@@ -1,0 +1,21 @@
+>>> from enthought.traits.api import HasTraits, Float, CFloat
+>>> class Person ( HasTraits ):
+...    weight  = Float
+...    cweight = CFloat
+>>>
+>>> bill = Person()
+>>> bill.weight  = 180    # OK, coerced to 180.0
+>>> bill.cweight = 180    # OK, cast to float(180)
+>>> bill.weight  = '180'  # Error, invalid coercion
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+  File "c:\wrk\src\lib\enthought\traits\trait_handlers.py", line 
+89, in error
+    raise TraitError, ( object, name, self.info(), value )
+enthought.traits.trait_errors.TraitError: The 'weight' trait of a 
+Person instance must be a value of type 'float', but a value of 
+180 was specified.
+>>>
+>>> bill.cweight = '180'  # OK, cast to float('180')
+>>> print bill.cweight
+180.0

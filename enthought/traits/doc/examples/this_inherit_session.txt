@@ -1,0 +1,22 @@
+>>> from enthought.traits.api import HasTraits, This
+>>> class Employee(HasTraits):
+...    manager = This
+...
+>>> class Executive(Employee):
+...  pass 
+...
+>>> fred = Employee()
+>>> mary = Executive()
+>>> fred.manager = mary 
+>>> # This is OK, because fred's manager can be an instance of
+>>> # Employee or any subclass.
+>>> mary.manager = fred 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in ?
+  File "c:\wrk\src\lib\enthought\traits\trait_handlers.py", line 
+90, in error
+    raise TraitError, ( object, name, self.info(), value )
+enthought.traits.trait_errors.TraitError: The 'manager' trait of 
+an Executive instance must be an instance of the same type as the 
+receiver, but a value of <__main__.Employee object at 0x00994330> 
+was specified.
