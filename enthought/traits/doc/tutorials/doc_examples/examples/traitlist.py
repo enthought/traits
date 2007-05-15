@@ -28,7 +28,7 @@ hand.cards = [
     Card( suit = 'Diamonds', rank = 10 ),
     Card( suit = 'Hearts',   rank = 12 ),
     Card( suit = 'Spades',   rank = 1 ),
-    Card( suit = 'Hearts',   rank = 7 ) ] )
+    Card( suit = 'Hearts',   rank = 7 ) ]
     
 # Now, try to give it an invalid hand (too many cards):
 hand.cards.append( Card( suit = 'Diamonds', rank = '5' ) )

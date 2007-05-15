@@ -1,6 +1,6 @@
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api \ 
+from enthought.traits.api \
     import HasTraits, Instance, Int, Str
 
 #--[Code]-----------------------------------------------------------------------

@@ -17,7 +17,7 @@ in the example below::
     class IName ( Interface ):
     
         def get_name ( self ):
-            """ Returns the name of an object. """
+            " Returns the name of an object. "
     
 This same code is shown in the **IName Interface** tab of the code.
 
