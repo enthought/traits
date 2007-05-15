@@ -15,6 +15,8 @@ Use this module for importing Traits names into your namespace. For example::
     from enthought.traits.api import HasTraits
 """
 
+__version__ = '2.1.0'
+
 from trait_base \
     import Undefined, Missing, Self
 
