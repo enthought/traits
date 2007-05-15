@@ -24,11 +24,15 @@ setup(
     install_requires = [
         'numpy',
         'enthought.ets', 
-        'enthought.resource',
-        'enthought.pyface>=1.1.1',
+        'enthought.logger',
     ],
     extras_require = {
-        'wx' : ['enthought.traits.ui.wx'],
+        'wx': ['enthought.traits.ui.wx'],
+        'ui': [
+            'enthought.pyface',
+            'enthought.resource',
+        ],
+             
     },
     namespace_packages = [
         "enthought",
