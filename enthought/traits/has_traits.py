@@ -1370,7 +1370,7 @@ class HasTraits ( CHasTraits ):
 
             # Merge the 'listeners':
             subclass_traits = getattr( subclass, ListenerTraits )
-            for name, value in listener.items():
+            for name, value in listeners.items():
                 subclass_traits.setdefault( name, value )
 
         # Copy all our new view elements into the base class's ViewElements:
