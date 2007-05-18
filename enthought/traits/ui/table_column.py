@@ -40,11 +40,9 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.menu \
     import Menu
     
-from enthought.pyface.grid.grid_cell_renderer \
-    import GridCellRenderer
-    
-from enthought.logger \
-    import logger
+# Set up a logger:    
+import logging
+logger = logging.getLogger( __name__ )
 
 #-------------------------------------------------------------------------------
 #  Constants:  
@@ -253,7 +251,7 @@ class ObjectColumn ( TableColumn ):
     editor = Instance( EditorFactory )
     
     # Renderer used to render the contents of this column:
-    renderer = Instance( GridCellRenderer )
+    renderer = Any # Instance( GridCellRenderer )
     
     # Format string to apply to column values:
     format = Str( '%s' )

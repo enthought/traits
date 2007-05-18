@@ -50,6 +50,10 @@ from trait_errors \
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
+    
+# Set up a logger:    
+import logging
+logger = logging.getLogger( __name__ )
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -2671,7 +2675,6 @@ class TraitDictObject ( dict ):
             self.name  = name
             self.trait = trait.handler
         else:
-            from enthought.logger.api import logger
             logger.debug( "rename: No 'trait' in %s for '%s'" %
                           ( self.object(), name ) )
 
@@ -2680,7 +2683,6 @@ class TraitDictObject ( dict ):
         result[ 'object' ] = self.object()
         #del result[ 'trait' ]
         if 'trait' not in result:
-            from enthought.logger.api import logger
             logger.debug( "__getstate__: No 'trait' in %s for '%s'" %
                           ( self.object(), self.name ) )
         else:

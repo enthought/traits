@@ -12,65 +12,52 @@ A handler that delegates the handling of events to a set of sub-handlers.
 
 This is typically used as the handler for dynamic views.  See the 
 **enthought.traits.has_dynamic_view** module.
-
 """
 
-
 # Enthought library imports
-from enthought.logger import logger
 from enthought.traits.api import HasTraits, List
 from enthought.traits.ui.ui import Dispatcher
 
 # Local imports.
 from handler import Handler
+    
+# Set up a logger:    
+import logging
+logger = logging.getLogger( __name__ )
 
-
-class DelegatingHandler(Handler):
+class DelegatingHandler ( Handler ):
+    """ A handler that delegates the handling of events to a set of 
+        sub-handlers.
     """
-    A handler that delegates the handling of events to a set of sub-handlers.
     
-    """
+    #-- Public 'DelegatingHandler' Interface -----------------------------------
     
-    ##########################################################################
-    # Attributes
-    ##########################################################################
+    # The list of sub-handlers this object delegates to:
+    sub_handlers = List( HasTraits )
 
-    #### public 'DelegatingHandler' interface ################################
-    
-    # The list of sub-handlers this object delegates to.
-    sub_handlers = List(HasTraits)
+    #-- Protected 'DelegatingHandler' Interface --------------------------------
 
-    
-    #### protected 'DelegatingHandler' interface #############################
-
-    # A list of dispatchable handler methods
+    # A list of dispatchable handler methods:
     _dispatchers = List
 
-    
-    ##########################################################################
-    # 'Handler' interface
-    ##########################################################################
+    #---------------------------------------------------------------------------
+    #  'Handler' interface:
+    #---------------------------------------------------------------------------
 
-    #### public methods ######################################################
+    #-- Public Methods ---------------------------------------------------------
     
-    def closed(self, info, is_ok):
-        """ 
-        Handles the user interface being closed by the user.
+    def closed ( self, info, is_ok ):
+        """ Handles the user interface being closed by the user.
 
-        This method is overridden here to unregister any dispatchers that were
-        set up in the init() method.
-        
+            This method is overridden here to unregister any dispatchers that 
+            were set up in the *init()* method.
         """
-        
         for d in self._dispatchers:
             d.remove()
-
-        return
         
     
-    def init(self, info):
-        """ 
-        Initializes the controls of a user interface.
+    def init ( self, info ):
+        """ Initializes the controls of a user interface.
         
         Parameters
         ----------
@@ -91,39 +78,39 @@ class DelegatingHandler(Handler):
         further customize the user interface before it is displayed.
         
         This method is overridden here to delegate to sub-handlers.
-        
         """
         
         # Iterate through our sub-handlers, and for each method whose name is
         # of the form 'object_name_changed', where 'object' is the name of an
         # object in the UI's context, create a trait notification handler that
         # will call the method whenever object's 'name' trait changes.  
-        logger.debug('Initializing delegation in DelegatingHandler [%s]', self)
+        logger.debug( 'Initializing delegation in DelegatingHandler [%s]',
+                      self )
         context = info.ui.context
         for h in self.sub_handlers:
             # fixme: I don't know why this wasn't here before... I'm not
             # sure this is right!
-            h.init(info)
+            h.init( info )
             
-            for name in self._each_trait_method(h):
+            for name in self._each_trait_method( h ):
                 if name[-8:] == '_changed':
                     prefix = name[:-8]
                     col = prefix.find( '_', 1 )
                     if col >= 0:
-                        object = context.get(prefix[:col])
+                        object = context.get( prefix[ :col ] )
                         if object is not None:
-                            logger.debug('\tto method [%s] on handler[%s]',
-                                name, h)
-                            method = getattr(h, name)
+                            logger.debug( '\tto method [%s] on handler[%s]',
+                                          name, h )
+                            method = getattr( h, name )
                             trait_name = prefix[col + 1:]
                             self._dispatchers.append(
-                                Dispatcher(method, info, object, trait_name)
-                                )
+                                Dispatcher( method, info, object, trait_name )
+                            )
 
                             # Also invoke the method immediately so initial 
                             # user interface state can be correctly set.
-                            if object.base_trait(trait_name).type != 'event':
-                                method(info)
+                            if object.base_trait( trait_name ).type != 'event':
+                                method( info )
 
                 # fixme: These are explicit workarounds for problems with:-
                 #
@@ -149,19 +136,18 @@ class DelegatingHandler(Handler):
                 # - which is called directly as as action from the context menu
                 #   defined in the tree editor.
                 #
-                elif name in ['tree_item_selected', 'inspect_object']:
-                    self.__dict__[name] = self._create_delegate(h, name)
+                elif name in [ 'tree_item_selected', 'inspect_object' ]:
+                    self.__dict__[ name ] = self._create_delegate( h, name )
 
         return True
 
-    def _create_delegate(self, h, name):
-        """ Quick fix for handler methods that are currently left out! """
+    def _create_delegate ( self, h, name ):
+        """ Quick fix for handler methods that are currently left out! 
+        """
 
-        def delegate(*args, **kw):
-            method = getattr(h, name)
-            return method(*args, **kw)
+        def delegate ( *args, **kw ):
+            method = getattr( h, name )
+            return method( *args, **kw )
 
         return delegate
-            
-#### EOF #####################################################################
 

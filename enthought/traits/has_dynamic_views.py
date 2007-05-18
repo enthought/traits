@@ -77,9 +77,6 @@ _<dynamic_name>_handler : A HasTraits instance.
 """
 
 # Enthought library imports:
-from enthought.logger \
-    import logger
-    
 from enthought.traits.ui.delegating_handler \
     import DelegatingHandler
 
@@ -92,6 +89,10 @@ from trait_types \
     
 from ui.api \
     import View, ViewSubElement, ViewElement
+    
+# Set up a logger:    
+import logging
+logger = logging.getLogger( __name__ )
 
 #-------------------------------------------------------------------------------
 #  'DynamicViewSubElement' class:

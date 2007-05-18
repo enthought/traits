@@ -27,10 +27,10 @@ import os
 import sys
 
 from os \
-    import getcwd
+    import getcwd, makedirs
     
 from os.path \
-    import dirname, exists, join
+    import isdir, dirname, exists, join
 
 from string \
     import lowercase, uppercase
@@ -39,8 +39,45 @@ from types \
     import ListType, TupleType, DictType, StringType, UnicodeType, IntType, \
            LongType, FloatType, ComplexType, ClassType, TypeType
 
-from enthought.ets.api \
-    import ETS
+try:           
+    from enthought.ets.api import ETS
+except:
+    # If the ETS package is not available, fake it:
+    class ETS ( object ):
+    
+        def _get_application_data ( self ):
+            """ Initializes the (default) application data directory. """
+        
+            environment_variable = 'HOME'
+            directory_name       = '.enthought'
+            if sys.platform == 'win32':
+                environment_variable = 'APPDATA'
+                directory_name       = 'Enthought'
+        
+            # Lookup the environment variable:
+            parent_directory = os.environ.get( environment_variable, None )
+            if parent_directory is None:
+                raise ValueError(
+                    'Environment variable "%s" not set' % environment_variable )
+        
+            application_data = join( parent_directory, directory_name )
+        
+            # If a file already exists with this name then make sure that it is
+            # a directory!
+            if exists( application_data ):
+                if not isdir( application_data ):
+                    raise ValueError( 'File "%s" already exists' % 
+                                      application_data )
+        
+            # Otherwise, create the directory:
+            else:
+                makedirs( application_data )
+        
+            return application_data
+            
+        application_data = property( _get_application_data )
+        
+        ETS = ETS()
 
 #-------------------------------------------------------------------------------
 #  Provide Python 2.3+ compatible definitions (if necessary):
