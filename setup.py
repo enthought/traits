@@ -22,11 +22,11 @@ setup(
     ext_modules = [ctraits, speedups],
     include_package_data = True,
     install_requires = [
-        'numpy',
         'enthought.ets', 
         'enthought.logger',
     ],
     extras_require = {
+        'array': ['numpy >= 1.0.0'],
         'wx': ['enthought.traits.ui.wx'],
         'ui': [
             'enthought.pyface',
