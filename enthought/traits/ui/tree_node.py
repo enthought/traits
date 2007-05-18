@@ -32,13 +32,10 @@ from enthought.traits.api \
            true, false
            
 from enthought.traits.trait_base \
-    import SequenceTypes
+    import SequenceTypes, get_resource_path
     
 from enthought.traits.ui.view \
     import View
-
-from enthought.resource.api \
-    import resource_path
 
 #-------------------------------------------------------------------------------
 #  'TreeNode' class:
@@ -133,7 +130,7 @@ class TreeNode ( HasPrivateTraits ):
     def __init__ ( self, **traits ):
         super( TreeNode, self ).__init__( **traits )
         if self.icon_path == '':
-            self.icon_path = resource_path()
+            self.icon_path = get_resource_path()
     
 #---- Overridable methods: -----------------------------------------------------
 

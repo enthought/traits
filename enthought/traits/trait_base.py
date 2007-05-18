@@ -1,36 +1,46 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-#
-# Author: David C. Morrill
-# Date: 06/21/2002
-#
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   06/21/2002
+# 
 #  Refactored into a separate module: 07/04/2003
+#
 #------------------------------------------------------------------------------
+
+""" Defines common, low-level capabilities needed by the Traits package.
+"""
 
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-""" Defines common, low-level capabilities needed by the Traits package.
-"""
-from __future__ import generators
 
 import os
 import sys
 
-from os.path import exists, join
-from string  import lowercase, uppercase
-from types   import ListType, TupleType, DictType, StringType, UnicodeType, \
-                    IntType, LongType, FloatType, ComplexType, ClassType, \
-                    TypeType
+from os \
+    import getcwd
+    
+from os.path \
+    import dirname, exists, join
 
-from enthought.ets.api import ETS
+from string \
+    import lowercase, uppercase
+    
+from types \
+    import ListType, TupleType, DictType, StringType, UnicodeType, IntType, \
+           LongType, FloatType, ComplexType, ClassType, TypeType
+
+from enthought.ets.api \
+    import ETS
 
 #-------------------------------------------------------------------------------
 #  Provide Python 2.3+ compatible definitions (if necessary):
@@ -232,5 +242,30 @@ def _verify_path ( path ):
 def get_module_name ( level = 2 ):
     """ Returns the name of the module that the caller's caller is located in.
     """
-    return sys._getframe( level ).f_globals.get( '__name__' )    
-
+    return sys._getframe( level ).f_globals.get( '__name__', '__main__' )    
+    
+#-------------------------------------------------------------------------------
+#  Returns a resource path calculated from the caller's stack:
+#-------------------------------------------------------------------------------
+        
+def get_resource_path ( level = 2 ):
+    """Returns a resource path calculated from the caller's stack.
+    """
+    module = sys._getframe( level ).f_globals.get( '__name__', '__main__' )
+    
+    if module != '__main__':
+        # Return the path to the module:
+        try:
+            return dirname( getattr( sys.modules.get( module ), '__file__' ) )
+        except:
+            # Apparently 'module' is not a registered module...treat it like 
+            # '__main__':
+            pass
+        
+    # '__main__' is not a real module, so we need a work around:
+    for path in [ dirname( sys.argv[0] ), getcwd() ]:
+        if exists( path ):
+            break
+            
+    return path
+    
