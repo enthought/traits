@@ -77,7 +77,7 @@ except:
             
         application_data = property( _get_application_data )
         
-        ETS = ETS()
+    ETS = ETS()
 
 #-------------------------------------------------------------------------------
 #  Provide Python 2.3+ compatible definitions (if necessary):
