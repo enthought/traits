@@ -2485,7 +2485,11 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
             break;
         default:
             PyErr_Format( PyExc_TypeError, 
+#if PY_VERSION_HEX >= 0x02050000
+                "Trait cast takes 1, 2 or 3 arguments (%zd given).", 
+#else
                 "Trait cast takes 1, 2 or 3 arguments (%u given).", 
+#endif
                 PyTuple_GET_SIZE( args ) );
             return NULL;
     }
