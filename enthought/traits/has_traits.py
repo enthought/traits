@@ -1058,16 +1058,16 @@ def adapts ( adapter, from_type, to_type = None ):
 #  'HasTraits' decorators:  
 #-------------------------------------------------------------------------------
                 
-def on_trait_change ( name ):
+def on_trait_change ( name, *names ):
     """ Marks the following method definition as being a handler for the 
-        extended trait change specified by *name*.
+        extended trait change specified by *name(s)*.
         
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for 
-        the *name* argument.
+        the *name(s)* argument.
     """
     def decorator ( function ):
-        function.on_trait_change = name
+        function.on_trait_change = ','.join( [ name ] + list( names ) )
         
         return function
         

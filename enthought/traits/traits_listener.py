@@ -22,6 +22,9 @@ from string \
 from has_traits \
     import HasTraits, HasPrivateTraits
     
+from trait_base \
+    import Undefined
+    
 from traits \
     import Property
     
@@ -334,7 +337,8 @@ class ListenerItem ( ListenerBase ):
             raise TraitError( "on_trait_change handler signature is "
                       "incompatible with a change to an intermediate trait" )
                               
-        self.wrapped_handler( object, name, old, getattr( object, name ) )
+        self.wrapped_handler( object, name, old, 
+                              getattr( object, name, Undefined ) )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a list trait:
