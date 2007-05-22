@@ -41,6 +41,7 @@ Traits 2.1 is to add a *buttons* trait with the correct value set to the
 Note that in a future release, the deprecated view traits will actually be
 removed from the **View** class.
 """
+
 #--<Imports>--------------------------------------------------------------------
 
 from enthought.traits.api import *

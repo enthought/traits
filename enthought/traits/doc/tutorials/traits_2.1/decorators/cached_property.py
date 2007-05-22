@@ -62,6 +62,7 @@ Use of the *cached_property* decorator also eliminates the need to add
 *cached = True* metadata to the property declaration, as was previously required
 when using *depends_on* metadata with a cached property definition.
 """
+
 #--<Imports>--------------------------------------------------------------------
 
 from enthought.traits.api import *

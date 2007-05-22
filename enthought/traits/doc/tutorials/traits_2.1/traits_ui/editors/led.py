@@ -22,6 +22,7 @@ The value edited by an **LEDEditor** should be an integer or float value,
 or a string value containing only characters that would be found in an interger 
 or float value.
 """
+
 #--[Imports]--------------------------------------------------------------------
 
 from threading \
