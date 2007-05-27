@@ -14,7 +14,7 @@
 #  Imports:  
 #-------------------------------------------------------------------------------
 
-from enthought.traits.traits \
+from enthought.traits.trait_types \
     import Str
     
 from enthought.traits.ui.editors \
