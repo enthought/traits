@@ -13,7 +13,7 @@ speedups = Extension(
 
 setup(
     name         = 'enthought.traits',
-    version      = '2.1.0',
+    version      = '3.0.0b1',
     description  = 'Explicitly typed Python attributes package',
     author       = 'David C. Morrill',
     author_email = 'dmorrill@enthought.com',
@@ -23,17 +23,17 @@ setup(
     packages     = find_packages(),
     ext_modules  = [ ctraits, speedups ],
     include_package_data = True,
-    
+
     install_requires = [
     ],
-    
+
     extras_require = {
-        'app_data': [ 'enthought.ets' ], 
+        'app_data': [ 'enthought.app_data_locator >=2.0.0b1, <3.0.0' ],
         'array':    [ 'numpy >= 1.0.0' ],
-        'ui':       [ 'enthought.pyface' ],
-        'wx':       [ 'enthought.traits.ui.wx' ],
+        'ui':       [ 'enthought.pyface >=2.0.0b1, <3.0.0' ],
+        'wx':       [ 'enthought.traits.ui.wx >=3.0.0b1, <4.0.0' ],
     },
-    
+
     namespace_packages = [
         'enthought',
         'enthought.traits',
