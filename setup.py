@@ -29,7 +29,7 @@ setup(
 
     extras_require = {
         'app_data': [ 'enthought.app_data_locator >=2.0.0b1, <3.0.0' ],
-        'array':    [ 'numpy >= 1.0.0' ],
+        'array':    [ 'numpy >= 1.0.0', 'enthought.util' ],
         'ui':       [ 'enthought.pyface >=2.0.0b1, <3.0.0' ],
         'wx':       [ 'enthought.traits.ui.wx >=3.0.0b1, <4.0.0' ],
     },
