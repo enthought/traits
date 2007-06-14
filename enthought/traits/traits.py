@@ -1066,19 +1066,23 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         if sum <= 1:
             if sum == 0:
                 return ForwardProperty( metadata )
+                
             handler = None
             if fget is not None:
                 trait = fget
+                
             if trait is not None:
                 trait = trait_cast( trait )
                 if trait is not None:
                     fvalidate = handler = trait.handler
                     if fvalidate is not None:
                         fvalidate = handler.validate
+                        
             if (fvalidate is not None) or (trait is not None):
                 if 'editor' not in metadata:
                     if (trait is not None) and (trait.editor is not None):
                         metadata[ 'editor' ] = trait.editor
+                        
                 return ForwardProperty( metadata, fvalidate, handler )
 
     if fget is None:
@@ -1088,6 +1092,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             fset = _undefined_set
         else:
             fget = _write_only
+            
     elif fset is None:
         fset = _read_only
         metadata[ 'transient' ] = True
@@ -1097,6 +1102,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         handler = trait.handler
         if (fvalidate is None) and (handler is not None):
             fvalidate = handler.validate
+            
         if ('editor' not in metadata) and (trait.editor is not None):
             metadata[ 'editor' ] = trait.editor
     
@@ -1109,10 +1115,12 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     trait.__dict__ = metadata.copy()
     if fvalidate is not None:
         n = _arg_count( fvalidate )
+        
     trait.property( fget,      _arg_count( fget ),
                     fset,      _arg_count( fset ),
                     fvalidate, n )
     trait.handler = handler
+    
     return trait
 
 Property = TraitFactory( Property )

@@ -11,17 +11,15 @@
 #
 #  Author:        David C. Morrill, Prabhu Ramachandran
 #  Original Date: 06/21/2002
-#  Symbols defined: HasTraits
-#                   HasStrictTraits
-#                   HasPrivateTraits
 #
 #  Rewritten as a C-based type extension: 06/21/2004
 #
 #------------------------------------------------------------------------------
+
+""" Defines the HasTraits class, along with several useful subclasses and 
+    associated metaclasses.
 """
-Defines the HasTraits class, along with several useful subclasses and associated
-metaclasses.
-"""
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------

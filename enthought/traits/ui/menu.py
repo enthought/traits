@@ -15,7 +15,7 @@
 #------------------------------------------------------------------------------
 
 """ Defines the standard menu bar for use with Traits UI windows and panels, 
-and standard actions and buttons.
+    and standard actions and buttons.
 """
 
 #-------------------------------------------------------------------------------

@@ -1,21 +1,23 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   10/07/2004
 #
-# Author: David C. Morrill
-# Date: 10/07/2004
-#  Symbols defined: Group
-#                   ShadowGroup
 #------------------------------------------------------------------------------
+
 """ Defines the Group class used to represent a group of items used in a 
-Traits-based user interface.
+    Traits-based user interface.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -67,6 +69,7 @@ Padding = Range( 0, 15, desc = 'amount of padding to add around each item' )
 class Group ( ViewSubElement ):
     """Represents a grouping of items in a user interface view.
     """
+    
     #---------------------------------------------------------------------------
     # Trait definitions:
     #---------------------------------------------------------------------------
