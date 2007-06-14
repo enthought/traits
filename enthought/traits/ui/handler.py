@@ -16,8 +16,9 @@
 #  Symbols defined: Handler
 #
 #------------------------------------------------------------------------------
+
 """ Defines the Handler class used to manage and control the editing process in
-a Traits-based user interface.
+    a Traits-based user interface.
 """
 #-------------------------------------------------------------------------------
 #  Imports:
@@ -306,8 +307,8 @@ class Handler ( HasPrivateTraits ):
         names = [ '%s_%s%s' % ( cname, klass, aview ),
                   '%s%s'    % ( cname, aview ),
                   '%s%s'    % ( klass, aview ) ]
-        if aview:
-            names.append( aview )
+        if view:
+            names.append( view )
         for name in names:
             result = self.trait_view( name )
             if result is not None:

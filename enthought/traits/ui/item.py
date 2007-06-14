@@ -11,11 +11,11 @@
 # 
 #  Author: David C. Morrill
 #  Date:   10/07/2004
-#   
+#  
 #------------------------------------------------------------------------------
 
 """Defines the Item class, which is used to represent a single item within
-a Traits-based user interface.
+   a Traits-based user interface.
 """
 
 #-------------------------------------------------------------------------------
@@ -28,7 +28,8 @@ from string \
     import find, rfind
 
 from enthought.traits.api \
-    import Instance, Str, Int, Range, Constant, false, Callable, Delegate
+    import Instance, Str, Int, Range, Constant, false, Callable, Property, \
+           Delegate, cached_property
 
 from enthought.traits.trait_base \
     import user_name_for
@@ -37,7 +38,7 @@ from view_element \
     import ViewSubElement
 
 from ui_traits \
-    import container_delegate
+    import Image, convert_image, container_delegate
 
 from editor_factory \
     import EditorFactory
@@ -109,6 +110,13 @@ class Item ( ViewSubElement ):
 
     # Image to display on notebook tabs:
     image = container_delegate
+    
+    # Image to display in the background of the group (only supported for labels
+    # currently):
+    bg_image = Image # Instance( ImageResource )
+    
+    # Does the item (or its containers) have a background image?
+    has_bg_image = Property( depends_on = 'bg_image, container.bg_image' )
 
     # Category of elements dragged from view:
     export = container_delegate
@@ -377,6 +385,15 @@ class Item ( ViewSubElement ):
                                   self._repr_value( self.label,'=' ),
                                   self._repr_value( self.style, ';', '',
                                                     'simple' ) )
+                                        
+    #-- Property Implementations -----------------------------------------------
+    
+    @cached_property
+    def _get_has_bg_image ( self ):
+        """ Returns whether the item (or its containers) have a background 
+            image.
+        """
+        return ((self.bg_image is not None) or self.container.has_bg_image)
 
 #-------------------------------------------------------------------------------
 #  'Label' class:
@@ -385,12 +402,14 @@ class Item ( ViewSubElement ):
 class Label ( Item ):
     """ An item that is a label.
     """
+    
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, label ):
-        super( Label, self ).__init__( label = label )
+    def __init__ ( self, label, bg_image = None ):
+        super( Label, self ).__init__( label    = label, 
+                                       bg_image = convert_image( bg_image ) )
 
 #-------------------------------------------------------------------------------
 #  'Heading' class:
@@ -399,6 +418,7 @@ class Label ( Item ):
 class Heading ( Label ):
     """ An item that is a fancy label.
     """
+    
     # Override the 'style' trait to default to the fancy 'custom' style:    
     style = Constant( 'custom' )
         
@@ -409,6 +429,7 @@ class Heading ( Label ):
 class Spring ( Item ):
     """ An item that is a layout "spring".
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------

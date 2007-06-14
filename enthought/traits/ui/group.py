@@ -27,7 +27,7 @@ from string \
 
 from enthought.traits.api \
     import Trait, TraitPrefixList, TraitError, ReadOnly, Delegate, Undefined, \
-           List, Str, Range, true, false
+           List, Str, Range, true, false, Property, cached_property
 
 from enthought.traits.trait_base \
     import enumerate
@@ -42,7 +42,7 @@ from include \
     import Include
 
 from ui_traits \
-    import SequenceTypes, container_delegate
+    import SequenceTypes, Image, container_delegate
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -96,7 +96,13 @@ class Group ( ViewSubElement ):
 
     # Default image to display on notebook tabs.
     image = container_delegate
+    
+    # Image to display in the background of the group.
+    bg_image = Image # Instance( ImageResource )
 
+    # Does the group (or its containers) have a background image?
+    has_bg_image = Property( depends_on = 'bg_image, container.bg_image' )
+    
     # Category of elements dragged from view.
     export = container_delegate
 
@@ -402,6 +408,15 @@ class Group ( ViewSubElement ):
                    self._repr_value( self.object, '', '', 'object' ),
                    self._repr_value( self.label,'=' ),
                    self._repr_value( self.style, ';', '', 'simple' ) )
+                                        
+    #-- Property Implementations -----------------------------------------------
+    
+    @cached_property
+    def _get_has_bg_image ( self ):
+        """ Returns whether the group (or its containers) have a background 
+            image.
+        """
+        return ((self.bg_image is not None) or self.container.has_bg_image)
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
@@ -410,6 +425,7 @@ class Group ( ViewSubElement ):
 class HGroup ( Group ):
     """ A group whose items are laid out horizontally.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -423,6 +439,7 @@ class HGroup ( Group ):
 class VGroup ( Group ):
     """ A group whose items are laid out vertically.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -436,6 +453,7 @@ class VGroup ( Group ):
 class VGrid ( VGroup ):
     """ A group whose items are laid out in 2 columns.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -450,6 +468,7 @@ class HFlow ( HGroup ):
     """ A group in which items are laid out horizontally, and "wrap" when 
     they exceed the available horizontal space..
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -465,6 +484,7 @@ class VFlow ( VGroup ):
     """ A group in which items are laid out vertically, and "wrap" when they
     exceed the available vertical space.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -479,6 +499,7 @@ class VFlow ( VGroup ):
 class HSplit ( Group ):
     """ A horizontal group with splitter bars to separate it from other groups.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -493,6 +514,7 @@ class HSplit ( Group ):
 class VSplit ( Group ):
     """ A vertical group with splitter bars to separate it from other groups.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -507,6 +529,7 @@ class VSplit ( Group ):
 class Tabbed ( Group ):
     """ A group that is shown as a tab in a notebook.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -519,9 +542,10 @@ class Tabbed ( Group ):
 
 class ShadowGroup ( Group ):
     """ Corresponds to a Group object, but with all embedded Include
-    objects resolved, and with all embedded Group objects replaced by 
-    corresponding ShadowGroup objects.
+        objects resolved, and with all embedded Group objects replaced by 
+        corresponding ShadowGroup objects.
     """
+    
     #---------------------------------------------------------------------------
     # Trait definitions:
     #---------------------------------------------------------------------------
@@ -549,6 +573,12 @@ class ShadowGroup ( Group ):
 
     # Default image to display on notebook tabs
     image = ShadowDelegate
+    
+    # Image to display in the background of the group.
+    bg_image = ShadowDelegate
+
+    # Does the group (or its containers) have a background image?
+    has_bg_image = ShadowDelegate
 
     # Category of elements dragged from the view
     export = ShadowDelegate

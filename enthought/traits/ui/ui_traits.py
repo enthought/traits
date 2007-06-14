@@ -23,7 +23,10 @@
 
 from enthought.traits.api \
     import Trait, TraitPrefixList, Delegate, Str, Instance, List, Enum, Any, \
-           Expression
+           Expression, TraitType
+           
+from enthought.traits.trait_base \
+    import get_resource_path
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -67,8 +70,61 @@ AView = Any
 #AView = Trait( '', Str, Instance( 'enthought.traits.ui.View' ) )
 
 #-------------------------------------------------------------------------------
+#  'Image' trait:
+#-------------------------------------------------------------------------------
+
+def convert_image ( value, level = 3 ):
+    """ Converts a specified value to an ImageResource if possible.
+    """
+    from enthought.pyface.image_resource import ImageResource
+    
+    if isinstance( value, basestring ):
+        if value[:1] == '@':
+            value = ImageResource( value[1:], 
+                        search_path = [ get_resource_path( 1 ) ] )
+        else:   
+            value = ImageResource( value,
+                        search_path = [ get_resource_path( level ) ] )
+                              
+    return value
+    
+class Image ( TraitType ):
+    """ Defines a trait whose value must be a PyFace ImageResource or a string
+        that can be converted to one.
+    """
+    
+    # Define the default value for the trait:
+    default_value = None
+    
+    # A description of the type of value this trait accepts:
+    info_text = 'an ImageResource or string that can be used to define one'
+    
+    def __init__ ( self, value = None, **metadata ):
+        """ Creates an Image trait.
+
+        Parameters
+        ----------
+        value : string or ImageResource
+            The default value for the Image, either an ImageResource object,
+            or a string from which an ImageResource object can be derived.
+        """
+        super( Image, self ).__init__( convert_image( value ), **metadata )
+
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+        from enthought.pyface.image_resource import ImageResource
+        
+        value = convert_image( value, 4 )
+        if (value is None) or isinstance( value, ImageResource ):
+            return value
+            
+        self.error( object, name, value )
+
+#-------------------------------------------------------------------------------
 #  Other definitions:
 #-------------------------------------------------------------------------------
 
 # Types that represent sequences
 SequenceTypes = ( tuple, list )
+

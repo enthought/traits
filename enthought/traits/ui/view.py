@@ -24,7 +24,7 @@
 
 from enthought.traits.api \
     import Trait, TraitPrefixList, TraitError, Str, Float, Bool, Instance, \
-           List, Any, Callable, Event, Enum
+           List, Any, Callable, Event, Enum, Constant
            
 from view_element \
     import ViewElement, ViewSubElement
@@ -321,6 +321,12 @@ class View ( ViewElement ):
     # What result should be returned if the user clicks the window or dialog 
     # close button or icon?
     close_result = close_result_trait
+    
+    # Image to display in the background of the group.
+    bg_image = Any # Instance( ImageResource )
+    
+    # Does the view have a background image?
+    has_bg_image = Constant( False )
     
     # Note: Group objects delegate their 'object' and 'style' traits to the View
         

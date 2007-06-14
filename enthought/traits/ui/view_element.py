@@ -1,21 +1,23 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill
-# Date: 10/18/2004
 #
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
+#  Date: 10/18/2004
+# 
 #  Symbols defined: ViewElement, ViewSubElement
 #
 #------------------------------------------------------------------------------
+
 """ Defines the abstract ViewElement class that all trait view template items
-(i.e., View, Group, Item, Include) derive from.
+    (i.e., View, Group, Item, Include) derive from.
 """
 
 #-------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ from string \
     import rfind
     
 from enthought.traits.api \
-    import HasPrivateTraits, Trait, true
+    import HasPrivateTraits, Trait, Constant, Any, true
     
 from ui_traits \
     import object_trait, style_trait, dock_style_trait, image_trait, \
@@ -48,6 +50,7 @@ label_pat2 = re.compile( r"^(.*){(.*)}(.*)$",   re.MULTILINE | re.DOTALL )
 class ViewElement ( HasPrivateTraits ):
     """ An element of a view.
     """
+    
     #---------------------------------------------------------------------------
     #  Replaces any items which have an 'id' with an Include object with the 
     #  same 'id', and puts the object with the 'id' into the specified 
@@ -82,8 +85,9 @@ class ViewElement ( HasPrivateTraits ):
 
 class DefaultViewElement ( ViewElement ):
     """ A view element that can be used as a default value for traits whose
-    value is a view element.
+        value is a view element.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -105,6 +109,12 @@ class DefaultViewElement ( ViewElement ):
     
     # Should labels be added to items in a group?
     show_labels = true
+    
+    # Image to display in the background of the group.
+    bg_image = Any # Instance( ImageResource )
+    
+    # Does the object (or its containers) have a background image?
+    has_bg_image = Constant( False )
                      
 #-------------------------------------------------------------------------------
 #  Trait definitions:
