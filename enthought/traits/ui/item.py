@@ -111,12 +111,15 @@ class Item ( ViewSubElement ):
     # Image to display on notebook tabs:
     image = container_delegate
     
-    # Image to display in the background of the group:
+    # Image to display in the background of the item:
     theme = Image
+    
+    # Image to display in the background of the item's label:
+    label_theme = Image
     
     # Does the item's containers have a theme?
     has_theme = Property( depends_on = 'container.theme, container.has_theme' )
-
+    
     # Category of elements dragged from view:
     export = container_delegate
 
