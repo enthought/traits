@@ -98,10 +98,10 @@ class Group ( ViewSubElement ):
     image = container_delegate
     
     # Image to display in the background of the group.
-    bg_image = Image # Instance( ImageResource )
+    theme = Image
 
-    # Does the group (or its containers) have a background image?
-    has_bg_image = Property( depends_on = 'bg_image, container.bg_image' )
+    # Does the group's containers have a theme?
+    has_theme = Property( depends_on = 'container.theme, container.has_theme' )
     
     # Category of elements dragged from view.
     export = container_delegate
@@ -411,12 +411,11 @@ class Group ( ViewSubElement ):
                                         
     #-- Property Implementations -----------------------------------------------
     
-    @cached_property
-    def _get_has_bg_image ( self ):
-        """ Returns whether the group (or its containers) have a background 
-            image.
+    #@cached_property
+    def _get_has_theme ( self ):
+        """ Returns whether the group's containers have a theme.
         """
-        return ((self.bg_image is not None) or self.container.has_bg_image)
+        return ((self.container.theme is not None) or self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
@@ -575,10 +574,10 @@ class ShadowGroup ( Group ):
     image = ShadowDelegate
     
     # Image to display in the background of the group.
-    bg_image = ShadowDelegate
+    theme = ShadowDelegate
 
-    # Does the group (or its containers) have a background image?
-    has_bg_image = ShadowDelegate
+    # Does the group's containers have a theme?
+    has_theme = ShadowDelegate
 
     # Category of elements dragged from the view
     export = ShadowDelegate

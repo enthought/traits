@@ -111,10 +111,10 @@ class DefaultViewElement ( ViewElement ):
     show_labels = true
     
     # Image to display in the background of the group.
-    bg_image = Any # Instance( ImageResource )
+    theme = Constant( None )
     
-    # Does the object (or its containers) have a background image?
-    has_bg_image = Constant( False )
+    # Does the object (or its containers) have a theme?
+    has_theme = Constant( False )
                      
 #-------------------------------------------------------------------------------
 #  Trait definitions:

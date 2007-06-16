@@ -323,10 +323,10 @@ class View ( ViewElement ):
     close_result = close_result_trait
     
     # Image to display in the background of the group.
-    bg_image = Any # Instance( ImageResource )
+    theme = Constant( None )
     
-    # Does the view have a background image?
-    has_bg_image = Constant( False )
+    # Does the view have a theme?
+    has_theme = Constant( False )
     
     # Note: Group objects delegate their 'object' and 'style' traits to the View
         

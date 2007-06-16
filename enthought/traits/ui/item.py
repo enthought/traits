@@ -111,12 +111,11 @@ class Item ( ViewSubElement ):
     # Image to display on notebook tabs:
     image = container_delegate
     
-    # Image to display in the background of the group (only supported for labels
-    # currently):
-    bg_image = Image # Instance( ImageResource )
+    # Image to display in the background of the group:
+    theme = Image
     
-    # Does the item (or its containers) have a background image?
-    has_bg_image = Property( depends_on = 'bg_image, container.bg_image' )
+    # Does the item's containers have a theme?
+    has_theme = Property( depends_on = 'container.theme, container.has_theme' )
 
     # Category of elements dragged from view:
     export = container_delegate
@@ -389,11 +388,10 @@ class Item ( ViewSubElement ):
     #-- Property Implementations -----------------------------------------------
     
     @cached_property
-    def _get_has_bg_image ( self ):
-        """ Returns whether the item (or its containers) have a background 
-            image.
+    def _get_has_theme ( self ):
+        """ Returns whether the item's containers have a theme.
         """
-        return ((self.bg_image is not None) or self.container.has_bg_image)
+        return ((self.container.theme is not None) or self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'Label' class:
@@ -407,9 +405,9 @@ class Label ( Item ):
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, label, bg_image = None ):
-        super( Label, self ).__init__( label    = label, 
-                                       bg_image = convert_image( bg_image ) )
+    def __init__ ( self, label, theme = None ):
+        super( Label, self ).__init__( label = label, 
+                                       theme = convert_image( theme ) )
 
 #-------------------------------------------------------------------------------
 #  'Heading' class:
