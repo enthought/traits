@@ -40,10 +40,10 @@ from types \
            LongType, FloatType, ComplexType, ClassType, TypeType
 
 try:           
-    from enthought.ets.api import ETS
+    from enthought.app_data_locator.api import AppDataLocator
 except:
-    # If the ETS package is not available, fake it:
-    class ETS ( object ):
+    # If the AppDataLocator package is not available, fake it:
+    class AppDataLocator ( object ):
     
         def _get_application_data ( self ):
             """ Initializes the (default) application data directory. """
@@ -77,7 +77,7 @@ except:
             
         application_data = property( _get_application_data )
         
-    ETS = ETS()
+    AppDataLocator = AppDataLocator()
 
 #-------------------------------------------------------------------------------
 #  Provide Python 2.3+ compatible definitions (if necessary):
@@ -252,7 +252,7 @@ def traits_home ( ):
     global _traits_home
 
     if _traits_home is None:
-        _traits_home = _verify_path( join( ETS.application_data, 'traits' ) )
+        _traits_home = _verify_path( join( AppDataLocator.application_data, 'traits' ) )
 
     return _traits_home
 
