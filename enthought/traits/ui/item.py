@@ -38,7 +38,7 @@ from view_element \
     import ViewSubElement
 
 from ui_traits \
-    import Image, convert_image, container_delegate
+    import convert_image, container_delegate
 
 from editor_factory \
     import EditorFactory
@@ -112,13 +112,14 @@ class Item ( ViewSubElement ):
     image = container_delegate
     
     # Image to display in the background of the item:
-    theme = Image
+    item_theme = container_delegate
     
     # Image to display in the background of the item's label:
-    label_theme = Image
+    label_theme = container_delegate
     
     # Does the item's containers have a theme?
-    has_theme = Property( depends_on = 'container.theme, container.has_theme' )
+    has_theme = Property( 
+                    depends_on = 'container.group_theme, container.has_theme' )
     
     # Category of elements dragged from view:
     export = container_delegate
@@ -394,7 +395,8 @@ class Item ( ViewSubElement ):
     def _get_has_theme ( self ):
         """ Returns whether the item's containers have a theme.
         """
-        return ((self.container.theme is not None) or self.container.has_theme)
+        return ((self.container.group_theme is not None) or 
+                 self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'Label' class:
@@ -408,9 +410,11 @@ class Label ( Item ):
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, label, theme = None ):
-        super( Label, self ).__init__( label = label, 
-                                       theme = convert_image( theme ) )
+    def __init__ ( self, label, item_theme = None ):
+        super( Label, self ).__init__( 
+            label      = label, 
+            item_theme = convert_image( item_theme )
+        )
 
 #-------------------------------------------------------------------------------
 #  'Heading' class:

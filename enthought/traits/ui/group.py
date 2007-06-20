@@ -98,10 +98,17 @@ class Group ( ViewSubElement ):
     image = container_delegate
     
     # Image to display in the background of the group.
-    theme = Image
+    group_theme = Image
+    
+    # Image to display in the background of contained items.
+    item_theme = container_delegate
+    
+    # Image to display in the background of contained item labels.
+    label_theme = container_delegate
 
     # Does the group's containers have a theme?
-    has_theme = Property( depends_on = 'container.theme, container.has_theme' )
+    has_theme = Property( 
+                    depends_on = 'container.group_theme, container.has_theme' )
     
     # Category of elements dragged from view.
     export = container_delegate
@@ -415,7 +422,8 @@ class Group ( ViewSubElement ):
     def _get_has_theme ( self ):
         """ Returns whether the group's containers have a theme.
         """
-        return ((self.container.theme is not None) or self.container.has_theme)
+        return ((self.container.group_theme is not None) or 
+                self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
@@ -574,7 +582,13 @@ class ShadowGroup ( Group ):
     image = ShadowDelegate
     
     # Image to display in the background of the group.
-    theme = ShadowDelegate
+    group_theme = ShadowDelegate
+    
+    # Image to display in the background of contained items.
+    item_theme = ShadowDelegate
+    
+    # Image to display in the background of contained item labels.
+    label_theme = ShadowDelegate
 
     # Does the group's containers have a theme?
     has_theme = ShadowDelegate

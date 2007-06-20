@@ -33,7 +33,7 @@ from enthought.traits.api \
     import HasPrivateTraits, Trait, Constant, Any, true
     
 from ui_traits \
-    import object_trait, style_trait, dock_style_trait, image_trait, \
+    import Image, object_trait, style_trait, dock_style_trait, image_trait, \
            export_trait, help_id_trait
 
 #-------------------------------------------------------------------------------
@@ -111,7 +111,13 @@ class DefaultViewElement ( ViewElement ):
     show_labels = true
     
     # Image to display in the background of the group.
-    theme = Constant( None )
+    group_theme = Constant( None )
+    
+    # Image to display in the background of contained items.
+    item_theme = Image
+    
+    # Image to display in the background of contained item labels.
+    label_theme = Image
     
     # Does the object (or its containers) have a theme?
     has_theme = Constant( False )

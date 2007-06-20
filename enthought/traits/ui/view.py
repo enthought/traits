@@ -33,7 +33,7 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, object_trait, style_trait, dock_style_trait, \
+    import SequenceTypes, Image, object_trait, style_trait, dock_style_trait, \
            image_trait, export_trait, help_id_trait, buttons_trait
     
 from handler \
@@ -323,7 +323,13 @@ class View ( ViewElement ):
     close_result = close_result_trait
     
     # Image to display in the background of the group.
-    theme = Constant( None )
+    group_theme = Constant( None )
+    
+    # Image to display in the background of contained items.
+    item_theme = Image
+    
+    # Image to display in the background of contained item labels.
+    label_theme = Image
     
     # Does the view have a theme?
     has_theme = Constant( False )
