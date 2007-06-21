@@ -14,9 +14,6 @@
 #  Imports:  
 #-------------------------------------------------------------------------------
 
-from enthought.util.numerix \
-    import Int, Float
-    
 from enthought.traits.api \
     import HasPrivateTraits, Array
     
@@ -33,8 +30,8 @@ class Test ( HasPrivateTraits ):
     #  Trait definitions:  
     #---------------------------------------------------------------------------
         
-    three = Array( (3,3), Int )
-    four  = Array( (4,4), Float, editor = ArrayEditor( width = -50 ) )
+    three = Array( int, (3,3) )
+    four  = Array( float, (4,4), editor = ArrayEditor( width = -50 ) )
     
     #---------------------------------------------------------------------------
     #  Traits view definitions:  

@@ -1,6 +1,5 @@
 
 import unittest
-from scipy import remainder
 
 from enthought.traits.api import HasTraits, Int, Range, Str
 
@@ -14,8 +13,8 @@ class WithFloatRange(HasTraits):
         self._changed_handler_calls += 1
         self.r_copied_on_change = str(self.r)
 
-        if remainder(self.r, 10) > 0:
-            self.r += 10-remainder(self.r, 10)
+        if (self.r % 10) > 0:
+            self.r += 10-(self.r % 10)
         
     
 class WithLargeIntRange(HasTraits):
@@ -86,7 +85,7 @@ class RangeTestCase(unittest.TestCase):
 
         obj.edit_traits(kind='livemodal', )
         
-        self.failUnlessEqual( remainder(obj.r,10), 0 )
+        self.failUnlessEqual( obj.r%10, 0 )
         
         return
     

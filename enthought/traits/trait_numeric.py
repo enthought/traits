@@ -11,12 +11,14 @@
 # Author: David C. Morrill
 # Date: 12/13/2004
 #------------------------------------------------------------------------------
-""" Trait definitions related to the Numeric library.
+""" Trait definitions related to the numpy library.
 """
 
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+
+import warnings
 
 from trait_base \
     import SequenceTypes
@@ -31,109 +33,53 @@ from trait_types \
     import Str, Any, Int as TInt, Float as TFloat
     
 #-------------------------------------------------------------------------------
-#  Deferred imports from numerix:
+#  Deferred imports from numpy:
 #-------------------------------------------------------------------------------
 
-ArrayType = None
+ndarray = None
 asarray   = None
 
 #-------------------------------------------------------------------------------
-#  Numeric type code mapping:
+#  numpy dtype mapping:
 #-------------------------------------------------------------------------------
 
-_type_codes = None
+def dtype2trait( dtype ):
+    """ Get the corresponding trait for a numpy dtype.
+    """
 
-# Define it as a function, so we can defer imports until it is actually used:
-def type_codes ( ):
+    import numpy
 
-    from enthought.util import numerix
-    
-    from enthought.util.numerix \
-         import Character, UnsignedInt8, Int, Int0, Int8, Int16, Int32, Float, \
-                Float0, Float8, Float16, Float32, Float64, Complex, Complex0, \
-                Complex8, Complex16, Complex32, Complex64, PyObject
-                    
-    try:
-        from enthought.util.numerix import Int64
-    except:
-        Int64 = None
-                        
-    try:
-        from enthought.util.numerix import Int128
-    except:
-        Int128 = None
-                        
-    try:
-        from enthought.util.numerix import Float128
-    except:
-        Float128 = None
-                        
-    try:
-        from enthought.util.numerix import Complex128
-    except:
-        Complex128 = None
-    
-    global _type_codes
-    
-    if _type_codes is None:
-        _type_codes = { 
-            Character:    ( 'character', Str ),
-            UnsignedInt8: ( 'unsigned 8 bit int', TInt ), 
-            Int:          ( 'int', TInt ),
-            Int0:         ( 'int', TInt ),
-            Int8:         ( '8 bit int', TInt ),
-            Int16:        ( '16 bit int', TInt ),
-            Int32:        ( '32 bit int', TInt ),
-            Int64:        ( '64 bit int', TInt ),
-            Int128:       ( '128 bit int', TInt ),
-            Float:        ( 'float', TFloat ),
-            Float0:       ( 'float', TFloat ),
-            Float8:       ( '8 bit float', TFloat ),
-            Float16:      ( '16 bit float', TFloat ),
-            Float32:      ( '32 bit float', TFloat ),
-            Float64:      ( '64 bit float', TFloat ),
-            Float128:     ( '128 bit float', TFloat ),
-            Complex:      ( 'complex', Any ),
-            Complex0:     ( 'complex', Any ),
-            Complex8:     ( '8 bit complex', Any ),
-            Complex16:    ( '16 bit complex', Any ),
-            Complex32:    ( '32 bit complex', Any ), 
-            Complex64:    ( '64 bit complex', Any ), 
-            Complex128:   ( '128 bit complex', Any ),
-            PyObject:     ( 'object', Any )
-        }
+    if dtype.char in numpy.typecodes['Float']:
+        return TFloat
+    elif dtype.char in numpy.typecodes['AllInteger']:
+        return TInt
+    elif dtype.char[0] == 'S':
+        return Str
+    else:
+        return Any
 
-        if numerix.which[0] == 'numarray':
-            # Numarray types are not strings so we need to add the strings also
-            for k, v in numerix.type2charmap.items():
-                try:
-                    _type_codes[v] = _type_codes[k]
-                except KeyError:
-                    pass
-                    
-    return _type_codes                    
 
 #-------------------------------------------------------------------------------
 #  'AbstractArray' trait base class:  
 #-------------------------------------------------------------------------------
                 
 class AbstractArray ( TraitType ):
-    """ Abstract base class for defining Numeric-based arrays.
+    """ Abstract base class for defining numpy-based arrays.
     """
     
-    def __init__ ( self, typecode = None, shape = None, value = None, 
-                         coerce = False, **metadata ):
+    def __init__ ( self, dtype = None, shape = None, value = None, 
+                         coerce = False, typecode = None, **metadata ):
         """ Returns an AbstractArray trait.
         """
-        global ArrayType, asarray
+        global ndarray, asarray
         
         try:
-            from enthought.util.numerix import array, asarray, zeros
-            
-            ArrayType = type( array( [ 1 ] ) )
-        except:
+            import numpy
+        except ImportError:
             raise TraitError( "Using Array or CArray trait types requires the "
-                              "NumPy package to be installed." )
+                              "numpy package to be installed." )
+        
+        from numpy import array, asarray, ndarray, zeros
         
         # Mark this as being an 'array' trait:
         metadata[ 'array' ] = True
@@ -141,12 +87,25 @@ class AbstractArray ( TraitType ):
         # Normally use object identity to detect array values changing:
         metadata.setdefault( 'rich_compare', False )
     
-        if isinstance( typecode, SequenceTypes ):
-            shape, typecode = typecode, shape
+        if typecode is not None:
+            warnings.warn("typecode is a deprecated argument; use dtype instead",
+                DeprecationWarning)
+            if dtype is not None and dtype != typecode:
+                raise TraitError( "Inconsistent usage of the dtype and typecode "
+                                  "arguments; use dtype alone" )
+            else:
+                dtype = typecode
+
+        if dtype is not None:
+            try:
+                # Convert the argument into an actual numpy dtype object.
+                dtype = numpy.dtype(dtype)
+            except TypeError, e:
+                raise TraitError( "could not convert %r to a numpy dtype" % dtype)
     
-        if (typecode is not None) and (typecode not in type_codes()):
-            raise TraitError, ("typecode must be a valid Numeric typecode or "
-                               "None")
+        # XXX: Ack! Ick! Ptooie!
+#        if isinstance( typecode, SequenceTypes ):
+#            shape, typecode = typecode, shape
     
         if shape is not None:
             if isinstance( shape, SequenceTypes ):
@@ -168,19 +127,25 @@ class AbstractArray ( TraitType ):
                 metadata.setdefault( 'editor', ArrayEditor )
     
         if value is None:
+            if dtype is None:
+                # Compatibility with the default of Traits 2.0
+                dt = int
+            else:
+                dt = dtype
             if shape is None:
-                value = zeros( ( 0, ), typecode )
+                value = zeros( ( 0, ), dt )
             else:
                 size = []
                 for item in shape:
                     if item is None:
                         item = 1
                     elif type( item ) in SequenceTypes:
+                        # XXX: what is this supposed to do?
                         item = item[0]
                     size.append( item )
-                value = zeros( size, typecode )
+                value = zeros( size, dt )
                 
-        self.typecode = typecode
+        self.dtype    = dtype
         self.shape    = shape
         self.coerce   = coerce
         
@@ -192,19 +157,22 @@ class AbstractArray ( TraitType ):
         try:
             # Make sure the value is an array:
             type_value = type( value )
-            if not isinstance( value, ArrayType ):    
+            if not isinstance( value, ndarray ):    
                 if not isinstance( value, SequenceTypes ):
                     self.error( object, name, value )
-                    
-                value = asarray( value, self.typecode )
+                if self.dtype is not None:
+                    value = asarray( value, self.dtype )
+                else:
+                    value = asarray( value )
                 
             # Make sure the array is of the right type:
-            if ((self.typecode is not None) and 
-                (numerix.typecode( value ) != self.typecode)):
+            if ((self.dtype is not None) and 
+                (value.dtype != self.dtype)):
                 if self.coerce:
-                    value = value.astype( self.typecode )
+                    value = value.astype( self.dtype )
                 else:
-                    value = asarray( value, self.typecode )
+                    # XXX: this also coerces.
+                    value = asarray( value, self.dtype )
                     
             # If no shape requirements, then return the value:
             trait_shape = self.shape
@@ -233,7 +201,7 @@ class AbstractArray ( TraitType ):
     def info ( self ):
         """ Returns descriptive information about the trait.
         """
-        typecode = shape = ''
+        dtype = shape = ''
         
         if self.shape is not None:
             shape = []
@@ -248,20 +216,21 @@ class AbstractArray ( TraitType ):
                 shape.append( item )
             shape = ' with shape %s' % ( tuple( shape ), )
              
-        if self.typecode is not None:
-            typecode = ' of %s values' % (type_codes()[ self.typecode ][0])
+        if self.dtype is not None:
+            # FIXME: restore nicer descriptions of dtypes.
+            dtype = ' of %s values' % self.dtype
             
-        return 'an array%s%s' % ( typecode, shape )
+        return 'an array%s%s' % ( dtype, shape )
 
     def get_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import TupleEditor
         
-        if self.typecode is None:
-            traits = TFloat
+        if self.dtype is None:
+            traits = TInt
         else:
-            traits = type_codes()[ self.typecode ][1]
+            traits = dtype2trait( self.dtype )
             
         return TupleEditor( traits = traits,
                             labels = self.labels or [],
@@ -287,16 +256,16 @@ class AbstractArray ( TraitType ):
 #-------------------------------------------------------------------------------
                 
 class Array ( AbstractArray ):
-    """ Defines a trait whose value must be a Numeric array.
+    """ Defines a trait whose value must be a numpy array.
     """
         
-    def __init__ ( self, typecode = None, shape = None, value = None, 
-                   **metadata ):
+    def __init__ ( self, dtype = None, shape = None, value = None, 
+                   typecode = None, **metadata ):
         """ Returns an Array trait.
                        
         Parameters
         ----------
-        typecode : a Numeric typecode (e.g., Float)
+        dtype : a numpy dtype (e.g., int32)
             The type of elements in the array; if omitted, no type-checking is
             performed on assigned values.
         shape : a tuple
@@ -310,7 +279,7 @@ class Array ( AbstractArray ):
             bound. (For example, ``shape=((3,5),(2,None))`` means that the 
             first dimension must be in the range 3 to 5 (inclusive), and the 
             second dimension must be at least 2.)
-        value : Numeric array
+        value : numpy array
             A default value for the array
     
         Default Value
@@ -322,29 +291,29 @@ class Array ( AbstractArray ):
         Description
         -----------
         An Array trait allows only upcasting of assigned values that are 
-        already Numeric arrays. It automatically casts tuples and lists of the 
-        right shape to the specified *typecode* (just like Numeric's **array**
+        already numpy arrays. It automatically casts tuples and lists of the 
+        right shape to the specified *dtype* (just like numpy's **array**
         does).
         """
-        super( Array, self ).__init__( typecode, shape, value, False, 
-                                       **metadata )
+        super( Array, self ).__init__( dtype, shape, value, False,
+                                       typecode = typecode, **metadata )
 
 #-------------------------------------------------------------------------------
 #  'CArray' trait:  
 #-------------------------------------------------------------------------------
                      
 class CArray ( AbstractArray ):
-    """ Defines a trait whose value must be a Numeric array, with casting 
+    """ Defines a trait whose value must be a numpy array, with casting 
         allowed.
     """
     
-    def __init__ ( self, typecode = None, shape = None, value = None, 
-                   **metadata ):
+    def __init__ ( self, dtype = None, shape = None, value = None, 
+                   typecode = None, **metadata ):
         """ Returns a CArray trait.
     
         Parameters
         ----------
-        typecode : a Numeric typecode (e.g., Float)
+        dtype : a numpy dtype (e.g., int32)
             The type of elements in the array
         shape : a tuple
             Describes the required shape of any assigned value. Wildcards and 
@@ -357,7 +326,7 @@ class CArray ( AbstractArray ):
             bound. (For example, ``shape=((3,5),(2,None))`` means that the 
             first dimension must be in the range 3 to 5 (inclusive), and the 
             second dimension must be at least 2.)
-        value : Numeric array
+        value : numpy array
             A default value for the array
     
         Default Value
@@ -370,10 +339,10 @@ class CArray ( AbstractArray ):
         -----------
         The trait returned by CArray() is similar to that returned by Array(),
         except that it allows both upcasting and downcasting of assigned values
-        that are already Numeric arrays. It automatically casts tuples and 
-        lists of the right shape to the specified *typecode* (just like 
-        Numeric's **array** does).
+        that are already numpy arrays. It automatically casts tuples and 
+        lists of the right shape to the specified *dtype* (just like 
+        numpy's **array** does).
         """
-        super( CArray, self ).__init__( typecode, shape, value, True, 
-                                        **metadata )
+        super( CArray, self ).__init__( dtype, shape, value, True, 
+                                        typecode = typecode, **metadata )
                             

@@ -30,7 +30,7 @@ from enthought.model.api \
     import ANumericModel, NumericArrayModel, ReductionModel, SelectionModel, \
            NumericItem, ExpressionFilter, IndexFilter
     
-from enthought.util.numerix \
+from numpy \
     import array, sin, arange
     
 #-------------------------------------------------------------------------------

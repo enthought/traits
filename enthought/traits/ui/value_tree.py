@@ -589,10 +589,10 @@ def basic_types ( ):
         ]
 
         try:
-            from enthought.util.numerix import array
+            from numpy import array
             
             _basic_types.append( ( type( array( [ 1 ] ) ), ArrayNode ) )
-        except:
+        except ImportError:
             pass
         
     return _basic_types

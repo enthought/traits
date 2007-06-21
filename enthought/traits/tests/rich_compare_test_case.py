@@ -1,8 +1,6 @@
 import unittest
 
-from enthought.util.scipyx import array, alltrue
-
-from enthought.traits.api import HasTraits, Any, Array, Str
+from enthought.traits.api import HasTraits, Any, Str
 
 class IdentityCompare(HasTraits):
     bar = Any(rich_compare=False)
@@ -143,23 +141,6 @@ class RichCompareTests:
         # be considered a change.
         rich.bar = self.same_as_a
         self.check_tracker( rich, 'bar', default_value, self.a, 1 )
-        return
-    
-
-class RichCompareArrayTestCase(unittest.TestCase, RichCompareTests):
-    
-    def setUp(self):
-        self.a = array([1,2,3])
-        self.same_as_a = array([1,2,3])
-        self.different_from_a = array([3,2,1])
-        return
-
-    def test_assumptions(self):
-        self.failIf( self.a is self.same_as_a )
-        self.failIf( self.a is self.different_from_a )
-
-        self.failUnless( alltrue( self.a == self.same_as_a ) )
-        self.failIf( alltrue( self.a == self.different_from_a ) )
         return
     
 

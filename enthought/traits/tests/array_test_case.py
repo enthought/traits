@@ -10,35 +10,14 @@
 #------------------------------------------------------------------------------
 import unittest
 
-from enthought.util.scipyx import *
+from numpy import arange, array, concatenate, ravel, take, zeros
 
 from enthought.traits.api import *
 
 
 
-# The type of arrays.
-ArrayType = type( arange( 1.0 ) )
-
-# Validator for my simple array type.
-def validator(object, name, value):
-    type_value = type( value )
-    if type_value == ArrayType:
-        shape = value.shape
-        if len( shape ) == 1:
-            return value
-        elif len( shape ) == 2:
-            if shape[1] == 2:
-                axis = 1
-            elif shape[0] == 2:
-                axis = 0
-            else:
-                raise TraitError
-            return ravel( take( value, ( 1, ), axis ) )
-    else:
-        raise TraitError
-
 class Foo( HasTraits ):
-    a = Trait(array([0.0, 1.0]), validator, desc='foo')
+    a = Array()
     event_fired = Bool(False)
 
     def _a_changed(self):
@@ -54,7 +33,7 @@ class ArrayTestCase( unittest.TestCase ):
         """
         
         f = Foo()
-        f.a = zeros((0,2), 'd')
+        f.a = zeros((2,), float)
         f.event_fired = False
         
         # Change the array.
