@@ -81,6 +81,8 @@ class Any ( TraitType ):
 class Int ( TraitType ):
     """ Defines a trait whose value must be a Python int.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = int
     
     # Define the default value for the trait:
     default_value = 0
@@ -113,6 +115,8 @@ class Int ( TraitType ):
 class Long ( TraitType ):
     """ Defines a trait whose value must be a Python long.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = long
     
     # Define the default value for the trait:
     default_value = 0L
@@ -148,6 +152,8 @@ class Long ( TraitType ):
 class Float ( TraitType ):
     """ Defines a trait whose value must be a Python float.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = float
     
     # Define the default value for the trait:
     default_value = 0.0
@@ -183,6 +189,8 @@ class Float ( TraitType ):
 class Complex ( TraitType ):
     """ Defines a trait whose value must be a Python complex.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = complex
     
     # Define the default value for the trait:
     default_value = 0.0 + 0.0j
@@ -289,6 +297,8 @@ class Unicode ( TraitType ):
 class Bool ( TraitType ):
     """ Defines a trait whose value must be a Python boolean.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = bool
     
     # Define the default value for the trait:
     default_value = False
@@ -324,6 +334,8 @@ class CInt ( Int ):
     """ Defines a trait whose value must be a Python int and which supports
         coercions of non-int values to int.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = int
     
     # Define the C-level fast validator to use:
     fast_validate = ( 12, int )
@@ -346,6 +358,8 @@ class CLong ( TraitType ):
     """ Defines a trait whose value must be a Python long and which supports
         coercions of non-long values to long.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = long
     
     # Define the C-level fast validator to use:
     fast_validate = ( 12, long )
@@ -368,6 +382,8 @@ class CFloat ( TraitType ):
     """ Defines a trait whose value must be a Python float and which supports
         coercions of non-float values to float.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = float
     
     # Define the C-level fast validator to use:
     fast_validate = ( 12, float )
@@ -390,6 +406,8 @@ class CComplex ( TraitType ):
     """ Defines a trait whose value must be a Python complex and which supports
         coercions of non-complex values to complex.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = complex
     
     # Define the C-level fast validator to use:
     fast_validate = ( 12, complex )
@@ -459,6 +477,8 @@ class CBool ( TraitType ):
     """ Defines a trait whose value must be a Python boolean and which supports
         coercions of non-boolean values to boolean.
     """
+    # The function to use for evaluating strings to this type:
+    evaluate = bool
     
     # Define the C-level fast validator to use:
     fast_validate = ( 12, bool )
