@@ -2,16 +2,16 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   06/21/2002
-# 
+#
 #  Refactored into a separate module: 07/04/2003
 #
 #------------------------------------------------------------------------------
@@ -28,56 +28,56 @@ import sys
 
 from os \
     import getcwd, makedirs
-    
+
 from os.path \
     import isdir, dirname, exists, join
 
 from string \
     import lowercase, uppercase
-    
+
 from types \
     import ListType, TupleType, DictType, StringType, UnicodeType, IntType, \
            LongType, FloatType, ComplexType, ClassType, TypeType
 
-try:           
-    from enthought.app_data_locator.api import AppDataLocator
+try:
+    from enthought.etsconfig.api import ETSConfig
 except:
-    # If the AppDataLocator package is not available, fake it:
-    class AppDataLocator ( object ):
-    
+    # If the ETSConfig package is not available, fake it:
+    class ETSConfig ( object ):
+
         def _get_application_data ( self ):
             """ Initializes the (default) application data directory. """
-        
+
             environment_variable = 'HOME'
             directory_name       = '.enthought'
             if sys.platform == 'win32':
                 environment_variable = 'APPDATA'
                 directory_name       = 'Enthought'
-        
+
             # Lookup the environment variable:
             parent_directory = os.environ.get( environment_variable, None )
             if parent_directory is None:
                 raise ValueError(
                     'Environment variable "%s" not set' % environment_variable )
-        
+
             application_data = join( parent_directory, directory_name )
-        
+
             # If a file already exists with this name then make sure that it is
             # a directory!
             if exists( application_data ):
                 if not isdir( application_data ):
-                    raise ValueError( 'File "%s" already exists' % 
+                    raise ValueError( 'File "%s" already exists' %
                                       application_data )
-        
+
             # Otherwise, create the directory:
             else:
                 makedirs( application_data )
-        
+
             return application_data
-            
+
         application_data = property( _get_application_data )
-        
-    AppDataLocator = AppDataLocator()
+
+    ETSConfig = ETSConfig()
 
 #-------------------------------------------------------------------------------
 #  Provide Python 2.3+ compatible definitions (if necessary):
@@ -107,7 +107,7 @@ SequenceTypes = ( ListType, TupleType )
 
 ComplexTypes  = ( float, int )
 
-TypeTypes     = ( StringType,  UnicodeType, IntType,   LongType, FloatType,  
+TypeTypes     = ( StringType,  UnicodeType, IntType,   LongType, FloatType,
                   ComplexType, ListType,    TupleType, DictType, BooleanType )
 
 TraitNotifier = '__trait_notifier__'
@@ -144,7 +144,7 @@ class _Missing ( object ):
        return '<missing>'
 
 # Singleton object that indicates that a method argument is missing from a
-# type-checked method signature. 
+# type-checked method signature.
 Missing = _Missing()
 
 #-------------------------------------------------------------------------------
@@ -202,7 +202,7 @@ def class_of ( object ):
     """
     if isinstance( object, basestring ):
        return add_article( object )
-       
+
     return add_article( object.__class__.__name__ )
 
 #-------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ def add_article ( name ):
     """
     if name[:1].lower() in 'aeiou':
        return 'an ' + name
-       
+
     return 'a ' + name
 
 #----------------------------------------------------------------------------
@@ -231,13 +231,13 @@ def user_name_for ( name ):
     name       = name.replace( '_', ' ' ).capitalize()
     result     = ''
     last_lower = 0
-    
+
     for c in name:
         if (c in uppercase) and last_lower:
            result += ' '
         last_lower = (c in lowercase)
         result    += c
-        
+
     return result
 
 #-------------------------------------------------------------------------------
@@ -252,7 +252,7 @@ def traits_home ( ):
     global _traits_home
 
     if _traits_home is None:
-        _traits_home = _verify_path( join( AppDataLocator.application_data, 'traits' ) )
+        _traits_home = _verify_path( join( ETSConfig.application_data, 'traits' ) )
 
     return _traits_home
 
@@ -269,7 +269,7 @@ def _verify_path ( path ):
             os.mkdir( path )
         except:
             pass
-            
+
     return path
 
 #-------------------------------------------------------------------------------
@@ -279,30 +279,30 @@ def _verify_path ( path ):
 def get_module_name ( level = 2 ):
     """ Returns the name of the module that the caller's caller is located in.
     """
-    return sys._getframe( level ).f_globals.get( '__name__', '__main__' )    
-    
+    return sys._getframe( level ).f_globals.get( '__name__', '__main__' )
+
 #-------------------------------------------------------------------------------
 #  Returns a resource path calculated from the caller's stack:
 #-------------------------------------------------------------------------------
-        
+
 def get_resource_path ( level = 2 ):
     """Returns a resource path calculated from the caller's stack.
     """
     module = sys._getframe( level ).f_globals.get( '__name__', '__main__' )
-    
+
     if module != '__main__':
         # Return the path to the module:
         try:
             return dirname( getattr( sys.modules.get( module ), '__file__' ) )
         except:
-            # Apparently 'module' is not a registered module...treat it like 
+            # Apparently 'module' is not a registered module...treat it like
             # '__main__':
             pass
-        
+
     # '__main__' is not a real module, so we need a work around:
     for path in [ dirname( sys.argv[0] ), getcwd() ]:
         if exists( path ):
             break
-            
+
     return path
-    
+
