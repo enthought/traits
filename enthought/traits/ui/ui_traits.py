@@ -22,8 +22,8 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Trait, TraitPrefixList, Delegate, Str, Instance, List, Enum, Any, \
-           Expression, TraitType
+    import HasStrictTraits, Trait, TraitPrefixList, Delegate, Str, Instance, \
+           List, Enum, Any, Range, Expression, TraitType
            
 from enthought.traits.trait_base \
     import get_resource_path
@@ -120,6 +120,85 @@ class Image ( TraitType ):
             return value
             
         self.error( object, name, value )
+        
+#-------------------------------------------------------------------------------
+#  'Padding' class:  
+#-------------------------------------------------------------------------------
+                
+class Padding ( HasStrictTraits ):
+    
+    # The amount of padding/margin at the top:
+    top = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin at the bottom:
+    bottom = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin on the left:
+    left = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin on the right:
+    right = Range( -32, 32, 0 )
+    
+    def __init__ ( self, value = None, **traits ):
+        """ Initializes the object.
+        """
+        if value is not None:
+            self.set( top  = value, bottom = value, 
+                      left = value, right  = value )
+                      
+        super( Padding, self ).__init__( **traits )
+        
+Margins = Padding
+
+#-------------------------------------------------------------------------------
+#  'HasPadding' trait:
+#-------------------------------------------------------------------------------
+
+class HasPadding ( TraitType ):
+    """ Defines a trait whose value must be a Padding object or an integer
+        value that can be converted to one.
+    """
+    
+    # Define the default value for the trait:
+    default_value = Padding( 0 )
+    
+    # A description of the type of value this trait accepts:
+    info_text = ('a Padding or Margin instance or an integer in the range from '
+                 '0 to 32 that can be used to define one')
+
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+        if isinstance( value, int ):
+            try:
+                value = Padding( value )
+            except:
+                self.error( object, name, value )
+            
+        if isinstance( value, Padding ):
+            return value
+            
+        self.error( object, name, value )
+        
+    def get_default_value ( self ):
+        """ Returns a tuple of the form: ( default_value_type, default_value )
+            which describes the default value for this trait.
+        """
+        dv  = self.default_value
+        dvt = self.default_value_type
+        if dvt < 0:
+            if isinstance( dv, int ):
+                dv = Padding( dv )
+                
+            if not isinstance( dv, Padding ):
+                return super( HasPadding, self ).get_default_value()
+                
+            self.default_value_type = dvt = 7
+            dv = ( Padding, (), dv.get() )
+        
+        return ( dvt, dv )
+        
+HasMargins = HasPadding        
 
 #-------------------------------------------------------------------------------
 #  Other definitions:

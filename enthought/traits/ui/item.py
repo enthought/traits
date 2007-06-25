@@ -114,10 +114,16 @@ class Item ( ViewSubElement ):
     # Image to display in the background of the item:
     item_theme = container_delegate
     
+    # The margins around the item's editor and its theme:
+    item_theme_margins = container_delegate
+    
     # Image to display in the background of the item's label:
     label_theme = container_delegate
     
-    # Does the item's containers have a theme?
+    # The margins around the item's label and its theme:
+    label_theme_margins = container_delegate
+    
+    # Do the item's containers have a theme?
     has_theme = Property( 
                     depends_on = 'container.group_theme, container.has_theme' )
     

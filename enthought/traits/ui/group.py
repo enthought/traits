@@ -42,7 +42,7 @@ from include \
     import Include
 
 from ui_traits \
-    import SequenceTypes, Image, container_delegate
+    import SequenceTypes, Image, HasMargins, container_delegate
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -100,13 +100,22 @@ class Group ( ViewSubElement ):
     # Image to display in the background of the group.
     group_theme = Image
     
+    # The margins around an group's content and its theme:
+    group_theme_margins = HasMargins( 0 )
+    
     # Image to display in the background of contained items.
     item_theme = container_delegate
     
+    # The margins around an item's editor and its theme:
+    item_theme_margins = container_delegate
+    
     # Image to display in the background of contained item labels.
     label_theme = container_delegate
+    
+    # The margins around an item's label and its theme:
+    label_theme_margins = container_delegate
 
-    # Does the group's containers have a theme?
+    # Do the group's containers have a theme?
     has_theme = Property( 
                     depends_on = 'container.group_theme, container.has_theme' )
     
@@ -584,13 +593,22 @@ class ShadowGroup ( Group ):
     # Image to display in the background of the group.
     group_theme = ShadowDelegate
     
+    # The margins around an group's content and its theme:
+    group_theme_margins = ShadowDelegate
+    
     # Image to display in the background of contained items.
     item_theme = ShadowDelegate
     
+    # The margins around an item's editor and its theme:
+    item_theme_margins = ShadowDelegate
+    
     # Image to display in the background of contained item labels.
     label_theme = ShadowDelegate
+    
+    # The margins around an item's label and its theme:
+    label_theme_margins = ShadowDelegate
 
-    # Does the group's containers have a theme?
+    # Do the group's containers have a theme?
     has_theme = ShadowDelegate
 
     # Category of elements dragged from the view

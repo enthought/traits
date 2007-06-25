@@ -33,8 +33,9 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, Image, object_trait, style_trait, dock_style_trait, \
-           image_trait, export_trait, help_id_trait, buttons_trait
+    import SequenceTypes, Image, HasMargins, object_trait, style_trait, \
+           dock_style_trait, image_trait, export_trait, help_id_trait, \
+           buttons_trait
     
 from handler \
     import Handler, default_handler
@@ -328,8 +329,14 @@ class View ( ViewElement ):
     # Image to display in the background of contained items.
     item_theme = Image
     
+    # The margins around an item's editor and its theme:
+    item_theme_margins = HasMargins( 3 )
+    
     # Image to display in the background of contained item labels.
     label_theme = Image
+    
+    # The margins around an item's label and its theme:
+    label_theme_margins = HasMargins( 0 )
     
     # Does the view have a theme?
     has_theme = Constant( False )

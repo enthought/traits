@@ -33,8 +33,8 @@ from enthought.traits.api \
     import HasPrivateTraits, Trait, Constant, Any, true
     
 from ui_traits \
-    import Image, object_trait, style_trait, dock_style_trait, image_trait, \
-           export_trait, help_id_trait
+    import Image, HasMargins, object_trait, style_trait, dock_style_trait, \
+           image_trait, export_trait, help_id_trait
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -116,8 +116,14 @@ class DefaultViewElement ( ViewElement ):
     # Image to display in the background of contained items.
     item_theme = Image
     
+    # The margins around an item's editor and its theme:
+    item_theme_margins = HasMargins( 3 )
+    
     # Image to display in the background of contained item labels.
     label_theme = Image
+    
+    # The margins around an item's label and its theme:
+    label_theme_margins = HasMargins( 0 )
     
     # Does the object (or its containers) have a theme?
     has_theme = Constant( False )

@@ -1,24 +1,29 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   06/21/2002
+# 
+#  Refactored into a separate module: 07/04/2003
 #
-# Author: David C. Morrill
-# Date: 06/21/2002
-#
-# Refactored into a separate module: 07/04/2003
 #------------------------------------------------------------------------------
-""" Defines the BaseTraitHandler class and a standard set of BaseTraitHandler
+
+""" 
+Defines the BaseTraitHandler class and a standard set of BaseTraitHandler
 subclasses for use with the Traits package.
 
-A trait handler mediates the assignment of values to object traits. It verifies
-(via its validate() method) that a specified value is consistent with the
-object trait, and generates a TraitError exception if it is not consistent.
+A trait handler mediates the assignment of values to object traits. It 
+verifies (via its validate() method) that a specified value is consistent
+with the object trait, and generates a TraitError exception if it is not 
+consistent.
 """
 
 #-------------------------------------------------------------------------------

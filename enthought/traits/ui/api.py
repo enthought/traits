@@ -34,6 +34,9 @@ from ui \
     
 from ui_info \
     import UIInfo
+    
+from ui_traits \
+    import Padding, Margins
 
 from help \
     import on_help_call
