@@ -21,6 +21,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from os.path \
+    import join
+    
 from enthought.traits.api \
     import HasStrictTraits, Trait, TraitPrefixList, Delegate, Str, Instance, \
            List, Enum, Any, Range, Expression, TraitType
@@ -81,7 +84,8 @@ def convert_image ( value, level = 3 ):
     if isinstance( value, basestring ):
         if value[:1] == '@':
             value = ImageResource( value[1:], 
-                        search_path = [ get_resource_path( 1 ) ] )
+                        search_path = [ join( get_resource_path( 1 ),
+                                              'library' ) ] )
         else:   
             value = ImageResource( value,
                         search_path = [ get_resource_path( level ) ] )
