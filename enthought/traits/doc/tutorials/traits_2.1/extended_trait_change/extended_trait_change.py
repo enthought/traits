@@ -101,8 +101,8 @@ Some examples of valid names and their meaning are as follows:
     
 '([left,right]).name'
     Listen for trait changes to the *name* trait of each node of a tree having 
-    *left* and *right* links to other tree nodes, and where *object* the method
-    is applied to the root node of the tree.
+    *left* and *right* links to other tree nodes, and where *object* is the 
+    root node of the tree.
     
 '+dirty'
     Listen for trait changes on any trait in the *object* which has the 'dirty' 

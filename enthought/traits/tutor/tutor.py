@@ -1272,7 +1272,7 @@ class SectionFactory ( HasPrivateTraits ):
         css_path = self.css_path
         if css_path != '':
             css_path = os.path.join( self.path, css_path )
-            settings[ 'stylesheet' ]       = css_path
+            settings[ 'stylesheet_path' ]  = css_path
             settings[ 'embed_stylesheet' ] = True
         else:
             css_path = path
@@ -1457,7 +1457,7 @@ class SectionFactory ( HasPrivateTraits ):
         css_path = self.css_path
         if css_path != '':
             css_path = os.path.join( self.path, css_path )
-            settings[ 'stylesheet' ]       = css_path
+            settings[ 'stylesheet_path' ]  = css_path
             settings[ 'embed_stylesheet' ] = True
         
         # Convert it from restructured text to HTML:            

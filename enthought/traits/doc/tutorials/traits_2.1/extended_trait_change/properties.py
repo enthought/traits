@@ -13,7 +13,7 @@ on an object immediately reachable from the object. For example::
     
     class Wheel ( Part ):
         
-        axel     = Instanced( Axel )
+        axel     = Instance( Axel )
         position = Property( depends_on = 'axel.position' )
         
         ...
@@ -24,7 +24,7 @@ method. So, for example it is now legal to write things like::
     
     class Wheel ( Part ):
         
-        axel     = Instanced( Axel )
+        axel     = Instance( Axel )
         position = Property( depends_on = 'axel.chassis.position' )
         
 or::
