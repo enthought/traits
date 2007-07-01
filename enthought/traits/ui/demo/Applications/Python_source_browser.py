@@ -1,6 +1,6 @@
 """
 This demo shows a combination of the <b>DirectoryEditor</b>, the 
-<b>TabularEditor</b> and the <b>CodeEditor</b> used to create a simply Python 
+<b>TabularEditor</b> and the <b>CodeEditor</b> used to create a simple Python 
 source browser: 
 
  - Use the <b>DirectoryEditor</b> on the left to navigate to and select 
