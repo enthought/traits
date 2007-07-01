@@ -479,6 +479,13 @@ get_image ( object, trait, row, column )
     **TabularEditor** *images* trait. In that case, the name should be the same 
     as the string specified in the **ImageResource** constructor.
      
+get_format ( object, trait, row, column )
+    Returns the Python formatting string to apply to the specified 
+    *object.trait[row].column* item in order to display it in the table.
+    
+    The result can be any Python string containing exactly one Python formatting
+    sequence, such as *'%.4f'* or *'(%5.2f)'*.
+     
 get_text ( object, trait, row, column )
     Returns a string containing the text to display for a specified 
     *object.trait[row].column* item.
@@ -646,6 +653,12 @@ default_value = Any( '' )
     
     The default value is the empty string, but you will normally need to assign 
     a different (default) value.
+   
+format = Str( '%s' )
+    The default Python formatting string for a column item.
+    
+    The default value is *'%s'* which will simply convert the column item to a
+    displayable string value.
     
 text = Property
     The text to display for the column item.
@@ -653,8 +666,11 @@ text = Property
     The implementation of the property checks the type of the column's
     *column id*:
     
-    - If it is an integer, it returns *str(item[column_id])*.
-    - Otherwise, it returns *str(item.column_id)*.
+    - If it is an integer, it returns *format%item[column_id]*.
+    - Otherwise, it returns *format%item.column_id*.
+    
+    Note that *format* refers to the value returned by a call to *get_format*
+    for the current column item.
     
 text_color = Property
     The text color for a row item. 
