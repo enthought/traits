@@ -909,7 +909,7 @@ feels stand out about this approach are:
   documentation.
 
 Look for a complete traits UI example based on this sample problem definition in 
-one of the other tutorials in this section.
+the *Single and Married Person Example* tutorial in this section.
   
 Now, as the complexity of a tabular view increases, the definition of the
 **TabularAdapter** class could possibly start to get large and unwieldy. At
