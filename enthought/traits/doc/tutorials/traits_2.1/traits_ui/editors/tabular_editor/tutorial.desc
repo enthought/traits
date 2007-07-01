@@ -1,4 +1,5 @@
 Tabular Editor
 
-tabular_editor:    Tabular Editor Introduction
-sm_person_example: Single and Married Person Example
+tabular_editor:        Tabular Editor Introduction
+sm_person_example:     Single and Married Person Example
+python_source_browser: Python Source Browser Example
