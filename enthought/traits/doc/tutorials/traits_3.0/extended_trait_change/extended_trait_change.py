@@ -3,7 +3,7 @@
 on_trait_change Method Enhancements
 ===================================
 
-In Traits 2.1, the capabilities of the **HasTraits** class's
+In Traits 3.0, the capabilities of the **HasTraits** class's
 *on_trait_change* method has been greatly enhanced with the addition of a new
 *extended* trait name syntax for specifying the name of the trait the
 notification handler applies to.
@@ -21,14 +21,14 @@ name
     The notification handler applies to each of the traits on the object with
     the specified names.
     
-In Traits 2.1, all of these forms are still supported, but now the syntax for
+In Traits 3.0, all of these forms are still supported, but now the syntax for
 specifying *name* has been expanded to allow a much broader set of traits that
 are *reachable* from the object the *on_trait_change* method is applied to.
 
 New *name* Parameter Syntax
 ---------------------------
         
-In Traits 2.1, the *name* parameter, in addition to being omitted, None or
+In Traits 3.0, the *name* parameter, in addition to being omitted, None or
 *anytrait*, can now be a single *xname* or a list of *xname* names, where 
 an *xname* is an extended name of the form::
         
@@ -191,10 +191,10 @@ if you want to be notified of changes to any of the items of the *xxx* trait.
 Backward Compatibility
 ----------------------
 
-The new extended trait name support in Traits 2.1 has one slight semantic 
-difference with the pre-Traits 2.1 *on_trait_change* method.
+The new extended trait name support in Traits 3.0 has one slight semantic 
+difference with the pre-Traits 3.0 *on_trait_change* method.
 
-Prior to Traits 2.1, it was necessary to make two separate calls to 
+Prior to Traits 3.0, it was necessary to make two separate calls to 
 *on_trait_change* in order to set up listeners on a **List** or **Dict** trait's
 value and the contents of its value, as shown in the following example::
     
@@ -207,16 +207,16 @@ value and the contents of its value, as shown in the following example::
     a_department.on_trait_change( some_listener, 'employees' )
     a_department.on_trait_change( some_listener_items, 'employees_items' )
     
-In Traits 2.1, this is still the case if the *some_listener* function has one 
+In Traits 3.0, this is still the case if the *some_listener* function has one 
 or more arguments. However, if it has no arguments, the *on_trait_change* method
 will automatically call the function either when the trait's value or its
-value's contents change. So in Traits 2.1 it is only necessary to write::
+value's contents change. So in Traits 3.0 it is only necessary to write::
     
     a_department.on_trait_change( some_listener, 'employees' )
     
 if the *some_listener* (and *some_listener_items*) function has no arguments.
 
-The net effect of this difference is that code written prior to Traits 2.1 
+The net effect of this difference is that code written prior to Traits 3.0 
 could set up two listeners (e.g. *some_listener* and *some_listener_items*, as
 in the example), and then have *both* methods called when the contents of the
 trait are modified if the *some_listener* method takes no arguments. Since no
@@ -224,9 +224,9 @@ data is passed to the *some_listener* function, there is probably no harm in
 doing this, but it does create unnecessary notification handler calls.
 
 As a result, to avoid creating this unwanted overhead in existing code, the
-*on_trait_change* method applies pre-Traits 2.1 semantics to all simple names
+*on_trait_change* method applies pre-Traits 3.0 semantics to all simple names
 passed to it (e.g. 'employees'). If you are writing new code and want to
-take advantage of the new Traits 2.1 *on_trait_change* semantics for a simple
+take advantage of the new Traits 3.0 *on_trait_change* semantics for a simple
 trait name, you will need to modify the name to use some recognizable aspect of 
 the new extended trait name syntax. 
 

@@ -15,7 +15,7 @@ default buttons displayed at the bottom of a view has been deprecated:
 Use of these traits has been supplanted by use of the *buttons* trait instead.
 
 As part of the ongoing phasing out of these traits, the following changes have
-been implemented in Traits 2.1:
+been implemented in Traits 3.0:
     
 - All use of the *apply*, *revert*, *undo*, *ok* and *cancel* traits have been 
   removed from views contained within the traits package itself, and have been
@@ -35,7 +35,7 @@ the deprecated **View** traits or use the newer *buttons* trait should not be
 affected.
 
 The correct fix for any **View** which has buttons disappear after installing 
-Traits 2.1 is to add a *buttons* trait with the correct value set to the 
+Traits 3.0 is to add a *buttons* trait with the correct value set to the 
 **View**.
 
 Note that in a future release, the deprecated view traits will actually be

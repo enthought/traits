@@ -3,7 +3,7 @@
 Interfaces
 ==========
 
-In Traits 2.1, the ability to define, implement and use *interfaces* has been 
+In Traits 3.0, the ability to define, implement and use *interfaces* has been 
 added to the package.
 
 Defining Interfaces

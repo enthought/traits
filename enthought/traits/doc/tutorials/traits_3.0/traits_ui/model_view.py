@@ -3,7 +3,7 @@
 ModelView and Controller Classes
 ================================
 
-Traits 2.1 introduces two new **Handler** subclasses, **ModelView** and
+Traits 3.0 introduces two new **Handler** subclasses, **ModelView** and
 **Controller**, both of which are intended to help simplify the process of
 creating MVC (i.e. Model/View/Controller) based applications.
 

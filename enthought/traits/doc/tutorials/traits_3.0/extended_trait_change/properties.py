@@ -3,7 +3,7 @@
 Extended Property *depends_on* References
 =========================================
 
-In Traits 2.1, the **Property** *depends_on* metadata has been extended to
+In Traits 3.0, the **Property** *depends_on* metadata has been extended to
 take advantage of the new extended trait name support offered by the 
 *on_trait_change* method.
 
@@ -18,7 +18,7 @@ on an object immediately reachable from the object. For example::
         
         ...
         
-Starting with Traits 2.1, the *depends_on* metadata may now include any
+Starting with Traits 3.0, the *depends_on* metadata may now include any
 extended trait reference that is allowed by the enhanced *on_trait_change*
 method. So, for example it is now legal to write things like::
     

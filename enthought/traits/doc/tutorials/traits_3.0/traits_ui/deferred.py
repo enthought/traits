@@ -3,7 +3,7 @@
 Deferred UI Notifications
 =========================
 
-In Traits 2.1, a change has been made to the way that events are handled in the
+In Traits 3.0, a change has been made to the way that events are handled in the
 Traits UI that should improve the performance and responsive of Traits-based
 user interfaces in certain important situations.
 

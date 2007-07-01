@@ -3,7 +3,7 @@
 Animated GIF Editor
 ===================
 
-In Traits 2.1, a new **AnimatedGIFEditor** has been added to the Traits UI
+In Traits 3.0, a new **AnimatedGIFEditor** has been added to the Traits UI
 package. The purpose of the editor is to allow inclusion of simple animated
 graphics into a traits UI via the use of animated GIF files.
 

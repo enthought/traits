@@ -3,7 +3,7 @@
 Extended Traits UI Item and Editor References
 =============================================
 
-In Traits 2.1, the Traits UI **Item** class and various *editor* classes
+In Traits 3.0, the Traits UI **Item** class and various *editor* classes
 have been extended to use the new extended trait name support provided by the 
 *on_trait_change* method.
 
@@ -16,7 +16,7 @@ traits defined directly on a UI context object. For example::
         Item( 'handler.status' )
     )
     
-In Traits 2.1 this restriction has been lifted, and now **Items** can reference
+In Traits 3.0 this restriction has been lifted, and now **Items** can reference
 (i.e. edit) any trait reachable from a UI context object::
     
     view = View(

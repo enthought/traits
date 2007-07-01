@@ -3,7 +3,7 @@
 Flash Editor (Windows Only)
 ===========================
 
-In Traits 2.1, a new **FlashEditor** has been added to the Traits UI package. 
+In Traits 3.0, a new **FlashEditor** has been added to the Traits UI package. 
 The editor allows displaying and interacting with Adobe Flash compatible files.
 
 This editor is currently only available for the Windows platform and is 

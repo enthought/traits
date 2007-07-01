@@ -35,7 +35,7 @@ that:
 - The resulting trait cannot be subclassed to derive a new trait with slightly
   different behavior.
   
-As a result, in Traits 2.1 a new method of defining traits has been added that
+As a result, in Traits 3.0 a new method of defining traits has been added that
 hopefully addresses both of these issues. Note that this new style of creating
 traits does not replace the old style of creating traits, but is simply a new
 technique that can be used instead of the original method. Both old and new

@@ -7,7 +7,7 @@ In previous versions of Traits there were a number of problems (i.e. bugs) in
 the delegation support that made delegation virtually unusable in some 
 situations.
 
-As a result, one of the primary goals of Traits 2.1 was to fix all known 
+As a result, one of the primary goals of Traits 3.0 was to fix all known 
 problems with delegation, thus allowing it to reclaim its role as one of the 
 five keys pillars of the Traits package (those pillars being *initialization*, 
 *validation*, *notification*, *delegation* and *visualization*).
@@ -23,7 +23,7 @@ Previously, many Traits users implicitly assumed that changes made to a
 (no matter how many such traits there might be). Unfortunately, this was not
 the case.
 
-However, starting with Traits 2.1, this feature has now been implemented. An
+However, starting with Traits 3.0, this feature has now been implemented. An
 example of what this means is shown below::
     
     class Parent ( HasTraits ):

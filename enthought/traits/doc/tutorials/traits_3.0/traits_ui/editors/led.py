@@ -3,7 +3,7 @@
 LED Editor
 ==========
 
-In Traits 2.1, a new **LEDEditor** has been added to the Traits UI package. The 
+In Traits 3.0, a new **LEDEditor** has been added to the Traits UI package. The 
 editor allows displaying (but not editing) numeric values using a set of 
 simulated LEDs. 
 

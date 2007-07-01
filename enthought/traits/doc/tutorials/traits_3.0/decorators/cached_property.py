@@ -3,7 +3,7 @@
 cached_property Decorator
 =========================
 
-New in Traits 2.1 is the *cached_property* method decorator which helps
+New in Traits 3.0 is the *cached_property* method decorator which helps
 streamline the process of writing properties which cache their current value.
 
 Defining properties is a very powerful technique for exposing as traits items

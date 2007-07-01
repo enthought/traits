@@ -10,7 +10,7 @@ large-scale applications using Traits, experience has shown that some traits
 specific support in this area would be of benefit to most application
 developers.
 
-Accordingly, Traits 2.1 introduces *__getstate__* and *__setstate__* methods
+Accordingly, Traits 3.0 introduces *__getstate__* and *__setstate__* methods
 that implement several traits aware serialization and deserialization policies.
 
 The *__getstate__* Method

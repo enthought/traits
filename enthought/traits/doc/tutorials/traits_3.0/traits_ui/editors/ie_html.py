@@ -3,7 +3,7 @@
 Internet Explorer HTML Editor (Windows Only)
 ============================================
 
-In Traits 2.1, a new **IEHTMLEditor** has been added to the Traits UI package. 
+In Traits 3.0, a new **IEHTMLEditor** has been added to the Traits UI package. 
 The editor allows displaying (but not editing) HTML pages using the Microsoft
 Internet Explorer browser.
 

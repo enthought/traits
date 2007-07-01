@@ -3,7 +3,7 @@
 on_trait_change Decorator
 =========================
 
-Until Traits 2.1, the only way to define a static trait notification handler
+Until Traits 3.0, the only way to define a static trait notification handler
 as part of a class definition was to define the method following a certain 
 naming convention::
     
@@ -18,7 +18,7 @@ naming convention::
 where *name* is the name of the trait to which the notification handler method
 applies.
 
-Starting with Traits 2.1, there is now an alternate method for declaring
+Starting with Traits 3.0, there is now an alternate method for declaring
 notification handlers using the **on_trait_change** decorator. The syntax
 for the decorator is::
     
@@ -35,7 +35,7 @@ several advantages:
     
 - It does not require using special method names.
 - It allows using the extended trait naming support added to the 
-  **on_trait_change** method in Traits 2.1.
+  **on_trait_change** method in Traits 3.0.
   
 The last item is especially important since it allows you to statically 
 declare notification handlers for many more cases than were previously possible.
