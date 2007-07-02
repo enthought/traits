@@ -2293,10 +2293,10 @@ class HasTraits ( CHasTraits ):
         is None, *handler* is invoked when any trait attribute on the
         object is changed.
         
-        The *name* parameter is a single *xname* or a list of *xname* names, where 
-        an *xname* is an extended name of the form::
+        The *name* parameter is a single *xname* or a list of *xname* names, 
+        where an *xname* is an extended name of the form::
                 
-            xname2['.'xname2]*
+            xname2[('.'|':') xname2]*
                 
         An *xname2* is of the form::
                 
@@ -2306,9 +2306,17 @@ class HasTraits ( CHasTraits ):
                 
              xname | ['+'|'-'][name] | name['?' | ('+'|'-')[name]]
                 
-        A *name* is any valid Python attribute name. The semantic meaning of this
-        notation is as follows:
-                
+        A *name* is any valid Python attribute name. The semantic meaning of 
+        this notation is as follows:
+            
+        - item1.item2 means item1 is a trait containing an object (or objects
+          if item1 is a list or dict) with a trait called item2. Changes to
+          either item1 or item2 will cause a notification to be generated.
+        - item1:item2 means item1 is a trait containing an object (or objects
+          if item1 is a list or dict) with a trait called item2. Changes to
+          item2 will cause a notification to be generated, while changes to
+          item1 will not (i.e. the ':' indicates that changes to the *link*
+          object should not be reported).
         - [ item, item, ..., item ]: A list which matches any of the
           specified items. Note that at the topmost level, the surrounding
           square brackets are optional.
@@ -2339,7 +2347,11 @@ class HasTraits ( CHasTraits ):
           and *object.baz*.
         - ['foo','bar','baz']: Equivalent to 'foo,bar,baz', but may be more
           useful in cases where the individual items are computed.
-        - 'foo.bar.baz': Listen for trait changes to *object.foo.bar.baz*.
+        - 'foo.bar.baz': Listen for trait changes to *object.foo.bar.baz* and
+          report changes to *object.foo*, *object.foo.bar* or
+          *object.foo.bar.baz*.
+        - 'foo:bar:baz': Listen for changes to *object.foo.bar.baz*, and only
+          report changes to *object.foo.bar.baz*.
         - 'foo.[bar,baz]': Listen for trait changes to *object.foo.bar* and
           *object.foo.baz*.
         - '([left,right]).name': Listen for trait changes to the *name*
@@ -2409,7 +2421,9 @@ class HasTraits ( CHasTraits ):
         intermediate trait or any subsequent intermediate trait preceding
         the final trait is a List or Dict, then a TraitError is raised,
         since the effective value for the final trait cannot in general be
-        resolved unambiguously.
+        resolved unambiguously. To prevent TraitErrors in this case, use the
+        ':' separator to suppress notifications for changes to any of the
+        intermediate links.
             
         Handler signature 1 also has the special characteristic that if a
         final trait is a List or Dict, it will automatically handle '_items'
