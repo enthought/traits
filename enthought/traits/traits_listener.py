@@ -7,9 +7,11 @@
 #  (c) Copyright 2007 by Enthought, Inc.
 #  
 #-------------------------------------------------------------------------------
+
 """ Defines classes used to implement and manage various trait listener 
-patterns.
+    patterns.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -108,14 +110,8 @@ class ListenerBase ( HasPrivateTraits ):
     # The type of handler being used:
     #type = Enum( ANY_LISTENER, SRC_LISTENER, DST_LISTENER )
     
-    #---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    #---------------------------------------------------------------------------
-    
-    def unregister ( self, old ):
-        """ Unregisters any existing listeners.
-        """
-        raise NotImplementedError
+    # Should changes to this item generate a notification to the handler?
+    # notify = Bool
     
     #---------------------------------------------------------------------------
     #  Registers new listeners:
@@ -123,6 +119,15 @@ class ListenerBase ( HasPrivateTraits ):
     
     def register ( self, new ):
         """ Registers new listeners.
+        """
+        raise NotImplementedError
+    
+    #---------------------------------------------------------------------------
+    #  Unregisters any existing listeners:
+    #---------------------------------------------------------------------------
+    
+    def unregister ( self, old ):
+        """ Unregisters any existing listeners.
         """
         raise NotImplementedError
     
@@ -207,25 +212,15 @@ class ListenerItem ( ListenerBase ):
     # The type of handler being used:
     type = Enum( ANY_LISTENER, SRC_LISTENER, DST_LISTENER )
     
+    # Should changes to this item generate a notification to the handler?
+    notify = Bool( True )
+    
     # A dictionary mapping objects to a list of all current active
     # (*name*, *type*) listener pairs, where *type* defines the type of 
     # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER,  DICT_LISTENER).
     active = Any( {} )
     
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
-    
-    #---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    #---------------------------------------------------------------------------
-    
-    def unregister ( self, old ):
-        """ Unregisters any existing listeners.
-        """
-        active = self.active.get( old )
-        if active is not None:
-            del self.active[ old ]
-            for name, type in active:
-                getattr( self, type )( old, name, True )
         
     #---------------------------------------------------------------------------
     #  Registers new listeners:
@@ -239,7 +234,7 @@ class ListenerItem ( ListenerBase ):
         if (new is None) or (new in self.active):
             return INVALID_DESTINATION
             
-        # Create a dictionary of {name: trait values} that match the object's
+        # Create a dictionary of {name: trait_values} that match the object's
         # definition for the 'new' object:
         name = self.name
         last = name[-1:]
@@ -314,16 +309,34 @@ class ListenerItem ( ListenerBase ):
         return INVALID_DESTINATION
     
     #---------------------------------------------------------------------------
+    #  Unregisters any existing listeners:
+    #---------------------------------------------------------------------------
+    
+    def unregister ( self, old ):
+        """ Unregisters any existing listeners.
+        """
+        active = self.active.get( old )
+        if active is not None:
+            del self.active[ old ]
+            for name, type in active:
+                getattr( self, type )( old, name, True )
+    
+    #---------------------------------------------------------------------------
     #  Handles a trait change for an intermediate link trait:
     #---------------------------------------------------------------------------
+    
+    def handle_simple ( self, object, name, old, new ):
+        """ Handles a trait change for an intermediate link trait.
+        """
+        self.next.unregister( old )
+        self.next.register( new )
     
     def handle_src ( self, object, name, old, new ):
         """ Handles a trait change for an intermediate link trait when the
             notification is for the link change itself.
         """
-        self.next.unregister( old )
-        self.next.register( new )
-                
+        self.handle_simple( object, name, old, new )
+            
         self.wrapped_handler( object, name, old, new )
     
     def handle_dst ( self, object, name, old, new ):
@@ -354,6 +367,11 @@ class ListenerItem ( ListenerBase ):
         register = self.next.register
         for obj in new:
             register( obj )
+    
+    def handle_list_src ( self, object, name, old, new ):
+        """ Handles a trait change for a list trait with notification.
+        """
+        self.handle_list( object, name, old, new )
                 
         self.wrapped_handler( object, name, old, new )
     
@@ -371,6 +389,11 @@ class ListenerItem ( ListenerBase ):
         register = self.next.register
         for obj in new.added:
             register( obj )
+     
+    def handle_list_items_src ( self, object, name, old, new ):
+        """ Handles a trait change for items of a list trait with notification.
+        """
+        self.handle_list_items( object, name, old, new )
                 
         self.wrapped_handler( object, name, old, new )
         
@@ -388,6 +411,11 @@ class ListenerItem ( ListenerBase ):
         register = self.next.register
         for obj in new.values():
             register( obj )
+    
+    def handle_dict_src ( self, object, name, old, new ):
+        """ Handles a trait change for a dictionary trait with notifications.
+        """
+        self.handle_dict( object, name, old, new )
                 
         self.wrapped_handler( object, name, old, new )
         
@@ -411,6 +439,12 @@ class ListenerItem ( ListenerBase ):
             for key, obj in new.changed.items():
                 unregister( obj )
                 register( dict[ key ] )
+    
+    def handle_dict_items_src ( self, object, name, old, new ):
+        """ Handles a trait change for a items of a dictionary trait with
+            notificationa.
+        """
+        self.handle_dict_items( object, name, old, new )
                 
         self.wrapped_handler( object, name, old, new )
 
@@ -472,10 +506,14 @@ class ListenerItem ( ListenerBase ):
             object._on_trait_change( self.handler, name,
                                      remove = remove, dispatch = self.dispatch )
             return ( object, name )
-            
-        handler = self.handle_src
-        if self.type == DST_LISTENER:
-            handler = self.handle_dst
+        
+        if self.notify:
+            if self.type == DST_LISTENER:
+                handler = self.handle_dst
+            else:
+                handler = self.handle_src
+        else:
+            handler = self.handle_simple
         
         object._on_trait_change( handler, name, 
                                  remove = remove, dispatch = self.dispatch )
@@ -502,11 +540,16 @@ class ListenerItem ( ListenerBase ):
                                      remove = remove, dispatch = self.dispatch )
                                     
             return ( object, name )
-            
-        handler       = self.handle_list
-        handler_items = self.handle_list_items
-        if self.type == DST_LISTENER:
-            handler = handler_items = self.handle_error
+           
+        if self.notify:
+            if self.type == DST_LISTENER:
+                handler = handler_items = self.handle_error
+            else:
+                handler       = self.handle_list_src
+                handler_items = self.handle_list_items_src
+        else:
+            handler       = self.handle_list
+            handler_items = self.handle_list_items
 
         object._on_trait_change( handler, name, 
                                  remove = remove, dispatch = self.dispatch )
@@ -541,11 +584,16 @@ class ListenerItem ( ListenerBase ):
                                      remove = remove, dispatch = self.dispatch )
                                     
             return ( object, name )
-            
-        handler       = self.handle_dict
-        handler_items = self.handle_dict_items
-        if self.type == DST_LISTENER:
-            handler = handler_items = self.handle_error
+           
+        if self.notify:
+            if self.type == DST_LISTENER:
+                handler = handler_items = self.handle_error
+            else:
+                handler       = self.handle_dict_src
+                handler_items = self.handle_dict_items_src
+        else:
+            handler       = self.handle_dict
+            handler_items = self.handle_dict_items
 
         object._on_trait_change( handler, name, 
                                  remove = remove, dispatch = self.dispatch )
@@ -588,6 +636,9 @@ class ListenerGroup ( ListenerBase ):
     
     # The type of handler being used:
     type = Property
+    
+    # Should changes to this item generate a notification to the handler?
+    notify = Property
 
     # The list of ListenerBase objects in the group
     items = List( ListenerBase )
@@ -620,18 +671,12 @@ class ListenerGroup ( ListenerBase ):
         for item in self.items:
             item.type = type
             
-    #-- 'ListenerBase' Class Method Implementations ----------------------------            
-    
-    #---------------------------------------------------------------------------
-    #  Unregisters any existing listeners:
-    #---------------------------------------------------------------------------
-    
-    def unregister ( self, old ):
-        """ Unregisters any existing listeners.
-        """
+    def _set_notify ( self, notify ):
         for item in self.items:
-            item.unregister( old )
-    
+            item.notify = notify
+            
+    #-- 'ListenerBase' Class Method Implementations ----------------------------            
+   
     #---------------------------------------------------------------------------
     #  Registers new listeners:
     #---------------------------------------------------------------------------
@@ -643,7 +688,17 @@ class ListenerGroup ( ListenerBase ):
             item.register( new )
             
         return INVALID_DESTINATION
-             
+    
+    #---------------------------------------------------------------------------
+    #  Unregisters any existing listeners:
+    #---------------------------------------------------------------------------
+    
+    def unregister ( self, old ):
+        """ Unregisters any existing listeners.
+        """
+        for item in self.items:
+            item.unregister( old )
+              
 #-------------------------------------------------------------------------------
 #  'ListenerParser' class:  
 #-------------------------------------------------------------------------------
@@ -776,7 +831,8 @@ class ListenerParser ( HasPrivateTraits ):
         if cycle:
             c = self.skip_ws
             
-        if c == '.':
+        if c in '.:':
+            result.notify = (c == '.')
             next = self.parse_item()
             if cycle:
                 result.next = lg = ListenerGroup( items = [ next, result ] )
