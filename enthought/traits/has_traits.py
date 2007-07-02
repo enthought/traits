@@ -108,7 +108,7 @@ InstanceTraits = '__instance_traits__'
 DefaultTraitsView = 'traits_view'
 
 # Quick test for normal vs extended trait name:
-extended_trait_pat = re.compile( r'.*[ +-,\.\*\?\[\]]' )
+extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
 #-------------------------------------------------------------------------------
 #  Filter for selecting traits whose metadata is not 'event':
