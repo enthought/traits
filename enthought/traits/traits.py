@@ -1049,10 +1049,10 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             # Shadow trait attribute
             _foo = Float
 
-            def _set_foo(x):
+            def _set_foo(self,x):
                 self._foo = x
 
-            def _get_foo():
+            def _get_foo(self):
                 return self._foo
 
     """
