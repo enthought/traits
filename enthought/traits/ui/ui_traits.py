@@ -202,7 +202,20 @@ class HasPadding ( TraitType ):
         
         return ( dvt, dv )
         
-HasMargins = HasPadding        
+HasMargins = HasPadding  
+
+#-------------------------------------------------------------------------------
+#  Other trait definitions:
+#-------------------------------------------------------------------------------
+
+# The position of an image relative to its associated text:
+Position = Enum( 'left', 'right', 'above', 'below' )
+    
+# The alignment of text within a control:
+Alignment = Enum( 'left', 'center', 'right' )
+
+# The spacing between two items:
+Spacing = Range( -32, 32, 3 )
 
 #-------------------------------------------------------------------------------
 #  Other definitions:
