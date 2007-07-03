@@ -107,6 +107,9 @@ InstanceTraits = '__instance_traits__'
 # The default Traits View name
 DefaultTraitsView = 'traits_view'
 
+# Trait types which cannot have default values:
+CantHaveDefaultValue = ( 'event', 'delegate', 'constant' )
+
 # Quick test for normal vs extended trait name:
 extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
@@ -697,8 +700,8 @@ class MetaHasTraitsObject ( object ):
                 # Add the view element to the class's 'ViewElements' if it is
                 # not already defined (duplicate definitions are errors):
                 if name in view_elements.content:
-                    raise TraitError, \
-                          "Duplicate definition for view element '%s'" % name
+                    raise TraitError( 
+                        "Duplicate definition for view element '%s'" % name )
                           
                 view_elements.content[ name ] = value
 
@@ -712,7 +715,13 @@ class MetaHasTraitsObject ( object ):
             else:
                 for ct in inherited_class_traits:
                     if name in ct:
-                        class_traits[ name ] = value = ct[ name ]( value )
+                        ictrait = ct[ name ]
+                        if ictrait.type in CantHaveDefaultValue:
+                            raise TraitError( "Cannot specify a default value "
+                                "for the %s trait '%s'. You must override the "
+                                "the trait definition instead." % 
+                                ( ictrait.type, name ) )
+                        class_traits[ name ] = value = ictrait( value )
                         del class_dict[ name ]
                         handler = value.handler
                         if (handler is not None) and handler.is_mapped:
@@ -1244,7 +1253,7 @@ class HasTraits ( CHasTraits ):
             if name in prefix_traits:
                 if is_subclass:
                     return
-                raise TraitError, "The '%s_' trait is already defined." % name
+                raise TraitError( "The '%s_' trait is already defined." % name )
             prefix_traits[ name ] = trait
 
             # Otherwise, add it to the list of known prefixes:
@@ -1261,7 +1270,7 @@ class HasTraits ( CHasTraits ):
         if class_traits.get( name ) is not None:
             if is_subclass:
                 return
-            raise TraitError, "The '%s' trait is aleady defined." % name
+            raise TraitError( "The '%s' trait is aleady defined." % name )
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:

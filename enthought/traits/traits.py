@@ -154,8 +154,14 @@ class CTrait ( cTrait ):
     #---------------------------------------------------------------------------
 
     def __call__ ( self, *args, **metadata ):
-        if 'parent' not in metadata:
-            metadata[ 'parent' ] = self
+        handler = self.handler
+        if isinstance( handler, TraitType ):
+            dict = (self.__dict__ or {}).copy()
+            dict.update( metadata )
+            
+            return handler( *args, **dict ) 
+            
+        metadata.setdefault( 'parent', self )
         return Trait( *(args + ( self, )), **metadata )
 
     #---------------------------------------------------------------------------

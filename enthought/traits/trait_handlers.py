@@ -538,7 +538,7 @@ class TraitType ( BaseTraitHandler ):
     def __call__ ( self, *args, **kw ):
         """ Allows a derivative trait to be defined from this one.
         """
-        return self.clone( *args, **kw )
+        return self.clone( *args, **kw ).as_ctrait()
         
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
