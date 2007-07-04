@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill
 # Description: The 'ViewHandler' traits view definition and handler.
 #    Usage is:
@@ -19,9 +19,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from enthought.enable2.traits.ui.wx.enable_rgba_color_editor import \
+    EnableRGBAColorEditor
 from enthought.traits.ui.api      import Handler, View, Group, Item
 from enthought.traits.ui.menu import MenuBar, Menu, Action, Separator
-
 import enthought.traits.ui
 
 #-------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ class ViewHandler ( Handler ):
         c      = info.object.color_
         format = info.object.format
         if format == 'Web':
-            cb.data = '#%02X%02X%02X' % ( 
+            cb.data = '#%02X%02X%02X' % (
                       int( 255 * c[0] ),
                       int( 255 * c[1] ),
                       int( 255 * c[2] ) )
@@ -51,7 +52,7 @@ class ViewHandler ( Handler ):
             cb.data = 'wx.Colour( %d, %d, %d )' % (
                       int( 255 * c[0] ),
                       int( 255 * c[1] ),
-                      int( 255 * c[2] ) )   
+                      int( 255 * c[2] ) )
 
     #---------------------------------------------------------------------------
     #  Handles the object's 'format' trait changing value:
@@ -61,16 +62,16 @@ class ViewHandler ( Handler ):
         """ Handles the object's 'format' trait changing value.
         """
         self.object_color_changed( info )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definition:    
+    #  Traits view definition:
     #---------------------------------------------------------------------------
-        
+
     traits_view = View(
         Group(
             Group(
                 Item(
-                    editor = enthought.traits.ui.EnableRGBAColorEditor(),
+                    editor = EnableRGBAColorEditor(),
                     name   = 'color',
                     style  = 'custom'
                 ),
@@ -89,10 +90,10 @@ class ViewHandler ( Handler ):
         title   = 'Color Clipboard',
         id      = 'enthought.traits.vet.examples.color_clipboard',
         buttons = [ 'OK', 'Cancel' ]
-    ) 
-    
+    )
+
 #-------------------------------------------------------------------------------
-#  'ViewHandler' test case: 
+#  'ViewHandler' test case:
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':

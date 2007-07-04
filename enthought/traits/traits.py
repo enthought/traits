@@ -13,7 +13,7 @@
 #  Original Date: 06/21/2002
 #
 #  Rewritten as a C-based type extension: 06/21/2004
-# 
+#
 #------------------------------------------------------------------------------
 
 """
@@ -68,7 +68,7 @@ from trait_handlers \
            TraitString, ThisClass, TraitRange, TraitTuple, TraitCallable, \
            TraitExpression, TraitWeakRef, TraitType, _arg_count, _read_only, \
            _write_only, _undefined_get, _undefined_set
-    
+
 from types \
     import NoneType, IntType, LongType, FloatType, ComplexType, StringType, \
            UnicodeType, ListType, TupleType, DictType, FunctionType, \
@@ -148,7 +148,7 @@ def shell_editor ( ):
 class CTrait ( cTrait ):
     """ Extends the underlying C-based cTrait type.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Allows a derivative trait to be defined from this one:
     #---------------------------------------------------------------------------
@@ -158,9 +158,9 @@ class CTrait ( cTrait ):
         if isinstance( handler, TraitType ):
             dict = (self.__dict__ or {}).copy()
             dict.update( metadata )
-            
-            return handler( *args, **dict ) 
-            
+
+            return handler( *args, **dict )
+
         metadata.setdefault( 'parent', self )
         return Trait( *(args + ( self, )), **metadata )
 
@@ -247,16 +247,16 @@ class CTrait ( cTrait ):
     #---------------------------------------------------------------------------
     #  Returns a description of the trait:
     #---------------------------------------------------------------------------
-    
+
     def info ( self ):
         """ Returns a description of the trait.
         """
         handler = self.handler
         if handler is not None:
             return handler.info()
-            
+
         return 'any value'
-                    
+
     #---------------------------------------------------------------------------
     #  Returns the pickleable form of a CTrait object:
     #---------------------------------------------------------------------------
@@ -331,7 +331,7 @@ def _default_value_type ( default_value ):
 
 class TraitFactory ( object ):
     ### Need a docstring here.
-    
+
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
@@ -346,12 +346,12 @@ class TraitFactory ( object ):
 
     def __call__ ( self, *args, **metadata ):
         return self.maker_function( *args, **metadata )
-        
-class TraitImportError ( TraitFactory ):    
+
+class TraitImportError ( TraitFactory ):
     """ Defines a factory class for deferring import problems until encountering
         code that actually tries to use the unimportable trait.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
@@ -390,28 +390,28 @@ def trait_cast ( something ):
     """
     if isinstance( something, CTrait ):
         return something
-        
+
     if isinstance( something, TraitFactory ):
         return trait_factory( something )
-        
+
     if isinstance( something, type ) and issubclass( something, TraitType ):
         return something().as_ctrait()
-        
+
     if isinstance( something, TraitType ):
         return something.as_ctrait()
-        
+
     return None
-    
+
 #-------------------------------------------------------------------------------
 #  Attempts to cast a value to a trait. Returns either a trait or the original
 #  value:
 #-------------------------------------------------------------------------------
-        
+
 def try_trait_cast ( something ):
     """ Attempts to cast a value to a trait. Returns either a trait or the
         original value.
     """
-    return trait_cast( something ) or something    
+    return trait_cast( something ) or something
 
 #-------------------------------------------------------------------------------
 #  Returns a trait derived from its input:
@@ -421,22 +421,22 @@ def trait_from ( something ):
     """ Returns a trait derived from its input.
     """
     from trait_types import Any
-    
+
     if isinstance( something, CTrait ):
         return something
-        
+
     if something is None:
         something = Any
-        
+
     if isinstance( something, TraitFactory ):
         return trait_factory( something )
-        
+
     if isinstance( something, type ) and issubclass( something, TraitType ):
         return something().as_ctrait()
-        
+
     if isinstance( something, TraitType ):
         return something.as_ctrait()
-        
+
     return Trait( something )
 
 # Patch the reference to 'trait_from' in 'trait_handlers.py':
@@ -480,7 +480,7 @@ def Constant ( value, **metadata ):
     Description
     -----------
     Traits of this type are very space efficient (and fast) because *value* is
-    not stored in each instance using the trait, but only in the trait object 
+    not stored in each instance using the trait, but only in the trait object
     itself. The *value* cannot be a list or dictionary, because those types have
     mutable values.
     """
@@ -681,15 +681,15 @@ def Trait ( *value_type, **metadata ):
     |                   |               | "compound" trait.                   |
     +-------------------+---------------+-------------------------------------+
 
-    All forms of the Trait function accept both predefined and arbitrary 
+    All forms of the Trait function accept both predefined and arbitrary
     keyword arguments. The value of each keyword argument becomes bound to the
     resulting trait object as the value of an attribute having the same name
     as the keyword. This feature lets you associate metadata with a trait.
-    
+
     The following predefined keywords are accepted:
-        
+
     desc : string
-        Describes the intended meaning of the trait. It is used in 
+        Describes the intended meaning of the trait. It is used in
         exception messages and fly-over help in user interfaces.
     label : string
         Provides a human-readable name for the trait. It is used to label user
@@ -700,11 +700,11 @@ def Trait ( *value_type, **metadata ):
     rich_compare : Boolean
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple
-        object identity (False). This attribute can be useful in cases 
+        object identity (False). This attribute can be useful in cases
         where a detailed comparison of two objects is very expensive, or where
         you do not care whether the details of an object change, as long as the
         same object is used.
-        
+
     """
     return _TraitMaker( *value_type, **metadata ).as_ctrait()
 
@@ -848,7 +848,7 @@ class _TraitMaker ( object ):
                     handler = clone.handler
                 if handler is not None:
                     default_value_type = handler.default_value_type
-###                 fixme: Is this path every used??? Remove it if not...                    
+###                 fixme: Is this path every used??? Remove it if not...
 ###                 if default_value_type >= 0:
 ###                     if hasattr( handler, 'default_value' ):
 ###                         default_value = handler.default_value(default_value)
@@ -903,9 +903,9 @@ class _TraitMaker ( object ):
             trait.clone( clone )
             if clone.__dict__ is not None:
                 trait.__dict__ = clone.__dict__.copy()
-                
+
         trait.default_value( self.default_value_type, self.default_value )
-        
+
         handler = self.handler
         if handler is not None:
             trait.handler = handler
@@ -915,15 +915,15 @@ class _TraitMaker ( object ):
                 trait.set_validate( handler.validate )
             if hasattr( handler, 'post_setattr' ):
                 trait.post_setattr = handler.post_setattr
-                
+
         trait.rich_comparison( metadata.get( 'rich_compare', True ) )
-        
+
         if len( metadata ) > 0:
             if trait.__dict__ is None:
                 trait.__dict__ = metadata
             else:
                 trait.__dict__.update( metadata )
-                
+
         return trait
 
     #---------------------------------------------------------------------------
@@ -1006,17 +1006,17 @@ def Delegate ( delegate, prefix = '', modify = False, **metadata ):
             prefix_type = 2
         else:
             prefix_type = 3
-            
+
     trait = CTrait( 3 )
     trait.delegate( delegate, prefix, prefix_type, modify )
-    
-    # Use False instead of True so we can detect user explicitly setting 
+
+    # Use False instead of True so we can detect user explicitly setting
     # 'transient = True' in HasTraits.__getstate__:
-    metadata.setdefault( 'transient' , False ) 
+    metadata.setdefault( 'transient' , False )
     metadata[ 'type' ]     = 'delegate'
     metadata[ 'delegate' ] = delegate
     metadata[ 'prefix' ]   = prefix
-    
+
     trait.__dict__         = metadata.copy()
     return trait
 
@@ -1046,7 +1046,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
     Description
     -----------
-    If no getter or setter functions are specified, it is assumed that they 
+    If no getter or setter functions are specified, it is assumed that they
     are defined elsewhere on the class whose attribute this trait is
     assigned to. For example::
 
@@ -1072,23 +1072,23 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         if sum <= 1:
             if sum == 0:
                 return ForwardProperty( metadata )
-                
+
             handler = None
             if fget is not None:
                 trait = fget
-                
+
             if trait is not None:
                 trait = trait_cast( trait )
                 if trait is not None:
                     fvalidate = handler = trait.handler
                     if fvalidate is not None:
                         fvalidate = handler.validate
-                        
+
             if (fvalidate is not None) or (trait is not None):
                 if 'editor' not in metadata:
                     if (trait is not None) and (trait.editor is not None):
                         metadata[ 'editor' ] = trait.editor
-                        
+
                 return ForwardProperty( metadata, fvalidate, handler )
 
     if fget is None:
@@ -1098,7 +1098,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             fset = _undefined_set
         else:
             fget = _write_only
-            
+
     elif fset is None:
         fset = _read_only
         metadata[ 'transient' ] = True
@@ -1108,10 +1108,10 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         handler = trait.handler
         if (fvalidate is None) and (handler is not None):
             fvalidate = handler.validate
-            
+
         if ('editor' not in metadata) and (trait.editor is not None):
             metadata[ 'editor' ] = trait.editor
-    
+
     if ((metadata.get( 'depends_on' ) is not None) and
         getattr( fget, 'cached_property', False )):
         metadata.setdefault( 'cached', True )
@@ -1121,12 +1121,12 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     trait.__dict__ = metadata.copy()
     if fvalidate is not None:
         n = _arg_count( fvalidate )
-        
+
     trait.property( fget,      _arg_count( fget ),
                     fset,      _arg_count( fset ),
                     fvalidate, n )
     trait.handler = handler
-    
+
     return trait
 
 Property = TraitFactory( Property )
@@ -1191,7 +1191,7 @@ Either = lambda *args: Trait(None, *args)
 # This trait provides behavior identical to a standard Python attribute.
 # That is, it allows any value to be assigned, and raises an ValueError if
 # an attempt is made to get the value before one has been assigned. It has no
-# default value. This trait is most often used in conjunction with wildcard 
+# default value. This trait is most often used in conjunction with wildcard
 # naming. See the *Traits User Manual* for details on wildcards.
 Python = TraitPython()
 
@@ -1216,7 +1216,7 @@ ReadOnly.default_value( 0, Undefined )  # This allows it to be written once
 
 # Indicates that a parameter is missing from a type-checked method signature.
 # Allows any value to be assigned; no type-checking is performed; default value
-# is the singleton Missing object. 
+# is the singleton Missing object.
 # See **enthought.traits.has_traits.method()**.
 missing         = CTrait( 0 )
 missing.handler = TraitHandler()
@@ -1226,7 +1226,7 @@ missing.default_value( 1, Missing )
 generic_trait = CTrait( 8 )
 
 # Callable values; default is None:
-Callable = Trait( TraitCallable(), copy = 'ref' ) 
+Callable = Trait( TraitCallable(), copy = 'ref' )
 
 #-------------------------------------------------------------------------------
 #  User interface related color and font traits:
@@ -1318,24 +1318,4 @@ def Font ( *args, **metadata ):
     return FontTrait( *args, **metadata )
 
 Font = TraitFactory( Font )
-
-def KivaFont ( *args, **metadata ):
-    """ Returns a trait whose value must be a GUI toolkit-specific font.
-
-    Description
-    -----------
-    For wxPython, the returned trait accepts any of the following:
-
-    * an enthought.kiva.fonttools.Font instance
-    * a string describing the font, including one or more of the font family,
-      size, weight, style, and typeface name.
-
-    Default Value
-    -------------
-    For wxPython, 'Arial 10'
-    """
-    from enthought.traits.ui.api import KivaFontTrait
-    return KivaFontTrait( *args, **metadata )
-
-KivaFont = TraitFactory( KivaFont )
 
