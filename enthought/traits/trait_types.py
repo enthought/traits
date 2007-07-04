@@ -1306,12 +1306,6 @@ class List ( TraitType ):
                            page_name     = self.page_name or '' )
 
     #-- Private Methods --------------------------------------------------------
-
-    def clone ( self ):
-        """ Returns a clone of the trait.
-        """
-        return self.__class__( self.item_trait, self._default_value, 
-                               self.minlen, self.maxlen, self.has_items )
     
     def items_event ( self ):
         return items_event()
@@ -1390,12 +1384,6 @@ class Dict ( TraitType ):
         return TextEditor( evaluate = eval )
 
     #-- Private Methods --------------------------------------------------------
-    
-    def clone ( self ):
-        """ Returns a clone of the trait.
-        """
-        return self.__class__( self.key_trait, self.value_trait, 
-                               self._default_value, self.has_items )
         
     def items_event ( self ):
         cls = self.__class__
