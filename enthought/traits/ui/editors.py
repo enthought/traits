@@ -167,9 +167,6 @@ def NullEditor ( *args, **traits ):
     """
     return toolkit().null_editor( *args, **traits )
 
-def PlotEditor ( *args, **traits ):
-    return toolkit().plot_editor( *args, **traits )
-
 def RangeEditor ( *args, **traits ):
     """ Allows the user to specify a value within a range.
     """
