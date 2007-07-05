@@ -76,21 +76,31 @@ AView = Any
 #  'Image' trait:
 #-------------------------------------------------------------------------------
 
+image_resource_cache = {}
+
 def convert_image ( value, level = 3 ):
     """ Converts a specified value to an ImageResource if possible.
     """
+    global image_resource_cache
+    
     from enthought.pyface.image_resource import ImageResource
     
-    if isinstance( value, basestring ):
-        if value[:1] == '@':
-            value = ImageResource( value[1:], 
-                        search_path = [ join( get_resource_path( 1 ),
-                                              'library' ) ] )
-        else:   
-            value = ImageResource( value,
-                        search_path = [ get_resource_path( level ) ] )
-                              
-    return value
+    if not isinstance( value, basestring ):
+        return value
+        
+    if value[:1] == '@':
+        value       = value[1:] 
+        search_path = join( get_resource_path( 1 ), 'library' )
+    else:   
+        search_path = get_resource_path( level )
+        
+    key    = '%s[%s]' % ( value, search_path )
+    result = image_resource_cache.get( key )
+    if result is None:
+        image_resource_cache[ key ] = result = ImageResource( value, 
+                                                 search_path = [ search_path ] )
+            
+    return result
     
 class Image ( TraitType ):
     """ Defines a trait whose value must be a PyFace ImageResource or a string
