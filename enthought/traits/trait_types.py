@@ -1247,6 +1247,8 @@ class List ( TraitType ):
         """
         if (isinstance( value, list ) and
            (self.minlen <= len( value ) <= self.maxlen)):
+            if object is None:
+                return value
             return TraitListObject( self, object, name, value )
             
         self.error( object, name, value )
@@ -1366,6 +1368,8 @@ class Dict ( TraitType ):
         """ Validates that the value is a valid dictionary.
         """
         if isinstance( value, dict ):
+            if value is None:
+                return value
             return TraitDictObject( self, object, name, value )
             
         self.error( object, name, value )
