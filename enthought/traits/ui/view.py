@@ -33,9 +33,9 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, Image, HasMargins, object_trait, style_trait, \
-           dock_style_trait, image_trait, export_trait, help_id_trait, \
-           buttons_trait
+    import SequenceTypes, Image, HasMargins, Alignment, object_trait, \
+           style_trait, dock_style_trait, image_trait, export_trait, \
+           help_id_trait, buttons_trait
     
 from handler \
     import Handler, default_handler
@@ -331,6 +331,9 @@ class View ( ViewElement ):
     
     # The margins around an item's editor and its theme:
     item_theme_margins = HasMargins( 3 )
+    
+    # The alignment of the label text within the item's theme:
+    item_theme_alignment = Alignment( 'center' )
     
     # Image to display in the background of contained item labels.
     label_theme = Image

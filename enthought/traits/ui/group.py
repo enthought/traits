@@ -42,7 +42,7 @@ from include \
     import Include
 
 from ui_traits \
-    import SequenceTypes, Image, HasMargins, container_delegate
+    import SequenceTypes, Image, HasMargins, Alignment, container_delegate
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -103,11 +103,17 @@ class Group ( ViewSubElement ):
     # The margins around an group's content and its theme:
     group_theme_margins = HasMargins( 0 )
     
+    # The alignment of the label text within the group's theme:
+    group_theme_alignment = Alignment( 'center' )
+    
     # Image to display in the background of contained items.
     item_theme = container_delegate
     
     # The margins around an item's editor and its theme:
     item_theme_margins = container_delegate
+    
+    # The alignment of the label text within the item's theme:
+    item_theme_alignment = container_delegate
     
     # Image to display in the background of contained item labels.
     label_theme = container_delegate
@@ -596,11 +602,17 @@ class ShadowGroup ( Group ):
     # The margins around an group's content and its theme:
     group_theme_margins = ShadowDelegate
     
+    # The alignment of the label text within the group's theme:
+    group_theme_alignment = ShadowDelegate
+    
     # Image to display in the background of contained items.
     item_theme = ShadowDelegate
     
     # The margins around an item's editor and its theme:
     item_theme_margins = ShadowDelegate
+    
+    # The alignment of the label text within the item's theme:
+    item_theme_alignment = ShadowDelegate
     
     # Image to display in the background of contained item labels.
     label_theme = ShadowDelegate

@@ -117,6 +117,9 @@ class Item ( ViewSubElement ):
     # The margins around the item's editor and its theme:
     item_theme_margins = container_delegate
     
+    # The alignment of the label text within the item's theme:
+    item_theme_alignment = container_delegate
+    
     # Image to display in the background of the item's label:
     label_theme = container_delegate
     
