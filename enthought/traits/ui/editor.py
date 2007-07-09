@@ -418,8 +418,7 @@ class Editor ( HasPrivateTraits ):
                             pass
                         del self._no_trait_update[ key ]
                 
-                user_object.on_trait_change( user_trait_modified, 
-                                xuser_name, dispatch = 'ui' )
+                user_object.on_trait_change( user_trait_modified, xuser_name )
                                     
                 if self._user_to is None:
                     self._user_to = []
@@ -441,7 +440,7 @@ class Editor ( HasPrivateTraits ):
                                 del self._no_trait_update[ key ]
                     
                     user_object.on_trait_change( user_list_modified, 
-                                    xuser_name + '_items', dispatch = 'ui' )
+                                    xuser_name + '_items' )
                     self._user_to.append( ( user_object, xuser_name + '_items', 
                                             user_list_modified ) )
                 
@@ -464,8 +463,7 @@ class Editor ( HasPrivateTraits ):
                             pass
                         del self._no_trait_update[ key ]
 
-                self.on_trait_change( editor_trait_modified, editor_name,
-                                      dispatch = 'ui' )
+                self.on_trait_change( editor_trait_modified, editor_name )
                                        
                 if self._user_from is None:
                     self._user_from = []
@@ -487,7 +485,7 @@ class Editor ( HasPrivateTraits ):
                             del self._no_trait_update[ key ]                                                                  
 
                     self.on_trait_change( editor_list_modified,
-                             editor_name + '_items', dispatch = 'ui' )
+                             editor_name + '_items' )
                     self._user_from.append( ( editor_name + '_items', 
                                               editor_list_modified ) )
                 
