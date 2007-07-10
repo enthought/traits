@@ -27,7 +27,8 @@ from view \
     import View
 
 from group \
-    import Group, HGroup, VGroup, VGrid, HFlow, VFlow, HSplit, VSplit, Tabbed
+    import Group, HGroup, VGroup, VGrid, HFlow, VFlow, VFold, HSplit, VSplit, \
+           Tabbed
 
 from ui \
     import UI

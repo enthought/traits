@@ -54,7 +54,7 @@ Orientation = Trait( 'vertical',
 
 # Group layout trait
 Layout = Trait( 'normal',
-                TraitPrefixList( 'normal', 'split', 'tabbed', 'flow' ) )
+                TraitPrefixList( 'normal', 'split', 'tabbed', 'flow', 'fold' ) )
 
 # Delegate trait to the object being "shadowed"
 ShadowDelegate = Delegate( 'shadow' )
@@ -512,6 +512,22 @@ class VFlow ( VGroup ):
     #---------------------------------------------------------------------------
 
     layout      = 'flow'
+    show_labels = false
+    
+#-------------------------------------------------------------------------------
+#  'VFold' class:
+#-------------------------------------------------------------------------------
+
+class VFold ( VGroup ):
+    """ A group in which items are laid out vertically and can be collapsed
+        (i.e. 'folded') by clicking their title.
+    """
+    
+    #---------------------------------------------------------------------------
+    #  Trait definitions:
+    #---------------------------------------------------------------------------
+
+    layout      = 'fold'
     show_labels = false
 
 #-------------------------------------------------------------------------------
