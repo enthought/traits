@@ -24,7 +24,7 @@
 
 from enthought.traits.api \
     import Trait, TraitPrefixList, TraitError, Str, Float, Bool, Instance, \
-           List, Any, Callable, Event, Enum, Constant
+           List, Any, Callable, Event, Enum
            
 from view_element \
     import ViewElement, ViewSubElement
@@ -33,9 +33,8 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, Image, HasMargins, Alignment, object_trait, \
-           style_trait, dock_style_trait, image_trait, export_trait, \
-           help_id_trait, buttons_trait
+    import SequenceTypes, ATheme, object_trait, style_trait, dock_style_trait, \
+           image_trait, export_trait, help_id_trait, buttons_trait
     
 from handler \
     import Handler, default_handler
@@ -322,27 +321,12 @@ class View ( ViewElement ):
     # What result should be returned if the user clicks the window or dialog 
     # close button or icon?
     close_result = close_result_trait
+
+    # The default theme to use for a contained item:
+    item_theme = ATheme
     
-    # Image to display in the background of the group.
-    group_theme = Constant( None )
-    
-    # Image to display in the background of contained items.
-    item_theme = Image
-    
-    # The margins around an item's editor and its theme:
-    item_theme_margins = HasMargins( 3 )
-    
-    # The alignment of the label text within the item's theme:
-    item_theme_alignment = Alignment( 'center' )
-    
-    # Image to display in the background of contained item labels.
-    label_theme = Image
-    
-    # The margins around an item's label and its theme:
-    label_theme_margins = HasMargins( 0 )
-    
-    # Does the view have a theme?
-    has_theme = Constant( False )
+    # The default theme to use for a contained item's label:
+    label_theme = ATheme
     
     # Note: Group objects delegate their 'object' and 'style' traits to the View
         

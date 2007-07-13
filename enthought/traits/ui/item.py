@@ -111,24 +111,11 @@ class Item ( ViewSubElement ):
     # Image to display on notebook tabs:
     image = container_delegate
     
-    # Image to display in the background of the item:
+    # The theme to use for the item itself:
     item_theme = container_delegate
     
-    # The margins around the item's editor and its theme:
-    item_theme_margins = container_delegate
-    
-    # The alignment of the label text within the item's theme:
-    item_theme_alignment = container_delegate
-    
-    # Image to display in the background of the item's label:
+    # The theme to use for the item's label:
     label_theme = container_delegate
-    
-    # The margins around the item's label and its theme:
-    label_theme_margins = container_delegate
-    
-    # Do the item's containers have a theme?
-    has_theme = Property( 
-                    depends_on = 'container.group_theme, container.has_theme' )
     
     # Category of elements dragged from view:
     export = container_delegate
@@ -397,15 +384,6 @@ class Item ( ViewSubElement ):
                                   self._repr_value( self.label,'=' ),
                                   self._repr_value( self.style, ';', '',
                                                     'simple' ) )
-                                        
-    #-- Property Implementations -----------------------------------------------
-    
-    @cached_property
-    def _get_has_theme ( self ):
-        """ Returns whether the item's containers have a theme.
-        """
-        return ((self.container.group_theme is not None) or 
-                 self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'Label' class:

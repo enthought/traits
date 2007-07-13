@@ -27,7 +27,7 @@ from string \
 
 from enthought.traits.api \
     import Trait, TraitPrefixList, TraitError, ReadOnly, Delegate, Undefined, \
-           List, Str, Range, true, false, Property, cached_property
+           List, Str, Range, Instance, Bool, Property, cached_property
 
 from enthought.traits.trait_base \
     import enumerate
@@ -42,8 +42,8 @@ from include \
     import Include
 
 from ui_traits \
-    import SequenceTypes, Image, HasMargins, Alignment, container_delegate
-
+    import SequenceTypes, ATheme, container_delegate
+    
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
@@ -96,34 +96,15 @@ class Group ( ViewSubElement ):
 
     # Default image to display on notebook tabs.
     image = container_delegate
+
+    # The theme to use for the group itself:
+    group_theme = ATheme
     
-    # Image to display in the background of the group.
-    group_theme = Image
-    
-    # The margins around an group's content and its theme:
-    group_theme_margins = HasMargins( 0 )
-    
-    # The alignment of the label text within the group's theme:
-    group_theme_alignment = Alignment( 'center' )
-    
-    # Image to display in the background of contained items.
+    # The theme to use for item's contained in the group:
     item_theme = container_delegate
     
-    # The margins around an item's editor and its theme:
-    item_theme_margins = container_delegate
-    
-    # The alignment of the label text within the item's theme:
-    item_theme_alignment = container_delegate
-    
-    # Image to display in the background of contained item labels.
+    # The theme to use for the labels of items contained in the group:
     label_theme = container_delegate
-    
-    # The margins around an item's label and its theme:
-    label_theme_margins = container_delegate
-
-    # Do the group's containers have a theme?
-    has_theme = Property( 
-                    depends_on = 'container.group_theme, container.has_theme' )
     
     # Category of elements dragged from view.
     export = container_delegate
@@ -154,29 +135,29 @@ class Group ( ViewSubElement ):
     # Should a border be drawn around group? If set to True, the **label** text
     # is embedded in the border. If set to False, the label appears as a banner
     # above the elements of the group.
-    show_border = false
+    show_border = Bool( False )
 
     # Should labels be added to items in group? Only items that are directly
     # contained in the group are affected. That is, if the group contains
     # a sub-group, the display of labels in the sub-group is not affected by
     # the attribute on this group.
-    show_labels = true
+    show_labels = Bool( True )
 
     # Should labels be shown to the left of items (True) or the right (False)?
     # Only items that are directly contained in the group are affected. That is,
     # if the group contains a sub-group, the display of labels in the sub-group
     # is not affected by the attribute in this group. If **show_labels** is
     # False, this attribute is irrelevant.
-    show_left = true
+    show_left = Bool( True )
 
     # Is this group the tab that is initially selected? If True, the group's
     # tab is displayed when the view is opened. If the **layout** of the group's
     # parent is not 'tabbed', this attribute is ignored.
-    selected = false
+    selected = Bool( False )
 
     # Should the group use extra space along its parent group's layout
     # orientation?
-    springy = false
+    springy = Bool( False )
 
     # Optional help text (for top-level group). This help text appears in the
     # View-level help window (created by the default help handler), for any
@@ -430,15 +411,6 @@ class Group ( ViewSubElement ):
                    self._repr_value( self.object, '', '', 'object' ),
                    self._repr_value( self.label,'=' ),
                    self._repr_value( self.style, ';', '', 'simple' ) )
-                                        
-    #-- Property Implementations -----------------------------------------------
-    
-    #@cached_property
-    def _get_has_theme ( self ):
-        """ Returns whether the group's containers have a theme.
-        """
-        return ((self.container.group_theme is not None) or 
-                self.container.has_theme)
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
@@ -496,7 +468,7 @@ class HFlow ( HGroup ):
     #---------------------------------------------------------------------------
 
     layout      = 'flow'
-    show_labels = false
+    show_labels = False
 
 #-------------------------------------------------------------------------------
 #  'VFlow' class:
@@ -512,7 +484,7 @@ class VFlow ( VGroup ):
     #---------------------------------------------------------------------------
 
     layout      = 'flow'
-    show_labels = false
+    show_labels = False
     
 #-------------------------------------------------------------------------------
 #  'VFold' class:
@@ -528,7 +500,7 @@ class VFold ( VGroup ):
     #---------------------------------------------------------------------------
 
     layout      = 'fold'
-    show_labels = false
+    show_labels = False
 
 #-------------------------------------------------------------------------------
 #  'HSplit' class:
@@ -612,32 +584,14 @@ class ShadowGroup ( Group ):
     # Default image to display on notebook tabs
     image = ShadowDelegate
     
-    # Image to display in the background of the group.
+    # Theme to display in the background of the group.
     group_theme = ShadowDelegate
     
-    # The margins around an group's content and its theme:
-    group_theme_margins = ShadowDelegate
-    
-    # The alignment of the label text within the group's theme:
-    group_theme_alignment = ShadowDelegate
-    
-    # Image to display in the background of contained items.
+    # Theme to display in the background of contained items.
     item_theme = ShadowDelegate
     
-    # The margins around an item's editor and its theme:
-    item_theme_margins = ShadowDelegate
-    
-    # The alignment of the label text within the item's theme:
-    item_theme_alignment = ShadowDelegate
-    
-    # Image to display in the background of contained item labels.
+    # Theme to display in the background of contained item labels.
     label_theme = ShadowDelegate
-    
-    # The margins around an item's label and its theme:
-    label_theme_margins = ShadowDelegate
-
-    # Do the group's containers have a theme?
-    has_theme = ShadowDelegate
 
     # Category of elements dragged from the view
     export = ShadowDelegate

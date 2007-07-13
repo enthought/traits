@@ -30,11 +30,11 @@ from string \
     import rfind
     
 from enthought.traits.api \
-    import HasPrivateTraits, Trait, Constant, Any, true
+    import HasPrivateTraits, Trait, Instance, Any, Bool
     
 from ui_traits \
-    import Image, HasMargins, Alignment, object_trait, style_trait, \
-           dock_style_trait, image_trait, export_trait, help_id_trait
+    import Image, ATheme, object_trait, style_trait, dock_style_trait, \
+           image_trait, export_trait, help_id_trait
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -108,28 +108,13 @@ class DefaultViewElement ( ViewElement ):
     export = export_trait
     
     # Should labels be added to items in a group?
-    show_labels = true
+    show_labels = Bool( True )
+
+    # The default theme to use for a contained item:
+    item_theme = ATheme
     
-    # Image to display in the background of the group.
-    group_theme = Constant( None )
-    
-    # Image to display in the background of contained items.
-    item_theme = Image
-    
-    # The margins around an item's editor and its theme:
-    item_theme_margins = HasMargins( 3 )
-    
-    # The alignment of the label text within the item's theme:
-    item_theme_alignment = Alignment( 'center' )
-    
-    # Image to display in the background of contained item labels.
-    label_theme = Image
-    
-    # The margins around an item's label and its theme:
-    label_theme_margins = HasMargins( 0 )
-    
-    # Does the object (or its containers) have a theme?
-    has_theme = Constant( False )
+    # The default theme to use for a contained item's label:
+    label_theme = ATheme
                      
 #-------------------------------------------------------------------------------
 #  Trait definitions:

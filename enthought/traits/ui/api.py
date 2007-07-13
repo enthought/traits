@@ -69,7 +69,10 @@ from help_template \
 
 from message \
     import message, error
-
+    
+from theme \
+    import Theme, default_theme
+    
 from tree_node \
     import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode
 

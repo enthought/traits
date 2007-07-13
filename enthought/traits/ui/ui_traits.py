@@ -136,6 +136,53 @@ class Image ( TraitType ):
         self.error( object, name, value )
         
 #-------------------------------------------------------------------------------
+#  'ATheme' trait:
+#-------------------------------------------------------------------------------
+
+def convert_theme ( value, level = 3 ):
+    """ Converts a specified value to a Theme if possible.
+    """
+    from theme import Theme
+    
+    if not isinstance( value, basestring ):
+        return value
+        
+    return Theme( image = convert_image( value, level + 1 ) )
+    
+class ATheme ( TraitType ):
+    """ Defines a trait whose value must be a traits UI Theme or a string that
+        can be converted to one.
+    """
+    
+    # Define the default value for the trait:
+    default_value = None
+    
+    # A description of the type of value this trait accepts:
+    info_text = 'a Theme or string that can be used to define one'
+    
+    def __init__ ( self, value = None, **metadata ):
+        """ Creates an ATheme trait.
+
+        Parameters
+        ----------
+        value : string or Theme
+            The default value for the ATheme, either a Theme object, or a 
+            string from which a Theme object can be derived.
+        """
+        super( ATheme, self ).__init__( convert_theme( value ), **metadata )
+
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+        from theme import Theme
+        
+        value = convert_theme( value, 4 )
+        if (value is None) or isinstance( value, Theme ):
+            return value
+            
+        self.error( object, name, value )
+
+#-------------------------------------------------------------------------------
 #  'Padding' class:  
 #-------------------------------------------------------------------------------
                 
@@ -153,13 +200,23 @@ class Padding ( HasStrictTraits ):
     # The amount of padding/margin on the right:
     right = Range( -32, 32, 0 )
     
-    def __init__ ( self, value = None, **traits ):
+    def __init__ ( self, *args, **traits ):
         """ Initializes the object.
         """
-        if value is not None:
-            self.set( top  = value, bottom = value, 
-                      left = value, right  = value )
-                      
+        n = len( args )
+        if n > 0:
+            if n == 1:
+                left = right = top = bottom = args[0]
+            elif n == 2:
+                left = right  = args[0]
+                top  = bottom = args[1]
+            elif n == 4:
+                left, right, top, bottom = args
+            else:
+                raise TraitError( '0, 1, 2 or 4 arguments expected, but %d '
+                                  'specified' % n )
+            self.set( left = left, right = right, top = top, bottom = bottom )
+             
         super( Padding, self ).__init__( **traits )
         
 Margins = Padding
@@ -177,8 +234,9 @@ class HasPadding ( TraitType ):
     default_value = Padding( 0 )
     
     # A description of the type of value this trait accepts:
-    info_text = ('a Padding or Margin instance or an integer in the range from '
-                 '0 to 32 that can be used to define one')
+    info_text = ('a Padding or Margin instance, or an integer in the range from '
+                 '-32 to 32 or a tuple with 1, 2 or 4 integers in that range '
+                 'that can be used to define one')
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
@@ -186,6 +244,11 @@ class HasPadding ( TraitType ):
         if isinstance( value, int ):
             try:
                 value = Padding( value )
+            except:
+                self.error( object, name, value )
+        elif isinstance( value, tuple ):
+            try:
+                value = Padding( *value )
             except:
                 self.error( object, name, value )
             
@@ -203,6 +266,8 @@ class HasPadding ( TraitType ):
         if dvt < 0:
             if isinstance( dv, int ):
                 dv = Padding( dv )
+            elif isinstance( dv, tuple ):
+                dv = Padding( *dv )
                 
             if not isinstance( dv, Padding ):
                 return super( HasPadding, self ).get_default_value()
@@ -222,7 +287,7 @@ HasMargins = HasPadding
 Position = Enum( 'left', 'right', 'above', 'below' )
     
 # The alignment of text within a control:
-Alignment = Enum( 'left', 'center', 'right' )
+Alignment = Enum( 'default', 'left', 'center', 'right' )
 
 # The spacing between two items:
 Spacing = Range( -32, 32, 3 )
