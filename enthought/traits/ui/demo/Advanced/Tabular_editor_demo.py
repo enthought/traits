@@ -51,7 +51,7 @@ from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Margins
+    import View, Group, Item, Theme
     
 from enthought.traits.ui.menu \
     import NoButtons
@@ -126,8 +126,7 @@ class Report ( HasTraits ):
         Group(
             Item( 'people', id = 'table', editor = tabular_editor ), 
             show_labels        = False,
-            item_theme         = '@BF5',
-            item_theme_margins = Margins( left = -3, right = -3 ),
+            item_theme         = Theme( '@BF5', margins = ( -3, 0 ) ),
             group_theme        = '@XG2' 
         ),
         title     = 'Tabular Editor Demo',

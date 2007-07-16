@@ -44,6 +44,9 @@ from include \
 from ui_traits \
     import SequenceTypes, ATheme, container_delegate
     
+from dock_window_theme \
+    import DockWindowTheme, default_dock_window_theme
+    
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
@@ -96,6 +99,9 @@ class Group ( ViewSubElement ):
 
     # Default image to display on notebook tabs.
     image = container_delegate
+    
+    # The theme to use for a DockWindow:
+    dock_theme = Instance( DockWindowTheme, allow_none = False )
 
     # The theme to use for the group itself:
     group_theme = ATheme
@@ -234,6 +240,11 @@ class Group ( ViewSubElement ):
 
         # Make sure this Group is the container for all its children:
         self.set_container()
+        
+    #-- Default Trait Values ---------------------------------------------------
+    
+    def _dock_theme_default ( self ):
+        return default_dock_window_theme
 
     #---------------------------------------------------------------------------
     #  Gets the label to use for a specified Group in a specified UI:
@@ -584,13 +595,16 @@ class ShadowGroup ( Group ):
     # Default image to display on notebook tabs
     image = ShadowDelegate
     
-    # Theme to display in the background of the group.
+    # The theme to use for a DockWindow:
+    dock_theme = ShadowDelegate
+    
+    # The theme to use for the group itself:
     group_theme = ShadowDelegate
     
-    # Theme to display in the background of contained items.
+    # The theme to use for item's contained in the group:
     item_theme = ShadowDelegate
     
-    # Theme to display in the background of contained item labels.
+    # The theme to use for the labels of items contained in the group:
     label_theme = ShadowDelegate
 
     # Category of elements dragged from the view
