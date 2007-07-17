@@ -111,8 +111,8 @@ white_dock_window_theme = DockWindowTheme(
                                   alignment = 'center', offset = ( 1, 0 ) ), 
     horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
                                  alignment = 'center', offset = ( 0, 0 ) ), 
-    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 10 ) ),
-    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 10, 0 ) )
+    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 4, 0 ) )
 )
     
 # Alternate theme with white/grey 3D tabs at the bottom:
@@ -132,7 +132,6 @@ white_bottom_dock_window_theme = DockWindowTheme(
                                   alignment = 'center', offset = ( 1, 0 ) ), 
     horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
                                  alignment = 'center', offset = ( 0, 0 ) ), 
-    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 10 ) ),
-    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 10, 0 ) )
+    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 4, 0 ) )
 )
-
