@@ -75,6 +75,23 @@ from types \
            ClassType, ModuleType, MethodType, InstanceType, TypeType
 
 #-------------------------------------------------------------------------------
+#  Constants:
+#-------------------------------------------------------------------------------
+
+# Mapping from 'ctrait' default value types to a string representation:
+KindMap = {
+   0: 'value',
+   1: 'value',
+   2: 'self',
+   3: 'list',
+   4: 'dict',
+   5: 'list',
+   6: 'dict',
+   7: 'factory',
+   8: 'method'
+}
+
+#-------------------------------------------------------------------------------
 #  Editor factory functions:
 #-------------------------------------------------------------------------------
 
@@ -163,6 +180,54 @@ class CTrait ( cTrait ):
 
         metadata.setdefault( 'parent', self )
         return Trait( *(args + ( self, )), **metadata )
+        
+    #---------------------------------------------------------------------------
+    #  (Python) property definitions:
+    #---------------------------------------------------------------------------
+    
+    def __get_default ( self ):
+        kind, value = self.default_value()
+        if kind in ( 2, 7, 8 ):
+            return Undefined
+         
+        if 3 <= kind <= 6:
+            return value.copy()
+            
+        return value
+        
+    default = property( __get_default )
+    
+    def __get_default_kind ( self ):
+        return KindMap[ self.default_value()[0] ]
+        
+    default_kind = property( __get_default_kind )
+    
+    def __get_trait_type ( self ):
+        handler = self.handler
+        if handler is not None:
+            return handler
+            
+        return Any
+        
+    trait_type = property( __get_trait_type )
+    
+    def __get_inner_traits ( self ):
+        handler = self.handler
+        if handler is not None:
+            return handler.inner_traits()
+            
+        return ()
+        
+    inner_traits = property( __get_inner_traits )
+    
+    #---------------------------------------------------------------------------
+    #  Returns whether or not this trait is of a specified trait type:
+    #---------------------------------------------------------------------------
+    
+    def is_trait_type ( self, trait_type ):
+        """ Returns whether or not this trait is of a specified trait type.
+        """
+        return isinstance( self.trait_type, trait_type )
 
     #---------------------------------------------------------------------------
     #  Returns the user interface editor associated with the trait:

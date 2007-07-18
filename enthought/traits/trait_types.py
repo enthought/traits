@@ -1307,6 +1307,11 @@ class List ( TraitType ):
                            use_notebook  = self.use_notebook is True,
                            page_name     = self.page_name or '' )
 
+    def inner_traits ( self ):
+        """ Returns the *inner trait* (or traits) for this trait.
+        """
+        return ( self.item_trait, )
+                           
     #-- Private Methods --------------------------------------------------------
     
     def items_event ( self ):
@@ -1386,6 +1391,11 @@ class Dict ( TraitType ):
         from enthought.traits.ui.api import TextEditor
         
         return TextEditor( evaluate = eval )
+
+    def inner_traits ( self ):
+        """ Returns the *inner trait* (or traits) for this trait.
+        """
+        return ( self.key_trait, self.value_trait )
 
     #-- Private Methods --------------------------------------------------------
         
