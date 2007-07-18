@@ -190,8 +190,11 @@ class CTrait ( cTrait ):
         if kind in ( 2, 7, 8 ):
             return Undefined
          
-        if 3 <= kind <= 6:
+        if kind in ( 4, 6 ):
             return value.copy()
+         
+        if kind in ( 3, 5 ):
+            return value[:]
             
         return value
         
