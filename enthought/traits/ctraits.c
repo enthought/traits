@@ -173,6 +173,9 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 /* Should a simple object identity test be performed (or a rich compare)? */
 #define TRAIT_OBJECT_IDENTITY 0x00000004
 
+/* Does the 'post_setattr' method want the original 'value'? */
+#define TRAIT_ORIGINAL_VALUE 0x00000008
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -1832,9 +1835,10 @@ setattr_trait ( trait_object      * traito,
             
     int rc;
     int changed = 0;
-    PyListObject * tnotifiers = NULL;
-    PyListObject * onotifiers = NULL;
-    PyObject     * old_value = NULL;
+    PyListObject * tnotifiers     = NULL;
+    PyListObject * onotifiers     = NULL;
+    PyObject     * old_value      = NULL;
+    PyObject     * original_value;
     
     PyObject * dict = obj->obj_dict;
     
@@ -1917,6 +1921,7 @@ notify:
 #endif
     }
     
+    original_value = value;
     if ( traitd->validate != NULL ) {
         value = traitd->validate( traitd, obj, name, value );
         if ( value == NULL ) {
@@ -1997,7 +2002,9 @@ notify:
     
     if ( changed ) {
         if ( traitd->post_setattr != NULL ) {
-            rc = traitd->post_setattr( traitd, obj, name, value );
+            if ( (traitd->flags & TRAIT_ORIGINAL_VALUE) == 0 )
+                original_value = value;
+            rc = traitd->post_setattr( traitd, obj, name, original_value );
         }
         if ( (rc == 0) && ((tnotifiers != NULL) || (onotifiers != NULL)) ) { 
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
@@ -3568,6 +3575,28 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
+|  Sets the value of the 'original_value' flag of a CTrait instance (used in
+|  the processing of 'post_settattr' calls):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_original_value ( trait_object * trait, PyObject * args ) {
+ 
+    int original_value;
+    
+    if ( !PyArg_ParseTuple( args, "i", &original_value ) ) 
+        return NULL;
+        
+    if ( original_value != 0 ) {
+        trait->flags |= TRAIT_ORIGINAL_VALUE;
+    } else {
+        trait->flags &= (~TRAIT_ORIGINAL_VALUE);
+    }
+    Py_INCREF( Py_None );
+    return Py_None;
+}    
+
+/*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -3908,6 +3937,8 @@ static PyMethodDef trait_methods[] = {
 	 	PyDoc_STR( "delegate(delegate_name,prefix,prefix_type,modify_delegate)" ) },
 	{ "rich_comparison",  (PyCFunction) _trait_rich_comparison,  METH_VARARGS,
 	 	PyDoc_STR( "rich_comparison(comparison_boolean)" ) },
+	{ "original_value",  (PyCFunction) _trait_original_value,    METH_VARARGS,
+	 	PyDoc_STR( "original_value(original_value_boolean)" ) },
 	{ "property",      (PyCFunction) _trait_property,      METH_VARARGS,
 	 	PyDoc_STR( "property([get,set,validate])" ) },
 	{ "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,

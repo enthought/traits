@@ -201,53 +201,63 @@ class InterfacesTest ( unittest.TestCase ):
     def test_instance_adapt_yes ( self ):
         ta = TestInterface()
         
-        ta.a_yes = SampleAverage()
+        ta.a_yes = object = SampleAverage()
         self.assertEqual( ta.a_yes.get_average(), 200.0 )
-        self.assert_( isinstance( ta.a_yes, SampleAverage ) )
+        self.assert_( isinstance( ta.a_yes,  SampleAverage ) )
+        self.assertEqual( ta.a_yes_, object )
         
-        ta.a_yes = SampleList()
+        ta.a_yes = object = SampleList()
         self.assertEqual( ta.a_yes.get_average(), 20.0 )
-        self.assert_( isinstance( ta.a_yes, ListAverageAdapter ) )
+        self.assert_( isinstance( ta.a_yes,  ListAverageAdapter ) )
+        self.assertEqual( ta.a_yes_, object )
         
-        ta.l_yes = Sample()
+        ta.l_yes = object = Sample()
         result = ta.l_yes.get_list()
         self.assertEqual( len( result ), 3 )
         for n in [ 1, 2, 3 ]:
             self.assert_( n in result )
-        self.assert_( isinstance( ta.l_yes, SampleListAdapter ) )
+        self.assert_( isinstance( ta.l_yes,  SampleListAdapter ) )
+        self.assertEqual( ta.l_yes_, object )
         
-        ta.a_yes = Sample()
+        ta.a_yes = object = Sample()
         self.assertEqual( ta.a_yes.get_average(), 2.0 )
         self.assert_( isinstance( ta.a_yes, ListAverageAdapter ) )
+        self.assertEqual( ta.a_yes_, object )
         
         self.assertRaises( TraitError, ta.set, a_yes = SampleBad() )
         
-        ta.f_yes = Sample()
+        ta.f_yes = object = Sample()
         self.assertEqual( ta.f_yes.get_foo(), 6 )
         self.assert_( isinstance( ta.f_yes, SampleFooAdapter ) )
+        self.assertEqual( ta.f_yes_, object )
         
-        ta.fp_yes = Sample( s1 = 5, s2 = 10, s3 = 15 )
+        ta.fp_yes = object = Sample( s1 = 5, s2 = 10, s3 = 15 )
         self.assertEqual( ta.fp_yes.get_foo(), 30 )
         self.assertEqual( ta.fp_yes.get_foo_plus(), 31 )
         self.assert_( isinstance( ta.fp_yes, FooPlusAdapter ) )
+        self.assertEqual( ta.fp_yes_, object )
             
     def test_instance_adapt_default ( self ):
         ta = TestInterface()
         
-        ta.a_default = SampleAverage()
+        ta.a_default = object = SampleAverage()
         self.assertEqual( ta.a_default.get_average(), 200.0 )
         self.assert_( isinstance( ta.a_default, SampleAverage ) )
+        self.assertEqual( ta.a_default_, object )
         
-        ta.a_default = SampleList()
+        ta.a_default = object = SampleList()
         self.assertEqual( ta.a_default.get_average(), 20.0 )
         self.assert_( isinstance( ta.a_default, ListAverageAdapter ) )
+        self.assertEqual( ta.a_default_, object )
         
-        ta.a_default = Sample()
+        ta.a_default = object = Sample()
         self.assertEqual( ta.a_default.get_average(), 2.0 )
         self.assert_( isinstance( ta.a_default, ListAverageAdapter ) )
+        self.assertEqual( ta.a_default_, object )
         
-        ta.a_default = SampleBad()
+        ta.a_default = object = SampleBad()
         self.assertEqual( ta.a_default, None )
+        self.assertEqual( ta.a_default_, object )
 
     #-- Helper Methods ---------------------------------------------------------
     

@@ -1546,6 +1546,12 @@ class Instance ( TraitType ):
             
         self.validate_failed( object, name, value )
 
+    def post_setattr ( self, object, name, value ):
+        """ Performs additional post-assignment processing.
+        """
+        # Save the original, unadapted value in the mapped trait:
+        object.__dict__[ name + '_' ] = value
+
     def info ( self ):
         """ Returns a description of the trait.
         """
@@ -1588,7 +1594,18 @@ class Instance ( TraitType ):
                                kind  = self.kind  or 'live' )
         
     #-- Private Methods --------------------------------------------------------
+
+    def as_ctrait ( self ):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
+        ctrait = super( Instance, self ).as_ctrait()
         
+        # Tell the C code that the 'post_setattr' method wants the original,
+        # unadapted value passed to 'setattr':
+        ctrait.original_value( True )
+        
+        return ctrait 
+     
     def validate_class ( self, klass ):
         return klass
 
