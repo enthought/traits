@@ -55,9 +55,8 @@ from trait_types \
 from has_traits \
     import method, HasTraits, HasStrictTraits, HasPrivateTraits, \
            SingletonHasTraits, SingletonHasStrictTraits, \
-           SingletonHasPrivateTraits, MetaHasTraits, Adapter, Vetoable, \
-           VetoableEvent, implements, adapts, traits_super, on_trait_change, \
-           cached_property
+           SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent, \
+           implements, traits_super, on_trait_change, cached_property
 
 from trait_handlers \
     import BaseTraitHandler, TraitType, TraitHandler, TraitRange, TraitString, \
@@ -65,6 +64,9 @@ from trait_handlers \
            TraitClass, TraitFunction, TraitEnum, TraitPrefixList, TraitMap, \
            TraitPrefixMap, TraitCompound, TraitList, TraitListEvent, \
            TraitDict, TraitDictEvent, TraitTuple
+           
+from adapter \
+    import Adapter, adapts
 
 from trait_numeric \
     import Array, CArray

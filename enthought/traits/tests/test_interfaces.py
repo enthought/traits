@@ -111,9 +111,7 @@ class TestInterface ( HasTraits ):
         
 class SampleListAdapter ( Adapter ):
     
-    implements( IList )
-    
-    adaptee = Instance( Sample )
+    adapts( Sample, IList )
     
     def get_list ( self ):
         obj = self.adaptee
@@ -122,9 +120,7 @@ class SampleListAdapter ( Adapter ):
                 
 class ListAverageAdapter ( Adapter ):
     
-    implements( IAverage )
-    
-    adaptee = Instance( IList )
+    adapts( IList, IAverage )
     
     def get_average ( self ):
         value = self.adaptee.get_list()

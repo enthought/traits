@@ -996,70 +996,6 @@ def implements ( *interfaces ):
 
     # Request that we be called back at class construction time:
     addClassAdvisor( callback )
-    
-#-------------------------------------------------------------------------------
-#  Defines the 'adapts' function for declaring which classes the containing
-#  class defines an adapter for, and which interfaces the containing class
-#  implements:
-#-------------------------------------------------------------------------------
-
-def adapts ( adapter, from_type, to_type = None ):
-    """ Declares the classes that the containing class defines an adapter for, 
-    and the interfaces that the containing class implements.
-    
-    Parameters
-    ----------
-    adapter : a class 
-        The adapter class
-    from_type : a type or a list of types
-        The types that are being adapted
-    to_type : a type of a list of types
-        The types that the adapter implements
-        
-    Returns
-    -------
-    Nothing
-    
-    Description
-    -----------
-    Declares that the containing class defines an adapter for each of the types
-    specified by *from_type*, and that the resulting adapter implements each of
-    the interfaces specified by *to_type*. If you call this function from 
-    directly within a class body, do not specify *to_type*. 
-    """
-    if to_type is None:
-        to_type, from_type, adapter = from_type, adapter, to_type
-        
-    def callback ( klass ):
-        from_types = from_type
-        if not isinstance( from_types, list ):
-            from_types = [ from_types ]
-
-        to_types = to_type
-        if not isinstance( to_types, list ):
-            to_types = [ to_types ]            
-
-        for_types     = [] 
-        for_protocols = []
-        for item in from_types:
-            if isinstance( item, Protocol ):
-                for_protocols.append( item )
-            else:
-                for_types.append( item )
-          
-        # Tell PyProtocols that the class is an adapter:
-        declareAdapter( klass, to_types, forProtocols = for_protocols,
-                                         forTypes     = for_types )
-                                         
-        # Tell PyProtocols that the class implements its interfaces:
-        declareImplementation( klass, instancesProvide = list( to_types ) )
-        
-        return klass
-    
-    if adapter is not None:
-        callback( adapter )
-    else:
-        addClassAdvisor( callback )
         
 #-------------------------------------------------------------------------------
 #  'HasTraits' decorators:  
@@ -3276,25 +3212,6 @@ class SingletonHasPrivateTraits ( HasPrivateTraits ):
     """
     def __new__ ( cls, *args, **traits ):
         return SingletonHasTraits.__new__( cls, *args, **traits )
-        
-#-------------------------------------------------------------------------------
-#  Defines a base class for creating interface adapter classes:  
-#-------------------------------------------------------------------------------
-                
-class Adapter ( HasPrivateTraits ):
-    """ Base class for creating interface adapter classes.
-    
-        Note that subclasses *must* define an *adaptee* trait of the form:
-        'adaptee = Instance(*class*)', where *class* is the class of object the
-        Adapter subclass is providing an adapter for. The class must also
-        contain an @implements() call that defines the interfaces that the class
-        implements.
-    """
-    
-    def __init__ ( self, adaptee ):
-        """ Creates an adapter for a specified *adaptee* object.
-        """
-        self.adaptee = adaptee
         
 #-------------------------------------------------------------------------------
 #  Defines a 'vetoable' request object and an associated event:
