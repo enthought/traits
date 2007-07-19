@@ -96,19 +96,23 @@ FunctionTypes  = ( FunctionType, CTraitMethod )
 # Class dictionary entries used to save trait, listener and view information and
 # definitions:
 
-BaseTraits     = '__base_traits__'
-ClassTraits    = '__class_traits__'
-PrefixTraits   = '__prefix_traits__'
-ListenerTraits = '__listener_traits__'
-ViewTraits     = '__view_traits__'
-SubclassTraits = '__subclass_traits__'
-InstanceTraits = '__instance_traits__'
+BaseTraits      = '__base_traits__'
+ClassTraits     = '__class_traits__'
+PrefixTraits    = '__prefix_traits__'
+ListenerTraits  = '__listener_traits__'
+ViewTraits      = '__view_traits__'
+SubclassTraits  = '__subclass_traits__'
+InstanceTraits  = '__instance_traits__'
+ImplementsClass = '__implements__'
 
 # The default Traits View name
 DefaultTraitsView = 'traits_view'
 
 # Trait types which cannot have default values:
 CantHaveDefaultValue = ( 'event', 'delegate', 'constant' )
+
+# An empty list:
+EmptyList = []
 
 # Quick test for normal vs extended trait name:
 extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
@@ -556,6 +560,16 @@ def method ( return_type = Any, *arg_types, **kwarg_types ):
     _add_assignment_advisor( callback )
 
 #-------------------------------------------------------------------------------
+#  '__NoInterface__' class:  
+#-------------------------------------------------------------------------------
+        
+class __NoInterface__ ( object ):
+    """ An uninstantiated class used to tag trait subclasses which do not
+        implement any interfaces.
+    """
+    pass
+
+#-------------------------------------------------------------------------------
 #  'MetaHasTraits' class:
 #-------------------------------------------------------------------------------
 
@@ -731,8 +745,14 @@ class MetaHasTraitsObject ( object ):
 
         # Process all HasTraits base classes:
         migrated_properties = {}
+        implements          = []
         for base in hastraits_bases:
             base_dict = base.__dict__
+            
+            # List the subclasses that implement interfaces:
+            if ((not is_category) and 
+                (base_dict.get( ImplementsClass ) is not __NoInterface__)):
+                implements.append( base )
 
             # Merge listener information:
             for name, value in base_dict.get( ListenerTraits ).items():
@@ -873,11 +893,24 @@ class MetaHasTraitsObject ( object ):
                     depends_on = ' ' + depends_on
                     
                 listeners[ name ] = ( 'property', cached, depends_on )
+                
+        # Define a class that is a subclass of all of the interfaces that the
+        # HasTraits base classes implement (we won't know which interfaces this 
+        # class explicitly implements until the 'implements' function callback 
+        # runs, which is after we exit)...
+        n = len( implements )
+        if n == 0:
+            implements_class = __NoInterface__
+        elif n == 1:
+            implements_class = implements[0].__implements__
+        else:
+            implements_class = _create_implements_class( class_name, EmptyList, 
+                                                         implements )
 
         # Add the traits meta-data to the class:
         self.add_traits_meta_data(
             bases, class_dict, base_traits, class_traits, instance_traits,
-            prefix_traits, listeners, view_elements )
+            prefix_traits, listeners, view_elements, implements_class )
 
     #---------------------------------------------------------------------------
     #  Adds the traits meta-data to the class:
@@ -885,15 +918,16 @@ class MetaHasTraitsObject ( object ):
 
     def add_traits_meta_data ( self, bases, class_dict, base_traits,
                                class_traits,  instance_traits, prefix_traits,
-                               listeners, view_elements ):
+                               listeners, view_elements, implements_class ):
         """ Adds the Traits metadata to the class dictionary.
         """
-        class_dict[ BaseTraits     ] = base_traits
-        class_dict[ ClassTraits    ] = class_traits
-        class_dict[ InstanceTraits ] = instance_traits
-        class_dict[ PrefixTraits   ] = prefix_traits
-        class_dict[ ListenerTraits ] = listeners
-        class_dict[ ViewTraits     ] = view_elements
+        class_dict[ BaseTraits      ] = base_traits
+        class_dict[ ClassTraits     ] = class_traits
+        class_dict[ InstanceTraits  ] = instance_traits
+        class_dict[ PrefixTraits    ] = prefix_traits
+        class_dict[ ListenerTraits  ] = listeners
+        class_dict[ ViewTraits      ] = view_elements
+        class_dict[ ImplementsClass ] = implements_class
 
     #---------------------------------------------------------------------------
     #  Migrates an existing property to the class being defined (allowing for
@@ -937,6 +971,47 @@ def _trait_monitor_index ( cls, handler ):
     return -1
 
 #-------------------------------------------------------------------------------
+#  Creates an class the implements a set of interfaces:
+#-------------------------------------------------------------------------------
+        
+def _create_implements_class ( class_name, interfaces, base_classes ):
+    """ Creates an class the implements a set of interfaces.
+    """
+    locals  = {}
+    classes = []
+    for interface in interfaces:
+        locals[ interface.__name__ ] = interface
+        classes.append( interface.__name__ )
+        
+    for base_class in base_classes:
+        ic = getattr( base_class, ImplementsClass, __NoInterface__ )
+        if ic is not __NoInterface__:
+            for ifc in _extract_interfaces( ic ):
+                name = ifc.__name__
+                if name not in locals:
+                    locals[ ifc.__name__ ] = ifc
+                    classes.append( ifc.__name__ )
+            
+    name = class_name + 'Implements'
+    exec 'class %s(%s):__ignore_interface__=None' % ( 
+         name, ','.join( classes ) ) in locals
+    
+    return locals[ name ]
+ 
+def _extract_interfaces ( implements_class ):
+    """ Extracts the list of interfaces implemented by a specified class.
+    """
+    result = []
+    for ifc in implements_class.__mro__:
+        if ifc is Interface:
+            break
+            
+        if not hasattr( ifc, '__ignore_interface__' ):
+            result.append( ifc )
+    
+    return result
+    
+#-------------------------------------------------------------------------------
 #  Defines the 'implements' function for declaring which interfaces a class
 #  implements:
 #-------------------------------------------------------------------------------
@@ -972,31 +1047,30 @@ def implements ( *interfaces ):
                               
     # Define a function that is called when the containing class is constructed:
     def callback ( klass ):
-        try:
-            # Check if this class is an adapter class having an 'adaptee' trait:
-            handler = klass.__class_traits__[ 'adaptee' ].handler
-            if isinstance( handler, Instance ):
-                for_type = handler.klass
-                if isinstance( for_type, type ):
-                    # If the 'adaptee' trait is an instance of a defined class,
-                    # tell PyProtocols that this is an adapter:
-                    if issubclass( for_type, Interface ):
-                        declareAdapter( klass, provides = list( interfaces ),
-                                        forProtocols = [ for_type ] )
-                    else:
-                        declareAdapter( klass, provides = list( interfaces ),
-                                        forTypes = [ for_type ] )
-        except:
-            pass
+        from category import Category
+        
+        target = klass
+        bases  = klass.__bases__
+        if (len( bases ) == 2) and (bases[0] is Category):
+            target = bases[1]
+            
+            # Update the class and each of the existing subclasses:
+            for subclass in target.trait_subclasses( True ):
+                # Merge in the interfaces implemented by the category:
+                subclass.__implements__ = _create_implements_class(
+                        subclass.__name__, interfaces, [ subclass ] )
+        
+        target.__implements__ = _create_implements_class( 
+            target.__name__, interfaces, bases ) 
             
         # Tell PyProtocols that the class implements its interfaces:
-        declareImplementation( klass, instancesProvide = list( interfaces ) )
+        declareImplementation( target, instancesProvide = list( interfaces ) )
         
         return klass
 
     # Request that we be called back at class construction time:
     addClassAdvisor( callback )
-        
+    
 #-------------------------------------------------------------------------------
 #  'HasTraits' decorators:  
 #-------------------------------------------------------------------------------
@@ -1252,12 +1326,14 @@ class HasTraits ( CHasTraits ):
         """ Adds a trait category to a class.
         """
         if issubclass( category, HasTraits ):
-            cls._add_trait_category( getattr( category, BaseTraits ),
-                                     getattr( category, ClassTraits ),
-                                     getattr( category, InstanceTraits ),
-                                     getattr( category, PrefixTraits ),
-                                     getattr( category, ListenerTraits ),
-                                     getattr( category, ViewTraits, None ) )
+            cls._add_trait_category(
+                getattr( category, BaseTraits ),
+                getattr( category, ClassTraits ),
+                getattr( category, InstanceTraits ),
+                getattr( category, PrefixTraits ),
+                getattr( category, ListenerTraits ),
+                getattr( category, ViewTraits, None ),
+                getattr( category, ImplementsClass ) )
 
         # Copy all methods that are not already in the class from the category:
         for subcls in category.__mro__:
@@ -1272,7 +1348,8 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _add_trait_category ( cls, base_traits, class_traits, instance_traits,
-                                   prefix_traits, listeners, view_elements ):
+                                   prefix_traits, listeners, view_elements, 
+                                   implements_class ):
         # Update the class and each of the existing subclasses:
         for subclass in [ cls ] + cls.trait_subclasses( True ):
 
@@ -1379,6 +1456,25 @@ class HasTraits ( CHasTraits ):
         return subclasses
 
     _trait_subclasses = classmethod( _trait_subclasses )
+
+    #---------------------------------------------------------------------------
+    #  Returns whether the object implements a specified traits interface:  
+    #---------------------------------------------------------------------------
+    
+    def has_traits_interface ( self, *interfaces ):
+        """Returns whether the object implements a specified traits interface.
+        
+           Parameters
+           ----------
+           interfaces : one or more traits Interface (sub)classes.
+           
+           Description
+           -----------
+           Tests whether the object implements one or more of the interfaces
+           specified by *interfaces*. Return **True** if it does, and **False**
+           otherwise.
+        """
+        return issubclass( self.__implements__, interfaces )
 
     #---------------------------------------------------------------------------
     #  Prepares an object to be pickled:

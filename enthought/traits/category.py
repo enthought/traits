@@ -71,15 +71,16 @@ class MetaCategoryObject ( MetaHasTraitsObject ):
            
     def add_traits_meta_data ( self, bases, class_dict, base_traits, 
                                class_traits, instance_traits, prefix_traits, 
-                               listeners, view_elements ):
+                               listeners, view_elements, implements_class ):
         if len( bases ) == 2:
             # Update the class and each of the existing subclasses:
             bases[1]._add_trait_category( base_traits, class_traits, 
-                      instance_traits, prefix_traits, listeners, view_elements )
+                      instance_traits, prefix_traits, listeners, view_elements,
+                      implements_class )
         else:
             MetaHasTraitsObject.add_traits_meta_data( self, bases,
                    class_dict, base_traits, class_traits, instance_traits, 
-                   prefix_traits, listeners, view_elements )  
+                   prefix_traits, listeners, view_elements, implements_class )  
         
 #-------------------------------------------------------------------------------
 #  'Category' class:
