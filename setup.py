@@ -1,6 +1,9 @@
 from setuptools \
     import setup, Extension, find_packages
 
+from enthought.traits.version import __version__
+
+
 ctraits = Extension(
     'enthought.traits.ctraits',
     sources = [ 'enthought/traits/ctraits.c' ],
@@ -13,7 +16,7 @@ speedups = Extension(
 
 setup(
     name         = 'enthought.traits',
-    version      = '3.0.0b1',
+    version      = __version__,
     description  = 'Explicitly typed Python attributes package',
     author       = 'David C. Morrill',
     author_email = 'dmorrill@enthought.com',
