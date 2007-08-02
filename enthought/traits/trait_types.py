@@ -37,7 +37,8 @@ from trait_handlers \
            TraitDictEvent, ThisClass, items_event, RangeTypes
     
 from traits \
-    import Trait, Event, trait_from, _InstanceArgs
+    import Trait, Event, trait_from, _InstanceArgs, code_editor, html_editor, \
+           password_editor, shell_editor
 
 from trait_errors \
     import TraitError
@@ -661,13 +662,8 @@ class Code ( String ):
     """ Defines a trait whose value is a Python string that represents source
         code in some language.
     """
-        
-    def init ( self ):
-        """ Allows the trait to perform any additional initialization needed.
-        """
-        from traits import code_editor
-        
-        self.metadata.setdefault( 'editor', code_editor )
+    
+    metadata = { 'editor': code_editor }
 
 #-------------------------------------------------------------------------------
 #  'HTML' trait:  
@@ -679,12 +675,7 @@ class HTML ( String ):
     TraitsUI views. The validation of the value does not enforce HTML syntax.
     """
     
-    def init ( self ):
-        """ Allows the trait to perform any additional initialization needed.
-        """
-        from traits import html_editor
-        
-        self.metadata.setdefault( 'editor', html_editor )
+    metadata = { 'editor': html_editor }
 
 #-------------------------------------------------------------------------------
 #  'Password' trait:  
@@ -698,12 +689,7 @@ class Password ( String ):
     PasswordEditor in TraitsUI views, which obscures text entered by the user.
     """
     
-    def init ( self ):
-        """ Allows the trait to perform any additional initialization needed.
-        """
-        from traits import password_editor
-        
-        self.metadata.setdefault( 'editor', password_editor )
+    metadata = { 'editor': password_editor }
 
 #-------------------------------------------------------------------------------
 #  'Expression' class:
@@ -747,12 +733,7 @@ class PythonValue ( Any ):
     editor is a Python shell.
     """
     
-    def init ( self ):
-        """ Allows the trait to perform any additional initialization needed.
-        """
-        from traits import shell_editor
-        
-        self.metadata.setdefault( 'editor', shell_editor )
+    metadata = { 'editor': shell_editor }
 
 #-------------------------------------------------------------------------------
 #  'File' trait:
@@ -789,9 +770,9 @@ class File ( Str ):
         """
         from enthought.traits.ui.editors import FileEditor
         
+        metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
+                                                   auto_set = auto_set ) )
         super( File, self ).__init__( value, **metadata )
-        self.metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
-                                                        auto_set = auto_set ) )
         
 #-------------------------------------------------------------------------------
 #  'Directory' trait:
@@ -824,9 +805,8 @@ class Directory ( Str ):
         """
         from enthought.traits.ui.editors import DirectoryEditor
         
+        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set ) )
         super( Directory, self ).__init__( value, **metadata )
-        self.metadata.setdefault( 'editor', 
-                                  DirectoryEditor( auto_set = auto_set ) )
    
 #-------------------------------------------------------------------------------
 #  'Range' trait:  

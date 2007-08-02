@@ -446,6 +446,7 @@ class TraitType ( BaseTraitHandler ):
     """
     
     default_value = Undefined
+    metadata      = {}
     
     def __init__ ( self, default_value = Undefined, **metadata ):
         """ This constructor method is the only method normally called 
@@ -458,7 +459,15 @@ class TraitType ( BaseTraitHandler ):
         if default_value is not Undefined:
             self.default_value = default_value
             
-        self.metadata = metadata
+        if len( metadata ) > 0:
+            if len( self.metadata ) > 0:
+                self._metadata = self.metadata.copy()
+                self._metadata.update( metadata )
+            else:
+                self._metadata = metadata
+        else:
+            self._metadata = self.metadata
+            
         self.init()
         
     def init ( self ):
@@ -532,11 +541,12 @@ class TraitType ( BaseTraitHandler ):
         if 'editor' in new_dict:
             del new_dict[ 'editor' ]
             
-        if 'metadata' in new_dict:
-            new.metadata = new.metadata.copy()
+        if '_metadata' in new_dict:
+            new._metadata = new._metadata.copy()
         else:
-            new.metadata = {}
-        new.metadata.update( metadata )
+            new._metadata = {}
+            
+        new._metadata.update( metadata )
         
         if default_value is not Missing:
             validate = self.validate
@@ -559,7 +569,7 @@ class TraitType ( BaseTraitHandler ):
         """
         from traits import CTrait
         
-        metadata = getattr( self, 'metadata', {} )
+        metadata = getattr( self, '_metadata', {} )
         getter   = getattr( self, 'get', None )
         setter   = getattr( self, 'set', None )
         if (getter is not None) or (setter is not None):
@@ -613,7 +623,7 @@ class TraitType ( BaseTraitHandler ):
             raise AttributeError( "'%s' object has no attribute '%s'" % (
                                   self.__class__.__name__, name ) )
                                   
-        return getattr( self, 'metadata', {} ).get( name, None )
+        return getattr( self, '_metadata', {} ).get( name, None )
         
 #-------------------------------------------------------------------------------
 #  'TraitHandler' class (base class for all trait handlers):

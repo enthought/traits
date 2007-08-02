@@ -20,6 +20,9 @@
 from enthought.traits.api \
     import HasPrivateTraits, Bool
     
+from ui_traits \
+    import Image
+    
 from theme \
     import Theme
     
@@ -47,9 +50,15 @@ class DockWindowTheme ( HasPrivateTraits ):
     
     # Inactive tab theme:
     tab_inactive = ATheme( Theme( 'tab_inactive', offset = ( 0, -2 ) ) ) 
+                          
+    # Optional image to use for right edge of rightmost inactive tab:                                
+    tab_inactive_edge = Image                                
     
     # Tab hover theme (used for inactive tabs):
     tab_hover = ATheme( Theme( 'tab_hover', offset = ( 0, -2 ) ) )
+                          
+    # Optional image to use for right edge of rightmost hover tab:                                
+    tab_hover_edge = Image                                
     
     # Tab background theme:
     tab_background = ATheme( Theme( 'tab_background' ) )
@@ -79,19 +88,20 @@ class DockWindowTheme ( HasPrivateTraits ):
 # Original DockWindows UI redone as a theme:
 default_dock_window_theme = DockWindowTheme(
     use_theme_color     = False,
-    tab_active          = Theme( 'std_tab_active', offset  = ( 0, -3 ), 
-                                                   margins = ( 7, 6, 0, 0 ) ),
+    tab_active          = Theme( 'std_tab_active',   offset  = ( 0, -3 ), 
+                                                     margins = ( 7, 6, 0, 0 ) ),
     tab_inactive        = Theme( 'std_tab_inactive', offset  = ( 0, -1 ),
                                                      margins = ( 5, 0 ) ),
-    tab_hover           = Theme( 'std_tab_hover', offset  = ( 0, -2 ),
-                                                  margins = ( 5, 0 ) ),
+    tab_hover           = Theme( 'std_tab_hover',    offset  = ( 0, -2 ),
+                                                     margins = ( 5, 0 ) ),
     tab_background      = Theme( 'std_tab_background' ),
-    tab                 = Theme( 'std_tab', margins = 0, offset = ( -4, 0 ) ),
+    tab                 = Theme( 'std_tab', margins = 0, 
+                                            offset  = ( -4, 0 ) ),
     vertical_splitter   = Theme( 'std_vertical_splitter', margins = 0, 
                                                           offset = ( 0, -25 ) ), 
     horizontal_splitter = Theme( 'std_horizontal_splitter', margins = 0, 
                                                           offset = ( -24, 0 ) ), 
-    vertical_drag       = Theme( 'std_vertical_drag', margins = ( 0, 10 ) ),
+    vertical_drag       = Theme( 'std_vertical_drag',   margins = ( 0, 10 ) ),
     horizontal_drag     = Theme( 'std_horizontal_drag', margins = ( 10, 0 ) )
 )
     
@@ -103,14 +113,14 @@ white_dock_window_theme = DockWindowTheme(
     tab_inactive        = Theme( 'w_tab_inactive', margins = ( 3, 0 ),
                                                    offset  = ( 1, -2 ) ),
     tab_hover           = Theme( 'w_tab_hover',    margins = ( 3, 0 ),
-                                                   offset  = ( 0, -2 ) ),
+                                                   offset  = ( 1, -2 ) ),
     tab_background      = Theme( 'w_tab_background', margins = 0 ),
-    tab                 = Theme( 'w_tab', margins = ( -4, -4, -2, 2 ), 
-                                          offset  = ( 6, 0 ) ),
+    tab                 = Theme( 'w_tab', margins = ( -4, -5, -4, 2 ), 
+                                          offset  = ( 4, 0 ) ),
     vertical_splitter   = Theme( 'w_vertical_splitter', margins = 0,
-                                  alignment = 'center', offset = ( 1, 0 ) ), 
+                                  alignment = 'center', offset = ( 0, 0 ) ), 
     horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
-                                 alignment = 'center', offset = ( 0, 0 ) ), 
+                                 alignment = 'center', offset = ( 0, -1 ) ), 
     vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 4 ) ),
     horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 4, 0 ) )
 )
@@ -119,19 +129,84 @@ white_dock_window_theme = DockWindowTheme(
 white_bottom_dock_window_theme = DockWindowTheme(
     use_theme_color     = True,
     tabs_at_top         = False,
-    tab_active          = Theme( 'w_tab_active_b',   margins = ( 3, 0 ), 
-                                                     offset  = ( 0, -1 ) ),
-    tab_inactive        = Theme( 'w_tab_inactive_b', margins = ( 3, 0 ),
-                                                     offset  = ( 1, -1 ) ),
-    tab_hover           = Theme( 'w_tab_hover_b',    margins = ( 3, 0 ),
-                                                     offset  = ( 0, -1 ) ),
+    tab_active          = Theme( 'w_tab_active_b',     margins = ( 3, 0 ), 
+                                                       offset  = ( 0, -1 ) ),
+    tab_inactive        = Theme( 'w_tab_inactive_b',   margins = ( 3, 0 ),
+                                                       offset  = ( 1, -1 ) ),
+    tab_hover           = Theme( 'w_tab_hover_b',      margins = ( 3, 0 ),
+                                                       offset  = ( 0, -1 ) ),
     tab_background      = Theme( 'w_tab_background_b', margins = 0 ),
-    tab                 = Theme( 'w_tab_b', margins = ( -4, -4, -2, 2 ), 
-                                            offset  = ( 6, 0 ) ),
-    vertical_splitter   = Theme( 'w_vertical_splitter', margins = 0,
-                                  alignment = 'center', offset = ( 1, 0 ) ), 
+    tab                 = Theme( 'w_tab_b', margins = ( -4, -3, 1, -3 ), 
+                                            offset  = ( 3, 0 ) ),
+    vertical_splitter   = Theme( 'w_vertical_splitter',   margins = 0,
+                                  alignment = 'center',   offset = ( 0, 0 ) ), 
     horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
-                                 alignment = 'center', offset = ( 0, 0 ) ), 
-    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 4 ) ),
-    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 4, 0 ) )
+                                 alignment = 'center', offset = ( 0, -1 ) ), 
+    vertical_drag       = Theme( 'w_vertical_drag',    margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'w_horizontal_drag',  margins = ( 4, 0 ) )
 )
+    
+# Alternate theme with blue/grey 2D tabs:
+blue_dock_window_theme = DockWindowTheme(
+    use_theme_color     = True,
+    tab_active          = Theme( 'blue_tab_active',     margins = ( 3, 0 ), 
+                                                        offset  = ( 0, -3 ) ),
+    tab_inactive        = Theme( 'blue_tab_inactive',   margins = ( 3, 0 ),
+                                                        offset  = ( 1, -2 ) ),
+    tab_hover           = Theme( 'blue_tab_hover',      margins = ( 3, 0 ),
+                                                        offset  = ( 1, -2 ) ),
+    tab_background      = Theme( 'blue_tab_background', margins = 0 ),
+    tab                 = Theme( 'blue_tab', margins = ( -3, -3, -3, 3 ), 
+                                             offset  = ( 3, 0 ) ),
+    tab_inactive_edge   = 'blue_tab_inactive_edge',
+    tab_hover_edge      = 'blue_tab_hover_edge',
+    vertical_splitter   = Theme( 'w_vertical_splitter',   margins = 0,
+                                  alignment = 'center',   offset = ( 0, 0 ) ), 
+    horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
+                                 alignment = 'center',    offset = ( 0, -1 ) ), 
+    vertical_drag       = Theme( 'w_vertical_drag',       margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'w_horizontal_drag',     margins = ( 4, 0 ) )
+)
+    
+# Alternate theme with tan 2D tabs:
+tan_dock_window_theme = DockWindowTheme(
+    use_theme_color     = True,
+    tab_active          = Theme( 't_tab_active',     margins = ( 3, 0 ), 
+                                                     offset  = ( 0, -3 ) ),
+    tab_inactive        = Theme( 't_tab_inactive',   margins = ( 3, 0 ),
+                                                     offset  = ( 1, -1 ) ),
+    tab_hover           = Theme( 't_tab_hover',      margins = ( 3, 0 ),
+                                                     offset  = ( 1, -1 ) ),
+    tab_background      = Theme( 't_tab_background', margins = 0 ),
+    tab                 = Theme( 't_tab', margins = ( -3, -3, -3, 3 ), 
+                                          offset  = ( 3, 0 ) ),
+    tab_inactive_edge   = 't_tab_inactive_edge',
+    vertical_splitter   = Theme( 't_vertical_splitter',   margins = 0,
+                                  alignment = 'center',   offset = ( 0, 0 ) ), 
+    horizontal_splitter = Theme( 't_horizontal_splitter', margins = 0, 
+                                 alignment = 'center',    offset = ( 0, 0 ) ), 
+    vertical_drag       = Theme( 't_vertical_drag',       margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 't_horizontal_drag',     margins = ( 4, 0 ) )
+)
+    
+# Alternate theme with tan 2D tabs:
+tan2_dock_window_theme = DockWindowTheme(
+    use_theme_color     = True,
+    tab_active          = Theme( 't2_tab_active',     margins = ( 3, 0 ), 
+                                                      offset  = ( 0, -3 ) ),
+    tab_inactive        = Theme( 't2_tab_inactive',   margins = ( 3, 0 ),
+                                                      offset  = ( 1, -1 ) ),
+    tab_hover           = Theme( 't2_tab_hover',      margins = ( 3, 0 ),
+                                                      offset  = ( 0, -1 ) ),
+    tab_background      = Theme( 't2_tab_background', margins = 0 ),
+    tab                 = Theme( 't2_tab', margins = ( -3, -3, -3, 3 ), 
+                                           offset  = ( 3, 0 ) ),
+    tab_inactive_edge   = 't2_tab_inactive_edge',
+    vertical_splitter   = Theme( 't2_vertical_splitter', margins = 0,
+                                  alignment = 'center',  offset  = ( 0, 0 ) ), 
+    horizontal_splitter = Theme( 't2_horizontal_splitter', margins = 0, 
+                                 alignment = 'center', offset = ( 0, 0 ) ), 
+    vertical_drag       = Theme( 't_vertical_drag',   margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 't_horizontal_drag', margins = ( 4, 0 ) )
+)
+

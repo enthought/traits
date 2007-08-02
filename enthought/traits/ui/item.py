@@ -38,7 +38,7 @@ from view_element \
     import ViewSubElement
 
 from ui_traits \
-    import convert_image, container_delegate
+    import convert_theme, container_delegate
 
 from editor_factory \
     import EditorFactory
@@ -400,7 +400,7 @@ class Label ( Item ):
     def __init__ ( self, label, item_theme = None ):
         super( Label, self ).__init__( 
             label      = label, 
-            item_theme = convert_image( item_theme )
+            item_theme = convert_theme( item_theme )
         )
 
 #-------------------------------------------------------------------------------

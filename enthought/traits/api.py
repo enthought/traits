@@ -62,8 +62,9 @@ from trait_handlers \
     import BaseTraitHandler, TraitType, TraitHandler, TraitRange, TraitString, \
            TraitCoerceType, TraitCastType, TraitInstance, ThisClass, \
            TraitClass, TraitFunction, TraitEnum, TraitPrefixList, TraitMap, \
-           TraitPrefixMap, TraitCompound, TraitList, TraitListEvent, \
-           TraitDict, TraitDictEvent, TraitTuple
+           TraitPrefixMap, TraitCompound, TraitList, TraitListObject, \
+           TraitListEvent, TraitDict, TraitDictObject, TraitDictEvent, \
+           TraitTuple
 
 from adapter \
     import Adapter, adapts

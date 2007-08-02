@@ -1126,8 +1126,6 @@ _has_traits_instance_traits ( has_traits_object * obj, PyObject * args ) {
     
     if ( obj->itrait_dict == NULL )
 		obj->itrait_dict = (PyDictObject *) PyDict_New();
-        if ( obj->itrait_dict == NULL )
-            return NULL;
     Py_XINCREF( obj->itrait_dict );
     return (PyObject *) obj->itrait_dict;
 }     

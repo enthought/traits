@@ -45,7 +45,9 @@ from ui_traits \
     import SequenceTypes, ATheme, container_delegate
     
 from dock_window_theme \
-    import DockWindowTheme, default_dock_window_theme
+    import DockWindowTheme
+    
+import dock_window_theme
     
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -244,7 +246,7 @@ class Group ( ViewSubElement ):
     #-- Default Trait Values ---------------------------------------------------
     
     def _dock_theme_default ( self ):
-        return default_dock_window_theme
+        return dock_window_theme.default_dock_window_theme
 
     #---------------------------------------------------------------------------
     #  Gets the label to use for a specified Group in a specified UI:
