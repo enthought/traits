@@ -25,14 +25,14 @@
 #if _app is None:
 #    _app = wx.PySimpleApp()
 
-#from enthought.traits.api \
-#    import HasPrivateTraits, Instance, Property, Category, cached_property
+from enthought.traits.api \
+    import HasPrivateTraits, Instance, Property, Category, cached_property, Any
 
 #from enthought.traits.trait_notifiers \
 #    import set_ui_handler
 
-#from enthought.traits.ui.api \
-#    import UI, Theme
+from enthought.traits.ui.api \
+    import UI, Theme
 
 from enthought.traits.ui.toolkit \
     import Toolkit
@@ -48,20 +48,20 @@ from enthought.traits.ui.toolkit \
 #-------------------------------------------------------------------------------
 
 EventSuffix = {
-    wx.wxEVT_LEFT_DOWN:     'left_down',
-    wx.wxEVT_LEFT_DCLICK:   'left_dclick',
-    wx.wxEVT_LEFT_UP:       'left_up',
-    wx.wxEVT_MIDDLE_DOWN:   'middle_down',
-    wx.wxEVT_MIDDLE_DCLICK: 'middle_dclick',
-    wx.wxEVT_MIDDLE_UP:     'middle_up',
-    wx.wxEVT_RIGHT_DOWN:    'right_down',
-    wx.wxEVT_RIGHT_DCLICK:  'right_dclick',
-    wx.wxEVT_RIGHT_UP:      'right_up',
-    wx.wxEVT_MOTION:        'mouse_move',
-    wx.wxEVT_ENTER_WINDOW:  'enter',
-    wx.wxEVT_LEAVE_WINDOW:  'leave',
-    wx.wxEVT_MOUSEWHEEL:    'mouse_wheel',
-    wx.wxEVT_PAINT:         'paint',
+    #wx.wxEVT_LEFT_DOWN:     'left_down',
+    #wx.wxEVT_LEFT_DCLICK:   'left_dclick',
+    #wx.wxEVT_LEFT_UP:       'left_up',
+    #wx.wxEVT_MIDDLE_DOWN:   'middle_down',
+    #wx.wxEVT_MIDDLE_DCLICK: 'middle_dclick',
+    #wx.wxEVT_MIDDLE_UP:     'middle_up',
+    #wx.wxEVT_RIGHT_DOWN:    'right_down',
+    #wx.wxEVT_RIGHT_DCLICK:  'right_dclick',
+    #wx.wxEVT_RIGHT_UP:      'right_up',
+    #wx.wxEVT_MOTION:        'mouse_move',
+    #wx.wxEVT_ENTER_WINDOW:  'enter',
+    #wx.wxEVT_LEAVE_WINDOW:  'leave',
+    #wx.wxEVT_MOUSEWHEEL:    'mouse_wheel',
+    #wx.wxEVT_PAINT:         'paint',
 }
 
 #-------------------------------------------------------------------------------
@@ -83,15 +83,6 @@ def ui_handler ( handler, *args ):
 #-------------------------------------------------------------------------------
 
 class GUIToolkit ( Toolkit ):
-    """ Implementation class for PyQt toolkit.
-    """
-    #---------------------------------------------------------------------------
-    #  Create PyQt specific user interfaces using information from the
-    #  specified UI object:
-    #---------------------------------------------------------------------------
-
-
-class _GUIToolkit ( Toolkit ):
     """ Implementation class for PyQt toolkit.
     """
     #---------------------------------------------------------------------------
@@ -591,7 +582,8 @@ class DragHandler ( HasPrivateTraits ):
     ui = Instance( UI )
 
     # The wx control associated with the drag handler
-    control = Instance( wx.Window )
+    #control = Instance( wx.Window )
+    control = Any
 
 #-- Drag and drop event handlers: ----------------------------------------------
 
