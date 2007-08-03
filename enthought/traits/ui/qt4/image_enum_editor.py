@@ -7,6 +7,7 @@
 #
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
+
 """ Defines the various image enumeration editors and the image enumeration
 editor factory for the PyQt user interface toolkit.
 """
@@ -15,11 +16,11 @@ editor factory for the PyQt user interface toolkit.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enum_editor \
-    import ToolkitEditorFactory as EditorFactory
-
 from enthought.traits.api \
     import Module, Type, Unicode
+
+from enum_editor \
+    import ToolkitEditorFactory as EditorFactory
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

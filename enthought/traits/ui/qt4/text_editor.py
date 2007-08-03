@@ -8,8 +8,8 @@
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
 
-""" Defines the various editors and the editor factory for single-selection
-enumerations, for the PyQt user interface toolkit.
+""" Defines the various text editors and the text editor factory, for the
+PyQt user interface toolkit.
 """
 
 #-------------------------------------------------------------------------------
@@ -17,47 +17,59 @@ enumerations, for the PyQt user interface toolkit.
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Any, Bool, Enum, Event, Range, Str
+    import Any, Dict, false, Str, true
 
 from editor_factory \
     import EditorFactory
 
 #-------------------------------------------------------------------------------
+#  Define a simple identity mapping:
+#-------------------------------------------------------------------------------
+
+class _Identity ( object ):
+    """ A simple indentity mapping.
+    """
+    def __call__ ( self, value ):
+        return value
+
+#-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
 
-# Supported display modes for a custom style editor
-Mode = Enum( 'radio', 'list' )
+# Mapping from user input text to other value
+mapping_trait = Dict( Str, Any )
+
+# Function used to evaluate textual user input
+evaluate_trait = Any( _Identity() )
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
 
 class ToolkitEditorFactory ( EditorFactory ):
-    """ PyQt editor factory for enumeration editors.
+    """ PyQt editor factory for text editors.
     """
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
-    # Values to enumerate (can be a list, tuple, dict, or a CTrait or
-    # TraitHandler that is "mapped"):
-    values = Any
+    # Dictionary that maps user input to other values
+    mapping = mapping_trait
 
-    # Extended name of the trait on **object** containing the enumeration data:
-    name = Str
+    # Is user input set on every keystroke?
+    auto_set = true
 
-    # (Optional) Function used to evaluate text input:
-    evaluate = Any
+    # Is user input set when the Enter key is pressed?
+    enter_set = false
 
-    # Is user input set on every keystroke (when text input is allowed)?
-    auto_set = Bool( True )
+    # Is multi-line text allowed?
+    multi_line = true
 
-    # Number of columns to use when displayed as a grid:
-    cols = Range( 1, 20 )
+    # Is user input unreadable? (e.g., for a password)
+    password = false
 
-    # Display modes supported for a custom style editor:
-    mode = Mode
+    # Function to evaluate textual user input
+    evaluate = evaluate_trait
 
-    # Fired when the **values** trait has been updated:
-    values_modified = Event
+    # The object trait containing the function used to evaluate user input
+    evaluate_name = Str

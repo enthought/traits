@@ -7,6 +7,7 @@
 #
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
+
 """ Defines the base PyQt EditorFactory class and classes the various
 styles of editors used in a Traits-based user interface.
 """

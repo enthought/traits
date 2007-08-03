@@ -11,6 +11,7 @@
 """ Defines the concrete implementations of the traits Toolkit interface for 
 the PyQt user interface toolkit.
 """
+
 __import__('pkg_resources').declare_namespace(__name__)
 
 #-------------------------------------------------------------------------------
