@@ -650,10 +650,11 @@ class DragHandler ( HasPrivateTraits ):
 #  PyQt:
 #-------------------------------------------------------------------------------
             
-class WXTheme ( Category, Theme ):
+#class WXTheme ( Category, Theme ):
     """ Defines the extensions needed to make the generic Theme class specific
         to PyQt.
     """
+"""
     
     # The image slice used to draw the theme:
     image_slice = Property( depends_on = 'image' )
@@ -668,3 +669,4 @@ class WXTheme ( Category, Theme ):
             return None
             
         return image_slice_for( self.image )
+"""
