@@ -16,14 +16,15 @@ the PyQt user interface toolkit.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-# Make sure that PyQt is installed
-#import wx
+# Make sure that PyQt is installed.
+from PyQt4 import QtGui
 
-# hack: Make sure a wx.App object is created early:
+# hack: Make sure a QApplication object is created early:
 
-#_app = wx.GetApp()
-#if _app is None:
-#    _app = wx.PySimpleApp()
+_app = QtGui.QApplication.instance()
+if _app is None:
+    import sys
+    _app = QtGui.QApplication(sys.argv)
 
 from enthought.traits.api \
     import HasPrivateTraits, Instance, Property, Category, cached_property, Any
