@@ -159,8 +159,12 @@ class ReadonlyEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = wx.TextCtrl( parent, -1, '', style = wx.TE_READONLY )
-        self.control.SetBackgroundColour( ReadonlyColor )
+        self.control = QtGui.QLineEdit(parent)
+        self.control.setReadOnly(True)
+
+        pal = self.control.palette()
+        pal.setColor(QtGui.QPalette.Base, ReadonlyColor)
+        self.control.setPalette(pal)
         
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
@@ -173,6 +177,6 @@ class ReadonlyEditor ( Editor ):
             editor.
         """
         if self.value:
-            self.control.SetLabel( 'True' )
+            self.control.setText('True')
         else:
-            self.control.SetLabel( 'False' )
+            self.control.setText('False')

@@ -287,7 +287,7 @@ class LiveWindow ( BaseDialog ):
     def _on_error ( self, errors ):
         """ Handles editing errors.
         """
-        self.ok.Enable( errors == 0 )
+        self.ok.setEnabled(errors == 0)
     
     #---------------------------------------------------------------------------
     #  Handles the 'Help' button being clicked:
@@ -305,7 +305,7 @@ class LiveWindow ( BaseDialog ):
     def _on_undoable ( self, state ):
         """ Handles a change to the "undoable" state of the undo history 
         """
-        self.undo.Enable( state )
+        self.undo.setEnabled(state)
             
     #---------------------------------------------------------------------------
     #  Handles the undo history 'redoable' state changing:
@@ -314,7 +314,7 @@ class LiveWindow ( BaseDialog ):
     def _on_redoable ( self, state ):
         """ Handles a change to the "redoable state of the undo history.
         """
-        self.redo.Enable( state )
+        self.redo.setEnabled(state)
             
     #---------------------------------------------------------------------------
     #  Handles the 'revert' state changing:
@@ -323,4 +323,4 @@ class LiveWindow ( BaseDialog ):
     def _on_revertable ( self, state ):
         """ Handles a change to the "revert" state.
         """
-        self.revert.Enable( state )
+        self.revert.setEnabled(state)

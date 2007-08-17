@@ -16,7 +16,7 @@ PyQt user interface toolkit.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import Dict, Str, Any, true, false, TraitError
@@ -143,7 +143,7 @@ class SimpleEditor ( Editor ):
     """
     
     # Flag for window styles:
-    base_style = 0
+    base_style = QtGui.QLineEdit
     
     # Background color when input is OK:
     ok_color = OKColor
@@ -164,33 +164,39 @@ class SimpleEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        factory       = self.factory
-        style         = self.base_style
+        factory = self.factory
+        wtype = self.base_style
         self.evaluate = factory.evaluate
-        self.sync_value( factory.evaluate_name, 'evaluate', 'from' )
+        self.sync_value(factory.evaluate_name, 'evaluate', 'from')
             
-        if (not factory.multi_line) or factory.is_grid_cell or factory.password:
-            style &= ~wx.TE_MULTILINE
+        if not factory.multi_line or factory.is_grid_cell or factory.password:
+            wtype = QtGui.QLineEdit
         
-        if factory.password:
-            style |= wx.TE_PASSWORD
-            
-        multi_line = ((style & wx.TE_MULTILINE) != 0)
+        multi_line = (wtype is not QtGui.QLineEdit)
         if multi_line:
             self.scrollable = True
-            
-        if factory.enter_set and (not multi_line):
-            control = wx.TextCtrl( parent, -1, self.str_value,
-                                   style = style | wx.TE_PROCESS_ENTER )
-            wx.EVT_TEXT_ENTER( parent, control.GetId(), self.update_object )
+
+        control = wtype(self.str_value, parent)
+
+        # Create the palettes.
+        self._error_palette = QtGui.QPalette(control.palette())
+        self._error_palette.setColor(QtGui.QPalette.Base, ErrorColor)
+
+        self._ok_palette = QtGui.QPalette(control.palette())
+        self._ok_palette.setColor(QtGui.QPalette.Base, self.ok_color)
+
+        control.setPalette(self._ok_palette)
+
+        if factory.password:
+            control.setEchoMode(QtGui.QLineEdit.Password)
+
+        if factory.auto_set and not factory.is_grid_cell:
+            control.connect(control, QtCore.SIGNAL('textEdited(QString)'),
+                    self.update_object)
         else:
-            control = wx.TextCtrl( parent, -1, self.str_value, style = style )
-            
-        wx.EVT_KILL_FOCUS( control, self.update_object )
-        
-        if factory.auto_set and (not factory.is_grid_cell):
-           wx.EVT_TEXT( parent, control.GetId(), self.update_object )
-           
+            control.connect(control, QtCore.SIGNAL('editingFinished()'),
+                    self.update_object)
+
         self.control = control
         self.set_tooltip()
 
@@ -198,17 +204,16 @@ class SimpleEditor ( Editor ):
     #  Handles the user entering input data in the edit control:
     #---------------------------------------------------------------------------
   
-    def update_object ( self, event ):
+    def update_object ( self ):
         """ Handles the user entering input data in the edit control.
         """
-        if (not self._no_update) and (self.control is not None):
+        if not self._no_update and self.control is not None:
             try:
                 self.value = self._get_user_value()
-                self.control.SetBackgroundColour( self.ok_color )
-                self.control.Refresh()
+                self.control.setPalette(self._ok_palette)
                 
                 if self._error is not None:
-                    self._error     = None
+                    self._error = None
                     self.ui.errors -= 1
                     
             except TraitError, excp:
@@ -224,14 +229,13 @@ class SimpleEditor ( Editor ):
         """
         if self._get_user_value() != self.value:
             self._no_update = True
-            self.control.SetValue( self.str_value )
+            self.control.setText(self.str_value)
             self._no_update = False
             
         if self._error is not None:
-            self._error     = None
+            self._error = None
             self.ui.errors -= 1
-            self.control.SetBackgroundColour( self.ok_color )
-            self.control.Refresh()
+            self.control.setPalette(self._ok_palette)
 
     #---------------------------------------------------------------------------
     #  Gets the actual value corresponding to what the user typed:
@@ -240,7 +244,7 @@ class SimpleEditor ( Editor ):
     def _get_user_value ( self ):
         """ Gets the actual value corresponding to what the user typed.
         """
-        value = self.control.GetValue()
+        value = unicode(self.control.text())
         try:
             value = self.evaluate( value )
         except:
@@ -255,11 +259,10 @@ class SimpleEditor ( Editor ):
     def error ( self, excp ):
         """ Handles an error that occurs while setting the object's trait value.
         """
-        self.control.SetBackgroundColour( ErrorColor )
-        self.control.Refresh()
+        self.control.setPalette(self._error_palette)
         
         if self._error is None:
-            self._error     = True
+            self._error = True
             self.ui.errors += 1
         
 #-------------------------------------------------------------------------------
@@ -270,9 +273,9 @@ class CustomEditor ( SimpleEditor ):
     """ Custom style of text editor, which displays a multi-line text field.
     """
     
-    # FIXME: What's the point of this?
+    # FIXME: The wx version exposes a wx constant.
     # Flag for window style. This value overrides the default.
-    #base_style = wx.TE_MULTILINE
+    base_style = QtGui.QTextEdit
                                      
 #-------------------------------------------------------------------------------
 #  'ReadonlyTextEditor' class:
@@ -303,4 +306,3 @@ class ReadonlyTextEditor ( ReadonlyEditor ):
                 
         elif control.GetLabel() != new_value:
             control.SetLabel( new_value )
-    

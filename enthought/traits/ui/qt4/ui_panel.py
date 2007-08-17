@@ -808,6 +808,7 @@ class FillPanel ( object ):
         if show_labels or (columns > 1):
             row = 0
             item_sizer = QtGui.QGridLayout()
+
             if show_left:
                 label_alignment = QtCore.Qt.AlignRight
                 if show_labels:
