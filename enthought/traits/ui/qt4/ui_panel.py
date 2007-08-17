@@ -34,8 +34,8 @@ from enthought.traits.trait_base \
 from enthought.traits.ui.undo \
     import UndoHistory
     
-from enthought.traits.ui.dockable_view_element \
-    import DockableViewElement
+#from enthought.traits.ui.dockable_view_element \
+#    import DockableViewElement
     
 from enthought.traits.ui.help_template \
     import help_template
@@ -811,12 +811,12 @@ class FillPanel ( object ):
             if show_left:
                 label_alignment = QtCore.Qt.AlignRight
                 if show_labels:
-                    for i in range(1, group.columns, 2):
+                    for i in range(1, group.columns * 2, 2):
                         item_sizer.setColumnStretch(i, 1)
             else:
                 label_alignment = QtCore.Qt.AlignLeft
                 if show_labels:
-                    for i in range(0, group.columns, 2):
+                    for i in range(0, group.columns * 2, 2):
                         item_sizer.setColumnStretch(i, 1)
 
             sizer.addLayout(item_sizer)
@@ -1071,12 +1071,6 @@ class FillPanel ( object ):
             # FIXME: Need to decide what to do about springy, border_size,
             # padding and item.padding.
             self._add_widget(item_sizer, control, row, col, show_labels)
-
-            # FIXME: Decide what to do about this.
-            # If the Item is resizable, and we are using a multi-column grid:
-            #if (item.resizable or scrollable) and (cols > 1):
-                # Mark the entire row as growable:
-            #    item_sizer.AddGrowableRow( col / cols )
 
             # Save the reference to the label control (if any) in the editor:
             editor.label_control = label

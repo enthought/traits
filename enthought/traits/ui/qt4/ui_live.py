@@ -74,7 +74,7 @@ def ui_dialog ( ui, parent, is_modal ):
         ui.control.exec_()
     else:
         ui.control.show()
-    
+
 #-------------------------------------------------------------------------------
 #  'LiveWindow' class:
 #-------------------------------------------------------------------------------
@@ -88,7 +88,6 @@ class LiveWindow ( BaseDialog ):
     #---------------------------------------------------------------------------
     
     def init ( self, ui, parent, is_modal ):
-        self.is_modal = is_modal
         view = ui.view
         history = ui.history
         window = ui.control
@@ -154,8 +153,7 @@ class LiveWindow ( BaseDialog ):
 
         # Check to see if we need to add any of the special function buttons:
         if (not no_buttons) and (has_buttons or view.help):
-            sw_sizer.Add( wx.StaticLine( window, -1 ), 0, wx.EXPAND )
-            b_sizer = wx.BoxSizer( wx.HORIZONTAL )
+            bbox = QtGui.QDialogButtonBox()
             
             # Convert all button flags to actual button actions if no buttons
             # were specified in the 'buttons' trait:
@@ -173,45 +171,60 @@ class LiveWindow ( BaseDialog ):
                 
             # Create a button for each button action:
             for button in buttons:
-                button = self.coerce_button( button )
-                if self.is_button( button, 'Undo' ):
-                    self.undo = self.add_button( button, b_sizer, 
-                                                 self._on_undo, False )
-                    self.redo = self.add_button( button, b_sizer, 
-                                                 self._on_redo, False, 'Redo' )
-                    history.on_trait_change( self._on_undoable, 'undoable', 
-                                             dispatch = 'ui' )
-                    history.on_trait_change( self._on_redoable, 'redoable',
-                                             dispatch = 'ui' )
+                button = self.coerce_button(button)
+
+                if self.is_button(button, 'Undo'):
+                    self.undo = self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.ActionRole, self._on_undo,
+                            False)
+                    history.on_trait_change(self._on_undoable, 'undoable',
+                            dispatch='ui')
                     if history.can_undo:
-                        self._on_undoable( True )
+                        self._on_undoable(True)
+
+                    self.redo = self.add_button(button,bbox, 
+                            QtGui.QDialogButtonBox.ActionRole, self._on_redo,
+                            False, 'Redo')
+                    history.on_trait_change(self._on_redoable, 'redoable',
+                            dispatch='ui')
                     if history.can_redo:
-                        self._on_redoable( True )
-                elif self.is_button( button, 'Revert' ): 
-                    self.revert = self.add_button( button, b_sizer,
-                                                   self._on_revert, False )
-                    history.on_trait_change( self._on_revertable, 'undoable',
-                                             dispatch = 'ui' )
+                        self._on_redoable(True)
+
+                elif self.is_button(button, 'Revert'): 
+                    self.revert = self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.ResetRole, self._on_revert,
+                            False)
+                    history.on_trait_change(self._on_revertable, 'undoable',
+                            dispatch='ui')
                     if history.can_undo:
-                        self._on_revertable( True )
-                elif self.is_button( button, 'OK' ): 
-                    self.ok = self.add_button( button, b_sizer, self._on_ok )
-                    ui.on_trait_change( self._on_error, 'errors', 
-                                        dispatch = 'ui' )
-                elif self.is_button( button, 'Cancel' ): 
-                    self.add_button( button, b_sizer, self._on_cancel )
-                elif self.is_button( button, 'Help' ): 
-                    self.add_button( button, b_sizer, self._on_help )
-                elif not self.is_button( button, '' ):
-                    self.add_button( button, b_sizer )
-            sw_sizer.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
+                        self._on_revertable(True)
+
+                elif self.is_button(button, 'OK'): 
+                    self.ok = self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.AcceptRole, window.accept)
+                    ui.on_trait_change(self._on_error, 'errors', dispatch='ui')
+
+                elif self.is_button(button, 'Cancel'): 
+                    self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.RejectRole, window.reject)
+
+                elif self.is_button(button, 'Help'): 
+                    self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.HelpRole, self._on_help)
+
+                elif not self.is_button(button, ''):
+                    self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.ActionRole)
+
+            layout.addStretch(1)
+            layout.addWidget(bbox)
         
         # Add the menu bar and tool bar (if any):
         self.add_menubar()
         self.add_toolbar()
 
         window.setLayout(layout)
-         
+
     #---------------------------------------------------------------------------
     #  Closes the dialog window:
     #---------------------------------------------------------------------------

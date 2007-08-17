@@ -16,21 +16,18 @@ the PyQt user interface toolkit.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-# Make sure that PyQt is installed.
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 
-# hack: Make sure a QApplication object is created early:
-
-_app = QtGui.QApplication.instance()
-if _app is None:
+# Make sure a QApplication object is created early:
+if QtGui.QApplication.startingUp():
     import sys
     _app = QtGui.QApplication(sys.argv)
 
 from enthought.traits.api \
     import HasPrivateTraits, Instance, Property, Category, cached_property, Any
 
-#from enthought.traits.trait_notifiers \
-#    import set_ui_handler
+from enthought.traits.trait_notifiers \
+    import set_ui_handler
 
 from enthought.traits.ui.api \
     import UI, Theme
@@ -41,43 +38,62 @@ from enthought.traits.ui.toolkit \
 #from enthought.util.wx.drag_and_drop \
 #    import PythonDropTarget, clipboard
 
-#from constants \
-#    import screen_dx, screen_dy
-
-#-------------------------------------------------------------------------------
-#  Constants:
-#-------------------------------------------------------------------------------
-
-EventSuffix = {
-    #wx.wxEVT_LEFT_DOWN:     'left_down',
-    #wx.wxEVT_LEFT_DCLICK:   'left_dclick',
-    #wx.wxEVT_LEFT_UP:       'left_up',
-    #wx.wxEVT_MIDDLE_DOWN:   'middle_down',
-    #wx.wxEVT_MIDDLE_DCLICK: 'middle_dclick',
-    #wx.wxEVT_MIDDLE_UP:     'middle_up',
-    #wx.wxEVT_RIGHT_DOWN:    'right_down',
-    #wx.wxEVT_RIGHT_DCLICK:  'right_dclick',
-    #wx.wxEVT_RIGHT_UP:      'right_up',
-    #wx.wxEVT_MOTION:        'mouse_move',
-    #wx.wxEVT_ENTER_WINDOW:  'enter',
-    #wx.wxEVT_LEAVE_WINDOW:  'leave',
-    #wx.wxEVT_MOUSEWHEEL:    'mouse_wheel',
-    #wx.wxEVT_PAINT:         'paint',
-}
+from constants \
+    import screen_dx, screen_dy
 
 #-------------------------------------------------------------------------------
 #  Handles UI notification handler requests that occur on a thread other than
 #  the UI thread:
 #-------------------------------------------------------------------------------
 
+class _CallAfter(QtCore.QObject):
+    """ This class dispatches a handler so that it executes in the main GUI
+        thread (similar to the wx function).
+    """
+
+    # The list of pending calls.
+    _calls = []
+
+    # The mutex around the list of pending calls.
+    _calls_mutex = QtCore.QMutex()
+
+    def __init__(self, handler, *args):
+        """ Initialise the call. """
+        QtCore.QObject.__init__(self)
+
+        # Save the details of the call.
+        self._handler = handler
+        self._args = args
+
+        # Add this to the list.
+        self._calls_mutex.lock()
+        self._calls.append(self)
+        self._calls_mutex.unlock()
+
+        # Move to the main GUI thread.
+        self.moveToThread(QtGui.QApplication.instance().thread())
+
+        # Dispatch next time round the event loop.
+        QtCore.QTimer.singleShot(0, self._dispatch)
+
+    def _dispatch(self):
+        """ Invoke the handler. """
+        # Remove from the list.
+        self._calls_mutex.lock()
+        del self._calls[self._calls.index(self)]
+        self._calls_mutex.unlock()
+
+        self._handler(*self._args)
+
+
 def ui_handler ( handler, *args ):
     """ Handles UI notification handler requests that occur on a thread other
         than the UI thread.
     """
-    wx.CallAfter( handler, *args )
+    _CallAfter(handler, *args)
 
 # Tell the traits notification handlers to use this UI handler
-#set_ui_handler( ui_handler )
+set_ui_handler( ui_handler )
 
 #-------------------------------------------------------------------------------
 #  'GUIToolkit' class:
@@ -188,16 +204,24 @@ class GUIToolkit ( Toolkit ):
         window = ui.control
 
         # Set up the default position of the window:
-        parent = window.GetParent()
+        parent = window.parent()
         if parent is None:
-           px,  py  = 0, 0
-           pdx, pdy = screen_dx, screen_dy
+            px = 0
+            py = 0
+            pdx = screen_dx
+            pdy = screen_dy
         else:
-           px,  py  = parent.GetPositionTuple()
-           pdx, pdy = parent.GetSizeTuple()
+            px = parent.x()
+            py = parent.y()
+            pdx = parent.width()
+            pdy = parent.height()
+
+        # Show the window in order to establish its size.
+        window.show()
 
         # Calculate the correct width and height for the window:
-        cur_width, cur_height = window.GetSizeTuple()
+        cur_width = window.width()
+        cur_height = window.height()
         width  = view.width
         height = view.height
 
@@ -242,7 +266,7 @@ class GUIToolkit ( Toolkit ):
             y = int( y )
 
         # Position and size the window as requested:
-        window.SetDimensions( max( 0, x ), max( 0, y ), width, height )
+        window.setGeometry( max( 0, x ), max( 0, y ), width, height )
 
     #---------------------------------------------------------------------------
     #  Shows a 'Help' window for a specified UI and control:
@@ -252,7 +276,7 @@ class GUIToolkit ( Toolkit ):
         """ Shows a help window for a specified UI and control.
         """
         import ui_panel
-        ui_panel.show_help( ui, control )
+        ui_panel.show_help(ui, control)
 
     #---------------------------------------------------------------------------
     #  Saves user preference information associated with a UI window:
@@ -262,8 +286,7 @@ class GUIToolkit ( Toolkit ):
         """ Saves user preference information associated with a UI window.
         """
         import helper
-
-        helper.save_window( ui )
+        helper.save_window(ui)
 
     #---------------------------------------------------------------------------
     #  Rebuilds a UI after a change to the content of the UI:
@@ -292,7 +315,7 @@ class GUIToolkit ( Toolkit ):
     def set_title ( self, ui ):
         """ Sets the title for the UI window.
         """
-        ui.control.SetTitle( ui.title )
+        ui.control.setWindowTitle(ui.title)
 
     #---------------------------------------------------------------------------
     #  Sets the icon for the UI window:
@@ -303,8 +326,8 @@ class GUIToolkit ( Toolkit ):
         """
         from enthought.pyface.image_resource import ImageResource
 
-        if isinstance( ui.icon, ImageResource ):
-            ui.control.SetIcon( ui.icon.create_icon() )
+        if isinstance(ui.icon, ImageResource):
+            ui.control.setWindowIcon(ui.icon.create_icon())
 
     #---------------------------------------------------------------------------
     #  Converts a keystroke event into a corresponding key name:
@@ -314,69 +337,7 @@ class GUIToolkit ( Toolkit ):
         """ Converts a keystroke event into a corresponding key name.
         """
         import key_event_to_name
-
         return key_event_to_name.key_event_to_name( event )
-
-    #---------------------------------------------------------------------------
-    #  Hooks all interesting events for all controls in a ui so that they can
-    #  be routed to the correct event handler:
-    #---------------------------------------------------------------------------
-
-    def hook_events ( self, ui, control, drop_target = None ):
-        """ Hooks all interesting mouse events for all controls in a UI so that
-        they can be routed to the correct event handler.
-        """
-        id            = control.GetId()
-        event_handler = wx.EvtHandler()
-        connect       = event_handler.Connect
-        route_event   = ui.route_event
-
-        connect( id, id, wx.wxEVT_LEFT_DOWN,     route_event )
-        connect( id, id, wx.wxEVT_LEFT_DCLICK,   route_event )
-        connect( id, id, wx.wxEVT_LEFT_UP,       route_event )
-        connect( id, id, wx.wxEVT_MIDDLE_DOWN,   route_event )
-        connect( id, id, wx.wxEVT_MIDDLE_DCLICK, route_event )
-        connect( id, id, wx.wxEVT_MIDDLE_UP,     route_event )
-        connect( id, id, wx.wxEVT_RIGHT_DOWN,    route_event )
-        connect( id, id, wx.wxEVT_RIGHT_DCLICK,  route_event )
-        connect( id, id, wx.wxEVT_RIGHT_UP,      route_event )
-        connect( id, id, wx.wxEVT_MOTION,        route_event )
-        connect( id, id, wx.wxEVT_ENTER_WINDOW,  route_event )
-        connect( id, id, wx.wxEVT_LEAVE_WINDOW,  route_event )
-        connect( id, id, wx.wxEVT_MOUSEWHEEL,    route_event )
-        connect( id, id, wx.wxEVT_PAINT,         route_event )
-
-        control.PushEventHandler( event_handler )
-        control.SetDropTarget( PythonDropTarget(
-                                   DragHandler( ui = ui, control = control ) ) )
-
-        for child in control.GetChildren():
-            self.hook_events( ui, child, drop_target )
-
-    #---------------------------------------------------------------------------
-    #  Routes a 'hooked' event to the correct handler method:
-    #---------------------------------------------------------------------------
-
-    def route_event ( self, ui, event ):
-        """ Routes a hooked event to the correct handler method.
-        """
-        suffix  = EventSuffix[ event.GetEventType() ]
-        control = event.GetEventObject()
-        handler = ui.handler
-        method  = None
-
-        owner   = getattr( control, '_owner', None )
-        if owner is not None:
-            method = getattr( handler, 'on_%s_%s' % ( owner.get_id(), suffix ),
-                              None )
-
-        if method is None:
-            method = getattr( handler, 'on_%s' % suffix, None )
-
-        if method is None:
-            event.Skip()
-        else:
-            method( ui.info, owner, event )
 
     #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:

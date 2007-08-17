@@ -16,7 +16,6 @@ complete application, using information from the specified UI object.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import sys
 import os
 
 from PyQt4 import QtGui
@@ -57,7 +56,10 @@ def view_application ( context, view, kind, handler, id, scrollable, args ):
     if (kind == 'panel') or ((kind is None) and (view.kind == 'panel')):
         kind = 'modal'
 
-    if QtGui.QApplication.startingUp():
+    # The _in_event_loop hack is needed because Qt v4 won't tell you if an
+    # event loop is running.
+    app = QtGui.QApplication.instance()
+    if app is not None and not hasattr(app, '_in_event_loop'):
         return ViewApplication( context, view, kind, handler, id, 
                                 scrollable, args ).ui.result
                                 
@@ -67,12 +69,12 @@ def view_application ( context, view, kind, handler, id, scrollable, args ):
                     id         = id,
                     scrollable = scrollable,
                     args       = args ).result
-    
+
 #-------------------------------------------------------------------------------
 #  'ViewApplication' class:
 #-------------------------------------------------------------------------------
 
-class ViewApplication ( QtGui.QApplication ):
+class ViewApplication ( object ):
     """ Modal window that contains a stand-alone application.
     """
     #---------------------------------------------------------------------------
@@ -95,8 +97,6 @@ class ViewApplication ( QtGui.QApplication ):
             from enthought.developer.helper.fbi import enable_fbi
             enable_fbi()
 
-        super( ViewApplication, self ).__init__(sys.argv)
-         
         self.ui = self.view.ui( self.context, 
                                 kind       = self.kind, 
                                 handler    = self.handler,
@@ -104,4 +104,5 @@ class ViewApplication ( QtGui.QApplication ):
                                 scrollable = self.scrollable,
                                 args       = self.args )
 
-        self.exec_()
+        QtGui.QApplication.instance()._in_event_loop = True
+        QtGui.QApplication.exec_()

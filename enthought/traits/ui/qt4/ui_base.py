@@ -16,7 +16,7 @@ dialogs.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import HasStrictTraits, HasPrivateTraits, Instance, List, Event
@@ -276,9 +276,7 @@ class BaseDialog ( object ):
     #  Creates a user specified button:
     #---------------------------------------------------------------------------
 
-    def add_button ( self, action, sizer, method  = None,
-                                          enabled = True,
-                                          name    = None ):
+    def add_button ( self, action, bbox, role, method=None, enabled=True, name=None ):
         """ Creates a button.
         """
         ui = self.ui
@@ -289,8 +287,8 @@ class BaseDialog ( object ):
         if name is None:
             name = action.name
         id     = action.id
-        button = wx.Button( self.control, -1, name )
-        button.Enable( enabled )
+        button = bbox.addButton(name, role)
+        button.setEnabled(enabled)
         if (method is None) or (action.enabled_when != '') or (id != ''):
             editor = ButtonEditor( ui      = ui,
                                    action  = action,
@@ -303,8 +301,11 @@ class BaseDialog ( object ):
                 ui.add_enabled( action.enabled_when, editor )
             if method is None:
                 method = editor.perform
-        wx.EVT_BUTTON( self.control, button.GetId(), method )
-        sizer.Add( button, 0, wx.LEFT, 5 )
+
+        if method is not None:
+            button.connect(button, QtCore.SIGNAL('clicked()'), method)
+
         if action.tooltip != '':
-            button.SetToolTipString( action.tooltip )
+            button.setToolTip(action.tooltip)
+
         return button
