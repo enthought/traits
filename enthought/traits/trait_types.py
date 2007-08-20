@@ -1017,7 +1017,10 @@ class Enum ( TraitType ):
         values[0]
         """
         default_value = values[0]
-        if (len( values ) == 2) and isinstance( values[1], SequenceTypes ):
+        if (len( values ) == 1) and (type( values[0] ) in SequenceTypes): 
+            values        = default_value
+            default_value = values[0]
+        elif (len( values ) == 2) and isinstance( values[1], SequenceTypes ):
             values = values[1]
         self.values        = tuple( values )
         self.fast_validate = ( 5, self.values )
