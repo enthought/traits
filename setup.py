@@ -24,11 +24,21 @@ TRAITS = etsdep('enthought.traits', '3.0.0b1')
 setup(
     author = 'Phil Thompson',
     author_email = 'phil@riverbankcomputing.co.uk',
+    dependency_links = [
+        'http://code.enthought.com/enstaller/eggs/source',
+        'http://code.enthought.com/enstaller/eggs/source/unstable',
+        ],
     description = 'PyQt backend for enthought.traits',
+    extras_require = {
+        # All non-ets dependencies should be in this extra to ensure users can
+        # decide whether to require them or not.
+        'nonets': [
+            ],
+        },
     include_package_data = True,
     install_requires = [
-        "enthought.model >=2.0.0b1, <3.0.0",
-        "enthought.traits >=3.0.0b1, <4.0.0",
+        MODEL,
+        TRAITS,
         ],
     license = 'GPL',
     name = 'enthought.traits.ui.qt4',
@@ -38,6 +48,10 @@ setup(
         "enthought.traits.ui",
         ],
     packages = find_packages(),
+    tests_require = [
+        'nose >= 0.9',
+        ],
+    test_suite = 'nose.collector',
     url = 'http://code.enthought.com/traits',
     version = '3.0.0b1',
     zip_safe = False,
