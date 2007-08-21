@@ -209,4 +209,44 @@ tan2_dock_window_theme = DockWindowTheme(
     vertical_drag       = Theme( 't_vertical_drag',   margins = ( 0, 4 ) ),
     horizontal_drag     = Theme( 't_horizontal_drag', margins = ( 4, 0 ) )
 )
+    
+# Alternate theme with floating 3D button tabs:
+button_dock_window_theme = DockWindowTheme(
+    use_theme_color     = True,
+    tab_active          = Theme( 'btn_tab_active',   margins = ( 0, 0 ), 
+                                                     offset  = ( 2, -1 ) ),
+    tab_inactive        = Theme( 'btn_tab_inactive', margins = ( 0, 0 ),
+                                                     offset  = ( 1, -2 ) ),
+    tab_hover           = Theme( 'btn_tab_hover',    margins = ( 0, 0 ),
+                                                     offset  = ( 1, -2 ) ),
+    tab_background      = Theme( 'btn_tab_background', margins = 0 ),
+    tab                 = Theme( 'btn_tab', margins = ( 2, 2 ),
+                                            offset  = ( -7, 0 ) ),
+    vertical_splitter   = Theme( 'w_vertical_splitter', margins = 0,
+                                  alignment = 'center', offset = ( 0, 0 ) ), 
+    horizontal_splitter = Theme( 'w_horizontal_splitter', margins = 0, 
+                                 alignment = 'center', offset = ( 0, -1 ) ), 
+    vertical_drag       = Theme( 'w_vertical_drag',   margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'w_horizontal_drag', margins = ( 4, 0 ) )
+)
+    
+# Alternate tan theme with floating flat button tabs:
+tan_button_dock_window_theme = DockWindowTheme(
+    use_theme_color     = True,
+    tab_active          = Theme( 'tbtn_tab_active',   margins = ( 0, 0 ), 
+                                                      offset  = ( 2, -1 ) ),
+    tab_inactive        = Theme( 'tbtn_tab_inactive', margins = ( 0, 0 ),
+                                                      offset  = ( 2, -1 ) ),
+    tab_hover           = Theme( 'tbtn_tab_hover',    margins = ( 0, 0 ),
+                                                      offset  = ( 2, -1 ) ),
+    tab_background      = Theme( 'tbtn_tab_background', margins = 0 ),
+    tab                 = Theme( 'tbtn_tab', margins = ( 2, 2 ),
+                                             offset  = ( -5, 0 ) ),
+    vertical_splitter   = Theme( 'tbtn_vertical_splitter', margins = 0,
+                                  alignment = 'center', offset = ( 0, 0 ) ), 
+    horizontal_splitter = Theme( 'tbtn_horizontal_splitter', margins = 0, 
+                                 alignment = 'center', offset = ( 0, 0 ) ), 
+    vertical_drag       = Theme( 'tbtn_vertical_drag',   margins = ( 0, 4 ) ),
+    horizontal_drag     = Theme( 'tbtn_horizontal_drag', margins = ( 4, 0 ) )
+)
 
