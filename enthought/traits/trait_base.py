@@ -33,7 +33,7 @@ from os.path \
     import isdir, dirname, exists, join
 
 from string \
-    import lowercase, uppercase
+    import lowercase, uppercase, capwords
 
 from types \
     import ListType, TupleType, DictType, StringType, UnicodeType, IntType, \
@@ -228,9 +228,9 @@ def user_name_for ( name ):
     capitalized and with underscore characters replaced by spaces. For example,
     ``user_name_for('user_name_for')`` returns ``'User name for'``.
     """
-    name       = name.replace( '_', ' ' ).capitalize()
+    name       = name.replace( '_', ' ' )
     result     = ''
-    last_lower = 0
+    last_lower = False
 
     for c in name:
         if (c in uppercase) and last_lower:
@@ -238,7 +238,7 @@ def user_name_for ( name ):
         last_lower = (c in lowercase)
         result    += c
 
-    return result
+    return capwords( result )
 
 #-------------------------------------------------------------------------------
 #  Gets the path to the traits home directory:
