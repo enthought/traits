@@ -142,11 +142,10 @@ class Image ( TraitType ):
 def convert_theme ( value, level = 3 ):
     """ Converts a specified value to a Theme if possible.
     """
-    from theme import Theme
-    
     if not isinstance( value, basestring ):
         return value
         
+    from theme import Theme
     return Theme( image = convert_image( value, level + 1 ) )
     
 class ATheme ( TraitType ):
