@@ -18,7 +18,7 @@ Use this module for importing Traits names into your namespace. For example::
 from version import __version__
 
 from trait_base \
-    import Undefined, Missing, Self
+    import Undefined, Missing, Self, python_version
 
 from trait_errors \
     import TraitError, TraitNotificationError, DelegationError
@@ -45,12 +45,16 @@ from trait_types \
            CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, Code, HTML, \
            Password, Expression, PythonValue, File, Directory, Range, Enum, \
            Tuple, List, Dict, Instance, WeakRef, false, true, undefined
-
+               
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \
            ListFunction, ListMethod, ListClass, ListInstance, ListThis, \
            DictStrAny, DictStrStr, DictStrInt, DictStrLong, DictStrFloat, \
            DictStrBool, DictStrList
+
+if python_version >= 2.5:
+    from trait_types \
+        import UUID
 
 from has_traits \
     import method, HasTraits, HasStrictTraits, HasPrivateTraits, \
@@ -79,7 +83,7 @@ from protocols.interfaces \
 #  ui imports:
 #-------------------------------------------------------------------------------
 
-if True:
+if False:
 
     from ui.handler \
         import Handler, ViewHandler, default_handler

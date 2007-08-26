@@ -30,7 +30,7 @@ from enthought.traits.protocols._speedups \
 
 from trait_base \
     import strx, get_module_name, class_of, SequenceTypes, TypeTypes, \
-           ClassTypes, Undefined
+           ClassTypes, Undefined, python_version
     
 from trait_handlers \
     import TraitType, TraitInstance, TraitListObject, TraitDictObject, \
@@ -1744,6 +1744,40 @@ class HandleWeakRef ( object ):
         object = self.object()
         if object is not None:
             object.trait_property_changed( self.name, Undefined, None )
+            
+if python_version >= 2.5:
+    
+    import uuid 
+    
+    #---------------------------------------------------------------------------
+    #  'UUID' trait:  
+    #---------------------------------------------------------------------------
+                       
+    class UUID ( TraitType ):
+        """ Defines a trait whose value is a globally unique UUID (type 4).
+        """
+    
+        # A description of the type of value this trait accepts:
+        info_text = 'a read-only UUID'
+        
+        def __init__ ( self, **metadata ):
+            """ Returns a UUID trait.
+            """
+            super( UUID, self ).__init__( None, **metadata )
+    
+        def validate ( self, object, name, value ):
+            """ Raises an error, since no values can be assigned to the trait.
+            """
+            raise TraitError( "The '%s' trait of %s instance is a read-only "
+                              "UUID." % ( name, class_of( object ) ) )
+            
+        def get_default_value ( self ):
+            return ( 7, ( self._create_uuid, (), None ) )
+             
+        #-- Private Methods ---------------------------------------------------
+         
+        def _create_uuid ( self ):
+            return uuid.uuid4()         
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:

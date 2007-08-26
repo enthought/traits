@@ -21,13 +21,10 @@ from enthought.traits.api \
     import HasPrivateTraits, Bool
     
 from ui_traits \
-    import Image
+    import Image, ATheme
     
 from theme \
     import Theme
-    
-from ui_traits \
-    import ATheme
 
 #-------------------------------------------------------------------------------
 #  'DockWindowTheme' class:
@@ -250,3 +247,13 @@ tan_button_dock_window_theme = DockWindowTheme(
     horizontal_drag     = Theme( 'tbtn_horizontal_drag', margins = ( 4, 0 ) )
 )
 
+# Set the default DockWindow theme:
+def dock_window_theme ( theme = None ):
+    global default_dock_window_theme
+    
+    old_theme = default_dock_window_theme
+    if theme is not None:
+        default_dock_window_theme = theme
+        
+    return old_theme
+    
