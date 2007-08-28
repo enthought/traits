@@ -322,7 +322,7 @@ class BaseTraitHandler ( object ):
             return 'class '  + value.__class__.__name__
         return repr( value )
 
-    def get_editor ( self, trait ):
+    def get_editor ( self, trait = None ):
         """ Returns a trait editor that allows the user to modify the *trait*
         trait.
 
