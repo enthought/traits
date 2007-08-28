@@ -8,12 +8,9 @@ This demo shows each of the four styles of the EnableRGBAColorEditor
 # Imports:
 from enthought.enable2.traits.ui.wx.enable_rgba_color_editor import \
     EnableRGBAColorEditor
-
-from enthought.traits.api \
-    import HasTraits, RGBAColor
-
-from enthought.traits.ui.api \
-    import Item, Group, View
+from enthought.enable2.traits.api import RGBAColor
+from enthought.traits.api import HasTraits
+from enthought.traits.ui.api import Item, Group, View
 
 
 # Define the main demo class:

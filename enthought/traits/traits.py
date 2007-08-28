@@ -1343,29 +1343,6 @@ def RGBColor ( *args, **metadata ):
 
 RGBColor = TraitFactory( RGBColor )
 
-def RGBAColor ( *args, **metadata ):
-    """ Returns a trait whose value must be a GUI toolkit-specific RGBA-based color.
-
-    Description
-    -----------
-    For wxPython, the returned trait accepts any of the following values:
-
-    * A tuple of the form (*r*, *g*, *b*, *a*), in which *r*, *g*, *b*, and *a*
-      represent red, green, blue, and alpha values, respectively, and are floats
-      in the range from 0.0 to 1.0
-    * An integer whose hexadecimal form is 0x*AARRGGBB*, where *AA* is the alpha
-      (transparency) value, *RR* is the red value, *GG* is the green value, and
-      *BB* is the blue value
-
-    Default Value
-    -------------
-    For wxPython, (0.0, 0.0, 0.0, 1.0) (that is, opaque white)
-    """
-    from enthought.traits.ui.api import RGBAColorTrait
-    return RGBAColorTrait( *args, **metadata )
-
-RGBAColor = TraitFactory( RGBAColor )
-
 def Font ( *args, **metadata ):
     """ Returns a trait whose value must be a GUI toolkit-specific font.
 

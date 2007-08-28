@@ -1,6 +1,7 @@
 # event.py --- Example of trait event
 import wx
-from enthought.traits.api import Event, HasTraits, List, Tuple, RGBAColor
+from enthought.traits.api import Event, HasTraits, List, Tuple
+from enthought.enable2.traits.api import RGBAColor
 
 point_2d = Tuple(0, 0)
 

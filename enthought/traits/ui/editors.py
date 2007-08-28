@@ -33,9 +33,6 @@ def ColorTrait ( *args, **traits ):
 def RGBColorTrait ( *args, **traits ):
     return toolkit().rgb_color_trait( *args, **traits )
 
-def RGBAColorTrait ( *args, **traits ):
-    return toolkit().rgba_color_trait( *args, **traits )
-
 def FontTrait ( *args, **traits ):
     return toolkit().font_trait( *args, **traits )
 
@@ -174,9 +171,6 @@ def RangeEditor ( *args, **traits ):
 
 def RGBColorEditor ( *args, **traits ):
     return toolkit().rgb_color_editor( *args, **traits )
-
-def RGBAColorEditor ( *args, **traits ):
-    return toolkit().rgba_color_editor( *args, **traits )
 
 def SetEditor ( *args, **traits ):
     return toolkit().set_editor( *args, **traits )

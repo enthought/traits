@@ -37,8 +37,7 @@ from traits \
     import Event, Constant, CTrait, Trait, Delegate, Property, Button, \
            ToolbarButton, Function, Method, Class, Module, Type, This, self, \
            Either, Python, Disallow, ReadOnly, missing, TraitFactory, \
-           Callable, Default, Color, RGBColor, RGBAColor, Font, \
-           TraitFactory, UIDebugger
+           Callable, Default, Color, RGBColor, Font, TraitFactory, UIDebugger
 
 from trait_types \
     import Any, Int, Long, Float, Complex, Str, Unicode, Bool, CInt, CLong, \
@@ -136,16 +135,16 @@ if False:
 
     from ui.editors \
         import ArrayEditor, BooleanEditor, ButtonEditor, CheckListEditor, \
-               CodeEditor, ColorEditor, RGBColorEditor, RGBAColorEditor, \
+               CodeEditor, ColorEditor, RGBColorEditor, \
                CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
                FontEditor, ImageEnumEditor, InstanceEditor, \
                ListEditor, RangeEditor, TextEditor, TreeEditor, \
                TableEditor, TupleEditor, DropEditor, DNDEditor, CustomEditor
 
     from ui.editors \
-        import ColorTrait, RGBColorTrait, RGBAColorTrait, \
-               FontTrait, SetEditor, HTMLEditor, KeyBindingEditor, \
-               ShellEditor, TitleEditor, ValueEditor, NullEditor
+        import ColorTrait, RGBColorTrait, FontTrait, SetEditor, HTMLEditor, \
+               KeyBindingEditor, ShellEditor, TitleEditor, ValueEditor, \
+               NullEditor
 
 
 import ui.view_elements

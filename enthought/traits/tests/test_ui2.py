@@ -19,10 +19,10 @@
 import wx
 
 from enthought.kiva.traits.kiva_font_trait import KivaFont
+from enthought.enable2.traits.api import RGBAColor
 
 from enthought.traits.api \
-    import Trait, HasTraits, Str, Int, Range, List, Event, RGBAColor, \
-           true
+    import Trait, HasTraits, Str, Int, Range, List, Event, true
 
 from enthought.traits.ui.api \
     import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \

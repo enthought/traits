@@ -4,8 +4,9 @@ Implementation of an RGBAColorEditor demo plugin for Traits UI demo program.
 This demo shows each of the four styles of the RGBAColorEditor.
 """
 
-from enthought.traits.api import HasTraits, RGBAColor
+from enthought.traits.api import HasTraits
 from enthought.traits.ui.api import Item, Group, View
+from enthought.enable2.traits.api import RGBAColor
 
 #-------------------------------------------------------------------------------
 #  Demo Class

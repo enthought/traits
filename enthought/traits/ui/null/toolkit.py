@@ -49,10 +49,6 @@ class GUIToolkit ( Toolkit ):
         import rgb_color_trait as rgbct
         return rgbct.RGBColor( *args, **traits )
 
-    def rgba_color_trait ( self, *args, **traits ):
-        import rgba_color_trait as rgbact
-        return rgbact.RGBAColor( *args, **traits )
-
     def font_trait ( self, *args, **traits ):
         import font_trait as ft
         return ft.NullFont( *args, **traits )
@@ -127,10 +123,6 @@ class GUIToolkit ( Toolkit ):
 
     # RGB Color:
     def rgb_color_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    # RGBA Color:
-    def rgba_color_editor ( self, *args, **traits ):
         return null_editor_factory
 
     # Text:
