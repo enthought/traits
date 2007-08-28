@@ -168,7 +168,7 @@ class SimpleEditor ( Editor ):
         wtype = self.base_style
         self.evaluate = factory.evaluate
         self.sync_value(factory.evaluate_name, 'evaluate', 'from')
-            
+
         if not factory.multi_line or factory.is_grid_cell or factory.password:
             wtype = QtGui.QLineEdit
         
@@ -244,7 +244,13 @@ class SimpleEditor ( Editor ):
     def _get_user_value ( self ):
         """ Gets the actual value corresponding to what the user typed.
         """
-        value = unicode(self.control.text())
+        try:
+            value = self.control.text()
+        except AttributeError:
+            value = self.control.toPlainText()
+
+        value = unicode(value)
+
         try:
             value = self.evaluate( value )
         except:
@@ -293,16 +299,12 @@ class ReadonlyTextEditor ( ReadonlyEditor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        control   = self.control
         new_value = self.str_value
         
         if self.factory.password:
-            new_value = '*' * len( new_value )
+            new_value = '*' * len(new_value)
             
-        if self.item.resizable or (self.item.height != -1):
-            if control.GetValue() != new_value:
-                control.SetValue( new_value )
-                control.SetInsertionPointEnd()
-                
-        elif control.GetLabel() != new_value:
-            control.SetLabel( new_value )
+        if self.item.resizable or self.item.height != -1:
+            self.control.setPlainText(new_value)
+        else:
+            self.control.setText(new_value)

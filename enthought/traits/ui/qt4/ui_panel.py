@@ -43,9 +43,6 @@ from enthought.traits.ui.help_template \
 from enthought.traits.ui.menu \
     import UndoButton, RevertButton, HelpButton
     
-#from enthought.pyface.dock.core \
-#    import DockWindow, DockSizer, DockSection, DockRegion, DockControl
-    
 #from enthought.pyface.sizers.flow \
 #    import FlowSizer
     
@@ -314,20 +311,16 @@ def panel ( ui, parent ):
 
         if len(content) == 1:
             # Fill the panel with the Group's content:
-            layout, resizable, contents = fill_panel_for_group(panel,
-                    content[0], ui)
+            layout, _, _ = fill_panel_for_group(panel, content[0], ui)
             panel.setLayout(layout)
 
         # Return the panel that was created:
         return panel
         
     # Create a notebook which will contain a page for each group in the content:
-    nb    = create_notebook_for_items( content, ui, parent, None )
+    nb = create_notebook_for_items(content, ui, parent, None)
     nb.ui = ui
-    
-    # Notice when the notebook page changes (to display correct help)
-    ###wx.EVT_NOTEBOOK_PAGE_CHANGED( parent, nb.GetId(), _page_changed )
-    
+
     # Return the notebook as the result:
     return nb
   
@@ -344,41 +337,38 @@ def create_notebook_for_items ( content, ui, parent, group,
     if is_dock_window:
         nb = parent
     else:
-        nb = DockWindow( parent, handler      = ui.handler, 
-                                 handler_args = ( ui.info, ),
-                                 id           = ui.id,
-                                 theme        = group.dock_theme ).control
-    pages     = []
-    count     = 0
+        nb = QtGui.QTabWidget(parent)
+
     has_theme = ((group is not None) and (group.group_theme is not None))
     
     # Create a notebook page for each group or item in the content:
     active = 0
     for index, item in enumerate( content ):
+        page_name = item.get_label(ui)
+        if page_name == '':
+           page_name = 'Page %d' % index
+               
         if isinstance( item, Group ):
-            # Create the group as a nested DockWindow item:
+            # Create the group as a QTabWidget page:
             if item.selected:
                 active = index
-            sg_sizer, resizable, contents = \
+            sg_page, resizable, contents = \
                 fill_panel_for_group( nb, item, ui, suppress_label = True,
                                                     is_dock_window = True )
-                                                    
-            # If the result is a region (i.e. notebook) with only one page,
-            # collapse it down into just the contents of the region:
-            if (isinstance( contents, DockRegion ) and 
-               (len( contents.contents ) == 1)):
-                contents = contents.contents[0]
+
+            # If the result is a QTabWidget with only one page, collapse it
+            # down into just the page:
+            if isinstance(contents, QtGui.QTabWidget) and contents.count() == 1:
+                page = contents.widget(0)
+                contents.removeTab(0)
+                sg_page.setParent(None)
+                sg_page = page
                 
             # Add the content to the notebook as a new page:    
-            pages.append( contents )
+            nb.addTab(sg_page, page_name)
         else:
             # Create the new page as a simple DockControl containing the
             # specified set of controls:
-            page_name = item.get_label( ui )
-            count    += 1
-            if page_name == '':
-               page_name = 'Page %d' % count
-               
             sizer = wx.BoxSizer( wx.VERTICAL )
             if has_theme:
                 image_panel, image_sizer = add_image_panel( nb, group )
@@ -398,18 +388,12 @@ def create_notebook_for_items ( content, ui, parent, group,
                                        control  = panel ) )
             item_handler( item, panel, sizer )
             panel.GetSizer().Fit( panel )
-    
-    region = DockRegion( contents = pages, active = active )
-    
-    # If the caller is a DockWindow, return the region as the result:
-    if is_dock_window:
-        return region
-        
-    nb.SetSizer( DockSizer( contents = DockSection( contents = [ region ] ) ) )
+
+    nb.setCurrentIndex(active)
 
     # Return the notebook as the result:
     return nb
-        
+
 #-------------------------------------------------------------------------------
 #  Creates a themed ImagePanel for the specified group and parent window:
 #-------------------------------------------------------------------------------
@@ -577,6 +561,7 @@ class FillPanel ( object ):
                 self.sizer = FlowSizer( orientation )
             else:
                 self.sizer = QtGui.QBoxLayout(orientation)
+                self.sizer.setMargin(0)
             if label != '':
                 self.sizer.addWidget(heading_text(panel, text=label).control)
 
@@ -584,7 +569,7 @@ class FillPanel ( object ):
         # the layout sizer for the panel:        
         if panel.layout() is None:
             panel.setLayout(self.sizer)
-        
+
         if is_splitter:
             dw = DockWindow( panel, handler      = ui.handler,
                                     handler_args = ( ui.info, ),
@@ -614,20 +599,15 @@ class FillPanel ( object ):
                 self.add_groups( content, panel )
             else:
                 self.add_items( content, panel, self.sizer )
+
+        # Pad the rest of the panel so that it absorbs any extra space.
+        panel.layout().addStretch(1)
                 
         # If the caller is a DockWindow, we need to define the content we are
         # adding to it:
         if is_dock_window:
-            self.dock_contents = DockRegion( contents = [
-                        DockControl( name     = group.get_label( self.ui ),
-                                     image    = group.image,
-                                     id       = group.get_id(),
-                                     style    = group.dock,
-                                     dockable = DockableViewElement(
-                                                    ui = ui, element = group ),
-                                     export   = group.export,
-                                     control  = panel ) ] )
-                         
+            self.dock_contents = panel
+
         # If we are using an background image, add the sizer to the image sizer:
         if theme is not None:
             image_sizer.Add( self.sizer, 1, wx.EXPAND )

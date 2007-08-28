@@ -27,9 +27,6 @@ from enthought.traits.ui.editor_factory \
 from editor \
     import Editor
     
-from constants \
-    import ReadonlyColor, WindowColor
-
 #-------------------------------------------------------------------------------
 #  'EditorFactory' base class:
 #-------------------------------------------------------------------------------
@@ -166,12 +163,6 @@ class ReadonlyEditor ( Editor ):
     field, containing a text representation of the object trait value.
     """
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
-    #---------------------------------------------------------------------------
-        
-    # layout_style = 0  # Style for imbedding control in a sizer (override)
-        
-    #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
@@ -180,14 +171,7 @@ class ReadonlyEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        if self.item.resizable or (self.item.height != -1):
-            self.control = wx.TextCtrl( parent, -1, self.str_value,
-                       style = wx.NO_BORDER | wx.TE_MULTILINE | wx.TE_READONLY )
-            self.control.SetBackgroundColour( WindowColor )                                      
-        else:
-            self.control = wx.StaticText( parent, -1, self.str_value,
-                                          style = wx.ALIGN_LEFT )
-            self.layout_style = 0
+        self.control = QtGui.QLabel(self.str_value, parent)
         self.set_tooltip()
         
     #---------------------------------------------------------------------------
@@ -198,9 +182,4 @@ class ReadonlyEditor ( Editor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        new_value = self.str_value
-        if self.item.resizable or (self.item.height!= -1):
-            if self.control.GetValue() != new_value:
-                self.control.SetValue( new_value )
-        elif self.control.GetLabel() != new_value:
-            self.control.SetLabel( new_value )
+        self.control.setText(new_value)

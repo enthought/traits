@@ -216,7 +216,6 @@ class LiveWindow ( BaseDialog ):
                     self.add_button(button, bbox,
                             QtGui.QDialogButtonBox.ActionRole)
 
-            layout.addStretch(1)
             layout.addWidget(bbox)
         
         # Add the menu bar and tool bar (if any):
