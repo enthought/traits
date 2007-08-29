@@ -347,7 +347,7 @@ def create_notebook_for_items ( content, ui, parent, group,
         page_name = item.get_label(ui)
         if page_name == '':
            page_name = 'Page %d' % index
-               
+
         if isinstance( item, Group ):
             # Create the group as a QTabWidget page:
             if item.selected:
@@ -356,6 +356,8 @@ def create_notebook_for_items ( content, ui, parent, group,
                 fill_panel_for_group( nb, item, ui, suppress_label = True,
                                                     is_dock_window = True )
 
+            # FIXME: This is almost certainly wrong as I don't yet understand
+            # the different widget structures that could be returned.
             # If the result is a QTabWidget with only one page, collapse it
             # down into just the page:
             if isinstance(contents, QtGui.QTabWidget) and contents.count() == 1:
@@ -785,7 +787,7 @@ class FillPanel ( object ):
         for item in content:
             show_labels |= item.show_label
 
-        if show_labels or (columns > 1):
+        if show_labels or columns > 1:
             row = 0
             item_sizer = QtGui.QGridLayout()
 
@@ -832,19 +834,18 @@ class FillPanel ( object ):
                 if label != '':
                     # If we are building a multi-column layout with labels, 
                     # just add space in the next column:
-                    if (cols > 1) and show_labels:
-                        item_sizer.Add( ( 1, 1 ) )
-                        
+                    if cols > 1 and show_labels:
+                        col += 1
+
                     if theme is not None:
                         from image_slice import ImageText
-                        
+
                         label = ImageText( panel, theme, label )
                         item_sizer.Add( label, 0, wx.EXPAND )
                     elif item.style == 'simple':
                         # Add a simple text label:
-                        label = wx.StaticText( panel, -1, label, 
-                                               style = wx.ALIGN_LEFT )
-                        item_sizer.Add( label, 0, wx.EXPAND )
+                        label = QtGui.QLabel(label, panel)
+                        item_sizer.addWidget(label, row, col)
                     else:
                         # Add the label to the sizer:
                         label = heading_text( panel, text = label ).control
