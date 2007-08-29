@@ -11,7 +11,7 @@ applications.
 #-- Imports ------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, List, Str, Property
+    import HasPrivateTraits, List, Str, Property, on_trait_change
     
 from enthought.traits.ui.api \
     import View, HGroup, Item
