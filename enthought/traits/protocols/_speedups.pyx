@@ -59,7 +59,7 @@ cdef extern from "Python.h":
 
 cdef object _marker, __conform, __adapt, __mro, __ECType
 from sys import exc_info
-from protocols.adapters import AdaptationFailure
+from adapters import AdaptationFailure
 
 try:
     from ExtensionClass import ExtensionClass
