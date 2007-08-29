@@ -10,7 +10,7 @@ ctraits = Extension(
 
 speedups = Extension(
     'enthought.traits.protocols._speedups',
-    sources = [ 'enthought/traits/protocols/_speedups.pyx' ],
+    sources = [ 'enthought/traits/protocols/_speedups.c' ],
     )
 
 
