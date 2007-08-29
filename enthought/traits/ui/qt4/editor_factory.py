@@ -16,7 +16,7 @@ styles of editors used in a Traits-based user interface.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui
     
 from enthought.traits.api \
     import TraitError, Any, Str
@@ -137,23 +137,23 @@ class TextEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = wx.TextCtrl( parent, -1, self.str_value )
-        wx.EVT_KILL_FOCUS( self.control, self.update_object )
-        wx.EVT_TEXT_ENTER( parent, self.control.GetId(), self.update_object )
+        self.control = QtGui.QLineEdit(self.str_value, parent)
+        QtCore.QObject.connect(self.control,
+                QtCore.SIGNAL('textEdited(QString)'), self.update_object)
         self.set_tooltip()
 
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
   
-    def update_object ( self, event ):
+    def update_object ( self, text ):
         """ Handles the user changing the contents of the edit control.
         """
         try:
-            self.value = self.control.GetValue()
+            self.value = unicode(text)
         except TraitError, excp:
             pass
-                               
+
 #-------------------------------------------------------------------------------
 #  'ReadonlyEditor' class:
 #-------------------------------------------------------------------------------
@@ -182,4 +182,4 @@ class ReadonlyEditor ( Editor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        self.control.setText(new_value)
+        self.control.setText(self.str_value)
