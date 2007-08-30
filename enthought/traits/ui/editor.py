@@ -56,7 +56,7 @@ class Editor ( HasPrivateTraits ):
     # The UI (user interface) this editor is part of:
     ui = ReadOnly
     
-    # Full name of object editor is editing (e.g. 'object.link1.link2'):
+    # Full name of the object the editor is editing (e.g. 'object.link1.link2'):
     object_name = Str( 'object' )
     
     # The object this editor is editing (e.g. object.link1.link2):

@@ -161,6 +161,7 @@ class UI ( HasPrivateTraits ):
     # List of editors used to build the user interface
     _editors = List
 
+    # fixme: This is not being used anymore (I believe)...
     # List of names bound to the **info** object
     _names = List
 
@@ -448,7 +449,7 @@ class UI ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
     #  Gets the preferences to be saved for the user interface:
     #---------------------------------------------------------------------------
-
+        
     def get_prefs ( self, prefs = None ):
         """ Gets the preferences to be saved for the user interface.
         """
@@ -456,13 +457,12 @@ class UI ( HasPrivateTraits ):
         if prefs is not None:
             ui_prefs[''] = prefs
 
-        info = self.info
-        for name in self._names:
-            editor = getattr( info, name, None )
-            if isinstance( editor, Editor ):
+        for editor in self._editors:
+            id = editor.item.id
+            if id != '':
                 prefs = editor.save_prefs()
                 if prefs != None:
-                    ui_prefs[ name ] = prefs
+                    ui_prefs[ id ] = prefs
 
         return ui_prefs
 

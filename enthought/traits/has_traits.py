@@ -1921,9 +1921,15 @@ class HasTraits ( CHasTraits ):
            non-event trait attributes on the current object.
 
         """
-        return self.__class__._trait_view( name, view_element,
+        result = self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
                             self.editable_traits )
+        if (result is None) and (view_element is None):
+            method = getattr( self, name, None )
+            if callable( method ):
+                result = method()
+                
+        return result
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
@@ -1962,7 +1968,7 @@ class HasTraits ( CHasTraits ):
             # specified:
             view_elements.content[ name ] = view_element
             
-            return
+            return None
 
         # Get the default view/view name:
         name = default_name()
