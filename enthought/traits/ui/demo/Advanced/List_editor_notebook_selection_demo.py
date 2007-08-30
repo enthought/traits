@@ -18,8 +18,10 @@ the selected tab completely visible.
 #-- Imports --------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasStrictTraits, Str, Int, Regex, List, Instance, Range, View, \
-           Item, ListEditor
+    import HasStrictTraits, Str, Int, Regex, List, Instance, Range
+    
+from enthought.traits.ui.api \
+    import View, VGroup, Item, ListEditor
         
 #-- Person Class ---------------------------------------------------------------
 
