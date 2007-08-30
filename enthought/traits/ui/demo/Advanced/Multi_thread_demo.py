@@ -17,7 +17,10 @@ from time \
     import sleep
     
 from enthought.traits.api \
-    import HasTraits, Int, Button, View, Item
+    import HasTraits, Int, Button
+    
+from enthought.traits.ui.api \
+    import View, Item
 
 class ThreadDemo ( HasTraits ):
     
