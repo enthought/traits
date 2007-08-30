@@ -162,7 +162,7 @@ class ReadonlyEditor ( Editor ):
         self.control = QtGui.QLineEdit(parent)
         self.control.setReadOnly(True)
 
-        pal = self.control.palette()
+        pal = QtGui.QPalette(self.control.palette())
         pal.setColor(QtGui.QPalette.Base, ReadonlyColor)
         self.control.setPalette(pal)
         

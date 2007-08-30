@@ -104,18 +104,16 @@ class SimpleEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = wx.TextCtrl( parent, -1, self.str_value,
-                                    style = wx.TE_READONLY )
-        wx.EVT_LEFT_UP( self.control, self.popup_editor )
+        self.control = _SimpleField(self, parent)
         self.set_tooltip()
-       
+
     #---------------------------------------------------------------------------
     #  Invokes the pop-up editor for an object trait:
     #  
     #  (Normally overridden in a subclass)
     #---------------------------------------------------------------------------
  
-    def popup_editor ( self, event ):
+    def popup_editor(self):
         """ Invokes the pop-up editor for an object trait.
         """
         pass
@@ -183,3 +181,21 @@ class ReadonlyEditor ( Editor ):
             editor.
         """
         self.control.setText(self.str_value)
+
+#-------------------------------------------------------------------------------
+#  '_SimpleField' class:
+#-------------------------------------------------------------------------------
+
+class _SimpleField(QtGui.QLineEdit):
+
+    def __init__(self, editor, parent):
+        QtGui.QLineEdit.__init__(self, editor.str_value, parent)
+
+        self.setReadOnly(True)
+        self._editor = editor
+
+    def mouseReleaseEvent(self, e):
+        QtGui.QLineEdit.mouseReleaseEvent(self, e)
+
+        if e.button() == QtCore.Qt.LeftButton:
+            self._editor.popup_editor()

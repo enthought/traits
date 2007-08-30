@@ -345,7 +345,7 @@ class GUIToolkit ( Toolkit ):
 
     def color_trait ( self, *args, **traits ):
         import color_trait as ct
-        return ct.WxColor( *args, **traits )
+        return ct.PyQtColor( *args, **traits )
 
     def rgb_color_trait ( self, *args, **traits ):
         import rgb_color_trait as rgbct
