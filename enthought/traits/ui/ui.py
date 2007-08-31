@@ -161,7 +161,6 @@ class UI ( HasPrivateTraits ):
     # List of editors used to build the user interface
     _editors = List
 
-    # fixme: This is not being used anymore (I believe)...
     # List of names bound to the **info** object
     _names = List
 
@@ -243,13 +242,10 @@ class UI ( HasPrivateTraits ):
 
         # Notify the handler that the view has been closed:
         self.handler.closed( self.info, self.result )
-        
+
+        # Destroy the view control:        
         self.control._object = None
-        # FIXME: This is a hack...move to a 'toolkit' function:
-        try:
-            self.control.deleteLater()
-        except AttributeError:
-            self.control.Destroy()
+        toolkit().destroy_control( self.control )
         self.__groups = None
 
         dict = self.__dict__
@@ -460,12 +456,13 @@ class UI ( HasPrivateTraits ):
         if prefs is not None:
             ui_prefs[''] = prefs
 
-        for editor in self._editors:
-            id = editor.item.id
-            if id != '':
+        info = self.info  
+        for name in self._names:  
+            editor = getattr( info, name, None )  
+            if isinstance( editor, Editor ):  
                 prefs = editor.save_prefs()
                 if prefs != None:
-                    ui_prefs[ id ] = prefs
+                    ui_prefs[ name ] = prefs
 
         return ui_prefs
 

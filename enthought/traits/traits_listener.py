@@ -217,7 +217,7 @@ class ListenerItem ( ListenerBase ):
     
     # A dictionary mapping objects to a list of all current active
     # (*name*, *type*) listener pairs, where *type* defines the type of 
-    # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER,  DICT_LISTENER).
+    # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
     active = Any( {} )
     
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
