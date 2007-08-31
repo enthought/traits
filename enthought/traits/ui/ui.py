@@ -245,8 +245,11 @@ class UI ( HasPrivateTraits ):
         self.handler.closed( self.info, self.result )
         
         self.control._object = None
-        # fixme: This is wxPython specific...move to a 'toolkit' function:
-        self.control.Destroy()
+        # FIXME: This is a hack...move to a 'toolkit' function:
+        try:
+            self.control.deleteLater()
+        except AttributeError:
+            self.control.Destroy()
         self.__groups = None
 
         dict = self.__dict__
