@@ -28,7 +28,7 @@ from string \
     import find, rfind
 
 from enthought.traits.api \
-    import Instance, Str, Int, Range, Constant, false, Callable, Property, \
+    import Instance, Str, Float, Range, Constant, false, Callable, Property, \
            Delegate, cached_property
 
 from enthought.traits.trait_base \
@@ -189,21 +189,43 @@ class Item ( ViewSubElement ):
     # **format_func** is set.
     format_str = Str
 
-    # Requested width of the editor (in pixels). The actual displayed width
-    # is at least the maximum of **width** and the optimal width of the widget
-    # as calculated by the GUI toolkit. Specify a negative value to ignore the
-    # toolkit's optimal width. For example, use -50 to force a width of 50 
-    # pixels. The default value of -1 ensures that the toolkit's optimal width
-    # is used.
-    width = Int( -1 )
+    # Requested width of the editor (in pixels or fraction of available width).
+    # For pixel values (i.e. values not in the range from 0.0 to 1.0), the 
+    # actual displayed width is at least the maximum of **width** and the
+    # optimal width of the widget as calculated by the GUI toolkit. Specify a
+    # negative value to ignore the toolkit's optimal width. For example, use 
+    # -50 to force a width of 50 pixels. The default value of -1 ensures that 
+    # the toolkit's optimal width is used.
+    #
+    # A value in the range from 0.0 to 1.0 specifies the fraction of the 
+    # available width to assign to the editor. Note that the value is not an
+    # absolute value, but is relative to other item's whose **width** is also
+    # in the 0.0 to 1.0 range. For example, if you have two item's with a width
+    # of 0.1, and one item with a width of 0.2, the first two items will each
+    # receive 25% of the available width, while the third item will receive
+    # 50% of the available width. The available width is the total width of the
+    # view minus the width of any item's with fixed pixel sizes (i.e. width
+    # values not in the 0.0 to 1.0 range).
+    width = Float( -1.0 )
 
-    # Requested height of the editor (in pixels). The actual displayed height
-    # is at least the maximum of **width** and the optimal height of the widget
-    # as calculated by the GUI toolkit. Specify a negative value to ignore the
-    # toolkit's optimal height. For example, use -50 to force a height of 50 
-    # pixels. The default value of -1 ensures that the toolkit's optimal height
-    # is used.
-    height = Int( -1 )
+    # Requested height of the editor (in pixels or fraction of available 
+    # height). For pixel values (i.e. values not in the range from 0.0 to 1.0), 
+    # the actual displayed height is at least the maximum of **height** and the
+    # optimal height of the widget as calculated by the GUI toolkit. Specify a
+    # negative value to ignore the toolkit's optimal height. For example, use 
+    # -50 to force a height of 50 pixels. The default value of -1 ensures that 
+    # the toolkit's optimal height is used.
+    #
+    # A value in the range from 0.0 to 1.0 specifies the fraction of the 
+    # available height to assign to the editor. Note that the value is not an
+    # absolute value, but is relative to other item's whose **height** is also
+    # in the 0.0 to 1.0 range. For example, if you have two item's with a height
+    # of 0.1, and one item with a height of 0.2, the first two items will each
+    # receive 25% of the available height, while the third item will receive
+    # 50% of the available height. The available height is the total height of 
+    # the view minus the height of any item's with fixed pixel sizes (i.e. 
+    # height values not in the 0.0 to 1.0 range).
+    height = Float( -1.0 )
 
     #---------------------------------------------------------------------------
     #  Initialize the object:
@@ -337,10 +359,10 @@ class Item ( ViewSubElement ):
             value = match.group( 1 ) + match.group( 3 )
             col   = data.find( ',' )
             if col < 0:
-                self._set_int( 'width', data )
+                self._set_float( 'width', data )
             else:
-                self._set_int( 'width',  data[ : col ] )
-                self._set_int( 'height', data[ col + 1: ] )
+                self._set_float( 'width',  data[ : col ] )
+                self._set_float( 'height', data[ col + 1: ] )
                 
         return value
 
@@ -359,16 +381,15 @@ class Item ( ViewSubElement ):
         return value
 
     #---------------------------------------------------------------------------
-    #  Sets a specified trait to a specified string converted to an integer:
+    #  Sets a specified trait to a specified string converted to a float:
     #---------------------------------------------------------------------------
 
-    def _set_int ( self, name, value ):
-        """ Sets a specified trait to a specified string converted to an
-            integer.
+    def _set_float ( self, name, value ):
+        """ Sets a specified trait to a specified string converted to a float.
         """
         value = value.strip()
         if value != '':
-            setattr( self, name, int( value ) )
+            setattr( self, name, float( value ) )
 
     #---------------------------------------------------------------------------
     #  Returns a 'pretty print' version of the Item:
