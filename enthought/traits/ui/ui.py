@@ -274,9 +274,8 @@ class UI ( HasPrivateTraits ):
             # the control is None and discard the update request:
             editor.control = None
 
-        # fixme: This is wxPython specific...move to a 'toolkit' function:
         if destroy:
-            self.control.DestroyChildren()
+            toolkit().destroy_children( self.control )
 
         for dispatcher in self._dispatchers:
             dispatcher.remove()

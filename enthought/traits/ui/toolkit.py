@@ -263,6 +263,16 @@ class Toolkit ( HasPrivateTraits ):
         """ Destroys a specified GUI toolkit control.
         """
         raise NotImplementedError
+
+    #---------------------------------------------------------------------------
+    #  Destroys all of the child controls of a specified GUI toolkit control:  
+    #---------------------------------------------------------------------------
+    
+    def destroy_children ( self, control ):
+        """ Destroys all of the child controls of a specified GUI toolkit 
+            control.
+        """
+        raise NotImplementedError
                 
     #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:
