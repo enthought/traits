@@ -220,10 +220,8 @@ class CustomEditor ( SimpleEditor ):
     def rebuild_editor ( self ):
         """ Rebuilds the editor after its definition is modified.
         """
-        control = self.control
-        layout = control.layout()
-
-        for cb in control.findChildren(QtGui.QCheckBox):
+        # Clear any existing content:
+        for cb in self.control.findChildren(QtGui.QCheckBox):
             cb.setParent(None)
 
         cur_value = parse_value( self.value )
@@ -241,11 +239,13 @@ class CustomEditor ( SimpleEditor ):
         incr[-1] = -(reduce( lambda x, y: x + y, incr[:-1], 0 ) - 1)
 
         # Add the set of all possible choices:
+        layout = self.control.layout()
         index = 0
+
         for i in range( rows ):
             for j in range( cols ):
                 if n > 0:
-                    cb = QtGui.QCheckBox(labels[index], control)
+                    cb = QtGui.QCheckBox(labels[index])
                     cb.value = values[index]
 
                     if cb.value in cur_value:

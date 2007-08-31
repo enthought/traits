@@ -137,18 +137,18 @@ class TextEditor ( Editor ):
         """
         self.control = QtGui.QLineEdit(self.str_value, parent)
         QtCore.QObject.connect(self.control,
-                QtCore.SIGNAL('textEdited(QString)'), self.update_object)
+                QtCore.SIGNAL('editingFinished()'), self.update_object)
         self.set_tooltip()
 
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
   
-    def update_object ( self, text ):
+    def update_object(self):
         """ Handles the user changing the contents of the edit control.
         """
         try:
-            self.value = unicode(text)
+            self.value = unicode(self.control.text())
         except TraitError, excp:
             pass
 

@@ -1244,3 +1244,5 @@ class HTMLHelpWindow ( QtGui.QLabel ):
 class heading_text(object):
     def __init__(self, parent, text):
         self.control = QtGui.QLabel(text, parent)
+        self.control.setFrameShadow(QtGui.QFrame.Plain)
+        self.control.setFrameShape(QtGui.QFrame.Box)

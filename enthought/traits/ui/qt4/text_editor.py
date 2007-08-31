@@ -191,10 +191,12 @@ class SimpleEditor ( Editor ):
             control.setEchoMode(QtGui.QLineEdit.Password)
 
         if factory.auto_set and not factory.is_grid_cell:
-            control.connect(control, QtCore.SIGNAL('textEdited(QString)'),
-                    self.update_object)
+            QtCore.QObject.connect(control,
+                    QtCore.SIGNAL('textEdited(QString)'), self.update_object)
         else:
-            control.connect(control, QtCore.SIGNAL('editingFinished()'),
+            # Assume enter_set is set, otherwise the value will never get
+            # updated.
+            QtCore.QObject.connect(control, QtCore.SIGNAL('editingFinished()'),
                     self.update_object)
 
         self.control = control
