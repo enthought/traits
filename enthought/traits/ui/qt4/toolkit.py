@@ -340,6 +340,15 @@ class GUIToolkit ( Toolkit ):
         return key_event_to_name.key_event_to_name( event )
 
     #---------------------------------------------------------------------------
+    #  Destroys a specified GUI toolkit control:  
+    #---------------------------------------------------------------------------
+    
+    def destroy_control ( self, control ):
+        """ Destroys a specified GUI toolkit control.
+        """
+        control.deleteLater()
+
+    #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:
     #---------------------------------------------------------------------------
 
