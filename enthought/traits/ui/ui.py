@@ -421,10 +421,10 @@ class UI ( HasPrivateTraits ):
             info = self.info
             for name in self._names:
                 editor = getattr( info, name, None )
-                if isinstance( editor, Editor ):
-                   editor_prefs = prefs.get( name )
-                   if editor_prefs != None:
-                       editor.restore_prefs( editor_prefs )
+                if isinstance( editor, Editor ) and (editor.ui is self):
+                    editor_prefs = prefs.get( name )
+                    if editor_prefs != None:
+                        editor.restore_prefs( editor_prefs )
 
             return prefs.get( '' )
 
@@ -458,7 +458,7 @@ class UI ( HasPrivateTraits ):
         info = self.info  
         for name in self._names:  
             editor = getattr( info, name, None )  
-            if isinstance( editor, Editor ):  
+            if isinstance( editor, Editor ) and (editor.ui is self):  
                 prefs = editor.save_prefs()
                 if prefs != None:
                     ui_prefs[ name ] = prefs
