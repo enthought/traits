@@ -96,13 +96,13 @@ def ui_panel_for ( ui, parent, buttons ):
     """ Creates a panel-based PyQt user interface for a specified UI object.
     """
     # Disable screen updates on the parent control while we build the view:
-    parent.Freeze()
+    parent.setUpdatesEnabled(False)
     
     # Build the view:
-    ui.control = control = Panel( ui, parent, buttons ).control
-    
+    ui.control = control = Panel(ui, parent, buttons).control
+
     # Allow screen updates to occur again:
-    parent.Thaw()
+    parent.setUpdatesEnabled(True)
     
     control._parent = parent
     control._object = ui.context.get( 'object' )
@@ -110,7 +110,7 @@ def ui_panel_for ( ui, parent, buttons ):
     try:
         ui.prepare_ui()
     except:
-        control.Destroy()
+        control.deleteLater()
         ui.control = None
         ui.result  = False
         raise
@@ -169,14 +169,20 @@ class Panel ( BaseDialog ):
         # Create a container panel to put everything in:
         cpanel = getattr( self, 'control', None )
         if cpanel is not None:
-            cpanel.SetSizer( None )
-            cpanel.DestroyChildren()
+            # Clear any existing content:
+            for w in cpanel.findChildren(QtGui.QWidget):
+                w.setParent(None)
+
+            layout = cpanel.layout()
         else:
             self.control = cpanel = QtGui.QWidget(parent)
+            layout = None
         
         # Create the actual trait sheet panel and imbed it in a scrollable 
         # window (if requested):
-        sw_sizer = wx.BoxSizer( wx.VERTICAL )
+        if layout is None:
+            layout = QtGui.QVBoxLayout(cpanel)
+
         if ui.scrollable:
             sizer = wx.BoxSizer( wx.VERTICAL )
             sw    = wx.ScrolledWindow( cpanel )
@@ -186,18 +192,19 @@ class Panel ( BaseDialog ):
             sw.SetScrollRate( 16, 16 )
             sw.SetMinSize( wx.Size( 0, 0 ) )
         else:
-            sw = panel( ui, cpanel ) 
-            
+            sw = panel(ui, cpanel) 
+
         if ((title != '') and 
             (not isinstance( getattr( parent, 'owner', None ), DockWindow ))):
-            sw_sizer.Add( heading_text( cpanel, text = title ).control, 0, 
+            layout.Add( heading_text( cpanel, text = title ).control, 0, 
                           wx.EXPAND )
-        sw_sizer.Add( sw, 1, wx.EXPAND )
+
+        layout.addWidget(sw)
         
         if (allow_buttons and
             ((nbuttons != 1) or (not self.is_button( buttons[0], '' )))):
             # Add the special function buttons:
-            sw_sizer.Add( wx.StaticLine( cpanel, -1 ), 0, wx.EXPAND )
+            layout.Add( wx.StaticLine( cpanel, -1 ), 0, wx.EXPAND )
             b_sizer = wx.BoxSizer( wx.HORIZONTAL )
             for button in buttons:
                 if self.is_button( button, 'Undo' ):
@@ -219,9 +226,7 @@ class Panel ( BaseDialog ):
                 elif not self.is_button( button, '' ):
                     self.add_button( button, b_sizer )
                 
-            sw_sizer.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
-        
-        cpanel.SetSizerAndFit( sw_sizer )
+            layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
    
     #---------------------------------------------------------------------------
     #  Handles an 'Undo' change request:
