@@ -132,7 +132,8 @@ cdef object _adapt(obj, protocol, default, factory):
         if PyObject_TypeCheck(obj, protocol):
             return obj
 
-    if PyClass_Check(protocol):
+### if PyClass_Check(protocol):
+    else:
         if PyInstance_Check(obj):
             if PyObject_IsInstance(obj,protocol):
                 return obj

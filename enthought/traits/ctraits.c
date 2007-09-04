@@ -3366,9 +3366,11 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                 /* case 14: Python-based validator check: */
                 /* case 15..18: Property 'setattr' validate checks: */
                 case 19:  /* PyProtocols 'adapt' check: */
-                    if ( (n == 4) &&  
+                    if ( (n == 4) &&
+/*                        
                          (PyClass_Check( PyTuple_GET_ITEM( validate, 1 ) )  ||
                           PyType_Check(  PyTuple_GET_ITEM( validate, 1 ) )) &&
+*/                         
                          PyInt_Check(    PyTuple_GET_ITEM( validate, 2 ) )  &&
                          PyBool_Check(   PyTuple_GET_ITEM( validate, 3 ) ) ) {
                         goto done;
