@@ -568,7 +568,6 @@ class FillPanel ( object ):
                 self.sizer = FlowSizer( orientation )
             else:
                 self.sizer = QtGui.QBoxLayout(orientation)
-                self.sizer.setMargin(0)
             if label != '':
                 self.sizer.addWidget(heading_text(panel, text=label).control)
 

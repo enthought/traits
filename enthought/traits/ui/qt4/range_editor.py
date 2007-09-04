@@ -506,7 +506,9 @@ class LargeRangeSliderEditor ( Editor ):
 
         self._set_format()
         self.control = panel = QtGui.QWidget(parent)
-        sizer  = wx.BoxSizer( wx.HORIZONTAL )
+        layout = QtGui.QHBoxLayout(panel)
+        layout.setMargin(0)
+
         fvalue = self.value
         try:
             fvalue_text = self._format % fvalue
@@ -515,66 +517,71 @@ class LargeRangeSliderEditor ( Editor ):
             fvalue_text = ''
             fvalue      = factory.low
         ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
-        
+
+        # Get the application's style which will provide the arrow icons.
+        sty = QtGui.QApplication.instance().style()
+        icon_sz = sty.pixelMetric(QtGui.QStyle.PM_ButtonIconSize)
+
         # Lower limit label:
-        label_lo       = wx.StaticText( panel, -1, '999999' )
-        panel.label_lo = label_lo
-        sizer.Add( label_lo, 2, wx.ALIGN_CENTER )
+        panel.label_lo = label_lo = QtGui.QLabel()
+        label_lo.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        layout.addWidget(label_lo)
         
         # Lower limit button:
-        bmp       = wx.ArtProvider.GetBitmap( wx.ART_GO_BACK, 
-                                              size = ( 15, 15 ) )
-        button_lo = wx.BitmapButton( panel, -1, bitmap = bmp, size = ( -1, 20 ),
-                                     style = wx.BU_EXACTFIT | wx.NO_BORDER )
-        panel.button_lo = button_lo
-        button_lo.Bind( wx.EVT_BUTTON, self.reduce_range, button_lo )
-        sizer.Add( button_lo, 1, wx.ALIGN_CENTER )
+        panel.button_lo = button_lo = QtGui.QPushButton()
+        button_lo.setFlat(True)
+        button_lo.setFocusPolicy(QtCore.Qt.NoFocus)
+        button_lo.setIcon(sty.standardIcon(QtGui.QStyle.SP_ArrowLeft))
+        button_lo.setMaximumSize(icon_sz, icon_sz)
+        QtCore.QObject.connect(button_lo, QtCore.SIGNAL('clicked()'),
+                self.reduce_range)
+        layout.addWidget(button_lo)
         
         # Slider:        
-        panel.slider = slider = wx.Slider( panel, -1, ivalue, 0, 10000,
-                                   size   = wx.Size( 80, 20 ),
-                                   style  = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS )
-        slider.SetTickFreq( 1000, 1 )
-        slider.SetPageSize( 1000 )
-        slider.SetLineSize( 100 )
-        wx.EVT_SCROLL( slider, self.update_object_on_scroll )
-        sizer.Add( slider, 6, wx.EXPAND )
+        panel.slider = slider = QtGui.QSlider(QtCore.Qt.Horizontal)
+        slider.setTracking(factory.auto_set)
+        slider.setMinimum(0)
+        slider.setMaximum(10000)
+        slider.setPageStep(1000)
+        slider.setSingleStep(100)
+        slider.setValue(ivalue)
+        QtCore.QObject.connect(slider, QtCore.SIGNAL('valueChanged(int)'),
+                self.update_object_on_scroll)
+        layout.addWidget(slider)
         
         # Upper limit button:
-        bmp       = wx.ArtProvider.GetBitmap( wx.ART_GO_FORWARD,
-                                              size = ( 15, 15 ) )
-        button_hi = wx.BitmapButton( panel, -1, bitmap = bmp, size = ( -1, 20 ),
-                                     style = wx.BU_EXACTFIT | wx.NO_BORDER )
-        panel.button_hi = button_hi
-        button_hi.Bind( wx.EVT_BUTTON, self.increase_range, button_hi )
-        sizer.Add( button_hi, 1, wx.ALIGN_CENTER )
-        
+        panel.button_hi = button_hi = QtGui.QPushButton()
+        button_hi.setFlat(True)
+        button_hi.setFocusPolicy(QtCore.Qt.NoFocus)
+        button_hi.setIcon(sty.standardIcon(QtGui.QStyle.SP_ArrowRight))
+        button_hi.setMaximumSize(icon_sz, icon_sz)
+        QtCore.QObject.connect(button_hi, QtCore.SIGNAL('clicked()'),
+                self.increase_range)
+        layout.addWidget(button_hi)
+
         # Upper limit label:
-        label_hi = wx.StaticText( panel, -1, '999999' )
-        panel.label_hi = label_hi
-        sizer.Add( label_hi, 2, wx.ALIGN_CENTER )
+        panel.label_hi = label_hi = QtGui.QLabel()
+        layout.addWidget(label_hi)
         
         # Text entry:
-        if factory.enter_set:
-            panel.text = text = wx.TextCtrl( panel, -1, fvalue_text,
-                                             size  = wx.Size( 56, 20 ),
-                                             style = wx.TE_PROCESS_ENTER )
-            wx.EVT_TEXT_ENTER( panel, text.GetId(), 
-                               self.update_object_on_enter )
-        else:                                               
-            panel.text = text = wx.TextCtrl( panel, -1, fvalue_text,
-                                             size  = wx.Size( 56, 20 ) )
-        wx.EVT_KILL_FOCUS( text, self.update_object_on_enter )
-        sizer.Add( text, 0, wx.LEFT | wx.EXPAND, 4 )
-        
+        panel.text = text = QtGui.QLineEdit(fvalue_text)
+        QtCore.QObject.connect(text, QtCore.SIGNAL('editingFinished()'),
+                self.update_object_on_enter)
+
+        # The default size is a bit too big and probably doesn't need to grow.
+        sh = text.sizeHint()
+        sh.setWidth(sh.width() / 2)
+        text.setMaximumSize(sh)
+
+        layout.addWidget(text)
+
         # Set-up the layout:
-        panel.SetSizerAndFit( sizer )
-        label_lo.SetLabel( str(low)  )
-        label_hi.SetLabel( str(high) )
-        self.set_tooltip( slider )
-        self.set_tooltip( label_lo )
-        self.set_tooltip( label_hi )
-        self.set_tooltip( text )
+        label_lo.setText(str(low))
+        label_hi.setText(str(high))
+        self.set_tooltip(slider)
+        self.set_tooltip(label_lo)
+        self.set_tooltip(label_hi)
+        self.set_tooltip(text)
 
         # Hook up the traits to listen to the object.
         self.sync_value( factory.low_name,  'low',  'from' )
@@ -587,38 +594,27 @@ class LargeRangeSliderEditor ( Editor ):
     #  Handles the user changing the current slider value: 
     #---------------------------------------------------------------------------
     
-    def update_object_on_scroll ( self, event ):
+    def update_object_on_scroll(self, pos):
         """ Handles the user changing the current slider value.
         """
-        low   = self.cur_low
-        high  = self.cur_high
-        value = low + ((float( event.GetPosition() ) / 10000.0) * 
-                       (high - low))
-        self.control.text.SetValue( self._format % value )
-        event_type = event.GetEventType()
-        try:
-            self.ui_changing = True
-            if ((event_type == wx.wxEVT_SCROLL_ENDSCROLL) or
-                (self.factory.auto_set and 
-                 (event_type == wx.wxEVT_SCROLL_THUMBTRACK))):
-                if self.factory.is_float:
-                    self.value = value
-                else:
-                    self.value = int( value )
-        finally:
-            self.ui_changing = False
-        
+        value = self.cur_low + ((float(pos) / 10000.0) * (self.cur_high - self.cur_low))
+
+        self.control.text.setText(self._format % value)
+
+        if self.factory.is_float:
+            self.value = value
+        else:
+            self.value = int(value)
+
     #---------------------------------------------------------------------------
     #  Handle the user pressing the 'Enter' key in the edit control:
     #---------------------------------------------------------------------------
     
-    def update_object_on_enter ( self, event ):
+    def update_object_on_enter(self):
         """ Handles the user pressing the Enter key in the text field.
         """
-        low  = self.cur_low
-        high = self.cur_high        
         try:
-            self.value = value = eval( self.control.text.GetValue().strip() )
+            self.value = eval(unicode(self.control.text.text()).strip())
         except TraitError, excp:
             pass
         
@@ -649,28 +645,23 @@ class LargeRangeSliderEditor ( Editor ):
         low, high = self.cur_low, self.cur_high
         value = self.value
         self._set_format()
-        self.control.label_lo.SetLabel( self._format % low )
-        self.control.label_hi.SetLabel( self._format % high )
+        self.control.label_lo.setText( self._format % low )
+        self.control.label_hi.setText( self._format % high )
+
         ivalue = int( (float( value - low ) / (high - low)) * 10000.0 )
-        self.control.slider.SetValue( ivalue )
+        blocked = self.control.slider.blockSignals(True)
+        self.control.slider.setValue( ivalue )
+        self.control.slider.blockSignals(blocked)
+
         text = self._format % self.value
-        self.control.text.SetValue( text )
-        factory = self.factory
-        f_low, f_high = self.low, self.high
-        if low == f_low:
-            self.control.button_lo.Disable()
-        else:
-            self.control.button_lo.Enable()
-        if high == f_high:
-            self.control.button_hi.Disable()
-        else:
-            self.control.button_hi.Enable()        
+        self.control.text.setText( text )
+        self.control.button_lo.setEnabled(low != self.low)
+        self.control.button_hi.setEnabled(high != self.high)
 
     def init_range ( self ):
         """ Initializes the slider range controls.
         """
         value     = self.value
-        factory   = self.factory
         low, high = self.low, self.high
         if high is None and low is not None:
             high = -low
@@ -685,10 +676,9 @@ class LargeRangeSliderEditor ( Editor ):
                 
         self.cur_low, self.cur_high = cur_low, cur_high
 
-    def reduce_range ( self, event ):
+    def reduce_range(self):
         """ Reduces the extent of the displayed range.
         """
-        factory   = self.factory
         low, high = self.low, self.high
         if abs( self.cur_low ) < 10:
             self.cur_low  = max( -10, low )
@@ -705,10 +695,9 @@ class LargeRangeSliderEditor ( Editor ):
         self.ui_changing = False
         self.update_range_ui()
 
-    def increase_range ( self, event ):
+    def increase_range(self):
         """ Increased the extent of the displayed range.
         """
-        factory   = self.factory
         low, high = self.low, self.high
         if abs( self.cur_high ) < 10:
             self.cur_low  = max( -10, low )

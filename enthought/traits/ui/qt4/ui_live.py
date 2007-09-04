@@ -147,9 +147,15 @@ class LiveWindow ( BaseDialog ):
         if ui.scrollable:
             sw = QtGui.QScrollArea()
             layout.addWidget(sw)
-            sw.setWidget(panel(ui, sw))
+            pan = panel(ui, sw)
+            sw.setWidget(pan)
         else:
-            layout.addWidget(panel(ui, window))
+            pan = panel(ui, window)
+            layout.addWidget(pan)
+
+        # Remove any margin from the panel so that it lines up with the
+        # buttons.
+        pan.layout().setMargin(0)
 
         # Check to see if we need to add any of the special function buttons:
         if (not no_buttons) and (has_buttons or view.help):
