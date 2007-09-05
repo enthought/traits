@@ -1667,6 +1667,40 @@ class Instance ( TraitType ):
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
             
         self.error( object, name, msg )
+            
+if python_version >= 2.5:
+    
+    import uuid 
+    
+    #---------------------------------------------------------------------------
+    #  'UUID' trait:  
+    #---------------------------------------------------------------------------
+                       
+    class UUID ( TraitType ):
+        """ Defines a trait whose value is a globally unique UUID (type 4).
+        """
+    
+        # A description of the type of value this trait accepts:
+        info_text = 'a read-only UUID'
+        
+        def __init__ ( self, **metadata ):
+            """ Returns a UUID trait.
+            """
+            super( UUID, self ).__init__( None, **metadata )
+    
+        def validate ( self, object, name, value ):
+            """ Raises an error, since no values can be assigned to the trait.
+            """
+            raise TraitError( "The '%s' trait of %s instance is a read-only "
+                              "UUID." % ( name, class_of( object ) ) )
+            
+        def get_default_value ( self ):
+            return ( 7, ( self._create_uuid, (), None ) )
+             
+        #-- Private Methods ---------------------------------------------------
+         
+        def _create_uuid ( self ):
+            return uuid.uuid4()         
 
 #-------------------------------------------------------------------------------
 #  'WeakRef' trait:
@@ -1735,7 +1769,7 @@ class WeakRef ( Instance ):
 
 class HandleWeakRef ( object ):
     
-    def __init__ ( object, name, value ):
+    def __init__ ( self, object, name, value ):
         self.object = ref( object )
         self.name   = name
         self.value  = ref( value, self._value_freed )
@@ -1744,40 +1778,6 @@ class HandleWeakRef ( object ):
         object = self.object()
         if object is not None:
             object.trait_property_changed( self.name, Undefined, None )
-            
-if python_version >= 2.5:
-    
-    import uuid 
-    
-    #---------------------------------------------------------------------------
-    #  'UUID' trait:  
-    #---------------------------------------------------------------------------
-                       
-    class UUID ( TraitType ):
-        """ Defines a trait whose value is a globally unique UUID (type 4).
-        """
-    
-        # A description of the type of value this trait accepts:
-        info_text = 'a read-only UUID'
-        
-        def __init__ ( self, **metadata ):
-            """ Returns a UUID trait.
-            """
-            super( UUID, self ).__init__( None, **metadata )
-    
-        def validate ( self, object, name, value ):
-            """ Raises an error, since no values can be assigned to the trait.
-            """
-            raise TraitError( "The '%s' trait of %s instance is a read-only "
-                              "UUID." % ( name, class_of( object ) ) )
-            
-        def get_default_value ( self ):
-            return ( 7, ( self._create_uuid, (), None ) )
-             
-        #-- Private Methods ---------------------------------------------------
-         
-        def _create_uuid ( self ):
-            return uuid.uuid4()         
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
