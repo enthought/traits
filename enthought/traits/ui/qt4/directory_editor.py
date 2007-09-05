@@ -18,9 +18,6 @@ PyQt user interface toolkit.
 
 from PyQt4 import QtGui
 
-from os.path \
-    import isdir
-
 from file_editor \
     import ToolkitEditorFactory as EditorFactory,    \
            SimpleEditor         as SimpleFileEditor, \
@@ -70,9 +67,10 @@ class SimpleEditor ( SimpleFileEditor ):
     def create_file_dialog ( self ):
         """ Creates the correct type of file dialog.
         """
-        dlg =  wx.DirDialog( self.control, message = 'Select a Directory' )
-        dlg.SetPath( self._filename.GetValue() )
-        
+        dlg = QtGui.QFileDialog(self.control)
+        dlg.selectFile(self._filename.text())
+        dlg.setFileMode(QtGui.QFileDialog.Directory)
+
         return dlg
         
 #-------------------------------------------------------------------------------
@@ -83,24 +81,13 @@ class CustomEditor ( CustomFileEditor ):
     """ Custom style of editor for directories, which displays a tree view of
         the file system.
     """
-        
-    #---------------------------------------------------------------------------
-    #  Returns the basic style to use for the control:
-    #---------------------------------------------------------------------------
-    
-    def get_style ( self ):
-        """ Returns the basic style to use for the control.
-        """
-        return (wx.DIRCTRL_DIR_ONLY | wx.DIRCTRL_EDIT_LABELS)
 
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
   
-    def update_object ( self, event ):
+    def update_object(self, idx):
         """ Handles the user changing the contents of the edit control.
         """
-        if self.control is not None:
-            path = self.control.GetPath()
-            if isdir( path ):
-                self.value = path
+        if self._model.isDir(idx):
+            self.value = unicode(self._model.filePath(idx))
