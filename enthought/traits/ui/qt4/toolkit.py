@@ -362,7 +362,7 @@ class GUIToolkit ( Toolkit ):
 
     def font_trait ( self, *args, **traits ):
         import font_trait as ft
-        return ft.WxFont( *args, **traits )
+        return ft.PyQtFont( *args, **traits )
 
 
     #---------------------------------------------------------------------------
