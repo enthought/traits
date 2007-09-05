@@ -128,6 +128,8 @@ cdef object _adapt(obj, protocol, default, factory):
 
     cdef void *tmp
 
+### This code is superfluous and actually prevents certain old style code (like
+### the Python VTK bindings) from working correctly...
 ###    if PyType_Check(protocol):
 ###        if PyObject_TypeCheck(obj, protocol):
 ###            return obj
