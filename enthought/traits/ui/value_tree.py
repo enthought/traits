@@ -16,8 +16,10 @@
 # 
 # 
 #------------------------------------------------------------------------------
+
 """ Defines tree node classes and editors for various types of values.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -35,6 +37,7 @@ from enthought.traits.ui.api \
 class SingleValueTreeNodeObject ( TreeNodeObject ):
     """ A tree node for objects of types that have a single value.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
@@ -162,7 +165,7 @@ class SingleValueTreeNodeObject ( TreeNodeObject ):
     #  Returns the correct node type for a specified value:  
     #---------------------------------------------------------------------------
                 
-    def node_for ( self, name, value ): 
+    def node_for ( self, name, value ):
         """ Returns the correct node type for a specified value.
         """
         for type, node in basic_types():
@@ -185,6 +188,7 @@ class SingleValueTreeNodeObject ( TreeNodeObject ):
 class MultiValueTreeNodeObject ( SingleValueTreeNodeObject ):
     """ A tree node for objects of types that have multiple values.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns whether chidren of this object are allowed or not:  
     #---------------------------------------------------------------------------
@@ -210,6 +214,7 @@ class MultiValueTreeNodeObject ( SingleValueTreeNodeObject ):
 class StringNode ( SingleValueTreeNodeObject ):
     """ A tree node for strings.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -300,7 +305,7 @@ class TupleNode ( MultiValueTreeNodeObject ):
 
     def tno_has_children ( self, node ):
         """ Returns whether the object has children, based on the length of 
-        the tuple.
+            the tuple.
         """
         return (len( self.value ) > 0)
         
@@ -329,6 +334,7 @@ class TupleNode ( MultiValueTreeNodeObject ):
 class ListNode ( TupleNode ):
     """ A tree node for lists.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -357,6 +363,23 @@ class ListNode ( TupleNode ):
         appended).
         """
         return (not self.readonly)
+    
+#-------------------------------------------------------------------------------
+#  'SetNode' class:  
+#-------------------------------------------------------------------------------
+        
+class SetNode ( ListNode ):
+    """ A tree node for sets.
+    """
+    
+    #---------------------------------------------------------------------------
+    #  Returns the formatted version of the value:  
+    #---------------------------------------------------------------------------
+        
+    def format_value ( self, value ):
+        """ Returns the formatted version of the value.
+        """
+        return 'Set(%d)' % len( value )
         
 #-------------------------------------------------------------------------------
 #  'ArrayNode' class:  
@@ -365,6 +388,7 @@ class ListNode ( TupleNode ):
 class ArrayNode ( TupleNode ):
     """ A tree node for arrays.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -381,6 +405,7 @@ class ArrayNode ( TupleNode ):
 class DictNode ( TupleNode ):
     """ A tree node for dictionaries.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -423,6 +448,7 @@ class DictNode ( TupleNode ):
 class ObjectNode ( MultiValueTreeNodeObject ):
     """ A tree node for objects.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -466,6 +492,7 @@ class ObjectNode ( MultiValueTreeNodeObject ):
 class TraitsNode ( ObjectNode ):
     """ A tree node for traits.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns whether or not the object has children:  
     #---------------------------------------------------------------------------
@@ -545,6 +572,7 @@ class TraitsNode ( ObjectNode ):
 class RootNode ( MultiValueTreeNodeObject ):
     """ A root node.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the formatted version of the value:  
     #---------------------------------------------------------------------------
@@ -584,6 +612,7 @@ def basic_types ( ):
             ( complex,      ComplexNode ),
             ( tuple,        TupleNode ),
             ( list,         ListNode ),
+            ( set,          SetNode ),
             ( dict,         DictNode ),
             ( HasTraits,    TraitsNode )
         ]
@@ -619,7 +648,7 @@ value_tree_nodes = [
     ObjectTreeNode( 
         node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                      ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
-                     DictNode, ObjectNode, TraitsNode, RootNode ] )
+                     DictNode, SetNode, ObjectNode, TraitsNode, RootNode ] )
 ]
 
 # Editor for a value tree
@@ -638,7 +667,8 @@ value_tree_editor_with_root = TreeEditor(
         ObjectTreeNode( 
             node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                          ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
-                         DictNode, ObjectNode, TraitsNode, RootNode ] ),
+                         DictNode, SetNode, ObjectNode, TraitsNode, RootNode ]
+        ),
         TreeNode( node_for = [ _ValueTree ],
                   auto_open  = True,
                   children   = 'values',
