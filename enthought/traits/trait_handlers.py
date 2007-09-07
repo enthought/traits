@@ -549,11 +549,13 @@ class TraitType ( BaseTraitHandler ):
         new._metadata.update( metadata )
         
         if default_value is not Missing:
-            validate = self.validate
-            if validate is None:
-                new.default_value = default_value
-            else:
-                new.default_value = validate( None, None, default_value )
+            new.default_value = default_value
+            if self.validate is not None:
+                try:
+                    new.default_value = self.validate( None, None, 
+                                                       default_value )
+                except:
+                    pass
             
         return new
             
