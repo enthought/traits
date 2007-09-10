@@ -39,6 +39,9 @@ from enthought.traits.ui.undo \
 from enthought.traits.ui.menu \
     import Menu, Action, Separator
 
+from clipboard \
+    import clipboard
+
 from editor \
     import Editor
 
@@ -283,8 +286,11 @@ class SimpleEditor ( Editor ):
                 self._on_item_dclicked)
         tree.connect(tree, QtCore.SIGNAL('itemSelectionChanged()'),
                 self._on_tree_sel_changed)
+        tree.connect(tree, QtCore.SIGNAL('customContextMenuRequested(QPoint)'),
+                self._on_context_menu)
 
-        #wx.EVT_RIGHT_DOWN(            tree,      self._on_right_down )
+        tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+
         #wx.EVT_TREE_BEGIN_DRAG(       tree, tid, self._on_tree_begin_drag )
         #wx.EVT_TREE_BEGIN_LABEL_EDIT( tree, tid, self._on_tree_begin_label_edit)
         #wx.EVT_TREE_END_LABEL_EDIT(   tree, tid, self._on_tree_end_label_edit )
@@ -501,13 +507,7 @@ class SimpleEditor ( Editor ):
         except:
             pass
 
-        # We set the '_locked' flag here because wx seems to generate a
-        # 'node selected' event when the node is deleted. This can lead to
-        # some bad side effects. So the 'node selected' event handler exits
-        # immediately if the '_locked' flag is set:
-        self._locked = True
-        self._tree.Delete( nid )
-        self._locked = False
+        nid.parent().removeChild(nid)
 
         # If the deleted node had an active editor panel showing, remove it:
         if (self._editor is not None) and (nid == self._editor._editor_nid):
@@ -539,19 +539,16 @@ class SimpleEditor ( Editor ):
     def _nodes ( self, nid ):
         """ Returns each of the child nodes of a specified node.
         """
-        tree         = self._tree
-        cnid, cookie = tree.GetFirstChild( nid )
-        while cnid.IsOk():
-            yield cnid
-            cnid, cookie = tree.GetNextChild( nid, cookie )
+        for i in range(nid.childCount()):
+            yield nid.child(i)
 
     #---------------------------------------------------------------------------
     #  Return the index of a specified node id within its parent:
     #---------------------------------------------------------------------------
 
     def _node_index ( self, nid ):
-        pnid = self._tree.GetItemParent( nid )
-        if not pnid.IsOk():
+        pnid = nid.parent()
+        if pnid is None:
             return ( None, None, None )
         for i, cnid in enumerate( self._nodes( pnid ) ):
             if cnid == nid:
@@ -904,8 +901,8 @@ class SimpleEditor ( Editor ):
         """
         nid = self._get_object_nid( object, name )
         if nid is not None:
-            pnid = self._tree.GetItemParent( nid )
-            if pnid.IsOk():
+            pnid = nid.parent()
+            if pnid is not self._tree.invisibleRootItem():
                 return self.get_object( pnid )
         return None
 
@@ -1101,48 +1098,51 @@ class SimpleEditor ( Editor ):
     #  Handles the user right clicking on a tree node:
     #---------------------------------------------------------------------------
 
-    def _on_right_down ( self, event ):
-        """ Handles the user right clicking on a tree node.
+    def _on_context_menu(self, pos):
+        """ Handles the user requesting a context menuright clicking on a tree node.
         """
-        expanded, node, object, nid, point = self._unpack_event( event )
+        nid = self._tree.itemAt(pos)
 
-        if node is not None:
-            self._data    = ( node, object, nid )
-            self._context = { 'object':  object,
-                              'editor':  self,
-                              'node':    node,
-                              'info':    self.ui.info,
-                              'handler': self.ui.handler }
+        if nid is None:
+            return
 
-            # Try to get the parent node of the node clicked on:
-            pnid = self._tree.GetItemParent( nid )
-            if pnid.IsOk():
-                ignore, parent_node, parent_object = self._get_node_data( pnid )
-            else:
-                parent_node = parent_object = None
+        _, node, object = self._get_node_data(nid)
 
-            self._menu_node          = node
-            self._menu_parent_node   = parent_node
-            self._menu_parent_object = parent_object
+        self._data = (node, object, nid)
+        self._context = {'object':  object,
+                         'editor':  self,
+                         'node':    node,
+                         'info':    self.ui.info,
+                         'handler': self.ui.handler}
 
-            menu = node.get_menu( object )
-            if menu is None:
-                menu = self._standard_menu( node, object )
-            else:
-                group = menu.find_group( NewAction )
-                if group is not None:
-                    # Only set it the first time:
-                    group.id = ''
-                    actions  = self._new_actions( node, object )
-                    if len( actions ) > 0:
-                        group.insert( 0, Menu( name = 'New', *actions ) )
+        # Try to get the parent node of the node clicked on:
+        pnid = nid.parent()
+        if pnid is not self._tree.invisibleRootItem():
+            _, parent_node, parent_object = self._get_node_data(pnid)
+        else:
+            parent_node = parent_object = None
 
-            wxmenu = menu.create_menu( self._tree, self )
-            self._tree.PopupMenuXY( wxmenu,
-                                    point[0] - 10, point[1] - 10 )
-            wxmenu.Destroy()
-            self._data = self._context = self._menu_node = \
-            self._menu_parent_node = self._menu_parent_object = None
+        self._menu_node = node
+        self._menu_parent_node = parent_node
+        self._menu_parent_object = parent_object
+
+        menu = node.get_menu(object)
+        if menu is None:
+            menu = self._standard_menu(node, object)
+        else:
+            group = menu.find_group(NewAction)
+            if group is not None:
+                # Only set it the first time:
+                group.id = ''
+                actions  = self._new_actions( node, object )
+                if len( actions ) > 0:
+                    group.insert( 0, Menu( name = 'New', *actions ) )
+
+        qmenu = menu.create_menu( self._tree, self )
+        qmenu.exec_(self._tree.mapToGlobal(pos))
+
+        self._data = self._context = self._menu_node = \
+        self._menu_parent_node = self._menu_parent_object = None
 
     #---------------------------------------------------------------------------
     #  Returns the standard contextual pop-up menu:
@@ -1210,9 +1210,7 @@ class SimpleEditor ( Editor ):
         return (can_cut and self._menu_node.can_delete_me( object ))
 
     def _is_pasteable ( self, object ):
-        from enthought.util.wx.clipboard import clipboard
-
-        return self._menu_node.can_add( object, clipboard.object_type )
+        return self._menu_node.can_add(object, clipboard.instance_type)
 
     def _is_deletable ( self, object ):
         parent = self._menu_parent_node
@@ -1458,10 +1456,8 @@ class SimpleEditor ( Editor ):
     def _menu_copy_node ( self ):
         """ Copies the current tree node object to the paste buffer.
         """
-        from enthought.util.wx.clipboard import clipboard
-
-        clipboard.data = self._data[1]
-        self._data     = None
+        clipboard.instance = self._data[1]
+        self._data = None
 
     #---------------------------------------------------------------------------
     #   Cuts the current tree node object into the paste buffer:
@@ -1470,12 +1466,10 @@ class SimpleEditor ( Editor ):
     def _menu_cut_node ( self ):
         """  Cuts the current tree node object into the paste buffer.
         """
-        from enthought.util.wx.clipboard import clipboard
-
         node, object, nid = self._data
-        clipboard.data    = object
-        self._data        = None
-        self._undoable_delete( *self._node_index( nid ) )
+        clipboard.instance = object
+        self._data = None
+        self._undoable_delete(*self._node_index(nid))
 
     #---------------------------------------------------------------------------
     #  Pastes the current contents of the paste buffer into the current node:
@@ -1485,11 +1479,9 @@ class SimpleEditor ( Editor ):
         """ Pastes the current contents of the paste buffer into the current
             node.
         """
-        from enthought.util.wx.clipboard import clipboard
-
         node, object, nid = self._data
-        self._data        = None
-        self._undoable_append( node, object, clipboard.object_data, False )
+        self._data = None
+        self._undoable_append(node, object, clipboard.instance, False)
 
     #---------------------------------------------------------------------------
     #  Deletes the current node from the tree:
@@ -1505,12 +1497,12 @@ class SimpleEditor ( Editor ):
             if rc is not True:
                 if self.ui.history is None:
                     # If no undo history, ask user to confirm the delete:
-                    dlg = wx.MessageDialog(
+                    butn = QtGui.QMessageBox.question(
                                 self._tree,
-                                'Are you sure you want to delete %s?' % node.get_label( object ),
-                                'Confirm Deletion',
-                                style = wx.OK | wx.CANCEL | wx.ICON_EXCLAMATION )
-                    if dlg.ShowModal() != wx.ID_OK:
+                                "Confirm Deletion",
+                                "Are you sure you want to delete %s?" % node.get_label( object ),
+                                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No)
+                    if butn != QtGui.QMessageBox.Yes:
                         return
 
             self._undoable_delete( *self._node_index( nid ) )
@@ -1574,12 +1566,9 @@ class SimpleEditor ( Editor ):
                 if child_node is not None:
                     self._append_node( nid, child_node, child )
 
-        # Indicate whether the node has any children now:
-        tree.SetItemHasChildren( nid, len( children ) > 0 )
-
         # Try to expand the node (if requested):
         if node.can_auto_open( object ):
-            tree.Expand( nid )
+            nid.setExpanded(True)
 
     #---------------------------------------------------------------------------
     #  Handles the children of a node being changed:
@@ -1617,14 +1606,9 @@ class SimpleEditor ( Editor ):
                 if child_node is not None:
                     self._append_node( nid, child_node, child )
 
-        # Indicate whether the node has any children now:
-        tree.SetItemHasChildren( nid, len( children ) > 0 )
-
         # Try to expand the node (if requested):
-        root = tree.GetRootItem()
         if node.can_auto_open( object ):
-            if ( nid != root ) or not self.factory.hide_root:
-                tree.Expand( nid )
+            nid.setExpanded(True)
 
     #---------------------------------------------------------------------------
     #   Handles the label of an object being changed:
