@@ -8,8 +8,7 @@
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
 
-""" Creates a PyQt user interface for a specified UI object, where the UI
-    is "live", meaning that it immediately updates its underlying object(s).
+""" Creates a PyQt user interface for a specified UI object.
 """
 
 #-------------------------------------------------------------------------------
@@ -28,34 +27,42 @@ from ui_panel \
     import panel, show_help
     
 from constants \
-    import DefaultTitle, WindowColor, screen_dy
-
-from enthought.traits.ui.undo \
-    import UndoHistory
+    import DefaultTitle
     
 from enthought.traits.ui.menu \
-    import UndoButton, RevertButton, OKButton, CancelButton, HelpButton
+    import ApplyButton, RevertButton, OKButton, CancelButton, HelpButton
 
 #-------------------------------------------------------------------------------
-#  Creates a 'live update' PyQt user interface for a specified UI object:
+#  Creates a modal PyQt user interface for a specified UI object:
 #-------------------------------------------------------------------------------
 
-def ui_live ( ui, parent ):
-    """ Creates a live, non-modal PyQt user interface for a specified UI
-    object.
-    """
-    ui_dialog( ui, parent, False )
-
-def ui_livemodal ( ui, parent ):
-    """ Creates a live, modal PyQt user interface for a specified UI object.
+def ui_modal ( ui, parent ):
+    """ Creates a modal PyQt user interface for a specified UI object.
     """
     ui_dialog( ui, parent, True )
 
+#-------------------------------------------------------------------------------
+#  Creates a non-modal PyQt user interface for a specified UI object:
+#-------------------------------------------------------------------------------
+
+def ui_nonmodal ( ui, parent ):
+    """ Creates a non-modal PyQt user interface for a specified UI object.
+    """
+    ui_dialog( ui, parent, False )
+
+#-------------------------------------------------------------------------------
+#  Creates a PyQt dialog-based user interface for a specified UI object:
+#-------------------------------------------------------------------------------
+
 def ui_dialog ( ui, parent, is_modal ):
-    """ Creates a live PyQt user interface for a specified UI object.
+    """ Creates a PyQt dialog box for a specified UI object.
+    
+    Changes are not immediately applied to the underlying object. The user must
+    click **Apply** or **OK** to apply changes. The user can revert changes by
+    clicking **Revert** or **Cancel**.
     """
     if ui.owner is None:
-        ui.owner = LiveWindow()
+        ui.owner = ModalDialog()
     ui.owner.init( ui, parent, is_modal )
     ui.control = ui.owner.control
     ui.control._parent = parent
@@ -74,35 +81,32 @@ def ui_dialog ( ui, parent, is_modal ):
         ui.control.exec_()
     else:
         ui.control.show()
-
+    
 #-------------------------------------------------------------------------------
-#  'LiveWindow' class:
+#  'ModalDialog' class:
 #-------------------------------------------------------------------------------
     
-class LiveWindow ( BaseDialog ):
-    """ User interface window that immediately updates its underlying object(s).
+class ModalDialog ( BaseDialog ):
+    """ Modal dialog box for Traits-based user interfaces.
     """
-    
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
     
     def init ( self, ui, parent, is_modal ):
+        self.is_modal = is_modal
         view = ui.view
-        history = ui.history
-        window = ui.control
 
+        revert = apply = False
+        window = ui.control
         if window is not None:
             layout = window.layout()
 
-            if history is not None:
-                history.on_trait_change( self._on_undoable, 'undoable',
-                                         remove = True )
-                history.on_trait_change( self._on_redoable, 'redoable',
-                                         remove = True )
-                history.on_trait_change( self._on_revertable, 'undoable',
-                                         remove = True )
             ui.reset()
+            if hasattr( self, 'revert' ):
+                revert = self.revert.isEnabled()
+            if hasattr( self, 'apply' ):
+                apply = self.apply.isEnabled()
         else:
             layout = None
 
@@ -129,23 +133,17 @@ class LiveWindow ( BaseDialog ):
             self.control = window
             self.set_icon( view.icon )
 
+            # Create the 'context' copies we will need while editing:
+            context     = ui.context
+            ui._context = context
+            ui.context  = self._copy_context( context )
+            ui._revert  = self._copy_context( context )
+
         if layout is None:
             layout = QtGui.QVBoxLayout(window)
 
         if not view.resizable:
             layout.setSizeConstraint(QtGui.QLayout.SetFixedSize)
-
-        buttons = [ self.coerce_button( button ) for button in view.buttons ]
-        nbuttons    = len( buttons )
-        no_buttons  = ((nbuttons == 1) and self.is_button( buttons[0], '' ))
-        has_buttons = ((not no_buttons) and ((nbuttons > 0) or view.undo or
-                                         view.revert or view.ok or view.cancel))
-        if has_buttons or (view.menubar is not None):
-            if history is None:
-                history = UndoHistory()
-        else:
-            history = None
-        ui.history = history
         
         # Create the actual trait sheet panel and imbed it in a scrollable 
         # window (if requested):
@@ -162,71 +160,54 @@ class LiveWindow ( BaseDialog ):
         # buttons.
         pan.layout().setMargin(0)
 
-        # Check to see if we need to add any of the special function buttons:
-        if (not no_buttons) and (has_buttons or view.help):
+        buttons  = [ self.coerce_button( button ) for button in view.buttons ]
+        nbuttons = len( buttons )
+        if (nbuttons != 1) or (not self.is_button( buttons[0], '' )):
             bbox = QtGui.QDialogButtonBox()
-            
-            # Convert all button flags to actual button actions if no buttons
-            # were specified in the 'buttons' trait:
+
+            # Create the necessary special function buttons:
             if nbuttons == 0:
-                if view.undo:
-                    self.check_button( buttons, UndoButton )
-                if view.revert:
-                    self.check_button( buttons, RevertButton )
+                if view.apply:
+                    self.check_button( buttons, ApplyButton )
+                    if view.revert:
+                        self.check_button( buttons, RevertButton )
                 if view.ok:
                     self.check_button( buttons, OKButton )
                 if view.cancel:
                     self.check_button( buttons, CancelButton )
                 if view.help:
                     self.check_button( buttons, HelpButton )
-                
-            # Create a button for each button action:
+                    
             for button in buttons:
-                button = self.coerce_button(button)
-
-                if self.is_button(button, 'Undo'):
-                    self.undo = self.add_button(button, bbox,
-                            QtGui.QDialogButtonBox.ActionRole, self._on_undo,
-                            False)
-                    history.on_trait_change(self._on_undoable, 'undoable',
+                if self.is_button(button, 'Apply'):
+                    self.apply = self.add_button(button, bbox,
+                            QtGui.QDialogButtonBox.ApplyRole, self._on_apply,
+                            apply)
+                    ui.on_trait_change(self._on_applyable, 'modified',
                             dispatch='ui')
-                    if history.can_undo:
-                        self._on_undoable(True)
 
-                    self.redo = self.add_button(button, bbox, 
-                            QtGui.QDialogButtonBox.ActionRole, self._on_redo,
-                            False, 'Redo')
-                    history.on_trait_change(self._on_redoable, 'redoable',
-                            dispatch='ui')
-                    if history.can_redo:
-                        self._on_redoable(True)
-
-                elif self.is_button(button, 'Revert'): 
-                    self.revert = self.add_button(button, bbox,
+                elif self.is_button(button, 'Revert'):
+                    self.revert = self.add_button(button, bbox, 
                             QtGui.QDialogButtonBox.ResetRole, self._on_revert,
-                            False)
-                    history.on_trait_change(self._on_revertable, 'undoable',
-                            dispatch='ui')
-                    if history.can_undo:
-                        self._on_revertable(True)
+                            revert)
 
-                elif self.is_button(button, 'OK'): 
+                elif self.is_button(button, 'OK'):
                     self.ok = self.add_button(button, bbox,
                             QtGui.QDialogButtonBox.AcceptRole, window.accept)
                     ui.on_trait_change(self._on_error, 'errors', dispatch='ui')
 
-                elif self.is_button(button, 'Cancel'): 
+                elif self.is_button(button, 'Cancel'):
                     self.add_button(button, bbox,
                             QtGui.QDialogButtonBox.RejectRole, window.reject)
 
-                elif self.is_button(button, 'Help'): 
+                elif self.is_button(button, 'Help'):
                     self.add_button(button, bbox,
                             QtGui.QDialogButtonBox.HelpRole, self._on_help)
 
                 elif not self.is_button(button, ''):
                     self.add_button(button, bbox,
                             QtGui.QDialogButtonBox.ActionRole)
-
+                    
             layout.addWidget(bbox)
         
         # Add the menu bar and tool bar (if any):
@@ -242,52 +223,102 @@ class LiveWindow ( BaseDialog ):
         """
         save_window(self.ui)
         self.ui.finish(rc)
-        self.ui = self.undo = self.redo = self.revert = self.control = None
+        self.ui = self.apply = self.revert = self.help = self.control = None
+        
+    #---------------------------------------------------------------------------
+    #  Creates a copy of a 'context' dictionary:
+    #---------------------------------------------------------------------------
+        
+    def _copy_context ( self, context ):
+        """ Creates a copy of a *context* dictionary.
+        """
+        result = {}
+        for name, value in context.items():
+            if value is not None:
+                result[ name ] = value.clone_traits()
+            else:
+                result[ name ] = None
+        return result
+        
+    #---------------------------------------------------------------------------
+    #  Applies the traits in the 'from' context to the 'to' context:
+    #---------------------------------------------------------------------------
+        
+    def _apply_context ( self, from_context, to_context ):
+        """ Applies the traits in the *from_context* to the *to_context*.
+        """
+        for name, value in from_context.items():
+            if value is not None:
+                to_context[ name ].copy_traits( value )
+            else:
+                to_context[ name ] = None
+        if to_context is self.ui._context:
+            on_apply = self.ui.view.on_apply
+            if on_apply is not None:
+                on_apply()
 
     #---------------------------------------------------------------------------
     #  Handles the user finishing with the dialog:
     #---------------------------------------------------------------------------
- 
+
     def _on_finished ( self, result ):
         """ Handles the user finishing with the dialog.
         """
         accept = bool(result)
 
         if self.ui.handler.close(self.ui.info, accept):
-            if not accept:
-                self._on_revert()
+            if accept:
+                self._apply_context(self.ui.context, self.ui._context)
+            else:
+                self._apply_context(self.ui._revert, self.ui._context)
 
             self.close(accept)
 
     #---------------------------------------------------------------------------
-    #  Handles an 'Undo' change request:
+    #  Handles the 'Help' button being clicked:
     #---------------------------------------------------------------------------
            
-    def _on_undo ( self ):
-        """ Handles an "Undo" change request.
+    def _on_help ( self, event ):
+        """ Handles the **Help** button being clicked.
         """
-        self.ui.history.undo()
-   
+        self.ui.handler.show_help( self.ui.info, event.GetEventObject() )
+ 
     #---------------------------------------------------------------------------
-    #  Handles a 'Redo' change request:
+    #  Handles an 'Apply' all changes request:
     #---------------------------------------------------------------------------
            
-    def _on_redo ( self ):
-        """ Handles a "Redo" change request.
+    def _on_apply ( self, event ):
+        """ Handles a request to apply changes.
         """
-        self.ui.history.redo()
+        ui = self.ui
+        self._apply_context( ui.context, ui._context )
+        self.revert.setEnable( True )
+        ui.handler.apply( ui.info )
+        ui.modified = False
    
     #---------------------------------------------------------------------------
     #  Handles a 'Revert' all changes request:
     #---------------------------------------------------------------------------
            
-    def _on_revert ( self ):
-        """ Handles a request to revert all changes.
+    def _on_revert ( self, event ):
+        """ Handles a request to revert changes.
         """
         ui = self.ui
-        ui.history.revert()
-        ui.handler.revert( ui.info )
-   
+        self._apply_context( ui._revert, ui.context )
+        self._apply_context( ui._revert, ui._context )
+        self.revert.setEnable( False )
+        ui.handler.revert( ui.info ) 
+        ui.modified = False
+            
+    #---------------------------------------------------------------------------
+    #  Handles the user interface 'modified' state changing:
+    #---------------------------------------------------------------------------
+            
+    def _on_applyable ( self, state ):
+        """ Handles a change to the "modified" state of the user interface .
+        """
+        self.apply.setEnable( state )
+            
     #---------------------------------------------------------------------------
     #  Handles editing errors:
     #---------------------------------------------------------------------------
@@ -295,40 +326,4 @@ class LiveWindow ( BaseDialog ):
     def _on_error ( self, errors ):
         """ Handles editing errors.
         """
-        self.ok.setEnabled(errors == 0)
-    
-    #---------------------------------------------------------------------------
-    #  Handles the 'Help' button being clicked:
-    #---------------------------------------------------------------------------
-           
-    def _on_help ( self, event ):
-        """ Handles the 'user clicking the Help button.
-        """
-        self.ui.handler.show_help( self.ui.info, event.GetEventObject() )
-            
-    #---------------------------------------------------------------------------
-    #  Handles the undo history 'undoable' state changing:
-    #---------------------------------------------------------------------------
-            
-    def _on_undoable ( self, state ):
-        """ Handles a change to the "undoable" state of the undo history 
-        """
-        self.undo.setEnabled(state)
-            
-    #---------------------------------------------------------------------------
-    #  Handles the undo history 'redoable' state changing:
-    #---------------------------------------------------------------------------
-            
-    def _on_redoable ( self, state ):
-        """ Handles a change to the "redoable state of the undo history.
-        """
-        self.redo.setEnabled(state)
-            
-    #---------------------------------------------------------------------------
-    #  Handles the 'revert' state changing:
-    #---------------------------------------------------------------------------
-            
-    def _on_revertable ( self, state ):
-        """ Handles a change to the "revert" state.
-        """
-        self.revert.setEnabled(state)
+        self.ok.setEnable( errors == 0 )

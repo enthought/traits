@@ -36,7 +36,7 @@ def convert_to_color ( object, name, value ):
     except:
         tup = value
 
-    if type(tup) is tuple:
+    if isinstance(tup, tuple):
         if 3 <= len(tup) <= 4:
             try:
                 color = QtGui.QColor(*tup)

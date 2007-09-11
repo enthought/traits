@@ -288,12 +288,13 @@ class SimpleEditor ( Editor ):
                 self._on_tree_sel_changed)
         tree.connect(tree, QtCore.SIGNAL('customContextMenuRequested(QPoint)'),
                 self._on_context_menu)
+        tree.connect(tree,
+                QtCore.SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
+                self._on_node_renamed)
 
         tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 
         #wx.EVT_TREE_BEGIN_DRAG(       tree, tid, self._on_tree_begin_drag )
-        #wx.EVT_TREE_BEGIN_LABEL_EDIT( tree, tid, self._on_tree_begin_label_edit)
-        #wx.EVT_TREE_END_LABEL_EDIT(   tree, tid, self._on_tree_end_label_edit )
 
         # Synchronize external object traits with the editor:
         self.sync_value( factory.selected, 'selected' )
@@ -319,20 +320,6 @@ class SimpleEditor ( Editor ):
         """
         if not self._no_update_selected:
             self._selection_changed( selected )
-
-    #---------------------------------------------------------------------------
-    #  Handles the user entering input data in the edit control:
-    #---------------------------------------------------------------------------
-
-    def update_object ( self, event ):
-        """ Handles the user entering input data in the edit control.
-        """
-        try:
-            self.value = self._get_value()
-            self.control.SetBackgroundColour( OKColor )
-            self.control.Refresh()
-        except TraitError, excp:
-            pass
 
     #---------------------------------------------------------------------------
     #  Saves the current 'expanded' state of all tree nodes:
@@ -467,7 +454,12 @@ class SimpleEditor ( Editor ):
         tree = self._tree
         cnid = QtGui.QTreeWidgetItem([node.get_label(object)])
         cnid.setIcon(0, self._get_icon(node, object))
+
+        # Prevent the itemChanged() signal from being emitted.
+        blk = self._tree.blockSignals(True)
         nid.addChild(cnid)
+        self._tree.blockSignals(blk)
+
         has_children = node._has_children( object )
         self._set_node_data( cnid, ( False, node, object ) )
         self._map.setdefault( id( object ), [] ).append(
@@ -963,10 +955,7 @@ class SimpleEditor ( Editor ):
     def _on_item_dclicked(self, nid, col):
         """ Handles a tree item being double-clicked.
         """
-        if nid is None:
-            return
-
-        expanded, node, object = self._get_node_data(nid)
+        _, node, object = self._get_node_data(nid)
 
         if node.dclick(object) is True:
             if self.factory.on_dclick is not None:
@@ -1040,42 +1029,6 @@ class SimpleEditor ( Editor ):
 
             # Allow the editor view to show any changes that have occurred:
             editor.setUpdatesEnabled(True)
-
-    #---------------------------------------------------------------------------
-    #  Handles the user starting to edit a tree node label:
-    #---------------------------------------------------------------------------
-
-    def _on_tree_begin_label_edit ( self, event ):
-        """ Handles the user starting to edit a tree node label.
-        """
-        item   = event.GetItem()
-        parent = self._tree.GetItemParent( item )
-        if parent.IsOk():
-            expanded, node, object = self._get_node_data( parent )
-            if node.can_rename( object ):
-                expanded, node, object = self._get_node_data( item )
-                if node.can_rename_me( object ):
-                    return
-        event.Veto()
-
-    #---------------------------------------------------------------------------
-    #  Handles the user completing tree node label editing:
-    #---------------------------------------------------------------------------
-
-    def _on_tree_end_label_edit ( self, event ):
-        """ Handles the user completing tree node label editing.
-        """
-        label = event.GetLabel()
-        if len( label ) > 0:
-            expanded, node, object = self._get_node_data( event.GetItem() )
-            # Tell the node to change the label. If it raises an exception,
-            # that means it didn't like the label, so veto the tree node change:
-            try:
-                node.set_label( object, label )
-                return
-            except:
-                pass
-        event.Veto()
 
     #---------------------------------------------------------------------------
     #  Handles a drag operation starting on a tree node:
@@ -1226,7 +1179,19 @@ class SimpleEditor ( Editor ):
             can_rename = parent.can_rename( self._menu_parent_object )
         else:
             can_rename = ((parent is not None) and parent.can_rename( object ))
-        return (can_rename and self._menu_node.can_rename_me( object ))
+
+        can_rename = (can_rename and self._menu_node.can_rename_me( object ))
+
+        # Set the widget item's editable flag appropriately.
+        nid = self._get_object_nid(object)
+        flags = nid.flags()
+        if can_rename:
+            flags |= QtCore.Qt.ItemIsEditable
+        else:
+            flags &= ~QtCore.Qt.ItemIsEditable
+        nid.setFlags(flags)
+
+        return can_rename
 
 #----- Drag and drop event handlers: -------------------------------------------
 
@@ -1512,15 +1477,27 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def _menu_rename_node ( self ):
-        """ Renames the current tree node.
+        """ Rename the current node.
         """
-        node, object, nid = self._data
-        self._data        = None
-        object_label      = ObjectLabel( label = node.get_label( object ) )
-        if object_label.edit_traits().result:
-            label = object_label.label.strip()
-            if label != '':
-                node.set_label( object, label )
+        _, _, nid = self._data
+        self._data = None
+        self._tree.editItem(nid)
+
+    def _on_node_renamed(self, nid, col):
+        """ Handle changes to the text of a node.  Elsewhere signals are
+            blocked to try and ensure that this is only invoked when the user
+            has editted it.
+        """
+        _, node, object = self._get_node_data(nid)
+
+        new_label = unicode(nid.text(col))
+        old_label = node.get_label(object)
+
+        if new_label != old_label:
+            if new_label != '':
+                node.set_label(object, new_label)
+            else:
+                nid.setText(col, old_label)
 
     #---------------------------------------------------------------------------
     #  Adds a new object to the current node:
@@ -1539,7 +1516,10 @@ class SimpleEditor ( Editor ):
 
             # Automatically select the new object if editing is being performed:
             if self.factory.editable:
-                self._tree.SelectItem( self._tree.GetLastChild( nid ) )
+                # FIXME: This will select the previous last child because the
+                # new one hasn't been added yet. The wx version has the same
+                # bug. (Or maybe the bug isn't in the toolkit specific code.)
+                self._tree.setCurrentItem(nid.child(nid.childCount() - 1))
 
 #----- Model event handlers: ---------------------------------------------------
 
@@ -1617,6 +1597,9 @@ class SimpleEditor ( Editor ):
     def _label_updated ( self, object, name, label ):
         """  Handles the label of an object being changed.
         """
+        # Prevent the itemChanged() signal from being emitted.
+        blk = self._tree.blockSignals(True)
+
         nids = {}
         for name2, nid in self._map[ id( object ) ]:
             if nid not in nids:
@@ -1624,6 +1607,8 @@ class SimpleEditor ( Editor ):
                 node = self._get_node_data( nid )[1]
                 nid.setText(0, node.get_label(object))
                 self._update_icon(nid)
+
+        self._tree.blockSignals(blk)
 
 #-- UI preference save/restore interface ---------------------------------------
 
@@ -1657,26 +1642,3 @@ class SimpleEditor ( Editor ):
         return None
 
 #-- End UI preference save/restore interface -----------------------------------
-
-#-------------------------------------------------------------------------------
-#  'ObjectLabel' class:
-#-------------------------------------------------------------------------------
-
-class ObjectLabel ( HasStrictTraits ):
-    """ An editable label for an object.
-    """
-    #---------------------------------------------------------------------------
-    #  Trait definitions:
-    #---------------------------------------------------------------------------
-
-    # Label to be edited
-    label = Str  
-
-    #---------------------------------------------------------------------------
-    #  Traits view definition:
-    #---------------------------------------------------------------------------
-
-    traits_view = View( 'label',
-                        title   = 'Edit Label',
-                        kind    = 'modal',
-                        buttons = [ 'OK', 'Cancel' ] )
