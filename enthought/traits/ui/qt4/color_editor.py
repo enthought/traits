@@ -130,7 +130,11 @@ class ToolkitEditorFactory ( EditorFactory ):
         """ Returns the text representation of a specified color value.
         """
         if isinstance(color, QtGui.QColor):
-            return "(%d,%d,%d)" % (color.red(), color.green(), color.blue())
+            alpha = color.alpha()
+            if alpha == 255:
+                return "(%d,%d,%d)" % (color.red(), color.green(), color.blue())
+
+            return "(%d,%d,%d,%d)" % (color.red(), color.green(), color.blue(), alpha)
 
         return color
                                       
@@ -241,7 +245,7 @@ class TextColorEditor ( TextEditor ):
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
 
-    def update_object ( self, event ):
+    def update_object(self):
         """ Handles the user changing the contents of the edit control.
         """
         self.value = unicode(self.control.text())

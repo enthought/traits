@@ -30,25 +30,41 @@ from enthought.traits.ui.api \
 def convert_to_color ( object, name, value ):
     """ Converts a number into a QColor object.
     """
-    if isinstance(value, basestring):
-        # Allow for spaces in the string value.
-        value = value.replace(' ', '')
-
-    # Let the standard ctors handle the value.
+    # Try the toolkit agnostic format.
     try:
-        color = QtGui.QColor(value)
-    except TypeError:
-        raise TraitError
+        tup = eval(value)
+    except:
+        tup = value
+
+    if type(tup) is tuple:
+        if 3 <= len(tup) <= 4:
+            try:
+                color = QtGui.QColor(*tup)
+            except TypeError:
+                raise TraitError
+        else:
+            raise TraitError
+    else:
+        if isinstance(value, basestring):
+            # Allow for spaces in the string value.
+            value = value.replace(' ', '')
+
+        # Let the standard ctors handle the value.
+        try:
+            color = QtGui.QColor(value)
+        except TypeError:
+            raise TraitError
 
     if not color.isValid():
         raise TraitError
 
     return color
 
-convert_to_color.info = ('a QColor instance, a Qt.GlobalColor, an integer '
-                         'which in hex is of the form 0xRRGGBB, a string of '
-                         'the form #RGB, #RRGGBB, #RRRGGGBBB or '
-                         '#RRRRGGGGBBBB')
+convert_to_color.info = ('a string of the form (r,g,b) or (r,g,b,a) where r, '
+                         'g, b, and a are integers from 0 to 255, a QColor '
+                         'instance, a Qt.GlobalColor, an integer which in hex '
+                         'is of the form 0xRRGGBB, a string of the form #RGB, '
+                         '#RRGGBB, #RRRGGGBBB or #RRRRGGGGBBBB')
 
 #-------------------------------------------------------------------------------
 #  Standard colors:
