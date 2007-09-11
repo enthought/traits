@@ -92,7 +92,8 @@ class TraitNotificationError ( exceptions.Exception ):
 class DelegationError ( TraitError ):
 
     def __init__ ( self, args ):
-        self.args = args
+        # .args must be a tuple.
+        self.args = args,
        
 #-------------------------------------------------------------------------------
 #  Export the defined exceptions to the C-base traits module:
