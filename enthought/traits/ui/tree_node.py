@@ -104,7 +104,10 @@ class TreeNode ( HasPrivateTraits ):
     # View to use for editing the object
     view = Instance( View )
     
-    # Right-click context menu
+    # Right-click context menu. The value can either be:
+    # - Instance( Menu ): Use this menu as the context menu
+    # - None: Use the default context menu
+    # - False: Do not display a context menu
     menu = Any
     
     # Name of leaf item icon
