@@ -30,7 +30,7 @@ class EditColumn ( ObjectColumn ):
         """
         super( EditColumn, self ).__init__( **traits )
 
-        # force the renderer to be a checkbox renderer
+        # force the renderer to be a edit renderer
         self.renderer = EditRenderer()
         
         self.label = ''
