@@ -15,3 +15,6 @@
 from enthought.traits.ui.extras.checkbox_column \
     import CheckboxColumn
 
+from enthought.traits.ui.extras.edit_column \
+    import EditColumn
+

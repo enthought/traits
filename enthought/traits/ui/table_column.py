@@ -492,12 +492,12 @@ class NumericColumn ( ObjectColumn ):
     #  row:
     #---------------------------------------------------------------------------
     
-    def get_cell_color ( self, object, row ):
+    def get_cell_color ( self, object ):
         """ Returns the cell background color for the column for a specified 
             object row.
         """
-        if self.is_editable( object, row ):
-            if self._is_selected( object, row ):
+        if self.is_editable( object ):
+            if self._is_selected( object ):
                 return self.selected_cell_color_
             return self.cell_color_
         return self.read_only_cell_color_
@@ -507,7 +507,7 @@ class NumericColumn ( ObjectColumn ):
     #  row:
     #---------------------------------------------------------------------------
     
-    def get_horizontal_alignment ( self, object, row ):
+    def get_horizontal_alignment ( self, object ):
         """ Returns the horizontal alignment for the column for a specified 
             object row.
         """
@@ -517,7 +517,7 @@ class NumericColumn ( ObjectColumn ):
     #  Returns the vertical alignment for the column for a specified object row:  
     #---------------------------------------------------------------------------
     
-    def get_vertical_alignment ( self, object, row ):
+    def get_vertical_alignment ( self, object ):
         """ Returns the vertical alignment for the column for a specified 
             object row.
         """
@@ -527,7 +527,7 @@ class NumericColumn ( ObjectColumn ):
     #  Returns whether the column is editable for a specified object row:  
     #---------------------------------------------------------------------------
                 
-    def is_editable ( self, object, row ):
+    def is_editable ( self, object ):
         """ Returns whether the column is editable for a specified object row.
         """
         return self.editable
@@ -558,11 +558,11 @@ class NumericColumn ( ObjectColumn ):
     #  Gets the value of the column for a specified object row:  
     #---------------------------------------------------------------------------
     
-    def get_value ( self, object, row ):
+    def get_value ( self, object ):
         """ Gets the value of the column for a specified object row.
         """
         try:
-            value = getattr( object, self.name )[ row ]
+            value = getattr( object, self.name )
             try:
                 return self.format % value
             except:
@@ -584,7 +584,7 @@ class NumericColumn ( ObjectColumn ):
     #  Gets the editor for the column of a specified object row:  
     #---------------------------------------------------------------------------
 
-    def get_editor ( self, object, row ):
+    def get_editor ( self, object ):
         """ Gets the editor for the column of a specified object row.
         """
         return super( NumericColumn, self ).get_editor( object )
@@ -602,11 +602,11 @@ class NumericColumn ( ObjectColumn ):
     #  Returns whether a specified object row is selected or not:  
     #---------------------------------------------------------------------------
     
-    def _is_selected ( self, object, row ):
+    def _is_selected ( self, object ):
         """ Returns whether a specified object row is selected.
         """
         selection = object.model_selection
-        return (selection is not None) and (selection[ row ] != 0)
+        return (selection is not None)
                 
 #-------------------------------------------------------------------------------
 #  'ListColumn' class:
