@@ -3366,13 +3366,13 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                 /* case 14: Python-based validator check: */
                 /* case 15..18: Property 'setattr' validate checks: */
                 case 19:  /* PyProtocols 'adapt' check: */
+                    /* Note: We don't check the 'class' argument (item[1])
+                       because some old-style code creates classes that are not
+                       strictly classes or types (e.g. VTK), and yet they work
+                       correctly with the rest of the Instance code */
                     if ( (n == 4) &&
-/*                        
-                         (PyClass_Check( PyTuple_GET_ITEM( validate, 1 ) )  ||
-                          PyType_Check(  PyTuple_GET_ITEM( validate, 1 ) )) &&
-*/                         
-                         PyInt_Check(    PyTuple_GET_ITEM( validate, 2 ) )  &&
-                         PyBool_Check(   PyTuple_GET_ITEM( validate, 3 ) ) ) {
+                         PyInt_Check(  PyTuple_GET_ITEM( validate, 2 ) )  &&
+                         PyBool_Check( PyTuple_GET_ITEM( validate, 3 ) ) ) {
                         goto done;
                     }
                     break;
