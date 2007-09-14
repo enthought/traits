@@ -220,7 +220,7 @@ class TreeNode ( HasPrivateTraits ):
         specified object.
         """
         object.on_trait_change( listener, self.children, remove = remove, 
-                                dispatch = 'ui' )
+                                dispatch = 'fast_ui' )
         
     #---------------------------------------------------------------------------
     #  Sets up/Tears down a listener for 'children changed' on a specified 
@@ -232,7 +232,7 @@ class TreeNode ( HasPrivateTraits ):
         specified object.
         """
         object.on_trait_change( listener, self.children + '_items', 
-                                remove = remove, dispatch = 'ui' )
+                                remove = remove, dispatch = 'fast_ui' )
         
     #---------------------------------------------------------------------------
     #  Gets the label to display for a specified object:    
@@ -962,7 +962,7 @@ class TreeNodeObject ( HasPrivateTraits ):
         specified object.
         """
         self.on_trait_change( listener, node.children, remove = remove, 
-                              dispatch = 'ui' )
+                              dispatch = 'fast_ui' )
         
     #---------------------------------------------------------------------------
     #  Sets up/Tears down a listener for 'children changed' on a specified 
@@ -974,7 +974,7 @@ class TreeNodeObject ( HasPrivateTraits ):
         specified object.
         """
         self.on_trait_change( listener, node.children + '_items', 
-                              remove = remove, dispatch = 'ui' )
+                              remove = remove, dispatch = 'fast_ui' )
         
     #---------------------------------------------------------------------------
     #  Gets the label to display for a specified object:    
