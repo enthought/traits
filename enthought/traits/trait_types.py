@@ -50,6 +50,7 @@ from types \
 #  Numeric type fast validator definitions:  
 #-------------------------------------------------------------------------------
 
+# The standard python definitions (without numpy):
 int_fast_validate     = ( 11, int )
 long_fast_validate    = ( 11, long,    None, int )
 float_fast_validate   = ( 11, float,   None, int )
@@ -58,7 +59,8 @@ bool_fast_validate    = ( 11, bool )
 
 try:
     from numpy import integer, floating, complexfloating, bool_
-    
+
+    # The numpy enhanced definitions:    
     int_fast_validate     = ( 11, int, integer )
     long_fast_validate    = ( 11, long, None, int, integer )
     float_fast_validate   = ( 11, float, floating, None, int, integer )
