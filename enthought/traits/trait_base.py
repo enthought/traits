@@ -205,7 +205,7 @@ def class_of ( object ):
     'a PlotValue').
     """
     if isinstance( object, basestring ):
-       return add_article( object )
+        return add_article( object )
 
     return add_article( object.__class__.__name__ )
 

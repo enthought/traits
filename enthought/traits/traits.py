@@ -977,12 +977,14 @@ class _TraitMaker ( object ):
         handler = self.handler
         if handler is not None:
             trait.handler = handler
-            if hasattr( handler, 'fast_validate' ):
-                trait.set_validate( handler.fast_validate )
-            else:
-                trait.set_validate( handler.validate )
-            if hasattr( handler, 'post_setattr' ):
-                trait.post_setattr = handler.post_setattr
+            validate      = getattr( handler, 'fast_validate', None )
+            if validate is None:
+                validate = handler.validate
+            trait.set_validate( validate )
+            
+            post_setattr = getattr( handler, 'post_setattr', None )
+            if post_setattr is not None:
+                trait.post_setattr = post_setattr
 
         trait.rich_comparison( metadata.get( 'rich_compare', True ) )
 
@@ -1322,7 +1324,8 @@ def Color ( *args, **metadata ):
 Color = TraitFactory( Color )
 
 def RGBColor ( *args, **metadata ):
-    """ Returns a trait whose value must be a GUI toolkit-specific RGB-based color.
+    """ Returns a trait whose value must be a GUI toolkit-specific RGB-based 
+        color.
 
     Description
     -----------

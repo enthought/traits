@@ -47,6 +47,28 @@ from types \
     import FunctionType, MethodType, ClassType, InstanceType
 
 #-------------------------------------------------------------------------------
+#  Numeric type fast validator definitions:  
+#-------------------------------------------------------------------------------
+
+int_fast_validate     = ( 11, int )
+long_fast_validate    = ( 11, long,    None, int )
+float_fast_validate   = ( 11, float,   None, int )
+complex_fast_validate = ( 11, complex, None, float, int )
+bool_fast_validate    = ( 11, bool )
+
+try:
+    from numpy import integer, floating, complexfloating, bool_
+    
+    int_fast_validate     = ( 11, int, integer )
+    long_fast_validate    = ( 11, long, None, int, integer )
+    float_fast_validate   = ( 11, float, floating, None, int, integer )
+    complex_fast_validate = ( 11, complex, complexfloating, None, 
+                                  float, floating, int, integer )
+    bool_fast_validate    = ( 11, bool, bool_ )
+except:
+    pass
+        
+#-------------------------------------------------------------------------------
 #  Returns a default text editor: 
 #-------------------------------------------------------------------------------
 
@@ -114,7 +136,7 @@ class Int ( BaseInt ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, int )
+    fast_validate = int_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseLong' and 'Long' traits:
@@ -158,7 +180,7 @@ class Long ( BaseLong ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, long, int )
+    fast_validate = long_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseFloat' and 'Float' traits:
@@ -201,7 +223,7 @@ class Float ( BaseFloat ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, float, int )
+    fast_validate = float_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseComplex' and 'Complex' traits:
@@ -245,7 +267,7 @@ class Complex ( BaseComplex ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, complex, float, int )
+    fast_validate = complex_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseStr' and 'Str' traits:
@@ -328,7 +350,7 @@ class Unicode ( BaseUnicode ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, unicode, str )
+    fast_validate = ( 11, unicode, None, str )
 
 #-------------------------------------------------------------------------------
 #  'BaseBool' and 'Bool' traits:
@@ -371,7 +393,7 @@ class Bool ( BaseBool ):
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 11, bool )
+    fast_validate = bool_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseCInt' and 'CInt' traits:
@@ -1244,7 +1266,7 @@ class BaseTuple ( TraitType ):
         default value is ('','',0).
         """
         if len( traits ) == 0:
-            self.init_fast_validator( 11, tuple, list )
+            self.init_fast_validator( 11, tuple, None, list )
             
             super( BaseTuple, self ).__init__( (), **metadata )
             

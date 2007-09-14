@@ -2923,6 +2923,15 @@ validate_trait_coerce_type ( trait_object * trait, has_traits_object * obj,
     }
     n = PyTuple_GET_SIZE( type_info );
     for ( i = 2; i < n; i++ ) {
+        type2 = PyTuple_GET_ITEM( type_info, i );
+        if ( type2 == Py_None )
+            break;
+        if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) {
+            Py_INCREF( value );
+            return value;
+        }
+    }
+    for ( i++; i < n; i++ ) {
         type2 = PyTuple_GET_ITEM( type_info, i ); 
         if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
             return type_converter( type, value );
@@ -3165,6 +3174,13 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     goto done;
                 k = PyTuple_GET_SIZE( type_info );
                 for ( j = 2; j < k; j++ ) {
+                    type2 = PyTuple_GET_ITEM( type_info, j );
+                    if ( type2 == Py_None )
+                        break;
+                    if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
+                        goto done;
+                }
+                for ( j++; j < k; j++ ) {
                     type2 = PyTuple_GET_ITEM( type_info, j ); 
                     if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
                         return type_converter( type, value );
