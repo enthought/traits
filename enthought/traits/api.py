@@ -50,6 +50,12 @@ from trait_types \
            ListFunction, ListMethod, ListClass, ListInstance, ListThis, \
            DictStrAny, DictStrStr, DictStrInt, DictStrLong, DictStrFloat, \
            DictStrBool, DictStrList
+           
+from trait_types \
+    import BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr, BaseUnicode, \
+           BaseBool, BaseCInt, BaseCLong, BaseCFloat, BaseCComplex, BaseCStr, \
+           BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange, \
+           BaseEnum, BaseTuple, BaseInstance
 
 if python_version >= 2.5:
     from trait_types \

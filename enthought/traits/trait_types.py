@@ -76,12 +76,13 @@ class Any ( TraitType ):
     info_text = 'any value'
                        
 #-------------------------------------------------------------------------------
-#  'Int' trait:
+#  'BaseInt' and 'Int' traits:
 #-------------------------------------------------------------------------------
 
-class Int ( TraitType ):
+class BaseInt ( TraitType ):
     """ Defines a trait whose value must be a Python int.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = int
     
@@ -90,14 +91,11 @@ class Int ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'an integer'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, int )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, int ):
             return value
@@ -109,13 +107,23 @@ class Int ( TraitType ):
         """
         return default_text_editor( self, int )
 
+        
+class Int ( BaseInt ):
+    """ Defines a trait whose value must be a Python int using a C-level fast
+        validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, int )
+
 #-------------------------------------------------------------------------------
-#  'Long' trait:
+#  'BaseLong' and 'Long' traits:
 #-------------------------------------------------------------------------------
 
-class Long ( TraitType ):
+class BaseLong ( TraitType ):
     """ Defines a trait whose value must be a Python long.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = long
     
@@ -124,14 +132,11 @@ class Long ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a long'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, long, int )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, long ):
             return value
@@ -146,11 +151,20 @@ class Long ( TraitType ):
         """
         return default_text_editor( self, long )
 
+        
+class Long ( BaseLong ):
+    """ Defines a trait whose value must be a Python long using a C-level fast
+        validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, long, int )
+
 #-------------------------------------------------------------------------------
-#  'Float' trait:
+#  'BaseFloat' and 'Float' traits:
 #-------------------------------------------------------------------------------
 
-class Float ( TraitType ):
+class BaseFloat ( TraitType ):
     """ Defines a trait whose value must be a Python float.
     """
     # The function to use for evaluating strings to this type:
@@ -161,14 +175,11 @@ class Float ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a float'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, float, int )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, float ):
             return value
@@ -183,13 +194,23 @@ class Float ( TraitType ):
         """
         return default_text_editor( self, float )
 
+        
+class Float ( BaseFloat ):
+    """ Defines a trait whose value must be a Python float using a C-level fast
+        validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, float, int )
+
 #-------------------------------------------------------------------------------
-#  'Complex' trait:
+#  'BaseComplex' and 'Complex' traits:
 #-------------------------------------------------------------------------------
 
-class Complex ( TraitType ):
+class BaseComplex ( TraitType ):
     """ Defines a trait whose value must be a Python complex.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = complex
     
@@ -198,14 +219,11 @@ class Complex ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a complex number'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, complex, float, int )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, complex ):
             return value
@@ -220,11 +238,20 @@ class Complex ( TraitType ):
         """
         return default_text_editor( self, complex )
 
+        
+class Complex ( BaseComplex ):
+    """ Defines a trait whose value must be a Python complex using a C-level
+        fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, complex, float, int )
+
 #-------------------------------------------------------------------------------
-#  'Str' trait:
+#  'BaseStr' and 'Str' traits:
 #-------------------------------------------------------------------------------
 
-class Str ( TraitType ):
+class BaseStr ( TraitType ):
     """ Defines a trait whose value must be a Python string.
     """
     
@@ -233,14 +260,11 @@ class Str ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a string'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, basestring )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, basestring ):
             return value
@@ -254,11 +278,20 @@ class Str ( TraitType ):
         
         return multi_line_text_editor()
 
+        
+class Str ( BaseStr ):
+    """ Defines a trait whose value must be a Python string using a C-level
+        fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, basestring )
+
 #-------------------------------------------------------------------------------
-#  'Unicode' trait:
+#  'BaseUnicode' and 'Unicode' traits:
 #-------------------------------------------------------------------------------
 
-class Unicode ( TraitType ):
+class BaseUnicode ( TraitType ):
     """ Defines a trait whose value must be a Python unicode string.
     """
     
@@ -267,14 +300,11 @@ class Unicode ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a unicode string'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, unicode, str )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, unicode ):
             return value
@@ -291,13 +321,23 @@ class Unicode ( TraitType ):
         
         return multi_line_text_editor()
 
+        
+class Unicode ( BaseUnicode ):
+    """ Defines a trait whose value must be a Python unicode string using a 
+        C-level fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, unicode, str )
+
 #-------------------------------------------------------------------------------
-#  'Bool' trait:
+#  'BaseBool' and 'Bool' traits:
 #-------------------------------------------------------------------------------
 
-class Bool ( TraitType ):
+class BaseBool ( TraitType ):
     """ Defines a trait whose value must be a Python boolean.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = bool
     
@@ -306,14 +346,11 @@ class Bool ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'a boolean'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, bool )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, bool ):
             return value
@@ -327,118 +364,153 @@ class Bool ( TraitType ):
         
         return BooleanEditor()
 
+        
+class Bool ( BaseBool ):
+    """ Defines a trait whose value must be a Python boolean using a C-level
+        fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, bool )
+
 #-------------------------------------------------------------------------------
-#  'CInt' trait:
+#  'BaseCInt' and 'CInt' traits:
 #-------------------------------------------------------------------------------
 
-class CInt ( Int ):
+class BaseCInt ( BaseInt ):
     """ Defines a trait whose value must be a Python int and which supports
         coercions of non-int values to int.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = int
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 12, int )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return int( value )
         except:
             self.error( object, name, value )
 
+            
+class CInt ( BaseCInt ):
+    """ Defines a trait whose value must be a Python int and which supports
+        coercions of non-int values to int using a C-level fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 12, int )
+
 #-------------------------------------------------------------------------------
-#  'CLong' trait:
+#  'BaseCLong' and 'CLong' traits:
 #-------------------------------------------------------------------------------
 
-class CLong ( TraitType ):
+class BaseCLong ( BaseLong ):
     """ Defines a trait whose value must be a Python long and which supports
         coercions of non-long values to long.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = long
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 12, long )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return long( value )
         except:
             self.error( object, name, value )
 
+            
+class CLong ( BaseCLong ):
+    """ Defines a trait whose value must be a Python long and which supports
+        coercions of non-long values to long using a C-level fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 12, long )
+
 #-------------------------------------------------------------------------------
-#  'CFloat' trait:
+#  'BaseCFloat' and 'CFloat' traits:
 #-------------------------------------------------------------------------------
 
-class CFloat ( TraitType ):
+class BaseCFloat ( BaseFloat ):
     """ Defines a trait whose value must be a Python float and which supports
         coercions of non-float values to float.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = float
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 12, float )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return float( value )
         except:
             self.error( object, name, value )
 
+            
+class CFloat ( BaseCFloat ):
+    """ Defines a trait whose value must be a Python float and which supports
+        coercions of non-float values to float using a C-level fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 12, float )
+
 #-------------------------------------------------------------------------------
-#  'CComplex' trait:
+#  'BaseCComplex' and 'CComplex' traits:
 #-------------------------------------------------------------------------------
 
-class CComplex ( TraitType ):
+class BaseCComplex ( BaseComplex ):
     """ Defines a trait whose value must be a Python complex and which supports
         coercions of non-complex values to complex.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = complex
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 12, complex )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return complex( value )
         except:
             self.error( object, name, value )
 
-#-------------------------------------------------------------------------------
-#  'CStr' trait:
-#-------------------------------------------------------------------------------
-
-class CStr ( TraitType ):
-    """ Defines a trait whose value must be a Python string and which supports
-        coercions of non-string values to string.
+            
+class CComplex ( BaseCComplex ):
+    """ Defines a trait whose value must be a Python complex and which supports
+        coercions of non-complex values to complex using a C-level fast
+        validator.
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 7, ( ( 12, str ), ( 12, unicode ) ) )
+    fast_validate = ( 12, complex )
+
+#-------------------------------------------------------------------------------
+#  'BaseCStr' and 'CStr' traits:
+#-------------------------------------------------------------------------------
+
+class BaseCStr ( BaseStr ):
+    """ Defines a trait whose value must be a Python string and which supports
+        coercions of non-string values to string.
+    """
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return str( value )
@@ -448,51 +520,76 @@ class CStr ( TraitType ):
             except:
                 self.error( object, name, value )
 
-#-------------------------------------------------------------------------------
-#  'CUnicode' trait:
-#-------------------------------------------------------------------------------
-
-class CUnicode ( TraitType ):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode.
+                
+class CStr ( BaseCStr ):
+    """ Defines a trait whose value must be a Python string and which supports
+        coercions of non-string values to string using a C-level fast 
+        validator.
     """
     
     # Define the C-level fast validator to use:
-    fast_validate = ( 12, unicode )
+    fast_validate = ( 7, ( ( 12, str ), ( 12, unicode ) ) )
+
+#-------------------------------------------------------------------------------
+#  'BaseCUnicode' and 'CUnicode' traits:
+#-------------------------------------------------------------------------------
+
+class BaseCUnicode ( BaseUnicode ):
+    """ Defines a trait whose value must be a Python unicode string and which
+        supports coercions of non-unicode values to unicode.
+    """
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return unicode( value )
         except:
             self.error( object, name, value )
 
+            
+class CUnicode ( BaseCUnicode ):
+    """ Defines a trait whose value must be a Python unicode string and which
+        supports coercions of non-unicode values to unicode using a C-level
+        fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 12, unicode )
+
 #-------------------------------------------------------------------------------
-#  'CBool' trait:
+#  'BaseCBool' and 'CBool' traits:
 #-------------------------------------------------------------------------------
 
-class CBool ( TraitType ):
+class BaseCBool ( BaseBool ):
     """ Defines a trait whose value must be a Python boolean and which supports
         coercions of non-boolean values to boolean.
     """
+    
     # The function to use for evaluating strings to this type:
     evaluate = bool
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 12, bool )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         
-            Note: The 'fast validator' normally performs this check in C.
+            Note: The 'fast validator' version performs this check in C.
         """
         try:
             return bool( value )
         except:
             self.error( object, name, value )
+
+            
+class CBool ( BaseCBool ):
+    """ Defines a trait whose value must be a Python boolean and which supports
+        coercions of non-boolean values to boolean using a C-level fast
+        validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 12, bool )
 
 #-------------------------------------------------------------------------------
 #  'String' trait:  
@@ -736,18 +833,15 @@ class PythonValue ( Any ):
     metadata = { 'editor': shell_editor }
 
 #-------------------------------------------------------------------------------
-#  'File' trait:
+#  'BaseFile' and 'File' traits:
 #-------------------------------------------------------------------------------
 
-class File ( Str ):
+class BaseFile ( BaseStr ):
     """ Defines a trait whose value must be the name of a file.
     """
     
     # A description of the type of value this trait accepts:
     info_text = 'a file name'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, basestring )
     
     def __init__ ( self, value = '', filter = None, auto_set = False,
                    **metadata ):
@@ -772,21 +866,27 @@ class File ( Str ):
         
         metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
                                                    auto_set = auto_set ) )
-        super( File, self ).__init__( value, **metadata )
+        super( BaseFile, self ).__init__( value, **metadata )
+
+        
+class File ( BaseFile ):
+    """ Defines a trait whose value must be the name of a file using a C-level
+        fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, basestring )
         
 #-------------------------------------------------------------------------------
-#  'Directory' trait:
+#  'BaseDirectory' and 'Directory' traits:
 #-------------------------------------------------------------------------------
 
-class Directory ( Str ):
+class BaseDirectory ( BaseStr ):
     """ Defines a trait whose value must be the name of a directory.
     """
     
     # A description of the type of value this trait accepts:
     info_text = 'a directory name'
-    
-    # Define the C-level fast validator to use:
-    fast_validate = ( 11, basestring )
                                                         
     def __init__ ( self, value = '', auto_set = False, **metadata ):
         """ Creates a Directory trait.
@@ -806,13 +906,22 @@ class Directory ( Str ):
         from enthought.traits.ui.editors import DirectoryEditor
         
         metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set ) )
-        super( Directory, self ).__init__( value, **metadata )
+        super( BaseDirectory, self ).__init__( value, **metadata )
+
+        
+class Directory ( BaseDirectory ):
+    """ Defines a trait whose value must be the name of a directory using a 
+        C-level fast validator.
+    """
+    
+    # Define the C-level fast validator to use:
+    fast_validate = ( 11, basestring )
    
 #-------------------------------------------------------------------------------
-#  'Range' trait:  
+#  'BaseRange' and 'Range' traits:  
 #-------------------------------------------------------------------------------
                     
-class Range ( TraitType ):
+class BaseRange ( TraitType ):
     """ Defines a trait whose numeric value must be in a specified range.
     """
     
@@ -849,7 +958,7 @@ class Range ( TraitType ):
             else:
                 value = high
                 
-        super( Range, self ).__init__( value, **metadata )
+        super( BaseRange, self ).__init__( value, **metadata )
 
         vtype = type( high )
         if (low is not None) and (vtype is not float):
@@ -897,13 +1006,19 @@ class Range ( TraitType ):
             exclude_mask |= 2
             
         if vtype is not long:
-            self.fast_validate = ( kind, low, high, exclude_mask )
+            self.init_fast_validator( kind, low, high, exclude_mask )
 
         # Assign type-corrected arguments to handler attributes:
         self._low          = low
         self._high         = high
         self._exclude_low  = exclude_low
         self._exclude_high = exclude_high
+        
+    def init_fast_validator ( self, *args ):
+        """ Does nothing for the BaseRange class. Used in the Range class to 
+            set up the fast validator.
+        """
+        pass
 
     def validate ( self, object, name, value ):
         """ Validate that the value is in the specified range.
@@ -996,11 +1111,22 @@ class Range ( TraitType ):
                             low_label  = self.low  or '',
                             high_label = self.high or '' )
 
+                            
+class Range ( BaseRange ):                            
+    """ Defines a trait whose numeric value must be in a specified range using
+        a C-level fast validator.
+    """
+    
+    def init_fast_validator ( self, *args ):
+        """ Set up the C-level fast validator.
+        """
+        self.fast_validate = args 
+        
 #-------------------------------------------------------------------------------
-#  'Enum' trait:  
+#  'BaseEnum' and 'Enum' traits:  
 #-------------------------------------------------------------------------------
                    
-class Enum ( TraitType ):
+class BaseEnum ( TraitType ):
     """ Defines a trait whose value must be one of a specified set of values.
     """
     
@@ -1022,10 +1148,17 @@ class Enum ( TraitType ):
             default_value = values[0]
         elif (len( values ) == 2) and isinstance( values[1], SequenceTypes ):
             values = values[1]
-        self.values        = tuple( values )
-        self.fast_validate = ( 5, self.values )
             
-        super( Enum, self ).__init__( default_value, **metadata )
+        self.values = tuple( values )
+        self.init_fast_validator( 5, self.values )
+            
+        super( BaseEnum, self ).__init__( default_value, **metadata )
+        
+    def init_fast_validator ( self, *args ):
+        """ Does nothing for the BaseEnum class. Used in the Enum class to set 
+            up the fast validator.
+        """
+        pass
 
     def validate ( self, object, name, value ):
         """ Validates that the value is one of the enumerated set of valid 
@@ -1051,11 +1184,22 @@ class Enum ( TraitType ):
                            evaluate = self.evaluate,
                            mode     = self.mode or 'radio' )
 
+                           
+class Enum ( BaseEnum ):
+    """ Defines a trait whose value must be one of a specified set of values
+        using a C-level fast validator.
+    """
+    
+    def init_fast_validator ( self, *args ):
+        """ Set up the C-level fast validator.
+        """
+        self.fast_validate = args 
+
 #-------------------------------------------------------------------------------
-#  'Tuple' trait:  
+#  'BaseTuple' and 'Tuple' traits:  
 #-------------------------------------------------------------------------------
                     
-class Tuple ( TraitType ):
+class BaseTuple ( TraitType ):
     """ Defines a trait whose value must be a tuple of specified trait types.
     """
     
@@ -1100,9 +1244,9 @@ class Tuple ( TraitType ):
         default value is ('','',0).
         """
         if len( traits ) == 0:
-            self.fast_validate = ( 11, tuple, list )
+            self.init_fast_validator( 11, tuple, list )
             
-            super( Tuple, self ).__init__( (), **metadata )
+            super( BaseTuple, self ).__init__( (), **metadata )
             
             return
 
@@ -1114,18 +1258,23 @@ class Tuple ( TraitType ):
                 traits = [ Trait( element ) for element in default_value ]
                 
         self.traits = tuple( [ trait_from( trait ) for trait in traits ] )
-        self.fast_validate = ( 9, self.traits )
+        self.init_fast_validator( 9, self.traits )
                 
         if default_value is None:
             default_value = tuple( [ trait.default_value()[1] 
                                      for trait in self.traits ] )
                                      
-        super( Tuple, self ).__init__( default_value, **metadata )                                      
+        super( BaseTuple, self ).__init__( default_value, **metadata )
+        
+    def init_fast_validator ( self, *args ):
+        """ Saves the validation parameters. 
+        """
+        self.no_type_check = (args[0] == 11) 
 
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid tuple.
         """
-        if self.fast_validate[0] == 11:
+        if self.no_type_check:
             if isinstance( value, tuple ):
                 return value
                 
@@ -1155,7 +1304,7 @@ class Tuple ( TraitType ):
     def info ( self ):
         """ Returns a description of the trait.
         """
-        if self.fast_validate[0] == 11:
+        if self.no_type_check:
             return 'a tuple'
             
         return 'a tuple of the form: (%s)' % (', '.join( [ trait.info() 
@@ -1169,6 +1318,18 @@ class Tuple ( TraitType ):
         return TupleEditor( traits = self.traits,
                             labels = self.labels or [],
                             cols   = self.cols or 1 )
+                    
+class Tuple ( BaseTuple ):
+    """ Defines a trait whose value must be a tuple of specified trait types
+        using a C-level fast validator.
+    """
+    
+    def init_fast_validator ( self, *args ):
+        """ Set up the C-level fast validator.
+        """
+        super( Tuple, self ).init_fast_validator( *args )
+        
+        self.fast_validate = args 
         
 #-------------------------------------------------------------------------------
 #  'List' trait: 
@@ -1390,7 +1551,7 @@ class Dict ( TraitType ):
         return cls._items_event
 
 #-------------------------------------------------------------------------------
-#  'Instance' trait:  
+#  'BaseInstance' and 'Instance' traits:  
 #-------------------------------------------------------------------------------
 
 # Allowed values and mappings for the 'adapt' keyword:
@@ -1400,7 +1561,7 @@ AdaptMap = {
    'default': 1
 }
                 
-class Instance ( TraitType ):
+class BaseInstance ( TraitType ):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
     """
@@ -1470,7 +1631,7 @@ class Instance ( TraitType ):
             if not isinstance( klass, ClassTypes ):
                 klass = klass.__class__
             self.klass = klass
-            self.set_fast_validate()
+            self.init_fast_validate()
         
         value = factory
         if factory is not None:
@@ -1495,7 +1656,7 @@ class Instance ( TraitType ):
            
         self.default_value = value
         
-        super( Instance, self ).__init__( value, **metadata )
+        super( BaseInstance, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
@@ -1561,7 +1722,7 @@ class Instance ( TraitType ):
         dvt = self.default_value_type
         if dvt < 0:
             if not isinstance( dv, _InstanceArgs ):
-                return super( Instance, self ).get_default_value()
+                return super( BaseInstance, self ).get_default_value()
             self.default_value_type = dvt = 7
             dv = ( self.create_default_value, dv.args, dv.kw )
         
@@ -1581,7 +1742,7 @@ class Instance ( TraitType ):
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        ctrait = super( Instance, self ).as_ctrait()
+        ctrait = super( BaseInstance, self ).as_ctrait()
         
         # Tell the C code that the 'post_setattr' method wants the original,
         # unadapted value passed to 'setattr':
@@ -1604,20 +1765,13 @@ class Instance ( TraitType ):
     # fixme: Do we still need this method using the new style?...
     def allow_none ( self ):
         self._allow_none = True
-        if hasattr( self, 'fast_validate' ):
-            self.set_fast_validate()
+        self.init_fast_validate()
 
-    def set_fast_validate ( self ):
-        if self.adapt < 0:
-            fast_validate = [ 1, self.klass ]
-            if self._allow_none:
-                fast_validate = [ 1, None, self.klass ]
-            if self.klass in TypeTypes:
-                fast_validate[0] = 0
-            self.fast_validate = tuple( fast_validate )
-        else:
-            self.fast_validate = ( 19, self.klass, self.adapt, 
-                                   self._allow_none )
+    def init_fast_validate ( self ):
+        """ Does nothing for the BaseInstance' class. Used by the 'Instance'
+            class to set up the C-level fast validator.
+        """
+        pass
 
     def resolve_class ( self, object, name, value ):
         klass = self.validate_class( self.find_class( self.klass ) )
@@ -1633,12 +1787,16 @@ class Instance ( TraitType ):
         # trait, so we need to check for this and pull out the List
         # 'item_trait'. Obviously this does not extend well to other traits
         # containing nested trait references (Dict?)...
-        self.set_fast_validate()
+        self.init_fast_validate()
         trait   = object.base_trait( name )
         handler = trait.handler
-        if (handler is not self) and hasattr( handler, 'item_trait' ):
-            trait = handler.item_trait
-        trait.set_validate( self.fast_validate )
+        if handler is not self:
+            item_trait = getattr( handler, 'item_trait', None )
+            if item_trait is not None:
+                trait = item_trait
+            
+        if self.fast_validate is not None:
+            trait.set_validate( self.fast_validate )
 
     def find_class ( self, klass ):
         module = self.module
@@ -1667,7 +1825,29 @@ class Instance ( TraitType ):
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
             
         self.error( object, name, msg )
-            
+                
+class Instance ( BaseInstance ):
+    """ Defines a trait whose value must be an instance of a specified class,
+        or one of its subclasses using a C-level fast validator.
+    """
+
+    def init_fast_validate ( self ):
+        """ Sets up the C-level fast validator.
+        """
+        if self.adapt < 0:
+            fast_validate = [ 1, self.klass ]
+            if self._allow_none:
+                fast_validate = [ 1, None, self.klass ]
+                
+            if self.klass in TypeTypes:
+                fast_validate[0] = 0
+                
+            self.fast_validate = tuple( fast_validate )
+        else:
+            self.fast_validate = ( 19, self.klass, self.adapt, 
+                                   self._allow_none )
+
+    
 if python_version >= 2.5:
     
     import uuid 
@@ -1778,6 +1958,33 @@ class HandleWeakRef ( object ):
         object = self.object()
         if object is not None:
             object.trait_property_changed( self.name, Undefined, None )
+
+#-------------------------------------------------------------------------------
+#  'RGBColor' trait:
+#-------------------------------------------------------------------------------
+
+class RGBColor ( TraitType ):
+    """ Defines a trait whose value represents an abstract color as a tuple of
+        the form: ( red, green, blue ), where *red*, *green* and *blue* are
+        floats in the range from 0.0 to 1.0.
+
+        Description
+        -----------
+        For wxPython, the trait accepts any of the following values:
+    
+        * A tuple of the form (*r*, *g*, *b*), in which *r*, *g*, and *b* 
+          represent red, green, and blue values, respectively, and are floats 
+          in the range from 0.0 to 1.0.
+        * An integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red
+          value, *GG* is the green value, and *BB* is the blue value.
+        * A string specifying a color name (e.g. "red"). Any of the standard
+          SVG color names can be used. The names are not case sensitive.
+    
+        Default Value
+        -------------
+        (0.0, 0.0, 0.0) (that is, white).
+    """
+    # fixme: Finish implementing this...
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
