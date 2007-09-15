@@ -431,8 +431,23 @@ class TraitType ( BaseTraitHandler ):
           method must return the original *value* or any suitably coerced or
           adapted value that is a legal value for the trait. If *value* is 
           not a legal value for the trait, and cannot be coerced or adapted
-          to a legal value, the method should either raise a TraitError or 
-          call the error() method to raise the TraitError on its behalf.
+          to a legal value, the method should either raise a **TraitError** or 
+          call the **error** method to raise the **TraitError** on its behalf.
+          
+        * **is_valid_for ( self, value )**
+        
+          As an alternative to implementing the **validate** method, you can
+          instead implement the **is_valid_for** method, which receives only 
+          the *value* being assigned. It should return **True** if the value is
+          valid, and **False** otherwise.
+          
+        * **value_for ( self, value )**
+        
+          As another alternative to implementing the **validate** method, you 
+          can instead implement the **value_for** method, which receives only
+          the *value* being assigned. It should return the validated form of 
+          *value* if it is valid, or raise a **TraitError** if the value is not
+          valid.
             
         * **post_setattr ( self, object, name, value )**
         
@@ -566,6 +581,24 @@ class TraitType ( BaseTraitHandler ):
         """
         return self.clone( *args, **kw ).as_ctrait()
         
+    def _is_valid_for ( self, object, name, value ):
+        """ Handles a simplified validator that only returns whether or not the
+            original value is valid.
+        """
+        if self.is_valid_for( value ):
+            return value
+             
+        self.error( object, name, value )
+        
+    def _value_for ( self, object, name, value ):
+        """ Handles a simplified validator that only receives the value 
+            argument.
+        """
+        try:
+            return self.value_for( value )
+        except TraitError:
+            self.error( object, name, value )
+        
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
@@ -595,14 +628,16 @@ class TraitType ( BaseTraitHandler ):
             trait.default_value( *self.get_default_value() )
             
             validate = getattr( self, 'fast_validate', None )
-            if validate is not None:
-                super_validate = getattr( super( self.__class__, self ),
-                                          'fast_validate', None )
-                if validate is super_validate:
-                    validate = None
-                    
             if validate is None:
                 validate = getattr( self, 'validate', None )
+                if validate is None:
+                    validate = getattr( self, 'is_valid_for', None )
+                    if validate is not None:
+                        validate = self._is_valid_for
+                    else:
+                        validate = getattr( self, 'value_for', None )
+                        if validate is not None:
+                            validate = self._value_for
                 
             if validate is not None:
                 trait.set_validate( validate )
