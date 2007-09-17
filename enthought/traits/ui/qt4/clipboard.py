@@ -17,12 +17,84 @@ using pickle.
 #-------------------------------------------------------------------------------
 
 from cPickle import dumps, load, loads
-
 from cStringIO import StringIO
 
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api import HasTraits, Instance, Property
+
+#-------------------------------------------------------------------------------
+#  'PyMimeData' class:
+#-------------------------------------------------------------------------------
+
+class PyMimeData(QtCore.QMimeData):
+    """ The PyMimeData wraps a Python instance as MIME data.
+    """
+    # The MIME type for instances.
+    MIME_TYPE = QtCore.QString('application/x-ets-qt4-instance')
+
+    def __init__(self, data=None):
+        """ Initialise the instance.
+        """
+        QtCore.QMimeData.__init__(self)
+
+        if data is not None:
+            # This format (as opposed to using a single sequence) allows the
+            # type to be extracted without unpickling the data itself.
+            self.setData(self.MIME_TYPE, dumps(data.__class__) + dumps(data))
+
+        # Keep a local reference to be returned if possible.
+        self._local_instance = data
+
+    @classmethod
+    def coerce(cls, md):
+        """ Coerce a QMimeData instance to a PyMimeData instance if possible.
+        """
+        # See if the data is already of the right type.  If it is then we know
+        # we are in the same process.
+        if isinstance(md, cls):
+            return md
+
+        # See if the data type is supported.
+        if not md.hasFormat(cls.MIME_TYPE):
+            return None
+
+        nmd = cls()
+        nmd.setData(cls.MIME_TYPE, md.data())
+
+        return nmd
+
+    def instance(self):
+        """ Return the instance.
+        """
+        if self._local_instance is not None:
+            return self._local_instance
+
+        io = StringIO(str(self.data(self.MIME_TYPE)))
+
+        try:
+            # Skip the type.
+            load(io)
+
+            # Recreate the instance.
+            return load(io)
+        except:
+            pass
+
+        return None
+
+    def instanceType(self):
+        """ Return the type of the instance.
+        """
+        if self._local_instance is not None:
+            return self._local_instance.__class__
+
+        try:
+            return loads(str(self.data(self.MIME_TYPE)))
+        except:
+            pass
+
+        return None
 
 #-------------------------------------------------------------------------------
 #  '_Clipboard' class:
@@ -49,66 +121,36 @@ class _Clipboard(HasTraits):
     clipboard = Instance(QtGui.QClipboard)
 
     #---------------------------------------------------------------------------
-    #  Non-trait class attributes:
-    #---------------------------------------------------------------------------
-
-    # The private MIME type for instances.
-    _MT_INSTANCE = QtCore.QString('application/x-ets-qt4-instance')
-
-    #---------------------------------------------------------------------------
     #  Instance property methods:
     #---------------------------------------------------------------------------
            
     def _get_instance(self):
         """ The instance getter.
         """
-        md = self.clipboard.mimeData()
+        md = PyMimeData.coerce(self.clipboard.mimeData())
         if md is None:
             return None
 
-        ba = md.data(self._MT_INSTANCE)
-        if ba.isEmpty():
-            return None
-
-        io = StringIO(str(ba))
-
-        # Skip the instance type.
-        load(io)
-
-        return load(io)
+        return md.instance()
 
     def _set_instance(self, data):
         """ The instance setter.
         """
-        md = QtCore.QMimeData()
-
-        # This format (as opposed to using a sequence) allows the type to be
-        # extracted without unpickling the data itself.
-        md.setData(self._MT_INSTANCE, dumps(data.__class__) + dumps(data))
-
-        self.clipboard.setMimeData(md)
+        self.clipboard.setMimeData(PyMimeData(data))
 
     def _get_has_instance(self):
         """ The has_instance getter.
         """
-        md = self.clipboard.mimeData()
-        if md is None:
-            return None
-
-        return md.hasFormat(self._MT_INSTANCE)
+        return self.clipboard.mimeData().hasFormat(PyMimeData.MIME_TYPE)
 
     def _get_instance_type(self):
         """ The instance_type getter.
         """
-        md = self.clipboard.mimeData()
+        md = PyMimeData.coerce(self.clipboard.mimeData())
         if md is None:
             return None
 
-        ba = md.data(self._MT_INSTANCE)
-        if ba.isEmpty():
-            return None
-
-        return loads(str(ba))
+        return md.instanceType()
 
     #---------------------------------------------------------------------------
     #  Other trait handlers:

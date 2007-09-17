@@ -24,14 +24,13 @@ from enthought.pyface.resource_manager \
     import resource_manager
 
 from enthought.traits.api \
-    import HasTraits, HasStrictTraits, Trait, Any, Dict, true, false, Tuple, \
-           Int, List, Instance, Str, Event, Enum
+    import HasTraits, Any, Dict, true, false, Int, List, Instance, Str, Event
 
 from enthought.traits.trait_base \
     import enumerate
 
 from enthought.traits.ui.api \
-    import View, Item, TreeNode, ObjectTreeNode, MultiTreeNode
+    import TreeNode, ObjectTreeNode, MultiTreeNode
     
 from enthought.traits.ui.undo \
     import ListUndoItem
@@ -40,7 +39,7 @@ from enthought.traits.ui.menu \
     import Menu, Action, Separator
 
 from clipboard \
-    import clipboard
+    import clipboard, PyMimeData
 
 from editor \
     import Editor
@@ -50,13 +49,6 @@ from editor_factory \
 
 from helper \
     import Orientation
-
-#-------------------------------------------------------------------------------
-#  Global data:
-#-------------------------------------------------------------------------------
-
-# Paste buffer for copy/cut/paste operations
-paste_buffer = None
 
 #-------------------------------------------------------------------------------
 #  The core tree node menu actions:
@@ -78,13 +70,6 @@ DeleteAction = Action( name         = 'Delete',
 RenameAction = Action( name         = 'Rename',
                        action       = 'editor._menu_rename_node',
                        enabled_when = 'editor._is_renameable(object)' )
-
-#-------------------------------------------------------------------------------
-#  Trait definitions:
-#-------------------------------------------------------------------------------
-
-# Size of each tree node icon
-IconSize = Tuple( ( 16, 16 ), Int, Int )
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -131,7 +116,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Size of the tree node icons
     # FIXME: Document as unimplemented or wx specific.
-    icon_size = IconSize
+    #icon_size = IconSize
 
     # Called when a node is selected
     on_select = Any
@@ -244,12 +229,12 @@ class SimpleEditor ( Editor ):
                     self._editor = editor.control
 
                 # Finally, create only the tree control:
-                self.control = self._tree = QtGui.QTreeWidget(parent)
+                self.control = self._tree = _TreeWidget(self, parent)
             else:
                 # If editable, create a tree control and an editor panel:
                 self._is_splitter = True
 
-                self._tree = QtGui.QTreeWidget()
+                self._tree = _TreeWidget(self)
 
                 self._editor = sa = QtGui.QScrollArea()
                 sa._node_ui = sa._editor_nid = None
@@ -264,37 +249,13 @@ class SimpleEditor ( Editor ):
                 splitter.addWidget(sa)
         else:
             # Otherwise, just create the tree control:
-            self.control = self._tree = QtGui.QTreeWidget(parent)
+            self.control = self._tree = _TreeWidget(self, parent)
 
         # Set up the mapping between objects and tree id's:
         self._map = {}
 
         # Initialize the 'undo state' stack:
         self._undoable = []
-
-        # Configure the tree.
-        tree = self._tree
-
-        tree.header().hide()
-
-        tree.connect(tree, QtCore.SIGNAL('itemExpanded(QTreeWidgetItem *)'),
-                self._on_item_expanded)
-        tree.connect(tree, QtCore.SIGNAL('itemCollapsed(QTreeWidgetItem *)'),
-                self._on_item_collapsed)
-        tree.connect(tree,
-                QtCore.SIGNAL('itemDoubleClicked(QTreeWidgetItem *, int)'),
-                self._on_item_dclicked)
-        tree.connect(tree, QtCore.SIGNAL('itemSelectionChanged()'),
-                self._on_tree_sel_changed)
-        tree.connect(tree, QtCore.SIGNAL('customContextMenuRequested(QPoint)'),
-                self._on_context_menu)
-        tree.connect(tree,
-                QtCore.SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
-                self._on_node_renamed)
-
-        tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-
-        #wx.EVT_TREE_BEGIN_DRAG(       tree, tid, self._on_tree_begin_drag )
 
         # Synchronize external object traits with the editor:
         self.sync_value( factory.selected, 'selected' )
@@ -322,78 +283,6 @@ class SimpleEditor ( Editor ):
             self._selection_changed( selected )
 
     #---------------------------------------------------------------------------
-    #  Saves the current 'expanded' state of all tree nodes:
-    #---------------------------------------------------------------------------
-
-    def _save_state ( self ):
-        tree  = self._tree
-        nid   = tree.GetRootItem()
-        state = {}
-        if nid.IsOk():
-            nodes_to_do = [ nid ]
-            while nodes_to_do:
-                node = nodes_to_do.pop()
-                data = self._get_node_data( node )
-                try:
-                    is_expanded = tree.IsExpanded( node )
-                except:
-                    is_expanded = True
-                state[ hash( data[-1] ) ] = ( data[0], is_expanded )
-                for cnid in self._nodes( node ):
-                    nodes_to_do.append( cnid )
-        return state
-
-    #---------------------------------------------------------------------------
-    #  Restores the 'expanded' state of all tree nodes:
-    #---------------------------------------------------------------------------
-
-    def _restore_state ( self, state ):
-        if not state:
-            return
-        tree = self._tree
-        nid  = tree.GetRootItem()
-        if nid.IsOk():
-            nodes_to_do = [ nid ]
-            while nodes_to_do:
-                node = nodes_to_do.pop()
-                for cnid in self._nodes( node ):
-                    data = self._get_node_data( cnid )
-                    key  = hash( data[-1] )
-                    if key in state:
-                        was_expanded, current_state = state[ key ]
-                        if was_expanded:
-                            self._expand_node( cnid )
-                            if current_state:
-                                tree.Expand( cnid )
-                            nodes_to_do.append( cnid )
-
-    #---------------------------------------------------------------------------
-    #  Expands all nodes starting from the current selection:
-    #---------------------------------------------------------------------------
-
-    def expand_all ( self ):
-        """ Expands all nodes, starting from the selected node.
-        """
-        tree = self._tree
-
-        def _do_expand ( nid ):
-            expanded, node, object = self._get_node_data( nid )
-            if node._has_children( object ):
-                tree.SetItemHasChildren( nid, True )
-                self._expand_node( nid )
-                tree.Expand( nid )
-
-        nid = tree.GetSelection()
-        if nid.IsOk():
-            nodes_to_do = [ nid ]
-            while nodes_to_do:
-                node = nodes_to_do.pop()
-                _do_expand( node )
-                for n in self._nodes( node ):
-                    _do_expand( n )
-                    nodes_to_do.append( n )
-
-    #---------------------------------------------------------------------------
     #  Expands from the specified node the specified number of sub-levels:
     #---------------------------------------------------------------------------
 
@@ -403,10 +292,9 @@ class SimpleEditor ( Editor ):
         if levels > 0:
             expanded, node, object = self._get_node_data( nid )
             if node._has_children( object ):
-                self._tree.SetItemHasChildren( nid, True )
                 self._expand_node( nid )
                 if expand:
-                    self._tree.Expand( nid )
+                    nid.setExpanded(True)
                 for cnid in self._nodes( nid ):
                     self.expand_levels( cnid, levels - 1 )
 
@@ -428,9 +316,9 @@ class SimpleEditor ( Editor ):
             if self.factory.hide_root:
                 nid = tree.invisibleRootItem()
             else:
-                nid = QtGui.QTreeWidgetItem([node.get_label(object)])
+                nid = QtGui.QTreeWidgetItem(tree)
+                nid.setText(0, node.get_label(object))
                 nid.setIcon(0, self._get_icon(node, object))
-                tree.addTopLevelItem(nid)
 
             self._map[ id( object ) ] = [ ( node.children, nid ) ]
             self._add_listeners( node, object )
@@ -451,16 +339,11 @@ class SimpleEditor ( Editor ):
     def _append_node ( self, nid, node, object ):
         """ Appends a new node to the specified node.
         """
-        tree = self._tree
-        cnid = QtGui.QTreeWidgetItem([node.get_label(object)])
+        cnid = QtGui.QTreeWidgetItem(nid)
+        cnid.setText(0, node.get_label(object))
         cnid.setIcon(0, self._get_icon(node, object))
 
-        # Prevent the itemChanged() signal from being emitted.
-        blk = self._tree.blockSignals(True)
-        nid.addChild(cnid)
-        self._tree.blockSignals(blk)
-
-        has_children = node._has_children( object )
+        has_children = node._has_children(object)
         self._set_node_data( cnid, ( False, node, object ) )
         self._map.setdefault( id( object ), [] ).append(
             ( node.children, cnid ) )
@@ -480,24 +363,20 @@ class SimpleEditor ( Editor ):
     def _delete_node ( self, nid ):
         """ Deletes a specified tree node and all its children.
         """
-        for cnid in [ cnid for cnid in self._nodes( nid ) ]:
+        for cnid in self._nodes_for( nid ):
             self._delete_node( cnid )
-        expanded, node, object = self._get_node_data( nid )
-        self._remove_listeners( node, object )
 
-        # If a node has several named children (i.e. has several traits which
-        # define separate sub-nodes for the main node for the object), then
-        # there will be several nodes that refer to the same object (i.e. the
-        # parent node and each of the trait sub-nodes). Only the parent node
-        # can be deleted, but because of the recursive nature of this method,
-        # the first deleted sub-node will cause the object to be removed from
-        # the map (below). This is why the 'del' is wrapped in a 'try' block...
-        # to catch the error when the n'th sub-node or parent sub-node tries
-        # to delete the already deleted object from the map.
-        try:
-            del self._map[ id( object ) ]
-        except:
-            pass
+        expanded, node, object = self._get_node_data( nid )
+        id_object   = id( object )
+        object_info = self._map[ id_object ]
+        for i, info in enumerate( object_info ):
+            if nid == info[1]:
+                del object_info[i]
+                break
+
+        if len( object_info ) == 0:
+            self._remove_listeners( node, object )
+            del self._map[ id_object ]
 
         nid.parent().removeChild(nid)
 
@@ -533,6 +412,11 @@ class SimpleEditor ( Editor ):
         """
         for i in range(nid.childCount()):
             yield nid.child(i)
+
+    def _nodes_for ( self, nid ):
+        """ Returns all child node ids of a specified node id.
+        """
+        return [ cnid for cnid in self._nodes( nid ) ]
 
     #---------------------------------------------------------------------------
     #  Return the index of a specified node id within its parent:
@@ -570,7 +454,6 @@ class SimpleEditor ( Editor ):
             if icon is not None:
                 return self._tree.style().standardIcon(icon)
 
-            # FIXME: The rest of this needs fixing.
             path = node.get_icon_path( object )
             if isinstance( path, basestring ):
                 path = [ path, node ]
@@ -584,7 +467,13 @@ class SimpleEditor ( Editor ):
             # Assume it is an ImageResource, and get its file name directly:
             file_name = icon_name.absolute_path
 
-        return self._image_list.GetIndex( file_name )
+        # Get the pixmap using the global cache if possible.
+        pm = QtGui.QPixmap()
+        if not QtGui.QPixmapCache.find(file_name, pm):
+            pm.load(file_name)
+            QtGui.QPixmapCache.insert(file_name, pm)
+
+        return QtGui.QIcon(pm)
 
     #---------------------------------------------------------------------------
     #  Adds the event listeners for a specified object:
@@ -627,6 +516,18 @@ class SimpleEditor ( Editor ):
             nid = info[0][1]
         expanded, node, ignore = self._get_node_data( nid )
         return ( expanded, node, nid )
+
+    def _object_info_for ( self, object, name = '' ):
+        """ Returns the tree node data for a specified object as a list of the
+            form: [ ( expanded, node, nid ), ... ].
+        """
+        result = []
+        for name2, nid in self._map[ id( object ) ]:
+            if name == name2:
+                expanded, node, ignore = self._get_node_data( nid )
+                result.append( ( expanded, node, nid ) )
+
+        return result
 
     #---------------------------------------------------------------------------
     #  Returns the TreeNode associated with a specified object:
@@ -720,39 +621,6 @@ class SimpleEditor ( Editor ):
         """
         expanded, node, object = self._get_node_data(nid)
         nid.setIcon(0, self._get_icon(node, object, expanded))
-
-    #---------------------------------------------------------------------------
-    #  Unpacks an event to see whether a tree item was involved:
-    #---------------------------------------------------------------------------
-
-    def _unpack_event ( self, event ):
-        """ Unpacks an event to see whether a tree item was involved.
-        """
-        try:
-            point = event.GetPosition()
-        except:
-            point = event.GetPoint()
-
-        nid = None
-        if hasattr( event, 'GetItem' ):
-            nid = event.GetItem()
-        if (nid is None) or (not nid.IsOk()):
-            nid, flags = self._tree.HitTest( point )
-        if nid.IsOk():
-            return self._get_node_data( nid ) + ( nid, point )
-        return ( None, None, None, nid, point )
-
-    #---------------------------------------------------------------------------
-    #  Returns information about the node at a specified point:
-    #---------------------------------------------------------------------------
-
-    def _hit_test ( self, point ):
-        """ Returns information about the node at a specified point.
-        """
-        nid, flags = self._tree.HitTest( point )
-        if nid.IsOk():
-            return self._get_node_data( nid ) + ( nid, point )
-        return ( None, None, None, nid, point )
 
     #---------------------------------------------------------------------------
     #  Begins an 'undoable' transaction:
@@ -1031,23 +899,6 @@ class SimpleEditor ( Editor ):
             editor.setUpdatesEnabled(True)
 
     #---------------------------------------------------------------------------
-    #  Handles a drag operation starting on a tree node:
-    #---------------------------------------------------------------------------
-
-    def _on_tree_begin_drag ( self, event ):
-        """ Handles a drag operation starting on a tree node.
-        """
-        if PythonDropSource is not None:
-            expanded, node, object, nid, point = self._unpack_event( event )
-            if node is not None:
-                try:
-                    self._dragging = True
-                    PythonDropSource( self._tree,
-                                      node.get_drag_object( object ) )
-                finally:
-                    self._dragging = False
-
-    #---------------------------------------------------------------------------
     #  Handles the user right clicking on a tree node:
     #---------------------------------------------------------------------------
 
@@ -1080,9 +931,13 @@ class SimpleEditor ( Editor ):
         self._menu_parent_object = parent_object
 
         menu = node.get_menu(object)
+
         if menu is None:
+            # Use the standard, default menu:
             menu = self._standard_menu(node, object)
-        else:
+
+        elif isinstance(menu, Menu):
+            # Use the menu specified by the node:
             group = menu.find_group(NewAction)
             if group is not None:
                 # Only set it the first time:
@@ -1091,9 +946,16 @@ class SimpleEditor ( Editor ):
                 if len( actions ) > 0:
                     group.insert( 0, Menu( name = 'New', *actions ) )
 
-        qmenu = menu.create_menu( self._tree, self )
-        qmenu.exec_(self._tree.mapToGlobal(pos))
+        else:
+            # All other values mean no menu should be displayed:
+            menu = None
 
+        # Only display the menu if a valid menu is defined:
+        if menu is not None:
+            qmenu = menu.create_menu( self._tree, self )
+            qmenu.exec_(self._tree.mapToGlobal(pos))
+
+        # Reset all menu related cached values:
         self._data = self._context = self._menu_node = \
         self._menu_parent_node = self._menu_parent_object = None
 
@@ -1192,107 +1054,6 @@ class SimpleEditor ( Editor ):
         nid.setFlags(flags)
 
         return can_rename
-
-#----- Drag and drop event handlers: -------------------------------------------
-
-    #---------------------------------------------------------------------------
-    #  Handles a Python object being dropped on the tree:
-    #---------------------------------------------------------------------------
-
-    def wx_dropped_on ( self, x, y, data, drag_result ):
-        """ Handles a Python object being dropped on the tree.
-        """
-        if isinstance( data, list ):
-            rc = wx.DragNone
-            for item in data:
-                rc = self.wx_dropped_on( x, y, item, drag_result )
-            return rc
-
-        expanded, node, object, nid, point = self._hit_test( wx.Point( x, y ) )
-        if node is not None:
-            if drag_result == wx.DragMove:
-                if not node._is_droppable( object, data, False ):
-                    return wx.DragNone
-
-                if self._dragging:
-                    nid  = self._object_info( data )[2]
-                    data = node._drop_object( object, data, False )
-                    if data is not None:
-                        try:
-                            self._begin_undo()
-                            self._undoable_delete( *self._node_index( nid ) )
-                            self._undoable_append( node, object, data, False )
-                        finally:
-                            self._end_undo()
-                else:
-                    data = node._drop_object( object, data )
-                    if data is not None:
-                        self._undoable_append( node, object, data )
-
-                return drag_result
-
-            to_node, to_object, to_index = self._node_index( nid )
-            if to_node is not None:
-                if self._dragging:
-                    nid  = self._object_info( data )[2]
-                    data = node._drop_object( to_object, data, False )
-                    if data is not None:
-                        from_node, from_object, from_index = \
-                            self._node_index( nid )
-                        if ((to_object is from_object) and
-                            (to_index > from_index)):
-                            to_index -= 1
-                        try:
-                            self._begin_undo()
-                            self._undoable_delete( from_node, from_object,
-                                                   from_index )
-                            self._undoable_insert( to_node, to_object, to_index,
-                                                   data, False )
-                        finally:
-                            self._end_undo()
-                else:
-                    data = to_node._drop_object( to_object, data )
-                    if data is not None:
-                        self._undoable_insert( to_node, to_object, to_index,
-                                               data )
-
-                return drag_result
-
-        return wx.DragNone
-
-    #---------------------------------------------------------------------------
-    #  Handles a Python object being dragged over the tree:
-    #---------------------------------------------------------------------------
-
-    def wx_drag_over ( self, x, y, data, drag_result ):
-        """ Handles a Python object being dragged over the tree.
-        """
-        expanded, node, object, nid, point = self._hit_test( wx.Point( x, y ) )
-        insert = False
-        if (node is not None) and (drag_result == wx.DragCopy):
-            node, object, index = self._node_index( nid )
-            insert = True
-        if (self._dragging and
-            (not self._is_drag_ok( self._get_object_nid( data ),
-                                   data, object ))):
-            return wx.DragNone
-        if (node is not None) and node._is_droppable( object, data, insert ):
-            return drag_result
-        return wx.DragNone
-
-    #---------------------------------------------------------------------------
-    #  Makes sure that the target is not the same as or a child of the source
-    #  object:
-    #---------------------------------------------------------------------------
-
-    def _is_drag_ok ( self, snid, source, target ):
-        if (snid is None) or (target is source):
-            return False
-        for cnid in self._nodes( snid ):
-            if not self._is_drag_ok( cnid, self._get_node_data( cnid )[2],
-                                     target ):
-                return False
-        return True
 
 #----- pyface.action 'controller' interface implementation: --------------------
 
@@ -1429,7 +1190,7 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def _menu_cut_node ( self ):
-        """  Cuts the current tree node object into the paste buffer.
+        """ Cuts the current tree node object into the paste buffer.
         """
         node, object, nid = self._data
         clipboard.instance = object
@@ -1483,12 +1244,15 @@ class SimpleEditor ( Editor ):
         self._data = None
         self._tree.editItem(nid)
 
-    def _on_node_renamed(self, nid, col):
-        """ Handle changes to the text of a node.  Elsewhere signals are
-            blocked to try and ensure that this is only invoked when the user
-            has editted it.
+    def _on_nid_changed(self, nid, col):
+        """ Handle changes to a widget item.
         """
-        _, node, object = self._get_node_data(nid)
+        # The node data may not have been set up for the nid yet.  Ignore it if
+        # it hasn't.
+        try:
+            _, node, object = self._get_node_data(nid)
+        except:
+            return
 
         new_label = unicode(nid.text(col))
         old_label = node.get_label(object)
@@ -1516,9 +1280,6 @@ class SimpleEditor ( Editor ):
 
             # Automatically select the new object if editing is being performed:
             if self.factory.editable:
-                # FIXME: This will select the previous last child because the
-                # new one hasn't been added yet. The wx version has the same
-                # bug. (Or maybe the bug isn't in the toolkit specific code.)
                 self._tree.setCurrentItem(nid.child(nid.childCount() - 1))
 
 #----- Model event handlers: ---------------------------------------------------
@@ -1537,7 +1298,7 @@ class SimpleEditor ( Editor ):
         # Only add/remove the changes if the node has already been expanded:
         if expanded:
             # Delete all current child nodes:
-            for cnid in [ cnid for cnid in self._nodes( nid ) ]:
+            for cnid in self._nodes_for( nid ):
                 self._delete_node( cnid )
 
             # Add all of the children back in as new nodes:
@@ -1563,32 +1324,34 @@ class SimpleEditor ( Editor ):
         self.log_change( self._get_undo_item, object, name, event )
 
         # Get information about the node that was changed:
+        start = event.index
+        n     = len( event.added )
+        end   = start + len( event.removed )
         tree                = self._tree
-        expanded, node, nid = self._object_info( object, name )
-        children            = node.get_children( object )
 
-        # If the new children aren't all at the end, just remove/add them all:
-        n = len( event.added )
-        if (n > 0) and ((event.index + n) != len( children )):
-            self._children_replaced( object, name, event )
-            return
+        for expanded, node, nid in self._object_info_for( object, name ):
+            children = node.get_children( object )
 
-        # Only add/remove the changes if the node has already been expanded:
-        if expanded:
-            # Remove all of the children that were deleted:
-            for child in event.removed:
-                expanded, child_node, cnid = self._object_info( child )
-                self._delete_node( cnid )
+            # If the new children aren't all at the end, remove/add them all:
+            if (n > 0) and ((start + n) != len( children )):
+                self._children_replaced( object, name, event )
+                return
 
-            # Add all of the children that were added:
-            for child in event.added:
-                child, child_node = self._node_for( child )
-                if child_node is not None:
-                    self._append_node( nid, child_node, child )
+            # Only add/remove the changes if the node has already been expanded:
+            if expanded:
+                # Remove all of the children that were deleted:
+                for cnid in self._nodes_for( nid )[ start: end ]:
+                    self._delete_node( cnid )
 
-        # Try to expand the node (if requested):
-        if node.can_auto_open( object ):
-            nid.setExpanded(True)
+                # Add all of the children that were added:
+                for child in event.added:
+                    child, child_node = self._node_for( child )
+                    if child_node is not None:
+                        self._append_node( nid, child_node, child )
+
+            # Try to expand the node (if requested):
+            if node.can_auto_open( object ):
+                nid.setExpanded(True)
 
     #---------------------------------------------------------------------------
     #   Handles the label of an object being changed:
@@ -1642,3 +1405,203 @@ class SimpleEditor ( Editor ):
         return None
 
 #-- End UI preference save/restore interface -----------------------------------
+
+#-------------------------------------------------------------------------------
+#  '_TreeWidget' class:
+#-------------------------------------------------------------------------------
+
+class _TreeWidget(QtGui.QTreeWidget):
+    """ The _TreeWidget class is a specialised QTreeWidget that reimplements
+        the drag'n'drop support so that it hooks into the provided Traits
+        support.
+    """
+    def __init__(self, editor, parent=None):
+        """ Initialise the tree widget.
+        """
+        QtGui.QTreeWidget.__init__(self, parent)
+
+        self.header().hide()
+        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.setDragEnabled(True)
+        self.setAcceptDrops(True)
+
+        self.connect(self, QtCore.SIGNAL('itemExpanded(QTreeWidgetItem *)'),
+                editor._on_item_expanded)
+        self.connect(self, QtCore.SIGNAL('itemCollapsed(QTreeWidgetItem *)'),
+                editor._on_item_collapsed)
+        self.connect(self,
+                QtCore.SIGNAL('itemDoubleClicked(QTreeWidgetItem *, int)'),
+                editor._on_item_dclicked)
+        self.connect(self, QtCore.SIGNAL('itemSelectionChanged()'),
+                editor._on_tree_sel_changed)
+        self.connect(self, QtCore.SIGNAL('customContextMenuRequested(QPoint)'),
+                editor._on_context_menu)
+        self.connect(self,
+                QtCore.SIGNAL('itemChanged(QTreeWidgetItem *, int)'),
+                editor._on_nid_changed)
+
+        self._editor = editor
+        self._dragging = None
+
+    def startDrag(self, actions):
+        """ Reimplemented to start the drag of a tree widget item.
+        """
+        nid = self.currentItem()
+        if nid is None:
+            return
+
+        self._dragging = nid
+
+        _, node, object = self._editor._get_node_data(nid)
+
+        # Convert the item being dragged to MIME data.
+        md = PyMimeData(node.get_drag_object(object))
+
+        # Render the item being dragged as a pixmap.
+        nid_rect = self.visualItemRect(nid)
+        rect = nid_rect.intersected(self.viewport().rect())
+
+        pm = QtGui.QPixmap(rect.size())
+        pm.fill(self.palette().base().color())
+
+        painter = QtGui.QPainter(pm)
+
+        option = self.viewOptions()
+        option.state |= QtGui.QStyle.State_Selected
+        option.rect = QtCore.QRect(nid_rect.topLeft() - rect.topLeft(), nid_rect.size())
+
+        self.itemDelegate().paint(painter, option, self.indexFromItem(nid))
+
+        painter.end()
+
+        # Calculate the hotspot so that the pixmap appears on top of the
+        # original item.
+        rect.adjust(self.horizontalOffset(), self.verticalOffset(), 0, 0)
+        hspos = self.mapFromGlobal(QtGui.QCursor.pos()) - rect.topLeft()
+
+        # Start the drag.
+        drag = QtGui.QDrag(self)
+        drag.setMimeData(md)
+        drag.setPixmap(pm)
+        drag.setHotSpot(hspos)
+        drag.exec_(actions)
+
+    def dragEnterEvent(self, e):
+        """ Reimplemented to see if the current drag can be handled by the
+            tree.
+        """
+        # Assume the drag is invalid.
+        e.ignore()
+
+        # Check what is being dragged.
+        md = PyMimeData.coerce(e.mimeData())
+        if md is None:
+            return
+
+        # We might be able to handle it (but it depends on what the final
+        # target is).
+        e.acceptProposedAction()
+
+    def dragMoveEvent(self, e):
+        """ Reimplemented to see if the current drag can be handled by the
+            particular tree widget item underneath the cursor.
+        """
+        # Assume the drag is invalid.
+        e.ignore()
+
+        # Get the tree widget item under the cursor.
+        nid = self.itemAt(e.pos())
+        if nid is None:
+            return
+
+        # Check that the target is not the source of a child of the source.
+        if self._dragging is not None:
+            pnid = nid
+            while pnid is not None:
+                if pnid is self._dragging:
+                    return
+
+                pnid = pnid.parent()
+
+        # A copy action is interpreted as moving the source to a particular
+        # place within the target's parent.  A move action is interpreted as
+        # moving the source to be a child of the target.
+        if e.proposedAction() == QtCore.Qt.CopyAction:
+            node, object, _ = self._editor._node_index(nid)
+            insert = True
+        else:
+            _, node, object = self._editor._get_node_data(nid)
+            insert = False
+
+        # See if the model will accept a drop.
+        data = PyMimeData.coerce(e.mimeData()).instance()
+
+        if not node._is_droppable(object, data, insert):
+            return
+
+        e.acceptProposedAction()
+
+    def dropEvent(self, e):
+        """ Reimplemented to update the model and tree.
+        """
+        # Assume the drop is invalid.
+        e.ignore()
+
+        dragging = self._dragging
+        self._dragging = None
+
+        # Get the tree widget item under the cursor.
+        nid = self.itemAt(e.pos())
+        if nid is None:
+            return
+
+        # Get the data being dropped.
+        data = PyMimeData.coerce(e.mimeData()).instance()
+
+        editor = self._editor
+        _, node, object = editor._get_node_data(nid)
+
+        if e.proposedAction() == QtCore.Qt.MoveAction:
+            if not node._is_droppable( object, data, False ):
+                return
+
+            if dragging is not None:
+                data = node._drop_object( object, data, False )
+                if data is not None:
+                    try:
+                        editor._begin_undo()
+                        editor._undoable_delete(
+                                 *editor._node_index( dragging ) )
+                        editor._undoable_append( node, object, data, False )
+                    finally:
+                        editor._end_undo()
+            else:
+                data = node._drop_object( object, data )
+                if data is not None:
+                    editor._undoable_append( node, object, data )
+        else:
+            to_node, to_object, to_index = editor._node_index( nid )
+            if to_node is not None:
+                if dragging is not None:
+                    data = node._drop_object( to_object, data, False )
+                    if data is not None:
+                        from_node, from_object, from_index = \
+                            editor._node_index( dragging )
+                        if ((to_object is from_object) and
+                            (to_index > from_index)):
+                            to_index -= 1
+                        try:
+                            editor._begin_undo()
+                            editor._undoable_delete( from_node, from_object,
+                                                   from_index )
+                            editor._undoable_insert( to_node, to_object, to_index,
+                                                   data, False )
+                        finally:
+                            editor._end_undo()
+                else:
+                    data = to_node._drop_object( to_object, data )
+                    if data is not None:
+                        editor._undoable_insert( to_node, to_object, to_index,
+                                               data )
+
+        e.acceptProposedAction()
