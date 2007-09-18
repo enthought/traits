@@ -6,7 +6,10 @@ example.
 """
 
 from enthought.traits.api \
-    import HasTraits, Button, View, VGroup, HGroup, Item, spring 
+    import HasTraits, Button
+
+from enthought.traits.ui.api \
+    import View, VGroup, HGroup, Item, spring 
 
 button = Item( 'ignore', show_label = False )
 

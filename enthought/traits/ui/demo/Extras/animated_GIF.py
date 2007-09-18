@@ -6,7 +6,10 @@ from os.path \
     import join, dirname
     
 from enthought.traits.api \
-    import HasTraits, File, Bool, Int, View, VGroup, HGroup, Item, EnumEditor
+    import HasTraits, File, Bool, Int
+    
+from enthought.traits.ui.api \
+    import View, VGroup, HGroup, Item, EnumEditor
     
 from enthought.traits.ui.wx.animated_gif_editor \
     import AnimatedGIFEditor

@@ -13,7 +13,7 @@ from enthought.traits.api \
     import HasTraits, Instance, Int, Bool
     
 from enthought.traits.ui.api \
-    import View, Item, HGroup, spring
+    import View, Item, HGroup, Handler, UIInfo, spring
     
 from enthought.traits.ui.wx.extra.led_editor \
     import LEDEditor
