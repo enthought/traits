@@ -425,37 +425,42 @@ class TraitChangeNotifyWrapper:
             handle_exception( object, trait_name, old, new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( getattr( self.object(), self.name ) )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if self.object is not None:
+            try:
+                self.dispatch( getattr( self.object(), self.name ) )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def rebind_call_1 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( getattr( self.object(), self.name ), new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if self.object is not None:
+            try:
+                self.dispatch( getattr( self.object(), self.name ), new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( getattr( self.object(), self.name ), 
-                           trait_name, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if self.object is not None:
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( getattr( self.object(), self.name ), 
-                           object, trait_name, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if self.object is not None:
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               object, trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( getattr( self.object(), self.name ), 
-                           object, trait_name, old, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if self.object is not None:
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               object, trait_name, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
 #  'FastUITraitChangeNotifyWrapper' class:
