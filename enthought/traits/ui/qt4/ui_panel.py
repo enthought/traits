@@ -761,14 +761,16 @@ class FillPanel ( object ):
                 sizer.Add( sg_sizer, 1, wx.EXPAND | wx.ALL, 2 )
                 
             else:
-                style    = wx.EXPAND | wx.ALL
-                growable = 0
-                if self.is_horizontal:
-                    if subgroup.springy:
-                        growable = 1
-                    if subgroup.orientation == 'horizontal':
-                        style |= wx.ALIGN_CENTER_VERTICAL
-                sizer.Add( sg_sizer, growable, style, 2 )
+                #style    = wx.EXPAND | wx.ALL
+                #growable = 0
+                #if self.is_horizontal:
+                #    if subgroup.springy:
+                #        growable = 1
+                #    if subgroup.orientation == 'horizontal':
+                #        style |= wx.ALIGN_CENTER_VERTICAL
+                #sizer.Add( sg_sizer, growable, style, 2 )
+                # FIXME: Try and account for the above.
+                sizer.addLayout(sg_sizer)
         
     #---------------------------------------------------------------------------
     #  Adds a list of Item objects to the panel:
