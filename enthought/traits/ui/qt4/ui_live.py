@@ -254,7 +254,7 @@ class LiveWindow ( BaseDialog ):
         accept = bool(result)
 
         if self.ui.handler.close(self.ui.info, accept):
-            if not accept:
+            if not accept and self.ui.history is not None:
                 self._on_revert()
 
             self.close(accept)

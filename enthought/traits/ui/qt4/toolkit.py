@@ -216,12 +216,12 @@ class GUIToolkit ( Toolkit ):
             pdx = parent.width()
             pdy = parent.height()
 
-        # Show the window in order to establish its size.
-        window.show()
+        # Get the window's prefered size.
+        size_hint = window.sizeHint()
 
         # Calculate the correct width and height for the window:
-        cur_width = window.width()
-        cur_height = window.height()
+        cur_width = size_hint.width()
+        cur_height = size_hint.height()
         width  = view.width
         height = view.height
 
