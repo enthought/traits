@@ -142,3 +142,27 @@ class GroupEditor ( Editor ):
         """ Initializes the object.
         """
         self.set( **traits )
+
+#-------------------------------------------------------------------------------
+#  'UnboundedScrollArea' class:
+#-------------------------------------------------------------------------------
+
+class UnboundedScrollArea(QtGui.QScrollArea):
+    """ The QScrollArea class, for some strange reason, imposes a maximum size
+        hint based on the font size.  This means that a widget that is larger
+        will be scrolled even if there is room for it at its full size.  This
+        sub-class removes the restriction.
+    """
+
+    def sizeHint(self):
+        """ Reimplemented to return a non-restricted size hint.
+        """
+        w = self.widget()
+        if w:
+            # We would like to be the widget's size.  Note that we are assuming
+            # that it is not resizeable and that the scrollbar policies are not
+            # "always-on".
+            return w.size()
+
+        # Fallback to the default implementation.
+        return QtGui.QScrollArea.sizeHint(self)

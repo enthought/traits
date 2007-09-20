@@ -606,9 +606,6 @@ class FillPanel ( object ):
             else:
                 self.add_items( content, panel, self.sizer )
 
-        # Pad the rest of the panel so that it absorbs any extra space.
-        panel.layout().addStretch(1)
-                
         # If the caller is a DockWindow, we need to define the content we are
         # adding to it:
         if is_dock_window:
@@ -809,6 +806,10 @@ class FillPanel ( object ):
                         item_sizer.setColumnStretch(i, 1)
 
             sizer.addLayout(item_sizer)
+            if sizer.direction() == QtGui.QBoxLayout.TopToBottom:
+                sizer.setAlignment(item_sizer, QtCore.Qt.AlignTop)
+            else:
+                sizer.setAlignment(item_sizer, QtCore.Qt.AlignLeft)
         else:
             # Otherwise, the current sizer will work as is:
             row = -1

@@ -19,7 +19,7 @@
 from PyQt4 import QtCore, QtGui
 
 from helper \
-    import restore_window, save_window
+    import restore_window, save_window, UnboundedScrollArea
     
 from ui_base \
     import BaseDialog
@@ -150,7 +150,8 @@ class LiveWindow ( BaseDialog ):
         # Create the actual trait sheet panel and imbed it in a scrollable 
         # window (if requested):
         if ui.scrollable:
-            sw = QtGui.QScrollArea()
+            sw = UnboundedScrollArea()
+            sw.setFrameShape(QtGui.QFrame.NoFrame)
             layout.addWidget(sw)
             pan = panel(ui, sw)
             sw.setWidget(pan)

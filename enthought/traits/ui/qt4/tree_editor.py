@@ -48,7 +48,7 @@ from editor_factory \
     import EditorFactory
 
 from helper \
-    import Orientation
+    import Orientation, UnboundedScrollArea
 
 #-------------------------------------------------------------------------------
 #  The core tree node menu actions:
@@ -236,7 +236,8 @@ class SimpleEditor ( Editor ):
 
                 self._tree = _TreeWidget(self)
 
-                self._editor = sa = QtGui.QScrollArea()
+                self._editor = sa = UnboundedScrollArea()
+                sa.setFrameShape(QtGui.QFrame.NoFrame)
                 sa._node_ui = sa._editor_nid = None
 
                 if factory.orientation == 'horizontal':
