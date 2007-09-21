@@ -37,6 +37,9 @@ from editor \
 from constants \
     import OKColor, ErrorColor
     
+from helper \
+    import IconButton
+    
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
@@ -518,24 +521,15 @@ class LargeRangeSliderEditor ( Editor ):
             fvalue      = factory.low
         ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
 
-        # Get the application's style which will provide the arrow icons.
-        sty = QtGui.QApplication.instance().style()
-        icon_sz = sty.pixelMetric(QtGui.QStyle.PM_ButtonIconSize)
-
         # Lower limit label:
         panel.label_lo = label_lo = QtGui.QLabel()
         label_lo.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         layout.addWidget(label_lo)
         
         # Lower limit button:
-        panel.button_lo = button_lo = QtGui.QPushButton()
-        button_lo.setFlat(True)
-        button_lo.setFocusPolicy(QtCore.Qt.NoFocus)
-        button_lo.setIcon(sty.standardIcon(QtGui.QStyle.SP_ArrowLeft))
-        button_lo.setMaximumSize(icon_sz, icon_sz)
-        QtCore.QObject.connect(button_lo, QtCore.SIGNAL('clicked()'),
+        panel.button_lo = IconButton(QtGui.QStyle.SP_ArrowLeft,
                 self.reduce_range)
-        layout.addWidget(button_lo)
+        layout.addWidget(panel.button_lo)
         
         # Slider:        
         panel.slider = slider = QtGui.QSlider(QtCore.Qt.Horizontal)
@@ -550,14 +544,9 @@ class LargeRangeSliderEditor ( Editor ):
         layout.addWidget(slider)
         
         # Upper limit button:
-        panel.button_hi = button_hi = QtGui.QPushButton()
-        button_hi.setFlat(True)
-        button_hi.setFocusPolicy(QtCore.Qt.NoFocus)
-        button_hi.setIcon(sty.standardIcon(QtGui.QStyle.SP_ArrowRight))
-        button_hi.setMaximumSize(icon_sz, icon_sz)
-        QtCore.QObject.connect(button_hi, QtCore.SIGNAL('clicked()'),
+        panel.button_hi = IconButton(QtGui.QStyle.SP_ArrowRight,
                 self.increase_range)
-        layout.addWidget(button_hi)
+        layout.addWidget(panel.button_hi)
 
         # Upper limit label:
         panel.label_hi = label_hi = QtGui.QLabel()

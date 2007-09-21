@@ -48,7 +48,7 @@ from editor_factory \
     import EditorFactory
 
 from helper \
-    import Orientation, UnboundedScrollArea
+    import pixmap_cache, Orientation, UnboundedScrollArea
 
 #-------------------------------------------------------------------------------
 #  The core tree node menu actions:
@@ -468,13 +468,7 @@ class SimpleEditor ( Editor ):
             # Assume it is an ImageResource, and get its file name directly:
             file_name = icon_name.absolute_path
 
-        # Get the pixmap using the global cache if possible.
-        pm = QtGui.QPixmap()
-        if not QtGui.QPixmapCache.find(file_name, pm):
-            pm.load(file_name)
-            QtGui.QPixmapCache.insert(file_name, pm)
-
-        return QtGui.QIcon(pm)
+        return QtGui.QIcon(pixmap_cache(file_name))
 
     #---------------------------------------------------------------------------
     #  Adds the event listeners for a specified object:

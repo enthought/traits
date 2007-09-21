@@ -16,7 +16,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import sys
+import os.path
 
 from PyQt4 import QtCore, QtGui
 
@@ -24,10 +24,7 @@ from constants \
     import screen_dx, screen_dy
     
 from enthought.traits.api \
-    import Enum, Trait, CTrait, Instance, Str, BaseTraitHandler, TraitError
-    
-from enthought.traits.ui.api \
-    import View
+    import Enum, CTrait, BaseTraitHandler, TraitError
     
 from enthought.traits.ui.ui_traits \
     import SequenceTypes
@@ -41,6 +38,26 @@ from editor \
 
 # Layout orientation for a control and its associated editor
 Orientation = Enum( 'horizontal', 'vertical' )
+
+#-------------------------------------------------------------------------------
+#  Convert an image file name to a cached QPixmap:
+#-------------------------------------------------------------------------------
+
+def pixmap_cache(name):
+    """ Return the QPixmap corresponding to a filename.  If the filename does
+        not contain a path component then the local 'images' directory is used.
+    """
+    path, _ = os.path.split(name)
+    if not path:
+        name = os.path.join(os.path.dirname(__file__), 'images', name)
+
+    pm = QtGui.QPixmap()
+
+    if not QtGui.QPixmapCache.find(name, pm):
+        pm.load(name)
+        QtGui.QPixmapCache.insert(name, pm)
+
+    return pm
 
 #-------------------------------------------------------------------------------
 #  Positions one window near another:
@@ -166,3 +183,49 @@ class UnboundedScrollArea(QtGui.QScrollArea):
 
         # Fallback to the default implementation.
         return QtGui.QScrollArea.sizeHint(self)
+
+#-------------------------------------------------------------------------------
+#  'IconButton' class:
+#-------------------------------------------------------------------------------
+
+class IconButton(QtGui.QPushButton):
+    """ The IconButton class is a push button that contains a small image or a
+        standard icon provided by the current style.
+    """
+
+    def __init__(self, icon, slot):
+        """ Initialise the button.  icon is either the name of an image file or
+            one of the QtGui.QStyle.SP_* values.
+        """
+        QtGui.QPushButton.__init__(self)
+
+        # Get the current style.
+        sty = QtGui.QApplication.instance().style()
+
+        # Get the minimum icon size to use.
+        ico_sz = sty.pixelMetric(QtGui.QStyle.PM_ButtonIconSize)
+
+        if isinstance(icon, basestring):
+            pm = pixmap_cache(icon)
+
+            # Increase the icon size to accomodate the image if needed.
+            pm_width = pm.width()
+            pm_height = pm.height()
+
+            if ico_sz < pm_width:
+                ico_sz = pm_width
+
+            if ico_sz < pm_height:
+                ico_sz = pm_height
+
+            ico = QtGui.QIcon(pm)
+        else:
+            ico = sty.standardIcon(icon)
+
+        # Configure the button.
+        self.setIcon(ico)
+        self.setMaximumSize(ico_sz, ico_sz)
+        self.setFlat(True)
+        self.setFocusPolicy(QtCore.Qt.NoFocus)
+
+        QtCore.QObject.connect(self, QtCore.SIGNAL('clicked()'), slot)
