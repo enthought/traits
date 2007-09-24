@@ -510,7 +510,7 @@ class FillPanel ( object ):
         
         if is_dock_window and (is_splitter or is_tabbed):
             if is_splitter:
-                self.dock_contents = self.add_dock_window_splitter_items( 
+                self.dock_contents = self.add_splitter_items( 
                                               panel, content, group )
             else:
                 self.dock_contents = create_notebook_for_items( content, ui,
@@ -537,7 +537,7 @@ class FillPanel ( object ):
                 panel.setLayout(sizer)
             self.control = panel = new_panel
             if is_splitter or is_tabbed:
-                editor = DockWindowGroupEditor( control = panel )
+                editor = SplitterGroupEditor( control = panel )
             else:
                 editor = GroupEditor( control = panel )
             if id != '':
@@ -577,22 +577,23 @@ class FillPanel ( object ):
             panel.setLayout(self.sizer)
 
         if is_splitter:
-            dw = DockWindow( panel, handler      = ui.handler,
-                                    handler_args = ( ui.info, ),
-                                    id           = ui.id,
-                                    theme        = group.dock_theme ).control
+            splitter = QtGui.QSplitter()
+
+            if not self.is_horizontal:
+                splitter.setOrientation(QtCore.Qt.Vertical)
+
             if editor is not None:
-                editor.dock_window = dw
-            dw.SetSizer( DockSizer( contents = 
-                   self.add_dock_window_splitter_items( dw, content, group ) ) )
-            self.sizer.Add( dw, 1, wx.EXPAND )
+                editor.splitter = splitter
+
+            self.add_splitter_items(splitter, content, group)
+            self.sizer.addWidget(splitter)
         elif len( content ) > 0:
             if is_tabbed:
                 self.resizable = True
                 dw = create_notebook_for_items( content, ui, panel, group,
                                                 self.add_notebook_item )
                 if editor is not None:
-                    editor.dock_window = dw
+                    editor.splitter = dw
                 ###self.sizer.Add( dw, 1, wx.EXPAND | wx.ALL, 2 )
                 self.sizer.Add( dw, 1, wx.EXPAND )
             # Check if content is all Group objects:
@@ -616,66 +617,35 @@ class FillPanel ( object ):
             image_sizer.Add( self.sizer, 1, wx.EXPAND )
         
     #---------------------------------------------------------------------------
-    #  Adds a set of groups or items separated by splitter bars to a DockWindow:    
+    #  Adds a set of groups or items separated by splitter bars to a QSplitter:
     #---------------------------------------------------------------------------
 
-    def add_dock_window_splitter_items ( self, window, content, group ):
+    def add_splitter_items(self, window, content, group):
         """ Adds a set of groups or items separated by splitter bars to a
-            DockWindow.
+            QSplitter.
         """
-        contents = [ self.add_dock_window_splitter_item( window, item, group )
-                     for item in content ]
-           
-        # Create a splitter group to hold the contents:
-        result = DockSection( contents = contents, is_row = self.is_horizontal )
-         
-        # If nothing is resizable, then mark each DockControl as such:
-        if not self.resizable:
-            for item in result.get_controls():
-                item.resizable = False
+        for item in content:
+            if isinstance(item, Group):
+                sizer, resizable, contents = fill_panel_for_group(window,
+                        item, self.ui, suppress_label=True,
+                        is_dock_window=True)
 
-        # Return the DockSection we created:
-        return result
-        
-    #---------------------------------------------------------------------------
-    #  Adds a single group or item to a DockWindow:
-    #---------------------------------------------------------------------------
+                self.resizable |= resizable
+            else:
+                panel = QtGui.QWidget(window)
 
-    def add_dock_window_splitter_item ( self, window, item, group ):
-        """ Adds a single group or item to a DockWindow.
-        """
-        if isinstance( item, Group ):
-            sizer, resizable, contents = fill_panel_for_group( window,
-                item, self.ui, suppress_label = True, is_dock_window = True )
-            self.resizable |= resizable
-            
-            return contents
+                if self.is_horizontal:
+                    direction = QtGui.QBoxLayout.LeftToRight
+                else:
+                    direction = QtGui.QBoxLayout.TopToBottom
+
+                layout = QtGui.QBoxLayout(direction, panel)
+                layout.setMargin(0)
         
-        orientation = wx.VERTICAL
-        if self.is_horizontal:
-            orientation = wx.HORIZONTAL
-        sizer = wx.BoxSizer( orientation )
+                self.add_items([item], panel, layout)
         
-        if group.group_theme is not None:
-            image_panel, image_sizer = add_image_panel( window, group )
-            panel = image_panel.control
-            image_sizer.Add( sizer, 1, wx.EXPAND )
-        else:
-            panel = QtGui.QWidget(window)
-            panel.SetSizer( sizer )
-            
-        self.add_items( [ item ], panel, sizer )
-        
-        return DockRegion( contents = [ 
-                 DockControl( name     = item.get_label( self.ui ),
-                              image    = item.image,
-                              id       = item.get_id(),
-                              style    = item.dock,
-                              dockable = DockableViewElement( 
-                                             ui = self.ui, element = item ),
-                              export   = item.export,
-                              control  = panel ) ] )
-        
+                window.addWidget(panel)
+
     #---------------------------------------------------------------------------
     #  Adds a set of groups or items as vertical notebook pages to a vertical
     #  notebook:
@@ -1139,19 +1109,19 @@ class FillPanel ( object ):
         control.SetFont( emphasis_font )
         
 #-------------------------------------------------------------------------------
-#  'DockWindowGroupEditor' class:
+#  'SplitterGroupEditor' class:
 #-------------------------------------------------------------------------------
         
-class DockWindowGroupEditor ( GroupEditor ):
-    """ Editor for a group which displays a DockWindow.
+class SplitterGroupEditor(GroupEditor):
+    """ Editor for a group which displays a QSplitter.
     """
 
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
     
-    # DockWindow for the group
-    dock_window = Instance( QtGui.QDockWidget )
+    # QSplitter for the group
+    splitter = Instance(QtGui.QSplitter)
 
     #-- UI preference save/restore interface -----------------------------------
 
@@ -1168,9 +1138,9 @@ class DockWindowGroupEditor ( GroupEditor ):
             structure = prefs.get( 'structure' )
         else:
             structure = prefs
-        self.dock_window.GetSizer().SetStructure( self.dock_window, structure )
-        self.dock_window.Layout()
-            
+
+        self.splitter.restoreState(structure)
+
     #---------------------------------------------------------------------------
     #  Returns any user preference information associated with the editor:
     #---------------------------------------------------------------------------
@@ -1178,7 +1148,7 @@ class DockWindowGroupEditor ( GroupEditor ):
     def save_prefs ( self ):
         """ Returns any user preference information associated with the editor.
         """
-        return { 'structure': self.dock_window.GetSizer().GetStructure() }
+        return {'structure': str(self.splitter.saveState())}
         
     #-- End UI preference save/restore interface -------------------------------                         
     

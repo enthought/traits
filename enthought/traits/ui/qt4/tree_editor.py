@@ -337,7 +337,7 @@ class SimpleEditor ( Editor ):
     #  Appends a new node to the specified node:
     #---------------------------------------------------------------------------
 
-    def _append_node ( self, nid, node, object ):
+    def _append_node ( self, nid, node, object, recurse=True ):
         """ Appends a new node to the specified node.
         """
         cnid = QtGui.QTreeWidgetItem(nid)
@@ -345,14 +345,23 @@ class SimpleEditor ( Editor ):
         cnid.setIcon(0, self._get_icon(node, object))
 
         has_children = node._has_children(object)
-        self._set_node_data( cnid, ( False, node, object ) )
+        self._set_node_data( cnid, ( recurse, node, object ) )
         self._map.setdefault( id( object ), [] ).append(
             ( node.children, cnid ) )
         self._add_listeners( node, object )
 
-        # Automatically expand the new node (if requested):
-        if has_children and node.can_auto_open( object ):
-            cnid.setExpanded(True)
+        if has_children:
+            if recurse:
+                # We have to add the new node's children as well so that the
+                # tree knows if it should display the decoration the user
+                # clicks on the expand the node.
+                for child in node.get_children(object):
+                    child, child_node = self._node_for(child)
+                    if child_node is not None:
+                        self._append_node(cnid, child_node, child, recurse=False)
+            elif node.can_auto_open( object ):
+                # Automatically expand the new node:
+                cnid.setExpanded(True)
 
         # Return the newly created node:
         return cnid
