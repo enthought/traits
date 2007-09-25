@@ -182,6 +182,7 @@ class Panel ( BaseDialog ):
         # window (if requested):
         if layout is None:
             layout = QtGui.QVBoxLayout(cpanel)
+            layout.setMargin(0)
 
         if ui.scrollable:
             sizer = wx.BoxSizer( wx.VERTICAL )
@@ -534,6 +535,7 @@ class FillPanel ( object ):
             sizer = panel.layout()
             if sizer is None:
                 sizer = QtGui.QVBoxLayout()
+                sizer.setMargin(0)
                 panel.setLayout(sizer)
             self.control = panel = new_panel
             if is_splitter or is_tabbed:
@@ -568,6 +570,11 @@ class FillPanel ( object ):
                 self.sizer = FlowSizer( orientation )
             else:
                 self.sizer = QtGui.QBoxLayout(orientation)
+
+                # Keep the margin if we are in a tab widget (which has a
+                # visible frame that we don't want to be right next to).
+                if not is_dock_window:
+                    self.sizer.setMargin(0)
             if label != '':
                 self.sizer.addWidget(heading_text(panel, text=label).control)
 
@@ -973,13 +980,21 @@ class FillPanel ( object ):
             scrollable  = editor.scrollable
             item_width  = item.width
             item_height = item.height
+            growable    = 0
             if (item_width != -1) or (item_height != -1):
+                if (0.0 < item_width <= 1.0) and self.is_horizontal:
+                    growable = int( 1000.0 * item_width )
+
+                item_width = int( item_width )
                 if item_width < -1:
                     item_width  = -item_width
                     fixed_width = True
                 else:
                     item_width = max( item_width, width )
-                    
+
+                if (0.0 < item_height <= 1.0) and (not self.is_horizontal):
+                    growable = int( 1000.0 * item_height )
+
                 if item_height < -1:
                     item_height = -item_height
                     scrollable  = False
@@ -1020,15 +1035,14 @@ class FillPanel ( object ):
             # Add the created editor control to the sizer with the appropriate
             # layout flags and values:
             ui._scrollable |= scrollable
-            growable        = 0
             if item.resizable or scrollable:
-                growable       = 1
+                growable = growable or 500
                 self.resizable = True
             elif item.springy:    
-                growable = 1
+                growable = growable or 500
 
             # FIXME: Need to decide what to do about springy, border_size,
-            # padding and item.padding.
+            # padding, item.padding and growable.
             self._add_widget(item_sizer, control, row, col, show_labels)
 
             # Save the reference to the label control (if any) in the editor:

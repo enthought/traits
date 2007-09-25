@@ -359,7 +359,8 @@ class SimpleEditor ( Editor ):
                     child, child_node = self._node_for(child)
                     if child_node is not None:
                         self._append_node(cnid, child_node, child, recurse=False)
-            elif node.can_auto_open( object ):
+
+            if node.can_auto_open( object ):
                 # Automatically expand the new node:
                 cnid.setExpanded(True)
 
