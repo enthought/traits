@@ -551,7 +551,7 @@ class FillPanel ( object ):
                 
         self.panel         = panel
         self.dock_contents = None
-        
+
         # Determine the horizontal/vertical orientation of the group:
         if self.is_horizontal:
             orientation = QtGui.QBoxLayout.LeftToRight
@@ -562,19 +562,28 @@ class FillPanel ( object ):
         label = ''
         if not suppress_label:
             label = group.label
+
         if group.show_border:
-            box = wx.StaticBox( panel, -1, label )
-            self.sizer = wx.StaticBoxSizer( box, orientation )
+            box = QtGui.QGroupBox(label, panel)
+            self.sizer = QtGui.QBoxLayout(orientation, box)
         else:
             if layout == 'flow':
                 self.sizer = FlowSizer( orientation )
             else:
                 self.sizer = QtGui.QBoxLayout(orientation)
 
-                # Keep the margin if we are in a tab widget (which has a
-                # visible frame that we don't want to be right next to).
-                if not is_dock_window:
+                # Try and figure out the nearest parent widget that isn't a
+                # simple layout holder.  (This code is based on the wx version
+                # which doesn't use nested layouts.)
+                ppanel = panel
+                while type(ppanel) is QtGui.QWidget:
+                    ppanel = ppanel.parent()
+
+                # If the parent doesn't have a visible frame then we don't want
+                # a margin.
+                if not isinstance(ppanel, QtGui.QTabWidget):
                     self.sizer.setMargin(0)
+
             if label != '':
                 self.sizer.addWidget(heading_text(panel, text=label).control)
 

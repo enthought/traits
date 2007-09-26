@@ -31,16 +31,6 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.ui_traits \
     import style_trait, AView
     
-#from enthought.traits.ui.dock_window_theme \
-#    import DockWindowTheme
-    
-#from enthought.traits.ui.dockable_view_element \
-#    import DockableViewElement
-    
-#from enthought.pyface.dock.core \
-#    import DockWindow, DockSizer, DockSection, DockRegion, DockControl, \
-#           DockStyle
-
 from editor_factory \
     import EditorFactory
     
@@ -639,11 +629,10 @@ class NotebookEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        # Create a DockWindow to hold each separate object's view:
-        theme = self.factory.dock_theme or self.item.container.dock_theme
-        dw    = DockWindow( parent, theme = theme )
-        self.control = dw.control
-        self.control.SetSizer( DockSizer( DockSection( dock_window = dw ) ) )
+        # Create a tab widget to hold each separate object's view:
+        self.control = QtGui.QTabWidget(parent)
+        QtCore.QObject.connect(self.control,
+                QtCore.SIGNAL('currentChanged(int)'), self._tab_activated)
 
         # Set up the additional 'list items changed' event handler needed for
         # a list based trait:
@@ -664,21 +653,12 @@ class NotebookEditor ( Editor ):
         # Destroy the views on each current notebook page:
         self.close_all()
 
-        # Create a DockControl for each object in the trait's value:
-        uis           = self._uis
-        dock_controls = []
+        # Create a tab page for each object in the trait's value:
         for object in self.value:
-            dock_control, monitoring = self._create_page( object )
+            page, monitoring = self._create_page(object)
                                      
-            # Remember the DockControl for later deletion processing:
-            uis.append( [ dock_control, object, monitoring ] )
-
-            dock_controls.append( dock_control )
-
-        # Add the new items to the DockWindow:
-        self.add_controls( dock_controls )
-        if self.ui.info.initialized:
-            self.update_layout()
+            # Remember the page for later deletion processing:
+            self._uis.append([page, object, monitoring])
 
     #---------------------------------------------------------------------------
     #  Handles some subset of the trait's list being updated:
@@ -690,32 +670,31 @@ class NotebookEditor ( Editor ):
         index = event.index
 
         # Delete the page corresponding to each removed item:
-        layout = ((len( event.removed ) + len( event.added )) <= 1)
-        for i in range( len( event.removed ) ):
-            dock_control, object, monitoring = self._uis[ index ]
+        page_name = self.factory.page_name[1:]
+
+        for object in event.removed:
+            page, _, monitoring = self._uis[index]
             if monitoring:
-                object.on_trait_change( self.update_page_name, 
-                                     self.factory.page_name[1:], remove = True )
-            dock_control.close( layout = layout, force = True )
-            del self._uis[ index ]
+                object.on_trait_change(self.update_page_name, page_name,
+                        remove=True)
+
+            self.control.removeTab(self.control.indexOf(page))
+
+            del self._uis[index]
 
         # Add a page for each added object:
-        dock_controls = []
-        first_control = None
+        first_page = None
         for object in event.added:
-            dock_control, monitoring  = self._create_page( object )
-            self._uis[ index: index ] = [ [ dock_control, object, monitoring ] ]
-            dock_controls.append( dock_control )
+            page, monitoring  = self._create_page(object)
+            self._uis[index:index] = [[page, object, monitoring]]
             index += 1
-            if first_control is None:
-                first_control = dock_control
 
-        # Add the new items to the DockWindow:
-        self.add_controls( dock_controls )
-        if first_control is not None:
-            first_control.activate( layout = False )
-        self.update_layout()
-        
+            if first_page is None:
+                first_page = page
+
+        if first_page is not None:
+            self.control.setCurrentWidget(first_page)
+
     #---------------------------------------------------------------------------
     #  Closes all currently open notebook pages:  
     #---------------------------------------------------------------------------
@@ -723,17 +702,19 @@ class NotebookEditor ( Editor ):
     def close_all ( self ):
         """ Closes all currently open notebook pages.
         """
-        page_name = self.factory.page_name[1:]
         if self._uis is not None:
-            for dock_control, object, monitoring in self._uis:
+            page_name = self.factory.page_name[1:]
+
+            for _, _, monitoring in self._uis:
                 if monitoring:
-                    object.on_trait_change( self.update_page_name, 
-                                                     page_name, remove = True )
-                dock_control.close( layout = False, force = True )
+                    object.on_trait_change(self.update_page_name, page_name,
+                            remove=True)
 
         # Reset the list of ui's and dictionary of page name counts:
-        self._uis   = []
+        self._uis = []
         self._pages = {}
+
+        self.control.clear()
         
     #---------------------------------------------------------------------------
     #  Disposes of the contents of an editor:    
@@ -748,55 +729,30 @@ class NotebookEditor ( Editor ):
         super( NotebookEditor, self ).dispose()
 
     #---------------------------------------------------------------------------
-    #  Adds a group of new DockControls to the view:
-    #---------------------------------------------------------------------------
-
-    def add_controls ( self, controls ):
-        """ Adds a group of new DockControls to the view.
-        """
-        if len( controls ) > 0: 
-            section = self.control.GetSizer().GetContents()
-            if ((len( section.contents ) == 0) or 
-                (not isinstance( section.contents[-1], DockRegion ))):
-                section.contents.append( DockRegion( contents = controls ) )
-            else:
-                section.contents[-1].contents.extend( controls )
-
-    #---------------------------------------------------------------------------
-    #  Updates the layout of the DockWindow:
-    #---------------------------------------------------------------------------
-
-    def update_layout ( self ):
-        """ Updates the layout of the DockWindow.
-        """
-        self.control.Layout()
-        self.control.Refresh()
-
-    #---------------------------------------------------------------------------
     #  Handles the trait defining a particular page's name being changed:
     #---------------------------------------------------------------------------
 
     def update_page_name ( self, object, name, old, new ):
         """ Handles the trait defining a particular page's name being changed.
         """
-        for i, value in enumerate( self._uis ):
-            dock_control, ui_object, monitoring = value
+        for i, value in enumerate(self._uis):
+            page, ui_object, _ = value
             if object is ui_object:
-                if dock_control.control is not None:
-                    name    = None
-                    handler = getattr( self.ui.handler, '%s_%s_page_name' % 
-                                       ( self.object_name, self.name ), None )
-                    if handler is not None:
-                        name = handler( self.ui.info, object )
-                    if name is None:
-                        name = str( getattr( object, 
-                                           self.factory.page_name[1:], '???' ) )
-                    dock_control.name = name
-                    self.update_layout()
+                name = None
+                handler = getattr(self.ui.handler,
+                        '%s_%s_page_name' % (self.object_name, self.name),
+                        None)
+
+                if handler is not None:
+                    name = handler(self.ui.info, object)
+
+                if name is None:
+                    name = str(getattr(object, self.factory.page_name[1:], '???'))
+                self.control.setTabText(self.control.indexOf(page), name)
                 break
 
     #---------------------------------------------------------------------------
-    #  Creates a DockControl for a specified object:
+    #  Creates a page for a specified object and adds it to the tab widget:
     #---------------------------------------------------------------------------
 
     def _create_page ( self, object ):
@@ -840,46 +796,33 @@ class NotebookEditor ( Editor ):
             if count > 1:
                 name += (' %d' % count)
 
-        # Return a new DockControl for the ui, and whether or not its name is
-        # being monitored:
+        # Return the control for the ui, and whether or not its name is being
+        # monitored:
         factory = self.factory
         image   = None
         method  = getattr( self.ui.handler, prefix + 'image', None )
         if method is not None:
             image = method( self.ui.info, object )
-        dock_control = DockControl( control   = ui.control,
-                                    id        = str( id( ui.control ) ),
-                                    name      = name,
-                                    style     = factory.dock_style,
-                                    image     = image,
-                                    export    = factory.export,
-                                    closeable = factory.deletable,
-                                    dockable  = DockableListElement(
-                                                    ui     = ui,
-                                                    editor = self ) )
-        self.set_dock_control_listener( dock_control )
-        return ( dock_control, monitoring )
-        
-    #---------------------------------------------------------------------------
-    #  Sets/Resets the listener for a DockControl being activated:  
-    #---------------------------------------------------------------------------
 
-    def set_dock_control_listener ( self, dock_control, remove = False ):
-        """ Sets or removes the listener for a DockControl being activated.
-        """
-        dock_control.on_trait_change( self._tab_activated, 'activated',
-                                      remove = remove, dispatch = 'ui' )
+        if image is None:
+            self.control.addTab(ui.control, name)
+        else:
+            self.control.addTab(ui.control, image, name)
+
+        return (ui.control, monitoring)
         
     #---------------------------------------------------------------------------
     #  Handles a notebook tab being 'activated' (i.e. clicked on) by the user:  
     #---------------------------------------------------------------------------
 
-    def _tab_activated ( self, dock_control, name, old, new ):
+    def _tab_activated(self, idx):
         """ Handles a notebook tab being "activated" (i.e. clicked on) by the 
             user.
         """
-        for a_dock_control, object, monitoring in self._uis:
-            if dock_control is a_dock_control:
+        w = self.control.widget(idx)
+
+        for page, object, _ in self._uis:
+            if page is w:
                 self.selected = object
                 break
                  
@@ -887,55 +830,10 @@ class NotebookEditor ( Editor ):
     #  Handles the 'selected' trait being changed:  
     #---------------------------------------------------------------------------
 
-    def _selected_changed ( self, selected ):
+    def _selected_changed(self, selected):
         """ Handles the **selected** trait being changed.
         """
-        for dock_control, object, monitoring in self._uis:
+        for page, object, _ in self._uis:
             if selected is object:
-                dock_control.activate( False )
+                self.control.setCurrentWidget(page)
                 break
-
-#-------------------------------------------------------------------------------
-#  'DockableListElement' class:
-#-------------------------------------------------------------------------------
-
-#class DockableListElement ( DockableViewElement ):
-class DockableListElement ( object ):
-
-    #---------------------------------------------------------------------------
-    #  Trait definitions:  
-    #---------------------------------------------------------------------------
-
-    # The editor this dockable item is associated with:
-    editor = Instance( NotebookEditor )
-        
-    #---------------------------------------------------------------------------
-    #  Returns whether or not it is OK to close the control, and if it is OK,
-    #  then it closes the DockControl itself:    
-    #---------------------------------------------------------------------------
-    
-    def dockable_close ( self, dock_control, force ):
-        """ Returns whether it is OK to close the control.
-        """
-        return self.close_dock_control( dock_control, force )
-
-    #---------------------------------------------------------------------------
-    #  Closes a DockControl:
-    #---------------------------------------------------------------------------
-
-    def close_dock_control ( self, dock_control, abort ):
-        """ Closes a DockControl.
-        """
-        if abort:
-            self.editor.set_dock_control_listener( dock_control, remove = True )
-            return super( DockableListElement, self ).close_dock_control(
-                                                           dock_control, False )
-
-        object = self.ui.context[ 'object' ]
-        for i, value in enumerate( self.editor._uis ):
-            if object is value[1]:
-                value[0] = dock_control
-                del self.editor.value[ i ]
-                break
-
-        return False
