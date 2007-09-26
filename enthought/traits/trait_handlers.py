@@ -2430,9 +2430,9 @@ class TraitListObject ( list ):
                   self.name, class_of( self.object() ), self.trait.info(),
                   len, 's'[ len == 1: ] ) )
 
-    def sort ( self, cmpfunc = None ):
+    def sort ( self, *args ):
         removed = self[:]
-        list.sort( self, cmpfunc )
+        list.sort( self, *args )
         if self.name_items is not None:
             setattr( self.object(), self.name_items,
                      TraitListEvent( 0, removed, self[:] ) )
