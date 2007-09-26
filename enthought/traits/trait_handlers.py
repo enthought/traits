@@ -2424,12 +2424,6 @@ class TraitListObject ( list ):
         else:
             self.len_error( len( self ) - 1 )
 
-    def len_error ( self, len ):
-        raise TraitError, ( "The '%s' trait of %s instance must be %s, "
-                  "but you attempted to change its length to %d element%s." % (
-                  self.name, class_of( self.object() ), self.trait.info(),
-                  len, 's'[ len == 1: ] ) )
-
     def sort ( self, *args ):
         removed = self[:]
         list.sort( self, *args )
@@ -2470,6 +2464,12 @@ class TraitListObject ( list ):
         if trait is not None:
             self.name  = name
             self.trait = trait.handler
+
+    def len_error ( self, len ):
+        raise TraitError, ( "The '%s' trait of %s instance must be %s, "
+                  "but you attempted to change its length to %d element%s." % (
+                  self.name, class_of( self.object() ), self.trait.info(),
+                  len, 's'[ len == 1: ] ) )
 
     def __getstate__ ( self ):
         result = self.__dict__.copy()
