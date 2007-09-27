@@ -176,6 +176,31 @@ def _get_def ( class_name, class_dict, bases, method ):
             return result
             
     return None
+    
+#-------------------------------------------------------------------------------
+#  Returns whether or not a specified value is serializable:  
+#-------------------------------------------------------------------------------
+        
+def _is_serializable ( value ):
+    """ Returns whether or not a specified value is serializable.
+    """
+    if isinstance( value, ( list, tuple ) ):
+        for item in value:
+            if not _is_serializable( item ):
+                return False
+                
+        return True
+        
+    if isinstance( value, dict ):
+        for name, item in value.items():
+            if ((not _is_serializable( name )) or 
+                (not _is_serializable( item ))):
+                return False
+                
+        return True
+        
+    return ((not isinstance( value, HasTraits )) or 
+            value.has_traits_interface( ISerializable ))
 
 #-------------------------------------------------------------------------------
 #  Returns a dictionary of potential 'Instance' or 'List(Instance)' handlers:
@@ -636,12 +661,13 @@ class MetaHasTraitsObject ( object ):
         """
         # Create the various class dictionaries, lists and objects needed to
         # hold trait and view information and definitions:
-        base_traits   = {}
-        class_traits  = {}
-        prefix_traits = {}
-        listeners     = {}
-        prefix_list   = []
-        view_elements = ViewElements()
+        base_traits    = {}
+        class_traits   = {}
+        prefix_traits  = {}
+        listeners      = {}
+        prefix_list    = []
+        override_bases = bases
+        view_elements  = ViewElements()
 
         # Create a list of just those base classes that derive from HasTraits:
         hastraits_bases = [ base for base in bases
@@ -737,7 +763,8 @@ class MetaHasTraitsObject ( object ):
                                 ( ictrait.type, name ) )
                         class_traits[ name ] = value = ictrait( value )
                         del class_dict[ name ]
-                        handler = value.handler
+                        override_bases = []
+                        handler        = value.handler
                         if (handler is not None) and handler.is_mapped:
                             class_traits[ name + '_' ] = _mapped_trait_for(
                                                                          value )
@@ -865,7 +892,7 @@ class MetaHasTraitsObject ( object ):
                                                '_%s_fired' % event ) )
 
             handlers = [ h for h in handlers if h is not None ]
-            default  = _get_def( class_name, class_dict, bases,
+            default  = _get_def( class_name, class_dict, override_bases,
                                  '_%s_default' % name )
             if (len( handlers ) > 0) or (default is not None):
                 if name not in cloned:
@@ -1486,9 +1513,9 @@ class HasTraits ( CHasTraits ):
         In general, avoid overriding __getstate__ in subclasses. Instead, mark
         traits that should not be pickled with 'transient = True' metadata.
         
-        In cases where this strategy is not sufficient, override
-        __getstate__ in subclasses using the follow pattern to remove items 
-        that should not be persisted::
+        In cases where this strategy is not sufficient, override __getstate__
+        in subclasses using the following pattern to remove items that should
+        not be persisted::
 
             def __getstate__(self):
                 state = super(X,self).__getstate__()
@@ -1497,12 +1524,28 @@ class HasTraits ( CHasTraits ):
                         del state[key]
                 return state
         """
+        # Save all traits which do not have any 'transient' metadata:
         result = self.get( transient = _is_none )
+        
+        # Add all delegate traits that explcitly have 'transient = False' 
+        # metadata:
         dic    = self.__dict__
         result.update( dict( [ ( name, dic[ name ] ) 
                              for name in self.trait_names( type = 'delegate', 
                                                            transient = False )
                              if name in dic ] ) )
+          
+        # If this object implements ISerializable, make sure that all
+        # contained HasTraits objects in its persisted state also implement
+        # ISerializable:
+        if self.has_traits_interface( ISerializable ): 
+            for name, value in results.items():
+                if not _is_serializable( value ):
+                    raise TraitError( "The '%s' trait of a '%s' instance "
+                                      "contains the unserializable value: %s" % 
+                                      ( name, self.__class__.__name__, value ) )
+                 
+        # Return the final state dictionary:
         return result
 
     def __reduce_ex__ ( self, protocol ):
@@ -2286,11 +2329,12 @@ class HasTraits ( CHasTraits ):
                 if trait is None:
                     return
                 notifiers = trait._notifiers( 0 )
+                
             if notifiers is not None:
                 for i, notifier in enumerate( notifiers ):
                     if notifier.equals( handler ):
-                        notifier.dispose()
                         del notifiers[i]
+                        notifier.dispose()
                         break
                         
             return
@@ -3327,6 +3371,15 @@ class Vetoable ( HasStrictTraits ):
         self._trait_veto_notify( state )
 
 VetoableEvent = Event( Vetoable )
+
+#-------------------------------------------------------------------------------
+#  'ISerializable' interface:
+#-------------------------------------------------------------------------------
+
+class ISerializable ( Interface ):
+    """ A class that implemented ISerializable requires that all HasTraits
+        objects saved as part of its state also implement ISerializable.
+    """
 
 #-------------------------------------------------------------------------------
 #  'traits_super' class:
