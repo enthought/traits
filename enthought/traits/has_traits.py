@@ -139,12 +139,15 @@ def _is_none ( value ):
 #  Creates a clone of a specified trait:
 #-------------------------------------------------------------------------------
 
-def _clone_trait ( clone ):
+def _clone_trait ( clone, metadata = None ):
     trait = CTrait( 0 )
     trait.clone( clone )
     
     if clone.__dict__ is not None:
         trait.__dict__ = clone.__dict__.copy()
+        
+    if metadata is not None:
+        trait.__dict__.update( metadata )
         
     return trait
 
@@ -700,9 +703,10 @@ class MetaHasTraitsObject ( object ):
                     if handler is not None:
                         
                         if handler.has_items:
-                            items_trait = handler.items_event()
-                            if value.instance_handler=='_list_changed_handler':
-                                items_trait = _clone_trait( items_trait )
+                            items_trait = _clone_trait( handler.items_event(), 
+                                                        value.__dict__ )
+                            if items_trait.instance_handler == \
+                                '_list_changed_handler':
                                 items_trait.instance_handler = \
                                     '_list_items_changed_handler'
                             class_traits[ name + '_items' ] = items_trait
