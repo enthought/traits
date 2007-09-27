@@ -3246,8 +3246,8 @@ class HasTraits ( CHasTraits ):
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
-        def notify ( object, notify_name, old, new ):
-            self.trait_property_changed( notify_name, old, new )
+        def notify ( notify_name, new ):
+            self.trait_property_changed( notify_name, Undefined, new )
             
         self.on_trait_change( notify, 
                               self._trait_delegate_name( name, pattern ) )
