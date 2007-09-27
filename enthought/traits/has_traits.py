@@ -717,7 +717,7 @@ class MetaHasTraitsObject ( object ):
                             prefix = name
                         elif (len( prefix ) > 1) and (prefix[-1] == '*'):
                             prefix = prefix[:-1] + name
-                        listeners[ name ] = ( 'delegate', '%s.%s' % ( 
+                        listeners[ name ] = ( 'delegate', ' %s.%s' % ( 
                                               value.delegate, prefix ) )
                 else:
                     name = name[:-1]
@@ -2527,7 +2527,7 @@ class HasTraits ( CHasTraits ):
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
-        if ((isinstance( name, str ) and 
+        if ((isinstance( name, str ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
             self._on_trait_change( handler, name, remove, dispatch )
             return
@@ -3219,8 +3219,7 @@ class HasTraits ( CHasTraits ):
             registered, traits listeners (called at object creation and 
             unpickling times).
         """
-        for name, data in \
-            self.__class__.__listener_traits__.items():
+        for name, data in self.__class__.__listener_traits__.items():
             getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
         
     def _init_trait_method_listener ( self, name, kind, pattern ):
@@ -3247,8 +3246,8 @@ class HasTraits ( CHasTraits ):
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
-        def notify ( value ):
-            self.trait_property_changed( name, Undefined, value )
+        def notify ( object, notify_name, old, new ):
+            self.trait_property_changed( notify_name, old, new )
             
         self.on_trait_change( notify, 
                               self._trait_delegate_name( name, pattern ) )
@@ -3283,7 +3282,7 @@ class HasTraits ( CHasTraits ):
             delegate.
         """
         if pattern[-1] == '*':
-            pattern = '%s.%s%s' % ( pattern[:-1], self.__class__.__prefix__,
+            pattern = '%s:%s%s' % ( pattern[:-1], self.__class__.__prefix__,
                                     name )
                                     
         return pattern 
