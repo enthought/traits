@@ -24,6 +24,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
     
+from types import \
+    FunctionType, MethodType
+    
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Instance, List, Any, Str, false
     
@@ -442,6 +445,63 @@ class DictNode ( TupleNode ):
         return (not self.readonly)
     
 #-------------------------------------------------------------------------------
+#  'FunctionNode' class:  
+#-------------------------------------------------------------------------------
+                
+class FunctionNode ( SingleValueTreeNodeObject ):
+    """ A tree node for functions
+    """
+    
+    #---------------------------------------------------------------------------
+    #  Returns the formatted version of the value:  
+    #---------------------------------------------------------------------------
+        
+    def format_value ( self, value ):
+        """ Returns the formatted version of the value.
+        """
+        return 'Function %s()' % ( value.func_code.co_name )
+
+#---------------------------------------------------------------------------
+#  'MethodNode' class:
+#---------------------------------------------------------------------------
+                
+class MethodNode ( MultiValueTreeNodeObject ):
+    
+    #---------------------------------------------------------------------------
+    #  Returns the formatted version of the value:  
+    #---------------------------------------------------------------------------
+        
+    def format_value ( self, value ):
+        """ Returns the formatted version of the value.
+        """
+        type = 'B'
+        if value.im_self is None:
+            type = 'Unb'
+            
+        return '%sound method %s.%s()' % (
+                   type,
+                   value.im_class.__name__,
+                   value.im_func.func_code.co_name )
+        
+    #---------------------------------------------------------------------------
+    #  Returns whether or not the object has children:  
+    #---------------------------------------------------------------------------
+
+    def tno_has_children ( self, node ):
+        """ Returns whether the object has children.
+        """
+        return (self.value.im_func != None)
+        
+    #---------------------------------------------------------------------------
+    #  Gets the object's children:  
+    #---------------------------------------------------------------------------
+
+    def tno_get_children ( self, node ):
+        """ Gets the object's children.
+        """
+        return [ self.node_for( 'Object', self.im_self ) ]
+        
+#-------------------------------------------------------------------------------
 #  'ObjectNode' class:  
 #-------------------------------------------------------------------------------
         
@@ -614,6 +674,8 @@ def basic_types ( ):
             ( list,         ListNode ),
             ( set,          SetNode ),
             ( dict,         DictNode ),
+            ( FunctionType, FunctionNode ),
+            ( MethodType,   MethodNode ),
             ( HasTraits,    TraitsNode )
         ]
 
@@ -643,15 +705,16 @@ class _ValueTree ( HasPrivateTraits ):
 #  Defines the value tree editor(s):  
 #-------------------------------------------------------------------------------
 
-# Nodes in a value tree
+# Nodes in a value tree:
 value_tree_nodes = [
     ObjectTreeNode( 
         node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                      ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
-                     DictNode, SetNode, ObjectNode, TraitsNode, RootNode ] )
+                     DictNode, SetNode, FunctionNode, MethodNode, ObjectNode, 
+                     TraitsNode, RootNode ] )
 ]
 
-# Editor for a value tree
+# Editor for a value tree:
 value_tree_editor = TreeEditor(
     auto_open = 3,
     hide_root = True,
@@ -659,7 +722,7 @@ value_tree_editor = TreeEditor(
     nodes     = value_tree_nodes
 )
 
-# Editor for a value tree with a root
+# Editor for a value tree with a root:
 value_tree_editor_with_root = TreeEditor(
     auto_open = 3,
     editable  = False,
@@ -667,7 +730,8 @@ value_tree_editor_with_root = TreeEditor(
         ObjectTreeNode( 
             node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                          ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
-                         DictNode, SetNode, ObjectNode, TraitsNode, RootNode ]
+                         DictNode, SetNode, FunctionNode, MethodNode, 
+                         ObjectNode, TraitsNode, RootNode ]
         ),
         TreeNode( node_for = [ _ValueTree ],
                   auto_open  = True,
@@ -684,6 +748,6 @@ value_tree_editor_with_root = TreeEditor(
 #  Defines a 'ValueTree' trait:  
 #-------------------------------------------------------------------------------
         
-# Trait for a value tree
+# Trait for a value tree:
 ValueTree = Instance( _ValueTree, (), editor = value_tree_editor_with_root )
 
