@@ -23,7 +23,7 @@ from PyQt4 import QtCore, QtGui
     
 from enthought.traits.api \
      import CTrait, TraitError, Property, Range, Enum, Str, Int, Float, Any, \
-            Unicode, true, false
+            Unicode, Bool
 
 from enthought.traits.ui.api \
     import View
@@ -55,10 +55,10 @@ class ToolkitEditorFactory ( EditorFactory ):
     cols = Range( 1, 20 )
     
     # Is user input set on every keystroke?
-    auto_set = true
+    auto_set = Bool(True)
     
     # Is user input set when the Enter key is pressed?
-    enter_set = false
+    enter_set = Bool(False)
     
     # Label for the low end of the range
     low_label = Unicode
@@ -80,7 +80,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     format = Unicode( '%s' )
     
     # Is the range for floating pointer numbers (vs. integers)?
-    is_float = true
+    is_float = Bool(True)
     
     # Low end of range
     low = Property
@@ -122,9 +122,9 @@ class ToolkitEditorFactory ( EditorFactory ):
             self.low  = handler._low
             self.high = handler._high
         else:
-            if self.low is None:
+            if (self.low is None) and (self.low_name == ''):
                 self.low  = 0.0
-            if self.high is None:
+            if (self.high is None) and (self.high_name == ''):
                 self.high = 1.0
             
     #---------------------------------------------------------------------------
@@ -137,7 +137,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     def _set_low ( self, low ):
         old_low         = self._low
         self._low = low = self._cast( low )
-        self.is_float   = (type( low ) is float)
+        self.is_float   = isinstance(low, float)
         if (self.low_label == '') or (self.low_label == str( old_low )):
             self.low_label = str( low  )
             
@@ -147,13 +147,15 @@ class ToolkitEditorFactory ( EditorFactory ):
     def _set_high ( self, high ):
         old_high          = self._high
         self._high = high = self._cast( high )
-        self.is_float     = (type( high ) is float)
+        self.is_float     = isinstance(high, float)
+
         if (self.high_label == '') or (self.high_label == str( old_high )):
             self.high_label = str( high )
             
     def _cast ( self, value ):
         if type( value ) is not str:
             return value
+
         try:
             return int( value )
         except:
@@ -268,6 +270,7 @@ class SimpleSliderEditor ( Editor ):
     The user can set a value either by moving the slider or by typing a value 
     in the text field.
     """
+
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
@@ -317,6 +320,7 @@ class SimpleSliderEditor ( Editor ):
         except:
             fvalue_text = ''
             fvalue      = low
+
         if high > low:
             ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
         else:
@@ -487,7 +491,7 @@ class LargeRangeSliderEditor ( Editor ):
     cur_high = Float
     
     # Flag indicating that the UI is in the process of being updated
-    ui_changing = false
+    ui_changing = Bool(False)
 
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
