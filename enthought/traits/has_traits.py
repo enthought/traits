@@ -699,23 +699,25 @@ class MetaHasTraitsObject ( object ):
                 del class_dict[ name ]
                 if name[-1:] != '_':
                     base_traits[ name ] = class_traits[ name ] = value
-                    handler = value.handler
-                    if handler is not None:
-                        
-                        if handler.has_items:
-                            items_trait = _clone_trait( handler.items_event(), 
-                                                        value.__dict__ )
-                            if items_trait.instance_handler == \
-                                '_list_changed_handler':
-                                items_trait.instance_handler = \
-                                    '_list_items_changed_handler'
-                            class_traits[ name + '_items' ] = items_trait
-                            
-                        if handler.is_mapped:
-                            class_traits[ name + '_' ] = _mapped_trait_for(
+                    value_type = value.type
+                    if value_type == 'trait':
+                       handler = value.handler
+                       if handler is not None:
+                           
+                           if handler.has_items:
+                               items_trait = _clone_trait( 
+                                   handler.items_event(), value.__dict__ )
+                               if items_trait.instance_handler == \
+                                   '_list_changed_handler':
+                                   items_trait.instance_handler = \
+                                       '_list_items_changed_handler'
+                               class_traits[ name + '_items' ] = items_trait
+                               
+                           if handler.is_mapped:
+                               class_traits[ name + '_' ] = _mapped_trait_for(
                                                                          value )
                                                                          
-                    if value.type == 'delegate':
+                    elif value_type == 'delegate':
                         prefix = value.prefix
                         if prefix == '':
                             prefix = name
