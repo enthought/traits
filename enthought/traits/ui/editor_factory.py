@@ -1,26 +1,29 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill
-# Date: 10/07/2004
-#  Symbols defined: EditorFactory
+#
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
+#  Date: 10/07/2004
+#
 #------------------------------------------------------------------------------
+
 """ Defines the abstract EditorFactory class, which represents a factory for
-creating the Editor objects used in a Traits-based user interface.
+    creating the Editor objects used in a Traits-based user interface.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Callable, Str, true, false
+    import HasPrivateTraits, Callable, Str, Bool
 
 #-------------------------------------------------------------------------------
 #  'EditorFactory' abstract base class:
@@ -28,7 +31,7 @@ from enthought.traits.api \
 
 class EditorFactory ( HasPrivateTraits ):
     """ Represents a factory for creating the Editor objects in a Traits-based
-    user interface.
+        user interface.
     """
     
     #---------------------------------------------------------------------------
@@ -42,10 +45,10 @@ class EditorFactory ( HasPrivateTraits ):
     format_str = Str
     
     # Is the editor being used to create table grid cells?
-    is_grid_cell = false
+    is_grid_cell = Bool( False )
     
     # Are created editors initially enabled?
-    enabled = true
+    enabled = Bool( True )
 
     #---------------------------------------------------------------------------
     #  Initializes the object:
@@ -67,6 +70,29 @@ class EditorFactory ( HasPrivateTraits ):
             have been set.
         """
         pass
+                         
+    #---------------------------------------------------------------------------
+    #  Returns the value of a specified extended name of the form: name or 
+    #  context_object_name.name[.name...]:
+    #---------------------------------------------------------------------------
+                                                      
+    def named_value ( self, name, ui ):
+        """ Returns the value of a specified extended name of the form: name or 
+            context_object_name.name[.name...]:
+        """
+        col = name.find( '.' )
+        if col < 0:
+            # fixme: This will produce incorrect values if the actual Item the
+            # factory is being used with does not use the default object='name'
+            # value, and the specified 'name' does not contain a '.'. The 
+            # solution will probably involve providing the Item as an argument,
+            # but it is currently not available at the time this method needs to 
+            # be called...
+            object = 'object'
+        else:
+            object, name = name[ : col ], name[ col + 1: ]
+            
+        return getattr( ui.context[ object ], name )
     
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
