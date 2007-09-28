@@ -195,10 +195,8 @@ class Panel ( BaseDialog ):
         else:
             sw = panel(ui, cpanel) 
 
-        if ((title != '') and 
-            (not isinstance( getattr( parent, 'owner', None ), DockWindow ))):
-            layout.Add( heading_text( cpanel, text = title ).control, 0, 
-                          wx.EXPAND )
+        if title != "":
+            layout.addWidget(heading_text(cpanel, title).control)
 
         layout.addWidget(sw)
         
