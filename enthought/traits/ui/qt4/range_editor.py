@@ -160,7 +160,24 @@ class ToolkitEditorFactory ( EditorFactory ):
             return int( value )
         except:
             return float( value )
-    
+
+    #-- Private Methods --------------------------------------------------------
+
+    def _get_low_high ( self, ui ):
+        """ Returns the low and high values used to determine the initial range.
+        """
+        low, high = self.low, self.high
+
+        if (low is None) and (self.low_name != ''):
+            low           = self.named_value( self.low_name, ui )
+            self.is_float = isinstance( low, float )
+
+        if (high is None) and (self.high_name != ''):
+            high          = self.named_value( self.high_name, ui )
+            self.is_float = isinstance( low, float )
+
+        return ( low, high, self.is_float )
+
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
@@ -178,7 +195,9 @@ class ToolkitEditorFactory ( EditorFactory ):
           SimpleSliderEditor
         * All other cases: SimpleSpinEditor
         """
-        if (self.low is None) or (self.high is None):
+        low, high, is_float = self._get_low_high(ui)
+
+        if (low is None) or (high is None):
             return RangeTextEditor( parent,
                                     factory     = self, 
                                     ui          = ui, 
@@ -194,7 +213,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                                  name        = name, 
                                                  description = description )
                                            
-        if self.is_float and (abs( self.high - self.low ) > 100):
+        if is_float and (abs(high - low) > 100):
             return LargeRangeSliderEditor( parent,
                                        factory     = self, 
                                        ui          = ui, 
@@ -202,7 +221,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                        name        = name, 
                                        description = description )
             
-        if self.is_float or (abs( self.high - self.low ) <= 100):
+        if is_float or (abs(high - low) <= 100):
             return SimpleSliderEditor( parent,
                                        factory     = self, 
                                        ui          = ui, 
@@ -229,7 +248,9 @@ class ToolkitEditorFactory ( EditorFactory ):
         * Integer range with extent <= 15: CustomEnumEditor
 
         """
-        if (self.low is None) or (self.high is None):
+        low, high, is_float = self._get_low_high(ui)
+
+        if (low is None) or (high is None):
             return RangeTextEditor( parent,
                                     factory     = self, 
                                     ui          = ui, 
@@ -245,7 +266,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                                  name        = name, 
                                                  description = description )
                                                  
-        if self.is_float or (abs( self.high - self.low ) > 15):
+        if is_float or (abs(high - low) > 15):
            return self.simple_editor( ui, object, name, description, parent )
            
         return CustomEnumEditor( parent, self, ui, object, name, description )
