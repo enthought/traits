@@ -18,6 +18,10 @@ the PyQt user interface toolkit.
 
 from PyQt4 import QtCore, QtGui
 
+# Check the version number is late enough.
+if QtCore.QT_VERSION < 0x040200:
+    raise RuntimeError, "Need Qt v4.2 or higher, but got v%s" % QtCore.QT_VERSION_STR
+
 # Make sure a QApplication object is created early:
 if QtGui.QApplication.startingUp():
     import sys
