@@ -222,7 +222,7 @@ class AbstractArray ( TraitType ):
             
         return 'an array%s%s' % ( dtype, shape )
 
-    def get_editor ( self ):
+    def get_editor ( self, trait = None ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import TupleEditor
