@@ -868,10 +868,12 @@ class TraitRange ( TraitHandler ):
                '='[ self._exclude_high: ], self._high )
 
     def get_editor ( self, trait ):
+        from enthought.traits.ui.api import RangeEditor
+        
         auto_set = trait.auto_set
         if auto_set is None:
             auto_set = True
-        from enthought.traits.ui.api import RangeEditor
+            
         return RangeEditor( self,
                             mode       = trait.mode or 'auto',
                             cols       = trait.cols or 3,
@@ -2386,15 +2388,20 @@ class TraitListObject ( list ):
         self.len_error( len( self ) + 1 )
 
     def extend ( self, xlist ):
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            list.extend( self, xlist )
+            return
+            
         try:
             len_xlist = len( xlist )
         except:
             raise TypeError, "list.extend() argument must be iterable"
-        if (self.trait.minlen <= (len( self ) + len_xlist) <=
-            self.trait.maxlen):
+            
+        if (trait.minlen <= (len( self ) + len_xlist) <= trait.maxlen):
             object   = self.object()
             name     = self.name
-            validate = self.trait.item_trait.handler.validate
+            validate = trait.item_trait.handler.validate
             try:
                 if validate is not None:
                     xlist = [ validate( object, name, value )
@@ -2408,6 +2415,7 @@ class TraitListObject ( list ):
             except TraitError, excp:
                 excp.set_prefix( 'The elements of the' )
                 raise excp
+                
         self.len_error( len( self ) + len( xlist ) )
 
     def remove ( self, value ):
@@ -2476,12 +2484,13 @@ class TraitListObject ( list ):
         result[ 'object' ] = self.object()
         if 'trait' in result:
             del result[ 'trait' ]
+            
         return result
 
     def __setstate__ ( self, state ):
+        self.object = ref( state.pop( 'object' ) )
+        self.rename( state.pop( 'name' ) )
         self.__dict__.update( state )
-        self.object = ref( self.object )
-        self.rename( self.name )
 
 
 class TraitDictEvent ( object ):
@@ -2629,9 +2638,14 @@ class TraitDictObject ( dict ):
             dict.update( self, self._validate_dic( value ) )
 
     def __setitem__ ( self, key, value ):
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            dict.__setitem__( self, key, value )
+            return
+            
         object = self.object()
         try:
-            validate = self.trait.key_trait.handler.validate
+            validate = trait.key_trait.handler.validate
             if validate is not None:
                 key = validate( object, self.name, key )
                 
@@ -2639,15 +2653,8 @@ class TraitDictObject ( dict ):
             excp.set_prefix( 'Each key of the' )
             raise excp
             
-        except AttributeError:
-            # This is to handle the fact that on unpickling a serialized
-            # dictionary, the items are simply stored in the dictionary before
-            # '__setstate__' is called:
-            dict.__setitem__( self, key, value )
-            return
-            
         try:
-            validate = self.trait.value_handler.validate
+            validate = trait.value_handler.validate
             if validate is not None:
                 value = validate( object, self.name, value )
                 
@@ -2756,9 +2763,9 @@ class TraitDictObject ( dict ):
         return result
 
     def __setstate__ ( self, state ):
+        self.object = ref( state.pop( 'object' ) )
+        self.rename( state.pop( 'name' ) )
         self.__dict__.update( state )
-        self.object = ref( self.object )
-        self.rename( self.name )
 
 #-- Private Methods ------------------------------------------------------------
 
