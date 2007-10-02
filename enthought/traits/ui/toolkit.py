@@ -1,32 +1,32 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-#
-# Author: David C. Morrill
-# Date: 10/07/2004
-#
-#  Symbols defined: toolkit
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date: 10/07/2004
 #
 #------------------------------------------------------------------------------
-""" Defines the stub functions used for creating concrete implementations of
-the standard EditorFactory subclasses supplied with the Traits package.
 
+""" Defines the stub functions used for creating concrete implementations of
+    the standard EditorFactory subclasses supplied with the Traits package.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.etsconfig.api \
-    import ETSConfig
-
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, TraitError
+    
+from enthought.traits.trait_base \
+    import ETSConfig
 
 from ui_traits \
     import SequenceTypes
@@ -35,14 +35,14 @@ from ui_traits \
 #  Constants:
 #-------------------------------------------------------------------------------
 
-# List of implemented UI toolkits
+# List of implemented UI toolkits:
 TraitUIToolkits = [ 'wx', 'qt4', 'null' ]
 
 #-------------------------------------------------------------------------------
 #  Data:
 #-------------------------------------------------------------------------------
 
-# The current GUI toolkit object being used
+# The current GUI toolkit object being used:
 _toolkit = None
 
 #-------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ def toolkit ( *toolkits ):
     """
     global _toolkit
 
-    # If a toolkit has already been selected then check we can use it.
+    # If a toolkit has already been selected then check we can use it:
     if ETSConfig.toolkit:
         toolkits = (ETSConfig.toolkit, )
 
@@ -90,6 +90,7 @@ def toolkit ( *toolkits ):
 class Toolkit ( HasPrivateTraits ):
     """ Abstract base class for GUI toolkits.
     """
+    
     #---------------------------------------------------------------------------
     #  Create GUI toolkit specific user interfaces using information from the
     #  specified UI object:
