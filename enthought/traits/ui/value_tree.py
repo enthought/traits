@@ -499,7 +499,7 @@ class MethodNode ( MultiValueTreeNodeObject ):
     def tno_get_children ( self, node ):
         """ Gets the object's children.
         """
-        return [ self.node_for( 'Object', self.im_self ) ]
+        return [ self.node_for( 'Object', self.value.im_self ) ]
         
 #-------------------------------------------------------------------------------
 #  'ObjectNode' class:  
