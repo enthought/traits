@@ -2352,9 +2352,14 @@ class TraitListObject ( list ):
         self.len_error( len( self ) - delta )
 
     def append ( self, value ):
-        if self.trait.minlen <= (len( self ) + 1) <= self.trait.maxlen:
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            list.append( self, value )
+            return
+            
+        if trait.minlen <= (len( self ) + 1) <= trait.maxlen:
             try:
-                validate = self.trait.item_trait.handler.validate
+                validate = trait.item_trait.handler.validate
                 object   = self.object()
                 if validate is not None:
                     value = validate( object, self.name, value )
