@@ -58,7 +58,7 @@ def toolkit ( *toolkits ):
 
     # If a toolkit has already been selected then check we can use it:
     if ETSConfig.toolkit:
-        toolkits = (ETSConfig.toolkit, )
+        toolkits = ( ETSConfig.toolkit, )
 
     if len( toolkits ) == 0:
         if _toolkit is not None:
@@ -72,7 +72,7 @@ def toolkit ( *toolkits ):
             module   = __import__( package )
             _toolkit = getattr( module.traits.ui, toolkit_name ).toolkit
 
-            # In case we have just decided on a toolkit, tell everybody else.
+            # In case we have just decided on a toolkit, tell everybody else:
             ETSConfig.toolkit = toolkit_name
 
             return _toolkit
