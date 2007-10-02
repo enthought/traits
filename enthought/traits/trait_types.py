@@ -1867,7 +1867,6 @@ class Instance ( BaseInstance ):
         else:
             self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
-        print "self.fast_validate:", self.fast_validate
                                    
 class AdaptedTo ( Instance ):
 
