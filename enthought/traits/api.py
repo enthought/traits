@@ -43,7 +43,8 @@ from trait_types \
     import Any, Int, Long, Float, Complex, Str, Unicode, Bool, CInt, CLong, \
            CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, Code, HTML, \
            Password, Expression, PythonValue, File, Directory, Range, Enum, \
-           Tuple, List, Dict, Instance, WeakRef, false, true, undefined
+           Tuple, List, Dict, Instance, AdaptedTo, AdaptsTo, WeakRef, false, \
+           true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \

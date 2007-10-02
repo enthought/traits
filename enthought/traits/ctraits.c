@@ -173,8 +173,11 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 /* Should a simple object identity test be performed (or a rich compare)? */
 #define TRAIT_OBJECT_IDENTITY 0x00000004
 
-/* Does the 'post_setattr' method want the original 'value'? */
-#define TRAIT_ORIGINAL_VALUE 0x00000008
+/* Make 'setattr' store the original unvalidated value */
+#define TRAIT_SETATTR_ORIGINAL_VALUE 0x00000008
+
+/* Send the 'post_setattr' method the original unvalidated value */
+#define TRAIT_POST_SETATTR_ORIGINAL_VALUE 0x00000010
 
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
@@ -1837,6 +1840,7 @@ setattr_trait ( trait_object      * traito,
     PyListObject * onotifiers     = NULL;
     PyObject     * old_value      = NULL;
     PyObject     * original_value;
+    PyObject     * new_value;
     
     PyObject * dict = obj->obj_dict;
     
@@ -1986,8 +1990,10 @@ notify:
              }
          }
     }
-             
-    if ( PyDict_SetItem( dict, name, value ) < 0 ) {
+     
+    new_value = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)? 
+                original_value: value;
+    if ( PyDict_SetItem( dict, name, new_value ) < 0 ) { 
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
             PyErr_SetObject( PyExc_AttributeError, name );
         Py_XDECREF( old_value );
@@ -2000,13 +2006,13 @@ notify:
     
     if ( changed ) {
         if ( traitd->post_setattr != NULL ) {
-            if ( (traitd->flags & TRAIT_ORIGINAL_VALUE) == 0 )
-                original_value = value;
-            rc = traitd->post_setattr( traitd, obj, name, original_value );
+            rc = traitd->post_setattr( traitd, obj, name, 
+                    (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
+                    original_value: value );
         }
         if ( (rc == 0) && ((tnotifiers != NULL) || (onotifiers != NULL)) ) { 
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
-                                 old_value, value );
+                                 old_value, new_value );
         }
     }
     Py_XDECREF( old_value );
@@ -2989,7 +2995,8 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     PyObject * result;
     PyObject * args;
     PyObject * type;
-    PyObject * type_info = trait->py_validate; 
+    PyObject * type_info = trait->py_validate;
+    long mode;
     
     if ( value == Py_None ) {
         if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) ) {
@@ -3000,7 +3007,8 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     }
     
     type = PyTuple_GET_ITEM( type_info, 1 );
-    if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) ) ) {
+    mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+    if ( mode == 2 ) {
         args = PyTuple_New( 3 );
         if ( args == NULL )
             return NULL;
@@ -3018,12 +3026,16 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     result = PyObject_Call( adapt, args, NULL );
     Py_DECREF( args );
     if ( result != NULL ) {
-        if ( result != Py_None ) 
-            return result;
-        Py_DECREF( result );
-        result = default_value_for( trait, obj, name );
-        if ( result != NULL )
-            return result;
+        if ( result != Py_None ) {
+            if ( (mode > 0) || (result == value) )  
+                return result;
+            Py_DECREF( result );
+        } else {
+            Py_DECREF( result );
+            result = default_value_for( trait, obj, name );
+            if ( result != NULL )
+                return result;
+        }
     }
     
     PyErr_Clear();
@@ -3039,7 +3051,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
     int    i, j, k, kind;
-    long   int_value, exclude_mask;
+    long   int_value, exclude_mask, mode;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
     
@@ -3210,7 +3222,8 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     break;
                 }
                 type = PyTuple_GET_ITEM( type_info, 1 );
-                if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) ) ) {
+                mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+                if ( mode == 2 ) {
                     args = PyTuple_New( 3 );
                     if ( args == NULL )
                         return NULL;
@@ -3228,8 +3241,13 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 result = PyObject_Call( adapt, args, NULL );
                 Py_DECREF( args );
                 if ( result != NULL ) {
-                    if ( result != Py_None ) 
+                    if ( result != Py_None ) { 
+                        if ( (mode == 0) && (result != value) ) {
+                            Py_DECREF( result );
+                            break;
+                        }
                         return result;
+                    }
                     Py_DECREF( result );
                     result = default_value_for( trait, obj, name );
                     if ( result != NULL )
@@ -3591,12 +3609,11 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
-|  Sets the value of the 'original_value' flag of a CTrait instance (used in
-|  the processing of 'post_settattr' calls):
+|  Sets the value of the 'setattr_original_value' flag of a CTrait instance: 
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_trait_original_value ( trait_object * trait, PyObject * args ) {
+_trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
  
     int original_value;
     
@@ -3604,10 +3621,34 @@ _trait_original_value ( trait_object * trait, PyObject * args ) {
         return NULL;
         
     if ( original_value != 0 ) {
-        trait->flags |= TRAIT_ORIGINAL_VALUE;
+        trait->flags |= TRAIT_SETATTR_ORIGINAL_VALUE;
     } else {
-        trait->flags &= (~TRAIT_ORIGINAL_VALUE);
+        trait->flags &= (~TRAIT_SETATTR_ORIGINAL_VALUE);
     }
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}    
+
+/*-----------------------------------------------------------------------------
+|  Sets the value of the 'post_setattr_original_value' flag of a CTrait 
+|  instance (used in the processing of 'post_settattr' calls):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
+ 
+    int original_value;
+    
+    if ( !PyArg_ParseTuple( args, "i", &original_value ) ) 
+        return NULL;
+        
+    if ( original_value != 0 ) {
+        trait->flags |= TRAIT_POST_SETATTR_ORIGINAL_VALUE;
+    } else {
+        trait->flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE);
+    }
+    
     Py_INCREF( Py_None );
     return Py_None;
 }    
@@ -3953,8 +3994,12 @@ static PyMethodDef trait_methods[] = {
 	 	PyDoc_STR( "delegate(delegate_name,prefix,prefix_type,modify_delegate)" ) },
 	{ "rich_comparison",  (PyCFunction) _trait_rich_comparison,  METH_VARARGS,
 	 	PyDoc_STR( "rich_comparison(comparison_boolean)" ) },
-	{ "original_value",  (PyCFunction) _trait_original_value,    METH_VARARGS,
-	 	PyDoc_STR( "original_value(original_value_boolean)" ) },
+	{ "setattr_original_value",  
+        (PyCFunction) _trait_setattr_original_value,       METH_VARARGS,
+	 	PyDoc_STR( "setattr_original_value(original_value_boolean)" ) },
+	{ "post_setattr_original_value",  
+        (PyCFunction) _trait_post_setattr_original_value,  METH_VARARGS,
+	 	PyDoc_STR( "post_setattr_original_value(original_value_boolean)" ) },
 	{ "property",      (PyCFunction) _trait_property,      METH_VARARGS,
 	 	PyDoc_STR( "property([get,set,validate])" ) },
 	{ "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,

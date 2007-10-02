@@ -47,6 +47,9 @@ from trait_errors \
     
 from types \
     import FunctionType, MethodType, ClassType, InstanceType
+    
+from protocols.api \
+    import Interface
 
 #-------------------------------------------------------------------------------
 #  Numeric type fast validator definitions:  
@@ -1580,9 +1583,9 @@ class Dict ( TraitType ):
 
 # Allowed values and mappings for the 'adapt' keyword:
 AdaptMap = {
-   'no':     -1,
-   'yes':     0,
-   'default': 1
+   'no':      0,
+   'yes':     1,
+   'default': 2
 }
                 
 class BaseInstance ( TraitType ):
@@ -1591,7 +1594,7 @@ class BaseInstance ( TraitType ):
     """
 
     def __init__ ( self, klass = None, factory = None, args = None, kw = None, 
-                   allow_none = True, adapt = 'yes', module = None,
+                   allow_none = True, adapt = None, module = None,
                    **metadata ):
         """ Returns an Instance trait.
     
@@ -1635,11 +1638,15 @@ class BaseInstance ( TraitType ):
         metadata.setdefault( 'copy', 'deep' )
         metadata.setdefault( 'instance_handler', '_instance_changed_handler' )
         
+        adapt = adapt or self.adapt_default
         if adapt not in AdaptMap:
             raise TraitError( "'adapt' must be 'yes', 'no' or 'default'." )
                        
-        if (args is None) and isinstance( factory, tuple ):
-            args, factory = factory, klass
+        if isinstance( factory, tuple ):
+            if args is None:
+                args, factory = factory, klass
+            elif isinstance( args, dict ):
+                factory, args, kw = klass, factory, args
         elif (kw is None) and isinstance( factory, dict ):
             kw, factory = factory, klass
         elif ((args is not None) or (kw is not None)) and (factory is None):
@@ -1694,15 +1701,19 @@ class BaseInstance ( TraitType ):
         if isinstance( self.klass, basestring ):
             self.resolve_class( object, name, value )
             
-        if self.adapt < 0:
-            if isinstance( value, self.klass ):
-                return value
+        if self.adapt == 0:
+            try:
+                if value is adapt( value, self.klass ):
+                    return value
+            except:
+                pass
                 
-        elif self.adapt == 0:
+        elif self.adapt == 1:
             try:
                 return adapt( value, self.klass )
             except:
                 pass
+                
         else:
             result = adapt( value, self.klass, None )
             if result is None:
@@ -1714,12 +1725,6 @@ class BaseInstance ( TraitType ):
             
         self.validate_failed( object, name, value )
 
-    def post_setattr ( self, object, name, value ):
-        """ Performs additional post-assignment processing.
-        """
-        # Save the original, unadapted value in the mapped trait:
-        object.__dict__[ name + '_' ] = value
-
     def info ( self ):
         """ Returns a description of the trait.
         """
@@ -1727,7 +1732,7 @@ class BaseInstance ( TraitType ):
         if type( klass ) is not str:
             klass = klass.__name__
             
-        if self.adapt < 0:
+        if self.adapt == 0:
             result = class_of( klass )
         else:
             result = ('an implementor of, or can be adapted to implement, %s' % 
@@ -1762,17 +1767,6 @@ class BaseInstance ( TraitType ):
                                kind  = self.kind  or 'live' )
         
     #-- Private Methods --------------------------------------------------------
-
-    def as_ctrait ( self ):
-        """ Returns a CTrait corresponding to the trait defined by this class.
-        """
-        ctrait = super( BaseInstance, self ).as_ctrait()
-        
-        # Tell the C code that the 'post_setattr' method wants the original,
-        # unadapted value passed to 'setattr':
-        ctrait.original_value( True )
-        
-        return ctrait 
      
     def validate_class ( self, klass ):
         return klass
@@ -1792,8 +1786,9 @@ class BaseInstance ( TraitType ):
         self.init_fast_validate()
 
     def init_fast_validate ( self ):
-        """ Does nothing for the BaseInstance' class. Used by the 'Instance'
-            class to set up the C-level fast validator.
+        """ Does nothing for the BaseInstance' class. Used by the 'Instance',
+            'AdaptedTo' and 'AdaptsTo' classes to set up the C-level fast 
+            validator.
         """
         pass
 
@@ -1855,10 +1850,12 @@ class Instance ( BaseInstance ):
         or one of its subclasses using a C-level fast validator.
     """
 
+    adapt_default = 'no'
+    
     def init_fast_validate ( self ):
         """ Sets up the C-level fast validator.
         """
-        if self.adapt < 0:
+        if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
             fast_validate = [ 1, self.klass ]
             if self._allow_none:
                 fast_validate = [ 1, None, self.klass ]
@@ -1868,9 +1865,41 @@ class Instance ( BaseInstance ):
                 
             self.fast_validate = tuple( fast_validate )
         else:
-            self.fast_validate = ( 19, self.klass, self.adapt, 
+            self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
+        print "self.fast_validate:", self.fast_validate
+                                   
+class AdaptedTo ( Instance ):
 
+    adapt_default = 'yes'
+
+    def post_setattr ( self, object, name, value ):
+        """ Performs additional post-assignment processing.
+        """
+        # Save the original, unadapted value in the mapped trait:
+        object.__dict__[ name + '_' ] = value
+
+    def as_ctrait ( self ):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
+        return self.modify_ctrait( super( AdaptedTo, self ).as_ctrait() )
+        
+    def modify_ctrait ( self, ctrait ):
+        
+        # Tell the C code that the 'post_setattr' method wants the original,
+        # unadapted value passed to 'setattr':
+        ctrait.post_setattr_original_value( True )
+        
+        return ctrait 
+    
+class AdaptsTo ( AdaptedTo ):    
+        
+    def modify_ctrait ( self, ctrait ):
+        # Tell the C code that 'setattr' should store the original, unadapted 
+        # value passed to it:
+        ctrait.setattr_original_value( True )
+        
+        return ctrait 
     
 if python_version >= 2.5:
     
