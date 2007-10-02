@@ -618,7 +618,7 @@ class UI ( HasPrivateTraits ):
             
         value = context.get( name )
         if value is not None:
-            context2 = value.get()
+            context2 = value.trait_get()
             context2.update( context )
         else:
             context2 = context.copy()

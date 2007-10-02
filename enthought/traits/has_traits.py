@@ -1531,7 +1531,7 @@ class HasTraits ( CHasTraits ):
                 return state
         """
         # Save all traits which do not have any 'transient' metadata:
-        result = self.get( transient = _is_none )
+        result = self.trait_get( transient = _is_none )
         
         # Add all delegate traits that explcitly have 'transient = False' 
         # metadata:
@@ -1564,14 +1564,14 @@ class HasTraits ( CHasTraits ):
     def __setstate__ ( self, state ):
         """ Restores the previously pickled state of an object.
         """
-        self.set( **state )
+        self.trait_set( **state )
         self._init_trait_listeners()
 
     #---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
     #---------------------------------------------------------------------------
 
-    def get ( self, *names, **metadata ):
+    def trait_get ( self, *names, **metadata ):
         """ Shortcut for getting object trait attributes.
 
         Parameters
@@ -1609,11 +1609,14 @@ class HasTraits ( CHasTraits ):
                 
         return result
 
+    # Define the deprecated alias for 'trait_get':
+    get = trait_get
+
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
     #---------------------------------------------------------------------------
 
-    def set ( self, trait_change_notify = True, **traits ):
+    def trait_set ( self, trait_change_notify = True, **traits ):
         """ Shortcut for setting object trait attributes.
 
         Parameters
@@ -1654,6 +1657,9 @@ class HasTraits ( CHasTraits ):
                 setattr( self, name, value )
 
         return self
+
+    # Define the deprecated alias for 'trait_set':
+    set = trait_set
 
     #---------------------------------------------------------------------------
     #  Resets some or all of an object's traits to their default values:
