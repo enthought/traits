@@ -285,7 +285,8 @@ class SimpleEditor ( Editor ):
                 control._editor.dispose()
                 control._editor.control = None
             else:
-                control.deleteLater()
+                control.setParent(None)
+        del control
 
         # Create all of the list item trait editors:
         trait_handler = self._trait_handler

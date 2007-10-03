@@ -353,7 +353,7 @@ class GUIToolkit ( Toolkit ):
     def destroy_control ( self, control ):
         """ Destroys a specified GUI toolkit control.
         """
-        control.deleteLater()
+        control.setParent(None)
 
     #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:

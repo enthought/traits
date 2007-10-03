@@ -110,7 +110,8 @@ def ui_panel_for ( ui, parent, buttons ):
     try:
         ui.prepare_ui()
     except:
-        control.deleteLater()
+        control.setParent(None)
+        del control
         ui.control = None
         ui.result  = False
         raise

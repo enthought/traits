@@ -69,7 +69,7 @@ def ui_dialog ( ui, parent, is_modal ):
     try:
         ui.prepare_ui()
     except:
-        ui.control.deleteLater()
+        ui.control.setParent(None)
         ui.control.ui = None
         ui.control    = None
         ui.owner      = None
