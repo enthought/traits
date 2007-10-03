@@ -34,6 +34,9 @@ from cPickle \
 
 from types \
     import FunctionType, MethodType
+    
+from version \
+    import __version__ as TraitsVersion
 
 from ctraits \
     import CHasTraits, CTraitMethod, _HasTraits_monitors
@@ -1513,7 +1516,7 @@ class HasTraits ( CHasTraits ):
     #  Prepares an object to be pickled:
     #---------------------------------------------------------------------------
 
-    def __getstate__ (self):
+    def __getstate__ ( self ):
         """ Returns dictionary of traits to pickle.
 
         In general, avoid overriding __getstate__ in subclasses. Instead, mark
@@ -1550,7 +1553,10 @@ class HasTraits ( CHasTraits ):
                     raise TraitError( "The '%s' trait of a '%s' instance "
                                       "contains the unserializable value: %s" % 
                                       ( name, self.__class__.__name__, value ) )
-                 
+        
+        # Store the traits version in the state dictionary (if possible):
+        result.setdefault( '__traits_version__', TraitsVersion )
+        
         # Return the final state dictionary:
         return result
 
@@ -1564,8 +1570,15 @@ class HasTraits ( CHasTraits ):
     def __setstate__ ( self, state ):
         """ Restores the previously pickled state of an object.
         """
-        self.trait_set( **state )
-        self._init_trait_listeners()
+        pop = state.pop
+        if pop( '__traits_version__', None ) is None:
+            values = [ ( name, pop( name ) ) 
+                       for name in pop( '__HasTraits_restore__', [] ) ] 
+            self.__dict__.update( state )
+            self.trait_set( **dict( values ) )
+        else:
+            self.trait_set( **state )
+            self._init_trait_listeners()
 
     #---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
