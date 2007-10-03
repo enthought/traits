@@ -2545,7 +2545,8 @@ class HasTraits ( CHasTraits ):
             return
             
         from traits_listener \
-            import TraitsListener, ListenerParser, ListenerNotifyWrapper
+            import TraitsListener, ListenerParser, ListenerHandler, \
+                   ListenerNotifyWrapper
             
         if isinstance( name, list ):
             for name_i in name:
@@ -2579,7 +2580,7 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener )  
                 listeners.append( lnw )
-                listener.set( handler         = handler,
+                listener.set( handler         = ListenerHandler( handler ),
                               wrapped_handler = lnw,
                               dispatch        = dispatch,
                               type            = lnw.type )

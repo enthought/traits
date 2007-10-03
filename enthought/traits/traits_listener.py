@@ -1,10 +1,16 @@
 #-------------------------------------------------------------------------------
-#  
-#  Written by: David C. Morrill
-#  
-#  Date: 03/05/2007
-#  
-#  (c) Copyright 2007 by Enthought, Inc.
+#
+#  Copyright (c) 2007, Enthought, Inc.
+#  All rights reserved.
+#
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#
+#  Author: David C. Morrill
+#  Date:   03/05/2007
 #  
 #-------------------------------------------------------------------------------
 
@@ -17,9 +23,16 @@
 #-------------------------------------------------------------------------------
 
 import string
+import weakref
 
 from string \
     import whitespace
+    
+from weakref \
+    import WeakKeyDictionary
+    
+from types \
+    import MethodType
 
 from has_traits \
     import HasTraits, HasPrivateTraits
@@ -186,17 +199,17 @@ class ListenerItem ( ListenerBase ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
     
-    # The name of the trait to listen to
+    # The name of the trait to listen to:
     name = Str
     
-    # The name of any metadata that must be present (or not present)
+    # The name of any metadata that must be present (or not present):
     metadata_name = Str
     
     # Does the specified metadata need to be defined (True) or not defined 
     # (False)?
     metadata_defined = Bool( True )
     
-    # The handler to be called when any listened-to trait is changed
+    # The handler to be called when any listened-to trait is changed:
     handler = Any
     
     # A 'wrapped' version of 'handler':
@@ -218,7 +231,7 @@ class ListenerItem ( ListenerBase ):
     # A dictionary mapping objects to a list of all current active
     # (*name*, *type*) listener pairs, where *type* defines the type of 
     # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Any( {} )
+    active = Instance( WeakKeyDictionary, () )
     
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
         
@@ -424,7 +437,7 @@ class ListenerItem ( ListenerBase ):
     #---------------------------------------------------------------------------
     
     def handle_dict_items ( self, object, name, old, new ):
-        """ Handles a trait change for a items of a dictionary trait.
+        """ Handles a trait change for items of a dictionary trait.
         """
         unregister = self.next.unregister
         for obj in new.removed.values():
@@ -441,8 +454,8 @@ class ListenerItem ( ListenerBase ):
                 register( dict[ key ] )
     
     def handle_dict_items_src ( self, object, name, old, new ):
-        """ Handles a trait change for a items of a dictionary trait with
-            notificationa.
+        """ Handles a trait change for items of a dictionary trait with
+            notification.
         """
         self.handle_dict_items( object, name, old, new )
                 
@@ -503,8 +516,10 @@ class ListenerItem ( ListenerBase ):
         """
         next = self.next
         if next is None:
-            object._on_trait_change( self.handler, name,
-                                     remove = remove, dispatch = self.dispatch )
+            handler = self.handler()
+            if handler is not Undefined:
+                object._on_trait_change( handler, name, remove = remove,
+                                         dispatch = self.dispatch )
             return ( object, name )
         
         if self.notify:
@@ -532,11 +547,13 @@ class ListenerItem ( ListenerBase ):
         """
         next = self.next
         if next is None:
-            object._on_trait_change( self.handler, name, 
-                                     remove = remove, dispatch = self.dispatch )
+            handler = self.handler()
+            if handler is not Undefined:
+                object._on_trait_change( handler, name, remove = remove, 
+                                         dispatch = self.dispatch )
         
-            if self.type == ANY_LISTENER:
-                object._on_trait_change( self.handler, name + '_items', 
+                if self.type == ANY_LISTENER:
+                    object._on_trait_change( handler, name + '_items', 
                                      remove = remove, dispatch = self.dispatch )
                                     
             return ( object, name )
@@ -576,11 +593,13 @@ class ListenerItem ( ListenerBase ):
         """
         next = self.next
         if next is None:
-            object._on_trait_change( self.handler, name, 
-                                     remove = remove, dispatch = self.dispatch )
+            handler = self.handler()
+            if handler is not Undefined:
+                object._on_trait_change( handler, name, remove = remove, 
+                                         dispatch = self.dispatch )
                                 
-            if self.type == ANY_LISTENER:
-                object._on_trait_change( self.handler, name + '_items', 
+                if self.type == ANY_LISTENER:
+                    object._on_trait_change( handler, name + '_items', 
                                      remove = remove, dispatch = self.dispatch )
                                     
             return ( object, name )
@@ -910,3 +929,30 @@ class ListenerNotifyWrapper ( TraitChangeNotifyWrapper ):
             
         self.object = self.owner = self.listener = None
                     
+#-------------------------------------------------------------------------------
+#  'ListenerHandler' class:  
+#-------------------------------------------------------------------------------
+
+class ListenerHandler:
+
+    def __init__ ( self, handler ):
+        if type( handler ) is MethodType:
+            object = handler.im_self
+            if object is not None:
+                self.object = weakref.ref( object, self.listener_deleted )
+                self.name   = handler.__name__
+                
+                return
+                
+        self.handler = handler
+        
+    def __call__ ( self ):
+        result = getattr( self, 'handler', None )
+        if result is not None:
+            return result
+            
+        return getattr( self.object(), self.name )
+
+    def listener_deleted ( self, ref ):
+        self.handler = Undefined
+
