@@ -182,7 +182,6 @@ class Panel ( BaseDialog ):
         # window (if requested):
         if layout is None:
             layout = QtGui.QVBoxLayout(cpanel)
-            layout.setMargin(0)
 
         if ui.scrollable:
             sizer = wx.BoxSizer( wx.VERTICAL )
