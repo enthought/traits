@@ -1572,11 +1572,14 @@ class HasTraits ( CHasTraits ):
         """
         pop = state.pop
         if pop( '__traits_version__', None ) is None:
+            # If the state was saved by a version of Traits prior to 3.0, then
+            # use Traits 2.0 compatible code to restore it:
             values = [ ( name, pop( name ) ) 
                        for name in pop( '__HasTraits_restore__', [] ) ] 
             self.__dict__.update( state )
             self.trait_set( **dict( values ) )
         else:
+            # Otherwise, apply the Traits 3.0 restore logic:
             self.trait_set( **state )
             self._init_trait_listeners()
 

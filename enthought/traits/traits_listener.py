@@ -328,11 +328,12 @@ class ListenerItem ( ListenerBase ):
     def unregister ( self, old ):
         """ Unregisters any existing listeners.
         """
-        active = self.active.get( old )
-        if active is not None:
-            del self.active[ old ]
-            for name, type in active:
-                getattr( self, type )( old, name, True )
+        if old is not None:
+            active = self.active.get( old )
+            if active is not None:
+                del self.active[ old ]
+                for name, type in active:
+                    getattr( self, type )( old, name, True )
     
     #---------------------------------------------------------------------------
     #  Handles a trait change for an intermediate link trait:
