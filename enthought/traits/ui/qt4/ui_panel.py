@@ -183,6 +183,7 @@ class Panel ( BaseDialog ):
         # window (if requested):
         if layout is None:
             layout = QtGui.QVBoxLayout(cpanel)
+            layout.setMargin(0)
 
         if ui.scrollable:
             sizer = wx.BoxSizer( wx.VERTICAL )
@@ -579,7 +580,7 @@ class FillPanel ( object ):
 
                 # If the parent doesn't have a visible frame then we don't want
                 # a margin.
-                if not isinstance(ppanel, QtGui.QTabWidget):
+                if not isinstance(ppanel, (QtGui.QTabWidget, QtGui.QMainWindow)):
                     self.sizer.setMargin(0)
 
             if label != '':
