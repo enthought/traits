@@ -533,9 +533,8 @@ class FillPanel ( object ):
                 new_panel = QtGui.QWidget(panel)
             sizer = panel.layout()
             if sizer is None:
-                sizer = QtGui.QVBoxLayout()
+                sizer = QtGui.QVBoxLayout(panel)
                 sizer.setMargin(0)
-                panel.setLayout(sizer)
             self.control = panel = new_panel
             if is_splitter or is_tabbed:
                 editor = SplitterGroupEditor( control = panel )
@@ -563,7 +562,8 @@ class FillPanel ( object ):
             label = group.label
 
         if group.show_border:
-            box = QtGui.QGroupBox(label, panel)
+            box = QtGui.QGroupBox(label)
+            panel.layout().addWidget(box)
             self.sizer = QtGui.QBoxLayout(orientation, box)
         else:
             if layout == 'flow':
@@ -572,8 +572,8 @@ class FillPanel ( object ):
                 self.sizer = QtGui.QBoxLayout(orientation)
 
                 # Try and figure out the nearest parent widget that isn't a
-                # simple layout holder.  (This code is based on the wx version
-                # which doesn't use nested layouts.)
+                # simple layout holder.  (This module's code is based on the wx
+                # version which doesn't use nested layouts.)
                 ppanel = panel
                 while type(ppanel) is QtGui.QWidget:
                     ppanel = ppanel.parent()
@@ -586,10 +586,10 @@ class FillPanel ( object ):
             if label != '':
                 self.sizer.addWidget(heading_text(panel, text=label).control)
 
-        # If no sizer has been specified for the panel yet, make the new sizer 
-        # the layout sizer for the panel:        
-        if panel.layout() is None:
-            panel.setLayout(self.sizer)
+            # If no sizer has been specified for the panel yet, make the new
+            # sizer the layout sizer for the panel:        
+            if panel.layout() is None:
+                panel.setLayout(self.sizer)
 
         if is_splitter:
             splitter = QtGui.QSplitter()
@@ -752,8 +752,11 @@ class FillPanel ( object ):
                 #        style |= wx.ALIGN_CENTER_VERTICAL
                 #sizer.Add( sg_sizer, growable, style, 2 )
                 # FIXME: Try and account for the above.
-                sizer.addLayout(sg_sizer)
-        
+
+                # Only add the layout if it hasn't already been done.
+                if sg_sizer.parent() is None:
+                    sizer.addLayout(sg_sizer)
+
     #---------------------------------------------------------------------------
     #  Adds a list of Item objects to the panel:
     #---------------------------------------------------------------------------
