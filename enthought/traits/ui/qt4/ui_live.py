@@ -86,7 +86,7 @@ class LiveWindow ( BaseDialog ):
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
-    
+
     def init ( self, ui, parent, is_modal ):
         view = ui.view
         history = ui.history

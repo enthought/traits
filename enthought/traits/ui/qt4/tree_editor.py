@@ -284,6 +284,18 @@ class SimpleEditor ( Editor ):
             self._selection_changed( selected )
 
     #---------------------------------------------------------------------------
+    #  Disposes of the contents of an editor:
+    #---------------------------------------------------------------------------
+
+    def dispose ( self ):
+        """ Disposes of the contents of an editor.
+        """
+        if self._tree is not None:
+            self._delete_node(self._tree.invisibleRootItem())
+
+        super( SimpleEditor, self ).dispose()
+
+    #---------------------------------------------------------------------------
     #  Expands from the specified node the specified number of sub-levels:
     #---------------------------------------------------------------------------
 
@@ -296,7 +308,7 @@ class SimpleEditor ( Editor ):
                 self._expand_node( nid )
                 if expand:
                     nid.setExpanded(True)
-                for cnid in self._nodes( nid ):
+                for cnid in self._nodes_for( nid ):
                     self.expand_levels( cnid, levels - 1 )
 
     #---------------------------------------------------------------------------
@@ -386,7 +398,11 @@ class SimpleEditor ( Editor ):
             self._remove_listeners( node, object )
             del self._map[ id_object ]
 
-        nid.parent().removeChild(nid)
+        pnid = nid.parent()
+        if pnid is None:
+            self._tree.takeTopLevelItem(self._tree.indexOfTopLevelItem(nid))
+        else:
+            pnid.removeChild(nid)
 
         # If the deleted node had an active editor panel showing, remove it:
         if (self._editor is not None) and (nid == self._editor._editor_nid):
@@ -421,16 +437,10 @@ class SimpleEditor ( Editor ):
     #  Returns each of the child nodes of a specified node id:
     #---------------------------------------------------------------------------
 
-    def _nodes ( self, nid ):
-        """ Returns each of the child nodes of a specified node.
-        """
-        for i in range(nid.childCount()):
-            yield nid.child(i)
-
     def _nodes_for ( self, nid ):
         """ Returns all child node ids of a specified node id.
         """
-        return [ cnid for cnid in self._nodes( nid ) ]
+        return [nid.child(i) for i in range(nid.childCount())]
 
     #---------------------------------------------------------------------------
     #  Return the index of a specified node id within its parent:
@@ -440,9 +450,10 @@ class SimpleEditor ( Editor ):
         pnid = nid.parent()
         if pnid is None:
             return ( None, None, None )
-        for i, cnid in enumerate( self._nodes( pnid ) ):
-            if cnid == nid:
-                ignore, pnode, pobject = self._get_node_data( pnid )
+
+        for i in range(pnid.childCount()):
+            if pnid.child(i) is nid:
+                _, pnode, pobject = self._get_node_data( pnid )
                 return ( pnode, pobject, i )
 
     #---------------------------------------------------------------------------
@@ -803,9 +814,7 @@ class SimpleEditor ( Editor ):
             parent = nid.parent()
 
             if parent is not None:
-                for n in range(parent.childCount()):
-                    snid = parent.child(n)
-
+                for snid in self._nodes_for(parent):
                     if snid is not nid:
                         snid.setExpanded(False)
 
