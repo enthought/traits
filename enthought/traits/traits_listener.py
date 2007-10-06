@@ -228,6 +228,11 @@ class ListenerItem ( ListenerBase ):
     # Should changes to this item generate a notification to the handler?
     notify = Bool( True )
     
+    # Is the associated handler a special list handler that handles both
+    # 'foo' and 'foo_items' events by receiving a list of 'deleted' and 'added'
+    # items as the 'old' and 'new' arguments?
+    is_list_handler = Bool( False )
+    
     # A dictionary mapping objects to a list of all current active
     # (*name*, *type*) listener pairs, where *type* defines the type of 
     # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
@@ -410,6 +415,11 @@ class ListenerItem ( ListenerBase ):
         self.handle_list_items( object, name, old, new )
                 
         self.wrapped_handler( object, name, old, new )
+     
+    def handle_list_items_special ( self, object, name, old, new ):
+        """ Handles a trait change for items of a list trait with notification.
+        """
+        self.wrapped_handler( object, name, new.removed, new.added )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a dictionary trait:
@@ -553,7 +563,11 @@ class ListenerItem ( ListenerBase ):
                 object._on_trait_change( handler, name, remove = remove, 
                                          dispatch = self.dispatch )
         
-                if self.type == ANY_LISTENER:
+                if self.is_list_handler:
+                    object._on_trait_change( self.handle_list_items_special,
+                                             name + '_items', remove = remove,
+                                             dispatch = self.dispatch )
+                elif self.type == ANY_LISTENER:
                     object._on_trait_change( handler, name + '_items', 
                                      remove = remove, dispatch = self.dispatch )
                                     
@@ -795,7 +809,7 @@ class ListenerParser ( HasPrivateTraits ):
         """
         items = []
         while True:
-            items.append( self.parse_item() )
+            items.append( self.parse_item( terminator ) )
             
             c = self.skip_ws
             if c is terminator:
@@ -816,7 +830,7 @@ class ListenerParser ( HasPrivateTraits ):
     #  Parses a single, complete listener item/group string:
     #---------------------------------------------------------------------------
              
-    def parse_item ( self ):
+    def parse_item ( self, terminator ):
         """ Parses a single, complete listener item or group string.
         """
         c = self.skip_ws
@@ -853,16 +867,26 @@ class ListenerParser ( HasPrivateTraits ):
             
         if c in '.:':
             result.notify = (c == '.')
-            next = self.parse_item()
+            next = self.parse_item( terminator )
             if cycle:
                 result.next = lg = ListenerGroup( items = [ next, result ] )
                 result      = lg
             else:
                 result.next = next
+                
+            return result
+            
+        if c == '[':
+            if (self.skip_ws == ']') and (self.skip_ws == terminator):
+                self.backspace
+                result.is_list_handler = True
+            else:
+                self.error( "Expected '[]' at the end of an item" )
         else:
             self.backspace
-            if cycle:
-                result.next = result
+            
+        if cycle:
+            result.next = result
                 
         return result
         
