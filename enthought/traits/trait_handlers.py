@@ -2107,7 +2107,7 @@ class TraitListEvent ( object ):
     #  Initialize the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, index, removed = None, added = None ):
+    def __init__ ( self, index = 0, removed = None, added = None ):
         self.index = index
         if removed is None:
             self.removed = []
