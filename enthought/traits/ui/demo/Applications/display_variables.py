@@ -61,7 +61,8 @@ from os.path \
 
 from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Expression, Delegate, Array, \
-           Range, Property, TraitListEvent, on_trait_change, cached_property
+           Range, Property, Any, TraitListEvent, on_trait_change, \
+           cached_property
     
 from enthought.traits.ui.api \
     import Controller, View, HSplit, HGroup, VGroup, Item, Label, Theme
@@ -104,7 +105,7 @@ class Variable ( HasTraits ):
     values = Array
     
     # The experiment the variable belongs to:
-    experiment = Any # Instance( 'Experiment' )
+    experiment = Any
     
     # A formula used to calculate the values (for purposes of this demo only):
     formula = Expression
@@ -282,11 +283,8 @@ class ExperimentView ( Controller ):
             ),
             id = 'splitter'
         ),
-        title     = 'Experimental Results',
-        id        = 'enthought.traits.ui.demo.application.display_variables',
-        width     = 0.5,
-        height    = 0.7,
-        resizable = True
+        id = 'enthought.traits.ui.demo.application.display_variables.'
+             'ExperimentView',
     )
     
     #-- Event Handlers ---------------------------------------------------------
@@ -318,5 +316,21 @@ demo = ExperimentView( model = experiment )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
-    demo.configure_traits()
+    # Note: The following code is a work-around for a current design bug in
+    # the Traits 'configure_traits' method that occurs when the object is a
+    # subclass of Handler (as ExperimentView is):
+    class ShowDemo ( HasTraits ):
+        demo = Instance( ExperimentView )
+        
+        view = View( 
+            Item( 'demo', style = 'custom', show_label = False ),
+            title     = 'Experimental Results',
+            id        = 'enthought.traits.ui.demo.application.'
+                        'display_variables',
+            width     = 0.5,
+            height    = 0.7,
+            resizable = True
+        )
+        
+    ShowDemo( demo = demo ).configure_traits()
                   
