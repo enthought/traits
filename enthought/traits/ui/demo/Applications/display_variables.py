@@ -224,7 +224,6 @@ class Slider ( Item ):
     item_theme = ATheme( Theme( '@GG5', margins = 1 ) )
 
 variable_view = View(
-    Item( 'name' ),
     Item( 'units' ),
     Item( 'description', style = 'custom' ),
     Item( 'formula' ),
