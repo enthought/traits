@@ -47,6 +47,17 @@ Notes:
  - Normally, use of the <b>ImageResource</b> class would not be necessary in 
    this program. However, because it is loaded dynamically by the demo program 
    framework, the search path must be specified explicitly.
+ - Try commenting out the line <i>multiple_open = True</i>, which allows more 
+   than one <b>Variable</b> object to be open at once.
+ - Try dragging the handles along the top part of each view to reorganize the
+   view layout. Whatever changes you make will be persisted from one invocation
+   of the program to another. The persistence is enabled through the use of the
+   <i>id</i> traits in the <b>View</b> and <b>Group</b> objects. The ability to
+   rearrange the views is enabled via the <i>dock</i> trait set in several of
+   the <b>Group</b> objects.
+ - Try dragging a view completely out of the Traits UI demo program window and
+   dropping it on your desktop. This feature is enabled via the <i>export</i>
+   trait set in several of the <b>Group</b> objects.
 """
 
 #-- Imports --------------------------------------------------------------------
