@@ -277,14 +277,15 @@ class SimpleEditor ( Editor ):
             editor.
         """
         list_pane = self._list_pane
-        editor    = self._editor
+        layout = list_pane.layout()
+        editor = self._editor
 
         # Disconnect the editor from any control about to be destroyed:        
         for control in list_pane.children():
             if hasattr( control, '_editor' ):
                 control._editor.dispose()
                 control._editor.control = None
-            else:
+            elif control is not layout:
                 control.setParent(None)
         del control
 
@@ -299,8 +300,6 @@ class SimpleEditor ( Editor ):
         is_fake       = (resizable and (len( values ) == 0))
         if is_fake:
             values = [ item_trait.default_value()[1] ]
-            
-        layout = list_pane.layout()
 
         for value in values:
             if resizable:       
