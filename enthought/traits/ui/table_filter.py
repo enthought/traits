@@ -1,21 +1,22 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-#
-# Author: David C. Morrill
-# Date: 07/01/2005
-#
-#  Symbols defined: TableFilter
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   07/01/2005
 #
 #------------------------------------------------------------------------------
+
 """ Defines the filter object used to filter items displayed in a table editor.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -56,6 +57,7 @@ GenericTableFilterRuleOperation = Trait( '=', {
 class TableFilter ( HasPrivateTraits ):
     """ Filter for items displayed in a table.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -179,6 +181,7 @@ class TableFilter ( HasPrivateTraits ):
 class EvalTableFilter ( TableFilter ):
     """ A table filter based on evaluating an expression.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -231,6 +234,7 @@ class EvalTableFilter ( TableFilter ):
 class GenericTableFilterRule ( HasPrivateTraits ):
     """ A general rule used by a table filter.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -379,6 +383,7 @@ class GenericTableFilterRule ( HasPrivateTraits ):
 class GenericTableFilterRuleEnabledColumn ( ObjectColumn ):
     """ Table column that indicates whether a filter rule is enabled.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the value of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -394,8 +399,9 @@ class GenericTableFilterRuleEnabledColumn ( ObjectColumn ):
 
 class GenericTableFilterRuleAndOrColumn ( ObjectColumn ):
     """ Table column that displays whether a filter rule is conjoining ('and')
-    or disjoining ('or').
+        or disjoining ('or').
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the value of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -414,6 +420,7 @@ class GenericTableFilterRuleAndOrColumn ( ObjectColumn ):
 class GenericTableFilterRuleNameColumn ( ObjectColumn ):
     """ Table column for the name of an object trait.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the traits editor of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -430,6 +437,7 @@ class GenericTableFilterRuleNameColumn ( ObjectColumn ):
 class GenericTableFilterRuleValueColumn ( ObjectColumn ):
     """ Table column for the value of an object trait.
     """
+    
     #---------------------------------------------------------------------------
     #  Returns the traits editor of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -458,6 +466,7 @@ generic_table_filter_rule_columns = [
 class RuleTableFilter ( TableFilter ):
     """ A table filter based on rules.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -483,7 +492,7 @@ class RuleTableFilter ( TableFilter ):
     #---------------------------------------------------------------------------
     #  Traits view definitions:  
     #---------------------------------------------------------------------------
-
+    
     error_view = View(
         Item( label = 'A menu or rule based filter can only be created for '
                       'tables with at least one entry'
@@ -493,7 +502,7 @@ class RuleTableFilter ( TableFilter ):
         close_result = False,
         buttons      = [ 'Cancel' ]
     )
-
+        
     #---------------------------------------------------------------------------
     #  Returns whether a specified object meets the filter/search criteria:
     #  (Should normally be overridden)
@@ -533,12 +542,16 @@ class RuleTableFilter ( TableFilter ):
                         ors.append( ' and '.join( ands ) )
                         ands = []
                 ands.append( rule.description() )
+                
         if len( ands ) > 0:
             ors.append( ' and '.join( ands ) )
+            
         if len( ors ) == 1:
             return ors[0]
+            
         if len( ors ) > 1:
             return ' or '.join( [ '(%s)' % t for t in ors ] )
+            
         return super( RuleTableFilter, self ).description()
 
     #---------------------------------------------------------------------------
@@ -638,6 +651,7 @@ menu_table_filter_rule_columns = [
 class MenuTableFilter ( RuleTableFilter ):
     """ A table filter based on a menu of rules.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------

@@ -289,24 +289,42 @@ class UI ( HasPrivateTraits ):
         """ Finds the definition of the specified Include object in the current
             user interface building context.
         """
+        context = self.context
+        result  = None
+        
+        # Get the context 'object' (if available):
+        if len( context ) == 1:
+            object = context.values()[0]
+        else:
+            object = context.get( 'object' )
+        
         # Try to use our ViewElements objects:
         ve = self.view_elements
 
         # If none specified, try to get it from the UI context:
-        if ve is None:
-            if len( self.context ) == 1:
-                obj = self.context.values()[0]
-            elif 'object' in self.context:
-                obj = self.context[ 'object' ]
-            else:
-                # Couldn't find a context object to use, so give up:
-                return None
-
-            # Otherwise, use the context object's ViewElements:
-            ve = obj.trait_view_elements()
+        if (ve is None) and (object is not None):
+            # Use the context object's ViewElements (if available):
+            ve = object.trait_view_elements()
 
         # Ask the ViewElements to find the requested item for us:
-        return ve.find( include.id, self._search )
+        if ve is not None:
+            result = ve.find( include.id, self._search )
+            
+        # If not found, then try to search the 'handler' and 'object' for a
+        # method we can call that will define it:
+        if result is None:
+            handler = context.get( 'handler' )
+            if handler is not None:
+                method = getattr( handler, include.id, None )
+                if callable( method ):
+                    result = method()
+                
+            if (result is None) and (object is not None):
+                method = getattr( object, include.id, None )
+                if callable( method ):
+                    result = method()
+            
+        return result
 
     #---------------------------------------------------------------------------
     #  Returns the current search stack level:
@@ -456,8 +474,8 @@ class UI ( HasPrivateTraits ):
             ui_prefs[''] = prefs
 
         info = self.info  
-        for name in self._names:  
-            editor = getattr( info, name, None )  
+        for name in self._names:
+            editor = getattr( info, name, None )
             if isinstance( editor, Editor ) and (editor.ui is self):  
                 prefs = editor.save_prefs()
                 if prefs != None:

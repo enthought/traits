@@ -17,7 +17,7 @@ from enthought.traits.ui.table_column \
     
 from enthought.traits.ui.table_filter \
     import EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate, \
-            RuleTableFilter
+           EvalTableFilter
 
 # A helper class for the 'Department' class below:
 class Employee ( HasTraits ):
@@ -53,7 +53,7 @@ table_editor = TableEditor(
                       resizable = True
                   ),
     filters     = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ],
-    search      = RuleTableFilter(),
+    search      = EvalTableFilter(),
     row_factory = Employee )
 
 # The class to be edited with the TableEditor:
