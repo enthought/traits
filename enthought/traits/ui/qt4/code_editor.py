@@ -16,7 +16,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from PyQt4 import QtGui
+from PyQt4 import QtCore, QtGui, Qsci
 
 from enthought.traits.api \
     import Instance, Str, List, Int, Color, Enum, Event, Bool, TraitError
@@ -169,14 +169,13 @@ class SourceEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        factory      = self.factory
-        self._editor = editor  = PythonEditor( parent, 
-                                 show_line_numbers = factory.show_line_numbers )
+        factory = self.factory
+        self._editor = editor = PythonEditor(parent,
+                show_line_numbers = factory.show_line_numbers)
         self.control = control = editor.control
-        control.resize(300, 124)
-        wx.EVT_KILL_FOCUS( control, self.wx_update_object )
-        if factory.auto_scroll and (factory.selected_line != ''):
-            wx.EVT_SIZE( control, self._update_selected_line )
+
+        control.connect(control, QtCore.SIGNAL('lostFocus'), self.update_object)
+
         if factory.auto_set:
             editor.on_trait_change( self.update_object, 'changed', 
                                     dispatch = 'ui' )
@@ -187,12 +186,14 @@ class SourceEditor ( Editor ):
             control.setReadOnly(True)
             
         # Define the markers we use:
-        control.MarkerDefine( MARK_MARKER, stc.STC_MARK_BACKGROUND, 
-                              background = factory.mark_color_ )
-        control.MarkerDefine( SEARCH_MARKER, stc.STC_MARK_BACKGROUND,
-                              background = factory.search_color_ )
-        control.MarkerDefine( SELECTED_MARKER, stc.STC_MARK_BACKGROUND,
-                              background = factory.selected_color_ )
+        control.markerDefine(Qsci.QsciScintilla.Background, MARK_MARKER)
+        control.setMarkerBackgroundColor(factory.mark_color_, MARK_MARKER)
+
+        control.markerDefine(Qsci.QsciScintilla.Background, SEARCH_MARKER)
+        control.setMarkerBackgroundColor(factory.search_color_, SEARCH_MARKER)
+
+        control.markerDefine(Qsci.QsciScintilla.Background, SELECTED_MARKER)
+        control.setMarkerBackgroundColor(factory.selected_color_, SELECTED_MARKER)
 
         # Make sure the editor has been initialized:
         self.update_editor()
@@ -204,11 +205,12 @@ class SourceEditor ( Editor ):
         self.sync_value( factory.selected_text, 'selected_text', 'to' )
         self.sync_value( factory.line, 'line' )
         self.sync_value( factory.column, 'column' )
-            
+
         # Check if we need to monitor the line or column position being changed:
         if (factory.line != '') or (factory.column != ''):
-            stc.EVT_STC_UPDATEUI( control, control.GetId(),
-                                  self._position_changed )
+            control.connect(control,
+                    QtCore.SIGNAL('cursorPositionChanged(int, int)'),
+                    self._position_changed)
             
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
@@ -219,9 +221,8 @@ class SourceEditor ( Editor ):
         """
         if not self._locked:
             try:
-                self.value = self.control.GetText()
-                self.control.SetBackgroundColour( OKColor )
-                self.control.Refresh()
+                self.value = unicode(self.control.text())
+                self.control.lexer().setPaper(OKColor)
             except TraitError, excp:
                 pass
         
@@ -234,17 +235,18 @@ class SourceEditor ( Editor ):
             editor.
         """
         self._locked = True
-        new_value    = self.str_value
-        control      = self.control
-        if control.GetText() != new_value:
-            readonly = control.GetReadOnly()
-            control.SetReadOnly( False )
-            l1  = control.GetFirstVisibleLine()
-            pos = control.GetCurrentPos()
-            control.SetText( new_value )
-            control.GotoPos( pos )
-            control.ScrollToLine( l1 )
-            control.SetReadOnly( readonly )
+        new_value = self.str_value
+        control = self.control
+        if control.text() != new_value:
+            readonly = control.isReadOnly()
+            control.setReadOnly(False)
+            vsb = control.verticalScrollBar()
+            l1 = vsb.value()
+            line, column = control.getCursorPosition()
+            control.setText(new_value)
+            control.setCursorPosition(line, column)
+            vsb.setValue(l1)
+            control.setReadOnly(readonly)
             self._mark_lines_changed()
             self._selected_line_changed()
         self._locked = False
@@ -258,13 +260,12 @@ class SourceEditor ( Editor ):
         """
         lines   = self.mark_lines
         control = self.control
-        lc      = control.GetLineCount()
-        control.MarkerDeleteAll( MARK_MARKER )
+        lc      = control.lines()
+        control.markerDeleteAll(MARK_MARKER)
         for line in lines:
             if 0 < line <= lc:
-                control.MarkerAdd( line - 1, MARK_MARKER )
-        control.Refresh()
-        
+                control.markerAdd(line - 1, MARK_MARKER)
+
     def _mark_lines_items_changed ( self ):
         self._mark_lines_changed()
         
@@ -277,22 +278,22 @@ class SourceEditor ( Editor ):
         """
         line    = self.selected_line
         control = self.control
-        line    = max( 1, min( control.GetLineCount(), line ) ) - 1
-        control.MarkerDeleteAll( SELECTED_MARKER )
-        control.MarkerAdd( line, SELECTED_MARKER )
-        control.GotoLine( line )
+        line    = max(1, min(control.lines(), line)) - 1
+        control.markerDeleteAll(SELECTED_MARKER)
+        control.markerAdd(line, SELECTED_MARKER)
+        _, column = control.getCursorPosition()
+        control.setCursorPosition(line, column)
         if self.factory.auto_scroll:
-            control.ScrollToLine( line - (control.LinesOnScreen() / 2) )
-            
-        control.Refresh()
-                                  
+            control.ensureLineVisible(line)
+
     #---------------------------------------------------------------------------
     #  Handles the 'line' trait being changed:  
     #---------------------------------------------------------------------------
                                               
     def _line_changed ( self, line ):
         if not self._locked:
-            self.control.GotoLine( line - 1 )
+            _, column = control.getCursorPosition()
+            self.control.setCursorPosition(line - 1, column)
                                   
     #---------------------------------------------------------------------------
     #  Handles the 'column' trait being changed:  
@@ -300,25 +301,21 @@ class SourceEditor ( Editor ):
                                               
     def _column_changed ( self, column ):
         if not self._locked:
-            control = self.control
-            line    = control.LineFromPosition( control.GetCurrentPos() )
-            control.GotoPos( control.PositionFromLine( line ) + column - 1 )  
-            
+            line, _ = control.getCursorPosition()
+            self.control.setCursorPosition(line, column - 1)
+
     #---------------------------------------------------------------------------
     #  Handles the cursor position being changed:  
     #---------------------------------------------------------------------------
                         
-    def _position_changed ( self, event ):
+    def _position_changed(self, line, column):
         """ Handles the cursor position being changed.
         """
-        control      = self.control
-        pos          = control.GetCurrentPos()
-        line         = control.LineFromPosition( pos )
         self._locked = True
-        self.line    = line + 1
-        self.column  = pos - control.PositionFromLine( line ) + 1
+        self.line = line
+        self.column = column
         self._locked = False
-        self.selected_text = control.GetSelectedText()
+        self.selected_text = unicode(control.selectedText())
         
     #---------------------------------------------------------------------------
     #  Handles a key being pressed within the editor:    
@@ -337,9 +334,8 @@ class SourceEditor ( Editor ):
     def error ( self, excp ):
         """ Handles an error that occurs while setting the object's trait value.
         """
-        self.control.SetBackgroundColour( ErrorColor )
-        self.control.Refresh()
-        
+        self.control.lexer().setPaper(ErrorColor)
+
     #---------------------------------------------------------------------------
     #  Disposes of the contents of an editor:    
     #---------------------------------------------------------------------------

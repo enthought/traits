@@ -1,98 +1,100 @@
-#-------------------------------------------------------------------------------
-#  
-#  Written by: David C. Morrill
-#  
-#  Date: 09/22/2005
-#  
-#  (c) Copyright 2005 by Enthought, Inc.
-#  
-#-------------------------------------------------------------------------------
-""" Converts a wx.KeyEvent to a standardized "name".
+#------------------------------------------------------------------------------
+# Copyright (c) 2007, Riverbank Computing Limited
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the GPL v2
+# license.
+#
+# Author: Riverbank Computing Limited
+#------------------------------------------------------------------------------
+
+""" Converts a QKeyEvent to a standardized "name".
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import wx
+from PyQt4 import QtCore
     
 #-------------------------------------------------------------------------------
 #  Constants:  
 #-------------------------------------------------------------------------------
-        
-# Mapping from wxPython special key names to Enable key names
+
+# Mapping from PyQt special key names to Enable key names
 key_map = {
-    wx.WXK_BACK:      'Backspace',
-    wx.WXK_TAB:       'Tab',
-    wx.WXK_RETURN:    'Enter',
-    wx.WXK_ESCAPE:    'Esc',
-    wx.WXK_DELETE:    'Delete',
-    wx.WXK_START:     'Start',
-    wx.WXK_LBUTTON:   'Left Button',
-    wx.WXK_RBUTTON:   'Right Button',
-    wx.WXK_CANCEL:    'Cancel',
-    wx.WXK_MBUTTON:   'Middle Button',
-    wx.WXK_CLEAR:     'Clear',
-    wx.WXK_SHIFT:     'Shift',
-    wx.WXK_CONTROL:   'Control',
-    wx.WXK_MENU:      'Menu',
-    wx.WXK_PAUSE:     'Pause',
-    wx.WXK_CAPITAL:   'Capital',
-    wx.WXK_PRIOR:     'Page Up',
-    wx.WXK_NEXT:      'Page Down',
-    wx.WXK_END:       'End',
-    wx.WXK_HOME:      'Home',
-    wx.WXK_LEFT:      'Left',
-    wx.WXK_UP:        'Up',
-    wx.WXK_RIGHT:     'Right',
-    wx.WXK_DOWN:      'Down',
-    wx.WXK_SELECT:    'Select',
-    wx.WXK_PRINT:     'Print',
-    wx.WXK_EXECUTE:   'Execute',
-    wx.WXK_SNAPSHOT:  'Snapshot',
-    wx.WXK_INSERT:    'Insert',
-    wx.WXK_HELP:      'Help',
-    wx.WXK_NUMPAD0:   'Numpad 0',
-    wx.WXK_NUMPAD1:   'Numpad 1',
-    wx.WXK_NUMPAD2:   'Numpad 2',
-    wx.WXK_NUMPAD3:   'Numpad 3',
-    wx.WXK_NUMPAD4:   'Numpad 4',
-    wx.WXK_NUMPAD5:   'Numpad 5',
-    wx.WXK_NUMPAD6:   'Numpad 6',
-    wx.WXK_NUMPAD7:   'Numpad 7',
-    wx.WXK_NUMPAD8:   'Numpad 8',
-    wx.WXK_NUMPAD9:   'Numpad 9',
-    wx.WXK_MULTIPLY:  'Multiply',
-    wx.WXK_ADD:       'Add',
-    wx.WXK_SEPARATOR: 'Separator',
-    wx.WXK_SUBTRACT:  'Subtract',
-    wx.WXK_DECIMAL:   'Decimal',
-    wx.WXK_DIVIDE:    'Divide',
-    wx.WXK_F1:        'F1',
-    wx.WXK_F2:        'F2',
-    wx.WXK_F3:        'F3',
-    wx.WXK_F4:        'F4',
-    wx.WXK_F5:        'F5',
-    wx.WXK_F6:        'F6',
-    wx.WXK_F7:        'F7',
-    wx.WXK_F8:        'F8',
-    wx.WXK_F9:        'F9',
-    wx.WXK_F10:       'F10',
-    wx.WXK_F11:       'F11',
-    wx.WXK_F12:       'F12',
-    wx.WXK_F13:       'F13',
-    wx.WXK_F14:       'F14',
-    wx.WXK_F15:       'F15',
-    wx.WXK_F16:       'F16',
-    wx.WXK_F17:       'F17',
-    wx.WXK_F18:       'F18',
-    wx.WXK_F19:       'F19',
-    wx.WXK_F20:       'F20',
-    wx.WXK_F21:       'F21',
-    wx.WXK_F22:       'F22',
-    wx.WXK_F23:       'F23',
-    wx.WXK_F24:       'F24',
-    wx.WXK_NUMLOCK:   'Num Lock',
-    wx.WXK_SCROLL:    'Scroll Lock'
+    QtCore.Qt.Key_Backspace: 'Backspace',
+    QtCore.Qt.Key_Tab:       'Tab',
+    QtCore.Qt.Key_Return:    'Enter',
+    QtCore.Qt.Key_Escape:    'Esc',
+    QtCore.Qt.Key_Delete:    'Delete',
+    #QtCore.Qt.Key_START:     'Start',
+    #QtCore.Qt.Key_LBUTTON:   'Left Button',
+    #QtCore.Qt.Key_RBUTTON:   'Right Button',
+    QtCore.Qt.Key_Cancel:    'Cancel',
+    #QtCore.Qt.Key_MBUTTON:   'Middle Button',
+    QtCore.Qt.Key_Clear:     'Clear',
+    QtCore.Qt.Key_Shift:     'Shift',
+    QtCore.Qt.Key_Control:   'Control',
+    QtCore.Qt.Key_Menu:      'Menu',
+    QtCore.Qt.Key_Pause:     'Pause',
+    #QtCore.Qt.Key_CAPITAL:   'Capital',
+    QtCore.Qt.Key_PageUp:    'Page Up',
+    QtCore.Qt.Key_PageDown:  'Page Down',
+    QtCore.Qt.Key_End:       'End',
+    QtCore.Qt.Key_Home:      'Home',
+    QtCore.Qt.Key_Left:      'Left',
+    QtCore.Qt.Key_Up:        'Up',
+    QtCore.Qt.Key_Right:     'Right',
+    QtCore.Qt.Key_Down:      'Down',
+    QtCore.Qt.Key_Select:    'Select',
+    QtCore.Qt.Key_Print:     'Print',
+    QtCore.Qt.Key_Execute:   'Execute',
+    #QtCore.Qt.Key_SNAPSHOT:  'Snapshot',
+    QtCore.Qt.Key_Insert:    'Insert',
+    QtCore.Qt.Key_Help:      'Help',
+    #QtCore.Qt.Key_NUMPAD0:   'Numpad 0',
+    #QtCore.Qt.Key_NUMPAD1:   'Numpad 1',
+    #QtCore.Qt.Key_NUMPAD2:   'Numpad 2',
+    #QtCore.Qt.Key_NUMPAD3:   'Numpad 3',
+    #QtCore.Qt.Key_NUMPAD4:   'Numpad 4',
+    #QtCore.Qt.Key_NUMPAD5:   'Numpad 5',
+    #QtCore.Qt.Key_NUMPAD6:   'Numpad 6',
+    #QtCore.Qt.Key_NUMPAD7:   'Numpad 7',
+    #QtCore.Qt.Key_NUMPAD8:   'Numpad 8',
+    #QtCore.Qt.Key_NUMPAD9:   'Numpad 9',
+    #QtCore.Qt.Key_MULTIPLY:  'Multiply',
+    #QtCore.Qt.Key_ADD:       'Add',
+    #QtCore.Qt.Key_SEPARATOR: 'Separator',
+    #QtCore.Qt.Key_SUBTRACT:  'Subtract',
+    #QtCore.Qt.Key_DECIMAL:   'Decimal',
+    #QtCore.Qt.Key_DIVIDE:    'Divide',
+    QtCore.Qt.Key_F1:        'F1',
+    QtCore.Qt.Key_F2:        'F2',
+    QtCore.Qt.Key_F3:        'F3',
+    QtCore.Qt.Key_F4:        'F4',
+    QtCore.Qt.Key_F5:        'F5',
+    QtCore.Qt.Key_F6:        'F6',
+    QtCore.Qt.Key_F7:        'F7',
+    QtCore.Qt.Key_F8:        'F8',
+    QtCore.Qt.Key_F9:        'F9',
+    QtCore.Qt.Key_F10:       'F10',
+    QtCore.Qt.Key_F11:       'F11',
+    QtCore.Qt.Key_F12:       'F12',
+    QtCore.Qt.Key_F13:       'F13',
+    QtCore.Qt.Key_F14:       'F14',
+    QtCore.Qt.Key_F15:       'F15',
+    QtCore.Qt.Key_F16:       'F16',
+    QtCore.Qt.Key_F17:       'F17',
+    QtCore.Qt.Key_F18:       'F18',
+    QtCore.Qt.Key_F19:       'F19',
+    QtCore.Qt.Key_F20:       'F20',
+    QtCore.Qt.Key_F21:       'F21',
+    QtCore.Qt.Key_F22:       'F22',
+    QtCore.Qt.Key_F23:       'F23',
+    QtCore.Qt.Key_F24:       'F24',
+    QtCore.Qt.Key_NumLock:   'Num Lock',
+    QtCore.Qt.Key_ScrollLock:'Scroll Lock'
 }
         
 #-------------------------------------------------------------------------------
@@ -128,4 +130,3 @@ def key_event_to_name ( event ):
     if name[:1] == '-':
         return name[1:]
     return name
-
