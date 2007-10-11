@@ -9,10 +9,12 @@
 #  Classes defined: KeyBinding, KeyBindings
 #
 #-------------------------------------------------------------------------------
+
 """ Defines KeyBinding and KeyBindings classes, which manage the mapping of
-keystroke events into method calls on controller objects that are supplied by
-the application.
+    keystroke events into method calls on controller objects that are supplied 
+    by the application.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -21,7 +23,7 @@ from enthought.traits.api \
     import TraitError, HasStrictTraits, Str, List, Any, Instance, Event
 
 from enthought.traits.ui.api \
-    import View, Item, ListEditor, KeyBindingEditor, toolkit
+    import View, HGroup, Item, ListEditor, KeyBindingEditor, toolkit
 
 #-------------------------------------------------------------------------------
 #  Key binding trait definition:
@@ -37,6 +39,7 @@ Binding = Str( event = 'binding', editor = KeyBindingEditor() )
 class KeyBinding ( HasStrictTraits ):
     """ Binds one or two keystrokes to a method.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
@@ -60,7 +63,14 @@ class KeyBinding ( HasStrictTraits ):
     #  Traits view definitions:  
     #---------------------------------------------------------------------------
     
-    traits_view = View( [ 'binding1', 'binding2', 'description~#', '-<>' ] )
+    traits_view = View(
+        HGroup(
+            Item( 'binding1' ), 
+            Item( 'binding2' ), 
+            Item( 'description', style = 'readonly' ),
+            show_labels = False
+        )
+    )
     
     #---------------------------------------------------------------------------
     #  Handles a binding trait being changed:  
@@ -77,6 +87,7 @@ class KeyBinding ( HasStrictTraits ):
 class KeyBindings ( HasStrictTraits ):
     """ A set of key bindings.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
