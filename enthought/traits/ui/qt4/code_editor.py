@@ -16,8 +16,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import wx
-import wx.stc as stc
+from PyQt4 import QtGui
 
 from enthought.traits.api \
     import Instance, Str, List, Int, Color, Enum, Event, Bool, TraitError
@@ -174,7 +173,7 @@ class SourceEditor ( Editor ):
         self._editor = editor  = PythonEditor( parent, 
                                  show_line_numbers = factory.show_line_numbers )
         self.control = control = editor.control
-        control.SetSize( ( 300, 124 ) )
+        control.resize(300, 124)
         wx.EVT_KILL_FOCUS( control, self.wx_update_object )
         if factory.auto_scroll and (factory.selected_line != ''):
             wx.EVT_SIZE( control, self._update_selected_line )
@@ -185,7 +184,7 @@ class SourceEditor ( Editor ):
             editor.on_trait_change( self.key_pressed, 'key_pressed', 
                                     dispatch = 'ui' )
         if self.readonly:
-            control.SetReadOnly( True )
+            control.setReadOnly(True)
             
         # Define the markers we use:
         control.MarkerDefine( MARK_MARKER, stc.STC_MARK_BACKGROUND, 
@@ -214,13 +213,7 @@ class SourceEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
     #---------------------------------------------------------------------------
-  
-    def wx_update_object ( self, event ):
-        """ Handles the user entering input data in the edit control.
-        """
-        self.update_object()
-        event.Skip()
-  
+
     def update_object ( self ):
         """ Handles the user entering input data in the edit control.
         """
