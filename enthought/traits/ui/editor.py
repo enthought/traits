@@ -112,8 +112,8 @@ class Editor ( HasPrivateTraits ):
     # Current value of object trait as a string:
     str_value = Property
     
-    # The trait the editor is editing (not the its value, but the trait itself):
-    trait = Property
+    # The trait the editor is editing (not its value, but the trait itself):
+    value_trait = Property
     
     #---------------------------------------------------------------------------
     #  Initializes the object:
@@ -202,7 +202,7 @@ class Editor ( HasPrivateTraits ):
     #  Returns the trait the editor is editing (Property implementation):
     #---------------------------------------------------------------------------
     
-    def _get_trait ( self ):
+    def _get_value_trait ( self ):
         """ Returns the trait the editor is editing (Property implementation).
         """
         return self.object.trait( self.name )
