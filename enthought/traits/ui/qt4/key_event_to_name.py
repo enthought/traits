@@ -21,7 +21,28 @@ from PyQt4 import QtCore
 #  Constants:  
 #-------------------------------------------------------------------------------
 
-# Mapping from PyQt special key names to Enable key names
+# Mapping from PyQt keypad key names to Enable key names.
+keypad_map = {
+    QtCore.Qt.Key_Enter:     'Enter',
+    QtCore.Qt.Key_0:         'Numpad 0',
+    QtCore.Qt.Key_1:         'Numpad 1',
+    QtCore.Qt.Key_2:         'Numpad 2',
+    QtCore.Qt.Key_3:         'Numpad 3',
+    QtCore.Qt.Key_4:         'Numpad 4',
+    QtCore.Qt.Key_5:         'Numpad 5',
+    QtCore.Qt.Key_6:         'Numpad 6',
+    QtCore.Qt.Key_7:         'Numpad 7',
+    QtCore.Qt.Key_8:         'Numpad 8',
+    QtCore.Qt.Key_9:         'Numpad 9',
+    QtCore.Qt.Key_Asterisk:  'Multiply',
+    QtCore.Qt.Key_Plus:      'Add',
+    QtCore.Qt.Key_Comma:     'Separator',
+    QtCore.Qt.Key_Minus:     'Subtract',
+    QtCore.Qt.Key_Period:    'Decimal',
+    QtCore.Qt.Key_Slash:     'Divide'
+}
+
+# Mapping from PyQt non-keypad key names to Enable key names.
 key_map = {
     QtCore.Qt.Key_Backspace: 'Backspace',
     QtCore.Qt.Key_Tab:       'Tab',
@@ -53,22 +74,6 @@ key_map = {
     #QtCore.Qt.Key_SNAPSHOT:  'Snapshot',
     QtCore.Qt.Key_Insert:    'Insert',
     QtCore.Qt.Key_Help:      'Help',
-    #QtCore.Qt.Key_NUMPAD0:   'Numpad 0',
-    #QtCore.Qt.Key_NUMPAD1:   'Numpad 1',
-    #QtCore.Qt.Key_NUMPAD2:   'Numpad 2',
-    #QtCore.Qt.Key_NUMPAD3:   'Numpad 3',
-    #QtCore.Qt.Key_NUMPAD4:   'Numpad 4',
-    #QtCore.Qt.Key_NUMPAD5:   'Numpad 5',
-    #QtCore.Qt.Key_NUMPAD6:   'Numpad 6',
-    #QtCore.Qt.Key_NUMPAD7:   'Numpad 7',
-    #QtCore.Qt.Key_NUMPAD8:   'Numpad 8',
-    #QtCore.Qt.Key_NUMPAD9:   'Numpad 9',
-    #QtCore.Qt.Key_MULTIPLY:  'Multiply',
-    #QtCore.Qt.Key_ADD:       'Add',
-    #QtCore.Qt.Key_SEPARATOR: 'Separator',
-    #QtCore.Qt.Key_SUBTRACT:  'Subtract',
-    #QtCore.Qt.Key_DECIMAL:   'Decimal',
-    #QtCore.Qt.Key_DIVIDE:    'Divide',
     QtCore.Qt.Key_F1:        'F1',
     QtCore.Qt.Key_F2:        'F2',
     QtCore.Qt.Key_F3:        'F3',
@@ -101,32 +106,42 @@ key_map = {
 #  Converts a keystroke event into a corresponding key name:  
 #-------------------------------------------------------------------------------
                 
-def key_event_to_name ( event ):
+def key_event_to_name(event):
     """ Converts a keystroke event into a corresponding key name.
     """
-    key_code = event.GetKeyCode()
-    if event.ControlDown() and (1 <= key_code <= 26):
-        key = chr( key_code + 96 )
+    key_code = event.key()
+    modifiers = event.modifiers()
+
+    if modifiers & QtCore.Qt.KeypadModifier:
+        key = keypad_map.get(key_code)
     else:
-        key = key_map.get( key_code )
-        if key is None:
-            key = chr( key_code )
+        key = None
+
+    if key is None:
+        key = key_map.get(key_code)
+
+    if key is None:
+        key = unicode(event.text())
+
+        if len(key) == 1 and 1 <= ord(key[0]) <= 26:
+            key = chr(ord(key[0]) + ord('a') - 1)
     
     name = ''
-    if event.AltDown():
+    if modifiers & QtCore.Qt.AltModifier:
         name = 'Alt'
-        
-    if event.ControlDown():
+
+    if modifiers & QtCore.Qt.ControlModifier:
         name += '-Ctrl'
             
-    if event.ShiftDown() and ((name != '') or (len( key ) > 1)):
+    if (modifiers & QtCore.Qt.ShiftModifier) and ((name != '') or (len(key) > 1)):
         name += '-Shift'
         
     if key == ' ':
         key = 'Space'
     
     name += ('-' + key)
-    
+
     if name[:1] == '-':
         return name[1:]
+
     return name

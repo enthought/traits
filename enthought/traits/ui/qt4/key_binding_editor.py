@@ -1,37 +1,32 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+# Copyright (c) 2007, Riverbank Computing Limited
+# All rights reserved.
 #
-#  Written by: David C. Morrill
+# This software is provided without warranty under the terms of the GPL v2
+# license.
 #
-#  Date: 05/20/2005
-#
-#  (c) Copyright 2005 by Enthought, Inc.
-#
-#-------------------------------------------------------------------------------
+# Author: Riverbank Computing Limited
+#------------------------------------------------------------------------------
+
 """ Defines the key binding editor for use with the KeyBinding class. This is a 
 specialized editor used to associate a particular key with a control (i.e., the
 key binding editor).
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import wx
+from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import Trait, TraitError, HasStrictTraits, Str, List, Any, Instance, \
-           Event, false
+    import Bool, Event
 
-from enthought.traits.ui.api \
-    import View, Item, ListEditor
-
-from enthought.traits.ui.wx.editor \
+from editor \
     import Editor
     
-from enthought.traits.ui.wx.basic_editor_factory \
+from basic_editor_factory \
     import BasicEditorFactory
-    
-from enthought.util.wx.dialog \
-    import confirmation
     
 from key_event_to_name \
     import key_event_to_name
@@ -48,7 +43,7 @@ class KeyBindingEditor ( Editor ):
     #---------------------------------------------------------------------------
         
     # Does the editor's control have focus currently?
-    has_focus = false
+    has_focus = Bool(False)
     
     # Keyboard event
     key = Event
@@ -58,12 +53,11 @@ class KeyBindingEditor ( Editor ):
     #  widget:
     #---------------------------------------------------------------------------
         
-    def init ( self, parent ):
+    def init (self, parent):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = KeyBindingCtrl( self, parent )
-        self.control.SetSize( wx.Size( 160, 19 ) )
+        self.control = KeyBindingCtrl(self, parent)
 
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
@@ -86,8 +80,8 @@ class KeyBindingEditor ( Editor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        self.control.Refresh()
-            
+        self.control.setText(self.value)
+
     #---------------------------------------------------------------------------
     #  Updates the current focus setting of the control:  
     #---------------------------------------------------------------------------
@@ -110,11 +104,13 @@ class KeyBindingEditor ( Editor ):
         key_name    = key_event_to_name( event )
         cur_binding = binding.owner.key_binding_for( binding, key_name )
         if cur_binding is not None:
-            if confirmation( None, 
-                     "'%s' has already been assigned to '%s'.\n"
-                     "Do you wish to continue?" % ( 
-                     key_name, cur_binding.description ),
-                     'Duplicate Key Definition' ) == 5104:
+            if QtGui.QMessageBox.question(self.control,
+                    "Duplicate Key Definition",
+                    "'%s' has already been assigned to '%s'.\n"
+                    "Do you wish to continue?" % (key_name,
+                        cur_binding.description),
+                     QtGui.QMessageBox.Yes | QtGui.QMessageBox.No,
+                     QtGui.QMessageBox.No) != QtGui.QMessageBox.Yes:
                 return
                 
         self.value = key_name
@@ -129,96 +125,80 @@ ToolkitEditorFactory = BasicEditorFactory( klass = KeyBindingEditor )
 #  'KeyBindingCtrl' class:
 #-------------------------------------------------------------------------------
 
-class KeyBindingCtrl ( wx.Window ):
-    """ wxPython control for editing key bindings.
+class KeyBindingCtrl(QtGui.QLabel):
+    """ PyQt control for editing key bindings.
     """
     #---------------------------------------------------------------------------
     #  Initialize the object:
     #---------------------------------------------------------------------------
     
-    def __init__ ( self, editor, parent, wid = -1, pos = wx.DefaultPosition,
-                   size = wx.DefaultSize ):
-                       
-        super( KeyBindingCtrl, self ).__init__( parent, wid, pos, size,
-                                                style = wx.CLIP_CHILDREN |
-                                                        wx.WANTS_CHARS )
-        # Save the reference to the controlling editor object:                                                        
+    def __init__(self, editor, parent):
+
+        QtGui.QLabel.__init__(self, parent)
+
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.setIndent(4)
+        self.setMinimumWidth(160)
+
+        pal = QtGui.QPalette(self.palette())
+        pal.setColor(QtGui.QPalette.Window, QtCore.Qt.white)
+        self.setPalette(pal)
+        self.setAutoFillBackground(True)
+
+        # Save the reference to the controlling editor object:
         self.editor = editor
         
         # Indicate we don't have the focus right now:
         editor.has_focus = False
 
-        # Set up the 'erase background' event handler:
-        wx.EVT_ERASE_BACKGROUND( self, self._on_erase_background )
- 
-        # Set up the 'paint' event handler:
-        wx.EVT_PAINT( self, self._paint )
-        
-        # Set up the focus change handlers:
-        wx.EVT_SET_FOCUS(  self, self._get_focus )
-        wx.EVT_KILL_FOCUS( self, self._lose_focus )
-        
-        # Set up mouse event handlers:
-        wx.EVT_LEFT_DOWN( self, self._set_focus )
-        
-        # Handle key events:
-        wx.EVT_CHAR( self, self._on_char )
- 
     #---------------------------------------------------------------------------
     #  Handle keyboard keys being pressed:
     #---------------------------------------------------------------------------
            
-    def _on_char ( self, event ):
+    def keyPressEvent(self, event):
         """ Handle keyboard keys being pressed.
         """
-        self.editor.key = event
-   
-    #---------------------------------------------------------------------------
-    #  Erase background event handler:
-    #---------------------------------------------------------------------------
+        # Ignore presses of the control and shift keys.
+        if event.key() not in (QtCore.Qt.Key_Control, QtCore.Qt.Key_Shift):
+            self.editor.key = event
 
-    def _on_erase_background ( self, event ):
-        pass
-    
     #---------------------------------------------------------------------------
     #  Do a GUI toolkit specific screen update:
     #---------------------------------------------------------------------------
 
-    def _paint ( self, event ):
+    def paintEvent(self, event):
         """ Updates the screen.
         """
-        wdc    = wx.PaintDC( self )
-        dx, dy = self.GetSizeTuple()
+        QtGui.QLabel.paintEvent(self, event)
+
+        w = self.width()
+        h = self.height()
+        p = QtGui.QPainter(self)
+
         if self.editor.has_focus:
-            wdc.SetPen( wx.Pen( wx.RED, 2 ) )
-            wdc.DrawRectangle( 1, 1, dx - 1, dy - 1 )
+            p.setRenderHint(QtGui.QPainter.Antialiasing, True)
+            pen = QtGui.QPen(QtCore.Qt.red)
+            pen.setWidth(2)
+            p.setPen(pen)
+            p.drawRect(1, 1, w - 2, h - 2)
         else:
-            wdc.SetPen( wx.Pen( wx.BLACK ) )
-            wdc.DrawRectangle( 0, 0, dx, dy )
-        wdc.DrawText( self.editor.str_value, 5, 1 )
-            
-    #---------------------------------------------------------------------------
-    #  Sets the keyboard focus to this window:  
-    #---------------------------------------------------------------------------
-                        
-    def _set_focus ( self, event ):
-        """ Sets the keyboard focus to this window.
-        """
-        self.SetFocus()
-        
+            p.setPen(QtCore.Qt.black)
+            p.drawRect(0, 0, w - 1, h - 1)
+
+        p.end()
+
     #---------------------------------------------------------------------------
     #  Handles getting/losing the focus:
     #---------------------------------------------------------------------------
     
-    def _get_focus ( self, event ):
+    def focusInEvent(self, event):
         """ Handles getting the focus.
         """
         self.editor.has_focus = True
-        self.Refresh()
-        
-    def _lose_focus ( self, event ):  
+        self.update()
+
+    def focusOutEvent(self, event):  
         """ Handles losing the focus.
         """
         self.editor.has_focus = False
-        self.Refresh()
-
+        self.update()
