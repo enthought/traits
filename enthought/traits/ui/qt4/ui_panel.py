@@ -1228,23 +1228,14 @@ class HTMLHelpWindow ( QtGui.QLabel ):
 #  Creates a PyFace HeadingText control:  
 #-------------------------------------------------------------------------------
                   
-# FIXME: Decide later on whether to use HeadingText.  All it is being used for
-# is a different font and a gradient background image - none of which should be
-# hardcoded anyway.
-#HeadingText = None
+HeadingText = None
 
-#def heading_text ( *args, **kw ):
-#    """ Creates a PyFace HeadingText control.
-#    """
-    #global HeadingText
+def heading_text ( *args, **kw ):
+    """ Creates a PyFace HeadingText control.
+    """
+    global HeadingText
     
-    #if HeadingText is None:
-    #    from enthought.pyface.heading_text import HeadingText
-        
-    #return HeadingText( *args, **kw )
+    if HeadingText is None:
+        from enthought.pyface.api import HeadingText
 
-class heading_text(object):
-    def __init__(self, parent, text):
-        self.control = QtGui.QLabel(text, parent)
-        self.control.setFrameShadow(QtGui.QFrame.Plain)
-        self.control.setFrameShape(QtGui.QFrame.Box)
+    return HeadingText( *args, **kw )
