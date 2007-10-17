@@ -2182,6 +2182,7 @@ class TraitList ( TraitHandler ):
         if (isinstance( value, list ) and
            (self.minlen <= len( value ) <= self.maxlen)):
             return TraitListObject( self, object, name, value )
+            
         self.error( object, name, self.repr( value ) )
 
     def info ( self ):

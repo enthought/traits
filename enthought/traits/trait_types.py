@@ -1881,24 +1881,20 @@ class AdaptedTo ( Instance ):
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        return self.modify_ctrait( super( AdaptedTo, self ).as_ctrait() )
-        
-    def modify_ctrait ( self, ctrait ):
-        
         # Tell the C code that the 'post_setattr' method wants the original,
         # unadapted value passed to 'setattr':
-        ctrait.post_setattr_original_value( True )
-        
-        return ctrait 
+        return super( AdaptedTo, self 
+                    ).as_ctrait().post_setattr_original_value( True )
     
 class AdaptsTo ( AdaptedTo ):    
         
-    def modify_ctrait ( self, ctrait ):
+    def as_ctrait ( self ):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
         # Tell the C code that 'setattr' should store the original, unadapted 
         # value passed to it:
-        ctrait.setattr_original_value( True )
-        
-        return ctrait 
+        return super( AdaptsTo, self 
+                    ).as_ctrait().setattr_original_value( True )
     
 if python_version >= 2.5:
     

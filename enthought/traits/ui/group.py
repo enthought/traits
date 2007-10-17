@@ -26,8 +26,8 @@ from string \
     import find
 
 from enthought.traits.api \
-    import Trait, TraitPrefixList, TraitError, ReadOnly, Delegate, Undefined, \
-           List, Str, Range, Instance, Bool, Property, cached_property
+    import Trait, TraitPrefixList, TraitError, ReadOnly, Delegate, List, Str, \
+           Range, Instance, Bool, Property, cached_property
 
 from enthought.traits.trait_base \
     import enumerate

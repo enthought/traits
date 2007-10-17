@@ -3626,8 +3626,8 @@ _trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
         trait->flags &= (~TRAIT_SETATTR_ORIGINAL_VALUE);
     }
     
-    Py_INCREF( Py_None );
-    return Py_None;
+    Py_INCREF( trait );
+    return trait;
 }    
 
 /*-----------------------------------------------------------------------------
@@ -3649,8 +3649,8 @@ _trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
         trait->flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE);
     }
     
-    Py_INCREF( Py_None );
-    return Py_None;
+    Py_INCREF( trait );
+    return trait;
 }    
 
 /*-----------------------------------------------------------------------------

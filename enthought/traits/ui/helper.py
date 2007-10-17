@@ -42,4 +42,16 @@ def user_name_for ( name ):
         last_lower = (c in lowercase)
         result    += c
     return result
+    
+#-------------------------------------------------------------------------------
+#  Format a number with embedded commas:
+#-------------------------------------------------------------------------------
+
+def commatize ( value ):
+    """ Formats a specified value as an integer string with embedded commas.
+        For example: commatize( 12345 ) returns "12,345".
+    """
+    s = str( value )
+    s = s.rjust( ((len( s ) + 2) / 3) * 3 )
+    return ','.join( [ s[ i: i + 3 ] for i in range( 0, len(s), 3 ) ] ).lstrip()
 
