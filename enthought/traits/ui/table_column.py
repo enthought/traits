@@ -20,7 +20,7 @@
 #------------------------------------------------------------------------------
 
 """ Defines the table column descriptor used by the editor and editor factory 
-classes for numeric and table editors.
+    classes for numeric and table editors.
 """
 
 #-------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ classes for numeric and table editors.
 
 from enthought.traits.api \
     import HasPrivateTraits, Int, Float, Str, Enum, Color, Font, Instance, \
-           Property, Expression, Constant, Any, true, false
+           Property, Expression, Constant, Any, Callable, Bool
     
 from enthought.traits.trait_base \
     import user_name_for
@@ -88,13 +88,13 @@ class TableColumn ( HasPrivateTraits ):
     vertical_alignment = Enum( 'center', [ 'top', 'center', 'bottom' ] )
     
     # Is the table column visible (i.e., viewable)?
-    visible = true
+    visible = Bool( True )
     
     # Is this column editable?
-    editable = true
+    editable = Bool( True )
     
     # Can external objects be dropped on the column?
-    droppable = false
+    droppable = Bool( False )
     
     # Context menu to display when this column is right-clicked:
     menu = Instance( Menu )
@@ -256,6 +256,9 @@ class ObjectColumn ( TableColumn ):
     # Format string to apply to column values:
     format = Str( '%s' )
     
+    # Format function to apply to column values:
+    format_func = Callable
+    
     #---------------------------------------------------------------------------
     #  Trait view definitions:  
     #---------------------------------------------------------------------------
@@ -312,6 +315,9 @@ class ObjectColumn ( TableColumn ):
         """ Gets the formatted value of the column for a specified object.
         """
         try:
+            if self.format_func is not None:
+                return self.format_func( self.get_raw_value( object ) )
+                
             return self.format % self.get_raw_value( object )
         except:
             logger.exception( 'Error occurred trying to format a %s value' % 
