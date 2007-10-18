@@ -680,6 +680,13 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
     /* Make sure no non-keyword arguments were specified: */
     if ( !PyArg_ParseTuple( args, "" ) )
         return -1;
+    
+    /* Make sure all of the object's listeners have been set up: */
+    if ( PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
+                                         listener_traits ) ) > 0 ) {
+        value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
+        Py_XDECREF( value );
+    }
 
     /* Set any traits specified in the constructor: */
     if ( kwds != NULL ) {
@@ -707,13 +714,6 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
             PyObject_Call( handler, handler_args, NULL );
             Py_DECREF( handler_args );
         }
-    }
-    
-    /* Make sure all of the object's listeners have been set up: */
-    if ( PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
-                                         listener_traits ) ) > 0 ) {
-        value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
-        Py_XDECREF( value );
     }
     
     /* Indicate that the object has finished being initialized: */
@@ -3627,7 +3627,7 @@ _trait_setattr_original_value ( trait_object * trait, PyObject * args ) {
     }
     
     Py_INCREF( trait );
-    return trait;
+    return (PyObject *) trait;
 }    
 
 /*-----------------------------------------------------------------------------
@@ -3650,7 +3650,7 @@ _trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
     }
     
     Py_INCREF( trait );
-    return trait;
+    return (PyObject *) trait;
 }    
 
 /*-----------------------------------------------------------------------------
