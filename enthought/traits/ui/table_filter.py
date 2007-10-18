@@ -73,7 +73,7 @@ class TableFilter ( HasPrivateTraits ):
     
     # A callable function that returns whether the passed object is allowed
     # by the filter
-    allowed = Callable( lambda object: True )
+    allowed = Callable( lambda object: True, transient = True )
 
     # Is the filter a template (i.e., non-deletable, non-editable)?
     template = false
