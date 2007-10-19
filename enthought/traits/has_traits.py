@@ -1567,7 +1567,7 @@ class HasTraits ( CHasTraits ):
     #  Restores the previously pickled state of an object:
     #---------------------------------------------------------------------------
 
-    def __setstate__ ( self, state ):
+    def __setstate__ ( self, state, trait_change_notify=True ):
         """ Restores the previously pickled state of an object.
         """
         pop = state.pop
@@ -1577,10 +1577,11 @@ class HasTraits ( CHasTraits ):
             values = [ ( name, pop( name ) ) 
                        for name in pop( '__HasTraits_restore__', [] ) ] 
             self.__dict__.update( state )
-            self.trait_set( **dict( values ) )
+            self.trait_set( trait_change_notify=trait_change_notify, 
+                            **dict( values ) )
         else:
             # Otherwise, apply the Traits 3.0 restore logic:
-            self.trait_set( **state )
+            self.trait_set( trait_change_notify=trait_change_notify, **state )
             self._init_trait_listeners()
 
     #---------------------------------------------------------------------------
