@@ -61,79 +61,99 @@ class GUIToolkit ( Toolkit ):
     #  'EditorFactory' factory methods:
     #---------------------------------------------------------------------------
 
-    # Boolean:
+    def array_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def boolean_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Button:
     def button_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Check list:
     def check_list_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Code:
     def code_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Color:
     def color_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Compound:
     def compound_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Directory:
+    def custom_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def directory_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Enum(eration):
+    def drop_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def dnd_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def enum_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # File:
     def file_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Font:
     def font_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Image enum(eration):
+    def key_binding_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def html_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def image_enum_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Instance:
     def instance_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # List:
     def list_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Plot:
+    def null_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def ordered_set_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def plot_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Range:
     def range_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # RGB Color:
     def rgb_color_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Text:
+    def rgba_color_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def shell_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def table_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def text_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Tree:
+    def title_editor ( self, *args, **traits ):
+        return null_editor_factory
+
     def tree_editor ( self, *args, **traits ):
         return null_editor_factory
 
-    # Tuple:
     def tuple_editor ( self, *args, **traits ):
+        return null_editor_factory
+
+    def value_editor ( self, *args, **traits ):
         return null_editor_factory
 
