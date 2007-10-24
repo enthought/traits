@@ -51,7 +51,11 @@ def commatize ( value ):
     """ Formats a specified value as an integer string with embedded commas.
         For example: commatize( 12345 ) returns "12,345".
     """
-    s = str( value )
+    s = str( abs( value ) )
     s = s.rjust( ((len( s ) + 2) / 3) * 3 )
-    return ','.join( [ s[ i: i + 3 ] for i in range( 0, len(s), 3 ) ] ).lstrip()
+    result = ','.join( [ s[ i: i+3 ] for i in range( 0, len(s), 3 ) ] ).lstrip()
+    if value >= 0:
+        return result
+        
+    return '-' + result
 
