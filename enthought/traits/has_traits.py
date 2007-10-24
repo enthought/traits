@@ -9,7 +9,7 @@
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #  Thanks for using Enthought open source!
 #
-#  Author:        David C. Morrill, Prabhu Ramachandran
+#  Author:        David C. Morrill
 #  Original Date: 06/21/2002
 #
 #  Rewritten as a C-based type extension: 06/21/2004
@@ -2586,6 +2586,7 @@ class HasTraits ( CHasTraits ):
                                 if len( dict ) == 0:
                                     del self.__dict__[ TraitsListener ]
                             wrapper.listener.unregister( self )
+                            wrapper.dispose()
                             break
         else:
             dict      = self.__dict__.setdefault( TraitsListener, {} )
