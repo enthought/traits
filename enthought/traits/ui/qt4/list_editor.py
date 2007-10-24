@@ -26,7 +26,7 @@ from enthought.traits.trait_base \
     import user_name_for, enumerate
     
 from enthought.traits.ui.api \
-    import View, Item, EditorFactory
+    import View, Item, EditorFactory as UIEditorFactory
     
 from enthought.traits.ui.ui_traits \
     import style_trait, AView
@@ -54,7 +54,7 @@ handler_trait = Instance( BaseTraitHandler )
 rows_trait = Range( 1, 50, 5,
                     desc = 'the number of list rows to display' )
                     
-editor_trait = Instance( EditorFactory )                    
+editor_trait = Instance( UIEditorFactory )                    
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
