@@ -38,8 +38,9 @@ from enthought.pyface.dock.idockable \
 
 class DockableViewElement ( HasPrivateTraits, IDockable ):
     """ Allows Traits UIs and Traits UI elements to be docked in external
-    PyFace DockWindow windows.
+        PyFace DockWindow windows.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
@@ -132,6 +133,9 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
     
         # Otherwise, clean up and close the traits UI:
         ui.dispose( abort = abort )
+        
+        # Break our linkage to the UI and ViewElement object:
+        self.ui = self.element = None
 
         # And tell the DockWindow to remove the DockControl:
         return True

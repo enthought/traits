@@ -227,6 +227,9 @@ class UI ( HasPrivateTraits ):
 
         # Finish disposing of the user interface:
         self.finish( result )
+        
+        # Break the linkage to any objects in the context dictionary:
+        self.context.clear()
 
     #---------------------------------------------------------------------------
     #  Finishes a user interface:

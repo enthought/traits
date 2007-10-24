@@ -274,6 +274,17 @@ class Toolkit ( HasPrivateTraits ):
             control.
         """
         raise NotImplementedError
+        
+    #---------------------------------------------------------------------------
+    #  Returns a renderer used to render 'themed' table cells for a specified 
+    #  TableColumn object:
+    #---------------------------------------------------------------------------
+    
+    def themed_cell_renderer ( self, column ):
+        """ Returns a renderer used to render 'themed' table cells for a 
+            specified TableColum object.
+        """
+        raise NotImplementedError
                 
     #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:

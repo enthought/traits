@@ -57,7 +57,7 @@ class Editor ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
     
     # The UI (user interface) this editor is part of:
-    ui = ReadOnly
+    ui = Instance( 'enthought.traits.ui.ui.UI' )
     
     # Full name of the object the editor is editing (e.g. 'object.link1.link2'):
     object_name = Str( 'object' )
@@ -169,6 +169,9 @@ class Editor ( HasPrivateTraits ):
         if self._user_to is not None:
             for object, name, handler in self._user_to:
                 object.on_trait_change( handler, name, remove = True )
+                
+        # Break the linkage to the object and ui being edited:
+        self.object = self._context_object = self.ui = None
      
     #---------------------------------------------------------------------------
     #  Returns the context object the editor is using (Property implementation):  

@@ -29,7 +29,7 @@
 
 from enthought.traits.api \
     import HasPrivateTraits, Int, Float, Str, Enum, Color, Font, Instance, \
-           Property, Expression, Constant, Any, Callable, Bool
+           Property, Expression, Constant, Any, Callable, Bool, cached_property
     
 from enthought.traits.trait_base \
     import user_name_for
@@ -37,8 +37,14 @@ from enthought.traits.trait_base \
 from enthought.traits.ui.api \
     import View, Group, EditorFactory, TextEditor
     
-from enthought.traits.ui.menu \
+from menu \
     import Menu
+    
+from ui_traits \
+    import ATheme
+
+from toolkit \
+    import toolkit
     
 # Set up a logger:    
 import logging
@@ -87,6 +93,15 @@ class TableColumn ( HasPrivateTraits ):
     # Vertical alignment of text in the column:
     vertical_alignment = Enum( 'center', [ 'top', 'center', 'bottom' ] )
     
+    # The theme used to render a column cell:
+    cell_theme = ATheme
+    
+    # The theme used to render a selected column cell:
+    selected_theme = ATheme
+    
+    # Renderer used to render the contents of this column:
+    renderer = Property( depends_on = 'cell_theme, selected_theme' )
+    
     # Is the table column visible (i.e., viewable)?
     visible = Bool( True )
     
@@ -102,7 +117,7 @@ class TableColumn ( HasPrivateTraits ):
     # The width of the column (< 0.0: Default, 0.0..1.0: fraction of total table
     # width, > 1.0: absolute width in pixels):
     width = Float( -1.0 )
-    
+   
     #---------------------------------------------------------------------------
     #  Returns the actual object being edited:  
     #---------------------------------------------------------------------------
@@ -188,6 +203,15 @@ class TableColumn ( HasPrivateTraits ):
             object.
         """
         return self.vertical_alignment
+
+    #---------------------------------------------------------------------------
+    #  Gets the renderer for the column of a specified object:  
+    #---------------------------------------------------------------------------
+
+    def get_renderer ( self, object ):
+        """ Gets the renderer for the column of a specified object.
+        """
+        return self.renderer
         
     #---------------------------------------------------------------------------
     #  Returns whether the column is editable for a specified object:  
@@ -228,6 +252,18 @@ class TableColumn ( HasPrivateTraits ):
         """ Returns the string representation of the table column.
         """
         return self.get_label()
+        
+    #-- Property Implementations -----------------------------------------------
+    
+    @cached_property
+    def _get_renderer ( self ):
+        if self.cell_theme is None:
+            return None
+            
+        return toolkit().themed_cell_renderer( self )
+        
+    def _set_renderer ( self, renderer ):
+        self._renderer = renderer
 
 #-------------------------------------------------------------------------------
 #  'ObjectColumn' class:
@@ -249,9 +285,6 @@ class ObjectColumn ( TableColumn ):
 
     # Trait editor used to edit the contents of this column:
     editor = Instance( EditorFactory )
-    
-    # Renderer used to render the contents of this column:
-    renderer = Any # Instance( GridCellRenderer )
     
     # Format string to apply to column values:
     format = Str( '%s' )
@@ -344,15 +377,6 @@ class ObjectColumn ( TableColumn ):
             return self.editor
             
         return self.get_object( object ).base_trait( self.name ).get_editor()
-
-    #---------------------------------------------------------------------------
-    #  Gets the renderer for the column of a specified object:  
-    #---------------------------------------------------------------------------
-
-    def get_renderer ( self, object ):
-        """ Gets the renderer for the column of a specified object.
-        """
-        return self.renderer
         
     #---------------------------------------------------------------------------
     #  Returns the result of comparing the column of two different objects:  

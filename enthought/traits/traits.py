@@ -557,6 +557,7 @@ def Constant ( value, **metadata ):
               "Cannot define a constant using a mutable list or dictionary"
     metadata[ 'type' ]      = 'constant'
     metadata[ 'transient' ] = True
+    
     return Trait( value, **metadata )
 
 #-------------------------------------------------------------------------------
@@ -580,6 +581,7 @@ def Event ( *value_type, **metadata ):
     result = Trait( *value_type, **metadata )
     if 'instance_handler' in result.__dict__:
         del result.instance_handler
+        
     return result
 
 Event = TraitFactory( Event )

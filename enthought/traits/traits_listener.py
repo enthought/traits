@@ -940,8 +940,8 @@ class ListenerNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.listener = listener
     
     def listener_deleted ( self, ref ):
-        owner = self.owner
-        dict  = owner.__dict__.get( TraitsListener )
+        owner     = self.owner
+        dict      = owner.__dict__.get( TraitsListener )
         listeners = dict.get( self.id )
         listeners.remove( self )
         if len( listeners ) == 0:
@@ -958,7 +958,7 @@ class ListenerNotifyWrapper ( TraitChangeNotifyWrapper ):
 #  'ListenerHandler' class:  
 #-------------------------------------------------------------------------------
 
-class ListenerHandler:
+class ListenerHandler ( object ):
 
     def __init__ ( self, handler ):
         if type( handler ) is MethodType:
