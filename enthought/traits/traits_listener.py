@@ -935,24 +935,29 @@ class ListenerNotifyWrapper ( TraitChangeNotifyWrapper ):
     #-- TraitChangeNotifyWrapper Method Overrides ------------------------------
     
     def __init__ ( self, handler, owner, id, listener ):
-        self.type     = ListenerType.get( self.init( handler, owner ) )
+        self.type     = ListenerType.get( self.init( handler, 
+                                    weakref.ref( owner, self.owner_deleted ) ) )
         self.id       = id
         self.listener = listener
     
     def listener_deleted ( self, ref ):
-        owner     = self.owner
-        dict      = owner.__dict__.get( TraitsListener )
-        listeners = dict.get( self.id )
-        listeners.remove( self )
-        if len( listeners ) == 0:
-            del dict[ self.id ]
-            if len( dict ) == 0:
-                del owner.__dict__[ TraitsListener ]
-            # fixme: Is the following line necessary, since all registered
-            # notifiers should be getting the same 'listener_deleted' call:
-            self.listener.unregister( owner )
+        owner = self.owner()
+        if owner is not None:
+            dict      = owner.__dict__.get( TraitsListener )
+            listeners = dict.get( self.id )
+            listeners.remove( self )
+            if len( listeners ) == 0:
+                del dict[ self.id ]
+                if len( dict ) == 0:
+                    del owner.__dict__[ TraitsListener ]
+                # fixme: Is the following line necessary, since all registered
+                # notifiers should be getting the same 'listener_deleted' call:
+                self.listener.unregister( owner )
             
         self.object = self.owner = self.listener = None
+        
+    def owner_deleted ( self, ref ):
+        self.object = self.owner = None
                     
 #-------------------------------------------------------------------------------
 #  'ListenerHandler' class:  
