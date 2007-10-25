@@ -77,13 +77,13 @@ class Editor ( HasPrivateTraits ):
     extended_name = Property
     
     # Original value of object.name (e.g. object.link1.link2.value):
-    old_value = ReadOnly
+    old_value = Any
     
     # Text description of the object trait being edited:
     description = ReadOnly
     
     # The Item object used to create this editor:
-    item = Instance( Item, (), allow_none = False )
+    item = Instance( Item, () )
     
     # The GUI widget defined by this editor:
     control = Any
@@ -170,8 +170,9 @@ class Editor ( HasPrivateTraits ):
             for object, name, handler in self._user_to:
                 object.on_trait_change( handler, name, remove = True )
                 
-        # Break the linkage to the object and ui being edited:
-        self.object = self._context_object = self.ui = None
+        # Break linkages to references we no longer need:
+        self.object = self.ui = self.item = self.factory = self.control = \
+        self.label_control = self.old_value = self._context_object = None
      
     #---------------------------------------------------------------------------
     #  Returns the context object the editor is using (Property implementation):  
