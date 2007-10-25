@@ -434,8 +434,6 @@ class CustomEditor ( Editor ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        super( CustomEditor, self ).dispose()
-
         # Make sure we aren't hanging on to any object refs:
         self._object_cache = None
         
@@ -451,6 +449,8 @@ class CustomEditor ( Editor ):
                                           remove = True )
             self.factory.on_trait_change( self.rebuild_items, 
                                           'values_items', remove = True )
+
+        super( CustomEditor, self ).dispose()
 
     #---------------------------------------------------------------------------
     #  Handles an error that occurs while setting the object's trait value:

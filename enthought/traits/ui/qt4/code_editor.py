@@ -343,13 +343,14 @@ class SourceEditor ( Editor ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        super( SourceEditor, self ).dispose()
         if self.factory.auto_set:
             self._editor.on_trait_change( self.update_object, 'changed',
                                           remove = True )
         if self.factory.key_bindings is not None:
             self._editor.on_trait_change( self.key_pressed, 'key_pressed',
                                           remove = True )
+
+        super( SourceEditor, self ).dispose()
                                           
     #-- UI preference save/restore interface -----------------------------------
 

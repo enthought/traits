@@ -348,8 +348,6 @@ class SimpleEditor ( Editor ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        super( SimpleEditor, self ).dispose()
-        
         if self._object is not None:
             self._object.on_trait_change( self._values_changed, 
                                           self._name, remove = True )
@@ -358,8 +356,10 @@ class SimpleEditor ( Editor ):
                                           'values_modified', remove = True )
                                           
         self.context_object.on_trait_change( self.update_editor,
-                                 self.extended_name + '_items?', remove = True )   
-                                     
+                                 self.extended_name + '_items?', remove = True )
+
+        super( SimpleEditor, self ).dispose()
+
     #---------------------------------------------------------------------------
     #  Event handlers:  
     #---------------------------------------------------------------------------

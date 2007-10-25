@@ -235,15 +235,15 @@ class BaseEditor ( Editor ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        super( BaseEditor, self ).dispose()
-        
         if self._object is not None:
             self._object.on_trait_change( self._values_changed, 
                                           ' ' + self._name, remove = True )
         else:
             self.factory.on_trait_change( self.rebuild_editor,
                                           'values_modified', remove = True )
-                                      
+
+        super( BaseEditor, self ).dispose()
+
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
 #-------------------------------------------------------------------------------

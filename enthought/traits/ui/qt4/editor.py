@@ -174,11 +174,11 @@ class EditorWithList ( Editor ):
     def dispose ( self ):
         """ Disconnects the listeners set up by the constructor.
         """
-        super( EditorWithList, self ).dispose()
-        
         self.list_object.on_trait_change( self._list_updated, 
                                           self.list_name, remove = True ) 
-            
+
+        super( EditorWithList, self ).dispose()
+
     #---------------------------------------------------------------------------
     #  Handles the monitored trait being updated:  
     #---------------------------------------------------------------------------
@@ -249,4 +249,5 @@ class EditorFromView ( Editor ):
         """ Disposes of the editor.
         """
         self._ui.dispose()
+
         super( EditorFromView, self ).dispose()

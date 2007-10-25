@@ -127,6 +127,7 @@ class CompoundEditor ( Editor ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        super( CompoundEditor, self ).dispose()
         for editor in self._editors:
             editor.dispose()
+
+        super( CompoundEditor, self ).dispose()
