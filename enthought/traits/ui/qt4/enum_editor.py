@@ -156,7 +156,7 @@ class BaseEditor ( Editor ):
                 self.parse_extended_name( factory.name )
             self.values_changed()
             self._object.on_trait_change( self._values_changed, 
-                                          self._name, dispatch = 'ui' )
+                                          ' ' + self._name, dispatch = 'ui' )
         else:
             factory.on_trait_change( self.rebuild_editor, 'values_modified', 
                                      dispatch = 'ui' )
@@ -239,7 +239,7 @@ class BaseEditor ( Editor ):
         
         if self._object is not None:
             self._object.on_trait_change( self._values_changed, 
-                                          self._name, remove = True )
+                                          ' ' + self._name, remove = True )
         else:
             self.factory.on_trait_change( self.rebuild_editor,
                                           'values_modified', remove = True )
