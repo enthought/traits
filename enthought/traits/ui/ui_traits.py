@@ -77,6 +77,7 @@ AView = Any
 #-------------------------------------------------------------------------------
 
 image_resource_cache = {}
+image_bitmap_cache   = {}
 
 def convert_image ( value, level = 3 ):
     """ Converts a specified value to an ImageResource if possible.
@@ -101,6 +102,18 @@ def convert_image ( value, level = 3 ):
                                                  search_path = [ search_path ] )
             
     return result
+    
+def convert_bitmap ( image_resource ):
+    """ Converts an ImageResource to a bitmap using a cache.
+    """
+    global image_bitmap_cache
+    
+    bitmap = image_bitmap_cache.get( image_resource )
+    if (bitmap is None) and (image_resource is not None):
+        image_bitmap_cache[ image_resource ] = bitmap = \
+            image_resource.create_bitmap()
+            
+    return bitmap
     
 class Image ( TraitType ):
     """ Defines a trait whose value must be a PyFace ImageResource or a string

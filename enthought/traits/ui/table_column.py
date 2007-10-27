@@ -41,7 +41,7 @@ from menu \
     import Menu
     
 from ui_traits \
-    import ATheme
+    import ATheme, Image
 
 from toolkit \
     import toolkit
@@ -99,8 +99,11 @@ class TableColumn ( HasPrivateTraits ):
     # The theme used to render a selected column cell:
     selected_theme = ATheme
     
+    # The image to display in the cell:
+    image = Image
+    
     # Renderer used to render the contents of this column:
-    renderer = Property( depends_on = 'cell_theme, selected_theme' )
+    renderer = Any # A toolkit specific renderer
     
     # Is the table column visible (i.e., viewable)?
     visible = Bool( True )
@@ -117,6 +120,11 @@ class TableColumn ( HasPrivateTraits ):
     # The width of the column (< 0.0: Default, 0.0..1.0: fraction of total table
     # width, > 1.0: absolute width in pixels):
     width = Float( -1.0 )
+    
+    #-- Private Traits ---------------------------------------------------------
+    
+    # The toolkit specific themed cell renderer:
+    themed_cell_renderer = Any 
    
     #---------------------------------------------------------------------------
     #  Returns the actual object being edited:  
@@ -203,15 +211,50 @@ class TableColumn ( HasPrivateTraits ):
             object.
         """
         return self.vertical_alignment
+        
+    #---------------------------------------------------------------------------
+    #  Returns the cell theme for the column for a specified object:
+    #---------------------------------------------------------------------------
+    
+    def get_cell_theme ( self, object ):
+        """ Returns the cell theme for the column for a specified object.
+        """
+        return self.cell_theme
+        
+    #---------------------------------------------------------------------------
+    #  Returns the selected cell theme for the column for a specified object:
+    #---------------------------------------------------------------------------
+    
+    def get_selected_theme ( self, object ):
+        """ Returns the selected cell theme for the column for a specified object.
+        """
+        return self.selected_theme
+        
+    #---------------------------------------------------------------------------
+    #  Returns the image to display for the column for a specified object:
+    #---------------------------------------------------------------------------
+    
+    def get_image ( self, object ):
+        """ Returns the image to display for the column for a specified object.
+        """
+        return self.image
 
     #---------------------------------------------------------------------------
-    #  Gets the renderer for the column of a specified object:  
+    #  Returns the renderer for the column of a specified object:  
     #---------------------------------------------------------------------------
 
     def get_renderer ( self, object ):
-        """ Gets the renderer for the column of a specified object.
+        """ Returns the renderer for the column of a specified object.
         """
-        return self.renderer
+        result = self.renderer
+        if result is not None:
+            return result
+            
+        if ((self.get_cell_theme( object ) is not None) or
+            (self.get_image(      object ) is not None)):
+            return self.themed_cell_renderer
+            
+        return None
         
     #---------------------------------------------------------------------------
     #  Returns whether the column is editable for a specified object:  
@@ -253,17 +296,10 @@ class TableColumn ( HasPrivateTraits ):
         """
         return self.get_label()
         
-    #-- Property Implementations -----------------------------------------------
+    #-- Default Trait Values ---------------------------------------------------
     
-    @cached_property
-    def _get_renderer ( self ):
-        if self.cell_theme is None:
-            return None
-            
+    def _themed_cell_renderer_default ( self ):
         return toolkit().themed_cell_renderer( self )
-        
-    def _set_renderer ( self, renderer ):
-        self._renderer = renderer
 
 #-------------------------------------------------------------------------------
 #  'ObjectColumn' class:
@@ -412,6 +448,8 @@ class ObjectColumn ( TableColumn ):
 #-------------------------------------------------------------------------------
                 
 class ExpressionColumn ( ObjectColumn ):
+    """ A column for displaying computed values.
+    """
     
     #---------------------------------------------------------------------------
     #  Trait definitions:
@@ -447,6 +485,7 @@ class ExpressionColumn ( ObjectColumn ):
 class NumericColumn ( ObjectColumn ):
     """ A column for editing Numeric arrays.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
@@ -645,6 +684,7 @@ class NumericColumn ( ObjectColumn ):
 class ListColumn ( TableColumn ):
     """ A column for editing lists.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
