@@ -146,7 +146,7 @@ class SimpleEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        label = self.factory.label or user_name_for( self.name )
+        label = self.factory.label or self.item.get_label( self.ui )
         self.control = QtGui.QPushButton(label, parent)
         self.sync_value( self.factory.label_value, 'label', 'from' )
         QtCore.QObject.connect(self.control, QtCore.SIGNAL('clicked()'),
