@@ -121,12 +121,36 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Called when a node is selected
     on_select = Any
 
+    # Called when a node is clicked
+    on_click = Any
+
     # Called when a node is double-clicked
     on_dclick = Any
 
-    # The name of the external object trait to synchronize with the editor's
-    # **selected** trait:
+    # The optional extended trait name of the trait to synchronize with the
+    # editor's current selection:
     selected = Str
+
+    # The optional extended trait name of the trait that should be assigned
+    # a node object when a tree node is clicked on (Note: If you want to
+    # receive repeated clicks on the same node, make sure the trait is defined
+    # as an Event):
+    click = Str
+
+    # The optional extended trait name of the trait that should be assigned
+    # a node object when a tree node is double-clicked on (Note: if you want to
+    # receive repeated double-clicks on the same node, make sure the trait is
+    # defined as an Event):
+    dclick = Str
+
+    # The optional extended trait name of the trait event that is fired
+    # whenever the application wishes to veto a tree action in progress (e.g.
+    # double-clicking a non-leaf tree node normally opens or closes the node,
+    # but if you are handling the double-click event in your program, you may
+    # wish to veto the open or close operation). Be sure to fire the veto event
+    # in the event handler triggered by the operation (e.g. the 'dclick' event
+    # handler.
+    veto = Str
 
     # Mode for lines connecting tree nodes 
     #
@@ -167,6 +191,15 @@ class SimpleEditor ( Editor ):
 
     # The currently selected object
     selected = Any
+
+    # The event fired when a tree node is clicked on:
+    click = Event
+
+    # The event fired when a tree node is double-clicked on:
+    dclick = Event
+
+    # The event fired when the application wants to veto an operation:
+    veto = Event
 
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
@@ -260,6 +293,9 @@ class SimpleEditor ( Editor ):
 
         # Synchronize external object traits with the editor:
         self.sync_value( factory.selected, 'selected' )
+        self.sync_value( factory.click,    'click',  'to' )
+        self.sync_value( factory.dclick,   'dclick', 'to' )
+        self.sync_value( factory.veto,     'veto',   'from' )
 
     #---------------------------------------------------------------------------
     #  Handles the 'selection' trait being changed:
@@ -282,6 +318,15 @@ class SimpleEditor ( Editor ):
         """
         if not self._no_update_selected:
             self._selection_changed( selected )
+
+    #---------------------------------------------------------------------------
+    #  Handles the 'veto' event being fired:
+    #---------------------------------------------------------------------------
+
+    def _veto_changed ( self ):
+        """ Handles the 'veto' event being fired.
+        """
+        self._veto = True
 
     #---------------------------------------------------------------------------
     #  Disposes of the contents of an editor:
@@ -834,7 +879,22 @@ class SimpleEditor ( Editor ):
         self._update_icon(nid)
 
     #---------------------------------------------------------------------------
-    #  Handles a tree item being activated (i.e. double clicked):
+    #  Handles a tree item click:
+    #---------------------------------------------------------------------------
+
+    def _on_item_clicked(self, nid, col):
+        """ Handles a tree item being clicked.
+        """
+        _, node, object = self._get_node_data(nid)
+
+        if node.click(object) is True and self.factory.on_click is not None:
+            self.ui.evaluate(self.factory.on_click, object)
+
+        # Fire the 'click' event with the object as its value:
+        self.click = object
+
+    #---------------------------------------------------------------------------
+    #  Handles a tree item double click:
     #---------------------------------------------------------------------------
 
     def _on_item_dclicked(self, nid, col):
@@ -845,6 +905,12 @@ class SimpleEditor ( Editor ):
         if node.dclick(object) is True:
             if self.factory.on_dclick is not None:
                 self.ui.evaluate(self.factory.on_dclick, object)
+                self._veto = True
+        else:
+            self._veto = True
+
+        # Fire the 'dclick' event with the clicked on object as value:
+        self.dclick = object
 
     #---------------------------------------------------------------------------
     #  Handles a tree node being selected:
@@ -1446,6 +1512,9 @@ class _TreeWidget(QtGui.QTreeWidget):
                 editor._on_item_expanded)
         self.connect(self, QtCore.SIGNAL('itemCollapsed(QTreeWidgetItem *)'),
                 editor._on_item_collapsed)
+        self.connect(self,
+                QtCore.SIGNAL('itemClicked(QTreeWidgetItem *, int)'),
+                editor._on_item_clicked)
         self.connect(self,
                 QtCore.SIGNAL('itemDoubleClicked(QTreeWidgetItem *, int)'),
                 editor._on_item_dclicked)
