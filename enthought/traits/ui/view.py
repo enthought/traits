@@ -141,7 +141,6 @@ imports_trait = List( Str, desc = 'the categories of elements that can be '
                                   'dragged into the view' )
 
 # The view position and size traits:                    
-
 width_trait  = Float( -1E6,
                       desc = 'the width of the view window' )
 height_trait = Float( -1E6,
@@ -156,6 +155,10 @@ y_trait      = Float( -1E6,
 close_result_trait = Enum( None, True, False,
                          desc = 'the result to return when the user clicks the '
                                 'window or dialog close button or icon' )
+                                
+# The KeyBindings trait:
+key_bindings_trait = Instance( 'enthought.traits.ui.key_bindings.KeyBindings',
+                               desc = 'the global key bindings for the view' )
                     
 #-------------------------------------------------------------------------------
 #  'View' class:
@@ -195,6 +198,20 @@ class View ( ViewElement ):
     # Undo/Redo, Revert, OK, Cancel, Help). To suppress buttons in the view,
     # use the **NoButtons** variable, defined in **enthought.traits.ui.menu**.
     buttons = buttons_trait
+    
+    # The set of global key bindings for the view. Each time a key is pressed
+    # while the view has keyboard focus, the key is checked to see if it is one
+    # of the keys recognized by the KeyBindings object. If it is, the matching
+    # KeyBinding's method name is checked to see if it is defined on any of the
+    # object's in the view's context. If it is, the method is invoked. If the
+    # result of the method is **False**, then the search continues with the 
+    # next object in the context. If any invoked method returns a non-False
+    # value, processing stops and the key is marked as having been handled. If
+    # all invoked methods return **False**, or no matching KeyBinding object is 
+    # found, the key is processed normally. If the view has a non-empty *id*
+    # trait, the contents of the **KeyBindings** object will be saved as part
+    # of the view's persistent data:
+    key_bindings = key_bindings_trait
     
     # The menu bar for the view:
 #   menubar = menubar_trait

@@ -237,12 +237,12 @@ class Toolkit ( HasPrivateTraits ):
         raise NotImplementedError
 
     #---------------------------------------------------------------------------
-    #  Hooks all interesting events for all controls in a ui so that they can
-    #  be routed to the corrent event handler:
+    #  Hooks all specified events for all controls in a ui so that they can be
+    #  routed to the corrent event handler:
     #---------------------------------------------------------------------------
 
-    def hook_events ( self, ui, control ):
-        """ Hooks all interesting events for all controls in a UI so that they
+    def hook_events ( self, ui, control, events = None, handler = None ):
+        """ Hooks all specified events for all controls in a UI so that they
             can be routed to the correct event handler.
         """
         raise NotImplementedError

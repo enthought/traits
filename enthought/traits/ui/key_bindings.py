@@ -25,6 +25,9 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import View, HGroup, Item, ListEditor, KeyBindingEditor, toolkit
 
+from enthought.traits.trait_base \
+    import SequenceTypes
+    
 #-------------------------------------------------------------------------------
 #  Key binding trait definition:
 #-------------------------------------------------------------------------------
@@ -139,16 +142,34 @@ class KeyBindings ( HasStrictTraits ):
     #  Processes a keyboard event:  
     #---------------------------------------------------------------------------
         
-    def do ( self, event, controller, *args ):
+    def do ( self, event, controllers, *args ):
         """ Processes a keyboard event.
         """
+        if isinstance( controllers, dict ):
+            controllers = controllers.values()
+        elif not isinstance( controllers, SequenceTypes ):
+            controllers = ( controllers, )
+            
         key_name = toolkit().key_event_to_name( event )
         for binding in self.bindings:
             if (key_name == binding.binding1) or (key_name == binding.binding2):
                 method_name = '%s%s%s' % ( 
                               self.prefix, binding.method_name, self.suffix )
-                return (getattr( controller, method_name )( *args ) != 
-                        False)
+                for controller in controllers:
+                    method = getattr( controller, method_name, None )
+                    if method is not None:
+                        result = method( *args )
+                        if result is not False:
+                            return True
+                else:
+                    if binding.method_name == 'edit_bindings':
+                        self.edit_traits()
+                        return True
+                        
+                    return False
+                    
+                return True
+                
         return False
                 
     #---------------------------------------------------------------------------
@@ -209,7 +230,7 @@ class KeyBindings ( HasStrictTraits ):
         if old is not None:
             old.border_size = 0
             
-#-- object overrides -----------------------------------------------------------
+    #-- object Method Overrides ------------------------------------------------
 
     #---------------------------------------------------------------------------
     #  Restores the state of a previously pickled object:  

@@ -368,6 +368,11 @@ class UI ( HasPrivateTraits ):
         if isinstance( handler, ViewHandler ):
             toolkit().hook_events( self, self.control )
 
+        # If the view has key bindings, hook all keyboard events:            
+        if self.view.key_bindings is not None:
+            toolkit().hook_events( self, self.control, 'keys', 
+                                   self.key_handler )
+
         # Invoke the handler's 'init' method, and abort if it indicates failure:
         if handler.init( info ) == False:
             raise TraitError, 'User interface creation aborted'
@@ -446,6 +451,11 @@ class UI ( HasPrivateTraits ):
                     editor_prefs = prefs.get( name )
                     if editor_prefs != None:
                         editor.restore_prefs( editor_prefs )
+                        
+            if self.view.key_bindings is not None:
+                key_bindings = prefs.get( '$' )
+                if key_bindings is not None:
+                    self.view.key_bindings.merge( key_bindings )
 
             return prefs.get( '' )
 
@@ -475,6 +485,9 @@ class UI ( HasPrivateTraits ):
         ui_prefs = {}
         if prefs is not None:
             ui_prefs[''] = prefs
+            
+        if self.view.key_bindings is not None:
+            ui_prefs['$'] = self.view.key_bindings
 
         info = self.info  
         for name in self._names:
@@ -583,6 +596,16 @@ class UI ( HasPrivateTraits ):
         """ Routes a "hooked" event to the correct handler method.
         """
         toolkit().route_event( self, event )
+        
+    #---------------------------------------------------------------------------
+    #  Handles key events when the view has a set of KeyBindings:
+    #---------------------------------------------------------------------------
+    
+    def key_handler ( self, event ):
+        """ Handles key events when the view has a set of KeyBindings.
+        """
+        if self.view.key_bindings.do( event, self.context, self.info ) is False:
+            event.Skip()
 
     #---------------------------------------------------------------------------
     #  Evaluates a specified function in the UI's context:
