@@ -300,6 +300,15 @@ class TableColumn ( HasPrivateTraits ):
     
     def _themed_cell_renderer_default ( self ):
         return toolkit().themed_cell_renderer( self )
+        
+    #-- Private Methods --------------------------------------------------------
+    
+    def _get_renderer ( self, object, use_themes ):
+        result = self.get_renderer( object )
+        if (result is None) and use_themes:
+            result = self.themed_cell_renderer
+        
+        return result
 
 #-------------------------------------------------------------------------------
 #  'ObjectColumn' class:
