@@ -316,8 +316,13 @@ def panel ( ui, parent ):
 
         if len(content) == 1:
             # Fill the panel with the Group's content:
-            layout, _, _ = fill_panel_for_group(panel, content[0], ui)
-            panel.setLayout(layout)
+            sg_layout, _, _ = fill_panel_for_group(panel, content[0], ui)
+            layout = panel.layout()
+
+            if isinstance(sg_layout, QtGui.QWidget):
+                layout.addWidget(sg_layout)
+            elif layout is not sg_layout:
+                layout.addLayout(sg_layout)
 
         # Return the panel that was created:
         return panel
@@ -504,7 +509,7 @@ class FillPanel ( object ):
         is_splitter        = (layout == 'split')
         is_tabbed          = (layout == 'tabbed')
         id                 = group.id
-        
+
         # Assume our contents are not resizable:
         self.resizable = False
         
@@ -525,12 +530,7 @@ class FillPanel ( object ):
             (theme is not None)        or
             (group.visible_when != '') or
             (group.enabled_when != '')):
-            if theme is not None:
-                image_panel, image_sizer = add_image_panel( panel, group )
-                new_panel       = image_panel.control
-                suppress_label |= image_panel.can_show_text
-            else:
-                new_panel = QtGui.QWidget(panel)
+            new_panel = QtGui.QWidget(panel)
             sizer = panel.layout()
             if sizer is None:
                 sizer = QtGui.QVBoxLayout(panel)
@@ -627,10 +627,6 @@ class FillPanel ( object ):
         if is_dock_window:
             self.dock_contents = panel
 
-        # If we are using an background image, add the sizer to the image sizer:
-        if theme is not None:
-            image_sizer.Add( self.sizer, 1, wx.EXPAND )
-        
     #---------------------------------------------------------------------------
     #  Adds a set of groups or items separated by splitter bars to a QSplitter:
     #---------------------------------------------------------------------------

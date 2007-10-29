@@ -229,3 +229,9 @@ class IconButton(QtGui.QPushButton):
         self.setFocusPolicy(QtCore.Qt.NoFocus)
 
         QtCore.QObject.connect(self, QtCore.SIGNAL('clicked()'), slot)
+
+#-------------------------------------------------------------------------------
+#  Dock-related stubs.
+#-------------------------------------------------------------------------------
+
+DockStyle = Enum('horizontal', 'vertical', 'tab', 'fixed')

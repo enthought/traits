@@ -38,7 +38,7 @@ from editor \
     import Editor
     
 from helper \
-    import IconButton, UnboundedScrollArea
+    import DockStyle, IconButton, UnboundedScrollArea
 
 from menu \
     import MakeMenu
@@ -88,13 +88,11 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Are notebook items deletable?
     deletable = false
     
-    # The DockWindow graphical theme:
-    # FIXME: Document as unimplemented or wx specific.
-    #dock_theme = Instance( DockWindowTheme )
+    # The DockWindow graphical theme: ignored.
+    dock_theme = Any
     
     # Dock page style to use for each DockControl:
-    # FIXME: Document as unimplemented or wx specific.
-    #dock_style = DockStyle 
+    dock_style = DockStyle 
 
     # Export class for each item in a notebook:
     export = Str 
@@ -673,8 +671,8 @@ class NotebookEditor ( Editor ):
         # Delete the page corresponding to each removed item:
         page_name = self.factory.page_name[1:]
 
-        for object in event.removed:
-            page, _, monitoring = self._uis[index]
+        for i in event.removed:
+            page, object, monitoring = self._uis[index]
             if monitoring:
                 object.on_trait_change(self.update_page_name, page_name,
                         remove=True)
@@ -706,7 +704,7 @@ class NotebookEditor ( Editor ):
         if self._uis is not None:
             page_name = self.factory.page_name[1:]
 
-            for _, _, monitoring in self._uis:
+            for _, object, monitoring in self._uis:
                 if monitoring:
                     object.on_trait_change(self.update_page_name, page_name,
                             remove=True)
