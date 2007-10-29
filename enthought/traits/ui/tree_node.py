@@ -98,6 +98,9 @@ class TreeNode ( HasPrivateTraits ):
     # Function for handling selecting an object
     on_select = Callable
     
+    # Function for handling clicking an object
+    on_click = Callable
+    
     # Function for handling double-clicking an object
     on_dclick = Callable
     
@@ -477,6 +480,20 @@ class TreeNode ( HasPrivateTraits ):
         if self.on_select is not None:
             self.on_select( object )
             return None
+            
+        return True
+        
+    #---------------------------------------------------------------------------
+    #  Handles an object being clicked:
+    #---------------------------------------------------------------------------
+       
+    def click ( self, object ):
+        """ Handles an object being clicked.
+        """
+        if self.on_click is not None:
+            self.on_click( object )
+            return None
+            
         return True
         
     #---------------------------------------------------------------------------
@@ -489,6 +506,7 @@ class TreeNode ( HasPrivateTraits ):
         if self.on_dclick is not None:
             self.on_dclick( object )
             return None
+            
         return True
         
     #---------------------------------------------------------------------------
@@ -501,6 +519,7 @@ class TreeNode ( HasPrivateTraits ):
         for item in self.add:
             if type( item ) in SequenceTypes:
                 item = item[0]
+                
             if issubclass( klass, item ):
                 return True
        
@@ -538,6 +557,7 @@ class TreeNode ( HasPrivateTraits ):
         """
         if for_insert and (not self.can_insert( object )):
             return False
+            
         return self.can_add( object, add_object )
                            
     #---------------------------------------------------------------------------
@@ -550,6 +570,7 @@ class TreeNode ( HasPrivateTraits ):
         new_object = self.drop_object( object, dropped_object )
         if (new_object is not dropped_object) or (not make_copy):
             return new_object
+            
         return copy.deepcopy( new_object )
         
 #-------------------------------------------------------------------------------
@@ -861,6 +882,15 @@ class ObjectTreeNode ( TreeNode ):
         """ Handles an object being selected.
         """
         return object.tno_select( self )
+        
+    #---------------------------------------------------------------------------
+    #  Handles an object being clicked:
+    #---------------------------------------------------------------------------
+       
+    def click ( self, object ):
+        """ Handles an object being clicked.
+        """
+        return object.tno_click( self )
         
     #---------------------------------------------------------------------------
     #  Handles an object being double-clicked:
@@ -1218,6 +1248,20 @@ class TreeNodeObject ( HasPrivateTraits ):
         if node.on_select is not None:
             node.on_select( self )
             return None
+            
+        return True
+        
+    #---------------------------------------------------------------------------
+    #  Handles an object being clicked:
+    #---------------------------------------------------------------------------
+       
+    def tno_click ( self, node ):
+        """ Handles an object being clicked.
+        """
+        if node.on_click is not None:
+            node.on_click( self )
+            return None
+            
         return True
         
     #---------------------------------------------------------------------------
@@ -1230,6 +1274,7 @@ class TreeNodeObject ( HasPrivateTraits ):
         if node.on_dclick is not None:
             node.on_dclick( self )
             return None
+            
         return True
     
 #-------------------------------------------------------------------------------
@@ -1496,6 +1541,15 @@ class MultiTreeNode ( TreeNode ):
         """ Handles an object being selected.
         """
         return self.root_node.select( object )
+        
+    #---------------------------------------------------------------------------
+    #  Handles an object being clicked:
+    #---------------------------------------------------------------------------
+       
+    def click ( self, object ):
+        """ Handles an object being clicked.
+        """
+        return self.root_node.click( object )
         
     #---------------------------------------------------------------------------
     #  Handles an object being double-clicked:
