@@ -1,22 +1,23 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-#
-# Author: David C. Morrill
-# Date: 10/07/2004
-#
-#  Symbols defined: UI
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   10/07/2004
 #
 #------------------------------------------------------------------------------
+
 """ Defines the UI class used to represent an active traits-based user 
-interface.
+    interface.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
@@ -28,8 +29,8 @@ from types \
     import FunctionType
 
 from enthought.traits.api \
-    import Trait, HasPrivateTraits, ReadOnly, DictStrAny, Any, List, Int, \
-           TraitError, false, Property, Bool, Event, Callable, Str
+    import Trait, HasPrivateTraits, DictStrAny, Any, List, Int, Instance, \
+           TraitError, Property, Bool, Event, Callable, Str
 
 from enthought.traits.trait_base \
     import traits_home
@@ -41,7 +42,7 @@ from view_elements \
     import ViewElements
 
 from handler \
-    import ViewHandler
+    import Handler, ViewHandler
 
 from toolkit \
     import toolkit
@@ -63,56 +64,55 @@ from group \
 kind_must_have_parent = ( 'panel', 'subpanel' )
 
 #-------------------------------------------------------------------------------
-#  Trait definitions:
-#-------------------------------------------------------------------------------
-
-# ViewElements that a View is associated with
-view_elements_trait = Trait( None, ViewElements,
-     desc = 'the ViewElements collection this UI resolves Include items from' )
-
-#-------------------------------------------------------------------------------
 #  'UI' class:
 #-------------------------------------------------------------------------------
 
 class UI ( HasPrivateTraits ):
     """ Information about the user interface for a View.
     """
+    
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
     # The ViewElements object from which this UI resolves Include items
-    view_elements = view_elements_trait
+    view_elements = Instance( ViewElements )
 
     # Context objects that the UI is editing
     context = DictStrAny
 
     # Handler object used for event handling
-    handler = ReadOnly
+    handler = Instance( Handler )
 
     # View template used to construct the user interface
-    view = ReadOnly
+    view = Instance( 'enthought.traits.ui.view.View' )
 
     # Panel or dialog associated with the user interface
     control = Any
+    
+    # The parent UI (if any) of this UI
+    parent = Instance( 'UI' )
 
     # Toolkit-specific object that "owns" **control**
     owner = Any
 
     # UIInfo object containing context or editor objects
-    info = ReadOnly
+    info = Instance( UIInfo )
 
     # Result from a modal or wizard dialog:
-    result = false
+    result = Bool( False )
 
     # Undo and Redo history
     history = Any
+    
+    # The KeyBindings object (if any) for this UI:
+    key_bindings = Instance( 'enthought.traits.ui.key_bindings.KeyBindings' )
 
     # The unique ID for this UI for persistence
     id = Str
 
     # Have any modifications been made to UI contents?
-    modified = false
+    modified = Bool( False )
 
     # Event when the user interface has changed
     updated = Event( Bool )
@@ -124,7 +124,7 @@ class UI ( HasPrivateTraits ):
     icon = Any
 
     # Should the created UI have scroll bars?
-    scrollable = false
+    scrollable = Bool( False )
 
     # The number of currently pending editor error conditions
     errors = Int
@@ -132,7 +132,7 @@ class UI ( HasPrivateTraits ):
     # The code used to rebuild an updated user interface
     rebuild = Callable
 
-    # Private traits:
+    #-- Private Traits ---------------------------------------------------------
 
     # Original context when used with a modal dialog
     _context = DictStrAny
@@ -180,15 +180,17 @@ class UI ( HasPrivateTraits ):
     #
     # The _scrollable trait is set correctly, but not used currently because
     # its value is arrived at too late to be of use in building the UI.
-    _scrollable = false
+    _scrollable = Bool( False )
 
     # List of traits that are thrown away when a user interface is disposed.
     disposable_traits = [
-        'control', '_context', '_revert', '_defined', '_visible', '_enabled',
-        '_checked', '_search', '_dispatchers', '_editors', '_names',
-        '_active_group', '_groups', '_undoable'
+        'view_elements', 'info', 'parent', 'control', 'handler', 'context',
+        '_context', 'view', 'owner', 'history', 'key_bindings', 'icon',
+        'rebuild', '_revert', '_defined', '_visible', '_enabled', '_checked', 
+        '_search', '_dispatchers', '_editors', '_names', '_active_group', 
+        '_groups', '_undoable', '_rebuild', '__groups'
     ]
-
+    
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
@@ -197,8 +199,19 @@ class UI ( HasPrivateTraits ):
         """ Initializes the object.
         """
         super( UI, self ).__init__( **traits )
+        
         self.info = UIInfo( ui = self )
         self.handler.init_info( self.info )
+
+        # Get the KeyBindings object to use:
+        values       = self.context.values()
+        key_bindings = self.view.key_bindings
+        if key_bindings is None:
+            from enthought.traits.ui.key_bindings import KeyBindings
+            
+            self.key_bindings = KeyBindings( controllers = values)
+        else:
+            self.key_bindings = key_bindings.clone( controllers = values )
 
     #---------------------------------------------------------------------------
     #  Creates a user interface from the associated View template object:
@@ -209,10 +222,10 @@ class UI ( HasPrivateTraits ):
         """
         if (parent is None) and (kind in kind_must_have_parent):
             kind = 'live'
-        self.rebuild = getattr( toolkit(), 'ui_' + kind )
-        self.rebuild( self, parent )
         self.view.on_trait_change( self._updated_changed, 'updated',
                                    dispatch = 'ui' )
+        self.rebuild = getattr( toolkit(), 'ui_' + kind )
+        self.rebuild( self, parent )
 
     #---------------------------------------------------------------------------
     #  Disposes of the contents of a user interface:
@@ -227,9 +240,6 @@ class UI ( HasPrivateTraits ):
 
         # Finish disposing of the user interface:
         self.finish( result )
-        
-        # Break the linkage to any objects in the context dictionary:
-        self.context.clear()
 
     #---------------------------------------------------------------------------
     #  Finishes a user interface:
@@ -249,15 +259,21 @@ class UI ( HasPrivateTraits ):
         # Destroy the view control:        
         self.control._object = None
         toolkit().destroy_control( self.control )
-        self.__groups = None
+        
+        # Clear the back-link from the UIInfo object to us:
+        self.info.ui = None
 
+        # Dispose of any KeyBindings object we reference:
+        self.key_bindings.dispose()
+            
+        # Break the linkage to any objects in the context dictionary:
+        self.context.clear()
+        
+        # Remove specified symbols from our dictionary to aid in clean-up:
         dict = self.__dict__
         for name in self.disposable_traits:
             if name in dict:
                 del dict[ name ]
-
-        # Break the circular reference so objects can be garbage collected:
-        self.info.ui = None
 
     #---------------------------------------------------------------------------
     #  Resets the contents of the user interface:
@@ -353,7 +369,7 @@ class UI ( HasPrivateTraits ):
 
     def prepare_ui ( self ):
         """ Performs all processing that occurs after the user interface is 
-        created.
+            created.
         """
         # Invoke all of the editor 'name_defined' methods we've accumulated:
         info = self.info
@@ -363,15 +379,13 @@ class UI ( HasPrivateTraits ):
         # Then reset the list, since we don't need it anymore:
         del self._defined[:]
 
+        # Hook all keyboard events: 
+        toolkit().hook_events( self, self.control, 'keys', self.key_handler )
+
         # Hook all events if the handler is an extended 'ViewHandler':
         handler = self.handler
         if isinstance( handler, ViewHandler ):
             toolkit().hook_events( self, self.control )
-
-        # If the view has key bindings, hook all keyboard events:            
-        if self.view.key_bindings is not None:
-            toolkit().hook_events( self, self.control, 'keys', 
-                                   self.key_handler )
 
         # Invoke the handler's 'init' method, and abort if it indicates failure:
         if handler.init( info ) == False:
@@ -452,10 +466,10 @@ class UI ( HasPrivateTraits ):
                     if editor_prefs != None:
                         editor.restore_prefs( editor_prefs )
                         
-            if self.view.key_bindings is not None:
+            if self.key_bindings is not None:
                 key_bindings = prefs.get( '$' )
                 if key_bindings is not None:
-                    self.view.key_bindings.merge( key_bindings )
+                    self.key_bindings.merge( key_bindings )
 
             return prefs.get( '' )
 
@@ -486,8 +500,8 @@ class UI ( HasPrivateTraits ):
         if prefs is not None:
             ui_prefs[''] = prefs
             
-        if self.view.key_bindings is not None:
-            ui_prefs['$'] = self.view.key_bindings
+        if self.key_bindings is not None:
+            ui_prefs['$'] = self.key_bindings
 
         info = self.info  
         for name in self._names:
@@ -601,11 +615,19 @@ class UI ( HasPrivateTraits ):
     #  Handles key events when the view has a set of KeyBindings:
     #---------------------------------------------------------------------------
     
-    def key_handler ( self, event ):
-        """ Handles key events when the view has a set of KeyBindings.
+    def key_handler ( self, event, skip = True ):
+        """ Handles key events.
         """
-        if self.view.key_bindings.do( event, self.context, self.info ) is False:
+        handled = self.key_bindings.do( event, [], self.info, 
+                                        recursive = (self.parent is None) )
+            
+        if (not handled) and (self.parent is not None):
+            handled = self.parent.key_handler( event, False )
+            
+        if (not handled) and skip:
             event.Skip()
+            
+        return handled
 
     #---------------------------------------------------------------------------
     #  Evaluates a specified function in the UI's context:
@@ -741,6 +763,16 @@ class UI ( HasPrivateTraits ):
     def _icon_changed ( self ):
         if self.control is not None:
             toolkit().set_icon( self )
+            
+    def _parent_changed ( self, parent ):
+        if parent is not None:
+            # If we don't have our own history, use our parent's:
+            if self.history is None:
+                self.history = parent.history
+                
+            # Link our KeyBindings object as a child of our parent's 
+            # KeyBindings object:
+            parent.key_bindings.children.append( self.key_bindings )
 
 #-------------------------------------------------------------------------------
 #  'Dispatcher' class:

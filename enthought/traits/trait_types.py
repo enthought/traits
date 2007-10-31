@@ -870,8 +870,8 @@ class BaseFile ( BaseStr ):
     # A description of the type of value this trait accepts:
     info_text = 'a file name'
     
-    def __init__ ( self, value = '', filter = None, auto_set = False,
-                   **metadata ):
+    def __init__ ( self, value = '', filter = None, auto_set = False, 
+                         entries = 0, **metadata ):
         """ Creates a File trait.
 
         Parameters
@@ -892,7 +892,8 @@ class BaseFile ( BaseStr ):
         from enthought.traits.ui.editors import FileEditor
         
         metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
-                                                   auto_set = auto_set ) )
+                                                   auto_set = auto_set,
+                                                   entries  = entries ) )
         super( BaseFile, self ).__init__( value, **metadata )
 
         
