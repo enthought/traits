@@ -22,7 +22,7 @@ from os.path \
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import List, Str, Event, Bool, Unicode
+    import List, Str, Event, Bool, Int, Unicode
     
 from enthought.traits.ui.api \
     import View, Group
@@ -66,7 +66,11 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Is user input set when the Enter key is pressed? (Overrides the default)
     # ('simple' style only):
     enter_set = True
-    
+
+    # The number of history entries to maintain:
+    # FIXME: add support
+    entries = Int( 10 )
+
     # Optional extended trait name used to notify the editor when the file 
     # system view should be reloaded ('custom' style only):
     reload_name = Str
@@ -125,23 +129,25 @@ class SimpleEditor ( SimpleTextEditor ):
         layout = QtGui.QHBoxLayout(panel)
         layout.setMargin(0)
 
-        self._filename = text = QtGui.QLineEdit()
+        self._file_name = control = QtGui.QLineEdit()
 
         if self.factory.auto_set:
-            QtCore.QObject.connect(text,
+            QtCore.QObject.connect(control,
                     QtCore.SIGNAL('textEdited(QString)'), self.update_object)
         else:
             # Assume enter_set is set, otherwise the value will never get
             # updated.
-            QtCore.QObject.connect(text, QtCore.SIGNAL('editingFinished()'),
+            QtCore.QObject.connect(control, QtCore.SIGNAL('editingFinished()'),
                     self.update_object)
 
-        layout.addWidget(text)
+        layout.addWidget(control)
 
         button = QtGui.QPushButton("Browse...")
         QtCore.QObject.connect(button, QtCore.SIGNAL('clicked()'),
                 self.show_file_dialog)
         layout.addWidget(button)
+
+        self.set_tooltip(control)
 
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
@@ -150,15 +156,8 @@ class SimpleEditor ( SimpleTextEditor ):
     def update_object(self):
         """ Handles the user changing the contents of the edit control.
         """
-        try:
-            filename = unicode(self._filename.text())
-            if self.factory.truncate_ext:
-                filename = splitext( filename )[0]
-                
-            self.value = filename
-        except TraitError, excp:
-            pass
-        
+        self._update(unicode(self._file_name.text()))
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
@@ -167,7 +166,7 @@ class SimpleEditor ( SimpleTextEditor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        self._filename.setText(self.str_value)
+        self._file_name.setText(self.str_value)
        
     #---------------------------------------------------------------------------
     #  Displays the pop-up file dialog:
@@ -179,35 +178,44 @@ class SimpleEditor ( SimpleTextEditor ):
         # We don't used the canned functions because we don't know how the
         # file name is to be used (ie. an existing one to be opened or a new
         # one to be created).
-        dlg = self.create_file_dialog()
+        dlg = self._create_file_dialog()
 
         if dlg.exec_() == QtGui.QDialog.Accepted:
             files = dlg.selectedFiles()
 
             if len(files) > 0:
-                filename = unicode(files[0])
+                file_name = unicode(files[0])
 
                 if self.factory.truncate_ext:
-                    filename = splitext(filename)[0]
+                    file_name = splitext(file_name)[0]
 
-                self.value = filename
+                self.value = file_name
                 self.update_editor()
 
-    #---------------------------------------------------------------------------
-    #  Creates the correct type of file dialog:
-    #---------------------------------------------------------------------------
-           
-    def create_file_dialog ( self ):
+    #-- Private Methods --------------------------------------------------------
+
+    def _create_file_dialog ( self ):
         """ Creates the correct type of file dialog.
         """
         dlg = QtGui.QFileDialog(self.control)
-        dlg.selectFile(self._filename.text())
+        dlg.selectFile(self._file_name.text())
 
         if len(self.factory.filter) > 0:
             dlg.setFilters(self.factory.filter)
             
         return dlg
-                                      
+
+    def _update ( self, file_name ):
+        """ Updates the editor value with a specified file name.
+        """
+        try:
+            if self.factory.truncate_ext:
+                file_name = splitext( file_name )[0]
+
+            self.value = file_name
+        except TraitError, excp:
+            pass
+
 #-------------------------------------------------------------------------------
 #  'CustomEditor' class:
 #-------------------------------------------------------------------------------
@@ -293,14 +301,15 @@ class CustomEditor ( SimpleTextEditor ):
 #  '_TreeView' class:
 #-------------------------------------------------------------------------------
 
-class _TreeView(QtGui.QTreeWidget):
+class _TreeView(QtGui.QTreeView):
     """ This is an internal class needed because QAbstractItemView (for some
-        strange reason) does provide a signal when the current index changes.
+        strange reason) doesn't provide a signal when the current index
+        changes.
     """
 
     def __init__(self, editor, parent):
 
-        QtGui.QTreeWidget.__init__(self, parent)
+        QtGui.QTreeView.__init__(self, parent)
 
         self._editor = editor
 
@@ -309,6 +318,6 @@ class _TreeView(QtGui.QTreeWidget):
             changed.
         """
 
-        QtGui.QTreeWidget.currentChanged(self, curr, prev)
+        QtGui.QTreeView.currentChanged(self, curr, prev)
 
         self._editor.update_object(curr)

@@ -344,6 +344,17 @@ class GUIToolkit ( Toolkit ):
         return key_event_to_name.key_event_to_name( event )
 
     #---------------------------------------------------------------------------
+    #  Hooks all specified events for all controls in a ui so that they can be
+    #  routed to the corrent event handler:
+    #---------------------------------------------------------------------------
+
+    def hook_events ( self, ui, control, events = None, handler = None ):
+        """ Hooks all specified events for all controls in a UI so that they
+            can be routed to the correct event handler.
+        """
+        pass
+
+    #---------------------------------------------------------------------------
     #  Destroys a specified GUI toolkit control:  
     #---------------------------------------------------------------------------
     

@@ -47,7 +47,10 @@ class KeyBindingEditor ( Editor ):
     
     # Keyboard event
     key = Event
-        
+
+    # Clear field event
+    clear = Event
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
@@ -114,6 +117,15 @@ class KeyBindingEditor ( Editor ):
                 return
                 
         self.value = key_name
+
+    #---------------------------------------------------------------------------
+    #  Handles a clear field event:
+    #---------------------------------------------------------------------------
+
+    def _clear_changed ( self ):
+        """ Handles a clear field event.
+        """
+        self.value = ''
 
 #-------------------------------------------------------------------------------
 #  Create the editor factory object:
@@ -202,3 +214,12 @@ class KeyBindingCtrl(QtGui.QLabel):
         """
         self.editor.has_focus = False
         self.update()
+
+    #---------------------------------------------------------------------------
+    #  Handles the user double clicking the control to clear its contents:
+    #---------------------------------------------------------------------------
+
+    def mouseDoubleClickEvent(self, event):
+        """ Handles the user double clicking the control to clear its contents.
+        """
+        self.editor.clear = True

@@ -30,7 +30,10 @@ from enthought.traits.ui.ui_traits \
     
 from enthought.traits.ui.helper \
     import user_name_for
-    
+
+from enthought.traits.ui.handler \
+    import Handler
+
 from enthought.traits.ui.instance_choice \
     import InstanceChoice, InstanceChoiceItem
 
@@ -413,14 +416,17 @@ class CustomEditor ( Editor ):
             else:
                 view    = self.view_for( value, self.item_for( value ) )
                 context = value.trait_context()
+                handler = None
+                if isinstance( value, Handler ):
+                    handler = value
                 context.setdefault( 'context', self.object )
                 self._ui = ui = view.ui( context, panel, 'subpanel', 
-                                         id = self.factory.id )
-                control  = ui.control
+                                         value.trait_view_elements(), handler,
+                                         self.factory.id )
+                control         = ui.control
                 self.scrollable = ui._scrollable
-                
-                # Chain the sub-panel's undo history to ours:
-                ui.history = self.ui.history
+                ui.parent       = self.ui
+
                 if view.resizable or view.scrollable or ui._scrollable:
                     stretch = 1
                     

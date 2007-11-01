@@ -958,17 +958,19 @@ class SimpleEditor ( Editor ):
                 view = node.get_view( object )
                 if view is None:
                     view = object.trait_view()
-                history = self.ui.history
-                if (history is not None) or (view.kind == 'subpanel'):
+                if (self.ui.history is not None) or (view.kind == 'subpanel'):
                     ui = object.edit_traits( parent = editor,
                                              view   = view,
                                              kind   = 'subpanel' )
-                    ui.history = history
                 else:
                     # Otherwise, just set up our own new one:
                     ui = object.edit_traits( parent = editor,
                                              view   = view,
                                              kind   = 'panel' )
+
+
+                # Make our UI the parent of the new UI:
+                ui.parent = self.ui
 
                 # Remember the new editor's UI and node info:
                 editor._node_ui    = ui

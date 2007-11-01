@@ -275,18 +275,11 @@ class SimpleEditor ( Editor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
+        # Disconnect the editor from any control about to be destroyed:        
+        self._dispose_items()
+
         list_pane = self._list_pane
         layout = list_pane.layout()
-        editor = self._editor
-
-        # Disconnect the editor from any control about to be destroyed:        
-        for control in list_pane.children():
-            if hasattr( control, '_editor' ):
-                control._editor.dispose()
-                control._editor.control = None
-            elif control is not layout:
-                control.setParent(None)
-        del control
 
         # Create all of the list item trait editors:
         trait_handler = self._trait_handler
@@ -300,6 +293,7 @@ class SimpleEditor ( Editor ):
         if is_fake:
             values = [ item_trait.default_value()[1] ]
 
+        editor = self._editor
         for value in values:
             if resizable:       
                 control = IconButton('list_editor.png', self.popup_menu)
@@ -360,6 +354,9 @@ class SimpleEditor ( Editor ):
         # Otherwise, find the proxy for this index and update it with the 
         # changed value: 
         for control in self.control.widget().children():
+            if isinstance(control, QtGui.QLayout):
+                continue
+
             proxy = control.proxy
             if proxy.index == event.index:
                 proxy.value = event.added[0]
@@ -545,7 +542,24 @@ class SimpleEditor ( Editor ):
         """
         list, index = self.get_info()
         self.value  = list[:index] + list[index+1:] + [ list[index] ] 
-                                      
+
+    #-- Private Methods --------------------------------------------------------
+
+    def _dispose_items ( self ):
+        """ Disposes of each current list item.
+        """
+        list_pane = self._list_pane
+        layout = list_pane.layout()
+
+        for control in list_pane.children():
+            if hasattr( control, '_editor' ):
+                control._editor.dispose()
+                control._editor.control = None
+            elif control is not layout:
+                control.setParent(None)
+
+        del control
+
 #-------------------------------------------------------------------------------
 #  'CustomEditor' class:
 #-------------------------------------------------------------------------------
@@ -759,10 +773,8 @@ class NotebookEditor ( Editor ):
         # Create the view for the object:
         ui = object.edit_traits( parent = self.control,
                                  view   = self.factory.view,
-                                 kind   = 'subpanel' )
-
-        # Chain the sub-panel's undo history to ours:
-        ui.history = self.ui.history
+                                 kind   = 'subpanel' ).set(
+                                 parent = self.ui )
 
         # Get the name of the page being added to the notebook:
         name       = ''

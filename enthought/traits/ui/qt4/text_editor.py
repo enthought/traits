@@ -19,7 +19,7 @@ PyQt user interface toolkit.
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import Dict, Str, Any, true, false, TraitError
+    import Dict, Str, Any, Bool, TraitError
     
 from enthought.traits.ui.api \
     import View, Group
@@ -69,16 +69,16 @@ class ToolkitEditorFactory ( EditorFactory ):
     mapping = mapping_trait
     
     # Is user input set on every keystroke?
-    auto_set = true
+    auto_set = Bool( True )
     
     # Is user input set when the Enter key is pressed?
-    enter_set = false
+    enter_set = Bool( False )
     
     # Is multi-line text allowed?
-    multi_line = true
+    multi_line = Bool( True )
     
     # Is user input unreadable? (e.g., for a password)
-    password = false
+    password = Bool( False )
     
     # Function to evaluate textual user input
     evaluate = evaluate_trait
