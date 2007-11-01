@@ -203,15 +203,16 @@ class UI ( HasPrivateTraits ):
         self.info = UIInfo( ui = self )
         self.handler.init_info( self.info )
 
-        # Get the KeyBindings object to use:
-        values       = self.context.values()
-        key_bindings = self.view.key_bindings
-        if key_bindings is None:
-            from enthought.traits.ui.key_bindings import KeyBindings
-            
-            self.key_bindings = KeyBindings( controllers = values)
-        else:
-            self.key_bindings = key_bindings.clone( controllers = values )
+        if self.view is not None:
+            # Get the KeyBindings object to use:
+            values       = self.context.values()
+            key_bindings = self.view.key_bindings
+            if key_bindings is None:
+                from enthought.traits.ui.key_bindings import KeyBindings
+                
+                self.key_bindings = KeyBindings( controllers = values)
+            else:
+                self.key_bindings = key_bindings.clone( controllers = values )
 
     #---------------------------------------------------------------------------
     #  Creates a user interface from the associated View template object:
