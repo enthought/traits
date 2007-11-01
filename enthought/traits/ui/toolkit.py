@@ -132,6 +132,12 @@ class Toolkit ( HasPrivateTraits ):
         """
         raise NotImplementedError
 
+    def ui_popup ( self, ui, parent ):
+        """ Creates a GUI-toolkit-specific modal "live update" popup dialog user
+            interface using information from the specified UI object.
+        """
+        raise NotImplementedError
+
     def ui_wizard ( self, ui, parent ):
         """ Creates a GUI-toolkit-specific wizard dialog user interface using
             information from the specified UI object.

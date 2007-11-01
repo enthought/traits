@@ -94,14 +94,15 @@ title_trait = Str( desc = 'the window title for the view' )
 #   until the user commits the change
 # * 'live': A nonmodal dialog box that immediately updates the object.
 # * 'livemodal': A modal dialog box that immediately updates the object.
+# * 'popup': A temporary, frameless popup dialog that immediately updates the 
+#   object.
 # * 'wizard': A wizard modal dialog box. A wizard contains a sequence of 
 #   pages, which can be accessed by clicking **Next** and **Back** buttons. 
 #   Changes to attribute values are applied only when the user clicks the
 #   **Finish** button on the last page.
-kind_trait = Trait( 'live', 
-                    TraitPrefixList( 'panel', 'subpanel', 
-                                     'modal', 'nonmodal',
-                                     'livemodal', 'live', 'wizard' ), 
+kind_trait = Trait( 'live', TraitPrefixList( 
+                                'panel', 'subpanel', 'modal', 'nonmodal',
+                                'livemodal', 'live', 'popup', 'wizard' ), 
                     desc = 'the kind of view window to create',
                     cols = 4 )
            
