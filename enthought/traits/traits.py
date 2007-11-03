@@ -588,7 +588,7 @@ Event = TraitFactory( Event )
 
 def Button ( label = '', image = None, style = 'button',
              orientation = 'vertical', width_padding = 7, height_padding = 5,
-             **metadata ):
+             view = None, **metadata ):
     """ Returns a trait event whose editor is a button.
 
     Parameters
@@ -620,6 +620,7 @@ def Button ( label = '', image = None, style = 'button',
                                orientation    = orientation,
                                width_padding  = width_padding,
                                height_padding = height_padding,
+                               view           = view,
                                **metadata ) )
 
 Button = TraitFactory( Button )
