@@ -37,6 +37,15 @@ from enthought.traits.ui.menu \
     import UndoButton, RevertButton, OKButton, CancelButton, HelpButton
 
 #-------------------------------------------------------------------------------
+#  Constants:
+#-------------------------------------------------------------------------------
+
+# Types of supported windows:
+NONMODAL = 0
+MODAL    = 1
+POPUP    = 2
+
+#-------------------------------------------------------------------------------
 #  Creates a 'live update' PyQt user interface for a specified UI object:
 #-------------------------------------------------------------------------------
 
@@ -44,21 +53,29 @@ def ui_live ( ui, parent ):
     """ Creates a live, non-modal PyQt user interface for a specified UI
     object.
     """
-    ui_dialog( ui, parent, False )
+    ui_dialog( ui, parent, NONMODAL )
 
 def ui_livemodal ( ui, parent ):
     """ Creates a live, modal PyQt user interface for a specified UI object.
     """
-    ui_dialog( ui, parent, True )
+    ui_dialog( ui, parent, MODAL )
 
-def ui_dialog ( ui, parent, is_modal ):
+def ui_popup ( ui, parent ):
+    """ Creates a live, modal popup PyQt user interface for a specified UI
+        object.
+    """
+    ui_dialog( ui, parent, POPUP )
+
+def ui_dialog ( ui, parent, style ):
     """ Creates a live PyQt user interface for a specified UI object.
     """
     if ui.owner is None:
         ui.owner = LiveWindow()
-    ui.owner.init( ui, parent, is_modal )
+
+    ui.owner.init( ui, parent, style )
     ui.control = ui.owner.control
     ui.control._parent = parent
+
     try:
         ui.prepare_ui()
     except:
@@ -68,9 +85,11 @@ def ui_dialog ( ui, parent, is_modal ):
         ui.owner      = None
         ui.result     = False
         raise
+
     ui.handler.position( ui.info )
     restore_window( ui )
-    if is_modal:
+
+    if style == MODAL:
         ui.control.exec_()
     else:
         ui.control.show()
@@ -87,7 +106,10 @@ class LiveWindow ( BaseDialog ):
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def init ( self, ui, parent, is_modal ):
+    def init ( self, ui, parent, style ):
+        # FIXME: Note that we treat MODAL and POPUP as equivalent until we have
+        # an example that demonstrates how POPUP is supposed to work.
+        self.is_modal = (style != NONMODAL)
         view = ui.view
         history = ui.history
         window = ui.control
@@ -116,7 +138,7 @@ class LiveWindow ( BaseDialog ):
 
             window = QtGui.QDialog(parent, flags)
 
-            window.setModal(is_modal)
+            window.setModal(self.is_modal)
 
             if view.title != '':
                 window.setWindowTitle(view.title)
@@ -242,6 +264,8 @@ class LiveWindow ( BaseDialog ):
         """ Closes the dialog window.
         """
         save_window(self.ui)
+        if self.is_modal:
+            self.control.done(rc)
         self.ui.finish(rc)
         self.ui = self.undo = self.redo = self.revert = self.control = None
 
