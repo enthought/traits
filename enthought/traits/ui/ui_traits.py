@@ -89,17 +89,22 @@ def convert_image ( value, level = 3 ):
     if not isinstance( value, basestring ):
         return value
         
-    if value[:1] == '@':
-        value       = value[1:] 
-        search_path = join( get_resource_path( 1 ), 'library' )
-    else:   
+    key             = value
+    is_traits_image = (value[:1] == '@')
+    if not is_traits_image:
         search_path = get_resource_path( level )
+        key         = '%s[%s]' % ( value, search_path )
         
-    key    = '%s[%s]' % ( value, search_path )
     result = image_resource_cache.get( key )
     if result is None:
-        image_resource_cache[ key ] = result = ImageResource( value, 
-                                                 search_path = [ search_path ] )
+        if is_traits_image:
+            from image import ImageLibrary
+            
+            result = ImageLibrary.image_resource( value )
+        else:
+            result = ImageResource( value, search_path = [ search_path ] )
+            
+        image_resource_cache[ key ] = result
             
     return result
     
@@ -308,6 +313,6 @@ Spacing = Range( -32, 32, 3 )
 #  Other definitions:
 #-------------------------------------------------------------------------------
 
-# Types that represent sequences
+# Types that represent sequences:
 SequenceTypes = ( tuple, list )
 
