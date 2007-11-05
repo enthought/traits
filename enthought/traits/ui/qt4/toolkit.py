@@ -364,6 +364,30 @@ class GUIToolkit ( Toolkit ):
         control.setParent(None)
 
     #---------------------------------------------------------------------------
+    #  Destroys all of the child controls of a specified GUI toolkit control:
+    #---------------------------------------------------------------------------
+
+    def destroy_children ( self, control ):
+        """ Destroys all of the child controls of a specified GUI toolkit
+            control.
+        """
+        for w in control.children():
+            # Only destroy widgets.
+            if isinstance(w, QtGui.QWidget):
+                w.setParent(None)
+
+    #---------------------------------------------------------------------------
+    #  Returns a ( width, height ) tuple containing the size of a specified
+    #  toolkit image:
+    #---------------------------------------------------------------------------
+
+    def image_size ( self, image ):
+        """ Returns a ( width, height ) tuple containing the size of a
+            specified toolkit image.
+        """
+        return ( image.width(), image.height() )
+
+    #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:
     #---------------------------------------------------------------------------
 
