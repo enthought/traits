@@ -282,6 +282,17 @@ class Toolkit ( HasPrivateTraits ):
         raise NotImplementedError
         
     #---------------------------------------------------------------------------
+    #  Returns a ( width, height ) tuple containing the size of a specified
+    #  toolkit image:
+    #---------------------------------------------------------------------------
+    
+    def image_size ( self, image ):
+        """ Returns a ( width, height ) tuple containing the size of a 
+            specified toolkit image.
+        """
+        raise NotImplementedError
+        
+    #---------------------------------------------------------------------------
     #  Returns a renderer used to render 'themed' table cells for a specified 
     #  TableColumn object:
     #---------------------------------------------------------------------------

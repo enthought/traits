@@ -34,8 +34,8 @@ from zipfile \
     import is_zipfile, ZipFile, ZIP_DEFLATED
     
 from enthought.traits.api \
-    import HasPrivateTraits, HasStrictTraits, Property, Str, Int, List, Dict, \
-           File, Instance, Bool, cached_property
+    import HasPrivateTraits, Property, Str, Int, List, Dict, File, Instance, \
+           Bool, cached_property
            
 from enthought.traits.trait_base \
     import get_resource_path
@@ -51,6 +51,16 @@ from enthought.pyface.resource_manager \
     
 from enthought.resource.resource_reference \
     import ImageReference
+    
+from toolkit \
+    import toolkit
+    
+#-------------------------------------------------------------------------------
+#  Constants:
+#-------------------------------------------------------------------------------
+
+# Standard image file extensions:
+ImageFileExts = ( '.png', '.gif', '.jpg', 'jpeg' )
     
 #-------------------------------------------------------------------------------
 #  'ImageLibrary' class:
@@ -134,10 +144,43 @@ class ImageLibrary ( HasPrivateTraits ):
         """ Adds the directory specified by **path** as a *virtual* volume
             called **vlume_name**. All image files contained within path define
             the contents of the volume. If **path** is None, the *images*
-            contained in the same directory as the caller are is used as the
-            path for the *virtual* volume..
+            contained in the 'images' subdirectory of the same directory as the 
+            caller are is used as the path for the *virtual* volume..
         """
-        pass # fixme: Implement this...
+        # Make sure we don't already have a volume with that name:
+        if volume_name in self.catalog:
+            raise TraitError( ("The volume name '%s' is already in the image "
+                               "library.") % volume_name )
+                               
+        # If no path specified, derive one from the caller's source code
+        # location:
+        if path is None:
+            path = join( get_resource_path( 2 ), 'images' )
+            
+        # Make sure that the specified path is a directory:
+        if not isdir( path ):
+            raise TraitError( "The image volume path '%s' does not exist." %
+                              path )
+                              
+        # Create the ImageVolume to describe the path's contents:
+        volume = ImageVolume( name        = volume_name,
+                              path        = path,
+                              is_zip_file = False )
+                              
+        # Add each image file contained in the path to the volume:
+        for name in listdir( path ):
+            root, ext = splitext( name )
+            if ext in ImageFileExts:
+                if ext == '.png':
+                    name = root
+                    
+                volume.images.append( ImageInfo( 
+                    name       = root, 
+                    image_name = '@%s:%s' % ( volume_name, name ) ) )
+                    
+        # Add the new volume to the library:
+        self.catalog[ volume_name ] = volume
+        self.volumes.append( volume )
         
     def extract ( self, file_name, image_names ):
         """ Builds a new image volume called **file_name** from the list of
@@ -216,16 +259,24 @@ class ImageLibrary ( HasPrivateTraits ):
     
     @cached_property
     def _get_volumes ( self ):
+        # Get all volumes in the standard Traits UI image library directory:
         result = self._add_path( join( get_resource_path( 1 ), 'library' ) )
+        
+        # Check to see if there is an environment variable specifying a list
+        # of paths containing image libraries:
         paths  = environ.get( 'TRAITS_IMAGES' )
         if paths is not None:
+            # Determine the correct OS path separator to use:
             separator = ';'
             if system() != 'Windows':
                 separator = ':'
                 
+            # Add all image volumes found in each path in the environment
+            # variable:
             for path in paths.split( separator ):
                 result.extend( self._add_path( path ) )
                 
+        # Return the list of default volumes found:
         return result
 
     @cached_property
@@ -239,13 +290,21 @@ class ImageLibrary ( HasPrivateTraits ):
             located in the specified **path**.
         """
         result = []
+        
+        # Make sure the path is a directory:
         if isdir( path ):
+            
+            # Find each zip file in the directory:
             for base in listdir( path ):
                 if splitext( base )[1] == '.zip':
+                    
+                    # Try to create a volume from the zip file and add it to
+                    # the result:
                     volume = self._add_volume( join( path, base ) )
                     if volume is not None:
                         result.append( volume )
                         
+        # Return the list of volumes found:
         return result
             
     def _add_volume ( self, path ):
@@ -253,14 +312,25 @@ class ImageLibrary ( HasPrivateTraits ):
             **path**. If **path** does not specify a valid ImageVolume, None is
             returned.
         """
+        # Make sure the path is a valid zip file:
         if is_zipfile( path ):
+            
+            # Open the zip file for reading:
             zf = ZipFile( path, 'r' )
             try:
-                if 'manifest.py' in zf.nameslist():
+                # Get the names of all top-level entries in the zip file:
+                names = zf.namelist()
+                
+                # Check to see if there is a manifest file:
+                if 'manifest.py' in names:
+                    # Load the manifest file and extract the volume data:
                     temp = {}
                     exec zf.read( 'manifest.py' ) in globals(), temp
                     volume = temp.get( 'volume' )
+                    
+                    # Verify that it is an ImageVolume:
                     if isinstance( volume, ImageVolume ):
+                        # Create a list of all external volume names referenced:
                         aka  = set()
                         name = volume.name
                         for image in volume.images:
@@ -269,6 +339,8 @@ class ImageLibrary ( HasPrivateTraits ):
                             if vname != name:
                                 aka.add( vname )
                             
+                        # Try to add all of the external volume references as
+                        # aliases for this volume:
                         aliases = self.aliases
                         for vname in aka:
                             if ((vname in aliases) and
@@ -279,12 +351,39 @@ class ImageLibrary ( HasPrivateTraits ):
                                     ( vname, name, aliases[ name ] ) )
                             aliases[ vname ] = name
                         
+                        # Set the path to this volume:
                         volume.path = abspath( path )
                         
+                        # Return the new volume:
+                        return volume
+                else:
+                    # Extract the volume name from the path:
+                    volume_name = splitext( basename( path ) )[0]
+                    
+                    # Create a new volume from it:
+                    volume      = ImageVolume( name = volume_name,
+                                               path = abspath( path ) )
+                                               
+                    # Add all image files contained in the .zip file to the
+                    # volume:
+                    for name in names:
+                        root, ext = splitext( name )
+                        if ext in ImageFileExts:
+                            if ext == '.png':
+                                name = root
+                            volume.images.append( ImageInfo(
+                                name       = root,
+                                image_name = '@%s:%s' % ( volume_name, name ) )
+                            )
+                            
+                    # If the volume is not empty, return it:
+                    if len( volume.images ) > 0:
                         return volume
             finally:
+                # Guarantee that the zip file is closed:
                 zf.close()
             
+        # Indicate no volume was found:
         return None
         
     def _find_volume ( self, image_name ):
@@ -317,7 +416,7 @@ ImageLibrary = ImageLibrary()
 #  'ImageInfo' class:
 #-------------------------------------------------------------------------------
 
-class ImageInfo ( HasStrictTraits ):
+class ImageInfo ( HasPrivateTraits ):
     """ Defines a class that contains information about a specific Traits UI 
         image.
     """
@@ -356,24 +455,56 @@ class ImageInfo ( HasStrictTraits ):
     
     #-- Default Value Implementations ------------------------------------------
     
+    def _name_default ( self ):
+        name = self.image_name
+        col  = name.find( ':' )
+        if col >= 0:
+            return name[ col + 1: ]
+            
+        return '<unknown>'
+        
+    def _width_default ( self ):
+        image = ImageLibrary.image_resource( self.image_name )
+        if image is None:
+            self.height = 0
+            
+            return 0
+            
+        width, self.height = toolkit().image_size( image.create_image() )
+        
+        return width
+        
+    def _height_default ( self ):
+        image = ImageLibrary.image_resource( self.image_name )
+        if image is None:
+            self.width = 0
+            
+            return 0
+            
+        self.width, height = toolkit().image_size( image.create_image() )
+        
+        return height
+    
     def _theme_default ( self ):
         return Theme( self.image_name )
     
     #-- Property Implementations -----------------------------------------------
         
     @cached_property
-    def _get_image_info ( self ):
+    def _get_image_info_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'name', 'image_name', 
                          'description', 'category', 'keywords' ).iteritems() ] )
         data.update( self.get( 'width', 'height', 'theme_code' ) )
+        
         return (ImageInfoTemplate % data)
     
     @cached_property
     def _get_theme_code ( self ):
         data = self.theme.get()
-        data[ 'image_name' ] = self.image_name
+        data[ 'image_name' ] = repr( self.image_name )
         data.update( self.theme.margins.get() )
+        
         return (ThemeTemplate % data)
         
 #-------------------------------------------------------------------------------
@@ -411,7 +542,7 @@ class ImageVolume ( HasPrivateTraits ):
     
     # A read-only string containing the Python code needed to construct this
     # ImageVolume object:
-    image_volume = Property
+    image_volume_code = Property
     
     #-- Public Methods ---------------------------------------------------------
     
@@ -419,23 +550,36 @@ class ImageVolume ( HasPrivateTraits ):
         """ Returns the ImageResource object for the specified **image_name**,
             or None if **image_name** cannot be found.
         """
+        # Try to get the ImageInfo object for the specified image name:
         info = self.catalog.get( image_name )
         if info is not None:
+            # Get the name of the image file:
             name = image_name[ image_name.find( ':' ) + 1: ]
             if splitext( name )[1] == '':
                 name += '.png'
                 
             if self.is_zip_file:
+                # If the volume is from a zip file, create a data reference
+                # using the contents of the zip file entry for the image:
                 zf  = ZipFile( self.path, 'r' )
                 ref = ImageReference( resource_manager.resource_factory,
                                       data = zf.read( name ) )
                 zf.close()
             else:
+                # Otherwise, create a file reference:
                 ref = ImageReference( resource_manager.resource_factory,
                                       filename = join( self.path, name ) )
                                       
-            return ImageResource( _ref = ref )
+            # Create the ImageResource object using the reference (note that
+            # the ImageResource class will not allow us to specify the
+            # reference in the constructor):
+            resource = ImageResource( name )
+            resource._ref = ref
             
+            # Return the ImageResource:
+            return resource
+            
+        # Indicate that we could not get an ImageResource object:
         return None
     
     #-- Property Implementations -----------------------------------------------
@@ -445,31 +589,29 @@ class ImageVolume ( HasPrivateTraits ):
         return dict( [ ( image.image_name, image ) for image in self.images ] )
         
     @cached_property
-    def _get_image_volume ( self ):
+    def _get_image_volume_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'name', 'description',
                                  'category', 'keywords', 'licenses'
                              ).iteritems() ] )
         data['images'] = '[\n%s\n    ]' % (',\n'.join( [ info.image_info_code 
-                                                    for info in self.images ] ))
+                                                 for info in self.images ] ))
         return (ImageVolumeTemplate % data)
 
 #-- Code Generation Templates --------------------------------------------------
 
 # Template for creating an ImageVolume object:
-ImageVolumeTemplate = """manifest = ImageVolume(
+ImageVolumeTemplate = """volume = ImageVolume(
     name        = %(name)s,
     description = %(description)s,
     category    = %(category)s,
     keywords    = %(keywords)s,
     licenses    = %(licenses)s,
-    paths       = %(paths)s,
     images      = %(images)s
 )"""    
 
 # Template for creating an ImageInfo object:
-ImageInfoTemplate = """
-        ImageInfo(
+ImageInfoTemplate = """        ImageInfo(
             name        = %(name)s,
             image_name  = %(image_name)s,
             description = %(description)s,
@@ -482,7 +624,7 @@ ImageInfoTemplate = """
     
 # Template for creating a Theme object:    
 ThemeTemplate = """Theme( %(image_name)s,
-                margins   = Margins( %(left)d, %(right)%d, %(top)d, %(bottom)d ),
+                margins   = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
                 offset    = %(offset)s,
                 alignment = "%(alignment)s"
             )"""
