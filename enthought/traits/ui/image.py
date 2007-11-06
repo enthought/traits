@@ -123,8 +123,10 @@ class ImageLibrary ( HasPrivateTraits ):
             if volume is None:
                 raise TraitError( "'%s' is not a valid image volume." % 
                                   file_name )
+                                  
             if volume.name in self.catalog:
                 self._duplicate_volume( volume.name )
+                
             self.catalog[ volume.name ] = volume
             self.volumes.append( volume )
             
@@ -135,6 +137,7 @@ class ImageLibrary ( HasPrivateTraits ):
             for volume in volumes:
                 if volume.name in catalog:
                     self._duplicate_volume( volume.name )
+                    
                 catalog[ volume.name ] = volume
                 
             self.volumes.extend( volumes )
@@ -145,10 +148,11 @@ class ImageLibrary ( HasPrivateTraits ):
                       
     def add_path ( self, volume_name, path = None ):
         """ Adds the directory specified by **path** as a *virtual* volume
-            called **vlume_name**. All image files contained within path define
-            the contents of the volume. If **path** is None, the *images*
-            contained in the 'images' subdirectory of the same directory as the 
-            caller are is used as the path for the *virtual* volume..
+            called **volume_name**. All image files contained within path 
+            define the contents of the volume. If **path** is None, the 
+            *images* contained in the 'images' subdirectory of the same 
+            directory as the caller are is used as the path for the *virtual* 
+            volume..
         """
         # Make sure we don't already have a volume with that name:
         if volume_name in self.catalog:
@@ -169,17 +173,6 @@ class ImageLibrary ( HasPrivateTraits ):
         volume = ImageVolume( name        = volume_name,
                               path        = path,
                               is_zip_file = False )
-                              
-        # Add each image file contained in the path to the volume:
-        for name in listdir( path ):
-            root, ext = splitext( name )
-            if ext in ImageFileExts:
-                if ext == '.png':
-                    name = root
-                    
-                volume.images.append( ImageInfo( 
-                    name       = root, 
-                    image_name = '@%s:%s' % ( volume_name, name ) ) )
                     
         # Add the new volume to the library:
         self.catalog[ volume_name ] = volume
@@ -208,9 +201,11 @@ class ImageLibrary ( HasPrivateTraits ):
         zf = ZipFile( file_name, 'w', ZIP_DEFLATED )
         
         # Add each of the specified images to it and the ImageVolume:
+        error    = True
+        licenses = set()
+        aliases  = set()
+        images   = []
         try:
-            error    = True
-            licenses = set()
             for image_name in image_names:
                 col = image_name.find( ':' )
                 
@@ -231,21 +226,37 @@ class ImageLibrary ( HasPrivateTraits ):
                     raise TraitError( ("Could not find the image specified by "
                                        "'%s'.") % image_name )
                                      
-                # Add the image info to the volume:
-                volume.images.append( info )
+                # Add the image info to the list of images:
+                images.append( info )
                 
                 # Add the image file to the zip file:
                 name = image_name[ col + 1: ]
+                if splitext( name )[1] == '':
+                    name += '.png'
                 zf.writestr( name, volume.image_data( image_name ) )
                 
                 # Update the license information for the new zip file:
                 licenses.add( volume.license )
+                
+                # Add the volume alias needed by the image (if any):
+                vname = image_name[ 1: col ]
+                if vname != volume_name:
+                    aliases.add( vname )
+                
+            # Create the list of images for the volume:
+            volume.images = images
+            
+            # Create the list of aliases for the volume:
+            volume.aliases = list( aliases )
                                              
             # Create the final license information for the volume:
             volume.licenses = list( licenses )
             
             # Write the volume manifest source code to the zip file:
-            zp.writestr( 'manifest.py', volume.image_volume_code )
+            zp.writestr( 'image_volume.py', volume.image_volume_code )
+            
+            # Write the image info source code to the zip file:
+            zp.writestr( 'image_info.py', volume.image_info_code )
             
             # Write a separate licenses file for human consumption:
             zp.writestr( 'license.txt', 
@@ -321,68 +332,46 @@ class ImageLibrary ( HasPrivateTraits ):
             # Open the zip file for reading:
             zf = ZipFile( path, 'r' )
             try:
+                # Extract the volume name from the path:
+                volume_name = splitext( basename( path ) )[0]
+                
                 # Get the names of all top-level entries in the zip file:
                 names = zf.namelist()
                 
                 # Check to see if there is a manifest file:
-                if 'manifest.py' in names: 
+                if 'image_volume.py' in names: 
                     # Load the manifest code and extract the volume object:
                     from time import time
                     now = time()
                     temp = {}
-                    exec zf.read( 'manifest.py' ) in globals(), temp
+                    exec zf.read( 'image_volume.py' ) in globals(), temp
                     volume = temp.get( 'volume' )
                     print time() - now
-                    
-                    # Create a list of all external volume names referenced:
-                    aka  = set()
-                    name = volume.name
-                    for image in volume.images:
-                        image_name = image.image_name
-                        vname      = image_name[ 1: image_name.find( ':' ) ]
-                        if vname != name:
-                            aka.add( vname )
                         
                     # Try to add all of the external volume references as
                     # aliases for this volume:
                     aliases = self.aliases
-                    for vname in aka:
+                    for vname in volume.aliases:
                         if ((vname in aliases) and
-                            (name != aliases[ vname ])):
+                            (volume_name != aliases[ vname ])):
                             raise TraitError( ("Image library error: "
                                 "Attempt to alias '%s' to '%s' when it is "
                                 "already aliased to '%s'") %
-                                ( vname, name, aliases[ name ] ) )
-                        aliases[ vname ] = name
+                                ( vname, volume_name, aliases[ name ] ) )
+                        aliases[ vname ] = volume_name
+                        
+                    # Set the volume name:
+                    volume.name = volume_name
                     
                     # Set the path to this volume:
                     volume.path = abspath( path )
                     
                     # Return the new volume:
                     return volume
-
-                # Extract the volume name from the path:
-                volume_name = splitext( basename( path ) )[0]
                 
                 # Create a new volume from it:
-                volume = ImageVolume( name = volume_name,
-                                      path = abspath( path ) )
-                                           
-                # Add all image files contained in the .zip file to the
-                # volume:
-                for name in names:
-                    root, ext = splitext( name )
-                    if ext in ImageFileExts:
-                        if ext == '.png':
-                            name = root
-                        volume.images.append( ImageInfo(
-                            name       = root,
-                            image_name = '@%s:%s' % ( volume_name, name ) )
-                        )
-                        
-                # If the volume is not empty, return it:
-                if len( volume.images ) > 0:
-                    return volume
+                return ImageVolume( name = volume_name, path = abspath( path ) )
+                
             finally:
                 # Guarantee that the zip file is closed:
                 zf.close()
@@ -504,6 +493,7 @@ class ImageInfo ( HasPrivateTraits ):
         
     @cached_property
     def _get_image_info_code ( self ):
+        print self.image_name
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'name', 'image_name',
                        'description', 'category', 'keywords' ).iteritems() ] )
@@ -532,6 +522,9 @@ class ImageVolume ( HasPrivateTraits ):
     
     # A list of keywords used to describe the volume:
     keywords = List( Str )
+    
+    # The list of aliases for this volume:
+    aliases = List( Str )
 
     # The list of licenses that apply to the volume and its contents:
     licenses = List( Str )
@@ -551,6 +544,10 @@ class ImageVolume ( HasPrivateTraits ):
     # A read-only string containing the Python code needed to construct this
     # ImageVolume object:
     image_volume_code = Property
+    
+    # A read-only string containing the Python code needed to construct the
+    # 'images' list for this ImageVolume object:
+    image_info_code = Property
     
     #-- Public Methods ---------------------------------------------------------
     
@@ -581,7 +578,66 @@ class ImageVolume ( HasPrivateTraits ):
         
         # Return the ImageResource:
         return resource
+        
+    def image_data ( self, image_name ):
+        """ Returns the image data (i.e. file contents) for the specified image
+            name.
+        """
+        pass # fixme: Implement this...
     
+    #-- Default Value Implementations ------------------------------------------
+    
+    def _images_default ( self ):
+        volume_name = self.name
+        
+        if self.is_zip_file:
+            zf = ZipFile( self.path, 'r' )
+            try:
+                # Get the names of all top-level entries in the zip file:
+                names = zf.namelist()
+                
+                # Check to see if there is a image info manifest file:
+                if 'image_info.py' in names: 
+                    # Load the manifest code and extract the images list:
+                    from time import time
+                    now = time()
+                    temp = {}
+                    exec zf.read( 'image_info.py' ) in globals(), temp
+                    images = temp[ 'images' ]
+                    print time() - now
+                else:    
+                    # Create an ImageInfo object for all image files contained
+                    # in the .zip file:
+                    images = []
+                    for name in names:
+                        root, ext = splitext( name )
+                        if ext in ImageFileExts:
+                            if ext == '.png':
+                                name = root
+                            images.append( ImageInfo(
+                                name       = root,
+                                image_name = '@%s:%s' % ( volume_name, name ) )
+                            )
+            finally:
+                # Guarantee that the zip file is closed:
+                zf.close()
+        else:
+            # Create an ImageInfo object for each image file containined in the
+            # path:
+            images = []
+            for name in listdir( self.path ):
+                root, ext = splitext( name )
+                if ext in ImageFileExts:
+                    if ext == '.png':
+                        name = root
+                        
+                    images.append( ImageInfo( 
+                        name       = root, 
+                        image_name = '@%s:%s' % ( volume_name, name ) ) )
+                        
+        # Return the resulting list as the default value:
+        return images
+        
     #-- Property Implementations -----------------------------------------------
     
     @cached_property
@@ -591,12 +647,16 @@ class ImageVolume ( HasPrivateTraits ):
     @cached_property
     def _get_image_volume_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
-                       for name, value in self.get( 'name', 'description',
-                                 'category', 'keywords', 'licenses'
-                             ).iteritems() ] )
-        data['images'] = '[\n%s\n    ]' % (',\n'.join( [ info.image_info_code 
-                                                 for info in self.images ] ))
+                       for name, value in self.get( 'description', 'category',
+                           'keywords', 'aliases', 'licenses' ).iteritems() ] )
+                             
         return (ImageVolumeTemplate % data)
+        
+    @cached_property
+    def _get_image_info_code ( self ):
+        images = ',\n'.join( [ info.image_info_code for info in self.images ] )
+        
+        return (ImageVolumeInfoTemplate % images)
         
 #-------------------------------------------------------------------------------
 #  'ZipFileReference' class:  
@@ -627,31 +687,37 @@ class ZipFileReference ( ResourceReference ):
 
 # Template for creating an ImageVolume object:
 ImageVolumeTemplate = \
-"""from enthought.traits.ui.image     import ImageVolume, ImageInfo
-from enthought.traits.ui.theme     import Theme
-from enthought.traits.ui.ui_traits import Margins 
+"""from enthought.traits.ui.image import ImageVolume
     
 volume = ImageVolume(
-    name        = %(name)s,
     description = %(description)s,
     category    = %(category)s,
     keywords    = %(keywords)s,
-    licenses    = %(licenses)s,
-    images      = %(images)s
+    aliases     = %(aliases)s,
+    licenses    = %(licenses)s
 )"""    
+
+# Template for creating an ImageVolume 'images' list:
+ImageVolumeInfoTemplate = \
+"""from enthought.traits.ui.image     import ImageInfo
+from enthought.traits.ui.ui_traits import Margins 
+    
+images = [
+%s
+]"""    
 
 # Template for creating an ImageInfo object:
 ImageInfoTemplate = \
-"""        ImageInfo(
-            name        = %(name)s,
-            image_name  = %(image_name)s,
-            description = %(description)s,
-            category    = %(category)s,
-            keywords    = %(keywords)s,
-            width       = %(width)d,
-            height      = %(height)d,
-            margins     = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
-            offset      = %(offset)s,
-            alignment   = %(alignment)s
-        )"""
+"""    ImageInfo(
+        name        = %(name)s,
+        image_name  = %(image_name)s,
+        description = %(description)s,
+        category    = %(category)s,
+        keywords    = %(keywords)s,
+        width       = %(width)d,
+        height      = %(height)d,
+        margins     = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
+        offset      = %(offset)s,
+        alignment   = %(alignment)s
+    )"""
             
