@@ -221,7 +221,7 @@ class VariableAdapter ( TabularAdapter ):
 
 class Slider ( Item ):
     editor     = ThemedSliderEditor( slider_color = 0xC3D3FD )
-    item_theme = ATheme( Theme( '@GG5', margins = 1 ) )
+    item_theme = ATheme( Theme( '@images:GG5', margins = 1 ) )
 
 variable_view = View(
     Item( 'units' ),
@@ -280,12 +280,12 @@ class ExperimentView ( Controller ):
                 Item( 'variables',
                       show_label = False,
                       editor     = TabularEditor( adapter = VariableAdapter() ),
-                      item_theme = '@TFB',
+                      item_theme = '@images:TFB',
                       id         = 'variables'
                 ),
                 HGroup( 
                     Slider( 'sample_points', springy = True ),
-                    group_theme = Theme( '@TFB', margins = -5 )
+                    group_theme = Theme( '@images:TFB', margins = -5 )
                 ),
                 label  = 'Summary',
                 dock   = 'horizontal',
