@@ -30,12 +30,15 @@ from os.path \
 from platform \
     import system
     
+from cPickle \
+    import loads, dumps
+    
 from zipfile \
     import is_zipfile, ZipFile, ZIP_DEFLATED
     
 from enthought.traits.api \
     import HasPrivateTraits, Property, Str, Int, List, Dict, File, Instance, \
-           Bool, cached_property
+           Bool, cached_property, Any
            
 from enthought.traits.trait_base \
     import get_resource_path
@@ -50,7 +53,7 @@ from enthought.pyface.resource_manager \
     import resource_manager
     
 from enthought.resource.resource_reference \
-    import ImageReference
+    import ImageReference, ResourceReference
     
 from toolkit \
     import toolkit
@@ -244,6 +247,9 @@ class ImageLibrary ( HasPrivateTraits ):
             # Write the volume manifest to the zip file:
             zp.writestr( 'manifest.py', volume.image_volume )
             
+            # Write a pickled version of the volume manifest out as well:
+            zp.writestr( 'manifest.pkl', dumps( volume, -1 ) )
+            
             # Write a separate licenses file for human consumption:
             zp.writestr( 'license.txt', 
                          ('\n%s\n' % ('-' * 79)).join( volume.licenses ) )
@@ -322,40 +328,44 @@ class ImageLibrary ( HasPrivateTraits ):
                 names = zf.namelist()
                 
                 # Check to see if there is a manifest file:
-                if 'manifest.py' in names:
-                    # Load the manifest file and extract the volume data:
+                volume = None
+                if 'manifest.pkl' in names:
+                    # Load the manifest by unpickling its volume object:
+                    volume = loads( zf.read( 'manifest.pkl' ) )
+                    
+                elif 'manifest.py' in names:
+                    # Load the manifest source file and extract the volume data:
                     temp = {}
                     exec zf.read( 'manifest.py' ) in globals(), temp
                     volume = temp.get( 'volume' )
                     
-                    # Verify that it is an ImageVolume:
-                    if isinstance( volume, ImageVolume ):
-                        # Create a list of all external volume names referenced:
-                        aka  = set()
-                        name = volume.name
-                        for image in volume.images:
-                            image_name = image.image_name
-                            vname      = image_name[ 1: image_name.find( ':' ) ]
-                            if vname != name:
-                                aka.add( vname )
-                            
-                        # Try to add all of the external volume references as
-                        # aliases for this volume:
-                        aliases = self.aliases
-                        for vname in aka:
-                            if ((vname in aliases) and
-                                (name != aliases[ vname ])):
-                                raise TraitError( ("Image library error: "
-                                    "Attempt to alias '%s' to '%s' when it is "
-                                    "already aliased to '%s'") %
-                                    ( vname, name, aliases[ name ] ) )
-                            aliases[ vname ] = name
+                if volume is not None:    
+                    # Create a list of all external volume names referenced:
+                    aka  = set()
+                    name = volume.name
+                    for image in volume.images:
+                        image_name = image.image_name
+                        vname      = image_name[ 1: image_name.find( ':' ) ]
+                        if vname != name:
+                            aka.add( vname )
                         
-                        # Set the path to this volume:
-                        volume.path = abspath( path )
-                        
-                        # Return the new volume:
-                        return volume
+                    # Try to add all of the external volume references as
+                    # aliases for this volume:
+                    aliases = self.aliases
+                    for vname in aka:
+                        if ((vname in aliases) and
+                            (name != aliases[ vname ])):
+                            raise TraitError( ("Image library error: "
+                                "Attempt to alias '%s' to '%s' when it is "
+                                "already aliased to '%s'") %
+                                ( vname, name, aliases[ name ] ) )
+                        aliases[ vname ] = name
+                    
+                    # Set the path to this volume:
+                    volume.path = abspath( path )
+                    
+                    # Return the new volume:
+                    return volume
                 else:
                     # Extract the volume name from the path:
                     volume_name = splitext( basename( path ) )[0]
@@ -454,7 +464,7 @@ class ImageInfo ( HasPrivateTraits ):
     theme_code = Property
     
     #-- Default Value Implementations ------------------------------------------
-    
+        
     def _name_default ( self ):
         name = self.image_name
         col  = name.find( ':' )
@@ -559,14 +569,13 @@ class ImageVolume ( HasPrivateTraits ):
                 name += '.png'
                 
             if self.is_zip_file:
-                # If the volume is from a zip file, create a data reference
-                # using the contents of the zip file entry for the image:
-                zf  = ZipFile( self.path, 'r' )
-                ref = ImageReference( resource_manager.resource_factory,
-                                      data = zf.read( name ) )
-                zf.close()
+                # If the volume is from a zip file, create a zip file reference:
+                ref = ZipFileReference( 
+                          resource_factory = resource_manager.resource_factory,
+                          path             = self.path,
+                          name             = name )
             else:
-                # Otherwise, create a file reference:
+                # Otherwise, create a normal file reference:
                 ref = ImageReference( resource_manager.resource_factory,
                                       filename = join( self.path, name ) )
                                       
@@ -597,11 +606,41 @@ class ImageVolume ( HasPrivateTraits ):
         data['images'] = '[\n%s\n    ]' % (',\n'.join( [ info.image_info_code 
                                                  for info in self.images ] ))
         return (ImageVolumeTemplate % data)
+        
+#-------------------------------------------------------------------------------
+#  'ZipFileReference' class:  
+#-------------------------------------------------------------------------------
+                
+class ZipFileReference ( ResourceReference ):
+    
+    # The path name of the zip file:
+    path = File
+    
+    # The file within the zip file:
+    name = Str
+    
+    #-- ResourceReference Interface Implementation -----------------------------
+
+    def load ( self ):
+        """ Loads the resource. 
+        """
+        zf = ZipFile( self.path, 'r' )
+        try:
+            data = zf.read( self.name )
+        finally:
+            zf.close()
+            
+        return self.resource_factory.image_from_data( data )
 
 #-- Code Generation Templates --------------------------------------------------
 
 # Template for creating an ImageVolume object:
-ImageVolumeTemplate = """volume = ImageVolume(
+ImageVolumeTemplate = \
+"""from enthought.traits.ui.image     import ImageVolume, ImageInfo
+from enthought.traits.ui.theme     import Theme
+from enthought.traits.ui.ui_traits import Margins 
+    
+volume = ImageVolume(
     name        = %(name)s,
     description = %(description)s,
     category    = %(category)s,
@@ -611,7 +650,8 @@ ImageVolumeTemplate = """volume = ImageVolume(
 )"""    
 
 # Template for creating an ImageInfo object:
-ImageInfoTemplate = """        ImageInfo(
+ImageInfoTemplate = \
+"""        ImageInfo(
             name        = %(name)s,
             image_name  = %(image_name)s,
             description = %(description)s,
@@ -623,7 +663,8 @@ ImageInfoTemplate = """        ImageInfo(
         )"""
     
 # Template for creating a Theme object:    
-ThemeTemplate = """Theme( %(image_name)s,
+ThemeTemplate = \
+"""Theme( %(image_name)s,
                 margins   = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
                 offset    = %(offset)s,
                 alignment = "%(alignment)s"
