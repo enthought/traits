@@ -30,20 +30,20 @@ from os.path \
 from platform \
     import system
     
-from cPickle \
-    import loads, dumps
-    
 from zipfile \
     import is_zipfile, ZipFile, ZIP_DEFLATED
     
 from enthought.traits.api \
     import HasPrivateTraits, Property, Str, Int, List, Dict, File, Instance, \
-           Bool, cached_property, Any
+           Bool, Tuple, cached_property
            
 from enthought.traits.trait_base \
     import get_resource_path
     
-from enthought.traits.ui.theme \
+from ui_traits \
+    import HasMargins, Margins, Alignment
+    
+from theme \
     import Theme
 
 from enthought.pyface.api \
@@ -244,11 +244,8 @@ class ImageLibrary ( HasPrivateTraits ):
             # Create the final license information for the volume:
             volume.licenses = list( licenses )
             
-            # Write the volume manifest to the zip file:
-            zp.writestr( 'manifest.py', volume.image_volume )
-            
-            # Write a pickled version of the volume manifest out as well:
-            zp.writestr( 'manifest.pkl', dumps( volume, -1 ) )
+            # Write the volume manifest source code to the zip file:
+            zp.writestr( 'manifest.py', volume.image_volume_code )
             
             # Write a separate licenses file for human consumption:
             zp.writestr( 'license.txt', 
@@ -328,18 +325,15 @@ class ImageLibrary ( HasPrivateTraits ):
                 names = zf.namelist()
                 
                 # Check to see if there is a manifest file:
-                volume = None
-                if 'manifest.pkl' in names:
-                    # Load the manifest by unpickling its volume object:
-                    volume = loads( zf.read( 'manifest.pkl' ) )
-                    
-                elif 'manifest.py' in names:
-                    # Load the manifest source file and extract the volume data:
+                if 'manifest.py' in names: 
+                    # Load the manifest code and extract the volume object:
+                    from time import time
+                    now = time()
                     temp = {}
                     exec zf.read( 'manifest.py' ) in globals(), temp
                     volume = temp.get( 'volume' )
+                    print time() - now
                     
-                if volume is not None:    
                     # Create a list of all external volume names referenced:
                     aka  = set()
                     name = volume.name
@@ -366,29 +360,29 @@ class ImageLibrary ( HasPrivateTraits ):
                     
                     # Return the new volume:
                     return volume
-                else:
-                    # Extract the volume name from the path:
-                    volume_name = splitext( basename( path ) )[0]
-                    
-                    # Create a new volume from it:
-                    volume      = ImageVolume( name = volume_name,
-                                               path = abspath( path ) )
-                                               
-                    # Add all image files contained in the .zip file to the
-                    # volume:
-                    for name in names:
-                        root, ext = splitext( name )
-                        if ext in ImageFileExts:
-                            if ext == '.png':
-                                name = root
-                            volume.images.append( ImageInfo(
-                                name       = root,
-                                image_name = '@%s:%s' % ( volume_name, name ) )
-                            )
-                            
-                    # If the volume is not empty, return it:
-                    if len( volume.images ) > 0:
-                        return volume
+
+                # Extract the volume name from the path:
+                volume_name = splitext( basename( path ) )[0]
+                
+                # Create a new volume from it:
+                volume = ImageVolume( name = volume_name,
+                                      path = abspath( path ) )
+                                           
+                # Add all image files contained in the .zip file to the
+                # volume:
+                for name in names:
+                    root, ext = splitext( name )
+                    if ext in ImageFileExts:
+                        if ext == '.png':
+                            name = root
+                        volume.images.append( ImageInfo(
+                            name       = root,
+                            image_name = '@%s:%s' % ( volume_name, name ) )
+                        )
+                        
+                # If the volume is not empty, return it:
+                if len( volume.images ) > 0:
+                    return volume
             finally:
                 # Guarantee that the zip file is closed:
                 zf.close()
@@ -455,13 +449,18 @@ class ImageInfo ( HasPrivateTraits ):
     # The theme for this image:
     theme = Instance( Theme )
     
+    # The margins to use around the content:
+    margins = HasMargins( Margins( 4, 2 ) )
+    
+    # The offset to use to properly position content: 
+    offset = Tuple( Int, Int )
+    
+    # The alignment to use for positioning content:
+    alignment = Alignment
+    
     # A read-only string containing the Python code needed to construct this
     # ImageInfo object:
     image_info_code = Property
-    
-    # A read-only string containing the Python code needed to construct the 
-    # Theme object for the image:
-    theme_code = Property
     
     #-- Default Value Implementations ------------------------------------------
         
@@ -496,26 +495,25 @@ class ImageInfo ( HasPrivateTraits ):
         return height
     
     def _theme_default ( self ):
-        return Theme( self.image_name )
+        return Theme( self.image_name,
+                      margins   = self.margins,
+                      offset    = self.offset,
+                      alignment = self.alignment )
     
     #-- Property Implementations -----------------------------------------------
         
     @cached_property
     def _get_image_info_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
-                       for name, value in self.get( 'name', 'image_name', 
-                         'description', 'category', 'keywords' ).iteritems() ] )
-        data.update( self.get( 'width', 'height', 'theme_code' ) )
-        
-        return (ImageInfoTemplate % data)
-    
-    @cached_property
-    def _get_theme_code ( self ):
-        data = self.theme.get()
-        data[ 'image_name' ] = repr( self.image_name )
+                       for name, value in self.get( 'name', 'image_name',
+                       'description', 'category', 'keywords' ).iteritems() ] )
+        data.update( dict( [ ( name, repr( value ) )
+                       for name, value in self.theme.get( 'offset',
+                                                 'alignment' ).iteritems() ] ) )
+        data.update( self.get( 'width', 'height' ) )
         data.update( self.theme.margins.get() )
         
-        return (ThemeTemplate % data)
+        return (ImageInfoTemplate % data)
         
 #-------------------------------------------------------------------------------
 #  'ImageVolume' class:
@@ -557,39 +555,32 @@ class ImageVolume ( HasPrivateTraits ):
     #-- Public Methods ---------------------------------------------------------
     
     def image_resource ( self, image_name ):
-        """ Returns the ImageResource object for the specified **image_name**,
-            or None if **image_name** cannot be found.
+        """ Returns the ImageResource object for the specified **image_name**.
         """
-        # Try to get the ImageInfo object for the specified image name:
-        info = self.catalog.get( image_name )
-        if info is not None:
-            # Get the name of the image file:
-            name = image_name[ image_name.find( ':' ) + 1: ]
-            if splitext( name )[1] == '':
-                name += '.png'
-                
-            if self.is_zip_file:
-                # If the volume is from a zip file, create a zip file reference:
-                ref = ZipFileReference( 
-                          resource_factory = resource_manager.resource_factory,
-                          path             = self.path,
-                          name             = name )
-            else:
-                # Otherwise, create a normal file reference:
-                ref = ImageReference( resource_manager.resource_factory,
-                                      filename = join( self.path, name ) )
-                                      
-            # Create the ImageResource object using the reference (note that
-            # the ImageResource class will not allow us to specify the
-            # reference in the constructor):
-            resource = ImageResource( name )
-            resource._ref = ref
+        # Get the name of the image file:
+        name = image_name[ image_name.find( ':' ) + 1: ]
+        if splitext( name )[1] == '':
+            name += '.png'
             
-            # Return the ImageResource:
-            return resource
-            
-        # Indicate that we could not get an ImageResource object:
-        return None
+        if self.is_zip_file:
+            # If the volume is from a zip file, create a zip file reference:
+            ref = ZipFileReference( 
+                      resource_factory = resource_manager.resource_factory,
+                      path             = self.path,
+                      name             = name )
+        else:
+            # Otherwise, create a normal file reference:
+            ref = ImageReference( resource_manager.resource_factory,
+                                  filename = join( self.path, name ) )
+                                  
+        # Create the ImageResource object using the reference (note that the
+        # ImageResource class will not allow us to specify the reference in the
+        # constructor):
+        resource = ImageResource( name )
+        resource._ref = ref
+        
+        # Return the ImageResource:
+        return resource
     
     #-- Property Implementations -----------------------------------------------
     
@@ -659,14 +650,8 @@ ImageInfoTemplate = \
             keywords    = %(keywords)s,
             width       = %(width)d,
             height      = %(height)d,
-            theme       = %(theme_code)s
+            margins     = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
+            offset      = %(offset)s,
+            alignment   = %(alignment)s
         )"""
-    
-# Template for creating a Theme object:    
-ThemeTemplate = \
-"""Theme( %(image_name)s,
-                margins   = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
-                offset    = %(offset)s,
-                alignment = "%(alignment)s"
-            )"""
             
