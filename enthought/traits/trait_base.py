@@ -365,7 +365,8 @@ def traits_home ( ):
     global _traits_home
 
     if _traits_home is None:
-        _traits_home = _verify_path( join( ETSConfig.application_data, 'traits' ) )
+        _traits_home = verify_path( join( ETSConfig.application_data,
+                                          'traits' ) )
 
     return _traits_home
 
@@ -373,7 +374,7 @@ def traits_home ( ):
 #  Verify that a specified path exists, and try to create it if it doesn't:
 #-------------------------------------------------------------------------------
 
-def _verify_path ( path ):
+def verify_path ( path ):
     """ Verify that a specified path exists, and try to create it if it
         does not exist.
     """

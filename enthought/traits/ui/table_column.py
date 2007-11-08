@@ -41,7 +41,7 @@ from menu \
     import Menu
     
 from ui_traits \
-    import ATheme, Image
+    import ATheme, Image, AView
 
 from toolkit \
     import toolkit
@@ -120,6 +120,9 @@ class TableColumn ( HasPrivateTraits ):
     # The width of the column (< 0.0: Default, 0.0..1.0: fraction of total table
     # width, > 1.0: absolute width in pixels):
     width = Float( -1.0 )
+    
+    # The view (if any) to display when clicking a non-editable cell:
+    view = AView
     
     #-- Private Traits ---------------------------------------------------------
     
@@ -286,7 +289,34 @@ class TableColumn ( HasPrivateTraits ):
             the column for a specified object.
         """
         return self.menu
+
+    #---------------------------------------------------------------------------
+    #  Returns the view to display when clicking a non-editable cell:
+    #---------------------------------------------------------------------------
+    
+    def get_view ( self, object ):
+        """ Returns the view to display when clicking a non-editable cell.
+        """
+        return self.view
         
+    #---------------------------------------------------------------------------
+    #  Called when the user clicks on the column:
+    #---------------------------------------------------------------------------
+    
+    def on_click ( self, object ):
+        """ Called when the user clicks on the column.
+        """
+        pass
+        
+    #---------------------------------------------------------------------------
+    #  Called when the user double-clicks on the column:
+    #---------------------------------------------------------------------------
+    
+    def on_dclick ( self, object ):
+        """ Called when the user clicks on the column.
+        """
+        pass
+                    
     #---------------------------------------------------------------------------
     #  Returns the string representation of the table column:  
     #---------------------------------------------------------------------------
