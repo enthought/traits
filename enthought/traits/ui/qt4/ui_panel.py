@@ -197,7 +197,7 @@ class Panel ( BaseDialog ):
             sw = panel(ui, cpanel) 
 
         if title != "":
-            layout.addWidget(heading_text(cpanel, title).control)
+            layout.addWidget(heading_text(cpanel, text=title).control)
 
         layout.addWidget(sw)
         
