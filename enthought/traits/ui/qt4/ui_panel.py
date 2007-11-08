@@ -47,7 +47,7 @@ from enthought.traits.ui.menu \
 #    import FlowSizer
     
 from helper \
-    import position_near, GroupEditor
+    import position_near, GroupEditor, UnboundedScrollArea
     
 from constants \
     import screen_dx, screen_dy, WindowColor
@@ -186,13 +186,9 @@ class Panel ( BaseDialog ):
             layout.setMargin(0)
 
         if ui.scrollable:
-            sizer = wx.BoxSizer( wx.VERTICAL )
-            sw    = wx.ScrolledWindow( cpanel )
-            sizer.Add( panel( ui, sw ), 1, wx.EXPAND )
-            
-            sw.SetSizerAndFit( sizer )
-            sw.SetScrollRate( 16, 16 )
-            sw.SetMinSize( wx.Size( 0, 0 ) )
+            sw = UnboundedScrollArea(cpanel)
+            sw.setFrameShape(QtGui.QFrame.NoFrame)
+            sw.setWidget(panel(ui, sw))
         else:
             sw = panel(ui, cpanel) 
 
@@ -321,7 +317,7 @@ def panel ( ui, parent ):
 
             if isinstance(sg_layout, QtGui.QWidget):
                 layout.addWidget(sg_layout)
-            elif layout is not sg_layout:
+            elif sg_layout.parentWidget() is None:
                 layout.addLayout(sg_layout)
 
         # Return the panel that was created:
@@ -563,7 +559,12 @@ class FillPanel ( object ):
 
         if group.show_border:
             box = QtGui.QGroupBox(label)
-            panel.layout().addWidget(box)
+            lay = panel.layout()
+            if lay is None:
+                lay = QtGui.QVBoxLayout(panel)
+                lay.setMargin(0)
+
+            lay.addWidget(box)
             self.sizer = QtGui.QBoxLayout(orientation, box)
         else:
             if layout == 'flow':

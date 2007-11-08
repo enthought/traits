@@ -20,8 +20,11 @@ from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import HasTraits, Str, Trait, List, Instance, Undefined, Property, Enum, \
-           Unicode, true
-    
+           Unicode, Bool
+
+from enthought.traits.trait_base \
+    import user_name_for, enumerate
+
 from enthought.traits.ui.view \
     import View, kind_trait
     
@@ -76,10 +79,10 @@ class ToolkitEditorFactory ( EditorFactory ):
     name = Str
     
     # Is the current value of the object trait editable (vs. merely selectable)?
-    editable = true
+    editable = Bool(True)
     
     # Should factory-created objects be cached?
-    cachable = true
+    cachable = Bool(True)
     
     # Optional label for button
     label = Unicode
@@ -164,7 +167,7 @@ class CustomEditor ( Editor ):
         if factory.name != '':
             self._object, self._name, self._value = \
                 self.parse_extended_name( factory.name )
-            
+
         # Create a panel to hold the object trait's view:
         if factory.editable:
             self.control = self._panel = parent = QtGui.QWidget(parent)
@@ -182,9 +185,10 @@ class CustomEditor ( Editor ):
             if item is not None:
                 self._object_cache[ id( item ) ] = self.value
             
-            self._choice = wx.Choice( parent, -1, wx.Point( 0, 0 ),
-                                      wx.Size( -1, -1 ), [] )
-            wx.EVT_CHOICE( parent, self._choice.GetId(), self.update_object )
+            self._choice = QtGui.QComboBox(parent)
+            QtCore.QObject.connect(self._choice,
+                    QtCore.SIGNAL('activated(QString)'), self.update_object)
+
             if droppable:
                 self._choice.SetBackgroundColour( self.ok_color )
                 
@@ -215,20 +219,25 @@ class CustomEditor ( Editor ):
             orientation = self.orientation
             
         if (selectable or droppable) and factory.editable:
-            sizer = wx.BoxSizer( orientation )
-            sizer.Add( self._choice, self.extra, wx.EXPAND )
-            if orientation == wx.VERTICAL:
-                sizer.Add( 
-                    wx.StaticLine( parent, -1, style = wx.LI_HORIZONTAL ), 0, 
-                    wx.EXPAND | wx.TOP | wx.BOTTOM, 5 )
-            self.create_editor( parent, sizer )
-            parent.SetSizer( sizer )
+            layout = QtGui.QBoxLayout(orientation, parent)
+            layout.setMargin(0)
+            layout.addWidget(self._choice)
+
+            if orientation == QtGui.QBoxLayout.TopToBottom:
+                hline = QtGui.QFrame()
+                hline.setFrameShape(QtGui.QFrame.HLine)
+                hline.setFrameShadow(QtGui.QFrame.Sunken)
+
+                layout.addWidget(hline)
+
+            self.create_editor(parent, layout)
         elif self.control is None:
             if self._choice is None:
-                self._choice = wx.Choice( parent, -1, wx.Point( 0, 0 ), 
-                                          wx.Size( -1, -1 ), [] )
-                wx.EVT_CHOICE( parent, self._choice.GetId(), 
-                               self.update_object )
+                self._choice = QtGui.QComboBox(parent)
+                QtCore.QObject.connect(self._choice,
+                        QtCore.SIGNAL('activated(QString)'),
+                        self.update_object)
+
             self.control = self._choice
         else:
             layout = QtGui.QBoxLayout(orientation, parent)
@@ -280,20 +289,19 @@ class CustomEditor ( Editor ):
         self._items = None
         
         # Rebuild the contents of the selector list:
-        name   = None
+        name   = -1
         value  = self.value
         choice = self._choice
-        choice.Clear()
-        for item in self.items:
+        choice.clear()
+        for i, item in enumerate(self.items):
             if item.is_selectable():
-                item_name = item.get_name()
-                choice.Append( item_name )
+                choice.addItem(item.get_name())
                 if item.is_compatible( value ):
-                    name = item_name
+                    name = i
                     
         # Reselect the current item if possible:                    
-        if name is not None:
-            choice.SetStringSelection( name )
+        if name >= 0:
+            choice.setCurrentIndex(name)
         else:
             # Otherwise, current value is no longer valid, try to discard it:
             try:
@@ -335,10 +343,10 @@ class CustomEditor ( Editor ):
     #  Handles the user selecting a new value from the combo box:
     #---------------------------------------------------------------------------
   
-    def update_object ( self, event ):
+    def update_object(self, text):
         """ Handles the user selecting a new value from the combo box.
         """
-        name = event.GetString()
+        name = unicode(text)
         for item in self.items:
             if name == item.get_name():
                 id_item = id( item )
@@ -373,11 +381,14 @@ class CustomEditor ( Editor ):
         if (choice is not None) and (item is not None):
             name = item.get_name( self.value )
             if self._object_cache is not None:
-                if choice.FindString( name ) < 0:
-                    choice.Append( name )
-                choice.SetStringSelection( name ) 
+                idx = choice.findText(name)
+                if idx < 0:
+                    idx = choice.count()
+                    choice.addItem(name)
+
+                choice.setCurrentIndex(idx)
             else:
-                choice.SetValue( name )
+                choice.setText(name)
 
     #---------------------------------------------------------------------------
     #  Resynchronizes the contents of the editor when the object trait changes
