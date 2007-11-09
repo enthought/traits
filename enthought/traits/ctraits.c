@@ -78,11 +78,16 @@ do { \
     (PyType_HasFeature(t, Py_TPFLAGS_HAVE_CLASS) ? (t)->tp_descr_get : NULL)
 #define OFF(x) offsetof(trait_method_object, x)
 
+/* Notification related: */
+#define has_notifiers(tnotifiers,onitofiers) \
+    ((((tnotifiers) != NULL) && (PyList_GET_SIZE((tnotifiers))>0)) || \
+     (((onotifiers) != NULL) && (PyList_GET_SIZE((onotifiers))>0)))
+    
 /* Field accessors: */
 #define trait_method_GET_NAME(meth) \
-        (((trait_method_object *) meth)->tm_name)
+    (((trait_method_object *) meth)->tm_name)
 #define trait_method_GET_FUNCTION(meth) \
-        (((trait_method_object *) meth)->tm_func)
+    (((trait_method_object *) meth)->tm_func)
 #define trait_method_GET_SELF(meth) \
 	(((trait_method_object *) meth)->tm_self)
 #define trait_method_GET_TRAITS(meth) \
@@ -1029,22 +1034,45 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
 static PyObject *
 _has_traits_property_changed ( has_traits_object * obj, PyObject * args ) {
  
-    PyObject     * name;
-    PyObject     * old_value;
-    PyObject     * new_value;
+    int            null_new_value;
     trait_object * trait;
-    int rc;
+    PyObject     * name;
+    PyListObject * tnotifiers;
+    PyListObject * onotifiers;
+    PyObject     * old_value;
+    PyObject     * new_value = NULL;
+    int rc = 0;
     
     /* Parse arguments, which specify the name of the changed trait, the 
        previous value, and the new value: */
-	if ( !PyArg_ParseTuple( args, "OOO", &name, &old_value, &new_value ) ) 
+	if ( !PyArg_ParseTuple( args, "OO|O", &name, &old_value, &new_value ) ) 
         return NULL;
     
     if ( (trait = (trait_object *) get_trait( obj, name, -1 )) == NULL )
         return NULL;
     
-    rc = call_notifiers( trait->notifiers, obj->notifiers, obj, name, 
-                         old_value, new_value );
+    tnotifiers = trait->notifiers;
+    onotifiers = obj->notifiers;
+    
+    if ( has_notifiers( tnotifiers, onotifiers ) ) {
+        
+        null_new_value = (new_value == NULL);
+        if ( null_new_value ) {
+           new_value = has_traits_getattro( obj, name );
+           if ( new_value == NULL ) {
+               Py_DECREF( trait );
+               return NULL;
+           }
+        }
+    
+        rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
+                             old_value, new_value );
+        
+        if ( null_new_value ) {
+            Py_DECREF( new_value );
+        }
+    }
+    
     Py_DECREF( trait );
     if ( rc )
         return NULL;
@@ -1195,7 +1223,7 @@ set_has_traits_dict ( has_traits_object * obj, PyObject * value, void * closure 
 static PyMethodDef has_traits_methods[] = {
 	{ "trait_property_changed", (PyCFunction) _has_traits_property_changed,
       METH_VARARGS,
-      PyDoc_STR( "trait_property_changed(name,old_value,new_value)" ) },
+      PyDoc_STR( "trait_property_changed(name,old_value[,new_value])" ) },
 	{ "_trait_change_notify", (PyCFunction) _has_traits_change_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_change_notify(boolean)" ) },
@@ -1716,8 +1744,8 @@ call_notifiers ( PyListObject      * tnotifiers,
     Py_INCREF( new_value );
     
     if ( tnotifiers != NULL ) {
-        temp = NULL;
         n    = PyList_GET_SIZE( tnotifiers );
+        temp = NULL;
         if ( n > 1 ) {
             temp = PyList_New( n );
             if ( temp == NULL ) {
@@ -1731,7 +1759,7 @@ call_notifiers ( PyListObject      * tnotifiers,
             }
             tnotifiers = (PyListObject *) temp;
         }
-        for ( i = 0, n = PyList_GET_SIZE( tnotifiers ); i < n; i++ ) {
+        for ( i = 0; i < n; i++ ) {
             if ( new_value_has_traits && 
                  (((has_traits_object *) new_value)->flags & 
                     HASTRAITS_VETO_NOTIFY) ) {
@@ -1749,14 +1777,12 @@ call_notifiers ( PyListObject      * tnotifiers,
             }
             Py_DECREF( result );
         }
-        if ( tnotifiers == (PyListObject *) temp ) {
-            Py_DECREF( temp );
-        }
+        Py_XDECREF( temp );
     }
     
     if ( onotifiers != NULL ) {
-        temp = NULL;
         n    = PyList_GET_SIZE( onotifiers );
+        temp = NULL;
         if ( n > 1 ) {
             temp = PyList_New( n );
             if ( temp == NULL ) {
@@ -1770,7 +1796,7 @@ call_notifiers ( PyListObject      * tnotifiers,
             }
             onotifiers = (PyListObject *) temp;
         }
-        for ( i = 0, n = PyList_GET_SIZE( onotifiers ); i < n; i++ ) {
+        for ( i = 0; i < n; i++ ) {
             if ( new_value_has_traits && 
                  (((has_traits_object *) new_value)->flags & 
                     HASTRAITS_VETO_NOTIFY) ) {
@@ -1787,9 +1813,7 @@ call_notifiers ( PyListObject      * tnotifiers,
             }
             Py_DECREF( result );
         }
-        if ( onotifiers == (PyListObject *) temp ) {
-            Py_DECREF( temp );
-        }
+        Py_XDECREF( temp );
     }
     
     Py_DECREF( args );
@@ -1807,6 +1831,9 @@ setattr_event ( trait_object      * traito,
                 PyObject          * name,
                 PyObject          * value ) {
     
+    PyListObject * tnotifiers;
+    PyListObject * onotifiers;
+    
     if ( value != NULL ) {
         if ( traitd->validate != NULL ) {
             value = traitd->validate( traitd, obj, name, value );
@@ -1815,9 +1842,13 @@ setattr_event ( trait_object      * traito,
             }
             Py_DECREF( value );
         }
+        
+        tnotifiers = traito->notifiers;
+        onotifiers = obj->notifiers;
+        
         if ( ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) &&
-              ((obj->notifiers != NULL) || (traito->notifiers != NULL)) ) 
-            return call_notifiers( traito->notifiers, obj->notifiers, obj, name, 
+             has_notifiers( tnotifiers, onotifiers ) ) 
+            return call_notifiers( tnotifiers, onotifiers, obj, name, 
                                    undefined, value );
     }
     return 0;
@@ -1884,8 +1915,8 @@ notify:
                         if ( traitd->post_setattr != NULL ) 
                             rc = traitd->post_setattr( traitd, obj, name, 
                                                        value );
-                        if ( (rc == 0) && ((tnotifiers != NULL) || 
-                                           (onotifiers != NULL)) ) 
+                        if ( (rc == 0) && 
+                             has_notifiers( tnotifiers, onotifiers ) )
                             rc = call_notifiers( tnotifiers, onotifiers, 
                                                  obj, name, old_value, value );
                     }
@@ -2010,7 +2041,7 @@ notify:
                     (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
                     original_value: value );
         }
-        if ( (rc == 0) && ((tnotifiers != NULL) || (onotifiers != NULL)) ) { 
+        if ( (rc == 0) && has_notifiers( tnotifiers, onotifiers ) ) { 
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
                                  old_value, new_value );
         }

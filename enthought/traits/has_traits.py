@@ -1155,13 +1155,12 @@ def cached_property ( function ):
     name = function.__name__[ 4: ]
     
     def decorator ( self ):
-        result = getattr( self, name, None )
-        if result is None:
-            result = function( self )
-            setattr( self, name, result )
+        result = self.__dict__.get( name, Undefined )
+        if result is Undefined:
+            self.__dict__[ name ] = result = function( self )
             
         return result
-      
+        
     decorator.cached_property = True
     
     return decorator        
@@ -3264,13 +3263,13 @@ class HasTraits ( CHasTraits ):
         """
         if cached is None:
             def notify ( ):
-                self.trait_property_changed( name, Undefined,
-                                             getattr( self, name ) )
+                self.trait_property_changed( name, Undefined )
+                                             #getattr( self, name ) )
         else:
             def notify ( ):
-                old = getattr( self, name )
-                setattr( self, cached, None )
-                self.trait_property_changed( name, old, getattr( self, name ) )
+                old = self.__dict__.get( cached, Undefined )
+                self.__dict__[ cached ] = Undefined
+                self.trait_property_changed( name, old )
                 
         self.on_trait_change( notify, pattern )
             
