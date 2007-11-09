@@ -846,7 +846,7 @@ class ImageLibrary ( HasPrivateTraits ):
         
         # Check to see if there is an environment variable specifying a list
         # of paths containing image libraries:
-        paths  = environ.get( 'TRAITS_IMAGES' )
+        paths = environ.get( 'TRAITS_IMAGES' )
         if paths is not None:
             # Determine the correct OS path separator to use:
             separator = ';'
