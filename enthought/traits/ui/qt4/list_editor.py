@@ -295,7 +295,7 @@ class SimpleEditor ( Editor ):
 
         editor = self._editor
         for value in values:
-            if resizable:       
+            if resizable:
                 control = IconButton('list_editor.png', self.popup_menu)
                 layout.addWidget(control, index, 0)
 
@@ -312,16 +312,16 @@ class SimpleEditor ( Editor ):
             except:
                 if not is_fake:
                     raise
-                pcontrol = wx.Button( list_pane, -1, 'sample' )
-                
+                pcontrol = QtGui.QPushButton('sample', list_pane)
+
             layout.addWidget(pcontrol, index, 1)
             index += 1
 
         if is_fake:
            self._cur_control = control   
            self.empty_list()
-           control.Destroy()
-           pcontrol.Destroy()
+           control.setParent(None)
+           pcontrol.setParent(None)
            
         if self.single_row:
             rows = 1
@@ -369,12 +369,10 @@ class SimpleEditor ( Editor ):
     def empty_list ( self ):
         """ Creates an empty list entry (so the user can add a new item).
         """
-        control = ImageControl( self.control,
-                                bitmap_cache( 'list_editor', False ),
-                                -1, self.popup_empty_menu )                                   
+        control = IconButton('list_editor.png', self.popup_menu)
         control.is_empty = True
         proxy    = ListItemProxy( self.object, self.name, -1, None, None )
-        pcontrol = wx.StaticText( self.control, -1, '   (Empty List)' )
+        pcontrol = QtGui.QLabel('   (Empty List)')
         pcontrol.proxy = control.proxy = proxy
         self.reload_sizer( [ ( control, pcontrol ) ] )
   
@@ -386,17 +384,21 @@ class SimpleEditor ( Editor ):
         """ Reloads the layout from the specified list of ( button, proxy ) 
             pairs.
         """
-        sizer = self.control.GetSizer()
-        for i in xrange( 2 * len( controls ) + extra ):
-            sizer.Remove( 0 )
+        layout = self._list_pane.layout()
+
+        child = layout.takeAt(0)
+        while child is not None:
+            child = layout.takeAt(0)
+
+        del child
+
         index = 0
         for control, pcontrol in controls:
-            sizer.Add( control,  0, wx.LEFT | wx.RIGHT, 2 )
-            sizer.Add( pcontrol, 1, wx.EXPAND )
+            layout.addWidget(control)
+            layout.addWidget(pcontrol)
+
             control.proxy.index = index
             index += 1
-        sizer.Layout()
-        self.control.SetVirtualSize( sizer.GetMinSize() )
        
     #---------------------------------------------------------------------------
     #  Returns the associated object list and current item index:

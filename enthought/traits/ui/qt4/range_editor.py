@@ -119,8 +119,8 @@ class ToolkitEditorFactory ( EditorFactory ):
         if handler is not None:
             if isinstance( handler, CTrait ):
                 handler = handler.handler
-            self.low  = handler._low
-            self.high = handler._high
+            self.low  = handler.low
+            self.high = handler.high
         else:
             if (self.low is None) and (self.low_name == ''):
                 self.low  = 0.0

@@ -737,7 +737,7 @@ class FillPanel ( object ):
                 self.resizable = True
                 
                 # Add the sub-group so that it can be resized by the layout:
-                sizer.Add( sg_sizer, 1, wx.EXPAND | wx.ALL, 2 )
+                sizer.addLayout(sg_sizer)
                 
             else:
                 #style    = wx.EXPAND | wx.ALL
