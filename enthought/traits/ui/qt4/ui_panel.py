@@ -727,7 +727,7 @@ class FillPanel ( object ):
         # Process each group:
         for subgroup in content:
             # Add the sub-group to the panel:
-            sg_sizer, sg_resizable, contents = \
+            sg_sizer, sg_resizable, _ = \
                 fill_panel_for_group( panel, subgroup, self.ui )
             
             # If the sub-group is resizable:
@@ -970,7 +970,7 @@ class FillPanel ( object ):
                 
             # Give the editor focus if it requested it:
             if item.has_focus:
-                editor.control.SetFocus()
+                editor.control.setFocus()
                 
             # Set up the reference to the correct 'control' to use in the 
             # following section, depending upon whether we have wrapped an
@@ -1008,7 +1008,7 @@ class FillPanel ( object ):
                     scrollable  = False
                 else:
                     item_height = max( item_height, height )
-                    
+
                 control.setMinimumWidth(item_width)
                 control.setMinimumHeight(item_height)
                 
@@ -1055,7 +1055,7 @@ class FillPanel ( object ):
 
             # Save the reference to the label control (if any) in the editor:
             editor.label_control = label
-                
+
     #---------------------------------------------------------------------------
     #  Adds a widget to a layout taking into account the orientation and the
     #  position of any labels.

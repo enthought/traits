@@ -19,7 +19,7 @@ PyQt user interface toolkit.
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import Str, Range, Enum, Property, Instance, Unicode
+    import Str, Range, Enum, Property, Unicode
 
 from enthought.traits.trait_base \
     import user_name_for
@@ -28,10 +28,7 @@ from enthought.traits.ui.api \
     import View
 
 from enthought.traits.ui.ui_traits \
-    import AView
-
-from enthought.pyface.image_resource \
-    import ImageResource
+    import AView, Image
 
 from editor_factory \
     import EditorFactory
@@ -61,7 +58,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     label_value = Str
 
     # (Optional) Image to display on the button
-    image = Instance( ImageResource, allow_none = True )
+    image = Image
 
     # Extra padding to add to both the left and the right sides
     width_padding = Range( 0, 31, 7 )
