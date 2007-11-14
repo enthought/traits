@@ -17,7 +17,7 @@ from enthought.traits.ui.wx.animated_gif_editor \
 # Some sample animated GIF files:    
 import enthought.traits.ui as ui
 
-base_path = join( dirname( ui.__file__ ), 'demo', 'Extras', 'images' )
+base_path = join( dirname( ui.api.__file__ ), 'demo', 'Extras', 'images' )
 
 files = [
     join( base_path, 'logo_64x64.gif' ),
