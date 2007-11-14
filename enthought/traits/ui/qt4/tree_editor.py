@@ -262,11 +262,9 @@ class SimpleEditor ( Editor ):
                     self._editor = editor.control
 
                 # Finally, create only the tree control:
-                self.control = self._tree = _TreeWidget(self, parent)
+                self.control = self._tree = _TreeWidget(self)
             else:
                 # If editable, create a tree control and an editor panel:
-                self._is_splitter = True
-
                 self._tree = _TreeWidget(self)
 
                 self._editor = sa = UnboundedScrollArea()
@@ -278,12 +276,12 @@ class SimpleEditor ( Editor ):
                 else:
                     orient = QtCore.Qt.Vertical
 
-                self.control = splitter = QtGui.QSplitter(orient, parent)
+                self.control = splitter = QtGui.QSplitter(orient)
                 splitter.addWidget(self._tree)
                 splitter.addWidget(sa)
         else:
             # Otherwise, just create the tree control:
-            self.control = self._tree = _TreeWidget(self, parent)
+            self.control = self._tree = _TreeWidget(self)
 
         # Set up the mapping between objects and tree id's:
         self._map = {}
@@ -431,22 +429,22 @@ class SimpleEditor ( Editor ):
         for cnid in self._nodes_for( nid ):
             self._delete_node( cnid )
 
-        expanded, node, object = self._get_node_data( nid )
-        id_object   = id( object )
-        object_info = self._map[ id_object ]
-        for i, info in enumerate( object_info ):
-            if nid == info[1]:
-                del object_info[i]
-                break
-
-        if len( object_info ) == 0:
-            self._remove_listeners( node, object )
-            del self._map[ id_object ]
-
         pnid = nid.parent()
         if pnid is None:
             self._tree.takeTopLevelItem(self._tree.indexOfTopLevelItem(nid))
         else:
+            expanded, node, object = self._get_node_data( nid )
+            id_object   = id( object )
+            object_info = self._map[ id_object ]
+            for i, info in enumerate( object_info ):
+                if nid == info[1]:
+                    del object_info[i]
+                    break
+
+            if len( object_info ) == 0:
+                self._remove_listeners( node, object )
+                del self._map[ id_object ]
+
             pnid.removeChild(nid)
 
         # If the deleted node had an active editor panel showing, remove it:
@@ -1469,7 +1467,7 @@ class SimpleEditor ( Editor ):
         """ Restores any saved user preference information associated with the
             editor.
         """
-        if self._is_splitter:
+        if isinstance(self.control, QtGui.QSplitter):
             if isinstance(prefs, dict):
                 structure = prefs.get('structure')
             else:
@@ -1484,7 +1482,7 @@ class SimpleEditor ( Editor ):
     def save_prefs ( self ):
         """ Returns any user preference information associated with the editor.
         """
-        if self._is_splitter:
+        if isinstance(self.control, QtGui.QSplitter):
             return {'structure': str(self.control.saveState())}
 
         return None

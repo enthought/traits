@@ -137,13 +137,12 @@ class SimpleEditor ( Editor ):
             factory.on_trait_change( self.update_editor, 'values_modified', 
                                      dispatch = 'ui' )
             
-        self.control = panel = QtGui.QWidget(parent)
-        grid = QtGui.QGridLayout(panel)
-        grid.setMargin(0)
+        # The control is a grid layout.
+        self.control = QtGui.QGridLayout()
         blayout = QtGui.QVBoxLayout()
 
-        self._unused = self._create_listbox(grid, 0, self._on_unused,
-                self._on_use, factory.left_column_title)
+        self._unused = self._create_listbox(0, self._on_unused, self._on_use,
+                factory.left_column_title)
 
         self._use_all = self._unuse_all = self._up = self._down = None
 
@@ -163,10 +162,10 @@ class SimpleEditor ( Editor ):
             self._down = self._create_button('Move Down', blayout,
                     self._on_down)
             
-        grid.addLayout(blayout, 1, 1, QtCore.Qt.AlignCenter)
+        self.control.addLayout(blayout, 1, 1, QtCore.Qt.AlignCenter)
 
-        self._used = self._create_listbox(grid, 2, self._on_value,
-                self._on_unuse, factory.right_column_title)
+        self._used = self._create_listbox(2, self._on_value, self._on_unuse,
+                factory.right_column_title)
 
         self.context_object.on_trait_change( self.update_editor, 
                                self.extended_name + '_items?', dispatch = 'ui' )
@@ -210,9 +209,9 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Creates a list box:  
     #---------------------------------------------------------------------------
-                
-    def _create_listbox(self, grid, col, handler1, handler2, title):
-        """ Creates a list box.
+
+    def _create_listbox(self, col, handler1, handler2, title):
+        """Creates a list box.
         """
         # Add the column title in emphasized text:
         title_widget = QtGui.QLabel(title)
@@ -220,12 +219,12 @@ class SimpleEditor ( Editor ):
         font.setBold(True)
         font.setPointSize(font.pointSize() + 1)
         title_widget.setFont(font)
-        grid.addWidget(title_widget, 0, col, QtCore.Qt.AlignLeft)
-        
+        self.control.addWidget(title_widget, 0, col, QtCore.Qt.AlignLeft)
+
         # Create the list box and add it to the column:
         list = QtGui.QListWidget()
         list.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
-        grid.addWidget(list, 1, col)
+        self.control.addWidget(list, 1, col)
 
         list.connect(list,
                 QtCore.SIGNAL('itemClicked(QListWidgetItem *)'), handler1)

@@ -203,11 +203,8 @@ class CustomEditor ( SimpleEditor ):
     def create_control ( self, parent ):
         """ Creates the initial editor control.
         """
-        # Create a panel to hold all of the check boxes
-        self.control = QtGui.QWidget(parent)
-
-        layout = QtGui.QGridLayout(self.control)
-        layout.setMargin(0)
+        # The control is a grid layout.
+        self.control = QtGui.QGridLayout()
 
         self._mapper = QtCore.QSignalMapper()
         QtCore.QObject.connect(self._mapper,
@@ -221,8 +218,7 @@ class CustomEditor ( SimpleEditor ):
         """ Rebuilds the editor after its definition is modified.
         """
         # Clear any existing content:
-        for cb in self.control.findChildren(QtGui.QCheckBox):
-            cb.setParent(None)
+        self.clear_layout()
 
         cur_value = parse_value( self.value )
 
@@ -239,7 +235,6 @@ class CustomEditor ( SimpleEditor ):
         incr[-1] = -(reduce( lambda x, y: x + y, incr[:-1], 0 ) - 1)
 
         # Add the set of all possible choices:
-        layout = self.control.layout()
         index = 0
 
         for i in range( rows ):
@@ -257,7 +252,7 @@ class CustomEditor ( SimpleEditor ):
                             self._mapper, QtCore.SLOT('map()'))
                     self._mapper.setMapping(cb, cb)
 
-                    layout.addWidget(cb, i, j)
+                    self.control.addWidget(cb, i, j)
 
                     index += incr[j]
                     n -= 1

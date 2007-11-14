@@ -31,6 +31,16 @@ class Editor ( UIEditor ):
     """ Base class for PyQt editors for Traits-based UIs.
     """
 
+    def clear_layout(self):
+        """Delete the contents of the control when it is a layout.
+        """
+        while True:
+            itm = self.control.takeAt(0)
+            if itm is None:
+                break
+
+            itm.widget().setParent(None)
+
     #---------------------------------------------------------------------------
     #  Handles the 'control' trait being set:
     #---------------------------------------------------------------------------
@@ -90,21 +100,34 @@ class Editor ( UIEditor ):
     #  Handles the 'enabled' state of the editor being changed:
     #---------------------------------------------------------------------------
             
-    def _enabled_changed ( self, enabled ):
-        """ Handles the **enabled** state of the editor being changed.
+    def _enabled_changed(self, enabled):
+        """Handles the **enabled** state of the editor being changed.
         """
-        self.control.setEnabled( enabled )
+        self._enabled_changed_helper(self.control, enabled)
+
+    def _enabled_changed_helper(self, control, enabled):
+        """A helper that allows the control to be a layout and recursively
+           manages all its widgets.
+        """
+        if isinstance(control, QtGui.QWidget):
+            control.setEnabled(enabled)
+        else:
+            for i in range(control.count()):
+                itm = control.itemAt(i)
+                self._enabled_changed_helper((itm.widget() or itm.layout()),
+                        enabled)
 
     #---------------------------------------------------------------------------
     #  Handles the 'visible' state of the editor being changed:
     #---------------------------------------------------------------------------
             
-    def _visible_changed ( self, visible ):
-        """ Handles the **visible** state of the editor being changed.
+    def _visible_changed(self, visible):
+        """Handles the **visible** state of the editor being changed.
         """
         if self.label_control is not None:
-            self.label_control.setVisible( visible )
-        self.control.setVisible( visible )
+            self.label_control.setVisible(visible)
+
+        self._visible_changed_helper(self.control, visible)
                 
         # FIXME: Does PyQt need something similar?
         # Handle the case where the item whose visibility has changed is a 
@@ -126,6 +149,18 @@ class Editor ( UIEditor ):
         #    elif i >= 0:
         #        notebook.RemovePage( i )
                 
+    def _visible_changed_helper(self, control, visible):
+        """A helper that allows the control to be a layout and recursively
+           manages all its widgets.
+        """
+        if isinstance(control, QtGui.QWidget):
+            control.setVisible(visible)
+        else:
+            for i in range(control.count()):
+                itm = control.itemAt(i)
+                self._visible_changed_helper((itm.widget() or itm.layout()),
+                        visible)
+
 #-------------------------------------------------------------------------------
 #  'EditorWithList' class:  
 #-------------------------------------------------------------------------------

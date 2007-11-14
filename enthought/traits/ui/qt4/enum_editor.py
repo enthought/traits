@@ -386,12 +386,9 @@ class RadioEditor ( BaseEditor ):
             widget.
         """
         super( RadioEditor, self ).init( parent )
-            
-        # Create a panel to hold all of the radio buttons:
-        self.control = QtGui.QWidget(parent)
 
-        layout = QtGui.QGridLayout(self.control)
-        layout.setMargin(0)
+        # The control is a grid layout.
+        self.control = QtGui.QGridLayout()
 
         self._mapper = QtCore.QSignalMapper()
         QtCore.QObject.connect(self._mapper,
@@ -420,7 +417,8 @@ class RadioEditor ( BaseEditor ):
             editor.
         """
         value = self.value
-        for rb in self.control.findChildren(QtGui.QRadioButton):
+        for i in range(self.control.count()):
+            rb = self.control.itemAt(i).widget()
             rb.setChecked(rb.value == value)
 
     #---------------------------------------------------------------------------
@@ -433,8 +431,7 @@ class RadioEditor ( BaseEditor ):
             object's **values** trait changes.
         """
         # Clear any existing content:
-        for rb in self.control.findChildren(QtGui.QRadioButton):
-            rb.setParent(None)
+        self.clear_layout()
 
         # Get the current trait value:
         cur_name = self.str_value
@@ -452,7 +449,6 @@ class RadioEditor ( BaseEditor ):
         incr[-1] = -(reduce( lambda x, y: x + y, incr[:-1], 0 ) - 1)
 
         # Add the set of all possible choices:
-        layout = self.control.layout()
         index = 0
 
         for i in range( rows ):
@@ -471,7 +467,7 @@ class RadioEditor ( BaseEditor ):
                     self._mapper.setMapping(rb, rb)
 
                     self.set_tooltip(rb)
-                    layout.addWidget(rb, i, j)
+                    self.control.addWidget(rb, i, j)
 
                     index += incr[j]
                     n -= 1

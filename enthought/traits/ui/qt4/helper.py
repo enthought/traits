@@ -29,9 +29,6 @@ from enthought.traits.api \
 from enthought.traits.ui.ui_traits \
     import SequenceTypes
     
-from editor \
-    import Editor
-
 #-------------------------------------------------------------------------------
 #  Trait definitions:  
 #-------------------------------------------------------------------------------
@@ -144,21 +141,6 @@ def enum_values_changed ( values ):
         inverse_mapping[ value ] = name
         
     return ( names, mapping, inverse_mapping )  
-
-#-------------------------------------------------------------------------------
-#  'GroupEditor' class:
-#-------------------------------------------------------------------------------
-        
-class GroupEditor ( Editor ):
-    
-    #---------------------------------------------------------------------------
-    #  Initializes the object:
-    #---------------------------------------------------------------------------
-    
-    def __init__ ( self, **traits ):
-        """ Initializes the object.
-        """
-        self.set( **traits )
 
 #-------------------------------------------------------------------------------
 #  'UnboundedScrollArea' class:

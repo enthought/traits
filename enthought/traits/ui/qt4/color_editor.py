@@ -202,17 +202,6 @@ class CustomColorEditor ( SimpleColorEditor ):
         self.control = color_editor_for(self, parent)
 
     #---------------------------------------------------------------------------
-    #  Disposes of the contents of an editor:    
-    #---------------------------------------------------------------------------
-
-    def dispose ( self ):
-        """ Disposes of the contents of an editor.
-        """
-        self.control._swatch_editor.dispose()
-
-        super( CustomColorEditor, self ).dispose()
-
-    #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
 
@@ -328,21 +317,16 @@ def set_color ( editor ):
 def color_editor_for(editor, parent):
     """ Creates a custom color editor panel for a specified editor.
     """
-    # Create a panel to hold all of the buttons:
-    panel = QtGui.QWidget(parent)
+    # The lanel is a horizontal layout.
+    panel = QtGui.QHBoxLayout()
 
-    layout = QtGui.QHBoxLayout(panel)
-    layout.setMargin(0)
-
-    panel._swatch_editor = swatch_editor = editor.factory.simple_editor( 
-              editor.ui, editor.object, editor.name, editor.description, panel )
-    swatch_editor.prepare( panel )
-    control = swatch_editor.control
-    layout.addWidget(control)
+    swatch_editor = editor.factory.simple_editor(editor.ui, editor.object,
+            editor.name, editor.description, None)
+    swatch_editor.prepare(None)
+    panel.addWidget(swatch_editor.control)
 
     # Add all of the color choice buttons:
     grid = QtGui.QGridLayout()
-    grid.setMargin(0)
     grid.setSpacing(0)
 
     mapper = QtCore.QSignalMapper(panel)
@@ -372,7 +356,7 @@ def color_editor_for(editor, parent):
     QtCore.QObject.connect(mapper, QtCore.SIGNAL('mapped(QWidget *)'),
             editor.update_object_from_swatch)
 
-    layout.addLayout(grid)
+    panel.addLayout(grid)
 
     # Return the panel as the result:
     return panel

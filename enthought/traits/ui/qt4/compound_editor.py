@@ -96,18 +96,16 @@ class CompoundEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        # Create a panel to hold all of the component trait editors:
-        self.control = panel = QtGui.QWidget(parent)
-        layout = QtGui.QVBoxLayout(panel)
-        layout.setMargin(0)
-        
+        # The control is a vertical layout.
+        self.control = QtGui.QVBoxLayout()
+
         # Add all of the component trait editors:
         self._editors = editors = []
         for factory in self.factory.editors:
             editor = getattr( factory, self.kind )( self.ui, self.object, 
-                                       self.name, self.description, panel )
-            editor.prepare( panel )
-            layout.addWidget(editor.control)
+                                       self.name, self.description, None )
+            editor.prepare(None)
+            self.control.addWidget(editor.control)
             editors.append( editor )
         
     #---------------------------------------------------------------------------

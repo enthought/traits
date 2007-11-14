@@ -8,146 +8,115 @@
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
 
-""" Creates a panel-based PyQt user interface for a specified UI object.
+"""Creates a panel-based PyQt user interface for a specified UI object.
 """
 
-#-------------------------------------------------------------------------------
-#  Imports:
-#-------------------------------------------------------------------------------
 
+import cgi
 import re
 
 from PyQt4 import QtCore, QtGui
 
-from cgi \
-    import escape
-    
 from enthought.traits.api \
-    import List, Instance
-    
+    import Instance
+
 from enthought.traits.ui.api \
     import Group
-    
+
 from enthought.traits.trait_base \
-    import user_name_for, enumerate
-    
+    import enumerate
+
 from enthought.traits.ui.undo \
     import UndoHistory
-    
-#from enthought.traits.ui.dockable_view_element \
-#    import DockableViewElement
-    
+
 from enthought.traits.ui.help_template \
     import help_template
-    
+
 from enthought.traits.ui.menu \
     import UndoButton, RevertButton, HelpButton
-    
-#from enthought.pyface.sizers.flow \
-#    import FlowSizer
-    
+
 from helper \
-    import position_near, GroupEditor, UnboundedScrollArea
-    
+    import position_near, UnboundedScrollArea
+
 from constants \
     import screen_dx, screen_dy, WindowColor
-    
+
 from ui_base \
-    import BaseDialog
+    import BasePanel
+
+from editor \
+    import Editor
+
 
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
 
 # Pattern of all digits    
-all_digits = re.compile( r'\d+' )
-        
-# Global font used for emphasis
-emphasis_font = None
+all_digits = re.compile(r'\d+')
 
-# Global color used for emphasis
-emphasis_color = QtGui.QColor( 0, 0, 127 )
 
 #-------------------------------------------------------------------------------
-#  Creates a panel-based PyQt user interface for a specified UI object:
+#  Create the different panel-based PyQt user interfaces.
 #-------------------------------------------------------------------------------
 
-def ui_panel ( ui, parent ):
-    """ Creates a panel-based PyQt user interface for a specified UI object.
+def ui_panel(ui, parent):
+    """Creates a panel-based PyQt user interface for a specified UI object.
     """
-    ui_panel_for( ui, parent, True )
+    _ui_panel_for(ui, parent, True)
 
-#-------------------------------------------------------------------------------
-#  Creates a subpanel-based PyQt user interface for a specified UI object:
-#-------------------------------------------------------------------------------
 
-def ui_subpanel ( ui, parent ):
-    """ Creates a subpanel-based PyQt user interface for a specified UI 
-        object. A subpanel does not allow control buttons (other than those 
-        specified in the UI object).
+def ui_subpanel(ui, parent):
+    """Creates a subpanel-based PyQt user interface for a specified UI object.
+       A subpanel does not allow control buttons (other than those specified in
+       the UI object).
     """
-    ui_panel_for( ui, parent, False )
+    _ui_panel_for(ui, parent, False)
 
-#-------------------------------------------------------------------------------
-#  Creates a panel-based PyQt user interface for a specified UI object:
-#-------------------------------------------------------------------------------
 
-def ui_panel_for ( ui, parent, buttons ):
-    """ Creates a panel-based PyQt user interface for a specified UI object.
+def _ui_panel_for(ui, parent, buttons):
+    """Creates a panel-based PyQt user interface for a specified UI object.
     """
-    # Disable screen updates on the parent control while we build the view:
+    # Build the view while updates are disabled.
     parent.setUpdatesEnabled(False)
-    
-    # Build the view:
-    ui.control = control = Panel(ui, parent, buttons).control
-
-    # Allow screen updates to occur again:
+    ui.control = control = _Panel(ui, parent, buttons).control
     parent.setUpdatesEnabled(True)
-    
+
     control._parent = parent
-    control._object = ui.context.get( 'object' )
-    control._ui     = ui
+    control._object = ui.context.get('object')
+    control._ui = ui
+
     try:
         ui.prepare_ui()
     except:
         control.setParent(None)
         del control
         ui.control = None
-        ui.result  = False
+        ui.result = False
         raise
+
     ui.restore_prefs()
     ui.result = True
-    
-#-------------------------------------------------------------------------------
-#  'Panel' class:
-#-------------------------------------------------------------------------------
 
-class Panel ( BaseDialog ):
-    """ PyQt user interface panel for Traits-based user interfaces.
+
+class _Panel(BasePanel):
+    """PyQt user interface panel for Traits-based user interfaces.
     """
 
-    #---------------------------------------------------------------------------
-    #  Initializes the object: 
-    #---------------------------------------------------------------------------
-        
-    def __init__ ( self, ui, parent, allow_buttons ):
-        """ Initializes the object.
+    def __init__(self, ui, parent, allow_buttons):
+        """Initialise the object.
         """
         self.ui = ui
-        history = None
-        view    = ui.view
-        title   = view.title
-        
-        # Reset any existing history listeners:
         history = ui.history
+        view = ui.view
+
+        # Reset any existing history listeners.
         if history is not None:
-            history.on_trait_change( self._on_undoable, 
-                                     'undoable', remove = True )
-            history.on_trait_change( self._on_redoable, 
-                                     'redoable', remove = True )
-            history.on_trait_change( self._on_revertable, 
-                                     'undoable', remove = True )
-                                     
+            history.on_trait_change(self._on_undoable, 'undoable', remove=True)
+            history.on_trait_change(self._on_redoable, 'redoable', remove=True)
+            history.on_trait_change(self._on_revertable, 'undoable',
+                    remove=True)
+
         # Determine if we need any buttons or an 'undo' history: 
         buttons  = [ self.coerce_button( button ) for button in view.buttons ]
         nbuttons = len( buttons )
@@ -158,7 +127,7 @@ class Panel ( BaseDialog ):
                 self.check_button( buttons, RevertButton )
             if view.help:
                 self.check_button( buttons, HelpButton )
-                
+
         if allow_buttons and (history is None):
             for button in buttons:
                 if (self.is_button( button, 'Undo' ) or 
@@ -166,37 +135,33 @@ class Panel ( BaseDialog ):
                     history = UndoHistory()
                     break
         ui.history = history
-          
-        # Create a container panel to put everything in:
-        cpanel = getattr( self, 'control', None )
-        if cpanel is not None:
-            # Clear any existing content:
-            for w in cpanel.findChildren(QtGui.QWidget):
-                w.setParent(None)
 
-            layout = cpanel.layout()
-        else:
-            self.control = cpanel = QtGui.QWidget(parent)
-            layout = None
-        
-        # Create the actual trait sheet panel and imbed it in a scrollable 
-        # window (if requested):
+        # Ensure the parent has a layout we can use.
+        layout = parent.layout()
+
         if layout is None:
-            layout = QtGui.QVBoxLayout(cpanel)
-            layout.setMargin(0)
+            layout = QtGui.QVBoxLayout(parent)
+        elif not isinstance(layout, QtGui.QBoxLayout):
+            raise TypeError, "panel parent layout must be a QBoxLayout"
 
-        if ui.scrollable:
-            sw = UnboundedScrollArea(cpanel)
-            sw.setFrameShape(QtGui.QFrame.NoFrame)
-            sw.setWidget(panel(ui, sw))
-        else:
-            sw = panel(ui, cpanel) 
+        # Handle any view title.
+        if view.title != "":
+            layout.addWidget(heading_text(parent, text=view.title).control)
 
-        if title != "":
-            layout.addWidget(heading_text(cpanel, text=title).control)
+        # Create and add the panel making sure that it is a widget.
+        self.control = panel(ui)
 
-        layout.addWidget(sw)
-        
+        if not isinstance(self.control, QtGui.QWidget):
+            # Create a container widget and make sure it doesn't take up any
+            # additional screen space.
+            self.control.setMargin(0)
+            w = QtGui.QWidget()
+            w.setLayout(self.control)
+            self.control = w
+
+        layout.addWidget(self.control)
+
+        # Add any buttons.
         if (allow_buttons and
             ((nbuttons != 1) or (not self.is_button( buttons[0], '' )))):
             # Add the special function buttons:
@@ -221,171 +186,95 @@ class Panel ( BaseDialog ):
                     self.add_button( button, b_sizer, self._on_help )
                 elif not self.is_button( button, '' ):
                     self.add_button( button, b_sizer )
-                
-            layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
-   
-    #---------------------------------------------------------------------------
-    #  Handles an 'Undo' change request:
-    #---------------------------------------------------------------------------
-           
-    def _on_undo ( self, event ):
-        """ Handles a request to undo a change.
-        """
-        self.ui.history.undo()
-    
-    #---------------------------------------------------------------------------
-    #  Handles a 'Redo' change request:
-    #---------------------------------------------------------------------------
-           
-    def _on_redo ( self, event ):
-        """ Handles a request to redo a change.
-        """
-        self.ui.history.redo()
-    
-    #---------------------------------------------------------------------------
-    #  Handles a 'Revert' all changes request:
-    #---------------------------------------------------------------------------
-           
-    def _on_revert ( self, event ):
-        """ Handles a request to revert all changes.
-        """
-        ui = self.ui
-        ui.history.revert()
-        ui.handler.revert( ui.info )
-    
-    #---------------------------------------------------------------------------
-    #  Handles the 'Help' button being clicked:
-    #---------------------------------------------------------------------------
-           
-    def _on_help ( self, event ):
-        """ Handles the **Help** button being clicked.
-        """
-        self.ui.handler.show_help( self.ui.info, event.GetEventObject() )
-            
-    #-----------------------------------------------------------------------
-    #  Handles the undo history 'undoable' state changing:
-    #-----------------------------------------------------------------------
-            
-    def _on_undoable ( self, state ):
-        """ Handles a change to the "undoable" state of the undo history.
-        """
-        self.undo.Enable( state )
-            
-    #---------------------------------------------------------------------------
-    #  Handles the undo history 'redoable' state changing:
-    #---------------------------------------------------------------------------
-            
-    def _on_redoable ( self, state ):
-        """ Handles a change to the "redoable" state of the undo history.
-        """
-        self.redo.Enable( state )
-            
-    #---------------------------------------------------------------------------
-    #  Handles the 'revert' state changing:
-    #---------------------------------------------------------------------------
-            
-    def _on_revertable ( self, state ):
-        """ Handles a change to the "revert" state.
-        """
-        self.revert.Enable( state )
-    
-#-------------------------------------------------------------------------------
-#  Creates a panel-based PyQt user interface for a specified UI object:
-#
-#  Note: This version does not modify the UI object passed to it.
-#-------------------------------------------------------------------------------
 
-def panel ( ui, parent ):
-    """ Creates a panel-based PyQt user interface for a specified UI object.
-    
-        This function does not modify the UI object passed to it
+            layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
+
+
+def panel(ui):
+    """Creates a panel-based PyQt user interface for a specified UI object.
+       This function does not modify the UI object passed to it.  The object
+       returned may be either a widget, a layout or None.
     """
     # Bind the context values to the 'info' object:
     ui.info.bind_context()
-    
+
     # Get the content that will be displayed in the user interface:
     content = ui._groups
-    
-    # If there is 0 or 1 Groups in the content, create a single panel for it:
-    if len(content) <= 1:
-        panel = QtGui.QWidget(parent)
+    nr_groups = len(content)
 
-        if len(content) == 1:
-            # Fill the panel with the Group's content:
-            sg_layout, _, _ = fill_panel_for_group(panel, content[0], ui)
-            layout = panel.layout()
+    if nr_groups == 0:
+        panel = None
+    if nr_groups == 1:
+        panel = _GroupPanel(content[0], ui).control
+    elif nr_groups > 1:
+        panel = QtGui.QTabWidget()
+        _fill_panel(panel, content, ui)
+        panel.ui = ui
 
-            if isinstance(sg_layout, QtGui.QWidget):
-                layout.addWidget(sg_layout)
-            elif sg_layout.parentWidget() is None:
-                layout.addLayout(sg_layout)
+    # If the UI is scrollable then wrap the panel in a scroll area.
+    if ui.scrollable and panel is not None:
+        # Make sure the panel is a widget.
+        if isinstance(panel, QtGui.QLayout):
+            panel.setMargin(0)
+            w = QtGui.QWidget()
+            w.setLayout(panel)
+            panel = w
 
-        # Return the panel that was created:
-        return panel
-        
-    # Create a notebook which will contain a page for each group in the content:
-    nb = create_notebook_for_items(content, ui, parent, None)
-    nb.ui = ui
+        sa = UnboundedScrollArea()
+        sa.setFrameShape(QtGui.QFrame.NoFrame)
+        sa.setWidget(panel)
+        panel = sa
 
-    # Return the notebook as the result:
-    return nb
-  
-#-------------------------------------------------------------------------------
-#  Creates a notebook and adds a list of groups or items to it as separate 
-#  pages:  
-#-------------------------------------------------------------------------------
-                                                      
-def create_notebook_for_items ( content, ui, parent, group,
-                                item_handler = None, is_dock_window = False ):
-    """ Creates a notebook and adds a list of groups or items to it as separate 
-        pages.
+    return panel
+
+
+def _fill_panel(panel, content, ui, item_handler=None):
+    """Fill a page based container panel with content.
     """
-    if is_dock_window:
-        nb = parent
-    else:
-        nb = QtGui.QTabWidget(parent)
-
-    has_theme = ((group is not None) and (group.group_theme is not None))
-    
-    # Create a notebook page for each group or item in the content:
     active = 0
-    for index, item in enumerate( content ):
-        page_name = item.get_label(ui)
-        if page_name == '':
-           page_name = 'Page %d' % index
 
-        if isinstance( item, Group ):
-            # Create the group as a QTabWidget page:
+    for index, item in enumerate(content):
+        page_name = item.get_label(ui)
+        if page_name == "":
+           page_name = "Page %d" % index
+
+        if isinstance(item, Group):
             if item.selected:
                 active = index
-            sg_page, resizable, contents = \
-                fill_panel_for_group( nb, item, ui, suppress_label = True,
-                                                    is_dock_window = True )
 
-            # FIXME: This is almost certainly wrong as I don't yet understand
-            # the different widget structures that could be returned.
-            # If the result is a QTabWidget with only one page, collapse it
-            # down into just the page:
-            if isinstance(contents, QtGui.QTabWidget) and contents.count() == 1:
-                page = contents.widget(0)
-                contents.removeTab(0)
-                sg_page.setParent(None)
-                sg_page = page
-                
-            # Add the content to the notebook as a new page:    
-            nb.addTab(sg_page, page_name)
+            gp = _GroupPanel(item, ui, suppress_label=True)
+            page = gp.control
+            sub_page = gp.sub_control
+
+            # If the result is the same type with only one page, collapse it
+            # down into just the page.
+            if type(sub_page) is type(panel) and sub_page.count() == 1:
+                new = sub_page.widget(0)
+
+                if isinstance(panel, QtGui.QTabWidget):
+                    sub_page.removeTab(0)
+                else:
+                    sub_page.removeItem(0)
+            elif isinstance(page, QtGui.QWidget):
+                new = page
+            else:
+                new = QtGui.QWidget()
+                new.setLayout(page)
+
+            # Add the content.
+            if isinstance(panel, QtGui.QTabWidget):
+                panel.addTab(new, page_name)
+            else:
+                panel.addItem(new, page_name)
+
         else:
+            # FIXME: Don't yet have an example that exercises this code.
             # Create the new page as a simple DockControl containing the
             # specified set of controls:
             sizer = wx.BoxSizer( wx.VERTICAL )
-            if has_theme:
-                image_panel, image_sizer = add_image_panel( nb, group )
-                panel = image_panel.control
-                image_sizer.Add( sizer, 1, wx.EXPAND )
-            else:   
-                panel = QtGui.QWidget(nb)
-                panel.SetSizer( sizer )
-                
+            panel = QtGui.QWidget(nb)
+            panel.SetSizer( sizer )
+
             pages.append( DockControl( name     = page_name,
                                        image    = item.image,
                                        id       = item.get_id(),
@@ -397,65 +286,41 @@ def create_notebook_for_items ( content, ui, parent, group,
             item_handler( item, panel, sizer )
             panel.GetSizer().Fit( panel )
 
-    nb.setCurrentIndex(active)
+    panel.setCurrentIndex(active)
 
-    # Return the notebook as the result:
-    return nb
 
-#-------------------------------------------------------------------------------
-#  Creates a themed ImagePanel for the specified group and parent window:
-#-------------------------------------------------------------------------------
-
-def add_image_panel ( window, group ):
-    """ Creates a themed ImagePanel for the specified group and parent window.
-    """
-    from image_slice import ImagePanel
-    
-    image_panel = ImagePanel( theme = group.group_theme, text = group.label )
-    panel       = image_panel.create_control( window )
-    
-    return ( image_panel, panel.GetSizer() )
-    
-#-------------------------------------------------------------------------------
-#  Handles a notebook page being 'turned':
-#-------------------------------------------------------------------------------
-    
-def _page_changed ( event ):
-    nb = event.GetEventObject()
-    nb.ui._active_group = event.GetSelection()
-    
 #-------------------------------------------------------------------------------
 #  Displays a help window for the specified UI's active Group:
 #-------------------------------------------------------------------------------
-    
+
 def show_help ( ui, button ):
     """ Displays a help window for the specified UI's active Group.
     """
     group    = ui._groups[ ui._active_group ]
     template = help_template()
     if group.help != '':
-        header = template.group_help % escape( group.help )
+        header = template.group_help % cgi.escape( group.help )
     else:
         header = template.no_group_help
     fields = []
     for item in group.get_content( False ):
         if not item.is_spacer():
             fields.append( template.item_help % (
-                           escape( item.get_label( ui ) ), 
-                           escape( item.get_help( ui ) ) ) )
+                           cgi.escape( item.get_label( ui ) ), 
+                           cgi.escape( item.get_help( ui ) ) ) )
     html = template.group_html % ( header, '\n'.join( fields ) ) 
     HTMLHelpWindow( button, html, .25, .33 )
-    
+
 #-------------------------------------------------------------------------------
 #  Displays a pop-up help window for a single trait:
 #-------------------------------------------------------------------------------
-    
+
 def show_help_popup ( event ):
     """ Displays a pop-up help window for a single trait.
     """
     control  = event.GetEventObject()
     template = help_template()
-    
+
     # Note: The following check is necessary because under Linux, we get back
     # a control which does not have the 'help' trait defined (it is the parent
     # of the object with the 'help' trait):
@@ -463,349 +328,228 @@ def show_help_popup ( event ):
     if help is not None:
         html = template.item_html % ( control.GetLabel(), help )
         HTMLHelpWindow( control, html, .25, .13 )
-    
-#-------------------------------------------------------------------------------
-#  Builds the user interface for a specified Group within a specified Panel:
-#-------------------------------------------------------------------------------
-    
-def fill_panel_for_group ( panel, group, ui, suppress_label = False, 
-                           is_dock_window = False, create_panel = False ):
-    """ Builds the user interface for a specified Group within a specified 
-        Panel.
-    """
-    fp = FillPanel( panel, group, ui, suppress_label, is_dock_window,
-                    create_panel )
-    return ( fp.control or fp.sizer, fp.resizable, fp.dock_contents )
-    
-#-------------------------------------------------------------------------------
-#  'FillPanel' class:
-#-------------------------------------------------------------------------------
-    
-class FillPanel ( object ):
-    """ A subpanel for a single group of items.
+
+
+class _GroupPanel(object):
+    """A sub-panel for a single group of items.  It may be either a layout or a
+       widget.
     """
 
-    #---------------------------------------------------------------------------
-    #  Initializes the object:
-    #---------------------------------------------------------------------------
-    
-    def __init__ ( self, panel, group, ui, suppress_label, is_dock_window, 
-                   create_panel ):
-        """ Initializes the object.
+    def __init__(self, group, ui, suppress_label=False):
+        """Initialise the object.
         """
         # Get the contents of the group:
         content = group.get_content()
-        
-        # Create a group editor object if one is needed:
-        self.control       = self.sizer = editor = None
-        self.ui            = ui
-        self.group         = group
-        self.is_horizontal = (group.orientation == 'horizontal')
-        layout             = group.layout
-        is_splitter        = (layout == 'split')
-        is_tabbed          = (layout == 'tabbed')
-        id                 = group.id
 
-        # Assume our contents are not resizable:
-        self.resizable = False
-        
-        if is_dock_window and (is_splitter or is_tabbed):
-            if is_splitter:
-                self.dock_contents = self.add_splitter_items( 
-                                              panel, content, group )
-            else:
-                self.dock_contents = create_notebook_for_items( content, ui,
-                                    panel, group, self.add_notebook_item, True )
-                self.resizable     = True
-            return
-          
-        theme = group.group_theme
-        if (is_dock_window             or 
-            create_panel               or
-            (id != '')                 or
-            (theme is not None)        or
-            (group.visible_when != '') or
-            (group.enabled_when != '')):
-            new_panel = QtGui.QWidget(panel)
-            sizer = panel.layout()
-            if sizer is None:
-                sizer = QtGui.QVBoxLayout(panel)
-                sizer.setMargin(0)
-            self.control = panel = new_panel
-            if is_splitter or is_tabbed:
-                editor = SplitterGroupEditor( control = panel )
-            else:
-                editor = GroupEditor( control = panel )
-            if id != '':
-                ui.info.bind( group.id, editor )
-            if group.visible_when != '':
-                ui.add_visible( group.visible_when, editor )
-            if group.enabled_when != '':
-                ui.add_enabled( group.enabled_when, editor )
-                
-        self.panel         = panel
-        self.dock_contents = None
+        # Save these for other methods.
+        self.group = group
+        self.ui = ui
+
+        # outer is the top-level widget or layout that will eventually be
+        # returned.  sub is the QTabWidget or QToolBox corresponding to any
+        # 'tabbed' or 'fold' layout.  It is only used to collapse nested
+        # widgets.  inner is the object (not necessarily a layout) that new
+        # controls should be added to.
+        outer = sub = inner = None
 
         # Determine the horizontal/vertical orientation of the group:
-        if self.is_horizontal:
-            orientation = QtGui.QBoxLayout.LeftToRight
+        if group.orientation == 'horizontal':
+            self.direction = QtGui.QBoxLayout.LeftToRight
         else:
-            orientation = QtGui.QBoxLayout.TopToBottom
+            self.direction = QtGui.QBoxLayout.TopToBottom
 
-        # Set up a group with or without a border around its contents:
-        label = ''
-        if not suppress_label:
+        # Get the group label.
+        if suppress_label:
+            label = ""
+        else:
             label = group.label
 
+        # Create a border if requested.
         if group.show_border:
-            box = QtGui.QGroupBox(label)
-            lay = panel.layout()
-            if lay is None:
-                lay = QtGui.QVBoxLayout(panel)
-                lay.setMargin(0)
+            outer = QtGui.QGroupBox(label)
+            inner = QtGui.QBoxLayout(self.direction, outer)
 
-            lay.addWidget(box)
-            self.sizer = QtGui.QBoxLayout(orientation, box)
-        else:
-            if layout == 'flow':
-                self.sizer = FlowSizer( orientation )
-            else:
-                self.sizer = QtGui.QBoxLayout(orientation)
+        elif label != "":
+            outer = inner = QtGui.QBoxLayout(self.direction)
+            inner.addWidget(heading_text(None, text=label).control)
 
-                # Try and figure out the nearest parent widget that isn't a
-                # simple layout holder.  (This module's code is based on the wx
-                # version which doesn't use nested layouts.)
-                ppanel = panel
-                while type(ppanel) is QtGui.QWidget:
-                    ppanel = ppanel.parent()
+        # Add the layout specific content.
+        if len(content) == 0:
+            pass
 
-                # If the parent doesn't have a visible frame then we don't want
-                # a margin.
-                if not isinstance(ppanel, (QtGui.QTabWidget, QtGui.QMainWindow)):
-                    self.sizer.setMargin(0)
+        elif group.layout == 'flow':
+            raise NotImplementedError, "'the 'flow' layout isn't implemented"
 
-            if label != '':
-                self.sizer.addWidget(heading_text(panel, text=label).control)
-
-            # If no sizer has been specified for the panel yet, make the new
-            # sizer the layout sizer for the panel:        
-            if panel.layout() is None:
-                panel.setLayout(self.sizer)
-
-        if is_splitter:
+        elif group.layout == 'split':
+            # Create the splitter.
             splitter = QtGui.QSplitter()
 
-            if not self.is_horizontal:
+            if self.direction == QtGui.QBoxLayout.TopToBottom:
                 splitter.setOrientation(QtCore.Qt.Vertical)
 
-            if editor is not None:
-                editor.splitter = splitter
-
-            self.add_splitter_items(splitter, content, group)
-            self.sizer.addWidget(splitter)
-        elif len( content ) > 0:
-            if is_tabbed:
-                self.resizable = True
-                dw = create_notebook_for_items( content, ui, panel, group,
-                                                self.add_notebook_item )
-                if editor is not None:
-                    editor.splitter = dw
-                ###self.sizer.Add( dw, 1, wx.EXPAND | wx.ALL, 2 )
-                self.sizer.Add( dw, 1, wx.EXPAND )
-            # Check if content is all Group objects:
-            elif layout == 'fold':
-                self.resizable = True
-                self.sizer.Add( self.create_fold_for_items( panel, content ), 
-                                1, wx.EXPAND )
-            elif isinstance( content[0], Group ):
-                # If so, add them to the panel and exit:
-                self.add_groups( content, panel )
+            if outer is None:
+                outer = splitter
             else:
-                self.add_items( content, panel, self.sizer )
+                inner.addWidget(splitter)
 
-        # If the caller is a DockWindow, we need to define the content we are
-        # adding to it:
-        if is_dock_window:
-            self.dock_contents = panel
+            # Create an editor.
+            self._setup_editor(group,
+                    SplitterGroupEditor(control=outer, splitter=splitter))
 
-    #---------------------------------------------------------------------------
-    #  Adds a set of groups or items separated by splitter bars to a QSplitter:
-    #---------------------------------------------------------------------------
+            self._add_splitter_items(content, splitter)
 
-    def add_splitter_items(self, window, content, group):
-        """ Adds a set of groups or items separated by splitter bars to a
-            QSplitter.
+        elif group.layout in ('tabbed', 'fold'):
+            if group.layout == 'tabbed':
+                sub = QtGui.QTabWidget()
+            else:
+                sub = QtGui.QToolBox()
+
+            _fill_panel(sub, content, self.ui, self._add_page_item)
+
+            if outer is None:
+                outer = sub
+            else:
+                inner.addWidget(sub)
+
+            # Create an editor.
+            self._setup_editor(group, GroupEditor(control=outer))
+
+        else:
+            # See if we need to control the visual appearence of the group.
+            if group.visible_when != '' or group.enabled_when != '':
+                # Make sure that outer is a widget or a layout.
+                if outer is None:
+                    outer = inner = QtGui.QBoxLayout(self.direction)
+
+                # Create an editor.
+                self._setup_editor(group, GroupEditor(control=outer))
+
+            if isinstance(content[0], Group):
+                layout = self._add_groups(content, inner)
+            else:
+                layout = self._add_items(content, inner)
+
+            if outer is None:
+                outer = layout
+            elif layout is not inner:
+                inner.addLayout(layout)
+
+        # Publish the top-level widget, layout or None.
+        self.control = outer
+
+        # Publish the optional sub-control.
+        self.sub_control = sub
+
+    def _add_splitter_items(self, content, splitter):
+        """Adds a set of groups or items separated by splitter bars.
         """
         for item in content:
             if isinstance(item, Group):
-                sizer, resizable, contents = fill_panel_for_group(window,
-                        item, self.ui, suppress_label=True,
-                        is_dock_window=True)
-
-                self.resizable |= resizable
+                panel = _GroupPanel(item, self.ui, suppress_label=True).control
             else:
-                panel = QtGui.QWidget(window)
+                panel = self._add_items([item])
 
-                if self.is_horizontal:
-                    direction = QtGui.QBoxLayout.LeftToRight
-                else:
-                    direction = QtGui.QBoxLayout.TopToBottom
+            # Add the panel to the splitter.
+            if panel is not None:
+                if isinstance(panel, QtGui.QLayout):
+                    # A QSplitter needs a widget.
+                    w = QtGui.QWidget()
+                    panel.setMargin(0)
+                    w.setLayout(panel)
+                    panel = w
 
-                layout = QtGui.QBoxLayout(direction, panel)
-                layout.setMargin(0)
-        
-                self.add_items([item], panel, layout)
-        
-                window.addWidget(panel)
+                splitter.addWidget(panel)
 
-    #---------------------------------------------------------------------------
-    #  Adds a set of groups or items as vertical notebook pages to a vertical
-    #  notebook:
-    #---------------------------------------------------------------------------
-
-    def create_fold_for_items ( self, window, content ):
-        """ Adds a set of groups or items as vertical notebook pages to a 
-            vertical notebook.
+    def _setup_editor(self, group, editor):
+        """Setup the editor for a group.
         """
-        from themed_vertical_notebook import ThemedVerticalNotebook
-        
-        # Create the vertical notebook:
-        nb     = ThemedVerticalNotebook( scrollable = True )
-        result = nb.create_control( window )
-                      
-        # Create the notebook pages:
-        nb.pages = [ self.create_fold_for_item( nb, item ) for item in content ]
-            
-        # Return the notebook we created:
-        return result
-        
-    #---------------------------------------------------------------------------
-    #  Adds a single group or item to a vertical notebook:
-    #---------------------------------------------------------------------------
-            
-    def create_fold_for_item ( self, notebook, item ):
-        """ Adds a single group or item to a vertical notebook.
-        """
-        # Create a new notebook page:
-        page = notebook.create_page()
+        if group.id != '':
+            self.ui.info.bind(group.id, editor)
 
-        # Create the page contents:
-        if isinstance( item, Group ):
-            panel, resizable, contents = fill_panel_for_group( page.parent,
-                item, self.ui, suppress_label = True, create_panel = True )
-        else:
-            panel = QtGui.QWidget(page.parent)
-            sizer = wx.BoxSizer( wx.VERTICAL )
-            panel.SetSizer( sizer )
-            self.add_items( [ item ], panel, sizer )
-        
-        # Set the page name and control:
-        page.name    = item.get_label( self.ui )
-        page.control = panel
-        
-        # Return the new notebook page:
-        return page
-        
-    #---------------------------------------------------------------------------
-    #  Adds a single Item to a notebook:  
-    #---------------------------------------------------------------------------
-    
-    def add_notebook_item ( self, item, parent, sizer ):
-        """ Adds a single Item to a notebook.
-        """
-        self.add_items( [ item ], parent, sizer )
+        if group.visible_when != '':
+            self.ui.add_visible(group.visible_when, editor)
 
-    #---------------------------------------------------------------------------
-    #  Adds a list of Group objects to the panel:
-    #---------------------------------------------------------------------------
-        
-    def add_groups ( self, content, panel ):
-        """ Adds a list of Group objects to the panel.
+        if group.enabled_when != '':
+            self.ui.add_enabled(group.enabled_when, editor)
+
+    def _add_page_item(self, item, layout):
+        """Adds a single Item to a page based panel.
         """
-        sizer = self.sizer
-        
-        # Process each group:
+        self._add_items([item], layout)
+
+    def _add_groups(self, content, outer):
+        """Adds a list of Group objects to the panel, creating a layout if
+           needed.  Return the outermost layout.
+        """
+        # Use the existing layout if there is one.
+        if outer is None:
+            outer = QtGui.QBoxLayout(self.direction)
+
+        # Process each group.
         for subgroup in content:
-            # Add the sub-group to the panel:
-            sg_sizer, sg_resizable, _ = \
-                fill_panel_for_group( panel, subgroup, self.ui )
-            
-            # If the sub-group is resizable:
-            if sg_resizable:
-                
-                # Then so are we:
-                self.resizable = True
-                
-                # Add the sub-group so that it can be resized by the layout:
-                sizer.addLayout(sg_sizer)
-                
-            else:
-                #style    = wx.EXPAND | wx.ALL
-                #growable = 0
-                #if self.is_horizontal:
-                #    if subgroup.springy:
-                #        growable = 1
-                #    if subgroup.orientation == 'horizontal':
-                #        style |= wx.ALIGN_CENTER_VERTICAL
-                #sizer.Add( sg_sizer, growable, style, 2 )
-                # FIXME: Try and account for the above.
+            panel = _GroupPanel(subgroup, self.ui).control
 
-                # Only add the layout if it hasn't already been done.
-                if sg_sizer.parent() is None:
-                    sizer.addLayout(sg_sizer)
+            if isinstance(panel, QtGui.QWidget):
+                outer.addWidget(panel)
+            elif isinstance(panel, QtGui.QLayout):
+                outer.addLayout(panel)
 
-    #---------------------------------------------------------------------------
-    #  Adds a list of Item objects to the panel:
-    #---------------------------------------------------------------------------
-        
-    def add_items ( self, content, panel, sizer ):
-        """ Adds a list of Item objects to the panel.
+        return outer
+
+    def _add_items(self, content, outer=None):
+        """Adds a list of Item objects, creating a layout if needed.  Return
+           the outermost layout.
         """
         # Get local references to various objects we need:
         ui = self.ui
         info = ui.info
         handler = ui.handler
-        
+
         group = self.group
         show_left = group.show_left
         padding = group.padding
         columns = group.columns
 
+        # See if a label is needed.
         show_labels = False
         for item in content:
             show_labels |= item.show_label
 
+        # See if a grid layout is needed.
         if show_labels or columns > 1:
+            inner = QtGui.QGridLayout()
+
+            if outer is None:
+                outer = inner
+            else:
+                outer.addLayout(inner)
+
             row = 0
-            item_sizer = QtGui.QGridLayout()
 
             if show_left:
                 label_alignment = QtCore.Qt.AlignRight
                 if show_labels:
                     for i in range(1, group.columns * 2, 2):
-                        item_sizer.setColumnStretch(i, 1)
+                        inner.setColumnStretch(i, 1)
             else:
                 label_alignment = QtCore.Qt.AlignLeft
                 if show_labels:
                     for i in range(0, group.columns * 2, 2):
-                        item_sizer.setColumnStretch(i, 1)
-
-            sizer.addLayout(item_sizer)
-            if sizer.direction() == QtGui.QBoxLayout.TopToBottom:
-                sizer.setAlignment(item_sizer, QtCore.Qt.AlignTop)
-            else:
-                sizer.setAlignment(item_sizer, QtCore.Qt.AlignLeft)
+                        inner.setColumnStretch(i, 1)
         else:
-            # Otherwise, the current sizer will work as is:
+            # Use the existing layout if there is one.
+            if outer is None:
+                outer = QtGui.QBoxLayout(self.direction)
+
+            inner = outer
+
             row = -1
-            item_sizer = sizer
             label_alignment = 0
-            
+
         # Process each Item in the list:
         col = -1
 
         for item in content:
-
             # Keep a track of the current logical row and column unless the
             # layout is not a grid.
             col += 1
@@ -813,43 +557,32 @@ class FillPanel ( object ):
             if row >= 0 and col >= columns:
                 col = 0
                 row += 1
-            
-            # Get the item theme (if any):
-            theme = item.item_theme
-            
+
             # Get the name in order to determine its type:
             name = item.name
-            
+
             # Check if is a label:
             if name == '':
                 label = item.label
-                if label != '':
+                if label != "":
                     # If we are building a multi-column layout with labels, 
                     # just add space in the next column:
                     if cols > 1 and show_labels:
                         col += 1
 
-                    if theme is not None:
-                        from image_slice import ImageText
-
-                        label = ImageText( panel, theme, label )
-                        item_sizer.Add( label, 0, wx.EXPAND )
-                    elif item.style == 'simple':
-                        # Add a simple text label:
-                        label = QtGui.QLabel(label, panel)
-                        item_sizer.addWidget(label, row, col)
+                    if item.style == 'simple':
+                        label = QtGui.QLabel(label)
                     else:
-                        # Add the label to the sizer:
-                        label = heading_text( panel, text = label ).control
-                        item_sizer.Add( label, 0, 
-                                        wx.TOP | wx.BOTTOM | wx.EXPAND, 3 )
-                                        
+                        label = heading_text(None, text=label).control
+
+                    inner.addWidget(label, row, col)
+
                     if item.emphasized:
-                        self._add_emphasis( label )
-                        
+                        self._add_emphasis(label)
+
                 # Continue on to the next Item in the list:
                 continue
-            
+
             # Check if it is a separator:
             if name == '_':
                 cols = columns
@@ -871,56 +604,58 @@ class FillPanel ( object ):
                 for i in range(cols):
                     line = QtGui.QFrame()
 
-                    if self.is_horizontal:
+                    if self.direction == QtGui.QBoxLayout.LeftToRight:
                         # Add a vertical separator:
                         line.setFrameShape(QtGui.QFrame.VLine)
 
                         if row < 0:
-                            item_sizer.addWidget(line)
+                            inner.addWidget(line)
                         else:
-                            item_sizer.addWidget(line, i, row)
+                            inner.addWidget(line, i, row)
                     else:
                         # Add a horizontal separator:
                         line.setFrameShape(QtGui.QFrame.HLine)
 
                         if row < 0:
-                            item_sizer.addWidget(line)
+                            inner.addWidget(line)
                         else:
-                            item_sizer.addWidget(line, row, i)
+                            inner.addWidget(line, row, i)
+
+                    line.setFrameShadow(QtGui.QFrame.Sunken)
 
                 # Continue on to the next Item in the list:
                 continue
-               
+
             # Convert a blank to a 5 pixel spacer:
             if name == ' ':
                 name = '5'
-               
+
             # Check if it is a spacer:
             if all_digits.match( name ):
-                
+
                 # If so, add the appropriate amount of space to the sizer:
                 n = int( name )
-                if self.is_horizontal:
-                    item_sizer.Add( ( n, 1 ) )
+                if self.direction == QtGui.QBoxLayout.LeftToRight:
+                    inner.Add( ( n, 1 ) )
                 else:
                     spacer = ( 1, n )
-                    item_sizer.Add( spacer )
+                    inner.Add( spacer )
                     if show_labels:
-                        item_sizer.Add( spacer )
-                    
+                        inner.Add( spacer )
+
                 # Continue on to the next Item in the list:
                 continue
-               
+
             # Otherwise, it must be a trait Item:
             object      = eval( item.object_, globals(), ui.context )
             trait       = object.base_trait( name )
             desc        = trait.desc or ''
             fixed_width = False
-            
+
             # Handle any label.
             if item.show_label:
-                label = self.create_label(item, ui, desc, panel)
-                self._add_widget(item_sizer, label, row, col, show_labels,
+                label = self._create_label(item, ui, desc)
+                self._add_widget(inner, label, row, col, show_labels,
                         label_alignment)
             else:
                 label = None
@@ -929,7 +664,7 @@ class FillPanel ( object ):
             editor_factory = item.editor
             if editor_factory is None:
                 editor_factory = trait.get_editor()
-                
+
                 # If still no editor factory found, use a default text editor:
                 if editor_factory is None:
                     from text_editor import ToolkitEditorFactory
@@ -942,54 +677,41 @@ class FillPanel ( object ):
                 if item.format_str != '':
                     editor_factory.format_str = item.format_str
 
-            # Set up the background image (if used):
-            item_panel = panel
-            if theme is not None:
-                from image_slice import ImagePanel
-                
-                image_panel = ImagePanel( theme = theme,
-                                          text  = item.get_label( ui ) )
-                item_panel  = image_panel.create_control( panel )
-                    
             # Create the requested type of editor from the editor factory:
             factory_method = getattr( editor_factory, item.style + '_editor' )
             editor         = factory_method( ui, object, name, item.tooltip, 
-                                        item_panel ).set( 
+                                        None).set( 
                                  item        = item,
                                  object_name = item.object )
-                                 
+
             # Tell editor to actually build the editing widget:
-            editor.prepare( item_panel )
-            
+            editor.prepare(None)
+
             # Set the initial 'enabled' state of the editor from the factory:
             editor.enabled = editor_factory.enabled
-            
+
             # Add emphasis to the editor control if requested:
             if item.emphasized:
-                self._add_emphasis( editor.control )
-                
+                self._add_emphasis(editor.control)
+
             # Give the editor focus if it requested it:
             if item.has_focus:
                 editor.control.setFocus()
-                
+
             # Set up the reference to the correct 'control' to use in the 
             # following section, depending upon whether we have wrapped an
             # ImagePanel around the editor control or not:
             control = editor.control
-            if theme is None:
-                width = control.width()
-                height = control.height()
-            else:
-                item_panel.GetSizer().Add( control, 1, wx.EXPAND ) 
-                control       = item_panel
-                width, height = image_panel.adjusted_size
-                
+
             # Set the correct size on the control, as specified by the user:
             scrollable  = editor.scrollable
             item_width  = item.width
             item_height = item.height
             growable    = 0
             if (item_width != -1) or (item_height != -1):
+                width = control.width()
+                height = control.height()
+
                 if (0.0 < item_width <= 1.0) and self.is_horizontal:
                     growable = int( 1000.0 * item_width )
 
@@ -1011,35 +733,35 @@ class FillPanel ( object ):
 
                 control.setMinimumWidth(item_width)
                 control.setMinimumHeight(item_height)
-                
+
             # Bind the editor into the UIInfo object name space so it can be 
             # referred to by a Handler while the user interface is active:
             id = item.id or name
             info.bind( id, editor, item.id )
-            
+
             # Also, add the editors to the list of editors used to construct 
             # the user interface:
             ui._editors.append( editor )
-            
+
             # If the handler wants to be notified when the editor is created, 
             # add it to the list of methods to be called when the UI is 
             # complete:
             defined = getattr( handler, id + '_defined', None )
             if defined is not None:
                 ui.add_defined( defined )
-            
+
             # If the editor is conditionally visible, add the visibility 
             # 'expression' and the editor to the UI object's list of monitored 
             # objects: 
             if item.visible_when != '':
                 ui.add_visible( item.visible_when, editor )
-            
+
             # If the editor is conditionally enabled, add the enabling 
             # 'expression' and the editor to the UI object's list of monitored 
             # objects: 
             if item.enabled_when != '':
                 ui.add_enabled( item.enabled_when, editor )
-            
+
             # Add the created editor control to the sizer with the appropriate
             # layout flags and values:
             ui._scrollable |= scrollable
@@ -1051,20 +773,24 @@ class FillPanel ( object ):
 
             # FIXME: Need to decide what to do about springy, border_size,
             # padding, item.padding and growable.
-            self._add_widget(item_sizer, control, row, col, show_labels)
+            self._add_widget(inner, control, row, col, show_labels)
 
             # Save the reference to the label control (if any) in the editor:
             editor.label_control = label
 
-    #---------------------------------------------------------------------------
-    #  Adds a widget to a layout taking into account the orientation and the
-    #  position of any labels.
-    #---------------------------------------------------------------------------
+        return outer
 
     def _add_widget(self, layout, w, row, column, show_labels, label_alignment=QtCore.Qt.AlignmentFlag(0)):
+        """Adds a widget to a layout taking into account the orientation and
+           the position of any labels.
+        """
         if row < 0:
             # It's not a grid layout.
-            layout.addWidget(w)
+            if isinstance(w, QtGui.QWidget):
+                layout.addWidget(w)
+            else:
+                layout.addLayout(w)
+
         else:
             if show_labels:
                 # Convert the "logical" column to a "physical" one.
@@ -1074,110 +800,100 @@ class FillPanel ( object ):
                    (label_alignment == 0 and self.group.show_left):
                     column += 1
 
-            if self.is_horizontal:
+            if self.direction == QtGui.QBoxLayout.LeftToRight:
                 # Flip the row and column.
                 row, column = column, row
 
-            layout.addWidget(w, row, column, label_alignment)
+            if isinstance(w, QtGui.QWidget):
+                layout.addWidget(w, row, column, label_alignment)
+            else:
+                layout.addLayout(w, row, column, label_alignment)
 
-    #---------------------------------------------------------------------------
-    #  Creates an item label:
-    #---------------------------------------------------------------------------
-        
-    def create_label ( self, item, ui, desc, parent, suffix = ':' ):
-        """ Creates an item label.
+    def _create_label(self, item, ui, desc, suffix = ':'):
+        """Creates an item label.
         """
-        label = item.get_label( ui )
+        label = item.get_label(ui)
         if (label == '') or (label[-1:] in '?=:;,.<>/\\"\'-+#|'):
             suffix = ''
 
-        theme = item.label_theme
-        if theme is not None:
-            from image_slice import ImageText
-            
-            control = ImageText( parent, theme, label + suffix )
-        else:            
-            control = QtGui.QLabel(label + suffix, parent)
+        control = QtGui.QLabel(label + suffix)
 
         if item.emphasized:
-            self._add_emphasis( control )
+            self._add_emphasis(control)
 
         # FIXME: Decide what to do about the help.  (The non-standard wx way,
         # What's This style help, both?)
         #wx.EVT_LEFT_UP( control, show_help_popup )
-        control.help = item.get_help( ui )
+        control.help = item.get_help(ui)
 
         if desc != '':
             control.setToolTip('Specifies ' + desc)
-            
+
         return control
 
-    #---------------------------------------------------------------------------
-    #  Adds 'emphasis' to a specified control:  
-    #---------------------------------------------------------------------------
-    
-    def _add_emphasis ( self, control ):
-        """ Adds emphasis to a specified control's font.
+    def _add_emphasis(self, control):
+        """Adds emphasis to a specified control's font.
         """
-        global emphasis_font
-        
-        control.SetForegroundColour( emphasis_color )
-        if emphasis_font is None:
-            font          = control.GetFont()
-            emphasis_font = wx.Font( font.GetPointSize() + 1, 
-                                     font.GetFamily(),
-                                     font.GetStyle(),
-                                     wx.BOLD )
-        control.SetFont( emphasis_font )
-        
-#-------------------------------------------------------------------------------
-#  'SplitterGroupEditor' class:
-#-------------------------------------------------------------------------------
-        
+        # Set the foreground colour.
+        pal = QtGui.QPalette(control.palette())
+        pal.setColor(QtGui.QPalette.WindowText, QtGui.QColor(0, 0, 127))
+        control.setPalette(pal)
+
+        # Set the font.
+        font = QtGui.QFont(control.font())
+        font.setBold(True)
+        font.setPointSize(font.pointSize())
+        control.setFont(font)
+
+
+class GroupEditor(Editor):
+    """A pseudo-editor that allows a group to be managed.
+    """
+
+    def __init__(self, **traits):
+        """Initialise the object.
+        """
+
+        self.set(**traits)
+
+
 class SplitterGroupEditor(GroupEditor):
-    """ Editor for a group which displays a QSplitter.
+    """A pseudo-editor that allows a group with a 'split' layout to be managed.
     """
 
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
-    # QSplitter for the group
+
+    # The QSplitter for the group.
     splitter = Instance(QtGui.QSplitter)
 
     #-- UI preference save/restore interface -----------------------------------
 
-    #---------------------------------------------------------------------------
-    #  Restores any saved user preference information associated with the 
-    #  editor:
-    #---------------------------------------------------------------------------
-            
     def restore_prefs ( self, prefs ):
-        """ Restores any saved user preference information associated with the 
-            editor.
+        """Restores any saved user preference information associated with the 
+           editor.
         """
-        if isinstance( prefs, dict ):
-            structure = prefs.get( 'structure' )
+        if isinstance(prefs, dict):
+            structure = prefs.get('structure')
         else:
             structure = prefs
 
         self.splitter.restoreState(structure)
 
-    #---------------------------------------------------------------------------
-    #  Returns any user preference information associated with the editor:
-    #---------------------------------------------------------------------------
-            
+
     def save_prefs ( self ):
-        """ Returns any user preference information associated with the editor.
+        """Returns any user preference information associated with the editor.
         """
         return {'structure': str(self.splitter.saveState())}
-        
-    #-- End UI preference save/restore interface -------------------------------                         
-    
+
+    #-- End UI preference save/restore interface -------------------------------
+
+
 #-------------------------------------------------------------------------------
 #  'HTMLHelpWindow' class:
 #-------------------------------------------------------------------------------
-            
+
 class HTMLHelpWindow ( QtGui.QLabel ):
     """ Window for displaying Traits-based help text with HTML formatting.
     """
@@ -1185,7 +901,7 @@ class HTMLHelpWindow ( QtGui.QLabel ):
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
-    
+
     def __init__ ( self, parent, html, scale_dx, scale_dy ):
         """ Initializes the object.
         """
@@ -1207,32 +923,29 @@ class HTMLHelpWindow ( QtGui.QLabel ):
         self.SetSizer( sizer )
         self.SetSize( wx.Size( int( scale_dx * screen_dx ), 
                                int( scale_dy * screen_dy ) ) )
- 
+
         # Position and show the dialog:
         position_near( parent, self, align_y = -1 )
         self.Show()
-        
+
     #---------------------------------------------------------------------------
     #  Handles the window being closed:
     #---------------------------------------------------------------------------
-        
+
     def _on_ok ( self, event ):
         """ Handles the window being closed.
         """
         self.Destroy()
 
-#-------------------------------------------------------------------------------
-#  Creates a PyFace HeadingText control:  
-#-------------------------------------------------------------------------------
-                  
+
 HeadingText = None
 
-def heading_text ( *args, **kw ):
-    """ Creates a PyFace HeadingText control.
+def heading_text(*args, **kw):
+    """Create a PyFace HeadingText control.
     """
     global HeadingText
-    
+
     if HeadingText is None:
         from enthought.pyface.api import HeadingText
 
-    return HeadingText( *args, **kw )
+    return HeadingText(*args, **kw)
