@@ -38,7 +38,7 @@ from editor \
     import Editor
     
 from helper \
-    import DockStyle, IconButton, UnboundedScrollArea
+    import DockStyle, IconButton
 
 from menu \
     import MakeMenu
@@ -236,8 +236,8 @@ class SimpleEditor ( Editor ):
         self._trait_handler = trait_handler
         
         # Create a scrolled window to hold all of the list item controls:
-        self.control = sa = UnboundedScrollArea(parent)
-        sa.setFrameShape(QtGui.QFrame.NoFrame)
+        self.control = QtGui.QScrollArea(parent)
+        self.control.setFrameShape(QtGui.QFrame.NoFrame)
 
         # Create a widget with a grid layout as the container.
         self._list_pane = QtGui.QWidget()

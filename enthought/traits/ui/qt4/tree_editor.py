@@ -48,7 +48,7 @@ from editor_factory \
     import EditorFactory
 
 from helper \
-    import pixmap_cache, Orientation, UnboundedScrollArea
+    import pixmap_cache, Orientation
 
 #-------------------------------------------------------------------------------
 #  The core tree node menu actions:
@@ -267,7 +267,7 @@ class SimpleEditor ( Editor ):
                 # If editable, create a tree control and an editor panel:
                 self._tree = _TreeWidget(self)
 
-                self._editor = sa = UnboundedScrollArea()
+                self._editor = sa = QtGui.QScrollArea()
                 sa.setFrameShape(QtGui.QFrame.NoFrame)
                 sa._node_ui = sa._editor_nid = None
 

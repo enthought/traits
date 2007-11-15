@@ -36,7 +36,7 @@ from enthought.traits.ui.menu \
     import UndoButton, RevertButton, HelpButton
 
 from helper \
-    import position_near, UnboundedScrollArea
+    import position_near
 
 from constants \
     import screen_dx, screen_dy, WindowColor
@@ -77,10 +77,7 @@ def ui_subpanel(ui, parent):
 def _ui_panel_for(ui, parent, buttons):
     """Creates a panel-based PyQt user interface for a specified UI object.
     """
-    # Build the view while updates are disabled.
-    parent.setUpdatesEnabled(False)
     ui.control = control = _Panel(ui, parent, buttons).control
-    parent.setUpdatesEnabled(True)
 
     control._parent = parent
     control._object = ui.context.get('object')
@@ -214,14 +211,13 @@ def panel(ui):
     if ui.scrollable and panel is not None:
         # Make sure the panel is a widget.
         if isinstance(panel, QtGui.QLayout):
-            panel.setMargin(0)
             w = QtGui.QWidget()
             w.setLayout(panel)
             panel = w
 
-        sa = UnboundedScrollArea()
-        sa.setFrameShape(QtGui.QFrame.NoFrame)
+        sa = QtGui.QScrollArea()
         sa.setWidget(panel)
+        sa.setWidgetResizable(True)
         panel = sa
 
     return panel
@@ -344,18 +340,17 @@ class _GroupPanel(object):
         self.group = group
         self.ui = ui
 
+        if group.orientation == 'horizontal':
+            self.direction = QtGui.QBoxLayout.LeftToRight
+        else:
+            self.direction = QtGui.QBoxLayout.TopToBottom
+
         # outer is the top-level widget or layout that will eventually be
         # returned.  sub is the QTabWidget or QToolBox corresponding to any
         # 'tabbed' or 'fold' layout.  It is only used to collapse nested
         # widgets.  inner is the object (not necessarily a layout) that new
         # controls should be added to.
         outer = sub = inner = None
-
-        # Determine the horizontal/vertical orientation of the group:
-        if group.orientation == 'horizontal':
-            self.direction = QtGui.QBoxLayout.LeftToRight
-        else:
-            self.direction = QtGui.QBoxLayout.TopToBottom
 
         # Get the group label.
         if suppress_label:
@@ -489,9 +484,13 @@ class _GroupPanel(object):
             panel = _GroupPanel(subgroup, self.ui).control
 
             if isinstance(panel, QtGui.QWidget):
-                outer.addWidget(panel)
+                outer.addWidget(panel, 1)
             elif isinstance(panel, QtGui.QLayout):
-                outer.addLayout(panel)
+                outer.addLayout(panel, 1)
+            else:
+                # The sub-group is empty which seems to be used as a way of
+                # providing some whitespace.
+                outer.addWidget(QtGui.QLabel(' '))
 
         return outer
 
@@ -783,6 +782,13 @@ class _GroupPanel(object):
         """Adds a widget to a layout taking into account the orientation and
            the position of any labels.
         """
+        # If the widget really is a widget then remove any margin so that it
+        # fills the cell.
+        if isinstance(w, QtGui.QWidget):
+            wl = w.layout()
+            if wl is not None:
+                wl.setMargin(0)
+
         if row < 0:
             # It's not a grid layout.
             if isinstance(w, QtGui.QWidget):

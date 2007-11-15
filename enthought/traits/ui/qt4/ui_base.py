@@ -302,8 +302,6 @@ class BaseDialog(BasePanel):
         elif isinstance(panel, QtGui.QLayout):
             layout.addLayout(panel)
 
-        layout.setAlignment(panel, QtCore.Qt.AlignTop)
-
         # Add the optional buttons.
         if buttons is not None:
             layout.addWidget(buttons)
