@@ -176,7 +176,7 @@ class SimpleEditor ( Editor ):
         self.value = self.factory.value
 
         # If there is an associated view, then display it:
-        if self.factory.view is not None:
+        if (self.factory is not None) and (self.factory.view is not None):
             self.object.edit_traits( view   = self.factory.view,
                                      parent = self.control )
 

@@ -431,6 +431,7 @@ class CustomEditor ( Editor ):
                 if isinstance( value, Handler ):
                     handler = value
                 context.setdefault( 'context', self.object )
+                context.setdefault( 'context_handler', self.ui.handler )
                 self._ui = ui = view.ui( context, panel, 'subpanel', 
                                          value.trait_view_elements(), handler,
                                          self.factory.id )

@@ -315,8 +315,9 @@ class BaseDialog(BasePanel):
     def close(self, rc):
         """Close the dialog and set the given return code.
         """
+        self.ui.result = rc
         save_window(self.ui)
-        self.ui.finish(rc)
+        self.ui.finish()
 
         self.ui = self.control = None
 
