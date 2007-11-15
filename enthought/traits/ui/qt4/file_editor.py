@@ -241,7 +241,7 @@ class CustomEditor ( SimpleTextEditor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = _TreeView(self, parent)
+        self.control = _TreeView(self)
 
         self._model = model = QtGui.QDirModel()
         self.control.setModel(model)
@@ -306,9 +306,9 @@ class _TreeView(QtGui.QTreeView):
         changes.
     """
 
-    def __init__(self, editor, parent):
+    def __init__(self, editor):
 
-        QtGui.QTreeView.__init__(self, parent)
+        QtGui.QTreeView.__init__(self)
 
         self._editor = editor
 

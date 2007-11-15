@@ -170,7 +170,7 @@ class CustomEditor ( Editor ):
 
         # Create a panel to hold the object trait's view:
         if factory.editable:
-            self.control = self._panel = parent = QtGui.QWidget(parent)
+            self.control = self._panel = parent = QtGui.QWidget()
         
         # Build the instance selector if needed:
         selectable = droppable = False
@@ -185,7 +185,7 @@ class CustomEditor ( Editor ):
             if item is not None:
                 self._object_cache[ id( item ) ] = self.value
             
-            self._choice = QtGui.QComboBox(parent)
+            self._choice = QtGui.QComboBox()
             QtCore.QObject.connect(self._choice,
                     QtCore.SIGNAL('activated(QString)'), self.update_object)
 
@@ -233,7 +233,7 @@ class CustomEditor ( Editor ):
             self.create_editor(parent, layout)
         elif self.control is None:
             if self._choice is None:
-                self._choice = QtGui.QComboBox(parent)
+                self._choice = QtGui.QComboBox()
                 QtCore.QObject.connect(self._choice,
                         QtCore.SIGNAL('activated(QString)'),
                         self.update_object)
@@ -251,7 +251,7 @@ class CustomEditor ( Editor ):
     def create_editor(self, parent, layout):
         """ Creates the editor control.
         """
-        self._panel = QtGui.QWidget(parent)
+        self._panel = QtGui.QWidget()
         layout.addWidget(self._panel)
         
     #---------------------------------------------------------------------------
@@ -559,7 +559,7 @@ class SimpleEditor ( CustomEditor ):
     def create_editor(self, parent, layout):
         """ Creates the editor control (a button).
         """        
-        self._button = QtGui.QPushButton(parent)
+        self._button = QtGui.QPushButton()
         layout.addWidget(self._button)
         QtCore.QObject.connect(self._button, QtCore.SIGNAL('clicked()'),
                 self.edit_instance)

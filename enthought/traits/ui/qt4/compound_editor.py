@@ -104,9 +104,14 @@ class CompoundEditor ( Editor ):
         for factory in self.factory.editors:
             editor = getattr( factory, self.kind )( self.ui, self.object, 
                                        self.name, self.description, None )
-            editor.prepare(None)
-            self.control.addWidget(editor.control)
-            editors.append( editor )
+            editor.prepare(self.control)
+
+            if isinstance(editor.control, QtGui.QWidget):
+                self.control.addWidget(editor.control)
+            else:
+                self.control.addLayout(editor.control)
+
+            editors.append(editor)
         
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:

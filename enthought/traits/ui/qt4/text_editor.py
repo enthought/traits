@@ -176,7 +176,7 @@ class SimpleEditor ( Editor ):
         if multi_line:
             self.scrollable = True
 
-        control = wtype(self.str_value, parent)
+        control = wtype(self.str_value)
 
         # Create the palettes.
         self._error_palette = QtGui.QPalette(control.palette())
@@ -280,7 +280,7 @@ class SimpleEditor ( Editor ):
 class CustomEditor ( SimpleEditor ):
     """ Custom style of text editor, which displays a multi-line text field.
     """
-    
+
     # FIXME: The wx version exposes a wx constant.
     # Flag for window style. This value overrides the default.
     base_style = QtGui.QTextEdit

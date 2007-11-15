@@ -263,7 +263,7 @@ class SimpleEditor ( BaseEditor ):
         """
         super( SimpleEditor, self ).init( parent )
         
-        self.control = control = QtGui.QComboBox(parent)
+        self.control = control = QtGui.QComboBox()
         control.addItems(self.names)
         QtCore.QObject.connect(control,
                 QtCore.SIGNAL('currentIndexChanged(QString)'),
@@ -491,7 +491,7 @@ class ListEditor ( BaseEditor ):
         """
         super( ListEditor, self ).init( parent )
         
-        self.control = QtGui.QListWidget(parent)
+        self.control = QtGui.QListWidget()
         QtCore.QObject.connect(self.control,
                 QtCore.SIGNAL('currentTextChanged(QString)'),
                 self.update_object)

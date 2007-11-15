@@ -170,7 +170,7 @@ class SourceEditor ( Editor ):
             widget.
         """
         factory = self.factory
-        self._editor = editor = PythonEditor(parent,
+        self._editor = editor = PythonEditor(None,
                 show_line_numbers = factory.show_line_numbers)
         self.control = control = editor.control
 

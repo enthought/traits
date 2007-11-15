@@ -236,7 +236,7 @@ class SimpleEditor ( Editor ):
         self._trait_handler = trait_handler
         
         # Create a scrolled window to hold all of the list item controls:
-        self.control = QtGui.QScrollArea(parent)
+        self.control = QtGui.QScrollArea()
         self.control.setFrameShape(QtGui.QFrame.NoFrame)
 
         # Create a widget with a grid layout as the container.
@@ -645,7 +645,7 @@ class NotebookEditor ( Editor ):
             widget.
         """
         # Create a tab widget to hold each separate object's view:
-        self.control = QtGui.QTabWidget(parent)
+        self.control = QtGui.QTabWidget()
         QtCore.QObject.connect(self.control,
                 QtCore.SIGNAL('currentChanged(int)'), self._tab_activated)
 

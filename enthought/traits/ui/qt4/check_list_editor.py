@@ -114,7 +114,7 @@ class SimpleEditor ( EditorWithList ):
     def create_control ( self, parent ):
         """ Creates the initial editor control.
         """
-        self.control = QtGui.QComboBox(parent)
+        self.control = QtGui.QComboBox()
         QtCore.QObject.connect(self.control,
                 QtCore.SIGNAL('activated(QString)'), self.update_object)
 

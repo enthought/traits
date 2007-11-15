@@ -278,7 +278,7 @@ class ReadonlyColorEditor ( ReadonlyEditor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = QtGui.QLineEdit(parent)
+        self.control = QtGui.QLineEdit()
         self.control.setReadOnly(True)
 
     #---------------------------------------------------------------------------
@@ -322,7 +322,7 @@ def color_editor_for(editor, parent):
 
     swatch_editor = editor.factory.simple_editor(editor.ui, editor.object,
             editor.name, editor.description, None)
-    swatch_editor.prepare(None)
+    swatch_editor.prepare(parent)
     panel.addWidget(swatch_editor.control)
 
     # Add all of the color choice buttons:

@@ -115,7 +115,7 @@ class SimpleEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = QtGui.QCheckBox(parent)
+        self.control = QtGui.QCheckBox()
         self.control.connect(self.control, QtCore.SIGNAL('stateChanged(int)'),
                 self.update_object)
         self.set_tooltip()
@@ -159,7 +159,7 @@ class ReadonlyEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = QtGui.QLineEdit(parent)
+        self.control = QtGui.QLineEdit()
         self.control.setReadOnly(True)
 
         pal = QtGui.QPalette(self.control.palette())

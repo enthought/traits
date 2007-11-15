@@ -140,7 +140,7 @@ class _Panel(BasePanel):
         # handle them being layouts as well.  Therefore create a widget if the
         # panel is not a widget or if we need a title or buttons.
         if not isinstance(self.control, QtGui.QWidget) or view.title != "" or has_buttons:
-            w = QtGui.QWidget(parent)
+            w = QtGui.QWidget()
             layout = QtGui.QVBoxLayout(w)
             layout.setMargin(0)
 
@@ -181,9 +181,6 @@ class _Panel(BasePanel):
                         self.add_button( button, b_sizer )
 
                 layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
-        else:
-            # Make sure the widget has the expected parent.
-            self.control.setParent(parent)
 
 
 def panel(ui):
@@ -684,8 +681,12 @@ class _GroupPanel(object):
                                  item        = item,
                                  object_name = item.object )
 
-            # Tell editor to actually build the editing widget:
-            editor.prepare(None)
+            # Tell the editor to actually build the editing widget.  Note that
+            # "inner" is a layout.  This shouldn't matter as individual editors
+            # shouldn't be using it as a parent anyway.  The important thing is
+            # that it is not None (otherwise the main TraitsUI code can change
+            # the "kind" of the created UI object).
+            editor.prepare(inner)
 
             # Set the initial 'enabled' state of the editor from the factory:
             editor.enabled = editor_factory.enabled

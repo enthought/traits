@@ -104,7 +104,7 @@ class SimpleEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = _SimpleField(self, parent)
+        self.control = _SimpleField(self)
         self.set_tooltip()
 
     #---------------------------------------------------------------------------
@@ -135,7 +135,7 @@ class TextEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = QtGui.QLineEdit(self.str_value, parent)
+        self.control = QtGui.QLineEdit(self.str_value)
         QtCore.QObject.connect(self.control,
                 QtCore.SIGNAL('editingFinished()'), self.update_object)
         self.set_tooltip()
@@ -169,7 +169,7 @@ class ReadonlyEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
-        self.control = QtGui.QLabel(self.str_value, parent)
+        self.control = QtGui.QLabel(self.str_value)
         self.set_tooltip()
         
     #---------------------------------------------------------------------------
@@ -188,8 +188,8 @@ class ReadonlyEditor ( Editor ):
 
 class _SimpleField(QtGui.QLineEdit):
 
-    def __init__(self, editor, parent):
-        QtGui.QLineEdit.__init__(self, editor.str_value, parent)
+    def __init__(self, editor):
+        QtGui.QLineEdit.__init__(self, editor.str_value)
 
         self.setReadOnly(True)
         self._editor = editor
