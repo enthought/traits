@@ -9,7 +9,7 @@ from enthought.traits.api \
     import Enum
     
 from enthought.traits.ui.api \
-    import View, Item
+    import View, HGroup, Item
     
 # The demo class:
 class FlashDemo ( HasTraits ):

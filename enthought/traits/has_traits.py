@@ -2063,7 +2063,7 @@ class HasTraits ( CHasTraits ):
         # traits defined for the object:
         from enthought.traits.ui.api import View
         
-        return View( editable_traits() )
+        return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
 
     _trait_view = classmethod( _trait_view )
 

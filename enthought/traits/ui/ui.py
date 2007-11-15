@@ -235,23 +235,23 @@ class UI ( HasPrivateTraits ):
     def dispose ( self, result = None, abort = False ):
         """ Disposes of the contents of a user interface.
         """
+        if result is not None:
+            self.result = result
+            
         # Save the user preference information for the user interface:
         if not abort:
             toolkit().save_window( self )
 
         # Finish disposing of the user interface:
-        self.finish( result )
+        self.finish()
 
     #---------------------------------------------------------------------------
     #  Finishes a user interface:
     #---------------------------------------------------------------------------
 
-    def finish ( self, result = None ):
+    def finish ( self ):
         """ Finishes disposing of a user interface.
         """
-        if result is not None:
-            self.result = result
-
         self.reset( destroy = False )
 
         # Notify the handler that the view has been closed:
