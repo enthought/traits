@@ -117,77 +117,76 @@ class _Panel(BasePanel):
             history.on_trait_change(self._on_revertable, 'undoable',
                     remove=True)
 
-        # Determine if we need any buttons or an 'undo' history: 
-        buttons  = [ self.coerce_button( button ) for button in view.buttons ]
-        nbuttons = len( buttons )
-        if nbuttons == 0:
+        # Determine if we need any buttons or an 'undo' history.
+        buttons = [self.coerce_button(button) for button in view.buttons]
+        nr_buttons = len(buttons)
+        has_buttons = (allow_buttons and ((nr_buttons != 1) or (not self.is_button(buttons[0], ''))))
+
+        if nr_buttons == 0:
             if view.undo:
-                self.check_button( buttons, UndoButton )
+                self.check_button(buttons, UndoButton)
             if view.revert:
-                self.check_button( buttons, RevertButton )
+                self.check_button(buttons, RevertButton)
             if view.help:
-                self.check_button( buttons, HelpButton )
+                self.check_button(buttons, HelpButton)
 
-        if allow_buttons and (history is None):
+        if allow_buttons and history is None:
             for button in buttons:
-                if (self.is_button( button, 'Undo' ) or 
-                    self.is_button( button, 'Revert' )):
-                    history = UndoHistory()
+                if self.is_button(button, 'Undo') or self.is_button(button, 'Revert'):
+                    history = ui.history = UndoHistory()
                     break
-        ui.history = history
 
-        # Ensure the parent has a layout we can use.
-        layout = parent.layout()
-
-        if layout is None:
-            layout = QtGui.QVBoxLayout(parent)
-        elif not isinstance(layout, QtGui.QBoxLayout):
-            raise TypeError, "panel parent layout must be a QBoxLayout"
-
-        # Handle any view title.
-        if view.title != "":
-            layout.addWidget(heading_text(parent, text=view.title).control)
-
-        # Create and add the panel making sure that it is a widget.
+        # Create the panel.
         self.control = panel(ui)
 
-        if not isinstance(self.control, QtGui.QWidget):
-            # Create a container widget and make sure it doesn't take up any
-            # additional screen space.
-            self.control.setMargin(0)
-            w = QtGui.QWidget()
-            w.setLayout(self.control)
+        # Panels must be widgets as it is only the TraitsUI PyQt code that can
+        # handle them being layouts as well.  Therefore create a widget if the
+        # panel is not a widget or if we need a title or buttons.
+        if not isinstance(self.control, QtGui.QWidget) or view.title != "" or has_buttons:
+            w = QtGui.QWidget(parent)
+            layout = QtGui.QVBoxLayout(w)
+            layout.setMargin(0)
+
+            # Handle any view title.
+            if view.title != "":
+                layout.addWidget(heading_text(None, text=view.title).control)
+
+            if isinstance(self.control, QtGui.QWidget):
+                layout.addWidget(self.control)
+            elif isinstance(self.control, QtGui.QLayout):
+                layout.addLayout(self.control)
+
             self.control = w
 
-        layout.addWidget(self.control)
-
-        # Add any buttons.
-        if (allow_buttons and
-            ((nbuttons != 1) or (not self.is_button( buttons[0], '' )))):
-            # Add the special function buttons:
-            layout.Add( wx.StaticLine( cpanel, -1 ), 0, wx.EXPAND )
-            b_sizer = wx.BoxSizer( wx.HORIZONTAL )
-            for button in buttons:
-                if self.is_button( button, 'Undo' ):
-                    self.undo = self.add_button( button, b_sizer, 
+            # Add any buttons.
+            if has_buttons:
+                # Add the special function buttons:
+                layout.Add( wx.StaticLine( cpanel, -1 ), 0, wx.EXPAND )
+                b_sizer = wx.BoxSizer( wx.HORIZONTAL )
+                for button in buttons:
+                    if self.is_button( button, 'Undo' ):
+                        self.undo = self.add_button( button, b_sizer, 
                                                  self._on_undo, False )
-                    self.redo = self.add_button( button, b_sizer, 
+                        self.redo = self.add_button( button, b_sizer, 
                                                  self._on_redo, False, 'Redo' )
-                    history.on_trait_change( self._on_undoable, 'undoable',
+                        history.on_trait_change( self._on_undoable, 'undoable',
                                              dispatch = 'ui' )
-                    history.on_trait_change( self._on_redoable, 'redoable',
+                        history.on_trait_change( self._on_redoable, 'redoable',
                                              dispatch = 'ui' )
-                elif self.is_button( button, 'Revert' ):
-                    self.revert = self.add_button( button, b_sizer, 
+                    elif self.is_button( button, 'Revert' ):
+                        self.revert = self.add_button( button, b_sizer, 
                                                    self._on_revert, False )
-                    history.on_trait_change( self._on_revertable, 'undoable',
+                        history.on_trait_change( self._on_revertable, 'undoable',
                                              dispatch = 'ui' )
-                elif self.is_button( button, 'Help' ):
-                    self.add_button( button, b_sizer, self._on_help )
-                elif not self.is_button( button, '' ):
-                    self.add_button( button, b_sizer )
+                    elif self.is_button( button, 'Help' ):
+                        self.add_button( button, b_sizer, self._on_help )
+                    elif not self.is_button( button, '' ):
+                        self.add_button( button, b_sizer )
 
-            layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
+                layout.Add( b_sizer, 0, wx.ALIGN_RIGHT | wx.ALL, 5 )
+        else:
+            # Make sure the widget has the expected parent.
+            self.control.setParent(parent)
 
 
 def panel(ui):
