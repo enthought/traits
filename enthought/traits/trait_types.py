@@ -838,15 +838,27 @@ class Expression ( TraitType ):
         """ Validates that a specified value is valid for this trait.
         """
         try:
-            compile( value, '<string>', 'eval' )
-            return value
+            return compile( value, '<string>', 'eval' )
         except:
             self.error( object, name, value )
 
     def post_setattr ( self, object, name, value ):
         """ Performs additional post-assignment processing.
         """
-        object.__dict__[ name + '_' ] = compile( value, '<string>', 'eval' )
+        object.__dict__[ name + '_' ] = value
+        
+    def mapped_value ( self, value ):
+        """ Returns the 'mapped' value for the specified **value**.
+        """
+        return compile( value, '<string>', 'eval' )
+        
+    def as_ctrait ( self ):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
+        # Tell the C code that 'setattr' should store the original, unadapted 
+        # value passed to it:
+        return super( Expression, self 
+                    ).as_ctrait().setattr_original_value( True )
 
 #-------------------------------------------------------------------------------
 #  'PythonValue' trait:
