@@ -256,6 +256,8 @@ def _fill_panel(panel, content, ui, item_handler=None):
                 new = QtGui.QWidget()
                 new.setLayout(page)
 
+            new.layout().setAlignment(QtCore.Qt.AlignTop)
+
             # Add the content.
             if isinstance(panel, QtGui.QTabWidget):
                 panel.addTab(new, page_name)
