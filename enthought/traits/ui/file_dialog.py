@@ -29,7 +29,7 @@ from time \
     import localtime, strftime
     
 from enthought.traits.api \
-    import HasPrivateTraits, File, List, CList, Str, Int, Instance, Property, \
+    import HasPrivateTraits, File, CList, Str, Int, Instance, Property, \
            Button, Bool, Interface, implements, cached_property
     
 from enthought.traits.trait_base \
@@ -319,7 +319,7 @@ class OpenFileDialog ( Handler ):
     file_name = File
     
     # The list of file filters to apply:
-    filter = List( Str )
+    filter = CList( Str )
     
     # Number of history entries to allow:
     entries = Int( 10 )
@@ -426,7 +426,7 @@ class OpenFileDialog ( Handler ):
                 
             # Finally, combine the normal view element with the extensions:
             item = klass( item, 
-                          VSplit( id = 'splitter2', *items ), 
+                          VSplit( id = 'splitter2', springy = True, *items ), 
                           id = 'splitter' )
             
         # Return the resulting view:
@@ -466,10 +466,11 @@ def open_file ( **traits ):
     if fd.edit_traits().result:
         return fd.file_name
         
-    return None
+    return ''
     
 #-- Test Case ------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print open_file( extensions = [ FileInfo(), TextInfo(), ImageInfo() ] )
+    print open_file( extensions = [ FileInfo(), TextInfo(), ImageInfo() ],
+                     filter = 'Python file (*.py)|*.py' )
 
