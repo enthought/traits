@@ -1433,6 +1433,7 @@ class List ( TraitType ):
            (self.minlen <= len( value ) <= self.maxlen)):
             if object is None:
                 return value
+                
             return TraitListObject( self, object, name, value )
             
         self.error( object, name, value )
@@ -1501,6 +1502,30 @@ class List ( TraitType ):
     def items_event ( self ):
         return items_event()
         
+#-------------------------------------------------------------------------------
+#  'CList' trait:  
+#-------------------------------------------------------------------------------        
+        
+class CList ( List ):
+    """ Defines a trait whose values must be a list whose items are of the 
+        specified trait type or which can be coerced to a list whose values are 
+        of the specified trait type.
+    """
+    
+    def validate ( self, object, name, value ):
+        """ Validates that the values is a valid list.
+        """
+        if isinstance( value, list ):
+            return super( CList, self ).validate( object, name, value )
+            
+        return super( CList, self ).validate( object, name, [ value ] )
+
+    def info ( self ):
+        """ Returns a description of the trait.
+        """
+        return '%s or %s' % ( self.item_trait.info(), 
+                              super( CList, self ).info() )
+    
 #-------------------------------------------------------------------------------
 #  'Dict' trait:  
 #-------------------------------------------------------------------------------
