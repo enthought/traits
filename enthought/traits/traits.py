@@ -302,14 +302,17 @@ class CTrait ( cTrait ):
             help = self.help
             if help is not None:
                 return help
+                
         handler = self.handler
         if handler is not None:
             info = 'must be %s.' % handler.info()
         else:
             info = 'may be any value.'
+            
         desc = self.desc
         if self.desc is None:
             return info.capitalize()
+            
         return 'Specifies %s and %s' % ( desc, info )
 
     #---------------------------------------------------------------------------

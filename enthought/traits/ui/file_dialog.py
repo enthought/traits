@@ -23,17 +23,20 @@
 #-------------------------------------------------------------------------------
     
 from os.path \
-    import split, isfile, getsize, getatime, getmtime, getctime
+    import split, splitext, isfile, getsize, getatime, getmtime, getctime
 
 from time \
     import localtime, strftime
     
 from enthought.traits.api \
-    import HasPrivateTraits, File, List, Str, Int, Instance, Property, Button, \
-           Bool, Interface, implements, cached_property
+    import HasPrivateTraits, File, List, CList, Str, Int, Instance, Property, \
+           Button, Bool, Interface, implements, cached_property
+    
+from enthought.traits.trait_base \
+    import user_name_for
     
 from enthought.traits.ui.api \
-    import View, VGroup, HGroup, HSplit, Item, Handler, FileEditor, \
+    import View, VGroup, HGroup, VSplit, HSplit, Item, Handler, FileEditor, \
            InstanceEditor, CodeEditor
     
 from enthought.traits.ui.ui_traits \
@@ -285,10 +288,10 @@ class ImageInfo ( MFileDialogModel ):
     @cached_property
     def _get_image ( self ):
         path, name = split( self.file_name )
-        if path == '':
-            image = ImageResource( 'unknown' )
-        else:
+        if splitext( name )[1] in ( '.png', '.gif', '.jpg', '.jpeg' ):
             image = ImageResource( name, search_path = [ path ] )
+        else:
+            image = ImageResource( 'unknown' )
         self._cur_image = image.create_image()
         return image
         
@@ -327,10 +330,13 @@ class OpenFileDialog ( Handler ):
     # The Traits UI persistence id to use:
     id = Str( 'enthought.traits.ui.file_dialog.OpenFileDialog' )
     
-    # An optional file dialog extension:
-    extension = Instance( IFileDialogModel )
+    # A list of optional file dialog extensions:
+    extensions = CList( IFileDialogModel )
     
     #-- Private Traits ---------------------------------------------------------
+    
+    # Allow extension models to be added dynamically:
+    extension__ = Instance( IFileDialogModel )
     
     # Is the currently specified file name valid?
     is_valid_file = Property( depends_on = 'file_name' )
@@ -369,39 +375,58 @@ class OpenFileDialog ( Handler ):
                      editor     = FileEditor( filter = self.filter ) )
         width = height = 0.20             
 
-        # Check to see if we have an extension being added:
-        extension = extension_view = self.extension
-        if extension is not None:
-            # If there is, sync up the 'file_name' trait with the extension:
-            self.sync_trait( 'file_name', extension, mutual = True )
-            
-            # Check to see if it also defines the optional IFileDialogView
-            # interface, and if not, use the default view information:
-            if not extension.has_traits_interface( IFileDialogView ):
-                extension_view = default_view
-            
-            # Get the view that the extension wants to use:
-            view = extension.trait_view( extension_view.view )
-
+        # Check to see if we have any extensions being added:
+        if len( self.extensions ) > 0:
+    
             # fixme: We should use the actual values of the view's Width and            
             # height traits here to adjust the overall width and height...
             width *= 2.0
-
-            # Determine whether to use a splitter or fixed width for the dialog:            
-            klass = HSplit
-            if extension_view.is_fixed:
-                klass = HGroup
             
-            # Finally, combine the normal view elements with the extension in
-            # a new horizontal group:
+            # Assume we can used a fixed width Group:
+            klass = HGroup
+            
+            # Set up to build a list of view Item objects:
+            items = []
+            
+            # Add each extension to the dialog:
+            for i, extension in enumerate( self.extensions ):
+                
+                # Save the extension in a new trait (for use by the View):
+                name = 'extension_%d' % i
+                setattr( self, name, extension )
+                
+                extension_view = extension
+                
+                # Sync up the 'file_name' trait with the extension:
+                self.sync_trait( 'file_name', extension, mutual = True )
+                
+                # Check to see if it also defines the optional IFileDialogView
+                # interface, and if not, use the default view information:
+                if not extension.has_traits_interface( IFileDialogView ):
+                    extension_view = default_view
+                
+                # Get the view that the extension wants to use:
+                view = extension.trait_view( extension_view.view )
+    
+                # Determine if we should use a splitter for the dialog:            
+                if not extension_view.is_fixed:
+                    klass = HSplit
+                    
+                # Add the extension as a new view item:
+                items.append(
+                    Item( name,
+                          label = user_name_for( extension.__class__.__name__ ),
+                          show_label = False,
+                          style      = 'custom',
+                          width      = 0.5,
+                          height     = 0.5,
+                          dock       = 'horizontal',
+                          editor     = InstanceEditor( view = view, id = name )
+                    ) )
+                
+            # Finally, combine the normal view element with the extensions:
             item = klass( item, 
-                          Item( 'extension',
-                                style      = 'custom',
-                                show_label = False,
-                                width      = 0.5,
-                                editor     = InstanceEditor( view = view,
-                                                             id = 'extension' )
-                          ),
+                          VSplit( id = 'splitter2', *items ), 
                           id = 'splitter' )
             
         # Return the resulting view:
@@ -446,5 +471,5 @@ def open_file ( **traits ):
 #-- Test Case ------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print open_file( extension = ImageInfo() )
+    print open_file( extensions = [ FileInfo(), TextInfo(), ImageInfo() ] )
 
