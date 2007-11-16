@@ -115,8 +115,11 @@ def convert_bitmap ( image_resource ):
     
     bitmap = image_bitmap_cache.get( image_resource )
     if (bitmap is None) and (image_resource is not None):
-        image_bitmap_cache[ image_resource ] = bitmap = \
-            image_resource.create_bitmap()
+        try:
+            image_bitmap_cache[ image_resource ] = bitmap = \
+                image_resource.create_bitmap()
+        except:
+            pass
             
     return bitmap
     
