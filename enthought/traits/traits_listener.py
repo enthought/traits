@@ -64,9 +64,10 @@ EOS = '\0'
 
 # Types of traits that can be listened to
 
-SIMPLE_LISTENER = '_register_simple'
-LIST_LISTENER   = '_register_list'
-DICT_LISTENER   = '_register_dict'
+ANYTRAIT_LISTENER = '_register_anytrait'
+SIMPLE_LISTENER   = '_register_simple'
+LIST_LISTENER     = '_register_list'
+DICT_LISTENER     = '_register_dict'
 
 # Mapping from trait default value types to listener types
 type_map = {
@@ -99,6 +100,7 @@ name_chars = string.ascii_letters + string.digits + '_'
 
 def is_not_none ( value ): return (value is not None)
 def is_none ( value ):     return (value is None)
+def not_event ( value ):   return (value != 'event')
     
 #-------------------------------------------------------------------------------
 #  'ListenerBase' class:
@@ -228,6 +230,10 @@ class ListenerItem ( ListenerBase ):
     # Should changes to this item generate a notification to the handler?
     notify = Bool( True )
     
+    # Is this an 'any_trait' change listener, or does it create explicit
+    # listeners for each individual trait?
+    is_any_trait = Bool( False )
+    
     # Is the associated handler a special list handler that handles both
     # 'foo' and 'foo_items' events by receiving a list of 'deleted' and 'added'
     # items as the 'old' and 'new' arguments?
@@ -257,9 +263,14 @@ class ListenerItem ( ListenerBase ):
         name = self.name
         last = name[-1:]
         if last == '*':
+            # Handle the special case of an 'anytrait' change listener:
+            if self.is_any_trait:
+                self.active[ new ] = [ ( '', ANYTRAIT_LISTENER ) ]
+                return self._register_anytrait( new, '', False )
+
             # Handle trait matching based on a common name prefix and/or 
             # matching trait metadata:
-            metadata = {}
+            metadata = { 'type': not_event }
             if self.metadata_name != '':
                 if self.metadata_defined:
                     metadata[ self.metadata_name ] = is_not_none
@@ -334,9 +345,8 @@ class ListenerItem ( ListenerBase ):
         """ Unregisters any existing listeners.
         """
         if old is not None:
-            active = self.active.get( old )
+            active = self.active.pop( old, None )
             if active is not None:
-                del self.active[ old ]
                 for name, type in active:
                     getattr( self, type )( old, name, True )
     
@@ -518,6 +528,19 @@ class ListenerItem ( ListenerBase ):
         
     #-- Private Methods --------------------------------------------------------
     
+    #---------------------------------------------------------------------------
+    #  Registers any 'anytrait' listener:  
+    #---------------------------------------------------------------------------
+    
+    def _register_anytrait ( self, object, name, remove ):
+        """ Registers any 'anytrait' listener.
+        """
+        handler = self.handler()
+        if handler is not Undefined:
+            object._on_trait_change( handler, remove   = remove,
+                                              dispatch = self.dispatch )
+        return ( object, name )
+        
     #---------------------------------------------------------------------------
     #  Registers a handler for a simple trait:
     #---------------------------------------------------------------------------
@@ -854,7 +877,11 @@ class ListenerParser ( HasPrivateTraits ):
                 result.name += '*'
                 result.metadata_defined = (c == '+')
                 self.parse_metadata( result )
+                result.is_any_trait = ((c == '-') and (name == '') and
+                                       (result.metadata_name == ''))
                 c = self.skip_ws
+                if result.is_any_trait and (c != terminator):
+                    self.error( "Expected end of name" )
             elif c == '?':
                 if len( name ) == 0:
                     self.error( "Expected non-empty name preceding '?'" )
