@@ -21,23 +21,27 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+  
+from os \
+    import mkdir, access, R_OK, W_OK
     
 from os.path \
-    import split, splitext, isfile, getsize, getatime, getmtime, getctime
+    import join, split, exists, splitext, isfile, isdir, dirname, basename, \
+           getsize, getatime, getmtime, getctime
 
 from time \
     import localtime, strftime
     
 from enthought.traits.api \
     import HasPrivateTraits, File, CList, Str, Int, Instance, Property, \
-           Button, Bool, Interface, implements, cached_property
+           Button, Bool, Interface, Event, Any, implements, cached_property
     
 from enthought.traits.trait_base \
     import user_name_for
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, VSplit, HSplit, Item, Handler, FileEditor, \
-           InstanceEditor, CodeEditor
+           InstanceEditor, CodeEditor, UIInfo, spring
     
 from enthought.traits.ui.ui_traits \
     import AView
@@ -52,6 +56,9 @@ from enthought.traits.ui.wx.extra.image_editor \
     
 from enthought.pyface.api \
     import ImageResource
+
+from enthought.pyface.timer.api \
+    import do_later
     
 from helper \
     import commatize
@@ -308,12 +315,138 @@ class ImageInfo ( MFileDialogModel ):
             return str( toolkit().image_size( self._cur_image )[1] ) + ' pixels'
         except:
             return '---'
+
+#-------------------------------------------------------------------------------
+#  'CreateDirHandler' class:
+#-------------------------------------------------------------------------------
+
+class CreateDirHandler ( Handler ):
+    """ Controller for the 'create new directory' popup.
+    """
+    
+    # The name for the new directory to be created:
+    dir_name = Str
+    
+    # The current status message:
+    message = Str
+    
+    # The OK and Cancel buttons:
+    ok     = Button( 'OK' )
+    cancel = Button( 'Cancel' )
+
+    #-- Traits View Definitions ------------------------------------------------
+
+    view = View(
+        VGroup(
+            HGroup(
+                 Item( 'handler.dir_name', 
+                       label = 'Name'
+                 ),
+                 Item( 'handler.ok',   
+                       show_label   = False,
+                       enabled_when = "handler.dir_name.strip() != ''"
+                 ),
+                 Item( 'handler.cancel',  
+                       show_label = False
+                 ),
+            ),
+            HGroup(
+                Item( 'handler.message',
+                      show_label = False,
+                      style      = 'readonly', 
+                      springy    = True 
+                )
+            )
+        ),
+        kind = 'popup'
+    )
+    
+    #-- Handler Event Handlers -------------------------------------------------
+    
+    def handler_ok_changed ( self, info ):
+        """ Handles the user clicking the OK button.
+        """
+        dir = info.object.file_name
+        if not isdir( dir ):
+            dir = dirname( dir )
+            
+        path = join( dir, self.dir_name )
+        try:
+            # Try to create the requested directory:
+            mkdir( path )
+            
+            # Force the file tree view to be refreshed:
+            info.object.reload    = True
+            
+            # set the new directory as the currently selected file name:
+            info.object.file_name = path
+            
+            # Close this view:
+            info.ui.dispose( True )
+        except:
+            self.message = "Could not create the '%s' directory" % self.dir_name
         
+    def handler_cancel_changed ( self, info ):
+        """ Handles the user clicking the Cancel button.
+        """
+        info.ui.dispose( False )
+
+#-------------------------------------------------------------------------------
+#  'FileExistsHandler' class:
+#-------------------------------------------------------------------------------
+
+class FileExistsHandler ( Handler ):
+    """ Controller for the 'file already exists' popup.
+    """
+    # The current status message:
+    message = Str
+    
+    # The OK and Cancel buttons:
+    ok     = Button( 'OK' )
+    cancel = Button( 'Cancel' )
+
+    #-- Traits View Definitions ------------------------------------------------
+
+    view = View(
+        VGroup(
+            HGroup(
+                 Item( 'handler.message',
+                       editor = ImageEditor( image = '@ui:dialog-warning' )
+                 ),
+                 Item( 'handler.message', style = 'readonly' ),
+                 show_labels = False
+            ),
+            HGroup(
+                 spring,
+                 Item( 'handler.ok' ),
+                 Item( 'handler.cancel' ),
+                 show_labels = False
+            )
+        ),
+        kind = 'popup'
+    )
+    
+    #-- Handler Event Handlers -------------------------------------------------
+    
+    def handler_ok_changed ( self, info ):
+        """ Handles the user clicking the OK button.
+        """
+        parent = info.ui.parent
+        info.ui.dispose( True )
+        parent.dispose( True )
+        
+    def handler_cancel_changed ( self, info ):
+        """ Handles the user clicking the Cancel button.
+        """
+        info.ui.dispose( False )
+    
 #-------------------------------------------------------------------------------
 #  'OpenFileDialog' class:
 #-------------------------------------------------------------------------------
 
 class OpenFileDialog ( Handler ):
+    """ Defines the model and handler for the open file dialog.
+    """
     
     # The starting and current file path:
     file_name = File
@@ -335,44 +468,98 @@ class OpenFileDialog ( Handler ):
     
     #-- Private Traits ---------------------------------------------------------
     
+    # The UIInfo object for the view:
+    info = Instance( UIInfo )
+    
+    # Event fired when the file tree view should be reloaded:
+    reload = Event
+    
+    # Event fired when the user double-clicks on a file name:
+    dclick = Event
+    
     # Allow extension models to be added dynamically:
     extension__ = Instance( IFileDialogModel )
+    
+    # Is the file dialog for saving a file (or opening a file)?
+    is_save_file = Bool( False )
     
     # Is the currently specified file name valid?
     is_valid_file = Property( depends_on = 'file_name' )
     
-    # The OK and Cancel buttons:
-    ok     = Button( 'OK' )
-    cancel = Button( 'Cancel' )
+    # Can a directory be created now?
+    can_create_dir = Property( depends_on = 'file_name' )
+    
+    # The OK, Cancel and create directory buttons:
+    ok      = Button( 'OK' )
+    cancel  = Button( 'Cancel' )
+    create  = Button( image = '@ui:folder-new', style = 'toolbar' )
+    
+    #-- Handler Class Method Overrides -----------------------------------------
+    
+    def init_info ( self, info ):
+        """ Handles the UIInfo object being initialized during view start-up.
+        """
+        self.info = info
         
     #-- Property Implementations -----------------------------------------------
     
     def _get_is_valid_file ( self ):
+        if self.is_save_file:
+            return (isfile( self.file_name ) or (not exists( self.file_name )))
+            
         return isfile( self.file_name )
+        
+    def _get_can_create_dir ( self ):
+        dir = dirname( self.file_name )
+        return (isdir( dir ) and access( dir, R_OK | W_OK ))
         
     #-- Handler Event Handlers -------------------------------------------------
     
     def object_ok_changed ( self, info ):
         """ Handles the user clicking the OK button.
         """
-        info.ui.dispose( True )
+        if self.is_save_file and exists( self.file_name ):
+            do_later( self._file_already_exists )
+        else:
+            info.ui.dispose( True )
         
     def object_cancel_changed ( self, info ):
         """ Handles the user clicking the Cancel button.
         """
         info.ui.dispose( False )
         
+    def object_create_changed ( self, info ):
+        """ Handles the user clicking the create directory button.
+        """
+        if not isdir( self.file_name ):
+            self.file_name = dirname( self.file_name )
+            
+        CreateDirHandler().edit_traits( context = self, 
+                                        parent  = info.create.control )
+                                        
+    #-- Traits Event Handlers --------------------------------------------------
+    
+    def _dclick_changed ( self ):
+        """ Handles the user double-clicking a file name in the file tree view.
+        """
+        if self.is_valid_file:
+            self.object_ok_changed( self.info )
+        
     #-- Private Methods --------------------------------------------------------
     
-    def trait_view ( self, name = None, view_element = None ):
+    def open_file_view ( self ):
         """ Returns the file dialog view to use.
         """
         # Set up the default file dialog view and size information:
         item = Item( 'file_name', 
+                     id         = 'file_tree',
                      style      = 'custom',
                      show_label = False,
                      width      = 0.5,
-                     editor     = FileEditor( filter = self.filter ) )
+                     editor     = FileEditor( filter      = self.filter,
+                                              allow_dir   = True,
+                                              reload_name = 'reload',
+                                              dclick_name = 'dclick' ) )
         width = height = 0.20             
 
         # Check to see if we have any extensions being added:
@@ -434,6 +621,13 @@ class OpenFileDialog ( Handler ):
             VGroup(
                 VGroup( item ),
                 HGroup(
+                    Item( 'create',
+                          id           = 'create',
+                          show_label   = False,
+                          style        = 'custom',
+                          defined_when = 'is_save_file',
+                          enabled_when = 'can_create_dir'
+                    ),
                     Item( 'file_name',
                           id      = 'history',
                           editor  = HistoryEditor( entries  = self.entries,
@@ -441,6 +635,7 @@ class OpenFileDialog ( Handler ):
                           springy = True
                     ),
                     Item( 'ok',
+                          id           = 'ok',
                           show_label   = False,
                           enabled_when = 'is_valid_file'
                     ),
@@ -456,14 +651,43 @@ class OpenFileDialog ( Handler ):
             height    = height,
             resizable = True
         )
+
+    def _file_already_exists ( self ):
+        """ Handles prompting the user when the selected file already exists,
+            and the dialog is a 'save file' dialog.
+        """
+        FileExistsHandler( message = ("The file '%s' already exists.\nDo "
+                                      "you wish to overwrite it?") % 
+                                      basename( self.file_name )
+            ).edit_traits( context = self, 
+                           parent  = self.info.ok.control ).set(
+                           parent  = self.info.ui )
         
 #-------------------------------------------------------------------------------
-#  Returns a file name to open or None if the user cancelled the operation:  
+#  Returns a file name to open or an empty string if the user cancels the 
+#  operation:  
 #-------------------------------------------------------------------------------
 
 def open_file ( **traits ):
+    """ Returns a file name to open or an empty string if the user cancels the
+        operation.
+    """
     fd = OpenFileDialog( **traits )
-    if fd.edit_traits().result:
+    if fd.edit_traits( view = 'open_file_view' ).result:
+        return fd.file_name
+        
+    return ''
+
+def save_file ( **traits ):
+    """ Returns a file name to save to or an empty string if the user cancels
+        the operation. In the case where the file selected already exists, the
+        user will be prompted if they want to overwrite the file before the
+        selected file name is returned.
+    """
+    traits.setdefault( 'title', 'Save File' )
+    traits[ 'is_save_file' ] = True
+    fd = OpenFileDialog( **traits )
+    if fd.edit_traits( view = 'open_file_view' ).result:
         return fd.file_name
         
     return ''
@@ -471,6 +695,6 @@ def open_file ( **traits ):
 #-- Test Case ------------------------------------------------------------------
 
 if __name__ == '__main__':
-    print open_file( extensions = [ FileInfo(), TextInfo(), ImageInfo() ],
+    print save_file( extensions = [ FileInfo(), TextInfo(), ImageInfo() ],
                      filter = 'Python file (*.py)|*.py' )
 

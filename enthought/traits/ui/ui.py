@@ -256,13 +256,13 @@ class UI ( HasPrivateTraits ):
 
         # Notify the handler that the view has been closed:
         self.handler.closed( self.info, self.result )
+        
+        # Clear the back-link from the UIInfo object to us:
+        self.info.ui = None
 
         # Destroy the view control:        
         self.control._object = None
         toolkit().destroy_control( self.control )
-        
-        # Clear the back-link from the UIInfo object to us:
-        self.info.ui = None
 
         # Dispose of any KeyBindings object we reference:
         self.key_bindings.dispose()
