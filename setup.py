@@ -17,7 +17,6 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-MODEL = etsdep('enthought.model', '2.0.0b1')
 TRAITS = etsdep('enthought.traits', '3.0.0b1')
 
 
@@ -37,7 +36,6 @@ setup(
         },
     include_package_data = True,
     install_requires = [
-        MODEL,
         TRAITS,
         ],
     license = 'GPL',
@@ -56,4 +54,3 @@ setup(
     version = '3.0.0b1',
     zip_safe = False,
     )
-
