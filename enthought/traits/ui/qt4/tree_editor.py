@@ -433,17 +433,18 @@ class SimpleEditor ( Editor ):
         if pnid is None:
             self._tree.takeTopLevelItem(self._tree.indexOfTopLevelItem(nid))
         else:
-            expanded, node, object = self._get_node_data( nid )
-            id_object   = id( object )
-            object_info = self._map[ id_object ]
-            for i, info in enumerate( object_info ):
-                if nid == info[1]:
-                    del object_info[i]
-                    break
+            if getattr(pnid, '_dummy', None) is not nid:
+                expanded, node, object = self._get_node_data( nid )
+                id_object   = id( object )
+                object_info = self._map[ id_object ]
+                for i, info in enumerate( object_info ):
+                    if nid == info[1]:
+                        del object_info[i]
+                        break
 
-            if len( object_info ) == 0:
-                self._remove_listeners( node, object )
-                del self._map[ id_object ]
+                if len( object_info ) == 0:
+                    self._remove_listeners( node, object )
+                    del self._map[ id_object ]
 
             pnid.removeChild(nid)
 
@@ -791,14 +792,14 @@ class SimpleEditor ( Editor ):
     #  Gets/Sets the node specific data:
     #---------------------------------------------------------------------------
 
-    def _get_node_data ( self, nid ):
-        """ Gets the node specific data.
-        """
+    @staticmethod
+    def _get_node_data(nid):
+        """ Gets the node specific data. """
         return nid._py_data
 
-    def _set_node_data ( self, nid, data ):
-        """ Sets the node specific data.
-        """
+    @staticmethod
+    def _set_node_data(nid, data):
+        """ Sets the node specific data. """
         nid._py_data = data
 
 #----- User callable methods: --------------------------------------------------

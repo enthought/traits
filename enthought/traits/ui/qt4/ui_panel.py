@@ -687,33 +687,33 @@ class _GroupPanel(object):
             # that it is not None (otherwise the main TraitsUI code can change
             # the "kind" of the created UI object).
             editor.prepare(inner)
+            control = editor.control
 
             # Set the initial 'enabled' state of the editor from the factory:
             editor.enabled = editor_factory.enabled
 
             # Add emphasis to the editor control if requested:
             if item.emphasized:
-                self._add_emphasis(editor.control)
+                self._add_emphasis(control)
 
             # Give the editor focus if it requested it:
             if item.has_focus:
-                editor.control.setFocus()
-
-            # Set up the reference to the correct 'control' to use in the 
-            # following section, depending upon whether we have wrapped an
-            # ImagePanel around the editor control or not:
-            control = editor.control
+                control.setFocus()
 
             # Set the correct size on the control, as specified by the user:
             scrollable  = editor.scrollable
             item_width  = item.width
             item_height = item.height
             growable    = 0
+            # FIXME: For the moment ignore any item size until we understand
+            # what the visual effect is supposed to be (ie. we have an example).
+            item_width = item_height = -1
             if (item_width != -1) or (item_height != -1):
+                is_horizontal = (self.direction == QtGui.QBoxLayout.LeftToRight)
                 width = control.width()
                 height = control.height()
 
-                if (0.0 < item_width <= 1.0) and self.is_horizontal:
+                if (0.0 < item_width <= 1.0) and is_horizontal:
                     growable = int( 1000.0 * item_width )
 
                 item_width = int( item_width )
@@ -723,7 +723,7 @@ class _GroupPanel(object):
                 else:
                     item_width = max( item_width, width )
 
-                if (0.0 < item_height <= 1.0) and (not self.is_horizontal):
+                if (0.0 < item_height <= 1.0) and (not is_horizontal):
                     growable = int( 1000.0 * item_height )
 
                 if item_height < -1:
