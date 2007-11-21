@@ -77,15 +77,20 @@ else:
 #  Returns a default text editor: 
 #-------------------------------------------------------------------------------
 
-def default_text_editor ( trait, type ):
+def default_text_editor ( trait, type = None ):
     auto_set = trait.auto_set
     if auto_set is None:
         auto_set = True
         
-    from enthought.traits.ui.api import TextEditor
+    enter_set = trait.enter_set or False
     
+    from enthought.traits.ui.api import TextEditor
+
+    if type is None:
+        return TextEditor( auto_set = auto_set, enter_set = enter_set )
+        
     return TextEditor( auto_set  = auto_set,
-                       enter_set = trait.enter_set or False,
+                       enter_set = enter_set,
                        evaluate  = type )
 
 #-------------------------------------------------------------------------------
@@ -735,6 +740,11 @@ class String ( TraitType ):
                 msg += ' and'
             msg += (" matching the pattern '%s'" % self.regex)
         return 'a string' + msg
+
+    def create_editor ( self ):
+        """ Returns the default traits UI editor for this type of trait.
+        """
+        return default_text_editor( self )
 
     def __getstate__ ( self ):
         """ Returns the current state of the trait. 
