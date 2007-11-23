@@ -7,6 +7,7 @@
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 #  Thanks for using Enthought open source!
 # 
 #  Author: David C. Morrill
@@ -14,7 +15,7 @@
 #
 #------------------------------------------------------------------------------
 
-""" Defines the Image object used to manage Traits UI image libraries.
+""" Defines the ImageLibrary object used to manage Traits UI image libraries.
 """
 
 #-------------------------------------------------------------------------------
@@ -22,7 +23,7 @@
 #-------------------------------------------------------------------------------
 
 from os \
-    import environ, listdir, remove, stat, makedirs
+    import environ, listdir, remove, stat, makedirs, rename
     
 from os.path \
     import join, isdir, isfile, join, splitext, abspath, basename, exists
@@ -37,7 +38,7 @@ from zipfile \
     import is_zipfile, ZipFile, ZIP_DEFLATED
     
 from time \
-    import time, sleep    
+    import time, sleep, localtime, strftime   
 
 from thread \
     import allocate_lock
@@ -79,6 +80,57 @@ ImageFileExts = ( '.png', '.gif', '.jpg', 'jpeg' )
 
 # The image_cache root directory:
 image_cache_path = join( traits_home(), 'image_cache' )
+
+# Names of files that should not be copied when ceating a new library copy:
+dont_copy_list = ( 'image_volume.py', 'image_info.py', 'licenses.txt' )
+
+#-------------------------------------------------------------------------------
+#  Returns the contents of the specified file:
+#-------------------------------------------------------------------------------
+
+def read_file ( file_name ):
+    """ Returns the contents of the specified *file_name*.
+    """
+    fh = file( file_name, 'rb' )
+    try:
+        return fh.read()
+    finally:
+        fh.close()
+
+#-------------------------------------------------------------------------------
+#  Writes the specified data to the specified file:
+#-------------------------------------------------------------------------------
+
+def write_file ( file_name, data ):
+    """ Writes the specified data to the specified file.
+    """
+    fh = file( file_name, 'wb' )
+    try:
+        fh.write( data )
+    finally:
+        fh.close()
+
+#-------------------------------------------------------------------------------
+#  Returns the value of a Python symbol loaded from a specified source code
+#  string:
+#-------------------------------------------------------------------------------
+                
+def get_python_value ( source, name ):
+    """ Returns the value of a Python symbol loaded from a specified source
+        code string.
+    """
+    temp = {}
+    exec source.replace( '\r', '' ) in globals(), temp
+    return temp[ name ]
+        
+#-------------------------------------------------------------------------------
+#  Returns a specified time as a text string:
+#-------------------------------------------------------------------------------
+
+def time_stamp_for ( time ):
+    """ Returns a specified time as a text string.
+    """
+    return strftime( '%Y%m%d%H%M%S', localtime( time ) )
         
 #-------------------------------------------------------------------------------
 #  'FastZipFile' class:  
@@ -122,6 +174,18 @@ class FastZipFile ( HasPrivateTraits ):
         finally:
             self.access.release()
             
+    def close ( self ):
+        """ Temporarily closes the zip file (usually while the zip file is being
+            replaced by a different version).
+        """
+        self.access.acquire()
+        try:
+            if self._zf is not None:
+                self._zf.close()
+                self._zf = None
+        finally:
+            self.access.release()
+            
     #-- Default Value Implementations ------------------------------------------
     
     def _access_default ( self ):
@@ -135,7 +199,9 @@ class FastZipFile ( HasPrivateTraits ):
         
         if self._zf is None:
             self._zf = ZipFile( self.path, 'r' )
-            Thread( target = self._process ).start()
+            if self._running is None:
+                Thread( target = self._process ).start()
+                self._running = True
             
         return self._zf
         
@@ -149,8 +215,11 @@ class FastZipFile ( HasPrivateTraits ):
             sleep( 1 )
             self.access.acquire()
             if time() > (self.time_stamp + 2.0):
-                self._zf.close()
-                self._zf = None
+                if self._zf is not None:
+                    self._zf.close()
+                    self._zf = None
+                
+                self._running = False
                 self.access.release()
                 break
                 
@@ -164,6 +233,9 @@ class ImageInfo ( HasPrivateTraits ):
     """ Defines a class that contains information about a specific Traits UI 
         image.
     """
+    
+    # The volume this image belongs to:
+    volume = Instance( 'ImageVolume' )
     
     # The user friendly name of the image:
     name = Str
@@ -214,7 +286,7 @@ class ImageInfo ( HasPrivateTraits ):
         return split_image_name( self.image_name )[1]
         
     def _width_default ( self ):
-        image = ImageLibrary.image_resource( self.image_name )
+        image = self.volume.image_resource( self.image_name )
         if image is None:
             self.height = 0
             
@@ -225,7 +297,7 @@ class ImageInfo ( HasPrivateTraits ):
         return width
         
     def _height_default ( self ):
-        image = ImageLibrary.image_resource( self.image_name )
+        image = self.volume.image_resource( self.image_name )
         if image is None:
             self.width = 0
             
@@ -236,8 +308,7 @@ class ImageInfo ( HasPrivateTraits ):
         return height
     
     def _theme_default ( self ):
-        print "self.image_name:", self.image_name
-        return Theme( self.image_name,
+        return Theme( self.volume.image_resource( self.image_name ),
                       margins   = self.margins,
                       offset    = self.offset,
                       alignment = self.alignment )
@@ -268,11 +339,9 @@ class ImageInfo ( HasPrivateTraits ):
     def _volume_info ( self, name ):
         """ Returns the VolumeInfo object that applies to this image.
         """
-        volume = ImageLibrary.find_volume( self.image_name )
-        if volume is not None:
-            info = volume.volume_info( self.image_name )
-            if info is not None:
-                return getattr( info, name, 'Unknown' ) 
+        info = self.volume.volume_info( self.image_name )
+        if info is not None:
+            return getattr( info, name, 'Unknown' ) 
             
         return 'Unknown'
         
@@ -369,10 +438,10 @@ class ImageVolume ( HasPrivateTraits ):
     images = List( ImageInfo )
     
     # A dictionary mapping image names to ImageInfo objects:
-    catalog = Property
+    catalog = Property( depends_on = 'images' )
     
     # The time stamp of when the image library was last modified:
-    time_stamp = Any 
+    time_stamp = Str
     
     # A read-only string containing the Python code needed to construct this
     # ImageVolume object:
@@ -388,6 +457,104 @@ class ImageVolume ( HasPrivateTraits ):
     license_text = Property
     
     #-- Public Methods ---------------------------------------------------------
+    
+    def update ( self ):
+        """ Updates the contents of the image volume from the underlying 
+            image store, and saves the results.
+        """
+        # Unlink all our current images:
+        for image in self.images:
+            image.volume = None
+                
+        # Make sure the images are up to date by deleting any current value:
+        del self.images
+        
+        # Save the new image volume information:
+        self.save()
+    
+    def save ( self ):
+        self.images
+        """ Saves the contents of the image volume using the current contents 
+            of the **ImageVolume**. 
+        """
+        path = self.path
+        if not self.is_zip_file:
+            # Write the volume manifest source code to a file:
+            write_file( join( path, 'image_volume.py' ), 
+                        self.image_volume_code )
+            
+            # Write the image info source code to a file:
+            write_file( join( path, 'image_info.py' ), self.images_code )
+            
+            # Write a separate license file for human consumption:
+            write_file( join( path, 'license.txt' ), self.license_text )
+            
+        # Create a temporary name for the new .zip file:
+        file_name = path + '.###'
+        
+        # Create the new zip file:
+        new_zf = ZipFile( file_name, 'w', ZIP_DEFLATED )
+        
+        try:
+            # Get the current zip file:
+            cur_zf = self.zip_file
+            
+            # Copy all of the image files from the current zip file to the new
+            # zip file:
+            for name in cur_zf.namelist():
+                if name not in dont_copy_list:
+                    new_zf.writestr( name, cur_zf.read( name ) ) 
+            
+            # Temporarily close the current zip file while we replace it with 
+            # the new version:
+            cur_zf.close()
+            
+            # We need to time stamp when this volume info was generated, but
+            # it needs to be the same or newer then the time stamp of the file
+            # it is in. So we use the current time plus a 'fudge factor' to
+            # allow for some slop in when the OS actually time stamps the file:
+            self.time_stamp = time_stamp_for( time() + 5.0 )
+            
+            # Write the volume manifest source code to the zip file:
+            new_zf.writestr( 'image_volume.py', self.image_volume_code )
+            
+            # Write the image info source code to the zip file:
+            new_zf.writestr( 'image_info.py', self.images_code )
+            
+            # Write a separate license file for human consumption:
+            new_zf.writestr( 'license.txt', self.license_text )
+            
+            # Done creating the new zip file:
+            new_zf.close()
+            new_zf = None
+            
+            # Rename the original file to a temporary name, so we can give the
+            # new file the original name. Note that unlocking the original zip
+            # file after the previous close sometimes seems to take a while,
+            # which is why we repeatedly try the rename until it either succeeds
+            # or takes so long that it must have failed for another reason:
+            temp_name = path + '.$$$'
+            for i in range( 50 ):
+                try:
+                    rename( path, temp_name )
+                    break
+                except:
+                    sleep( 0.1 )
+                
+            try:
+                rename( file_name, path )
+                file_name = temp_name
+            except:
+                rename( temp_name, path )
+                raise
+            
+            # Indicate no errors occurred:
+            error = False
+        finally:
+            if new_zf is not None:
+                new_zf.close()
+                
+            remove( file_name )
     
     def image_resource ( self, image_name ):
         """ Returns the ImageResource object for the specified **image_name**.
@@ -433,11 +600,7 @@ class ImageVolume ( HasPrivateTraits ):
         if self.is_zip_file:
             return self.zip_file.read( file_name )
         else:
-            fh = file( join( self.path, file_name ), 'rb' )
-            try:
-                return fh.read()
-            finally:
-                fh.close()
+            return read_file( join( self.path, file_name ) )
         
     def volume_info ( self, image_name ):
         """ Returns the ImageVolumeInfo object that corresponds to the 
@@ -457,7 +620,42 @@ class ImageVolume ( HasPrivateTraits ):
         return [ ImageVolumeInfo() ]
     
     def _images_default ( self ):
+        return self._load_image_info()
+        
+    #-- Property Implementations -----------------------------------------------
+    
+    @cached_property
+    def _get_catalog ( self ):
+        return dict( [ ( image.image_name, image ) for image in self.images ] )
+        
+    def _get_image_volume_code ( self ):
+        data = dict( [ ( name, repr( value ) ) 
+                       for name, value in self.get( 'description', 'category',
+                           'keywords', 'aliases', 'time_stamp', 'licenses'
+                           ).iteritems() ] )
+        data['info'] = ',\n'.join( [ info.image_volume_info_code
+                                     for info in self.info ] )
+                           
+        return (ImageVolumeTemplate % data)
+        
+    def _get_images_code ( self ):
+        images = ',\n'.join( [ info.image_info_code for info in self.images ] )
+        
+        return (ImageVolumeImagesTemplate % images)
+        
+    def _get_license_text ( self ):
+        return (('\n\n%s\n' % ('-' * 79)).join( [ info.image_volume_info_text
+                                                  for info in self.info ] ))
+                                                  
+    #-- Private Methods --------------------------------------------------------
+    
+    def _load_image_info ( self ):
+        """ Returns the list of ImageInfo objects for the images in the volume.
+        """
+        time_stamp  = time_stamp_for( stat( self.path )[ ST_MTIME ] )
         volume_name = self.name
+        old_images  = []
+        cur_images  = []
         
         if self.is_zip_file:
             zf = self.zip_file
@@ -466,67 +664,66 @@ class ImageVolume ( HasPrivateTraits ):
             names = zf.namelist()
             
             # Check to see if there is an image info manifest file:
-            if 'image_info.py' in names: 
+            if 'image_info.py' in names:
                 # Load the manifest code and extract the images list:
-                temp   = {}
-                source = zf.read( 'image_info.py' ).replace( '\r', '' )
-                exec source in globals(), temp
-                images = temp[ 'images' ]
-            else:    
-                # Create an ImageInfo object for all image files contained
-                # in the .zip file:
-                images = []
+                old_images = get_python_value( zf.read( 'image_info.py' ), 
+                                               'images' )
+
+            # Check to see if our time stamp is up to data with the file:
+            if self.time_stamp < time_stamp:
+                
+                # If not, create an ImageInfo object for all image files 
+                # contained in the .zip file:
                 for name in names:
                     root, ext = splitext( name )
                     if ext in ImageFileExts:
-                        images.append( ImageInfo(
+                        cur_images.append( ImageInfo(
                            name       = root,
-                           image_name = join_image_name(volume_name, name) )
-                        )
+                           image_name = join_image_name( volume_name, name ) ) )
+                 
         else:
-            # Create an ImageInfo object for each image file containined in the
-            # path:
-            images = []
-            for name in listdir( self.path ):
-                root, ext = splitext( name )
-                if ext in ImageFileExts:
-                    images.append( ImageInfo( 
-                        name       = root, 
-                        image_name = join_image_name( volume_name, name ) ) )
-                        
+            image_info_path = join( self.path, 'image_info.py' )
+            if exists( image_info_path ):
+                # Load the manifest code and extract the images list:
+                old_images = get_python_value( read_file( image_info_path ),
+                                               'images' )
+                                               
+            # Check to see if our time stamp is up to data with the file:
+            if self.time_stamp < time_stamp:
+                
+                # If not, create an ImageInfo object for each image file
+                # contained in the path:
+                for name in listdir( self.path ):
+                    root, ext = splitext( name )
+                    if ext in ImageFileExts:
+                        cur_images.append( ImageInfo( 
+                           name       = root, 
+                           image_name = join_image_name( volume_name, name ) ) )
+                           
+        # Merge the old and current images into a single up to data list:
+        if len( old_images ) == 0:
+            images = cur_images
+        elif len( cur_images ) == 0:
+            images = old_images
+        else:
+            old_image_set = set( [ image.image_name for image in old_images ] )
+            cur_image_set = set( [ image.image_name for image in cur_images ] )
+            images        = ([ image for image in old_images
+                                     if image.image_name in cur_image_set ] +
+                             [ image for image in cur_images 
+                                     if image.image_name not in old_image_set ])
+        
+        # Set the new time stamp of the volume:
+        self.time_stamp = time_stamp
+                           
         # Return the resulting sorted list as the default value:
         images.sort( key = lambda item: item.image_name )
         
+        # Make sure all images reference this volume:
+        for image in images:
+            image.volume = self
+        
         return images
-        
-    #-- Property Implementations -----------------------------------------------
-    
-    @cached_property
-    def _get_catalog ( self ):
-        return dict( [ ( image.image_name, image ) for image in self.images ] )
-        
-    @cached_property
-    def _get_image_volume_code ( self ):
-        data = dict( [ ( name, repr( value ) ) 
-                       for name, value in self.get( 'description', 'category',
-                           'keywords', 'aliases', 'licenses' ).iteritems() ] )
-        data['info'] = ',\n'.join( [ info.image_volume_info_code
-                                     for info in self.info ] )
-                           
-        return (ImageVolumeTemplate % data)
-        
-    @cached_property
-    def _get_images_code ( self ):
-        images = ',\n'.join( [ info.image_info_code for info in self.images ] )
-        
-        return (ImageVolumeImagesTemplate % images)
-        
-    @cached_property
-    def _get_license_text ( self ):
-        return (('\n\n%s\n' % ('-' * 79)).join( [ info.image_volume_info_text
-                                                  for info in self.info ] ))
-                                                  
-    #-- Private Methods --------------------------------------------------------
     
     def _check_cache ( self, file_name ):
         """ Checks to see if the specified zip file name has been saved in the
@@ -535,7 +732,8 @@ class ImageVolume ( HasPrivateTraits ):
         """
         cache_file = join( image_cache_path, self.name, file_name )
         if (exists( cache_file ) and 
-           (stat( cache_file )[ ST_MTIME ] > self.time_stamp)):
+           (time_stamp_for( stat( cache_file )[ ST_MTIME ] ) >
+            self.time_stamp)):
             return cache_file
         
         return None
@@ -607,7 +805,7 @@ class ImageLibrary ( HasPrivateTraits ):
     catalog = Dict( Str, ImageVolume )
     
     # The list of available images in the library:
-    images = List( ImageInfo )
+    images = Property( List, depends_on = 'volumes.images' )
     
     #-- Private Traits ---------------------------------------------------------
     
@@ -726,9 +924,21 @@ class ImageLibrary ( HasPrivateTraits ):
                               path )
                               
         # Create the ImageVolume to describe the path's contents:
-        volume = ImageVolume( name        = volume_name,
-                              path        = path,
-                              is_zip_file = False )
+        image_volume_path = join( path, 'image_volume.py' )
+        if exists( image_volume_path ):
+            volume = get_python_value( read_file( image_volume_path ),
+                                       'volume' )
+        else:    
+            volume = ImageVolume()
+            
+        # Set up the rest of the volume information:
+        volume.set( name        = volume_name,
+                    path        = path,
+                    is_zip_file = False )
+                    
+        # Try to bring the volume information up to date if necessary:
+        if volume.time_stamp < time_stamp_for( stat( path )[ ST_MTIME ] ):
+            volume.save()
                     
         # Add the new volume to the library:
         self.catalog[ volume_name ] = volume
@@ -864,16 +1074,11 @@ class ImageLibrary ( HasPrivateTraits ):
     def _catalog_default ( self ):
         return dict( [ ( volume.name, volume ) for volume in self.volumes ] )
         
-    def _images_default ( self ):
-        return self._get_images_list()
-        
-    #-- Event Handlers ---------------------------------------------------------
+    #-- Property Implementations -----------------------------------------------
     
-    @on_trait_change( ' volumes' )
-    def _update_images ( self ):
-        """ Handles the 'volumes' list being modified.
-        """
-        self.images = self._get_images_list()
+    @cached_property
+    def _get_images ( self ):
+        return self._get_images_list()
         
     #-- Private Methods --------------------------------------------------------
     
@@ -918,14 +1123,13 @@ class ImageLibrary ( HasPrivateTraits ):
             **path**. If **path** does not specify a valid ImageVolume, None is
             returned.
         """
+        path = abspath( path )
+        
         # Make sure the path is a valid zip file:
         if is_zipfile( path ):
             
             # Create a fast zip file for reading:
             zf = FastZipFile( path = path )
-
-            # Get the time stamp of the file:
-            time_stamp = stat( path )[ ST_MTIME ]
             
             # Extract the volume name from the path:
             volume_name = splitext( basename( path ) )[0]
@@ -936,46 +1140,52 @@ class ImageLibrary ( HasPrivateTraits ):
             # Check to see if there is a manifest file:
             if 'image_volume.py' in names: 
                 # Load the manifest code and extract the volume object:
-                temp   = {}
-                source = zf.read( 'image_volume.py' ).replace( '\r', '' )
-                exec source in globals(), temp
-                volume = temp.get( 'volume' )
-                    
-                # Try to add all of the external volume references as
-                # aliases for this volume:
-                aliases = self.aliases
-                for vname in volume.aliases:
-                    if ((vname in aliases) and
-                        (volume_name != aliases[ vname ])):
-                        raise TraitError( ("Image library error: "
-                            "Attempt to alias '%s' to '%s' when it is "
-                            "already aliased to '%s'") %
-                            ( vname, volume_name, aliases[ name ] ) )
-                    aliases[ vname ] = volume_name
+                volume = get_python_value( zf.read( 'image_volume.py' ), 
+                                           'volume' )
                     
                 # Set the volume name:
                 volume.name = volume_name
+                    
+                # Try to add all of the external volume references as
+                # aliases for this volume:
+                self._add_aliases( volume )
                 
                 # Set the path to this volume:
-                volume.path = abspath( path )
-                
-                # Set the time stampt for the volume:
-                volume.time_stamp = time_stamp
+                volume.path = path
                 
                 # Save the reference to the zip file object we are using:
                 volume.zip_file = zf
                 
-                # Return the new volume:
-                return volume
-            
-            # Create a new volume from it:
-            return ImageVolume( name       = volume_name, 
-                                path       = abspath( path ),
-                                zip_file   = zf,
-                                time_stamp = time_stamp )
+            else:
+                # Create a new volume from the zip file:
+                volume =  ImageVolume( name     = volume_name, 
+                                       path     = path,
+                                       zip_file = zf )
+                 
+            # If this volume is not up to date, update it:
+            if volume.time_stamp < time_stamp_for( stat( path )[ ST_MTIME ] ):
+                volume.save()
+                
+            # Return the volume:
+            return volume
                 
         # Indicate no volume was found:
         return None
+        
+    def _add_aliases ( self, volume ):
+        """ Try to add all of the external volume references as aliases for 
+            this volume.
+        """
+        aliases     = self.aliases
+        volume_name = volume.name
+        for vname in volume.aliases:
+            if ((vname in aliases) and
+                (volume_name != aliases[ vname ])):
+                raise TraitError( ("Image library error: "
+                    "Attempt to alias '%s' to '%s' when it is "
+                    "already aliased to '%s'") %
+                    ( vname, volume_name, aliases[ name ] ) )
+            aliases[ vname ] = volume_name
 
     def _duplicate_volume ( self, volume_name ):
         """ Raises a duplicate volume name error.
@@ -1043,6 +1253,7 @@ volume = ImageVolume(
     category    = %(category)s,
     keywords    = %(keywords)s,
     aliases     = %(aliases)s,
+    time_stamp  = %(time_stamp)s,
     info        = [
 %(info)s
     ]
