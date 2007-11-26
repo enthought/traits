@@ -79,7 +79,7 @@ do { \
 #define OFF(x) offsetof(trait_method_object, x)
 
 /* Notification related: */
-#define has_notifiers(tnotifiers,onitofiers) \
+#define has_notifiers(tnotifiers,onotifiers) \
     ((((tnotifiers) != NULL) && (PyList_GET_SIZE((tnotifiers))>0)) || \
      (((onotifiers) != NULL) && (PyList_GET_SIZE((onotifiers))>0)))
     
