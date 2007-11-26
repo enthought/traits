@@ -1916,41 +1916,33 @@ class Instance ( BaseInstance ):
             self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
                                    
-class AdaptedTo ( Instance ):
-
-    adapt_default = 'yes'
-
-    def post_setattr ( self, object, name, value ):
-        """ Performs additional post-assignment processing.
-        """
-        # Save the original, unadapted value in the mapped trait:
-        object.__dict__[ name + '_' ] = value
-
-    def as_ctrait ( self ):
-        """ Returns a CTrait corresponding to the trait defined by this class.
-        """
-        # Tell the C code that the 'post_setattr' method wants the original,
-        # unadapted value passed to 'setattr':
-        return super( AdaptedTo, self 
-                    ).as_ctrait().post_setattr_original_value( True )
-    
-class AdaptsTo ( Instance ):    
-
-    adapt_default = 'yes'
-
-    def post_setattr ( self, object, name, value ):
-        """ Performs additional post-assignment processing.
-        """
-        # Save the adapted value in the mapped trait:
-        object.__dict__[ name + '_' ] = value
-        
-    def as_ctrait ( self ):
-        """ Returns a CTrait corresponding to the trait defined by this class.
-        """
-        # Tell the C code that 'setattr' should store the original, unadapted 
-        # value passed to it:
-        return super( AdaptsTo, self 
-                    ).as_ctrait().setattr_original_value( True )
+class AdaptedTo ( Instance ):  
+ 
+    adapt_default = 'yes'  
+  
+    def post_setattr ( self, object, name, value ):  
+        """ Performs additional post-assignment processing.  
+        """  
+        # Save the original, unadapted value in the mapped trait:  
+        object.__dict__[ name + '_' ] = value  
+  
+    def as_ctrait ( self ):  
+        """ Returns a CTrait corresponding to the trait defined by this class.  
+        """  
+        return self.modify_ctrait( super( AdaptedTo, self ).as_ctrait() )  
+          
+    def modify_ctrait ( self, ctrait ):  
+          
+        # Tell the C code that the 'post_setattr' method wants the original,  
+        # unadapted value passed to 'setattr':  
+        return ctrait.post_setattr_original_value( True )  
+      
+class AdaptsTo ( AdaptedTo ):      
+          
+    def modify_ctrait ( self, ctrait ):  
+        # Tell the C code that 'setattr' should store the original, unadapted   
+        # value passed to it:  
+        return ctrait.setattr_original_value( True )  
     
 if python_version >= 2.5:
     
