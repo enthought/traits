@@ -17,20 +17,20 @@
 #-------------------------------------------------------------------------------
 
 from os.path \
-    import splitext, isfile
-    
+    import splitext, isfile, exists
+
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import List, Str, Event, Bool, Int, Unicode
-    
+
 from enthought.traits.ui.api \
     import View, Group
-    
+
 from text_editor \
     import ToolkitEditorFactory as EditorFactory, \
            SimpleEditor         as SimpleTextEditor
-           
+
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
@@ -45,24 +45,27 @@ filter_trait = List(Unicode)
 class ToolkitEditorFactory ( EditorFactory ):
     """ PyQt editor factory for file editors.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     # Wildcard filter to apply to the file dialog:
     filter = filter_trait
-    
+
     # Optional extended trait name of the trait containing the list of filters:
     filter_name = Str
-    
+
     # Should file extension be truncated?
     truncate_ext = Bool( False )
-    
+
+    # Can the user select directories as well as files?
+    allow_dir = Bool( False )
+
     # Is user input set on every keystroke? (Overrides the default) ('simple' 
     # style only):
     auto_set = False      
-    
+
     # Is user input set when the Enter key is pressed? (Overrides the default)
     # ('simple' style only):
     enter_set = True
@@ -74,22 +77,26 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Optional extended trait name used to notify the editor when the file 
     # system view should be reloaded ('custom' style only):
     reload_name = Str
-    
+
+    # Optional extended trait name used to notify when the user double-clicks
+    # an entry in the file tree view:
+    dclick_name = Str
+
     #---------------------------------------------------------------------------
     #  Traits view definition:  
     #---------------------------------------------------------------------------
-    
+
     traits_view = View( [ [ '<options>',
                         'truncate_ext{Automatically truncate file extension?}',
                         '|options:[Options]>' ],
                           [ 'filter', '|[Wildcard filters]<>' ] ] )
-    
+
     extras = Group()
-    
+
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
-    
+
     def simple_editor ( self, ui, object, name, description, parent ):
         return SimpleEditor( parent,
                              factory     = self, 
@@ -97,7 +104,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                              object      = object, 
                              name        = name, 
                              description = description ) 
-    
+
     def custom_editor ( self, ui, object, name, description, parent ):
         return CustomEditor( parent,
                              factory     = self, 
@@ -105,22 +112,22 @@ class ToolkitEditorFactory ( EditorFactory ):
                              object      = object, 
                              name        = name, 
                              description = description ) 
-                                      
+
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class SimpleEditor ( SimpleTextEditor ):
     """ Simple style of file editor, consisting of a text field and a **Browse**
         button that opens a file-selection dialog box. The user can also drag 
         and drop a file onto this control.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
@@ -151,7 +158,7 @@ class SimpleEditor ( SimpleTextEditor ):
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
-  
+
     def update_object(self):
         """ Handles the user changing the contents of the edit control.
         """
@@ -160,17 +167,17 @@ class SimpleEditor ( SimpleTextEditor ):
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-        
+
     def update_editor ( self ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
         self._file_name.setText(self.str_value)
-       
+
     #---------------------------------------------------------------------------
     #  Displays the pop-up file dialog:
     #---------------------------------------------------------------------------
- 
+
     def show_file_dialog(self):
         """ Displays the pop-up file dialog.
         """
@@ -196,12 +203,12 @@ class SimpleEditor ( SimpleTextEditor ):
     def _create_file_dialog ( self ):
         """ Creates the correct type of file dialog.
         """
-        dlg = QtGui.QFileDialog(self.control)
+        dlg = QtGui.QFileDialog(self.control.parentWidget())
         dlg.selectFile(self._file_name.text())
 
         if len(self.factory.filter) > 0:
             dlg.setFilters(self.factory.filter)
-            
+
         return dlg
 
     def _update ( self, file_name ):
@@ -225,18 +232,21 @@ class CustomEditor ( SimpleTextEditor ):
 
     # Is the file editor scrollable? This value overrides the default.
     scrollable = True
-    
+
     # Wildcard filter to apply to the file dialog:
     filter = filter_trait
-    
+
     # Event fired when the file system view should be rebuilt:
     reload = Event
-    
+
+    # Event fired when the user double-clicks a file:
+    dclick = Event
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
@@ -250,47 +260,59 @@ class CustomEditor ( SimpleTextEditor ):
         self.filter = factory.filter
         self.sync_value(factory.filter_name, 'filter', 'from', is_list=True)
         self.sync_value(factory.reload_name, 'reload', 'from')
-        
+        self.sync_value(factory.dclick_name, 'dclick', 'to')
+
         self.set_tooltip()
 
     #---------------------------------------------------------------------------
     #  Handles the user changing the contents of the edit control:
     #---------------------------------------------------------------------------
-  
+
     def update_object(self, idx):
         """ Handles the user changing the contents of the edit control.
         """
-        path = unicode(self._model.filePath(idx))
+        if self.control is not None:
+            path = unicode(self._model.filePath(idx))
 
-        if isfile(path):
-            if self.factory.truncate_ext:
-                path = splitext( path )[0]
+            if self.factory.allow_dir or isfile(path):
+                if self.factory.truncate_ext:
+                    path = splitext( path )[0]
 
-            self.value = path
-        
+                self.value = path
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-        
+
     def update_editor ( self ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
-        self.control.setCurrentIndex(self._model.index(self.str_value))
-        
+        if exists(self.str_value):
+            self.control.setCurrentIndex(self._model.index(self.str_value))
+
     #---------------------------------------------------------------------------
     #  Handles the 'filter' trait being changed:
     #---------------------------------------------------------------------------
-    
+
     def _filter_changed ( self ):
         """ Handles the 'filter' trait being changed.
         """
         self._model.setNameFilters(self.filter)
-        
+
+    #---------------------------------------------------------------------------
+    #  Handles the user double-clicking on a file name:
+    #---------------------------------------------------------------------------
+
+    def _on_dclick ( self, idx ):
+        """ Handles the user double-clicking on a file name.
+        """
+        self.dclick = True
+
     #---------------------------------------------------------------------------
     #  Handles the 'reload' trait being changed:
     #---------------------------------------------------------------------------
-    
+
     def _reload_changed ( self ):
         """ Handles the 'reload' trait being changed.
         """
@@ -309,6 +331,9 @@ class _TreeView(QtGui.QTreeView):
     def __init__(self, editor):
 
         QtGui.QTreeView.__init__(self)
+
+        self.connect(self, QtCore.SIGNAL('doubleClicked(QModelIndex)'),
+                editor._on_dclick)
 
         self._editor = editor
 
