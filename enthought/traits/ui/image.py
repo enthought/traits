@@ -54,7 +54,7 @@ from enthought.traits.trait_base \
     import get_resource_path, traits_home
     
 from ui_traits \
-    import HasMargins, Margins, Alignment
+    import HasMargin, HasBorder, Alignment
     
 from theme \
     import Theme
@@ -82,7 +82,7 @@ ImageFileExts = ( '.png', '.gif', '.jpg', 'jpeg' )
 image_cache_path = join( traits_home(), 'image_cache' )
 
 # Names of files that should not be copied when ceating a new library copy:
-dont_copy_list = ( 'image_volume.py', 'image_info.py', 'licenses.txt' )
+dont_copy_list = ( 'image_volume.py', 'image_info.py', 'license.txt' )
 
 #-------------------------------------------------------------------------------
 #  Returns the contents of the specified file:
@@ -131,6 +131,18 @@ def time_stamp_for ( time ):
     """ Returns a specified time as a text string.
     """
     return strftime( '%Y%m%d%H%M%S', localtime( time ) )
+    
+#-------------------------------------------------------------------------------
+#  Adds all traits from a specified object to a dictionary with a specified name
+#  prefix:
+#-------------------------------------------------------------------------------
+        
+def add_object_prefix ( dict, object, prefix ):
+    """ Adds all traits from a specified object to a dictionary with a specified 
+        name prefix.
+    """
+    for name, value in object.get().iteritems():
+        dict[ prefix + name ] = value
         
 #-------------------------------------------------------------------------------
 #  'FastZipFile' class:  
@@ -261,13 +273,16 @@ class ImageInfo ( HasPrivateTraits ):
     # The theme for this image:
     theme = Instance( Theme )
     
-    # The margins to use around the content:
-    margins = HasMargins( Margins( 4, 2 ) )
+    # The border inset:
+    border = HasBorder
     
-    # The offset to use to properly position content: 
-    offset = Tuple( Int, Int )
+    # The margin to use around the content:
+    content = HasMargin
     
-    # The alignment to use for positioning content:
+    # The margin to use around the label:
+    label = HasMargin
+    
+    # The alignment to use for the label:
     alignment = Alignment
     
     # The copyright that applies to this image:
@@ -309,8 +324,9 @@ class ImageInfo ( HasPrivateTraits ):
     
     def _theme_default ( self ):
         return Theme( self.volume.image_resource( self.image_name ),
-                      margins   = self.margins,
-                      offset    = self.offset,
+                      border    = self.border,
+                      content   = self.content,
+                      label     = self.label,
                       alignment = self.alignment )
     
     #-- Property Implementations -----------------------------------------------
@@ -320,11 +336,12 @@ class ImageInfo ( HasPrivateTraits ):
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'name', 'image_name',
                        'description', 'category', 'keywords' ).iteritems() ] )
-        data.update( dict( [ ( name, repr( value ) )
-                       for name, value in self.theme.get( 'offset',
-                                                 'alignment' ).iteritems() ] ) )
         data.update( self.get( 'width', 'height' ) )
-        data.update( self.theme.margins.get() )
+        theme = self.theme
+        data[ 'alignment' ] = repr( theme.alignment )
+        add_object_prefix( data, theme.border,  'b' )
+        add_object_prefix( data, theme.content, 'c' )
+        add_object_prefix( data, theme.label,   'l' )
         
         return (ImageInfoTemplate % data)
         
@@ -478,13 +495,26 @@ class ImageVolume ( HasPrivateTraits ):
             of the **ImageVolume**. 
         """
         path = self.path
+            
+        # Pre-compute the images code, because it can require a long time
+        # to load all of the images so that we can determine their size, and we
+        # don't want that time to interfere with the time stamp of the image
+        # volume:
+        images_code = self.images_code
+        
         if not self.is_zip_file:
+            # We need to time stamp when this volume info was generated, but
+            # it needs to be the same or newer then the time stamp of the file
+            # it is in. So we use the current time plus a 'fudge factor' to
+            # allow for some slop in when the OS actually time stamps the file:
+            self.time_stamp = time_stamp_for( time() + 5.0 )
+            
             # Write the volume manifest source code to a file:
             write_file( join( path, 'image_volume.py' ), 
                         self.image_volume_code )
             
             # Write the image info source code to a file:
-            write_file( join( path, 'image_info.py' ), self.images_code )
+            write_file( join( path, 'image_info.py' ), images_code )
             
             # Write a separate license file for human consumption:
             write_file( join( path, 'license.txt' ), self.license_text )
@@ -503,7 +533,7 @@ class ImageVolume ( HasPrivateTraits ):
             # zip file:
             for name in cur_zf.namelist():
                 if name not in dont_copy_list:
-                    new_zf.writestr( name, cur_zf.read( name ) ) 
+                    new_zf.writestr( name, cur_zf.read( name ) )
             
             # Temporarily close the current zip file while we replace it with 
             # the new version:
@@ -513,13 +543,13 @@ class ImageVolume ( HasPrivateTraits ):
             # it needs to be the same or newer then the time stamp of the file
             # it is in. So we use the current time plus a 'fudge factor' to
             # allow for some slop in when the OS actually time stamps the file:
-            self.time_stamp = time_stamp_for( time() + 5.0 )
+            self.time_stamp = time_stamp_for( time() + 10.0 )
             
             # Write the volume manifest source code to the zip file:
             new_zf.writestr( 'image_volume.py', self.image_volume_code )
             
             # Write the image info source code to the zip file:
-            new_zf.writestr( 'image_info.py', self.images_code )
+            new_zf.writestr( 'image_info.py', images_code )
             
             # Write a separate license file for human consumption:
             new_zf.writestr( 'license.txt', self.license_text )
@@ -1262,7 +1292,7 @@ volume = ImageVolume(
 # Template for creating an ImageVolume 'images' list:
 ImageVolumeImagesTemplate = \
 """from enthought.traits.ui.image     import ImageInfo
-from enthought.traits.ui.ui_traits import Margins 
+from enthought.traits.ui.ui_traits import Margin, Border 
     
 images = [
 %s
@@ -1278,8 +1308,9 @@ ImageInfoTemplate = \
         keywords    = %(keywords)s,
         width       = %(width)d,
         height      = %(height)d,
-        margins     = Margins( %(left)d, %(right)d, %(top)d, %(bottom)d ),
-        offset      = %(offset)s,
+        border      = Border( %(bleft)d, %(bright)d, %(btop)d, %(bbottom)d ),
+        content     = Margin( %(cleft)d, %(cright)d, %(ctop)d, %(cbottom)d ),
+        label       = Margin( %(lleft)d, %(lright)d, %(ltop)d, %(lbottom)d ),
         alignment   = %(alignment)s
     )"""
             

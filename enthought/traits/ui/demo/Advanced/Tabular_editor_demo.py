@@ -126,7 +126,7 @@ class Report ( HasTraits ):
         Group(
             Item( 'people', id = 'table', editor = tabular_editor ), 
             show_labels        = False,
-            item_theme         = Theme( '@BF5', margins = ( -3, 0 ) ),
+            item_theme         = Theme( '@BF5', content = ( -3, 0 ) ),
             group_theme        = '@XG2' 
         ),
         title     = 'Tabular Editor Demo',

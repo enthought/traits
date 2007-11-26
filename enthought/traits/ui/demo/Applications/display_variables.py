@@ -221,7 +221,7 @@ class VariableAdapter ( TabularAdapter ):
 
 class Slider ( Item ):
     editor     = ThemedSliderEditor( slider_color = 0xC3D3FD )
-    item_theme = ATheme( Theme( '@images:GG5', margins = 1 ) )
+    item_theme = ATheme( Theme( '@images:GG5', content = 1 ) )
 
 variable_view = View(
     Item( 'units' ),
@@ -243,8 +243,8 @@ class ExperimentView ( Controller ):
                 Label( 'Experiment Variables', 
                        Theme( ImageResource( 'header', 
                                              search_path = search_path ),
-                              margins   = ( 0, 4 ), 
-                              offset    = ( 0, 2 ),
+                              content   = ( 0, 4 ), 
+                              label     = ( 0, 2 ),
                               alignment = 'center' ) ),
                 '_',
                 Item( 'variables',
@@ -253,11 +253,11 @@ class ExperimentView ( Controller ):
                           closed_theme = Theme( 
                               ImageResource( 'notebook_close', 
                                              search_path = search_path ), 
-                              offset = ( -9, 0 ) ),
+                              label = ( -9, 0 ) ),
                           open_theme = Theme(
                               ImageResource( 'notebook_open', 
                                              search_path = search_path ),
-                              margins = ( -20, 2 ) ),
+                              content = ( -20, 2 ) ),
                           multiple_open = True,
                           scrollable    = True,
                           double_click  = False,
@@ -273,8 +273,8 @@ class ExperimentView ( Controller ):
                 Label( 'Experiment Variables', 
                        Theme( ImageResource( 'header', 
                                              search_path = search_path ),
-                              margins   = ( 0, 4 ),
-                              offset    = ( 0, 2 ), 
+                              content   = ( 0, 4 ),
+                              label     = ( 0, 2 ), 
                               alignment = 'center' ) ),
                 '_',
                 Item( 'variables',
@@ -285,7 +285,7 @@ class ExperimentView ( Controller ):
                 ),
                 HGroup( 
                     Slider( 'sample_points', springy = True ),
-                    group_theme = Theme( '@images:TFB', margins = -5 )
+                    group_theme = Theme( '@images:TFB', content = -5 )
                 ),
                 label  = 'Summary',
                 dock   = 'horizontal',

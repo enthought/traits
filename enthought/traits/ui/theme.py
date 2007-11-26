@@ -18,7 +18,7 @@ from enthought.traits.api \
     import HasPrivateTraits, Tuple, Int
     
 from ui_traits \
-    import Image, HasMargins, Margins, Alignment
+    import Image, HasBorder, HasMargin, Alignment
     
 #-------------------------------------------------------------------------------
 #  'Theme' class:
@@ -31,14 +31,20 @@ class Theme ( HasPrivateTraits ):
     # The background image to use for the theme:
     image = Image
     
-    # The margins to use around the content:
-    margins = HasMargins( Margins( 4, 2 ) )
+    # The border inset:
+    border = HasBorder
     
-    # The offset to use to properly position content: 
-    offset = Tuple( Int, Int )
+    # The margin to use around the content:
+    content = HasMargin
     
-    # The alignment to use for positioning content:
+    # The margin to use around the label:
+    label = HasMargin
+    
+    # The alignment to use for positioning the label:
     alignment = Alignment
+    
+    # Note: The 'content_color' and 'label_color' traits should be added by a
+    # toolkit-specific category...
     
     #-- Constructor ------------------------------------------------------------
     

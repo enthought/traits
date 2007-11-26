@@ -166,6 +166,13 @@ def convert_theme ( value, level = 3 ):
     if not isinstance( value, basestring ):
         return value
         
+    if (value[:1] == '@') and (value.find( ':' ) >= 2):
+        from image import ImageLibrary
+        
+        info = ImageLibrary.image_info( value )
+        if info is not None:
+            return info.theme
+        
     from theme import Theme
     return Theme( image = convert_image( value, level + 1 ) )
     
@@ -203,22 +210,10 @@ class ATheme ( TraitType ):
         self.error( object, name, value )
 
 #-------------------------------------------------------------------------------
-#  'Padding' class:  
+#  'BasePMB' class:  
 #-------------------------------------------------------------------------------
                 
-class Padding ( HasStrictTraits ):
-    
-    # The amount of padding/margin at the top:
-    top = Range( -32, 32, 0 )
-    
-    # The amount of padding/margin at the bottom:
-    bottom = Range( -32, 32, 0 )
-    
-    # The amount of padding/margin on the left:
-    left = Range( -32, 32, 0 )
-    
-    # The amount of padding/margin on the right:
-    right = Range( -32, 32, 0 )
+class BaseMB ( HasStrictTraits ):
     
     def __init__ ( self, *args, **traits ):
         """ Initializes the object.
@@ -237,42 +232,79 @@ class Padding ( HasStrictTraits ):
                                   'specified' % n )
             self.set( left = left, right = right, top = top, bottom = bottom )
              
-        super( Padding, self ).__init__( **traits )
-        
-Margins = Padding
+        super( BaseMB, self ).__init__( **traits )
 
 #-------------------------------------------------------------------------------
-#  'HasPadding' trait:
+#  'Margin' class:  
+#-------------------------------------------------------------------------------
+                
+class Margin ( BaseMB ):
+    
+    # The amount of padding/margin at the top:
+    top = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin at the bottom:
+    bottom = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin on the left:
+    left = Range( -32, 32, 0 )
+    
+    # The amount of padding/margin on the right:
+    right = Range( -32, 32, 0 )
+
+#-------------------------------------------------------------------------------
+#  'Border' class:  
+#-------------------------------------------------------------------------------
+                
+class Border ( BaseMB ):
+    
+    # The amount of border at the top:
+    top = Range( 0, 32, 0 )
+    
+    # The amount of border at the bottom:
+    bottom = Range( 0, 32, 0 )
+    
+    # The amount of border on the left:
+    left = Range( 0, 32, 0 )
+    
+    # The amount of border on the right:
+    right = Range( 0, 32, 0 )
+
+#-------------------------------------------------------------------------------
+#  'HasMargin' trait:
 #-------------------------------------------------------------------------------
 
-class HasPadding ( TraitType ):
-    """ Defines a trait whose value must be a Padding object or an integer
-        value that can be converted to one.
+class HasMargin ( TraitType ):
+    """ Defines a trait whose value must be a Margin object or an integer or
+        tuple value that can be converted to one.
     """
     
+    # The desired value class:
+    klass = Margin
+    
     # Define the default value for the trait:
-    default_value = Padding( 0 )
+    default_value = Margin( 0 )
     
     # A description of the type of value this trait accepts:
-    info_text = ('a Padding or Margin instance, or an integer in the range from '
-                 '-32 to 32 or a tuple with 1, 2 or 4 integers in that range '
-                 'that can be used to define one')
+    info_text = ('a Margin instance, or an integer in the range from -32 to 32 '
+                 'or a tuple with 1, 2 or 4 integers in that range that can be '
+                 'used to define one')
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         """
         if isinstance( value, int ):
             try:
-                value = Padding( value )
+                value = self.klass( value )
             except:
                 self.error( object, name, value )
         elif isinstance( value, tuple ):
             try:
-                value = Padding( *value )
+                value = self.klass( *value )
             except:
                 self.error( object, name, value )
             
-        if isinstance( value, Padding ):
+        if isinstance( value, self.klass ):
             return value
             
         self.error( object, name, value )
@@ -285,19 +317,37 @@ class HasPadding ( TraitType ):
         dvt = self.default_value_type
         if dvt < 0:
             if isinstance( dv, int ):
-                dv = Padding( dv )
+                dv = self.klass( dv )
             elif isinstance( dv, tuple ):
-                dv = Padding( *dv )
+                dv = self.klass( *dv )
                 
-            if not isinstance( dv, Padding ):
+            if not isinstance( dv, self.klass ):
                 return super( HasPadding, self ).get_default_value()
                 
             self.default_value_type = dvt = 7
-            dv = ( Padding, (), dv.get() )
+            dv = ( self.klass, (), dv.get() )
         
         return ( dvt, dv )
-        
-HasMargins = HasPadding  
+
+#-------------------------------------------------------------------------------
+#  'HasBorder' trait:
+#-------------------------------------------------------------------------------
+
+class HasBorder ( HasMargin ):
+    """ Defines a trait whose value must be a Border object or an integer
+        or tuple value that can be converted to one.
+    """
+    
+    # The desired value class:
+    klass = Border
+    
+    # Define the default value for the trait:
+    default_value = Border( 0 )
+    
+    # A description of the type of value this trait accepts:
+    info_text = ('a Border instance, or an integer in the range from 0 to 32 '
+                 'or a tuple with 1, 2 or 4 integers in that range that can be '
+                 'used to define one')
 
 #-------------------------------------------------------------------------------
 #  Other trait definitions:

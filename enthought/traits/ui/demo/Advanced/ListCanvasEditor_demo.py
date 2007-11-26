@@ -206,14 +206,14 @@ class PersonMonitor ( ListCanvasItemMonitor ):
 class TestAdapter ( ListCanvasAdapter ):
     
     Person_theme_active   = ATheme( Theme( 'Photo_frame_active',   
-                                           offset = ( 0, -3 ) ) )
+                                           label = ( 0, -3 ) ) )
     Person_theme_inactive = ATheme( Theme( 'Photo_frame_inactive',
-                                           offset = ( 0, -3 ) ) )
+                                           label = ( 0, -3 ) ) )
     Person_theme_hover    = ATheme( Theme( 'Photo_frame_hover',
-                                           offset = ( 0, -3 ) ) )
-    ObjectTrait_theme_active   = ATheme( Theme( '@J08', margins = 3 ) )
-    ObjectTrait_theme_inactive = ATheme( Theme( '@J07', margins = 3 ) )
-    ObjectTrait_theme_hover    = ATheme( Theme( '@J0A', margins = 3 ) )
+                                           label = ( 0, -3 ) ) )
+    ObjectTrait_theme_active   = ATheme( Theme( '@J08', content = 3 ) )
+    ObjectTrait_theme_inactive = ATheme( Theme( '@J07', content = 3 ) )
+    ObjectTrait_theme_hover    = ATheme( Theme( '@J0A', content = 3 ) )
     CanvasItems_size    = Tuple( ( 180, 250 ) )
     CanvasSnoop_size    = Tuple( ( 250, 250 ) )
     
