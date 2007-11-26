@@ -334,6 +334,9 @@ class SimpleEditor ( Editor ):
         """ Disposes of the contents of an editor.
         """
         if self._tree is not None:
+            # Stop the chatter (specifically about the changing selection).
+            self._tree.blockSignals(True)
+
             self._delete_node(self._tree.invisibleRootItem())
 
         super( SimpleEditor, self ).dispose()
