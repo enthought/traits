@@ -1992,20 +1992,14 @@ class HasTraits ( CHasTraits ):
            non-event trait attributes on the current object.
 
         """
-        result = self.__class__._trait_view( name, view_element,
+        return self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
-                            self.editable_traits )
-        if (result is None) and (view_element is None):
-            method = getattr( self, name, None )
-            if callable( method ):
-                result = method()
-                
-        return result
+                            self.editable_traits, self )
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
                   cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_editable_traits )
+                  cls.class_editable_traits, None )
 
     class_trait_view = classmethod( class_trait_view )
 
@@ -2014,7 +2008,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           editable_traits ):
+                           editable_traits, handler ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
@@ -2033,7 +2027,13 @@ class HasTraits ( CHasTraits ):
             if view_element is None:
                 # If only a name was specified, return the ViewElement it
                 # matches, if any:
-                return view_elements.find( name )
+                result = view_elements.find( name )
+                if (result is None) and (handler is not None):
+                    method = getattr( handler, name, None )
+                    if callable( method ):
+                        result = method()
+                        
+                return result
 
             # Otherwise, save the specified ViewElement under the name
             # specified:

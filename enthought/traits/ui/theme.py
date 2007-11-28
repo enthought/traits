@@ -41,7 +41,7 @@ class Theme ( HasPrivateTraits ):
     label = HasMargin
     
     # The alignment to use for positioning the label:
-    alignment = Alignment
+    alignment = Alignment( cols = 4 )
     
     # Note: The 'content_color' and 'label_color' traits should be added by a
     # toolkit-specific category...

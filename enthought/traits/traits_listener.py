@@ -880,7 +880,8 @@ class ListenerParser ( HasPrivateTraits ):
                 result.is_any_trait = ((c == '-') and (name == '') and
                                        (result.metadata_name == ''))
                 c = self.skip_ws
-                if result.is_any_trait and (c != terminator):
+                if result.is_any_trait and (not ((c == terminator) or
+                    ((c == ',') and (terminator == ']')))):
                     self.error( "Expected end of name" )
             elif c == '?':
                 if len( name ) == 0:
