@@ -190,14 +190,14 @@ class _ModalDialog(BaseDialog):
         """
         ui = self.ui
         self._apply_context(ui.context, ui._context)
-        self.revert.setEnable(True)
+        self.revert.setEnabled(True)
         ui.handler.apply(ui.info)
         ui.modified = False
 
     def _on_applyable(self, state):
         """Handles a change to the "modified" state of the user interface .
         """
-        self.apply.setEnable( state )
+        self.apply.setEnabled( state )
 
     def _on_revert(self):
         """Handles a request to revert changes.
@@ -205,6 +205,6 @@ class _ModalDialog(BaseDialog):
         ui = self.ui
         self._apply_context(ui._revert, ui.context)
         self._apply_context(ui._revert, ui._context)
-        self.revert.setEnable(False)
+        self.revert.setEnabled(False)
         ui.handler.revert(ui.info) 
         ui.modified = False

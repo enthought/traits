@@ -360,7 +360,7 @@ class BaseDialog(BasePanel):
     def _on_error(self, errors):
         """Handles editing errors.
         """
-        self.ok.setEnable(errors == 0)
+        self.ok.setEnabled(errors == 0)
 
     #---------------------------------------------------------------------------
     #  Adds a menu bar to the dialog:
