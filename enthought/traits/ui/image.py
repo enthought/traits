@@ -231,7 +231,7 @@ class FastZipFile ( HasPrivateTraits ):
                     self._zf.close()
                     self._zf = None
                 
-                self._running = False
+                self._running = None
                 self.access.release()
                 break
                 
@@ -490,7 +490,6 @@ class ImageVolume ( HasPrivateTraits ):
         self.save()
     
     def save ( self ):
-        self.images
         """ Saves the contents of the image volume using the current contents 
             of the **ImageVolume**. 
         """
@@ -730,18 +729,20 @@ class ImageVolume ( HasPrivateTraits ):
                            name       = root, 
                            image_name = join_image_name( volume_name, name ) ) )
                            
-        # Merge the old and current images into a single up to data list:
-        if len( old_images ) == 0:
-            images = cur_images
-        elif len( cur_images ) == 0:
+        # Merge the old and current images into a single up to date list:
+        if len( cur_images ) == 0:
             images = old_images
         else:
-            old_image_set = set( [ image.image_name for image in old_images ] )
-            cur_image_set = set( [ image.image_name for image in cur_images ] )
-            images        = ([ image for image in old_images
-                                     if image.image_name in cur_image_set ] +
-                             [ image for image in cur_images 
-                                     if image.image_name not in old_image_set ])
+            cur_image_set = dict( [ ( image.image_name, image )
+                                    for image in cur_images ] )
+            for old_image in old_images:
+                cur_image = cur_image_set.get( old_image.image_name )
+                if cur_image is not None:
+                    cur_image_set[ old_image.image_name ] = old_image
+                    old_image.width  = cur_image.width
+                    old_image.height = cur_image.height
+                    
+            images = cur_image_set.values()
         
         # Set the new time stamp of the volume:
         self.time_stamp = time_stamp

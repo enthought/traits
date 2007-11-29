@@ -285,8 +285,10 @@ class TreeNode ( HasPrivateTraits ):
         """
         if not self.allows_children( object ):
             return self.icon_item
+            
         if is_expanded:
             return self.icon_open
+            
         return self.icon_group
         
     #---------------------------------------------------------------------------
