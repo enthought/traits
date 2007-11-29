@@ -22,11 +22,12 @@ from PyQt4 import QtCore, QtGui
 from enthought.traits.api \
     import Bool, Event
 
+# FIXME: Import from the api.py file when it has been added.
+from enthought.traits.ui.basic_editor_factory \
+    import BasicEditorFactory
+    
 from editor \
     import Editor
-    
-from basic_editor_factory \
-    import BasicEditorFactory
     
 from key_event_to_name \
     import key_event_to_name
