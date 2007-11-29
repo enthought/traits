@@ -739,8 +739,10 @@ class ImageVolume ( HasPrivateTraits ):
                 cur_image = cur_image_set.get( old_image.image_name )
                 if cur_image is not None:
                     cur_image_set[ old_image.image_name ] = old_image
+                    cur_image.volume = self
                     old_image.width  = cur_image.width
                     old_image.height = cur_image.height
+                    cur_image.volume = None
                     
             images = cur_image_set.values()
         
