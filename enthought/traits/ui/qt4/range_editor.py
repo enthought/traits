@@ -20,26 +20,26 @@ from math \
     import log10
 
 from PyQt4 import QtCore, QtGui
-    
+
 from enthought.traits.api \
      import CTrait, TraitError, Property, Range, Enum, Str, Int, Float, Any, \
             Unicode, Bool
 
 from enthought.traits.ui.api \
     import View
-    
+
 from editor_factory \
     import EditorFactory, TextEditor
-    
+
 from editor \
     import Editor
-    
+
 from constants \
     import OKColor, ErrorColor
-    
+
 from helper \
     import IconButton
-    
+
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
@@ -50,51 +50,51 @@ class ToolkitEditorFactory ( EditorFactory ):
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     # Number of columns when displayed as an enumeration
     cols = Range( 1, 20 )
-    
+
     # Is user input set on every keystroke?
     auto_set = Bool(True)
-    
+
     # Is user input set when the Enter key is pressed?
     enter_set = Bool(False)
-    
+
     # Label for the low end of the range
     low_label = Unicode
-    
+
     # Label for the high end of the range
     high_label = Unicode
-    
+
     # FIXME: This is not yet supported.
     # The width of the low and high labels
     label_width = Int
-    
+
     # The name of an [object.]trait that defines the low value for the range
     low_name = Str
-    
+
     # The name of an [object.]trait that defines the high value for the range
     high_name = Str
 
     # Formatting string used to format value and labels
     format = Unicode( '%s' )
-    
+
     # Is the range for floating pointer numbers (vs. integers)?
     is_float = Bool(True)
-    
+
     # Low end of range
     low = Property
-    
+
     # High end of range
     high = Property
-    
+
     # Display mode to use
     mode = Enum( 'auto', 'slider', 'xslider', 'spinner', 'enum', 'text' )
-    
+
     #---------------------------------------------------------------------------
     #  Traits view definition:    
     #---------------------------------------------------------------------------
-        
+
     traits_view = View( [ [ 'low', 'high',
                             '|[Range]' ],
                           [ 'low_label{Low}', 'high_label{High}', 
@@ -106,12 +106,12 @@ class ToolkitEditorFactory ( EditorFactory ):
                           [ 'cols', 
                             '|[Number of columns for integer custom style]<>' ]
                         ] )
-        
+
     #---------------------------------------------------------------------------
     #  Performs any initialization needed after all constructor traits have 
     #  been set:
     #---------------------------------------------------------------------------
-     
+
     def init ( self, handler = None ):
         """ Performs any initialization needed after all constructor traits 
             have been set.
@@ -126,24 +126,24 @@ class ToolkitEditorFactory ( EditorFactory ):
                 self.low  = 0.0
             if (self.high is None) and (self.high_name == ''):
                 self.high = 1.0
-            
+
     #---------------------------------------------------------------------------
     #  Define the 'low' and 'high' traits:
     #---------------------------------------------------------------------------
-            
+
     def _get_low ( self ):
         return self._low
-        
+
     def _set_low ( self, low ):
         old_low         = self._low
         self._low = low = self._cast( low )
         self.is_float   = isinstance(low, float)
         if (self.low_label == '') or (self.low_label == str( old_low )):
             self.low_label = str( low  )
-            
+
     def _get_high ( self ):
         return self._high
-        
+
     def _set_high ( self, high ):
         old_high          = self._high
         self._high = high = self._cast( high )
@@ -151,7 +151,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
         if (self.high_label == '') or (self.high_label == str( old_high )):
             self.high_label = str( high )
-            
+
     def _cast ( self, value ):
         if type( value ) is not str:
             return value
@@ -181,13 +181,13 @@ class ToolkitEditorFactory ( EditorFactory ):
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
-    
+
     def simple_editor ( self, ui, object, name, description, parent ):
         """ Creates a simple style of editor.
-        
+
         The type of editor depends on the type and extent of the range being
         edited:
-            
+
         * One end of range is unspecified: RangeTextEditor
         * **mode** is specified and not 'auto': editor corresponding to **mode**
         * Floating point range with extent > 100: LargeRangeSliderEditor
@@ -204,7 +204,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                     object      = object, 
                                     name        = name, 
                                     description = description )
-                                    
+
         if self.mode != 'auto':
             return SimpleEditorMap[ self.mode ]( parent, 
                                                  factory     = self, 
@@ -212,7 +212,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                                  object      = object, 
                                                  name        = name, 
                                                  description = description )
-                                           
+
         if is_float and (abs(high - low) > 100):
             return LargeRangeSliderEditor( parent,
                                        factory     = self, 
@@ -220,7 +220,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                        object      = object, 
                                        name        = name, 
                                        description = description )
-            
+
         if is_float or (abs(high - low) <= 100):
             return SimpleSliderEditor( parent,
                                        factory     = self, 
@@ -234,13 +234,13 @@ class ToolkitEditorFactory ( EditorFactory ):
                                  object      = object, 
                                  name        = name, 
                                  description = description ) 
-    
+
     def custom_editor ( self, ui, object, name, description, parent ):
         """ Creates a custom style of range editor
-        
+
         The type of editor depends on the type and extent of the range being
         edited:
-            
+
         * One end of range is unspecified: RangeTextEditor
         * **mode** is specified and not 'auto': editor corresponding to **mode**
         * Floating point range: Same as "simple" style
@@ -257,7 +257,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                                     object      = object, 
                                     name        = name, 
                                     description = description )
-                                    
+
         if self.mode != 'auto':
             return CustomEditorMap[ self.mode ]( parent, 
                                                  factory     = self, 
@@ -265,12 +265,12 @@ class ToolkitEditorFactory ( EditorFactory ):
                                                  object      = object, 
                                                  name        = name, 
                                                  description = description )
-                                                 
+
         if is_float or (abs(high - low) > 15):
            return self.simple_editor( ui, object, name, description, parent )
-           
+
         return CustomEnumEditor( parent, self, ui, object, name, description )
-    
+
     def text_editor ( self, ui, object, name, description, parent ):
         """ Creates a text style of range editor.
         """
@@ -280,14 +280,14 @@ class ToolkitEditorFactory ( EditorFactory ):
                                 object      = object, 
                                 name        = name, 
                                 description = description ) 
-                                      
+
 #-------------------------------------------------------------------------------
 #  'SimpleSliderEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class SimpleSliderEditor ( Editor ):
     """ Simple style of range editor that displays a slider and a text field. 
-    
+
     The user can set a value either by moving the slider or by typing a value 
     in the text field.
     """
@@ -298,18 +298,18 @@ class SimpleSliderEditor ( Editor ):
 
     # Low value for the slider range
     low = Any
-    
+
     # High value for the slider range
     high = Any
-    
+
     # Formatting string used to format value and labels
     format = Unicode
-        
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
@@ -317,15 +317,15 @@ class SimpleSliderEditor ( Editor ):
         factory = self.factory
         if not factory.low_name:
             self.low = factory.low
-            
+
         if not factory.high_name:
             self.high = factory.high
-            
+
         self.format = factory.format
 
         if factory.label_width > 0:
             size = wx.Size( factory.label_width, 20 )
-            
+
         self.sync_value( factory.low_name,  'low',  'from' )
         self.sync_value( factory.high_name, 'high', 'from' )
         low  = self.low
@@ -347,6 +347,9 @@ class SimpleSliderEditor ( Editor ):
             ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
         else:
             ivalue = low
+
+            if ivalue is None:
+                ivalue = 0
 
         self._label_lo = QtGui.QLabel()
         self._label_lo.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
@@ -376,11 +379,11 @@ class SimpleSliderEditor ( Editor ):
         text.setMaximumSize(sh)
 
         panel.addWidget(text)
-        
+
         low_label = factory.low_label
         if factory.low_name != '':
             low_label = self.format % self.low
-            
+
         high_label = factory.high_label
         if factory.high_name != '':
             high_label = self.format % self.high
@@ -396,7 +399,7 @@ class SimpleSliderEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Handles the user changing the current slider value: 
     #---------------------------------------------------------------------------
-    
+
     def update_object_on_scroll(self, pos):
         """ Handles the user changing the current slider value.
         """
@@ -411,7 +414,7 @@ class SimpleSliderEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Handle the user pressing the 'Enter' key in the edit control:
     #---------------------------------------------------------------------------
- 
+
     def update_object_on_enter (self):
         """ Handles the user pressing the Enter key in the text field.
         """
@@ -431,11 +434,11 @@ class SimpleSliderEditor ( Editor ):
                      (self.high - self.low)) * 10000 ) )
         except TraitError, excp:
             pass
-        
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-        
+
     def update_editor ( self ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
@@ -454,12 +457,15 @@ class SimpleSliderEditor ( Editor ):
         else:
             ivalue = low
 
+            if ivalue is None:
+                ivalue = 0
+
         self.control.text.setText(text)
 
         blocked = self.control.slider.blockSignals(True)
         self.control.slider.setValue(ivalue)
         self.control.slider.blockSignals(blocked)
-        
+
     #---------------------------------------------------------------------------
     #  Handles the 'low'/'high' traits being changed:  
     #---------------------------------------------------------------------------
@@ -470,11 +476,11 @@ class SimpleSliderEditor ( Editor ):
                 self.value = float( low )
             else:
                 self.value = int( low )
-                
+
         if self._label_lo is not None:
             self._label_lo.setText(self.format % low )
             self.update_editor()
-            
+
     def _high_changed ( self, high ):
         if self.value > high:
             if self.factory.is_float:
@@ -488,10 +494,10 @@ class SimpleSliderEditor ( Editor ):
 #-------------------------------------------------------------------------------
 #  'LargeRangeSliderEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class LargeRangeSliderEditor ( Editor ):
     """ A slider editor for large ranges. 
-    
+
     The editor displays a slider and a text field. A subset of the total range
     is displayed in the slider; arrow buttons at each end of the slider let
     the user move the displayed range higher or lower.
@@ -499,19 +505,19 @@ class LargeRangeSliderEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
-        
+
     # Low value for the slider range
     low = Any(0)
-    
+
     # High value for the slider range
     high = Any(1)
-    
+
     # Low end of displayed range
     cur_low = Float
-    
+
     # High end of displayed range
     cur_high = Float
-    
+
     # Flag indicating that the UI is in the process of being updated
     ui_changing = Bool(False)
 
@@ -519,7 +525,7 @@ class LargeRangeSliderEditor ( Editor ):
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
@@ -552,12 +558,12 @@ class LargeRangeSliderEditor ( Editor ):
         panel.label_lo = label_lo = QtGui.QLabel()
         label_lo.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         panel.addWidget(label_lo)
-        
+
         # Lower limit button:
         panel.button_lo = IconButton(QtGui.QStyle.SP_ArrowLeft,
                 self.reduce_range)
         panel.addWidget(panel.button_lo)
-        
+
         # Slider:        
         panel.slider = slider = QtGui.QSlider(QtCore.Qt.Horizontal)
         slider.setTracking(factory.auto_set)
@@ -569,7 +575,7 @@ class LargeRangeSliderEditor ( Editor ):
         QtCore.QObject.connect(slider, QtCore.SIGNAL('valueChanged(int)'),
                 self.update_object_on_scroll)
         panel.addWidget(slider)
-        
+
         # Upper limit button:
         panel.button_hi = IconButton(QtGui.QStyle.SP_ArrowRight,
                 self.increase_range)
@@ -578,7 +584,7 @@ class LargeRangeSliderEditor ( Editor ):
         # Upper limit label:
         panel.label_hi = label_hi = QtGui.QLabel()
         panel.addWidget(label_hi)
-        
+
         # Text entry:
         panel.text = text = QtGui.QLineEdit(fvalue_text)
         QtCore.QObject.connect(text, QtCore.SIGNAL('editingFinished()'),
@@ -604,11 +610,11 @@ class LargeRangeSliderEditor ( Editor ):
 
         # Update the ranges and button just in case.
         self.update_range_ui()
-       
+
     #---------------------------------------------------------------------------
     #  Handles the user changing the current slider value: 
     #---------------------------------------------------------------------------
-    
+
     def update_object_on_scroll(self, pos):
         """ Handles the user changing the current slider value.
         """
@@ -624,7 +630,7 @@ class LargeRangeSliderEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Handle the user pressing the 'Enter' key in the edit control:
     #---------------------------------------------------------------------------
-    
+
     def update_object_on_enter(self):
         """ Handles the user pressing the Enter key in the text field.
         """
@@ -632,11 +638,11 @@ class LargeRangeSliderEditor ( Editor ):
             self.value = eval(unicode(self.control.text.text()).strip())
         except TraitError, excp:
             pass
-        
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-    
+
     def update_editor ( self ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
@@ -688,7 +694,7 @@ class LargeRangeSliderEditor ( Editor ):
             d        = 0.5 * (10**int( log10( mag ) + 1 ))
             cur_low  = max( low,  value - d )
             cur_high = min( high, value + d )
-                
+
         self.cur_low, self.cur_high = cur_low, cur_high
 
     def reduce_range(self):
@@ -704,7 +710,7 @@ class LargeRangeSliderEditor ( Editor ):
         else:
             self.cur_high = self.cur_low
             self.cur_low  = max( low, self.cur_low * 10 )
-                
+
         self.ui_changing = True
         self.value       = min( max( self.value, self.cur_low ), self.cur_high )
         self.ui_changing = False
@@ -753,9 +759,9 @@ class LargeRangeSliderEditor ( Editor ):
                 self.value = float( low )
             else:
                 self.value = int( low )
-                
+
         self.update_editor()
-            
+
     def _high_changed ( self, high ):
         if self.value > high:
             if self.factory.is_float:
@@ -775,10 +781,10 @@ class SimpleSpinEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
-        
+
     # Low value for the slider range
     low = Any
-    
+
     # High value for the slider range
     high = Any
 
@@ -811,7 +817,7 @@ class SimpleSpinEditor ( Editor ):
     #---------------------------------------------------------------------------
     #  Handle the user selecting a new value from the spin control:
     #---------------------------------------------------------------------------
-  
+
     def update_object(self, value):
         """ Handles the user selecting a new value in the spin box.
         """
@@ -834,7 +840,7 @@ class SimpleSpinEditor ( Editor ):
                 self.control.setValue(int(self.value))
             except:
                 pass
-                                      
+
     #---------------------------------------------------------------------------
     #  Handles the 'low'/'high' traits being changed:  
     #---------------------------------------------------------------------------
@@ -849,7 +855,7 @@ class SimpleSpinEditor ( Editor ):
         if self.control:
             self.control.setMinimum(low)
             self.control.setValue(int(self.value))
-            
+
     def _high_changed ( self, high ):
         if self.value > high:
             if self.factory.is_float:
@@ -864,7 +870,7 @@ class SimpleSpinEditor ( Editor ):
 #-------------------------------------------------------------------------------
 #  'RangeTextEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class RangeTextEditor ( TextEditor ):
     """ Editor for ranges that displays a text field. If the user enters a 
     value that is outside the allowed range, the background of the field
@@ -873,7 +879,7 @@ class RangeTextEditor ( TextEditor ):
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
     #---------------------------------------------------------------------------
-  
+
     def update_object (self):
         """ Handles the user entering input data in the edit control.
         """
@@ -894,7 +900,7 @@ class RangeTextEditor ( TextEditor ):
 def SimpleEnumEditor ( parent, factory, ui, object, name, description ):
     return CustomEnumEditor( parent, factory, ui, object, name, description,
                              'simple' )
-        
+
 #-------------------------------------------------------------------------------
 #  'CustomEnumEditor' factory adaptor:  
 #-------------------------------------------------------------------------------
@@ -909,13 +915,13 @@ def CustomEnumEditor ( parent, factory, ui, object, name, description,
         factory._enum = enum_editor.ToolkitEditorFactory( 
                             values = range( factory.low, factory.high + 1 ), 
                             cols   = factory.cols )
-                            
+
     if style == 'simple':
         return factory._enum.simple_editor( ui, object, name, description, 
                                             parent )
-    
+
     return factory._enum.custom_editor( ui, object, name, description, parent )
-       
+
 #-------------------------------------------------------------------------------
 #  Defines the mapping between editor factory 'mode's and Editor classes:  
 #-------------------------------------------------------------------------------

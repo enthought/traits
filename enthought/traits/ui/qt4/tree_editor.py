@@ -339,6 +339,8 @@ class SimpleEditor ( Editor ):
 
             self._delete_node(self._tree.invisibleRootItem())
 
+            self._tree = None
+
         super( SimpleEditor, self ).dispose()
 
     #---------------------------------------------------------------------------

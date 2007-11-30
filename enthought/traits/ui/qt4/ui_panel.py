@@ -483,9 +483,9 @@ class _GroupPanel(object):
             panel = _GroupPanel(subgroup, self.ui).control
 
             if isinstance(panel, QtGui.QWidget):
-                outer.addWidget(panel, 1)
+                outer.addWidget(panel)
             elif isinstance(panel, QtGui.QLayout):
-                outer.addLayout(panel, 1)
+                outer.addLayout(panel)
             else:
                 # The sub-group is empty which seems to be used as a way of
                 # providing some whitespace.
