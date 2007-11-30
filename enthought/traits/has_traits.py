@@ -726,7 +726,8 @@ class MetaHasTraitsObject ( object ):
                             prefix = name
                         elif (len( prefix ) > 1) and (prefix[-1] == '*'):
                             prefix = prefix[:-1] + name
-                        listeners[ name ] = ( 'delegate', ' %s.%s' % ( 
+                            
+                        listeners[ name ] = ( 'delegate', ' %s:%s' % ( 
                                               value.delegate, prefix ) )
                 else:
                     name = name[:-1]
@@ -1201,9 +1202,14 @@ class HasTraits ( CHasTraits ):
     # Mapping from dispatch type to notification wrapper class type:
     wrappers = {
         'same':    TraitChangeNotifyWrapper,
+        'new':     NewTraitChangeNotifyWrapper,
         'fast_ui': FastUITraitChangeNotifyWrapper,
-        'ui':      UITraitChangeNotifyWrapper,
-        'new':     NewTraitChangeNotifyWrapper
+        'ui':      FastUITraitChangeNotifyWrapper
+        # fixme: Disabling the new ui dispatch mechanism until the problems can
+        # be worked out (i.e. breaks Undo/Redo and doesn't handle list item
+        # event objects correctly because of the 'new' value replacement not
+        # always being the correct action to take).
+        #'ui':     UITraitChangeNotifyWrapper
     }
 
     #-- Trait Definitions ------------------------------------------------------
@@ -3275,8 +3281,8 @@ class HasTraits ( CHasTraits ):
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
-        def notify ( notify_name, new ):
-            self.trait_property_changed( notify_name, Undefined, new )
+        def notify ( object, notify_name, old, new ):
+            self.trait_property_changed( notify_name, old, new )
             
         self.on_trait_change( notify, 
                               self._trait_delegate_name( name, pattern ) )
@@ -3288,7 +3294,7 @@ class HasTraits ( CHasTraits ):
         dict = self.__dict__.setdefault( ListenerTraits, {} )
         
         if remove:
-            # Although the name should be in the dict, it may not if a value 
+            # Although the name should be in the dict, it may not be if a value 
             # was assigned to a delegate in a constructor or setstate:
             if name in dict:
                 # Remove the delegate listener:
@@ -3298,6 +3304,7 @@ class HasTraits ( CHasTraits ):
                 del dict[ name ]
                 if len( dict ) == 0:
                     del self.__dict__[ ListenerTraits ]
+                    
             return
             
         # Otherwise the local copy of the delegate value was deleted, restore
