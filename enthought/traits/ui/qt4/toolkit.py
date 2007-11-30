@@ -361,7 +361,14 @@ class GUIToolkit ( Toolkit ):
     def destroy_control ( self, control ):
         """ Destroys a specified GUI toolkit control.
         """
-        control.setParent(None)
+        # Treating dialogs differently seems to be necessary on Windows to
+        # prevent a crash.  I think the problem is that this is being called
+        # from within the finished() signal handler so we need to do the
+        # delete after the handler has returned.
+        if isinstance(control, QtGui.QDialog):
+            control.deleteLater()
+        else:
+            control.setParent(None)
 
     #---------------------------------------------------------------------------
     #  Destroys all of the child controls of a specified GUI toolkit control:

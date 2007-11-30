@@ -313,12 +313,8 @@ class BaseDialog(BasePanel):
         self._add_toolbar()
 
     def close(self, rc):
-        """Close the dialog and set the given return code.
-        """
-        self.ui.result = rc
-        save_window(self.ui)
-        self.ui.finish()
-
+        """Close the dialog and set the given return code."""
+        self.ui.dispose(rc)
         self.ui = self.control = None
 
     @staticmethod
