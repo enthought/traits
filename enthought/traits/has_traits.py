@@ -729,6 +729,10 @@ class MetaHasTraitsObject ( object ):
                             
                         listeners[ name ] = ( 'delegate', ' %s:%s' % ( 
                                               value.delegate, prefix ) )
+                    elif value_type == 'event':
+                        on_trait_change = value.on_trait_change
+                        if isinstance( on_trait_change, basestring ):
+                            listeners[ name ] = ( 'event', on_trait_change )
                 else:
                     name = name[:-1]
                     prefix_list.append( name )
@@ -3263,6 +3267,14 @@ class HasTraits ( CHasTraits ):
             decorator.
         """
         self.on_trait_change( getattr( self, name ), pattern )
+        
+    def _init_trait_event_listener ( self, name, kind, pattern ):
+        """ Sets up the listener for an event with on_trait_change metadata. 
+        """
+        def notify ( ):
+            setattr( self, name, True )
+            
+        self.on_trait_change( notify, pattern )
         
     def _init_trait_property_listener ( self, name, kind, cached, pattern ):
         """ Sets up the listener for a property with 'depends_on' metadata. 

@@ -1800,6 +1800,7 @@ class BaseInstance ( TraitType ):
         if dvt < 0:
             if not isinstance( dv, _InstanceArgs ):
                 return super( BaseInstance, self ).get_default_value()
+                
             self.default_value_type = dvt = 7
             dv = ( self.create_default_value, dv.args, dv.kw )
         
