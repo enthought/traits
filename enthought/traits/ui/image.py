@@ -331,7 +331,6 @@ class ImageInfo ( HasPrivateTraits ):
     
     #-- Property Implementations -----------------------------------------------
         
-    @cached_property
     def _get_image_info_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'name', 'image_name',
@@ -517,6 +516,8 @@ class ImageVolume ( HasPrivateTraits ):
             
             # Write a separate license file for human consumption:
             write_file( join( path, 'license.txt' ), self.license_text )
+            
+            return
             
         # Create a temporary name for the new .zip file:
         file_name = path + '.###'
