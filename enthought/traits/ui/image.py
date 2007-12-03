@@ -577,9 +577,6 @@ class ImageVolume ( HasPrivateTraits ):
             except:
                 rename( temp_name, path )
                 raise
-            
-            # Indicate no errors occurred:
-            error = False
         finally:
             if new_zf is not None:
                 new_zf.close()
