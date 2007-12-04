@@ -367,6 +367,12 @@ class GUIToolkit ( Toolkit ):
         # delete after the handler has returned.
         if isinstance(control, QtGui.QDialog):
             control.deleteLater()
+
+            # PyQt v4.3.1 and earlier deleteLater() didn't transfer ownership
+            # to C++ which turns out to be important.
+            if QtCore.PYQT_VERSION < 0x040302:
+                import sip
+                sip.transferto(control, None)
         else:
             control.setParent(None)
 
