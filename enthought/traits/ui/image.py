@@ -301,6 +301,9 @@ class ImageInfo ( HasPrivateTraits ):
         return split_image_name( self.image_name )[1]
         
     def _width_default ( self ):
+        if self.volume is None:
+            return 0
+            
         image = self.volume.image_resource( self.image_name )
         if image is None:
             self.height = 0
@@ -312,6 +315,9 @@ class ImageInfo ( HasPrivateTraits ):
         return width
         
     def _height_default ( self ):
+        if self.volume is None:
+            return 0
+            
         image = self.volume.image_resource( self.image_name )
         if image is None:
             self.width = 0
@@ -323,7 +329,11 @@ class ImageInfo ( HasPrivateTraits ):
         return height
     
     def _theme_default ( self ):
-        return Theme( self.volume.image_resource( self.image_name ),
+        image = None
+        if self.volume is not None:
+            image = self.volume.image_resource( self.image_name )
+            
+        return Theme( image,
                       border    = self.border,
                       content   = self.content,
                       label     = self.label,
@@ -658,8 +668,7 @@ class ImageVolume ( HasPrivateTraits ):
     def _get_image_volume_code ( self ):
         data = dict( [ ( name, repr( value ) ) 
                        for name, value in self.get( 'description', 'category',
-                           'keywords', 'aliases', 'time_stamp', 'licenses'
-                           ).iteritems() ] )
+                           'keywords', 'aliases', 'time_stamp' ).iteritems() ] )
         data['info'] = ',\n'.join( [ info.image_volume_info_code
                                      for info in self.info ] )
                            
@@ -679,6 +688,10 @@ class ImageVolume ( HasPrivateTraits ):
     def _load_image_info ( self ):
         """ Returns the list of ImageInfo objects for the images in the volume.
         """
+        # If there is no current path, then return a default list of images:
+        if self.path == '':
+            return []
+            
         time_stamp  = time_stamp_for( stat( self.path )[ ST_MTIME ] )
         volume_name = self.name
         old_images  = []
