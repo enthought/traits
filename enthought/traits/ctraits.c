@@ -37,6 +37,8 @@ static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * adapt;               /* PyProtocols 'adapt' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
 static PyObject * _HasTraits_monitors; /* Object creation monitors. */
+static PyObject * _trait_notification_handler; /* User supplied trait */ 
+                /* notification handler (intended for use by debugging tools) */
 static PyTypeObject * ctrait_type;     /* Python-level CTrait type reference */
 
 /*-----------------------------------------------------------------------------
@@ -1729,7 +1731,11 @@ call_notifiers ( PyListObject      * tnotifiers,
     int i, n, new_value_has_traits;
     PyObject * result, * item, * temp;
     
-    PyObject * args = PyTuple_New( 4 );
+    int rc = 0;
+    
+    PyObject * arg_temp  = Py_None;
+    PyObject * user_args = NULL;
+    PyObject * args      = PyTuple_New( 4 );
     if ( args == NULL )
         return -1;
     
@@ -1743,14 +1749,26 @@ call_notifiers ( PyListObject      * tnotifiers,
     Py_INCREF( old_value );
     Py_INCREF( new_value );
     
+    if ( _trait_notification_handler != NULL ) {
+        user_args = PyTuple_New( 2 );
+        if ( user_args == NULL ) {
+            Py_DECREF( args );
+            return -1;
+        }
+        PyTuple_SET_ITEM( user_args, 0, arg_temp );
+        PyTuple_SET_ITEM( user_args, 1, args );
+        Py_INCREF( arg_temp );
+        Py_INCREF( args );
+    }
+    
     if ( tnotifiers != NULL ) {
         n    = PyList_GET_SIZE( tnotifiers );
         temp = NULL;
         if ( n > 1 ) {
             temp = PyList_New( n );
             if ( temp == NULL ) {
-                Py_DECREF( args );
-                return -1;
+                rc = -1;
+                goto exit2;
             }
             for ( i = 0; i < n; i++ ) {
                 item = PyList_GET_ITEM( tnotifiers, i );
@@ -1763,31 +1781,36 @@ call_notifiers ( PyListObject      * tnotifiers,
             if ( new_value_has_traits && 
                  (((has_traits_object *) new_value)->flags & 
                     HASTRAITS_VETO_NOTIFY) ) {
-                Py_DECREF( args );
-                return 0;
-            }        
-            result = PyObject_Call( PyList_GET_ITEM( tnotifiers, i ), 
-                                    args, NULL );
+                goto exit;
+            }  
+            if ( user_args != NULL ) {
+                Py_DECREF( arg_temp );
+                arg_temp = PyList_GET_ITEM( tnotifiers, i );
+                Py_INCREF( arg_temp );
+                PyTuple_SET_ITEM( user_args, 0, arg_temp ); 
+                result = PyObject_Call( _trait_notification_handler, 
+                                        user_args, NULL );
+            } else {
+                result = PyObject_Call( PyList_GET_ITEM( tnotifiers, i ), 
+                                        args, NULL );
+            }
             if ( result == NULL ) {
-                Py_DECREF( args );
-                if ( tnotifiers == (PyListObject *) temp ) {
-                    Py_DECREF( temp );
-                }
-                return -1;
+                rc = -1;
+                goto exit;
             }
             Py_DECREF( result );
         }
         Py_XDECREF( temp );
     }
     
+    temp = NULL;
     if ( onotifiers != NULL ) {
-        n    = PyList_GET_SIZE( onotifiers );
-        temp = NULL;
+        n = PyList_GET_SIZE( onotifiers );
         if ( n > 1 ) {
             temp = PyList_New( n );
             if ( temp == NULL ) {
-                Py_DECREF( args );
-                return -1;
+                rc = -1;
+                goto exit2;
             }
             for ( i = 0; i < n; i++ ) {
                 item = PyList_GET_ITEM( onotifiers, i );
@@ -1802,22 +1825,31 @@ call_notifiers ( PyListObject      * tnotifiers,
                     HASTRAITS_VETO_NOTIFY) ) {
                 break;
             }        
-            result = PyObject_Call( PyList_GET_ITEM( onotifiers, i ), 
-                                    args, NULL );
+            if ( user_args != NULL ) {
+                Py_DECREF( arg_temp );
+                arg_temp = PyList_GET_ITEM( onotifiers, i );
+                Py_INCREF( arg_temp );
+                PyTuple_SET_ITEM( user_args, 0, arg_temp ); 
+                result = PyObject_Call( _trait_notification_handler, 
+                                        user_args, NULL );
+            } else {
+                result = PyObject_Call( PyList_GET_ITEM( onotifiers, i ), 
+                                        args, NULL );
+            }
             if ( result == NULL ) {
-                Py_DECREF( args );
-                if ( onotifiers == (PyListObject *) temp ) {
-                    Py_DECREF( temp );
-                }
-                return -1;
+                rc = -1;
+                goto exit;
             }
             Py_DECREF( result );
         }
-        Py_XDECREF( temp );
     }
-    
+exit:        
+    Py_XDECREF( temp );
+exit2:    
+    Py_XDECREF( user_args );
     Py_DECREF( args );
-    return 0;
+    
+    return rc;
 }                     
 
 /*-----------------------------------------------------------------------------
@@ -4173,6 +4205,34 @@ _ctraits_ctrait ( PyObject * self, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
+|  Sets the global 'trait_notification_handler' function, and returns the
+|  previous value:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_ctraits_trait_notification_handler ( PyObject * self, PyObject * args ) {
+    
+    PyObject * result = _trait_notification_handler;
+    
+    if ( !PyArg_ParseTuple( args, "O", &_trait_notification_handler ) ) {
+        return NULL;
+    }
+    
+    if ( _trait_notification_handler == Py_None ) {
+        _trait_notification_handler = NULL;
+    } else {
+        Py_INCREF( _trait_notification_handler );
+    }
+    
+    if ( result == NULL ) {
+        Py_INCREF( Py_None );
+        result = Py_None;
+    }
+    
+    return result;
+}    
+
+/*-----------------------------------------------------------------------------
 |  'CTrait' instance methods:
 +----------------------------------------------------------------------------*/
 
@@ -4187,6 +4247,9 @@ static PyMethodDef ctraits_methods[] = {
 	 	PyDoc_STR( "_adapt(PyProtocols._speedups.adapt)" ) },
 	{ "_ctrait",       (PyCFunction) _ctraits_ctrait,       METH_VARARGS,
 	 	PyDoc_STR( "_ctrait(CTrait_class)" ) },
+	{ "_trait_notification_handler", 
+        (PyCFunction) _ctraits_trait_notification_handler,  METH_VARARGS,
+        PyDoc_STR( "_trait_notification_handler(handler)" ) },
 	{ NULL,	NULL },
 };
 
