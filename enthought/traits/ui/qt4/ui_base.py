@@ -271,8 +271,6 @@ class BaseDialog(BasePanel):
         flags = QtCore.Qt.WindowSystemMenuHint
         if view.resizable:
             flags |= QtCore.Qt.WindowMinMaxButtonsHint
-        else:
-            flags |= QtCore.Qt.MSWindowsFixedSizeDialogHint
 
         self.control = control = QtGui.QDialog(parent, flags)
 
