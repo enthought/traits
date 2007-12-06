@@ -2669,14 +2669,16 @@ class TraitDictObject ( dict ):
             if self.name_items is not None:
                 if dict.has_key( self, key ):
                     added   = None
-                    changed = { key: self[ key ] }
+                    old     = self[ key ]
+                    changed = { key: old }
                 else:
                     added   = { key: value }
                     changed = None
                     
             dict.__setitem__( self, key, value )
             
-            if self.name_items is not None:
+            if ((self.name_items is not None) and
+               ((added is not None) or (old != value))):
                 setattr( object, self.name_items,
                          TraitDictEvent( added, changed ) )
                          
