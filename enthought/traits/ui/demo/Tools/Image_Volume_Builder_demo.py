@@ -204,8 +204,6 @@ try:
     # Create an instance of the VolumeBuilder as the demo to run:
     popup = VolumeBuilder()
 except:
-    import traceback
-    traceback.print_exc()
     raise Exception( 'This demo requires the enthought.developer package '
                      'to be installed.' )
         

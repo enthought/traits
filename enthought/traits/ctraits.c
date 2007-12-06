@@ -1783,7 +1783,7 @@ call_notifiers ( PyListObject      * tnotifiers,
                     HASTRAITS_VETO_NOTIFY) ) {
                 goto exit;
             }  
-            if ( user_args != NULL ) {
+            if ( (_trait_notification_handler != NULL) && (user_args != NULL) ){
                 Py_DECREF( arg_temp );
                 arg_temp = PyList_GET_ITEM( tnotifiers, i );
                 Py_INCREF( arg_temp );
@@ -1825,7 +1825,7 @@ call_notifiers ( PyListObject      * tnotifiers,
                     HASTRAITS_VETO_NOTIFY) ) {
                 break;
             }        
-            if ( user_args != NULL ) {
+            if ( (_trait_notification_handler != NULL) && (user_args != NULL) ){
                 Py_DECREF( arg_temp );
                 arg_temp = PyList_GET_ITEM( onotifiers, i );
                 Py_INCREF( arg_temp );

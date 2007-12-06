@@ -426,7 +426,7 @@ class ObjectColumn ( TableColumn ):
             if self.format_func is not None:
                 return self.format_func( self.get_raw_value( object ) )
                 
-            return self.format % self.get_raw_value( object )
+            return self.format % ( self.get_raw_value( object ), )
         except:
             logger.exception( 'Error occurred trying to format a %s value' % 
                               self.__class__.__name__ )
@@ -672,7 +672,7 @@ class NumericColumn ( ObjectColumn ):
         try:
             value = getattr( object, self.name )
             try:
-                return self.format % value
+                return self.format % ( value, )
             except:
                 return 'Format!'
         except:

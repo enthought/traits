@@ -1990,7 +1990,7 @@ class WeakRef ( Instance ):
     assigned value.
     """
 
-    def __init__ ( self, klass = 'enthought.traits.HasTraits', 
+    def __init__ ( self, klass = 'enthought.traits.has_traits.HasTraits', 
                          allow_none = False, adapt = 'yes', **metadata ):
         """ Returns a WeakRef trait.
         
