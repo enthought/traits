@@ -2282,7 +2282,7 @@ class TraitListObject ( list ):
 
     def __setitem__ ( self, key, value ):
         try:
-            removed = [ self[ key ] ]
+            removed = self[ key ]
         except:
             pass
         try:
@@ -2294,8 +2294,9 @@ class TraitListObject ( list ):
             if self.name_items is not None:
                 if key < 0:
                     key = len( self ) + key
-                setattr( object, self.name_items,
-                         TraitListEvent( key, removed, [ value ] ) )
+                if removed != value:
+                    setattr( object, self.name_items,
+                             TraitListEvent( key, [ removed ], [ value ] ) )
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
@@ -2317,7 +2318,8 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 list.__setslice__( self, i, j, values )
-                if self.name_items is not None:
+                if ((self.name_items is not None) and
+                   ((delta != 0) or (removed != values))):
                    setattr( object, self.name_items,
                             TraitListEvent( max( 0, i ), removed, values ) )
                 return
@@ -2346,7 +2348,7 @@ class TraitListObject ( list ):
         if self.trait.minlen <= (len( self ) - delta):
             removed = self[ i: j ]
             list.__delslice__( self, i, j )
-            if self.name_items is not None:
+            if (self.name_items is not None) and (len( removed ) != 0):
                 setattr( self.object(), self.name_items,
                          TraitListEvent( max( 0, i ), removed ) )
             return
@@ -2413,7 +2415,7 @@ class TraitListObject ( list ):
                     xlist = [ validate( object, name, value )
                               for value in xlist ]
                 list.extend( self, xlist )
-                if self.name_items is not None:
+                if (self.name_items is not None) and (len( xlist ) != 0):
                     setattr( object, self.name_items,
                              TraitListEvent( len( self ) - len( xlist ), None,
                                              xlist ) )
