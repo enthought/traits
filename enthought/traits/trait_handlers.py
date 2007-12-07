@@ -2294,9 +2294,14 @@ class TraitListObject ( list ):
             if self.name_items is not None:
                 if key < 0:
                     key = len( self ) + key
-                if removed != value:
-                    setattr( object, self.name_items,
-                             TraitListEvent( key, [ removed ], [ value ] ) )
+                try:
+                    if removed == value:
+                        return
+                except:
+                    # Treat incomparable values as unequal:
+                    pass
+                setattr( object, self.name_items,
+                         TraitListEvent( key, [ removed ], [ value ] ) )
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
@@ -2318,10 +2323,16 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 list.__setslice__( self, i, j, values )
-                if ((self.name_items is not None) and
-                   ((delta != 0) or (removed != values))):
-                   setattr( object, self.name_items,
-                            TraitListEvent( max( 0, i ), removed, values ) )
+                if self.name_items is not None:
+                    if delta == 0:
+                        try:
+                            if removed == values:
+                                return
+                        except:
+                            # Treat incomparable values as equal:
+                            pass
+                    setattr( object, self.name_items,
+                             TraitListEvent( max( 0, i ), removed, values ) )
                 return
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
@@ -2677,8 +2688,14 @@ class TraitDictObject ( dict ):
                     
             dict.__setitem__( self, key, value )
             
-            if ((self.name_items is not None) and
-               ((added is not None) or (old != value))):
+            if self.name_items is not None:
+                if added is None:
+                    try:
+                        if old == value:
+                            return
+                    except:
+                        # Treat incomparable objects as unequal:
+                        pass        
                 setattr( object, self.name_items,
                          TraitDictEvent( added, changed ) )
                          
