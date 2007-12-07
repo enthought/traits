@@ -32,6 +32,7 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 ETSCONFIG = etsdep('enthought.etsconfig', '2.0.0b1')
 PYFACE = etsdep('enthought.pyface', '2.0.0b1')
+RESOURCE = etsdep('enthought.resource', '2.0.0b1')
 TRAITSUIWX = etsdep('enthought.traits.ui.wx', '3.0.0b1')
 TRAITSUIQT4 = etsdep('enthought.traits.ui.qt4', '3.0.0b1')
 
@@ -48,6 +49,7 @@ setup(
             ],
         'ui': [
             PYFACE,
+            RESOURCE,
             ],
         'wx': [
             TRAITSUIWX,
