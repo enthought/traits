@@ -26,7 +26,7 @@ from os.path \
     
 from enthought.traits.api \
     import HasStrictTraits, Trait, TraitPrefixList, Delegate, Str, Instance, \
-           List, Enum, Any, Range, Expression, TraitType
+           Float, List, Enum, Any, Range, Expression, TraitType
            
 from enthought.traits.trait_base \
     import get_resource_path
@@ -72,6 +72,63 @@ buttons_trait = List( a_button,
 AView = Any
 #AView = Trait( '', Str, Instance( 'enthought.traits.ui.View' ) )
 
+#-------------------------------------------------------------------------------
+#  'StatusItem' class:
+#-------------------------------------------------------------------------------
+
+class StatusItem ( HasStrictTraits ):
+    
+    # The name of the trait the status information will be synched with:
+    name = Str( 'status' )
+    
+    # The width of the status field. The possible values are:
+    # - abs( width )  > 1.0: Width of the field in pixels = abs( width )
+    # - abs( width ) <= 1.0: Relative width of the field when compared to other
+    #   relative width fields.
+    width = Float( 0.5 )
+    
+#-------------------------------------------------------------------------------
+#  'ViewStatus' trait:
+#-------------------------------------------------------------------------------
+
+class ViewStatus ( TraitType ):
+    """ Defines a trait whose value must be a single StatusItem instance or a
+        list of StatusItem instances.
+    """
+    
+    # Define the default value for the trait:
+    default_value = None
+    
+    # A description of the type of value this trait accepts:
+    info_text = ('None, a string, a single StatusItem instance, or a list or ' 
+                 'tuple of strings and/or StatusItem instances')
+    
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+        if isinstance( value, basestring ):
+            return [ StatusItem( name = value ) ]
+            
+        if isinstance( value, StatusItem ):
+            return [ value ]
+            
+        if value is None:
+            return value
+            
+        result = []
+        if isinstance( value, SequenceTypes ):
+            for item in value:
+                if isinstance( item, basestring ):
+                    result.append( StatusItem( name = item ) )
+                elif isinstance( item, StatusItem ):
+                    result.append( item )
+                else:
+                    break
+            else:
+                return result
+            
+        self.error( object, name, value )
+    
 #-------------------------------------------------------------------------------
 #  'Image' trait:
 #-------------------------------------------------------------------------------

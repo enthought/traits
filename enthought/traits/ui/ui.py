@@ -429,7 +429,26 @@ class UI ( HasPrivateTraits ):
 
         # Indicate that the user interface has been initialized:
         info.initialized = True
+        
+    #---------------------------------------------------------------------------
+    #  Gets the current value of a specified extended trait name:  
+    #---------------------------------------------------------------------------
 
+    def get_extended_value ( self, name ):
+        """ Gets the current value of a specified extended trait name.
+        """
+        names = name.split( '.' )
+        if len( names ) > 1:
+            value = self.context[ names[0] ]
+            del names[0]
+        else:
+            value = self.context[ 'object' ]
+            
+        for name in names:
+            value = getattr( value, name )
+            
+        return value
+        
     #---------------------------------------------------------------------------
     #  Restores any saved user preference information associated with the UI:
     #---------------------------------------------------------------------------

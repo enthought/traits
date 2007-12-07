@@ -34,7 +34,7 @@ from ui \
     
 from ui_traits \
     import SequenceTypes, ATheme, object_trait, style_trait, dock_style_trait, \
-           image_trait, export_trait, help_id_trait, buttons_trait
+           image_trait, export_trait, help_id_trait, buttons_trait, ViewStatus
     
 from handler \
     import Handler, default_handler
@@ -189,6 +189,16 @@ class View ( ViewElement ):
     
     # The toolbar for the view. Usually requires a custom **handler**:
     toolbar = Any
+    
+    # Status bar items to add to the view's status bar. The value can be:
+    # - **None**: No status bar for the view (the default).
+    # - string: Same as [ StatusItem( name = string ) ].
+    # - StatusItem: Same as [ StatusItem ].
+    # - [ [StatusItem|string], ... ]: Create a status bar with one field for
+    #   each StatusItem in the list (or tuple). The status bar fields are
+    #   defined from left to right in the order specified. A string value is 
+    #   converted to: StatusItem( name = string ):
+    statusbar = ViewStatus
     
     # List of button actions to add to the view. The **enthought.traits.ui.menu**
     # module defines standard buttons, such as **OKButton**, and standard sets

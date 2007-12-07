@@ -37,7 +37,7 @@ from ui_info \
     import UIInfo
 
 from ui_traits \
-    import Border, Margin
+    import Border, Margin, StatusItem
 
 from help \
     import on_help_call
