@@ -24,7 +24,7 @@ from enthought.pyface.resource_manager \
     import resource_manager
 
 from enthought.traits.api \
-    import HasTraits, Any, Dict, true, false, Int, List, Instance, Str, Event
+    import Any, Dict, true, false, Int, List, Instance, Str, Event
 
 from enthought.traits.trait_base \
     import enumerate
@@ -48,7 +48,7 @@ from editor_factory \
     import EditorFactory
 
 from helper \
-    import pixmap_cache, Orientation
+    import open_fbi, pixmap_cache, Orientation
 
 #-------------------------------------------------------------------------------
 #  The core tree node menu actions:
@@ -1178,16 +1178,14 @@ class SimpleEditor ( Editor ):
                 if not eval( action.defined_when, globals(), self._context ):
                     return False
             except:
-                from enthought.debug.fbi import if_fbi
-                if_fbi()
+                of_fbi()
 
         if action.visible_when != '':
             try:
                 if not eval( action.visible_when, globals(), self._context ):
                     return False
             except:
-                from enthought.debug.fbi import if_fbi
-                if_fbi()
+                of_fbi()
 
         return True
 
@@ -1258,8 +1256,7 @@ class SimpleEditor ( Editor ):
                 if not eval( condition, globals(), self._context ):
                     value = False
             except:
-                from enthought.debug.fbi import if_fbi
-                if_fbi()
+                of_fbi()
             setattr( object, trait, value )
 
 #----- Menu event handlers: ----------------------------------------------------

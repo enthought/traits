@@ -143,6 +143,19 @@ def enum_values_changed ( values ):
     return ( names, mapping, inverse_mapping )  
 
 #-------------------------------------------------------------------------------
+#  Safely tries to pop up an FBI window if enthought.debug is installed
+#-------------------------------------------------------------------------------
+
+def open_fbi():
+    try:
+        from enthought.debug.fbi import if_fbi
+        if not if_fbi():
+            import traceback
+            traceback.print_exc()
+    except ImportError:
+        pass
+
+#-------------------------------------------------------------------------------
 #  'IconButton' class:
 #-------------------------------------------------------------------------------
 

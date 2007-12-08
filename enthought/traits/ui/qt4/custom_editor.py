@@ -27,6 +27,9 @@ from editor \
 from editor_factory \
     import EditorFactory
 
+from helper \
+    import open_fbi
+
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
@@ -111,10 +114,7 @@ class CustomEditor ( Editor ):
             try:
                 self.control = factory( *(( parent, self ) + self.factory.args ) )
             except:
-                from enthought.debug.fbi import if_fbi
-                if not if_fbi():
-                    import traceback
-                    traceback.print_exc()
+                open_fbi()
         if self.control is None:
             self.control = QtGui.QLabel(
                 'An error occurred creating a custom editor.\n'

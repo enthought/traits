@@ -94,8 +94,11 @@ class ViewApplication ( object ):
         
         # FIXME: fbi is wx specific at the moment.
         if os.environ.get( 'ENABLE_FBI' ) is not None:
-            from enthought.developer.helper.fbi import enable_fbi
-            enable_fbi()
+            try:
+                from enthought.developer.helper.fbi import enable_fbi
+                enable_fbi()
+            except:
+                pass
 
         self.ui = self.view.ui( self.context, 
                                 kind       = self.kind, 
