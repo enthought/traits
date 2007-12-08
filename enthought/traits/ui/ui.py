@@ -175,6 +175,9 @@ class UI ( HasPrivateTraits ):
 
     # Code used to rebuild an updated user interface
     _rebuild = Callable
+    
+    # The statusbar listeners that have been set up:
+    _statusbar = List
 
     # Does the UI contain any scrollable widgets?
     #
@@ -293,6 +296,12 @@ class UI ( HasPrivateTraits ):
             # the UI queue, the editor's '_update_editor' method will see that
             # the control is None and discard the update request:
             editor.control = None
+            
+        # Remove any statusbar listeners that have been set up:
+        for object, handler, name in self._statusbar:
+            object.on_trait_change( handler, name, remove = True )
+            
+        del self._statusbar[:]
 
         if destroy:
             toolkit().destroy_children( self.control )
