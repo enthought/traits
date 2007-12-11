@@ -392,7 +392,9 @@ class BaseDialog(BasePanel):
     def _add_statusbar ( self ):
         """ Adds a statusbar to the dialog.
         """
-        raise NotImplementedError
+        statusbar = self.ui.view.statusbar
+        if statusbar is not None:
+            raise NotImplementedError
 
     #---------------------------------------------------------------------------
     #  Adds a menu item to the menu bar being constructed:
