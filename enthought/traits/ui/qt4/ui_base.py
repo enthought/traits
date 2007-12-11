@@ -306,9 +306,10 @@ class BaseDialog(BasePanel):
         if buttons is not None:
             layout.addWidget(buttons)
 
-        # Add the menu bar and tool bar (if any).
+        # Add the menu bar, tool bar and status bar (if any).
         self._add_menubar()
         self._add_toolbar()
+        self._add_statusbar()
 
     def close(self, rc):
         """Close the dialog and set the given return code."""
@@ -383,6 +384,15 @@ class BaseDialog(BasePanel):
             self.control.SetToolBar(
                 toolbar.create_tool_bar( self.control, self ) )
             self._last_group = self._last_parent = None
+
+    #---------------------------------------------------------------------------
+    #  Adds a status bar to the dialog:
+    #---------------------------------------------------------------------------
+
+    def _add_statusbar ( self ):
+        """ Adds a statusbar to the dialog.
+        """
+        raise NotImplementedError
 
     #---------------------------------------------------------------------------
     #  Adds a menu item to the menu bar being constructed:
