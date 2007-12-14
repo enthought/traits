@@ -26,7 +26,7 @@ from os \
     import environ, listdir, remove, stat, makedirs, rename
     
 from os.path \
-    import join, isdir, isfile, join, splitext, abspath, basename, exists
+    import join, isdir, isfile, splitext, abspath, basename, exists
     
 from stat \
     import ST_MTIME
@@ -1228,7 +1228,7 @@ class ImageLibrary ( HasPrivateTraits ):
                 raise TraitError( ("Image library error: "
                     "Attempt to alias '%s' to '%s' when it is "
                     "already aliased to '%s'") %
-                    ( vname, volume_name, aliases[ name ] ) )
+                    ( vname, volume_name, aliases[ volume_name ] ) )
             aliases[ vname ] = volume_name
 
     def _duplicate_volume ( self, volume_name ):

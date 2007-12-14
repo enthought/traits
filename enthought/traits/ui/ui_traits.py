@@ -26,7 +26,7 @@ from os.path \
     
 from enthought.traits.api \
     import HasStrictTraits, Trait, TraitPrefixList, Delegate, Str, Instance, \
-           Float, List, Enum, Any, Range, Expression, TraitType
+           Float, List, Enum, Any, Range, Expression, TraitType, TraitError
            
 from enthought.traits.trait_base \
     import get_resource_path
@@ -379,7 +379,7 @@ class HasMargin ( TraitType ):
                 dv = self.klass( *dv )
                 
             if not isinstance( dv, self.klass ):
-                return super( HasPadding, self ).get_default_value()
+                return super( HasMargin, self ).get_default_value()
                 
             self.default_value_type = dvt = 7
             dv = ( self.klass, (), dv.get() )

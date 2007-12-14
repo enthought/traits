@@ -27,7 +27,7 @@ associated class's parent classes.
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Trait, HasStrictTraits, List, Dict, Str, Int, Any
+    import Trait, HasStrictTraits, List, Dict, Str, Int, Any, TraitError
     
 from enthought.traits.trait_base \
     import enumerate

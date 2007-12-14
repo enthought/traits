@@ -1557,7 +1557,7 @@ class HasTraits ( CHasTraits ):
         # contained HasTraits objects in its persisted state also implement
         # ISerializable:
         if self.has_traits_interface( ISerializable ): 
-            for name, value in results.items():
+            for name, value in result.items():
                 if not _is_serializable( value ):
                     raise TraitError( "The '%s' trait of a '%s' instance "
                                       "contains the unserializable value: %s" % 

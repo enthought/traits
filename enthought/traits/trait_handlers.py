@@ -1451,7 +1451,7 @@ class TraitWeakRef ( TraitInstance ):
         
 class HandleWeakRef ( object ):
     
-    def __init__ ( object, name, value ):
+    def __init__ ( self, object, name, value ):
         self.object = ref( object )
         self.name   = name
         self.value  = ref( value, self._value_freed )
