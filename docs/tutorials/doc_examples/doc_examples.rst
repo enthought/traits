@@ -33,7 +33,21 @@ Cast Simple
 Compound
     Shows the definition of a compound trait.
     
+Event
+    Shows the definition of a trait event
     
+List Notifiers
+    Example of zero-parameter handlers for an object containing a list
     
+Metadata
+    Example of accessing trait metadata attributes
     
+Minimal
+    Minimal example of using Traits.
+    
+Static Notification
+    Example of static attribute notification
+    
+This
+    Example of This predefined trait
 
