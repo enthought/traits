@@ -1,10 +1,16 @@
 # keywords.py --- Example of trait keywords
-from enthought.traits.api import HasTraits, Trait 
+
+#--[Imports]--------------------------------------------------------------------
+from enthought.traits.api import HasTraits, Str 
+
+#--[Code]-----------------------------------------------------------------------
 
 class Person(HasTraits): 
-    first_name = Trait('', 
-                       desc='first or personal name',
-                       label='First Name')
-    last_name =  Trait('', 
-                       desc='last or family name', 
-                       label='Last Name')
+    # 'label' is used for Traits UI field labels; 
+    # 'desc' can be used for tooltips.
+    first_name = Str('', 
+                     desc='first or personal name',
+                     label='First Name')
+    last_name =  Str('', 
+                     desc='last or family name', 
+                     label='Last Name')

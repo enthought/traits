@@ -1,11 +1,11 @@
+# all_traits_features.py --- Shows primary features of the Traits 
+#                            package
+
 #--[Imports]--------------------------------------------------------------------
-
-from enthought.traits.api import Delegate, HasTraits, Int, Trait
-
+from enthought.traits.api import Delegate, HasTraits, Instance, Int, Str
 import enthought.traits.ui
 
 #--[Code]-----------------------------------------------------------------------
-
 # Shows the five primary features of the Traits package.
 
 class Parent ( HasTraits ):
@@ -28,7 +28,7 @@ class Child ( HasTraits ):
     def _age_changed ( self, old, new ): 
         print 'Age changed from %s to %s ' % ( old, new )
 
-#--[Example*]-------------------------------------------------------------------         
+#--[Example*]-------------------------------------------------------------------
 
 # Set up the example:
 joe = Parent()
@@ -38,9 +38,13 @@ moe.father = joe
 
 # DELEGATION in action:
 print "Moe's last name is %s " % moe.last_name 
+# Result: 
+# Moe's last name is Johnson
 
-# NOTIFICATION in action:
+# NOTIFICATION in action
 moe.age = 10
+# Result:
+# Age changed from 0 to 10
 
 # VISUALIZATION: Displays a UI for editing moe's 
 # attributes (if a supported GUI toolkit is installed)
