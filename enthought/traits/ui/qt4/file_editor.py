@@ -22,7 +22,7 @@ from os.path \
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import List, Str, Event, Bool, Int, Unicode
+    import List, Str, Event, Bool, Int, Unicode, TraitError
 
 from enthought.traits.ui.api \
     import View, Group
