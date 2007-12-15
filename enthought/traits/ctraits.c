@@ -4521,6 +4521,23 @@ trait_method_traverse ( trait_method_object * tm, visitproc visit,
 	return 0;
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Garbage collector object clearing method:
++----------------------------------------------------------------------------*/
+
+static int
+trait_method_clear ( trait_method_object * tm ) {
+
+    Py_CLEAR( tm->tm_func );
+    Py_CLEAR( tm->tm_self );
+    Py_CLEAR( tm->tm_traits );
+    Py_CLEAR( tm->tm_class );
+	return 0;
+}
+
+
+
 /*-----------------------------------------------------------------------------
 |  Returns the class name of the class:
 +----------------------------------------------------------------------------*/
@@ -4851,7 +4868,7 @@ static PyTypeObject trait_method_type = {
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,         /* tp_flags */
 	trait_method_doc,                                /* tp_doc */
 	(traverseproc) trait_method_traverse,            /* tp_traverse */
-	0,                                               /* tp_clear */
+	(inquiry) trait_method_clear,                    /* tp_clear */
 	0,                                               /* tp_richcompare */
  	offsetof( trait_method_object, tm_weakreflist ), /* tp_weaklistoffset */
 	0,				                                 /* tp_iter */
