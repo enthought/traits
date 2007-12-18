@@ -2429,7 +2429,7 @@ class HasTraits ( CHasTraits ):
                 
         An *xname2* is of the form::
                 
-            ( xname3 | '['xname3[','xname3]*'] ) ['*']
+            ( xname3 | '['xname3[','xname3]*']' ) ['*']
                 
         An *xname3* is of the form::
                 
