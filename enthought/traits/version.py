@@ -1,1 +1,8 @@
-__version__ = '3.0.0b1'
+# Wrapped in a try/except in those situations where someone hasn't installed
+# as an egg.  What do we do then?  For now, we just punt since we don't want
+# to define the version number in two places.
+try:
+    import pkg_resources
+    __version__ = pkg_resources.require('enthought.traits')[0].version
+except:
+    __version__ = ''

@@ -1,7 +1,5 @@
 from setuptools import setup, Extension, find_packages
 
-from enthought.traits.version import __version__
-
 
 ctraits = Extension(
     'enthought.traits.ctraits',
@@ -81,7 +79,7 @@ setup(
         ],
     test_suite = 'nose.collector',
     url = 'http://code.enthought.com/traits',
-    version = __version__,
+    version = '3.0.0b1',
     zip_safe = False,
     )
 
