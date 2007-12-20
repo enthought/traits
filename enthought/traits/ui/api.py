@@ -51,6 +51,9 @@ from item \
 from editor_factory \
     import EditorFactory
 
+from basic_editor_factory \
+    import BasicEditorFactory
+
 from editor \
     import Editor
 
