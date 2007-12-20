@@ -22,6 +22,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+import re
 import string
 import weakref
 
@@ -93,6 +94,39 @@ INVALID_DESTINATION = ( None, None )
 
 # Characters valid in a traits name:
 name_chars = string.ascii_letters + string.digits + '_'
+
+#-------------------------------------------------------------------------------
+# Utility functions:
+#-------------------------------------------------------------------------------
+
+def indent(text, first_line=True, n=1, width=4):
+    """ Indent lines of text.
+
+    Parameters
+    ----------
+    text : str
+        The text to indent.
+    first_line : bool, optional
+        If False, then the first line will not be indented.
+    n : int, optional
+        The level of indentation.
+    width : int, optional
+        The number of spaces in each level of indentation.
+
+    Returns
+    -------
+    indented : str
+    """
+    lines = text.split('\n')
+    if not first_line:
+        first = lines[0]
+        lines = lines[1:]
+    spaces = ' '*(width*n)
+    lines2 = [spaces + x for x in lines]
+    if not first_line:
+        lines2.insert(0, first)
+    indented = '\n'.join(lines2)
+    return indented
 
 #-------------------------------------------------------------------------------
 #  Metadata filters:
@@ -245,7 +279,45 @@ class ListenerItem ( ListenerBase ):
     active = Instance( WeakKeyDictionary, () )
     
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
-        
+
+    #---------------------------------------------------------------------------
+    #  String representation:
+    #---------------------------------------------------------------------------
+
+    def __repr__(self, seen=set()):
+        """ Get a string representation.
+
+        Since the object graph may have cycles, we extend the basic __repr__ API
+        to include a set of objects we've already seen while constructing
+        a string representation. When this method tries to get the repr of
+        a ListenerItem or ListenerGroup, we will use the extended API and build
+        up the set of seen objects. The repr of a seen object will just be
+        '<cycle>'.
+        """
+        seen.add(self)
+        if self.next in seen:
+            # We have a cycle.
+            next_repr = '<cycle>'
+        else:
+            if isinstance(self.next, (ListenerItem, ListenerGroup)):
+                next_repr = self.next.__repr__(seen)
+            else:
+                next_repr = repr(self.next)
+        lines = [
+            '%s(' % self.__class__.__name__,
+            '    name = %r,' % self.name,
+            '    metadata_name = %r,' % self.metadata_name,
+            '    metadata_defined = %r,' % self.metadata_defined,
+            '    is_any_trait = %r,' % self.is_any_trait,
+            '    dispatch = %r,' % self.dispatch,
+            '    notify = %r,' % self.notify,
+            '    is_list_handler = %r,' % self.is_list_handler,
+            '    type = %r,' % self.type,
+            '    next = %s,' % indent(next_repr, False),
+            ')',
+        ]
+        return '\n'.join(lines)
+
     #---------------------------------------------------------------------------
     #  Registers new listeners:
     #---------------------------------------------------------------------------
@@ -735,6 +807,36 @@ class ListenerGroup ( ListenerBase ):
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
    
     #---------------------------------------------------------------------------
+    #  String representation:
+    #---------------------------------------------------------------------------
+
+    def __repr__(self, seen=set()):
+        """ Get a string representation.
+
+        Since the object graph may have cycles, we extend the basic __repr__ API
+        to include a set of objects we've already seen while constructing
+        a string representation. When this method tries to get the repr of
+        a ListenerItem or ListenerGroup, we will use the extended API and build
+        up the set of seen objects. The repr of a seen object will just be
+        '<cycle>'.
+        """
+        seen.add(self)
+        lines = [
+            '%s(items = [' % self.__class__.__name__,
+        ]
+        for item in self.items:
+            if isinstance(item, (ListenerItem, ListenerGroup)):
+                item_repr = item.__repr__(seen)
+            else:
+                item_repr = repr(item)
+            lines.extend(indent(item_repr, True).split('\n'))
+            lines[-1] += ','
+        lines.extend([
+            '])',
+        ])
+        return '\n'.join(lines)
+
+    #---------------------------------------------------------------------------
     #  Registers new listeners:
     #---------------------------------------------------------------------------
     
@@ -768,6 +870,9 @@ class ListenerParser ( HasPrivateTraits ):
     
     # The string being parsed
     text = Str
+
+    # The length of the string being parsed.
+    len_text = Int
     
     # The current parse index within the string
     index = Int
@@ -787,13 +892,12 @@ class ListenerParser ( HasPrivateTraits ):
     #-- Property Implementations -----------------------------------------------
     
     def _get_next ( self ):
-        try:
-            result = self.text[ self.index ]
-            self.index += 1
-            return result
-        except:
-            self.index += 1
-            return EOS
+        char = EOS
+        index = self.index
+        if index < self.len_text:
+            char = self.text[ index ]
+        self.index += 1
+        return char
             
     def _get_backspace ( self ):
         self.index = max( 0, self.index - 1 )
@@ -821,6 +925,17 @@ class ListenerParser ( HasPrivateTraits ):
         """ Parses the text and returns the appropriate collection of 
             ListenerBase objects described by the text.
         """
+        # Try a simple case quickly. The simplest case of a single Python name
+        # never triggers this parser, so we don't try to make that a shortcut,
+        # too.
+        # Whitespace should already have been stripped from the start and end.
+        m = re.match(r'^([a-zA-Z_]\w*)(\.|:)([a-zA-Z_]\w*)$', self.text)
+        if m is not None:
+            item = ListenerItem(name=m.group(1))
+            item.notify = (m.group(2) == '.')
+            item.next = ListenerItem(name=m.group(3))
+            return item
+
         return self.parse_group( EOS )
     
     #---------------------------------------------------------------------------
@@ -952,6 +1067,7 @@ class ListenerParser ( HasPrivateTraits ):
     
     def _text_changed ( self ):
         self.index    = 0
+        self.len_text = len( self.text )
         self.listener = self.parse()
 
 #-------------------------------------------------------------------------------
