@@ -55,7 +55,7 @@ image_trait = Instance( 'enthought.pyface.image_resource.ImageResource',
 export_trait = Str( desc = 'the category of elements dragged out of the view' )
 
 # Delegate a trait value to the object's **container** trait:                  
-container_delegate = Delegate( 'container' )
+container_delegate = Delegate( 'container', listenable=False )
 
 # An identifier for the external help context:
 help_id_trait = Str( desc = "the external help context identifier" )                     

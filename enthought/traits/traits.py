@@ -1031,7 +1031,8 @@ def TraitPython ( **metadata ):
 #  Factory function for creating C-based trait delegates:
 #-------------------------------------------------------------------------------
 
-def Delegate ( delegate, prefix = '', modify = False, **metadata ):
+def Delegate ( delegate, prefix = '', modify = False, listenable = True, 
+               **metadata ):
     """ Creates a "delegator" trait, whose definition and default value are
     delegated to a *delegate* trait attribute on another object.
 
@@ -1046,6 +1047,9 @@ def Delegate ( delegate, prefix = '', modify = False, **metadata ):
     modify : Boolean
         Indicates whether changes are made to the delegate attribute,
         rather than to the delegator attribute
+    listenable : Boolean
+        Indicates whether a listener can be attached to this attribute such that
+        changes to the delagate attribute will trigger it
 
     Description
     -----------
@@ -1092,6 +1096,7 @@ def Delegate ( delegate, prefix = '', modify = False, **metadata ):
     metadata[ 'type' ]     = 'delegate'
     metadata[ 'delegate' ] = delegate
     metadata[ 'prefix' ]   = prefix
+    metadata[ 'listenable' ] = listenable
 
     trait.__dict__         = metadata.copy()
     return trait

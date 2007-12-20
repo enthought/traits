@@ -3289,10 +3289,19 @@ class HasTraits ( CHasTraits ):
                 self.trait_property_changed( name, old )
                 
         self.on_trait_change( notify, pattern )
-            
+
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
+        # Only hook up the listener if the trait.propagate metadata is not
+        # False.
+        trait = self._trait( name, 2 )  # 2==create instance trait if needed.
+        if trait.listenable == False:
+            # Explicitly check for equality with False because we want to
+            # interpret None as True.
+            self.__dict__.setdefault( ListenerTraits, {} ).pop( name, None )
+            return
+
         def notify ( object, notify_name, old, new ):
             self.trait_property_changed( notify_name, old, new )
             
