@@ -8,7 +8,9 @@ ctraits = Extension(
 
 speedups = Extension(
     'enthought.traits.protocols._speedups',
-    sources = [ 'enthought/traits/protocols/_speedups.pyx' ],
+    # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can play
+    # with each other. See #1364
+    sources = [ 'enthought/traits/protocols/_speedups.c' ],
     )
 
 
