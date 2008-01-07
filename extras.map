@@ -1,0 +1,20 @@
+[agent]
+enthought.logger.agent = *
+
+
+[plugin]
+enthought.logger.plugin = *
+enthought.logger.widget = *
+
+
+[distribution]
+enthought.util.distribution = *
+
+
+[traits]
+enthought.util.traits = *
+
+
+[ui]
+enthought.util.ui = *
+
