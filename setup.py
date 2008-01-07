@@ -69,7 +69,7 @@ setup(
     install_requires = [
         ],
     license = 'BSD',
-    name = 'enthought.traits',
+    name = 'Traits',
     namespace_packages = [
         'enthought',
         'enthought.traits',
