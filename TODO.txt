@@ -1,0 +1,2 @@
+* Remove the dependency on AppTools project (caused by imports of enthought.resource).
+
