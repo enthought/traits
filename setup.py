@@ -30,11 +30,11 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ETSCONFIG = etsdep('enthought.etsconfig', '2.0.0b1')
-PYFACE = etsdep('enthought.pyface', '2.0.0b1')
-RESOURCE = etsdep('enthought.resource', '2.0.0b1')
-TRAITSUIWX = etsdep('enthought.traits.ui.wx', '3.0.0b1')
-TRAITSUIQT4 = etsdep('enthought.traits.ui.qt4', '3.0.0b1')
+APPTOOLS = etsdep('AppTools', '3.0.0b1')
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
+TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')
+TRAITSBACKENDQT4 = etsdep('TraitsBackendQt', '3.0.0b1')
 
 
 setup(
@@ -43,19 +43,19 @@ setup(
     description = 'Explicitly typed Python attributes package',
     extras_require = {
         'etsconfig': [
-            ETSCONFIG,
+            ENTHOUGHTBASE,
             ],
         'array': [
             ],
         'ui': [
-            PYFACE,
-            RESOURCE,
+            APPTOOLS,
+            TRAITSGUI,
             ],
         'wx': [
-            TRAITSUIWX,
+            TRAITSBACKENDWX,
             ],
         'qt4': [
-            TRAITSUIQT4,
+            TRAITSBACKENDQT4,
             ],
 
         # All non-ets dependencies should be in this extra to ensure users can
