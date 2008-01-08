@@ -12,26 +12,38 @@ dictate. Have fun!
 
 A brief description of each of the examples presented in this tutorial follows:
 
-All Traits Features
-    Shows the five primary features of the Traits package.
-    
-Bad Self Ref
-    Shows the incorrect way of defining a self-referencing class.
-    
-Circular Definition
-    Shows the incorrect way of defining mutually-referring classes.
-    
 Add Class Traits
     Defining mutually-referring classes using the *add_class_trait* method.
     
-All Wildcard
-    Shows the trait attribute wildcard attributes.
+All Traits Features
+    Shows the five primary features of the Traits package.
+        
+Bad Self Ref
+    Shows the incorrect way of defining a self-referencing class.
     
 Cast Simple
     Shows use of some of the simple casting types.
     
+Circular Definition
+    Shows the incorrect way of defining mutually-referring classes.
+    
 Compound
     Shows the definition of a compound trait.
+
+Custom TraitHandler
+    Example of a custom TraitHandler
+
+Use Custom TraitHandler
+    Example of using a custom TraitHandler
+    
+Delegate
+    Example of trait delegation.
+    
+Delegate Prefix
+    Examples of the Delegate() 'prefix' parameter.
+    
+Delegation Notification
+    Example of notification with delegation.
     
 Event
     Shows the definition of a trait event
@@ -45,9 +57,23 @@ Metadata
 Minimal
     Minimal example of using Traits.
     
+Override Default
+    Example of overriding a default value for a trait attribute in a subclass
+    
 Static Notification
     Example of static attribute notification
     
 This
     Example of This predefined trait
 
+Trait Reuse
+    Example of reusing trait definitions
+    
+Temp Wildcard
+    Example of using a wildcard with a trait attribute name.
+All Wildcard
+    Shows the trait attribute wildcard rules.
+Wildcard rules
+    Example of trait attribute wildcard rules
+
+    

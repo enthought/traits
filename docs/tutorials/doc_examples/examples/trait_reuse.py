@@ -1,8 +1,10 @@
-# trait_reuse.py --- Example of reusing trait 
-#                    definitions
+# trait_reuse.py --- Example of reusing trait definitions
+
+#--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Range, Trait, TraitRange
 
-coefficient = Trait(0.0, TraitRange(-1.0, 1.0))
+#--[Code]-----------------------------------------------------------------------
+coefficient = Range(-1.0, 1.0, 0.0))
 
 class quadratic(HasTraits):
     c2 = coefficient

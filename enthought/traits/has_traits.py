@@ -2334,9 +2334,9 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         handler : function
-            A trait notification function for the *name* trait attribute.
+            A trait notification function for the attribute specified by *name*.
         name : string
-            The name of the trait attribute whose value changes trigger the
+            Specifies the trait attribute whose value changes trigger the
             notification.
         remove : Boolean
             If True, removes the previously-set association between
@@ -2414,6 +2414,15 @@ class HasTraits ( CHasTraits ):
             If True, removes the previously-set association between
             *handler* and *name*; if False (the default), creates the
             association.
+        dispatch : string
+            A string indicating the thread on which notifications must be run. 
+            Possible values are:
+                * 'same': Run notifications on the same thread as this one.
+                * 'ui': Run notifications on the UI thread, and allow them to
+                  be queued and deferred.
+                * 'fast_ui': Run notifications on the UI thread, and process
+                  them immediately.
+                * 'new': Run notifications in a new thread.
 
         Description
         -----------

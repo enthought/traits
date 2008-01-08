@@ -49,6 +49,11 @@ _toolkit = None
 #  Low-level GUI toolkit selection function:
 #-------------------------------------------------------------------------------
 
+def _import_toolkit(name):
+    package  = 'enthought.traits.ui.' + name
+    module   = __import__( package )
+    return getattr( module.traits.ui, name ).toolkit
+
 def toolkit ( *toolkits ):
     """ Selects and returns a low-level GUI toolkit.
 
@@ -68,9 +73,7 @@ def toolkit ( *toolkits ):
 
     for toolkit_name in toolkits:
         try:
-            package  = 'enthought.traits.ui.' + toolkit_name
-            module   = __import__( package )
-            _toolkit = getattr( module.traits.ui, toolkit_name ).toolkit
+            _toolkit = _import_toolkit(toolkit_name)
 
             # In case we have just decided on a toolkit, tell everybody else:
             ETSConfig.toolkit = toolkit_name
@@ -80,8 +83,15 @@ def toolkit ( *toolkits ):
         except ImportError:
             pass
     else:
-        raise TraitError, ("Could not find any UI toolkit called: %s" %
-                           ', '.join( toolkits ))
+        # Try using the null toolkit and printing a warning
+        try:
+            _toolkit = _import_toolkit("null")
+            import warnings
+            warnings.warn("Unable to import the %s backend for traits UI; using the 'null' toolkit instead.")
+            return _toolkit
+        except ImportError:
+            raise TraitError, ("Could not find any UI toolkit called: %s" %
+                               ', '.join( toolkits ))
 
 #-------------------------------------------------------------------------------
 #  'Toolkit' class (abstract base class):

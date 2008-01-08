@@ -631,7 +631,7 @@ Button = TraitFactory( Button )
 def ToolbarButton ( label = '', image = None, style = 'toolbar',
                     orientation = 'vertical', width_padding = 2,
                     height_padding = 2, **metadata ):
-    """ Returns a trait even whose editor is a toolbar button.
+    """ Returns a trait event whose editor is a toolbar button.
 
     Parameters
     ----------
@@ -739,7 +739,7 @@ def Trait ( *value_type, **metadata ):
     |                   |   Trait(i)    |                                     |
     +-------------------+---------------+-------------------------------------+
     | Trait(*handler*)  | Trait(        | Assignment to this trait is         |
-    |                   | TraitEnum     | validated by an object derived from |
+    |                   | TraitEnum )   | validated by an object derived from |
     |                   |               | **enthought.traits.TraitHandler**.  |
     +-------------------+---------------+-------------------------------------+
     | Trait(*default*,  | Trait(0.0, 0.0| This is the most general form of    |
@@ -1107,7 +1107,6 @@ def Delegate ( delegate, prefix = '', modify = False, listenable = True,
 
 def Property ( fget = None, fset = None, fvalidate = None, force = False,
                handler = None, trait = None, **metadata ):
-    ### JMS: Need more detail in docstring
     """ Returns a trait whose value is a Python property.
 
     Parameters
@@ -1119,7 +1118,8 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     fvalidate : function
         The validation function for the property
     force : Boolean
-        Indicates whether to force WHAT?
+        Indicates whether to use only the function definitions spedficied by
+        **fget** and **fset**, and not look elsewhere on the class.
     handler : function
         A trait handler function for the trait
     trait : a trait definition or value that can be converted to a trait
@@ -1127,9 +1127,9 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
     Description
     -----------
-    If no getter or setter functions are specified, it is assumed that they
-    are defined elsewhere on the class whose attribute this trait is
-    assigned to. For example::
+    If no getter or setter functions are specified (and **force** is not True),
+    it is assumed that they are defined elsewhere on the class whose attribute
+    this trait is assigned to. For example::
 
         class Bar(HasTraits):
             foo = Property(Float)
@@ -1142,6 +1142,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             def _get_foo(self):
                 return self._foo
 
+    
     """
     metadata[ 'type' ] = 'property'
 

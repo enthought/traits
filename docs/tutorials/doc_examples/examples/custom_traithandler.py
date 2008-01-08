@@ -1,7 +1,10 @@
-# custom_traithandler.py --- Example of a custom 
-#                            TraitHandler
+# custom_traithandler.py --- Example of a custom TraitHandler
+
+#--[Imports]--------------------------------------------------------------------
 import types
 from enthought.traits.api import TraitHandler
+
+#--[Code]-----------------------------------------------------------------------
 
 class TraitOddInteger(TraitHandler):
 

@@ -1,14 +1,14 @@
 # static_notification.py --- Example of static attribute notification
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Trait
+from enthought.traits.api import HasTraits, Float
 
 #--[Code]-----------------------------------------------------------------------
 
 class Person(HasTraits):
-    weight_kg = Trait(0.0)
-    height_m =  Trait(1.0)
-    bmi = Trait(0.0)
+    weight_kg = Float(0.0)
+    height_m =  Float(1.0)
+    bmi = Float(0.0)
 
     def _weight_kg_changed(self, old, new):
          print 'weight_kg changed from %s to %s ' % (old, new)

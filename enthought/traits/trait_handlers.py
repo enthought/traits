@@ -898,6 +898,16 @@ class TraitString ( TraitHandler ):
     non-string types result in a TraitError being raised. The handler then
     makes sure that the resulting string is within the specified length range
     and that it matches the regular expression.
+    
+    Example
+    -------
+    ::
+        class Person(HasTraits):
+            name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
+    
+    This example defines a **Person** class with a **name** attribute, which
+    must be a string of between 0 and 50 characters that consist of only
+    upper and lower case letters.
     """
     def __init__ ( self, minlen = 0, maxlen = sys.maxint, regex = '' ):
         """ Creates a TraitString handler.
@@ -1807,6 +1817,18 @@ class TraitPrefixMap ( TraitMap ):
     one and only one key *k* in the dictionary. The actual values assigned to
     the trait attribute is *k*, and its corresponding mapped attribute is
     *map*[*k*].
+    
+    Example
+    -------
+    ::
+        boolean_map = Trait('true', TraitPrefixMap( {
+                                        'true': 1,
+                                        'yes': 1,
+                                        'false': 0,
+                                        'no': 0 } ))
+                                        
+    This example defines a Boolean trait that accepts any prefix of 'true',
+    'yes', 'false', or 'no', and maps them to 1 or 0.
     """
     def __init__ ( self, map ):
         """Creates a TraitPrefixMap handler.
