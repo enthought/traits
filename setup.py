@@ -17,7 +17,8 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-TRAITS = etsdep('enthought.traits', '3.0.0b1')
+TRAITS = etsdep('Traits', '3.0.0b1')
+TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 
 
 setup(
@@ -25,9 +26,8 @@ setup(
     author_email = 'phil@riverbankcomputing.co.uk',
     dependency_links = [
         'http://code.enthought.com/enstaller/eggs/source',
-        'http://code.enthought.com/enstaller/eggs/source/unstable',
         ],
-    description = 'PyQt backend for enthought.traits',
+    description = 'PyQt backend for Traits and Pyface.',
     extras_require = {
         # All non-ets dependencies should be in this extra to ensure users can
         # decide whether to require them or not.
@@ -37,11 +37,14 @@ setup(
     include_package_data = True,
     install_requires = [
         TRAITS,
+        TRAITSGUI,
         ],
     license = 'GPL',
-    name = 'enthought.traits.ui.qt4',
+    name = 'TraitsBackendQt',
     namespace_packages = [
         "enthought",
+        "enthought.pyface",
+        "enthought.pyface.ui",
         "enthought.traits",
         "enthought.traits.ui",
         ],
@@ -50,7 +53,7 @@ setup(
         'nose >= 0.9',
         ],
     test_suite = 'nose.collector',
-    url = 'http://code.enthought.com/traits',
+    url = 'http://code.enthought.com/ets',
     version = '3.0.0b1',
     zip_safe = False,
     )
