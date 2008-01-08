@@ -344,4 +344,104 @@ class _Tool(HasTraits):
 
         self.control.setChecked(action.checked)
 
+
+class _PaletteTool(HasTraits):
+    """ A tool palette representation of an action item. """
+
+    #### '_PaletteTool' interface #############################################
+
+    # The radio group we are part of (None if the tool is not part of such a
+    # group).
+    group = Any
+
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __init__(self, tool_palette, image_cache, item, show_labels):
+        """ Creates a new tool palette tool for an action item. """
+
+        self.item = item
+        self.tool_palette = tool_palette
+
+        action = self.item.action
+        label = action.name
+
+        # Tool palette tools never have '...' at the end.
+        if label.endswith('...'):
+            label = label[:-3]
+
+        # And they never contain shortcuts.
+        label = label.replace('&', '')
+
+        image = action.image.create_image()
+        path = action.image.absolute_path
+        bmp = image_cache.get_bitmap(path)
+
+        kind    = action.style
+        tooltip = action.tooltip
+        longtip = action.description
+
+        if not show_labels:
+            label = ''
+
+        # Add the tool to the tool palette.
+        self.tool_id = tool_palette.add_tool(label, bmp, kind, tooltip,longtip)
+        tool_palette.toggle_tool(self.tool_id, action.checked)
+        tool_palette.enable_tool(self.tool_id, action.enabled)
+        tool_palette.on_tool_event(self.tool_id, self._on_tool)
+
+        # Listen to the trait changes on the action (so that we can update its
+        # enabled/disabled/checked state etc).
+        action.on_trait_change(self._on_action_enabled_changed, 'enabled')
+        action.on_trait_change(self._on_action_checked_changed, 'checked')
+
+        return
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    #### Trait event handlers #################################################
+
+    def _on_action_enabled_changed(self, action, trait_name, old, new):
+        """ Called when the enabled trait is changed on an action. """
+
+        self.tool_palette.enable_tool(self.tool_id, action.enabled)
+
+        return
+
+    def _on_action_checked_changed(self, action, trait_name, old, new):
+        """ Called when the checked trait is changed on an action. """
+
+        if action.style == 'radio':
+            # If we're turning this one on, then we need to turn all the others
+            # off.  But if we're turning this one off, don't worry about the
+            # others.
+            if new:
+                for item in self.item.parent.items:
+                    if item is not self.item:
+                        item.action.checked = False
+
+        # This will *not* emit a tool event.
+        self.tool_palette.toggle_tool(self.tool_id, new)
+
+        return
+
+    #### Tool palette event handlers ##########################################
+
+    def _on_tool(self, event):
+        """ Called when the tool palette button is clicked. """
+
+        action = self.item.action
+        action_event = ActionEvent()
+
+        is_checkable = (action.style == 'radio' or action.style == 'check')
+
+        # Perform the action!
+        action.checked = self.tool_palette.get_tool_state(self.tool_id) == 1
+        action.perform(action_event)
+
+        return
+
 #### EOF ######################################################################
