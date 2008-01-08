@@ -2,13 +2,13 @@
 enthought.logger.agent = *
 
 
-[plugin]
-enthought.logger.plugin = *
-enthought.logger.widget = *
-
-
 [distribution]
 enthought.util.distribution = *
+
+
+[envisage]
+enthought.logger.plugin = *
+enthought.logger.widget = *
 
 
 [traits]
