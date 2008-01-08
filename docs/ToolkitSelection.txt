@@ -28,7 +28,7 @@ for this document.
 enthought.etsconfig.api.ETSConfig.toolkit
 =========================================
 
-The ``ETSConfig`` is a singleton that has a ``toolkit`` string trait.  Its
+The ``ETSConfig`` is a singleton that has a ``toolkit`` string property.  Its
 value is the name of the toolkit or an empty string if the toolkit has not yet
 been selected.
 
