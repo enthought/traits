@@ -185,7 +185,7 @@ class MakeMenu:
             self.parse(submenu, indented)
 
             # Add the menu to its parent:
-            act = menu.append(submenu)
+            act = menu.addMenu(submenu)
             act.setStatusTip(help)
 
     #---------------------------------------------------------------------------
