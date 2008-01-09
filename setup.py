@@ -50,7 +50,6 @@ setup(
         'envisage': [
             ENVISAGECORE,
             ENVISAGEPLUGINS,
-            PYFACE,
             ],
 
         # All non-ets dependencies should be in this extra to ensure users can
