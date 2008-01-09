@@ -17,4 +17,5 @@ enthought.util.traits = *
 
 [ui]
 enthought.util.ui = *
+enthought.util.wx = *
 

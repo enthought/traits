@@ -25,10 +25,11 @@ ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- all from logger.plu
 TRAITS = etsdep('Traits', '3.0.0b1')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- only from e.util.traits.editor.parameter_choice_editor.py
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')  # -- from logger.(agent|plugin|widget)
+TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 
 # The following "soft dependencies" are wrapped in try..except blocks
-#APPTOOLS = etsdep('AppTools', '3.0.0b1')  # util/wx/drag_and_drop
-#SCIMATH = etsdep('SciMath', '3.0.0b1')    # util/wx/spreadsheet/unit_renderer.py
+#APPTOOLS -- util/wx/drag_and_drop
+#SCIMATH -- util/wx/spreadsheet/unit_renderer.py
 
 setup(
     author = 'Enthought, Inc',
@@ -38,18 +39,27 @@ setup(
         ],
     description = 'EnthoughtBase is the root project of all other ETS projects',
     extras_require = {
+        'agent': [
+            ENVISAGECORE,
+            TRAITS,
+            TRAITSGUI,
+            ],
         'distribution': [
-            TRAITSGUI,
-            ],
-        'traits': [
-            TRAITSBACKENDWX,
-            ],
-        'ui': [
-            TRAITSGUI,
+            TRAITS_UI,
             ],
         'envisage': [
             ENVISAGECORE,
             ENVISAGEPLUGINS,
+            TRAITSGUI,
+            TRAITS_UI,
+            ],
+        'traits': [
+            TRAITS,
+            TRAITSBACKENDWX,
+            ],
+        'ui': [    # -- this includes util.ui.* and util.wx.* (see extras.map)
+            TRAITSGUI,
+            TRAITS_UI,
             ],
 
         # All non-ets dependencies should be in this extra to ensure users can

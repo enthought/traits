@@ -1,6 +1,13 @@
 * REMOVE ALL DEPENDENCIES THIS PACKAGE HAS ON OTHER ETS PROJECTS!
 
-* Separate the logger plugin (basically all subpackages of this package) from
-    the core logger utility methods / classes this package contains.   This
-    will remove the dependency on enthought.envisage, enthought.pyface, and
-    enthought.traits.
+* Refactor util/equivalence.py to remove the dependency on Traits, or else move
+    the module out of this project.
+
+* Separate the logger plugin (basically everything from enthought.logger.plugin
+    on down) from the core logger utility methods / classes this package
+    contains.   This will remove some dependencies in our extras.
+
+* Refactor util/traits/editor/parameter_choice_editor.py to be toolkit
+    independent -- it is currently hardwired for wx.  Or move it out of this
+    project.
+
