@@ -22,11 +22,13 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- all from logger.(plugin|agent|widget)
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- all from logger.plugin
-SCIMATH = etsdep('SciMath', '3.0.0b1')  # -- all from util/wx/spreadsheet/unit_renderer.py
 TRAITS = etsdep('Traits', '3.0.0b1')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- only from e.util.traits.editor.parameter_choice_editor.py
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')  # -- from logger.(agent|plugin|widget)
 
+# The following "soft dependencies" are wrapped in try..except blocks
+#APPTOOLS = etsdep('AppTools', '3.0.0b1')  # util/wx/drag_and_drop
+#SCIMATH = etsdep('SciMath', '3.0.0b1')    # util/wx/spreadsheet/unit_renderer.py
 
 setup(
     author = 'Enthought, Inc',
@@ -36,6 +38,21 @@ setup(
         ],
     description = 'EnthoughtBase is the root project of all other ETS projects',
     extras_require = {
+        'distribution': [
+            TRAITSGUI,
+            ],
+        'traits': [
+            TRAITSBACKENDWX,
+            ],
+        'ui': [
+            TRAITSGUI,
+            ],
+        'envisage': [
+            ENVISAGECORE,
+            ENVISAGEPLUGINS,
+            PYFACE,
+            ],
+
         # All non-ets dependencies should be in this extra to ensure users can
         # decide whether to require them or not.
         'nonets': [
@@ -44,12 +61,6 @@ setup(
     license = 'BSD',
     include_package_data = True,
     install_requires = [
-        ENVISAGECORE,
-        ENVISAGEPLUGINS,
-        SCIMATH,
-        TRAITS,
-        TRAITSBACKENDWX,
-        TRAITSGUI,
         ],
     name = 'EnthoughtBase',
     namespace_packages = [
