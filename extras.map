@@ -1,0 +1,15 @@
+[array]
+# deprecated
+
+[etsconfig]
+# optional use only
+
+[qt4]
+# optional only
+
+[ui]
+enthought.traits.ui = *
+
+
+[wx]
+# optional only
