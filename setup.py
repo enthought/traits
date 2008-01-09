@@ -17,8 +17,12 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-TRAITS = etsdep('Traits', '3.0.0b1')
+APPTOOLS = etsdep('AppTools', '3.0.0b1')  # -- pyface/ui/qt4/resource_manager.py import enthought.resource
+#DEVTOOLS -- import of e.debug.fbi and e.developer.helper.fbi only in try..except
+MAYAVI = etsdep('Mayavi', '2.0.3a1')  # imports in pyface/ui/qt4/tvtk/*
+TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
+TRAITSGUI_TVTK = etsdep('TraitsGUI[tvtk]', '3.0.0b1') # imports in pyface/ui/qt4/tvtk/*
 
 
 setup(
@@ -29,6 +33,11 @@ setup(
         ],
     description = 'PyQt backend for Traits and Pyface.',
     extras_require = {
+        'tvtk': [
+            MAYAVI,
+            TRAITSGUI_TVTK,
+            ],
+
         # All non-ets dependencies should be in this extra to ensure users can
         # decide whether to require them or not.
         'nonets': [
@@ -36,7 +45,8 @@ setup(
         },
     include_package_data = True,
     install_requires = [
-        TRAITS,
+        APPTOOLS,
+        TRAITS_UI,
         TRAITSGUI,
         ],
     license = 'GPL',
