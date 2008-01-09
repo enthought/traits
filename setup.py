@@ -33,7 +33,7 @@ def etsdep(p, min, max=None, literal=False):
 APPTOOLS = etsdep('AppTools', '3.0.0b1')  # -- import of enthought.resource from traits/ui/image.py
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')  # -- from traits/trait_base.py
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- direct imports in ui/file_dialog.py and when anyone uses api.UIDebugger
-TRAITSBACKENDQT4 = etsdep('TraitsBackendQt', '3.0.0b1')
+TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.0b1')
 TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.0b1')
 
 
@@ -48,7 +48,7 @@ setup(
             ENTHOUGHTBASE,
             ],
         'qt4': [
-            TRAITSBACKENDQT4,
+            TRAITSBACKENDQT,
             ],
         'ui': [
             APPTOOLS,
@@ -77,6 +77,8 @@ setup(
         'enthought.traits.ui',
         ],
     packages = find_packages(exclude=[
+        'docs',
+        'docs.*',
         'integrationtests',
         'integrationtests.*',
         ]),

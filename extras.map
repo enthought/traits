@@ -1,15 +1,18 @@
 [array]
 # deprecated
 
+
 [etsconfig]
-# optional use only
+# completely optional, not triggered by imports.
+
 
 [qt4]
-# optional only
+# completely optional, not triggered by imports.
+
 
 [ui]
 enthought.traits.ui = *
 
 
 [wx]
-# optional only
+# completely optional, not triggered by imports.
