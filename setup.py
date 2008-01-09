@@ -20,7 +20,6 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-APPTOOLS = etsdep('AppTools', '3.0.0b1')  # -- imported only in util/wx/drag_and_drop
 ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- all from logger.(plugin|agent|widget)
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- all from logger.plugin
 SCIMATH = etsdep('SciMath', '3.0.0b1')  # -- all from util/wx/spreadsheet/unit_renderer.py
@@ -45,7 +44,6 @@ setup(
     license = 'BSD',
     include_package_data = True,
     install_requires = [
-        APPTOOLS,
         ENVISAGECORE,
         ENVISAGEPLUGINS,
         SCIMATH,
