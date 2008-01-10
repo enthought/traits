@@ -19,7 +19,7 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 APPTOOLS = etsdep('AppTools', '3.0.0b1')  # -- pyface/ui/qt4/resource_manager.py import enthought.resource
 #DEVTOOLS -- import of e.debug.fbi and e.developer.helper.fbi only in try..except
-MAYAVI = etsdep('Mayavi', '2.0.3a1')  # imports in pyface/ui/qt4/tvtk/*
+MAYAVI = etsdep('Mayavi', '3.0.0a1')  # imports in pyface/ui/qt4/tvtk/*
 TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 TRAITSGUI_TVTK = etsdep('TraitsGUI[tvtk]', '3.0.0b1') # imports in pyface/ui/qt4/tvtk/*
