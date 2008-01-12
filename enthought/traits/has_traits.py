@@ -688,6 +688,7 @@ class MetaHasTraitsObject ( object ):
         for name, value in class_dict.items():
             value = _check_trait( value )
             rc    = isinstance( value, CTrait )
+
             if (not rc) and isinstance( value, ForwardProperty ):
                 rc       = True
                 validate = _property_method( class_dict, '_validate_' + name )
@@ -876,7 +877,7 @@ class MetaHasTraitsObject ( object ):
         # Make one final pass over the class traits dictionary, making sure
         # all static trait notification handlers are attached to a 'cloned'
         # copy of the original trait:
-        cloned = {}
+        cloned = set()
         for name in class_traits.keys():
             trait    = class_traits[ name ]
             handlers = [ anytrait,
@@ -906,11 +907,11 @@ class MetaHasTraitsObject ( object ):
                                                '_%s_fired' % event ) )
 
             handlers = [ h for h in handlers if h is not None ]
-            default  = _get_def( class_name, class_dict, override_bases,
+            default  = _get_def( class_name, class_dict, [],
                                  '_%s_default' % name )
             if (len( handlers ) > 0) or (default is not None):
                 if name not in cloned:
-                    cloned[ name ] = None
+                    cloned.add( name )
                     class_traits[ name ] = trait = _clone_trait( trait )
                 if len( handlers ) > 0:
                     _add_notifiers( trait._notifiers( 1 ), handlers )
@@ -1012,11 +1013,11 @@ def _trait_monitor_index ( cls, handler ):
     return -1
 
 #-------------------------------------------------------------------------------
-#  Creates an class the implements a set of interfaces:
+#  Creates a class the implements a set of interfaces:
 #-------------------------------------------------------------------------------
         
 def _create_implements_class ( class_name, interfaces, base_classes ):
-    """ Creates an class the implements a set of interfaces.
+    """ Creates a class the implements a set of interfaces.
     """
     locals  = {}
     classes = []
