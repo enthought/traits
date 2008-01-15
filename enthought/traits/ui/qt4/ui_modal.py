@@ -177,13 +177,12 @@ class _ModalDialog(BaseDialog):
         """
         accept = bool(result)
 
-        if self.ui.handler.close(self.ui.info, accept):
-            if accept:
-                self._apply_context(self.ui.context, self.ui._context)
-            else:
-                self._apply_context(self.ui._revert, self.ui._context)
+        if accept:
+            self._apply_context(self.ui.context, self.ui._context)
+        else:
+            self._apply_context(self.ui._revert, self.ui._context)
 
-            self.close(accept)
+        self.close(accept)
 
     def _on_apply(self):
         """Handles a request to apply changes.

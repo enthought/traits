@@ -251,6 +251,53 @@ class BasePanel(object):
         self.revert.setEnabled(state)
 
 
+class _StickyDialog(QtGui.QDialog):
+    """A QDialog that will only close if the traits handler allows it.
+    """
+
+    def __init__(self, ui, parent, flags):
+        """Initialise the dialog.
+        """
+
+        QtGui.QDialog.__init__(self, parent, flags)
+
+        self._ui = ui
+
+    def closeEvent(self, e):
+        """Reimplemented to check when the clicks the window close button.
+        (Note that QDialog doesn't get a close event when the dialog is closed
+        in any other way.)
+        """
+
+        if self._ok_to_close():
+            QtGui.QDialog.closeEvent(self, e)
+        else:
+            # Ignore the event thereby keeping the dialog open.
+            e.ignore()
+
+    def keyPressEvent(self, e):
+        """Reimplemented to ignore the Escape key if appropriate.
+        """
+
+        if (e.modifiers() != QtCore.Qt.NoModifier or
+                e.key() != QtCore.Qt.Key_Escape or self._ok_to_close()):
+            QtGui.QDialog.keyPressEvent(self, e)
+
+    def done(self, r):
+        """Reimplemented to ignore calls to accept() or reject() if
+        appropriate.
+        """
+
+        if self._ok_to_close(bool(r)):
+            QtGui.QDialog.done(self, r)
+
+    def _ok_to_close(self, is_ok=False):
+        """Let the handler decide if the dialog should be closed.
+        """
+
+        return self._ui.handler.close(self._ui.info, is_ok)
+
+
 class BaseDialog(BasePanel):
     """Base class for Traits UI dialog boxes.
     """
@@ -272,7 +319,7 @@ class BaseDialog(BasePanel):
         if view.resizable:
             flags |= QtCore.Qt.WindowMinMaxButtonsHint
 
-        self.control = control = QtGui.QDialog(parent, flags)
+        self.control = control = _StickyDialog(self.ui, parent, flags)
 
         control.setModal(style == BaseDialog.MODAL)
         control.setWindowTitle(view.title or DefaultTitle)
