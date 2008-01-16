@@ -79,7 +79,7 @@ class RadioGroup ( HasStrictTraits ):
 #  'ButtonEditor' class:
 #-------------------------------------------------------------------------------
 
-class ButtonEditor ( Editor ):
+class ButtonEditor(Editor):
     """ Editor for buttons.
     """
     #---------------------------------------------------------------------------
@@ -87,33 +87,33 @@ class ButtonEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     # Action associated with the button
-    action = Instance( Action )
+    action = Instance(Action)
 
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, **traits ):
-        self.set( **traits )
+    def __init__(self, **traits):
+        self.set(**traits)
 
     #---------------------------------------------------------------------------
     #  Handles the associated button being clicked:
     #---------------------------------------------------------------------------
 
-    def perform ( self, event ):
-        """ Handles the associated button being clicked.
-        """
-        self.ui.do_undoable( self._perform, event )
+    def perform(self):
+        """Handles the associated button being clicked."""
+        self.ui.do_undoable(self._perform, None)
 
-    def _perform ( self, event ):
+    def _perform(self, event):
         method_name = self.action.action
         if method_name == '':
-            method_name = '_%s_clicked' % (self.action.name.lower())
-        method = getattr( self.ui.handler, method_name, None )
+            method_name = '_%s_clicked' % self.action.name.lower()
+
+        method = getattr(self.ui.handler, method_name, None)
         if method is not None:
-            method( self.ui.info )
+            method(self.ui.info)
         else:
-            self.action.perform( event )
+            self.action.perform(event)
 
 
 class BasePanel(object):
