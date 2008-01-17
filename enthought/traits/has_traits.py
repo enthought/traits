@@ -2493,7 +2493,7 @@ class HasTraits ( CHasTraits ):
           report changes to *object.foo.bar.baz*.
         - 'foo.[bar,baz]': Listen for trait changes to *object.foo.bar* and
           *object.foo.baz*.
-        - '([left,right]).name': Listen for trait changes to the *name*
+        - '[left,right]*.name': Listen for trait changes to the *name*
           trait of each node of a tree having *left* and *right* links to
           other tree nodes, and where *object* the method is applied to 
           the root node of the tree.
