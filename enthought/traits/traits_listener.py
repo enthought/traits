@@ -356,16 +356,18 @@ class ListenerItem ( ListenerBase ):
                     metadata[ self.metadata_name ] = is_none
                     
             # Get all object traits with matching metadata:
-            traits = new.traits( **metadata )
+            names = new.trait_names( **metadata )
             
             # If a name prefix was specified, filter out only the names that
             # start with the specified prefix:
             name = name[:-1]
             if name != '':
-                n      = len( name )
-                traits = dict( [ ( aname, atrait ) 
-                                 for aname, atrait in traits.items()
-                                 if name == aname[ : n ] ] )
+                n     = len( name )
+                names = [ aname for aname in names if name == aname[ : n ] ]
+                
+            # Create the dictionary of selected traits:
+            bt     = new.base_trait
+            traits = dict( [ ( name, bt( name ) ) for name in names ] )
         else:
             # Determine if the trait is optional or not:
             optional = (last == '?')
@@ -373,7 +375,7 @@ class ListenerItem ( ListenerBase ):
                 name = name[:-1]
                 
             # Else, no wildcard matching, just get the specified trait:
-            trait = new.trait( name )
+            trait = new.base_trait( name )
             
             # Try to get the object trait:
             if trait is None:
