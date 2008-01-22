@@ -692,6 +692,8 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
     if ( PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
                                          listener_traits ) ) > 0 ) {
         value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
+        if ( value == NULL ) 
+            return -1;
         Py_XDECREF( value );
     }
 
