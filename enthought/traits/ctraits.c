@@ -694,7 +694,7 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
         value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
         if ( value == NULL ) 
             return -1;
-        Py_XDECREF( value );
+        Py_DECREF( value );
     }
 
     /* Set any traits specified in the constructor: */
