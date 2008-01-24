@@ -36,7 +36,8 @@ from enthought.traits.ui.table_column \
 class AffectsAverageColumn ( ObjectColumn ):
     
     # The context menu for the column:
-    menu = Menu( Action( name = 'Add', action = 'column.add( object )' ) )
+    menu = Menu( Action( name = 'Add', action = 'column.add( object )' ),
+                 Action( name = 'Sub', action = 'column.sub( object )' ) )
     
     # Right-align numeric values:
     horizontal_alignment = 'right'
@@ -48,6 +49,11 @@ class AffectsAverageColumn ( ObjectColumn ):
         """ Increment the affected player statistic.
         """
         setattr( object, self.name, getattr( object, self.name ) + 1 ) 
+    
+    def sub ( self, object ):
+        """ Decrement the affected player statistic.
+        """
+        setattr( object, self.name, getattr( object, self.name ) - 1 )
 
         
 # The 'players' trait table editor:
