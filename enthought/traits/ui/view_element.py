@@ -33,8 +33,8 @@ from enthought.traits.api \
     import HasPrivateTraits, Trait, Instance, Any, Bool
     
 from ui_traits \
-    import Image, ATheme, object_trait, style_trait, dock_style_trait, \
-           image_trait, export_trait, help_id_trait
+    import Image, ATheme, object_trait, EditorStyle, DockStyle, image_trait, \
+           export_trait, HelpId
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -96,10 +96,10 @@ class DefaultViewElement ( ViewElement ):
     object = object_trait
     
     # The default editor style to use:
-    style = style_trait   
+    style = EditorStyle   
     
     # The default dock style to use:
-    dock = dock_style_trait
+    dock = DockStyle
     
     # The default notebook tab image to use:                        
     image = image_trait
@@ -139,7 +139,7 @@ class ViewSubElement ( ViewElement ):
     container = container_trait 
     
     # External help context identifier:
-    help_id = help_id_trait   
+    help_id = HelpId   
             
     #---------------------------------------------------------------------------
     #  Splits a string at a specified character:

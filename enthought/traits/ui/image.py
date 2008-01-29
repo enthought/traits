@@ -83,6 +83,70 @@ image_cache_path = join( traits_home(), 'image_cache' )
 
 # Names of files that should not be copied when ceating a new library copy:
 dont_copy_list = ( 'image_volume.py', 'image_info.py', 'license.txt' )
+    
+#-- Code Generation Templates --------------------------------------------------
+
+# Template for creating an ImageVolumeInfo object:
+ImageVolumeInfoCodeTemplate = \
+"""        ImageVolumeInfo(
+            description = %(description)s,
+            copyright   = %(copyright)s,
+            license     = %(license)s,
+            image_names = %(image_names)s
+        )"""
+
+# Template for creating an ImageVolumeInfo license text:
+ImageVolumeInfoTextTemplate = \
+"""Description:
+    %s
+
+Copyright:
+    %s
+
+License:
+    %s
+
+Applicable Images:
+%s"""    
+
+# Template for creating an ImageVolume object:
+ImageVolumeTemplate = \
+"""from enthought.traits.ui.image import ImageVolume, ImageVolumeInfo
+    
+volume = ImageVolume(
+    category    = %(category)s,
+    keywords    = %(keywords)s,
+    aliases     = %(aliases)s,
+    time_stamp  = %(time_stamp)s,
+    info        = [
+%(info)s
+    ]
+)"""    
+
+# Template for creating an ImageVolume 'images' list:
+ImageVolumeImagesTemplate = \
+"""from enthought.traits.ui.image     import ImageInfo
+from enthought.traits.ui.ui_traits import Margin, Border 
+    
+images = [
+%s
+]"""    
+
+# Template for creating an ImageInfo object:
+ImageInfoTemplate = \
+"""    ImageInfo(
+        name        = %(name)s,
+        image_name  = %(image_name)s,
+        description = %(description)s,
+        category    = %(category)s,
+        keywords    = %(keywords)s,
+        width       = %(width)d,
+        height      = %(height)d,
+        border      = Border( %(bleft)d, %(bright)d, %(btop)d, %(bbottom)d ),
+        content     = Margin( %(cleft)d, %(cright)d, %(ctop)d, %(cbottom)d ),
+        label       = Margin( %(lleft)d, %(lright)d, %(ltop)d, %(lbottom)d ),
+        alignment   = %(alignment)s
+    )"""
 
 #-------------------------------------------------------------------------------
 #  Returns the contents of the specified file:
@@ -143,6 +207,38 @@ def add_object_prefix ( dict, object, prefix ):
     """
     for name, value in object.get().iteritems():
         dict[ prefix + name ] = value
+        
+#-------------------------------------------------------------------------------
+#  Splits a specified **image_name** into its constituent volume and file names
+#  and returns a tuple of the form: ( volume_name, file_name ).
+#-------------------------------------------------------------------------------
+
+def split_image_name ( image_name ):
+    """ Splits a specified **image_name** into its constituent volume and file
+        names and returns a tuple of the form: ( volume_name, file_name ).
+    """
+    col         = image_name.find( ':' )
+    volume_name = image_name[ 1: col ]
+    file_name   = image_name[ col + 1: ]
+    if file_name.find( '.' ) < 0:
+        file_name += '.png'
+    
+    return ( volume_name, file_name )
+
+#-------------------------------------------------------------------------------
+#  Joins a specified **volume_name** and **file_name** into an image name, and
+#  return the resulting image name:
+#-------------------------------------------------------------------------------
+
+def join_image_name ( volume_name, file_name ):
+    """ Joins a specified **volume_name** and **file_name** into an image name,
+        and return the resulting image name.    
+    """
+    root, ext = splitext( file_name )
+    if (ext == '.png') and (root.find( '.' ) < 0):
+        file_name = root
+        
+    return '@%s:%s' % ( volume_name, file_name )
         
 #-------------------------------------------------------------------------------
 #  'FastZipFile' class:  
@@ -1239,92 +1335,4 @@ class ImageLibrary ( HasPrivateTraits ):
         
 # Create the singleton image object:        
 ImageLibrary = ImageLibrary()        
-        
-#-- Utility functions ----------------------------------------------------------
-
-def split_image_name ( image_name ):
-    """ Splits a specified **image_name** into its constituent volume and file
-        names and returns a tuple of the form: ( volume_name, file_name ).
-    """
-    col         = image_name.find( ':' )
-    volume_name = image_name[ 1: col ]
-    file_name   = image_name[ col + 1: ]
-    if file_name.find( '.' ) < 0:
-        file_name += '.png'
-    
-    return ( volume_name, file_name )
-    
-def join_image_name ( volume_name, file_name ):
-    """ Joins a specified **volume_name** and **file_name** into an image name,
-        and return the resulting image name.    
-    """
-    root, ext = splitext( file_name )
-    if (ext == '.png') and (root.find( '.' ) < 0):
-        file_name = root
-        
-    return '@%s:%s' % ( volume_name, file_name )
-    
-#-- Code Generation Templates --------------------------------------------------
-
-# Template for creating an ImageVolumeInfo object:
-ImageVolumeInfoCodeTemplate = \
-"""        ImageVolumeInfo(
-            description = %(description)s,
-            copyright   = %(copyright)s,
-            license     = %(license)s,
-            image_names = %(image_names)s
-        )"""
-
-# Template for creating an ImageVolumeInfo license text:
-ImageVolumeInfoTextTemplate = \
-"""Description:
-    %s
-
-Copyright:
-    %s
-
-License:
-    %s
-
-Applicable Images:
-%s"""    
-
-# Template for creating an ImageVolume object:
-ImageVolumeTemplate = \
-"""from enthought.traits.ui.image import ImageVolume, ImageVolumeInfo
-    
-volume = ImageVolume(
-    category    = %(category)s,
-    keywords    = %(keywords)s,
-    aliases     = %(aliases)s,
-    time_stamp  = %(time_stamp)s,
-    info        = [
-%(info)s
-    ]
-)"""    
-
-# Template for creating an ImageVolume 'images' list:
-ImageVolumeImagesTemplate = \
-"""from enthought.traits.ui.image     import ImageInfo
-from enthought.traits.ui.ui_traits import Margin, Border 
-    
-images = [
-%s
-]"""    
-
-# Template for creating an ImageInfo object:
-ImageInfoTemplate = \
-"""    ImageInfo(
-        name        = %(name)s,
-        image_name  = %(image_name)s,
-        description = %(description)s,
-        category    = %(category)s,
-        keywords    = %(keywords)s,
-        width       = %(width)d,
-        height      = %(height)d,
-        border      = Border( %(bleft)d, %(bright)d, %(btop)d, %(bbottom)d ),
-        content     = Margin( %(cleft)d, %(cright)d, %(ctop)d, %(cbottom)d ),
-        label       = Margin( %(lleft)d, %(lright)d, %(ltop)d, %(lbottom)d ),
-        alignment   = %(alignment)s
-    )"""
             

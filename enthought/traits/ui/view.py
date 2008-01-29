@@ -33,8 +33,8 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, ATheme, object_trait, style_trait, dock_style_trait, \
-           image_trait, export_trait, help_id_trait, buttons_trait, ViewStatus
+    import SequenceTypes, ATheme, object_trait, EditorStyle, DockStyle, \
+           image_trait, export_trait, HelpId, buttons_trait, ViewStatus
     
 from handler \
     import Handler, default_handler
@@ -253,7 +253,7 @@ class View ( ViewElement ):
     object = object_trait
     
     # The default editor style of elements in the view:
-    style = style_trait
+    style = EditorStyle
     
     # The default docking style to use for sub-groups of the view. The following
     # values are possible:
@@ -266,7 +266,7 @@ class View ( ViewElement ):
     # * 'tabbed': Moveable elements appear as tabbed pages, which can be 
     #   arranged within the window or "stacked" so that only one appears at
     #   at a time.
-    dock = dock_style_trait
+    dock = DockStyle
     
     # The image to display on notebook tabs:
     image = image_trait
@@ -309,7 +309,7 @@ class View ( ViewElement ):
     
     # External help context identifier, which can be used by a custom help
     # handler. This attribute is ignored by the default help handler.
-    help_id = help_id_trait
+    help_id = HelpId
     
     # Requested x-coordinate (horizontal position) for the view window. This
     # attribute can be specified in the following ways:

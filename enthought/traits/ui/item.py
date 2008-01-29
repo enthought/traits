@@ -38,7 +38,7 @@ from view_element \
     import ViewSubElement
 
 from ui_traits \
-    import convert_theme, container_delegate
+    import convert_theme, ContainerDelegate
 
 from editor_factory \
     import EditorFactory
@@ -100,25 +100,25 @@ class Item ( ViewSubElement ):
     help = Str
 
     # The HasTraits object whose trait attribute the item is editing:
-    object = container_delegate
+    object = ContainerDelegate
 
     # Presentation style for the item:
-    style = container_delegate
+    style = ContainerDelegate
 
     # Docking style for the item:
-    dock = container_delegate
+    dock = ContainerDelegate
 
     # Image to display on notebook tabs:
-    image = container_delegate
+    image = ContainerDelegate
     
     # The theme to use for the item itself:
-    item_theme = container_delegate
+    item_theme = ContainerDelegate
     
     # The theme to use for the item's label:
-    label_theme = container_delegate
+    label_theme = ContainerDelegate
     
     # Category of elements dragged from view:
-    export = container_delegate
+    export = ContainerDelegate
 
     # Should a label be displayed for the item?
     show_label = Delegate( 'container', 'show_labels' )

@@ -35,17 +35,25 @@ from enthought.traits.trait_base \
 #  Trait definitions:
 #-------------------------------------------------------------------------------
 
+# Orientation trait:
+Orientation = Trait( 'vertical',
+                     TraitPrefixList( 'vertical', 'horizontal' ) )
+
 # Styles for user interface elements:
-style_trait = Trait( 'simple',
+EditorStyle = style_trait = Trait( 'simple',
                      TraitPrefixList( 'simple', 'custom', 'text', 'readonly' ),
                      cols = 4 )
+
+# Group layout trait:
+Layout = Trait( 'normal',
+                TraitPrefixList( 'normal', 'split', 'tabbed', 'flow', 'fold' ) )
                      
 # Trait for the default object being edited:                     
 object_trait = Expression( 'object' )                     
 
 # The default dock style to use:
-dock_style_trait = Enum( 'fixed', 'horizontal', 'vertical', 'tab',
-                         desc = "the default docking style to use" )
+DockStyle = dock_style_trait = Enum( 'fixed', 'horizontal', 'vertical', 'tab',
+                                     desc = "the default docking style to use" )
                          
 # The default notebook tab image to use:                      
 image_trait = Instance( 'enthought.pyface.image_resource.ImageResource',
@@ -55,10 +63,11 @@ image_trait = Instance( 'enthought.pyface.image_resource.ImageResource',
 export_trait = Str( desc = 'the category of elements dragged out of the view' )
 
 # Delegate a trait value to the object's **container** trait:                  
-container_delegate = Delegate( 'container', listenable=False )
+ContainerDelegate = container_delegate = Delegate( 'container', 
+                                                   listenable = False )
 
 # An identifier for the external help context:
-help_id_trait = Str( desc = "the external help context identifier" )                     
+HelpId = help_id_trait = Str( desc = "the external help context identifier" )                     
 
 # A button to add to a view:
 a_button = Trait( '', Str, Instance( 'enthought.traits.ui.menu.Action' ) )

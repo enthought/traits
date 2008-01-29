@@ -42,7 +42,7 @@ from include \
     import Include
 
 from ui_traits \
-    import SequenceTypes, ATheme, container_delegate
+    import SequenceTypes, ATheme, ContainerDelegate, Orientation, Layout
     
 from dock_window_theme \
     import DockWindowTheme
@@ -52,14 +52,6 @@ import dock_window_theme
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
-
-# Group orientation trait
-Orientation = Trait( 'vertical',
-                     TraitPrefixList( 'vertical', 'horizontal' ) )
-
-# Group layout trait
-Layout = Trait( 'normal',
-                TraitPrefixList( 'normal', 'split', 'tabbed', 'flow', 'fold' ) )
 
 # Delegate trait to the object being "shadowed"
 ShadowDelegate = Delegate( 'shadow' )
@@ -72,7 +64,7 @@ Padding = Range( 0, 15, desc = 'amount of padding to add around each item' )
 #-------------------------------------------------------------------------------
 
 class Group ( ViewSubElement ):
-    """Represents a grouping of items in a user interface view.
+    """ Represents a grouping of items in a user interface view.
     """
     
     #---------------------------------------------------------------------------
@@ -91,16 +83,16 @@ class Group ( ViewSubElement ):
     label = Str
 
     # Default context object for group items.
-    object = container_delegate
+    object = ContainerDelegate
 
     # Default editor style of items in the group.
-    style = container_delegate
+    style = ContainerDelegate
 
     # Default docking style of items in group.
-    dock = container_delegate
+    dock = ContainerDelegate
 
     # Default image to display on notebook tabs.
-    image = container_delegate
+    image = ContainerDelegate
     
     # The theme to use for a DockWindow:
     dock_theme = Instance( DockWindowTheme, allow_none = False )
@@ -109,13 +101,13 @@ class Group ( ViewSubElement ):
     group_theme = ATheme
     
     # The theme to use for item's contained in the group:
-    item_theme = container_delegate
+    item_theme = ContainerDelegate
     
     # The theme to use for the labels of items contained in the group:
-    label_theme = container_delegate
+    label_theme = ContainerDelegate
     
     # Category of elements dragged from view.
-    export = container_delegate
+    export = ContainerDelegate
 
     # Spatial orientation of the group's elements. Can be 'vertical' (default)
     # or 'horizontal'.
