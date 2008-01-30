@@ -169,7 +169,9 @@ class KeyBindings ( HasPrivateTraits ):
         if isinstance( controllers, dict ):
             controllers = controllers.values()
         elif not isinstance( controllers, SequenceTypes ):
-            controllers = ( controllers, )
+            controllers = [ controllers ]
+        else:
+            controllers = list( controllers )
             
         return self._do( toolkit().key_event_to_name( event ), 
                          controllers, args, kw.get( 'recursive', False ) )
