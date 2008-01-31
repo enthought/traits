@@ -456,7 +456,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
         lay = w.layout()
 
         if lay is not None:
-            lay.setAlignment(QtCore.Qt.AlignTop)
+            lay.setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
 
             sty = w.style()
             l = sty.pixelMetric(QtGui.QStyle.PM_LayoutLeftMargin)
