@@ -23,7 +23,9 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-    
+
+import inspect
+
 from types import \
     FunctionType, MethodType
     
@@ -176,7 +178,10 @@ class SingleValueTreeNodeObject ( TreeNodeObject ):
                 break
         else:
             node = OtherNode
-            if hasattr( value, '__class__' ):
+            if inspect.isclass( value ):
+                node = ClassNode
+                
+            elif hasattr( value, '__class__' ):
                 node = ObjectNode
             
         return node( parent   = self, 
@@ -544,7 +549,24 @@ class ObjectNode ( MultiValueTreeNodeObject ):
         items = [ ( k, v ) for k, v in self.value.__dict__.items() ]
         items.sort( lambda l, r: cmp( l[0], r[0] ) )
         return [ self.node_for( '.' + k, v ) for k, v in items ]
+
+#-------------------------------------------------------------------------------
+#  'ClassNode' class:  
+#-------------------------------------------------------------------------------
+        
+class ClassNode ( ObjectNode ):
+    """ A tree node for classes.
+    """
     
+    #---------------------------------------------------------------------------
+    #  Returns the formatted version of the value:  
+    #---------------------------------------------------------------------------
+        
+    def format_value ( self, value ):
+        """ Returns the formatted version of the value.
+        """
+        return value.__name__
+
 #-------------------------------------------------------------------------------
 #  'TraitsNode' class:  
 #-------------------------------------------------------------------------------
@@ -711,7 +733,7 @@ value_tree_nodes = [
         node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                      ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
                      DictNode, SetNode, FunctionNode, MethodNode, ObjectNode, 
-                     TraitsNode, RootNode ] )
+                     TraitsNode, RootNode, ClassNode ] )
 ]
 
 # Editor for a value tree:
@@ -731,7 +753,7 @@ value_tree_editor_with_root = TreeEditor(
             node_for = [ NoneNode, StringNode, BoolNode, IntNode, FloatNode, 
                          ComplexNode, OtherNode, TupleNode, ListNode, ArrayNode,
                          DictNode, SetNode, FunctionNode, MethodNode, 
-                         ObjectNode, TraitsNode, RootNode ]
+                         ObjectNode, TraitsNode, RootNode, ClassNode ]
         ),
         TreeNode( node_for = [ _ValueTree ],
                   auto_open  = True,
