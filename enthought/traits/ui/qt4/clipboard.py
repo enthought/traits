@@ -38,13 +38,19 @@ class PyMimeData(QtCore.QMimeData):
         """
         QtCore.QMimeData.__init__(self)
 
-        if data is not None:
-            # This format (as opposed to using a single sequence) allows the
-            # type to be extracted without unpickling the data itself.
-            self.setData(self.MIME_TYPE, dumps(data.__class__) + dumps(data))
-
         # Keep a local reference to be returned if possible.
         self._local_instance = data
+
+        if data is not None:
+            # We may not be able to pickle the data.
+            try:
+                pdata = dumps(data)
+            except TypeError:
+                return
+
+            # This format (as opposed to using a single sequence) allows the
+            # type to be extracted without unpickling the data itself.
+            self.setData(self.MIME_TYPE, dumps(data.__class__) + pdata)
 
     @classmethod
     def coerce(cls, md):
