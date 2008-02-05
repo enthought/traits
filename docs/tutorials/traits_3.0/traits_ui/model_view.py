@@ -121,7 +121,7 @@ class ChildModelView ( ModelView ):
     
     # Define the 'family' ModelView property that maps the child and its 
     # parents into a list of objects that can be viewed as a table:
-    family = Property
+    family = Property( List )
     
     # Define a view showing the family as a table:
     view = View(
