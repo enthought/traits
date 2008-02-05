@@ -185,13 +185,20 @@ class UI ( HasPrivateTraits ):
     # its value is arrived at too late to be of use in building the UI.
     _scrollable = Bool( False )
 
-    # List of traits that are thrown away when a user interface is disposed.
-    disposable_traits = [
-        'view_elements', 'info', 'parent', 'control', 'handler', 'context',
-        '_context', 'view', 'owner', 'history', 'key_bindings', 'icon',
-        'rebuild', '_revert', '_defined', '_visible', '_enabled', '_checked', 
+    # List of traits that are reset when a user interface is recycled 
+    # (i.e. rebuilt).
+    recyclable_traits = [
+        'parent', 'control', 'owner', 
+        '_context', '_revert', '_defined', '_visible', '_enabled', '_checked', 
         '_search', '_dispatchers', '_editors', '_names', '_active_group', 
-        '_groups', '_undoable', '_rebuild', '__groups'
+        '_undoable', '_rebuild', '__groups'
+    ]
+
+    # List of additional traits that are discarded when a user interface is 
+    # disposed.
+    disposable_traits = [
+        'view_elements', 'info', 'handler', 'context', 'view', 'history', 
+        'key_bindings', 'icon', 'rebuild',
     ]
     
     #---------------------------------------------------------------------------
@@ -247,7 +254,24 @@ class UI ( HasPrivateTraits ):
 
         # Finish disposing of the user interface:
         self.finish()
+        
+    #---------------------------------------------------------------------------
+    #  Recycles the user interface prior to rebuilding it:
+    #---------------------------------------------------------------------------
+    
+    def recycle ( self ):
+        """ Recycles the user interface prior to rebuilding it.
+        """
+        # Reset all user interface editors:
+        self.reset( destroy = False )
 
+        # Destroy the view control:        
+        self.control._object = None
+        toolkit().destroy_control( self.control )
+
+        # Reset all recyclable traits:
+        self.reset_traits( self.recyclable_traits )
+        
     #---------------------------------------------------------------------------
     #  Finishes a user interface:
     #---------------------------------------------------------------------------
@@ -274,10 +298,8 @@ class UI ( HasPrivateTraits ):
         self.context.clear()
         
         # Remove specified symbols from our dictionary to aid in clean-up:
-        dict = self.__dict__
-        for name in self.disposable_traits:
-            if name in dict:
-                del dict[ name ]
+        self.reset_traits( self.recyclable_traits )
+        self.reset_traits( self.disposable_traits )
 
     #---------------------------------------------------------------------------
     #  Resets the contents of the user interface:

@@ -385,6 +385,22 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 }  
 
 /*-----------------------------------------------------------------------------
+|  Raise an attempt to delete a property error:
++----------------------------------------------------------------------------*/
+
+static int
+set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
+    
+    if ( PyString_Check( name ) ) {
+        PyErr_Format( TraitError,
+	        "Cannot delete the '%.400s' property of a '%.50s' object.",
+	        PyString_AS_STRING( name ), obj->ob_type->tp_name );
+        return -1;
+    }
+    return invalid_attribute_error();
+}  
+
+/*-----------------------------------------------------------------------------
 |  Raise an undefined attribute error:
 +----------------------------------------------------------------------------*/
 
@@ -2188,11 +2204,15 @@ setattr_property0 ( trait_object      * traito,
                     has_traits_object * obj, 
                     PyObject          * name,
                     PyObject          * value ) {
-                       
+                 
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+    
     PyObject * result = PyObject_Call( traitd->delegate_prefix, empty_tuple, 
                                        NULL );
     if ( result == NULL ) 
         return -1;
+    
     Py_DECREF( result );
     return 0;
 }                       
@@ -2206,15 +2226,20 @@ setattr_property1 ( trait_object      * traito,
                        
     PyObject * result;
     
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+    
     PyObject * args = PyTuple_New( 1 );
     if ( args == NULL )
         return -1;
+    
     PyTuple_SET_ITEM( args, 0, value );
     Py_INCREF( value );
     result = PyObject_Call( traitd->delegate_prefix, args, NULL );
     Py_DECREF( args );
     if ( result == NULL ) 
         return -1;
+    
     Py_DECREF( result );
     return 0;
 }                       
@@ -2228,9 +2253,13 @@ setattr_property2 ( trait_object      * traito,
                        
     PyObject * result;
     
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+    
     PyObject * args = PyTuple_New( 2 );
     if ( args == NULL )
         return -1;
+    
     PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
     PyTuple_SET_ITEM( args, 1, value );
     Py_INCREF( obj );
@@ -2239,6 +2268,7 @@ setattr_property2 ( trait_object      * traito,
     Py_DECREF( args );
     if ( result == NULL ) 
         return -1;
+    
     Py_DECREF( result );
     return 0;
 }                       
@@ -2252,9 +2282,13 @@ setattr_property3 ( trait_object      * traito,
                        
     PyObject * result;
     
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+    
     PyObject * args = PyTuple_New( 3 );
     if ( args == NULL )
         return -1;
+    
     PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
     PyTuple_SET_ITEM( args, 1, name );
     PyTuple_SET_ITEM( args, 2, value );
@@ -2265,6 +2299,7 @@ setattr_property3 ( trait_object      * traito,
     Py_DECREF( args );
     if ( result == NULL ) 
         return -1;
+    
     Py_DECREF( result );
     return 0;
 }                       

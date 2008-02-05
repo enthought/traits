@@ -711,10 +711,12 @@ class MetaHasTraitsObject ( object ):
                            if handler.has_items:
                                items_trait = _clone_trait( 
                                    handler.items_event(), value.__dict__ )
+                                   
                                if items_trait.instance_handler == \
                                    '_list_changed_handler':
                                    items_trait.instance_handler = \
                                        '_list_items_changed_handler'
+                                       
                                class_traits[ name + '_items' ] = items_trait
                                
                            if handler.is_mapped:
@@ -776,6 +778,7 @@ class MetaHasTraitsObject ( object ):
                                 "for the %s trait '%s'. You must override the "
                                 "the trait definition instead." % 
                                 ( ictrait.type, name ) )
+                                
                         class_traits[ name ] = value = ictrait( value )
                         del class_dict[ name ]
                         override_bases = []
@@ -811,6 +814,7 @@ class MetaHasTraitsObject ( object ):
                             self.migrate_property( name, value, property_info,
                                                    class_dict )
                     base_traits[ name ] = value
+                    
                 elif is_category:
                     raise TraitError, ("Cannot override '%s' trait "
                                        "definition in a category" % name)
@@ -827,6 +831,7 @@ class MetaHasTraitsObject ( object ):
                             value = self.migrate_property( name, value,
                                                      property_info, class_dict )
                     class_traits[ name ] = value
+                    
                 elif is_category:
                     raise TraitError, ("Cannot override '%s' trait "
                                        "definition in a category" % name)
@@ -898,8 +903,10 @@ class MetaHasTraitsObject ( object ):
 
             events = trait.event
             if events is not None:
+                
                 if isinstance(events, basestring):
                     events = [ events ]
+                    
                 for event in events:
                     handlers.append( _get_def( class_name, class_dict, bases,
                                                '_%s_changed' % event ) )
@@ -910,17 +917,21 @@ class MetaHasTraitsObject ( object ):
             default  = _get_def( class_name, class_dict, [],
                                  '_%s_default' % name )
             if (len( handlers ) > 0) or (default is not None):
+                
                 if name not in cloned:
                     cloned.add( name )
                     class_traits[ name ] = trait = _clone_trait( trait )
+                    
                 if len( handlers ) > 0:
                     _add_notifiers( trait._notifiers( 1 ), handlers )
+                    
                 if default is not None:
                     trait.default_value( 8, default )
 
             # Handle the case of properties whose value depends upon the value
             # of other traits:
             if (trait.type == 'property') and (trait.depends_on is not None):
+                
                 cached = trait.cached
                 if cached is True:
                     cached = '_' + name
@@ -1723,7 +1734,7 @@ class HasTraits ( CHasTraits ):
         for name in traits:
             try:
                 delattr( self, name )
-            except AttributeError:
+            except ( AttributeError, TraitError ):
                 unresetable.append( name )
                 
         return unresetable
