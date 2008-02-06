@@ -248,12 +248,14 @@ class UI ( HasPrivateTraits ):
         if result is not None:
             self.result = result
             
-        # Save the user preference information for the user interface:
-        if not abort:
-            toolkit().save_window( self )
-
-        # Finish disposing of the user interface:
-        self.finish()
+        # Only continue if the view has not already been disposed of:
+        if self.control is not None:
+            # Save the user preference information for the user interface:
+            if not abort:
+                toolkit().save_window( self )
+    
+            # Finish disposing of the user interface:
+            self.finish()
         
     #---------------------------------------------------------------------------
     #  Recycles the user interface prior to rebuilding it:
