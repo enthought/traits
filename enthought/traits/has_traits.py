@@ -1602,8 +1602,9 @@ class HasTraits ( CHasTraits ):
                             **dict( values ) )
         else:
             # Otherwise, apply the Traits 3.0 restore logic:
-            self.trait_set( trait_change_notify=trait_change_notify, **state )
             self._init_trait_listeners()
+            self.trait_set( trait_change_notify = trait_change_notify, **state )
+            self.traits_init()
 
     #---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
@@ -1891,7 +1892,9 @@ class HasTraits ( CHasTraits ):
         memo[ 'traits_copy_mode' ] = copy
         new = self.__new__( self.__class__ )
         memo[ id( self ) ] = new
+        new._init_trait_listeners()
         new.copy_traits( self, traits, memo, copy, **metadata )
+        new.traits_init()
         
         return new
 

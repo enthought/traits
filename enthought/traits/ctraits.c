@@ -741,6 +741,12 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
         }
     }
     
+    /* Call the 'traits_init' method to finish up initialization: */
+    value = PyObject_CallMethod( obj, "traits_init", "()" );
+    if ( value == NULL ) 
+        return -1;
+    Py_DECREF( value );
+    
     /* Indicate that the object has finished being initialized: */
     ((has_traits_object *) obj)->flags |= HASTRAITS_INITED;
 
@@ -1151,6 +1157,18 @@ _has_traits_veto_notify ( has_traits_object * obj, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
+|  This method is called at the end of a HasTraits constructor and the
+|  __setstate__ method to perform any final object initialization needed.
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_init ( has_traits_object * obj ) {
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}
+
+/*-----------------------------------------------------------------------------
 |  Returns whether or not the object has finished being initialized:
 +----------------------------------------------------------------------------*/
 
@@ -1250,6 +1268,9 @@ static PyMethodDef has_traits_methods[] = {
 	{ "_trait_veto_notify", (PyCFunction) _has_traits_veto_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_veto_notify(boolean)" ) },
+	{ "traits_init", (PyCFunction) _has_traits_init,
+      METH_NOARGS,
+      PyDoc_STR( "traits_init()" ) },
 	{ "traits_inited", (PyCFunction) _has_traits_inited,
       METH_NOARGS,
       PyDoc_STR( "traits_inited()" ) },
