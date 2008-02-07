@@ -252,7 +252,7 @@ class UI ( HasPrivateTraits ):
         if self.control is not None:
             # Save the user preference information for the user interface:
             if not abort:
-                toolkit().save_window( self )
+                self.save_prefs()
     
             # Finish disposing of the user interface:
             self.finish()
@@ -535,6 +535,10 @@ class UI ( HasPrivateTraits ):
     def save_prefs ( self, prefs = None ):
         """ Saves any user preference information associated with the UI.
         """
+        if prefs is None:
+            toolkit().save_window( self )
+            return
+            
         id = self.id
         if id != '':
             db = self.get_ui_db( mode = 'c' )
