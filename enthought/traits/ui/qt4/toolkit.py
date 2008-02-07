@@ -303,7 +303,7 @@ class GUIToolkit ( Toolkit ):
         if ui.control is not None:
             size   = ui.control.GetSize()
             parent = ui.control._parent
-            ui.dispose( abort = True )
+            ui.recycle()
             ui.info.ui = ui
         ui.rebuild( ui, parent )
         if parent is not None:
