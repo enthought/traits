@@ -20,7 +20,7 @@ from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import Trait, HasTraits, BaseTraitHandler, Range, Str, Any, Instance, \
-           Property, false
+           Property, Bool
 
 from enthought.traits.trait_base \
     import user_name_for, enumerate
@@ -81,12 +81,12 @@ class ToolkitEditorFactory ( EditorFactory ):
     rows = rows_trait 
 
     # Use a notebook for a custom view?
-    use_notebook = false
+    use_notebook = Bool(False)
 
     #-- Notebook Specific Traits -----------------------------------------------
 
     # Are notebook items deletable?
-    deletable = false
+    deletable = Bool(False)
 
     # The DockWindow graphical theme: ignored.
     dock_theme = Any
@@ -169,7 +169,8 @@ class ToolkitEditorFactory ( EditorFactory ):
                              object      = object, 
                              name        = name, 
                              description = description,
-                             kind        = 'readonly_editor' )
+                             kind        = self.style + '_editor',
+                             mutable     = False )
 
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
@@ -186,7 +187,10 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     # The kind of editor to create for each list item
-    kind = Str  
+    kind = Str
+
+    # Is the list of items being edited mutable?
+    mutable = Bool( True )
 
     #---------------------------------------------------------------------------
     #  Class constants:  
@@ -284,7 +288,7 @@ class SimpleEditor ( Editor ):
         # Create all of the list item trait editors:
         trait_handler = self._trait_handler
         resizable     = ((trait_handler.minlen != trait_handler.maxlen) and
-                         (self.kind != 'readonly_editor'))
+                         self.mutable)
         item_trait    = trait_handler.item_trait
         values        = self.value
         index         = 0
