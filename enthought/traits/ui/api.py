@@ -71,7 +71,7 @@ from help_template \
     import help_template
 
 from message \
-    import message, error
+    import message, error, auto_close_message
     
 from theme \
     import Theme, default_theme

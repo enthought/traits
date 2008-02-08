@@ -13,21 +13,29 @@
 #  Date:   09/01/2005
 #
 #------------------------------------------------------------------------------
+
 """ Displays a message to the user as a modal window.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Str, Any
+    import HasPrivateTraits, Str, Any, Float
     
 from view \
     import View
+
+from group \
+    import HGroup
     
-from ui_traits \
-    import buttons_trait
-    
+from item \
+    import Item, spring
+
+from enthought.pyface.timer.api \
+    import do_after
+
 #-------------------------------------------------------------------------------
 #  'Message' class:  
 #-------------------------------------------------------------------------------
@@ -83,4 +91,49 @@ def error ( message = '', title = 'Message', buttons = [ 'OK', 'Cancel' ],
                                           buttons = buttons,
                                           kind    = 'modal' ) )
     return ui.result
+
+
+#-------------------------------------------------------------------------------
+#  'AutoCloseMessage' class:  
+#-------------------------------------------------------------------------------
+
+class AutoCloseMessage ( HasPrivateTraits ):
+
+    # The message to be shown:
+    message = Str( 'Please wait' )
+
+    # The time (in seconds) to show the message:
+    time = Float( 2.0 )
+
+    def show ( self, parent = None, title = '' ):
+        """ Display the wait message for a limited duration.
+        """
+        view = View(
+            HGroup( 
+                spring,
+                Item( 'message', 
+                      show_label = False,
+                      style      = 'readonly' 
+                ),
+                spring
+            ),
+            title = title
+        )
+        
+        do_after( int( 1000.0 * self.time ), 
+                  self.edit_traits( parent = parent, view = view ).dispose )
+
+#-------------------------------------------------------------------------------
+#  Displays a user specified message that closes automatically after a specified
+#  time interval:
+#-------------------------------------------------------------------------------
+
+def auto_close_message ( message = 'Please wait', time   = 2.0, 
+                         title   = 'Please wait', parent = None ):
+    """ Displays a message to the user as a modal window with no buttons. The 
+        window closes automatically after a specified time interval (specified 
+        in seconds).
+    """
+    msg = AutoCloseMessage( message = message, time = time )
+    msg.show( parent = parent, title = title )
     
