@@ -336,6 +336,11 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             editor.control.setObjectName(editor.id)
             self._qt4_adjust_widget_layout(editor.control)
 
+            def on_name_changed():
+                self._qt4_editor_area.setWidgetTitle(editor.control, editor.name)
+
+            editor.on_trait_change(on_name_changed, 'name')
+
             self.editor_opened = editor
 
         self._qt4_monitor(editor.control)
@@ -403,6 +408,11 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
             # Save the dock window.
             view._qt4_dock = dw
+
+            def on_name_changed():
+                view._qt4_dock.setWindowTitle(view.name)
+
+            view.on_trait_change(on_name_changed, 'name')
 
         # Make sure the view control exists.
         if view.control is None:

@@ -178,6 +178,14 @@ class SplitTabWidget(QtGui.QSplitter):
 
             tw.setTabIcon(tidx, icon)
 
+    def setWidgetTitle(self, w, title):
+        """ Set the title for the given widget. """
+
+        tw, idx = self._tab_widget(w)
+
+        if tw is not None:
+            tw.setTabText(idx, title)
+
     def _tab_widget(self, w):
         """ Return the tab widget and index containing the given widget. """
 
