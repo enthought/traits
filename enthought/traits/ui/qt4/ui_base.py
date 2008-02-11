@@ -252,22 +252,32 @@ class BasePanel(object):
 
 
 class _StickyDialog(QtGui.QDialog):
-    """A QDialog that will only close if the traits handler allows it.
-    """
+    """A QDialog that will only close if the traits handler allows it."""
 
-    def __init__(self, ui, parent, flags):
-        """Initialise the dialog.
-        """
+    def __init__(self, ui, parent):
+        """Initialise the dialog."""
+
+        flags = QtCore.Qt.WindowSystemMenuHint
+        if ui.view.resizable:
+            flags |= QtCore.Qt.WindowMinMaxButtonsHint
 
         QtGui.QDialog.__init__(self, parent, flags)
+
+        # Create the main window so we can add toolbars etc.
+        layout = QtGui.QVBoxLayout()
+        self._mw = QtGui.QMainWindow()
+        layout.addWidget(self._mw)
+        self.setLayout(layout)
+
+        if not ui.view.resizable:
+            layout.setSizeConstraint(QtGui.QLayout.SetFixedSize)
 
         self._ui = ui
 
     def closeEvent(self, e):
         """Reimplemented to check when the clicks the window close button.
         (Note that QDialog doesn't get a close event when the dialog is closed
-        in any other way.)
-        """
+        in any other way.)"""
 
         if self._ok_to_close():
             QtGui.QDialog.closeEvent(self, e)
@@ -276,8 +286,7 @@ class _StickyDialog(QtGui.QDialog):
             e.ignore()
 
     def keyPressEvent(self, e):
-        """Reimplemented to ignore the Escape key if appropriate.
-        """
+        """Reimplemented to ignore the Escape key if appropriate."""
 
         if (e.modifiers() != QtCore.Qt.NoModifier or
                 e.key() != QtCore.Qt.Key_Escape or self._ok_to_close()):
@@ -285,41 +294,34 @@ class _StickyDialog(QtGui.QDialog):
 
     def done(self, r):
         """Reimplemented to ignore calls to accept() or reject() if
-        appropriate.
-        """
+        appropriate."""
 
         if self._ok_to_close(bool(r)):
             QtGui.QDialog.done(self, r)
 
     def _ok_to_close(self, is_ok=False):
-        """Let the handler decide if the dialog should be closed.
-        """
+        """Let the handler decide if the dialog should be closed."""
 
         return self._ui.handler.close(self._ui.info, is_ok)
 
 
 class BaseDialog(BasePanel):
-    """Base class for Traits UI dialog boxes.
-    """
+    """Base class for Traits UI dialog boxes."""
 
     # The different dialog styles.
     NONMODAL, MODAL, POPUP = range(3)
 
     def init(self, ui, parent, style):
-        """Initialise the dialog by creating the controls.
-        """
+        """Initialise the dialog by creating the controls."""
+
         raise NotImplementedError
 
     def create_dialog(self, parent, style):
-        """Create the dialog control.
-        """
+        """Create the dialog control."""
+
+        self.control = control = _StickyDialog(self.ui, parent)
+
         view = self.ui.view
-
-        flags = QtCore.Qt.WindowSystemMenuHint
-        if view.resizable:
-            flags |= QtCore.Qt.WindowMinMaxButtonsHint
-
-        self.control = control = _StickyDialog(self.ui, parent, flags)
 
         control.setModal(style == BaseDialog.MODAL)
         control.setWindowTitle(view.title or DefaultTitle)
@@ -331,27 +333,21 @@ class BaseDialog(BasePanel):
 
     def add_contents(self, panel, buttons):
         """Add a panel (either a widget, layout or None) and optional buttons
-           to the dialog.
-        """
-        # Make sure we have a layout.
-        layout = self.control.layout()
-        if layout is None:
-            layout = QtGui.QVBoxLayout(self.control)
+        to the dialog."""
 
-        if not self.ui.view.resizable:
-            layout.setSizeConstraint(QtGui.QLayout.SetFixedSize)
+        # If the panel is a layout then provide a widget for it.
+        if isinstance(panel, QtGui.QLayout):
+            w = QtGui.QWidget()
+            panel.setMargin(0)
+            w.setLayout(panel)
+            panel = w
 
-        # Add the panel.
-        if isinstance(panel, QtGui.QWidget):
-            layout.setAlignment(QtCore.Qt.AlignTop)
-            layout.addWidget(panel)
-        elif isinstance(panel, QtGui.QLayout):
-            panel.setAlignment(QtCore.Qt.AlignTop)
-            layout.addLayout(panel)
+        if panel is not None:
+            self.control._mw.setCentralWidget(panel)
 
         # Add the optional buttons.
         if buttons is not None:
-            layout.addWidget(buttons)
+            self.control.layout().addWidget(buttons)
 
         # Add the menu bar, tool bar and status bar (if any).
         self._add_menubar()
@@ -360,13 +356,14 @@ class BaseDialog(BasePanel):
 
     def close(self, rc):
         """Close the dialog and set the given return code."""
+
         self.ui.dispose(rc)
         self.ui = self.control = None
 
     @staticmethod
     def display_ui(ui, parent, style):
-        """Display the UI.
-        """
+        """Display the UI."""
+
         ui.owner.init(ui, parent, style)
         ui.control = ui.owner.control
         ui.control._parent = parent
@@ -390,8 +387,8 @@ class BaseDialog(BasePanel):
             ui.control.exec_()
 
     def _set_icon(self, icon=None):
-        """Sets the dialog's icon.
-        """
+        """Sets the dialog's icon."""
+
         from enthought.pyface.image_resource import ImageResource
 
         if not isinstance(icon, ImageResource):
@@ -400,8 +397,8 @@ class BaseDialog(BasePanel):
         self.control.setWindowIcon(icon.create_icon())
 
     def _on_error(self, errors):
-        """Handles editing errors.
-        """
+        """Handles editing errors."""
+
         self.ok.setEnabled(errors == 0)
 
     #---------------------------------------------------------------------------

@@ -253,7 +253,7 @@ def _fill_panel(panel, content, ui, item_handler=None):
                 new = QtGui.QWidget()
                 new.setLayout(page)
 
-            new.layout().setAlignment(QtCore.Qt.AlignTop)
+            new.layout().setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
 
             # Add the content.
             if isinstance(panel, QtGui.QTabWidget):
@@ -436,7 +436,11 @@ class _GroupPanel(object):
     def _add_splitter_items(self, content, splitter):
         """Adds a set of groups or items separated by splitter bars.
         """
+        sizes = []
+
         for item in content:
+            sizes.append(item.width)
+
             if isinstance(item, Group):
                 panel = _GroupPanel(item, self.ui, suppress_label=True).control
             else:
@@ -451,7 +455,45 @@ class _GroupPanel(object):
                     w.setLayout(panel)
                     panel = w
 
+                panel.layout().setAlignment(QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
                 splitter.addWidget(panel)
+
+        # Find out how much space is available.
+        sh = splitter.sizeHint()
+        if splitter.orientation() == QtCore.Qt.Vertical:
+            total = sh.width()
+        else:
+            total = sh.height()
+
+        # Allocate requested space.
+        avail = total
+        remain = 0
+
+        for i, sz in enumerate(sizes):
+            if avail <= 0:
+                break
+
+            if sz >= 0:
+                if sz >= 1:
+                    sz = min(sz, avail)
+                else:
+                    sz *= total
+
+                sz = int(sz)
+                sizes[i] = sz
+                avail -= sz
+            else:
+                remain += 1
+
+        # Allocate the remainder to those parts that didn't request a width.
+        if remain > 0:
+            remain = int(avail / remain)
+
+            for i, sz in enumerate(sizes):
+                if sz < 0:
+                    sizes[i] = remain
+
+        splitter.setSizes(sizes)
 
     def _setup_editor(self, group, editor):
         """Setup the editor for a group.
