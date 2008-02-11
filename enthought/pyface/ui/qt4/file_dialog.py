@@ -128,4 +128,13 @@ class FileDialog(MFileDialog, Dialog):
 
         return dlg
 
+    ###########################################################################
+    # Trait handlers.
+    ###########################################################################
+
+    def _wildcard_default(self):
+        """ Return the default wildcard. """
+
+        return self.WILDCARD_ALL
+
 #### EOF ######################################################################

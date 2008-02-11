@@ -120,8 +120,13 @@ class GUI(MGUI, HasTraits):
         QtGui.QApplication.quit()
 
     ###########################################################################
-    # Private 'GUI' interface.
+    # Trait handlers.
     ###########################################################################
+
+    def _state_location_default(self):
+        """ The default state location handler. """
+
+        return self._default_state_location()
 
     def _busy_changed(self, new):
         """ The busy trait change handler. """
