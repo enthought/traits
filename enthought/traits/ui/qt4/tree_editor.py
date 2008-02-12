@@ -434,23 +434,27 @@ class SimpleEditor ( Editor ):
         for cnid in self._nodes_for( nid ):
             self._delete_node( cnid )
 
+        # See if it is a dummy.
         pnid = nid.parent()
+        if pnid is not None and getattr(pnid, '_dummy', None) is nid:
+            pnid.removeChild(nid)
+            return
+
+        expanded, node, object = self._get_node_data(nid)
+        id_object = id(object)
+        object_info = self._map[id_object]
+        for i, info in enumerate(object_info):
+            if nid == info[1]:
+                del object_info[i]
+                break
+
+        if len( object_info ) == 0:
+            self._remove_listeners( node, object )
+            del self._map[ id_object ]
+
         if pnid is None:
             self._tree.takeTopLevelItem(self._tree.indexOfTopLevelItem(nid))
         else:
-            if getattr(pnid, '_dummy', None) is not nid:
-                expanded, node, object = self._get_node_data( nid )
-                id_object   = id( object )
-                object_info = self._map[ id_object ]
-                for i, info in enumerate( object_info ):
-                    if nid == info[1]:
-                        del object_info[i]
-                        break
-
-                if len( object_info ) == 0:
-                    self._remove_listeners( node, object )
-                    del self._map[ id_object ]
-
             pnid.removeChild(nid)
 
         # If the deleted node had an active editor panel showing, remove it:
@@ -553,6 +557,7 @@ class SimpleEditor ( Editor ):
         if node.allows_children( object ):
             node.when_children_replaced( object, self._children_replaced, False)
             node.when_children_changed(  object, self._children_updated,  False)
+
         node.when_label_changed( object, self._label_updated, False )
 
     #---------------------------------------------------------------------------
@@ -565,6 +570,7 @@ class SimpleEditor ( Editor ):
         if node.allows_children( object ):
             node.when_children_replaced( object, self._children_replaced, True )
             node.when_children_changed(  object, self._children_updated,  True )
+
         node.when_label_changed( object, self._label_updated, True )
 
     #---------------------------------------------------------------------------
