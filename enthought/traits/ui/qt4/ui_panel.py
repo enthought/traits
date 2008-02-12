@@ -136,16 +136,24 @@ class _Panel(BasePanel):
         # Create the panel.
         self.control = panel(ui)
 
+        # Suppress the title if we think it should be superceded by the title
+        # of an "outer" widget (eg. a dock widget).  These tests are extremely
+        # flakey.
+        title = view.title
+        if title != "":
+            if isinstance(parent, QtGui.QMainWindow) and not isinstance(parent.parent(), QtGui.QDialog):
+                title = ""
+
         # Panels must be widgets as it is only the TraitsUI PyQt code that can
         # handle them being layouts as well.  Therefore create a widget if the
         # panel is not a widget or if we need a title or buttons.
-        if not isinstance(self.control, QtGui.QWidget) or view.title != "" or has_buttons:
+        if not isinstance(self.control, QtGui.QWidget) or title != "" or has_buttons:
             w = QtGui.QWidget()
             layout = QtGui.QVBoxLayout(w)
             layout.setMargin(0)
 
             # Handle any view title.
-            if view.title != "":
+            if title != "":
                 layout.addWidget(heading_text(None, text=view.title).control)
 
             if isinstance(self.control, QtGui.QWidget):
