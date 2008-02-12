@@ -20,6 +20,10 @@ from PyQt4 import QtCore, QtGui
 # Enthought library imports.
 from enthought.traits.api import Event, implements
 
+# Private Enthought library imports.
+from enthought.util.clean_strings import python_name
+from enthought.traits.ui.qt4.clipboard import PyMimeData
+
 # Local imports.
 from enthought.pyface.i_python_shell import IPythonShell, MPythonShell
 from enthought.pyface.key_pressed_event import KeyPressedEvent
@@ -72,8 +76,8 @@ class PythonShell(MPythonShell, Widget):
     ###########################################################################
 
     def _create_control(self, parent):
-        # FIXME v3: Note that we don't (yet) support DND or the zoom(?) of the
-        # wx version.
+        # FIXME v3: Note that we don't (yet) support the zoom(?) of the wx
+        # version.
         return PyShell(parent)
 
 
@@ -85,6 +89,7 @@ class PyShell(QtGui.QTextEdit):
 
         QtGui.QTextEdit.__init__(self, parent)
 
+        self.setAcceptDrops(True)
         self.setAcceptRichText(False)
         self.setWordWrapMode(QtGui.QTextOption.WrapAnywhere)
 
@@ -158,6 +163,9 @@ class PyShell(QtGui.QTextEdit):
         self._lines.append(command)
         source = '\n'.join(self._lines)
 
+        if not hidden:
+            self.write(source + '\n')
+
         # Save the current std* and point them here.
         old_stdin, old_stdout, old_stderr = sys.stdin, sys.stdout, sys.stderr
         sys.stdin = sys.stdout = sys.stderr = self
@@ -190,6 +198,65 @@ class PyShell(QtGui.QTextEdit):
                 self.write(sys.ps2)
             else:
                 self.write(sys.ps1)
+
+    def dragEnterEvent(self, e):
+        """ Handle a drag entering the widget. """
+
+        if self._dragged_object(e) is not None:
+            # Make sure the users knows we will only do a copy.
+            e.setDropAction(QtCore.Qt.CopyAction)
+            e.accept()
+
+    def dragMoveEvent(self, e):
+        """ Handle a drag moving across the widget. """
+
+        if self._dragged_object(e) is not None:
+            # Make sure the users knows we will only do a copy.
+            e.setDropAction(QtCore.Qt.CopyAction)
+            e.accept()
+
+    def dropEvent(self, e):
+        """ Handle a drop on the widget. """
+
+        obj = self._dragged_object(e)
+        if obj is None:
+            return
+
+        # If we can't create a valid Python identifier for the name of an
+        # object we use this instead.
+        name = 'dragged'
+
+        if hasattr(obj, 'name') \
+           and isinstance(obj.name, basestring) and len(obj.name) > 0:
+            py_name = python_name(obj.name)
+
+            # Make sure that the name is actually a valid Python identifier.
+            try:
+                if eval(py_name, {py_name : True}):
+                    name = py_name
+            except:
+                pass
+
+        self.interpreter.locals[name] = obj
+        self.run(name)
+        self.setFocus()
+
+        e.setDropAction(QtCore.Qt.CopyAction)
+        e.accept()
+
+    @staticmethod
+    def _dragged_object(e):
+        """Return the Python object being dragged or None if there isn't one.
+        """
+
+        md = e.mimeData()
+
+        if isinstance(md, PyMimeData):
+            obj = md.instance()
+        else:
+            obj = None
+
+        return obj
 
     def keyPressEvent(self, e):
         """ Handle user input a key at a time. """
