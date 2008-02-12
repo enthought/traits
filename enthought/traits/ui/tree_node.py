@@ -15,7 +15,7 @@
 #------------------------------------------------------------------------------
 
 """ Defines the tree node descriptor used by the tree editor and tree editor 
-factory classes.
+    factory classes.
 """
 
 #-------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ from inspect \
 
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Str, List, Callable, Instance, Any, \
-           true, false
+           Bool, Property, Interface, cached_property
            
 from enthought.traits.trait_base \
     import SequenceTypes, get_resource_path
@@ -60,28 +60,28 @@ class TreeNode ( HasPrivateTraits ):
     name = Str  
     
     # Can the object's children be renamed?
-    rename = true
+    rename = Bool( True )
     
     # Can the object be renamed?
-    rename_me = true
+    rename_me = Bool( True )
     
     # Can the object's children be copied?
-    copy = true
+    copy = Bool( True )
     
     # Can the object's children be deleted?
-    delete = true
+    delete = Bool( True )
     
     # Can the object be deleted (if its parent allows it)?
-    delete_me = true
+    delete_me = Bool( True )
     
     # Can children be inserted (vs. appended)?
-    insert = true
+    insert = Bool( True )
     
     # Should tree nodes be automatically opened (expanded)?
-    auto_open = false
+    auto_open = Bool( False )
     
     # Automatically close sibling tree nodes?
-    auto_close = false
+    auto_close = Bool( False )
     
     # List of object classes than can be added or copied
     add = List( Any )
@@ -89,8 +89,14 @@ class TreeNode ( HasPrivateTraits ):
     # List of object classes that can be moved
     move = List( Any )
     
-    # List of object classes that the node applies to
+    # List of object classes and/or interfaces that the node applies to
     node_for = List( Any )
+    
+    # Tuple of object classes that the node applies to
+    node_for_class = Property( depends_on = 'node_for' )
+    
+    # List of object interfaces that the node applies to
+    node_for_interface = Property( depends_on = 'node_for' )
     
     # Function for formatting the label
     formatter = Callable
@@ -137,8 +143,20 @@ class TreeNode ( HasPrivateTraits ):
         super( TreeNode, self ).__init__( **traits )
         if self.icon_path == '':
             self.icon_path = get_resource_path()
+            
+    #-- Property Implementations -----------------------------------------------
     
-#---- Overridable methods: -----------------------------------------------------
+    @cached_property
+    def _get_node_for_class ( self ):
+        return tuple( [ klass for klass in self.node_for
+                        if not issubclass( klass, Interface ) ] )
+    
+    @cached_property
+    def _get_node_for_interface ( self ):
+        return [ klass for klass in self.node_for
+                 if issubclass( klass, Interface ) ]
+    
+    #-- Overridable Methods: ---------------------------------------------------
 
     #---------------------------------------------------------------------------
     #  Returns whether chidren of this object are allowed or not:  
@@ -413,7 +431,8 @@ class TreeNode ( HasPrivateTraits ):
     def is_node_for ( self, object ):
         """ Returns whether this is the node that handles a specified object.
         """
-        return isinstance( object, tuple( self.node_for ) )
+        return (isinstance( object, self.node_for_class ) or
+                object.has_traits_interface( *self.node_for_interface ))
  
     #---------------------------------------------------------------------------
     #  Returns whether a given 'add_object' can be added to an object:
@@ -838,6 +857,7 @@ class ObjectTreeNode ( TreeNode ):
         """
         if isinstance( object, TreeNodeObject ):
             return object.tno_is_node_for( self )
+            
         return False
  
     #---------------------------------------------------------------------------
@@ -1183,7 +1203,8 @@ class TreeNodeObject ( HasPrivateTraits ):
         """ Returns whether this is the node that should handle a 
             specified object.
         """
-        return isinstance( self, tuple( node.node_for ) )
+        return (isinstance( self, node.node_for_class ) or
+                self.has_traits_interface( *node.node_for_interface ))
  
     #---------------------------------------------------------------------------
     #  Returns whether a given 'add_object' can be added to an object:
