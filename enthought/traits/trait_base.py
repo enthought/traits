@@ -351,7 +351,7 @@ def user_name_for ( name ):
         last_lower = (c in lowercase)
         result    += c
 
-    return capwords( result )
+    return result.capitalize()
 
 #-------------------------------------------------------------------------------
 #  Gets the path to the traits home directory:

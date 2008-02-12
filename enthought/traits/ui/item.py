@@ -323,7 +323,7 @@ class Item ( ViewSubElement ):
         if tlabel is None:
             return label
             
-        if isinstance(tlabel, basestring):
+        if isinstance( tlabel, basestring ):
             if tlabel[0:3] == '...':
                 return label + tlabel[3:]
             if tlabel[-3:] == '...':
