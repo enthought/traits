@@ -219,7 +219,7 @@ class Group ( ViewSubElement ):
             elif type( value ) in SequenceTypes:
                 # Map (...) or [...] to a Group():
                 content.append( Group( *value ) )
-            elif isinstance(value, basestring):
+            elif isinstance( value, basestring ):
                 if value[0:1] in '-|':
                     # We've already parsed Group trait options above:
                     pass
