@@ -131,6 +131,7 @@ class SimpleFontEditor ( SimpleEditor ):
 
         if ok:
             self.value = self.factory.from_pyqt_font(fnt)
+            self.update_editor()
 
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:

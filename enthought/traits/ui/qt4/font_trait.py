@@ -24,7 +24,7 @@ from enthought.traits.ui.api \
     import FontEditor
 
 #-------------------------------------------------------------------------------
-#  Convert a string into a valid 'wxFont' object (if possible):
+#  Convert a string into a valid QFont object (if possible):
 #-------------------------------------------------------------------------------
 
 # Mapping of strings to valid QFont style hints.
@@ -53,7 +53,7 @@ font_weights = {
 font_noise = [ 'pt', 'point', 'family' ]
 
 #-------------------------------------------------------------------------------
-#  Converts a wx.Font into a string description of itself:  
+#  Converts a QFont into a string description of itself:  
 #-------------------------------------------------------------------------------
 
 def font_to_str ( font ):
