@@ -1255,9 +1255,6 @@ Class = Trait( ClassType )
 # Module values only (i.e., types.ModuleType); default value is None.
 Module = Trait( ModuleType )
 
-# Type values only (i.e., types.TypeType); default value is None.
-Type = Trait( TypeType )
-
 # Allows only class values of the same class (or a subclass) as the object
 # containing the trait attribute; default value is None.
 This = Trait( ThisClass )

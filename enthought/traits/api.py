@@ -35,7 +35,7 @@ from trait_db \
 
 from traits \
     import Event, Constant, CTrait, Trait, Delegate, Property, Button, \
-           ToolbarButton, Function, Method, Class, Module, Type, This, self, \
+           ToolbarButton, Function, Method, Class, Module, This, self, \
            Either, Python, Disallow, ReadOnly, missing, TraitFactory, \
            Callable, Default, Color, RGBColor, Font, TraitFactory, UIDebugger
 
@@ -43,8 +43,8 @@ from trait_types \
     import Any, Int, Long, Float, Complex, Str, Unicode, Bool, CInt, CLong, \
            CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, Code, HTML, \
            Password, Expression, PythonValue, File, Directory, Range, Enum, \
-           Tuple, List, CList, Dict, Instance, AdaptedTo, AdaptsTo, WeakRef, \
-           false, true, undefined
+           Tuple, List, CList, Dict, Instance, AdaptedTo, AdaptsTo, Type, \
+           WeakRef, false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \

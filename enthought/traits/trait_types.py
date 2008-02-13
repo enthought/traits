@@ -1722,8 +1722,59 @@ AdaptMap = {
    'yes':     1,
    'default': 2
 }
+
+class BaseClass ( TraitType ):
+    """ Base class for types which have an associated class which can be
+        determined dynamically by specifying a string name for the class (e.g.
+        'package1.package2.module.class'. 
+        
+        Any subclass must define instances with 'klass' and 'module' attributes
+        that contain the string name of the class (or actual class object) and
+        the module name that contained the original trait definition (used for
+        resolving local class names (e.g. 'LocalClass')).
+        
+        This is an abstract class that only provides helper methods used to
+        resolve the class name into an actual class object.
+    """
+
+    def resolve_class ( self, object, name, value ):
+        klass = self.validate_class( self.find_class( self.klass ) )
+        if klass is None:
+            self.validate_failed( object, name, value )
+        self.klass = klass
+     
+    def validate_class ( self, klass ):
+        return klass
+
+    def find_class ( self, klass ):
+        module = self.module
+        col    = klass.rfind( '.' )
+        if col >= 0:
+            module = klass[ : col ]
+            klass = klass[ col + 1: ]
+            
+        theClass = getattr( sys.modules.get( module ), klass, None )
+        if (theClass is None) and (col >= 0):
+            try:
+                mod = __import__( module )
+                for component in module.split( '.' )[1:]:
+                    mod = getattr( mod, component )
+                theClass = getattr( mod, klass, None )
+            except:
+                pass
                 
-class BaseInstance ( TraitType ):
+        return theClass
+
+    def validate_failed ( self, object, name, value ):
+        kind = type( value )
+        if kind is InstanceType:
+            msg = 'class %s' % value.__class__.__name__
+        else:
+            msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
+            
+        self.error( object, name, msg )
+                
+class BaseInstance ( BaseClass ):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
     """
@@ -1864,7 +1915,7 @@ class BaseInstance ( TraitType ):
         """ Returns a description of the trait.
         """
         klass = self.klass
-        if type( klass ) is not str:
+        if not isinstance( klass, basestring ):
             klass = klass.__name__
             
         if self.adapt == 0:
@@ -1903,9 +1954,6 @@ class BaseInstance ( TraitType ):
                                kind  = self.kind  or 'live' )
         
     #-- Private Methods --------------------------------------------------------
-     
-    def validate_class ( self, klass ):
-        return klass
 
     def create_default_value ( self, *args, **kw ):
         klass = args[0]
@@ -1929,10 +1977,7 @@ class BaseInstance ( TraitType ):
         pass
 
     def resolve_class ( self, object, name, value ):
-        klass = self.validate_class( self.find_class( self.klass ) )
-        if klass is None:
-            self.validate_failed( object, name, value )
-        self.klass = klass
+        super( BaseInstance, self ).resolve_class( object, name, value )
 
         # fixme: The following is quite ugly, because it wants to try and fix
         # the trait referencing this handler to use the 'fast path' now that the
@@ -1952,34 +1997,6 @@ class BaseInstance ( TraitType ):
             
         if self.fast_validate is not None:
             trait.set_validate( self.fast_validate )
-
-    def find_class ( self, klass ):
-        module = self.module
-        col    = klass.rfind( '.' )
-        if col >= 0:
-            module = klass[ : col ]
-            klass = klass[ col + 1: ]
-            
-        theClass = getattr( sys.modules.get( module ), klass, None )
-        if (theClass is None) and (col >= 0):
-            try:
-                mod = __import__( module )
-                for component in module.split( '.' )[1:]:
-                    mod = getattr( mod, component )
-                theClass = getattr( mod, klass, None )
-            except:
-                pass
-                
-        return theClass
-
-    def validate_failed ( self, object, name, value ):
-        kind = type( value )
-        if kind is InstanceType:
-            msg = 'class %s' % value.__class__.__name__
-        else:
-            msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
-            
-        self.error( object, name, msg )
                 
 class Instance ( BaseInstance ):
     """ Defines a trait whose value must be an instance of a specified class,
@@ -2030,7 +2047,113 @@ class AdaptsTo ( AdaptedTo ):
     def modify_ctrait ( self, ctrait ):  
         # Tell the C code that 'setattr' should store the original, unadapted   
         # value passed to it:  
-        return ctrait.setattr_original_value( True )  
+        return ctrait.setattr_original_value( True )
+        
+#-------------------------------------------------------------------------------
+#  'Type' trait:
+#-------------------------------------------------------------------------------
+
+class Type ( BaseClass ):
+    """ Defines a trait whose value must be a subclass of a specified class.
+    """
+
+    def __init__ ( self, value = None, klass = None, allow_none = True, 
+                         **metadata ):
+        """ Returns an Type trait.
+    
+        Parameters
+        ----------
+        value : class or None
+        klass : class or None
+        allow_none : boolean
+            Indicates whether None is allowed as an assignable value. Even if
+            **False**, the default *value* may be **None**.
+    
+        Default Value
+        -------------
+        **None** if *klass* is an instance or if it is a class and *args* and 
+        *kw* are not specified. Otherwise, the default value is the instance 
+        obtained by calling ``klass(*args, **kw)``. Note that the constructor 
+        call is performed each time a default value is assigned, so each 
+        default value assigned is a unique instance.
+        """
+        if value is None:
+            if klass is None:
+                klass = object
+        elif klass is None:
+            klass = value
+            
+        if isinstance( klass, basestring ):
+            self.validate = self.resolve
+        elif not isinstance( klass, ClassTypes ):
+            raise TraitError( "A Type trait must specify a class." )
+            
+        self.klass       = klass
+        self._allow_none = allow_none
+        self.module      = get_module_name()
+        
+        super( Type, self ).__init__( value, **metadata )
+        
+
+    def validate ( self, object, name, value ):
+        """ Validates that the value is a valid object instance.
+        """
+        try:
+            if issubclass( value, self.klass ):
+                return value
+        except:
+            if (value is None) and (self._allow_none):
+                return value
+        
+        self.error( object, name, value )
+        
+    def resolve ( self, object, name, value ):
+        """ Resolves a class originally specified as a string into an actual
+            class, then resets the trait so that future calls will be handled by 
+            the normal validate method.
+        """
+        if isinstance( self.klass, basestring ):
+            self.resolve_class( object, name, value )
+            del self.validate
+        
+        return self.validate( object, name, value )
+
+    def info ( self ):
+        """ Returns a description of the trait.
+        """
+        klass = self.klass
+        if not isinstance( klass, basestring ):
+            klass = klass.__name__
+            
+        result = 'a subclass of ' + klass
+                      
+        if self._allow_none:
+            return result + ' or None'
+            
+        return result
+        
+    def get_default_value ( self ):
+        """ Returns a tuple of the form: ( default_value_type, default_value )
+            which describes the default value for this trait.
+        """
+        if not isinstance( self.default_value, basestring ):
+            return super( Type, self ).get_default_value()
+            
+        return ( 7, ( self.resolve_default_value, (), None ) )
+        
+    def resolve_default_value ( self ):
+        """ Resolves a class name into a class so that it can be used to
+            return the class as the default value of the trait.
+        """
+        if isinstance( self.klass, basestring ):
+            try:
+                self.resolve_class( None, None, None )
+                del self.validate
+            except:
+                raise TraitError( 'Could not resolve %s into a valid class' % 
+                                  self.klass )
+                
+        return self.klass
     
 if python_version >= 2.5:
     
@@ -2142,33 +2265,6 @@ class HandleWeakRef ( object ):
         object = self.object()
         if object is not None:
             object.trait_property_changed( self.name, Undefined, None )
-
-#-------------------------------------------------------------------------------
-#  'RGBColor' trait:
-#-------------------------------------------------------------------------------
-
-class RGBColor ( TraitType ):
-    """ Defines a trait whose value represents an abstract color as a tuple of
-        the form: ( red, green, blue ), where *red*, *green* and *blue* are
-        floats in the range from 0.0 to 1.0.
-
-        Description
-        -----------
-        For wxPython, the trait accepts any of the following values:
-    
-        * A tuple of the form (*r*, *g*, *b*), in which *r*, *g*, and *b* 
-          represent red, green, and blue values, respectively, and are floats 
-          in the range from 0.0 to 1.0.
-        * An integer whose hexadecimal form is 0x*RRGGBB*, where *RR* is the red
-          value, *GG* is the green value, and *BB* is the blue value.
-        * A string specifying a color name (e.g. "red"). Any of the standard
-          SVG color names can be used. The names are not case sensitive.
-    
-        Default Value
-        -------------
-        (0.0, 0.0, 0.0) (that is, white).
-    """
-    # fixme: Finish implementing this...
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:
