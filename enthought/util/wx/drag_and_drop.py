@@ -227,15 +227,16 @@ class PythonDropTarget(wx.PyDropTarget):
         # First, if we have a source in the clipboard and the source
         # doesn't allow moves then change the default to copy
         data = clipboard.data
-        if clipboard.drop_source is not None and \
-           not clipboard.drop_source.allow_move:
-            default_drag_result = wx.DragCopy
-        else:
-            data = None
-            if (clipboard.drop_source is None) and \
-                (not hasattr(self.handler, 'wx_drag_any')):
+        if clipboard.drop_source is None:
+            
+            if not hasattr(self.handler, 'wx_drag_any'):
                 # this is probably a file being dragged in, so just return
                 return default_drag_result
+                
+            data = None
+            
+        elif not clipboard.drop_source.allow_move:
+            default_drag_result = wx.DragCopy
 
         # The value returned here tells the source what kind of visual feedback
         # to give.  For example, if wxDragCopy is returned then only the copy
