@@ -2226,11 +2226,12 @@ setattr_property0 ( trait_object      * traito,
                     PyObject          * name,
                     PyObject          * value ) {
                  
+    PyObject * result;
+    
     if ( value == NULL )
         return set_delete_property_error( obj, name );
     
-    PyObject * result = PyObject_Call( traitd->delegate_prefix, empty_tuple, 
-                                       NULL );
+    result = PyObject_Call( traitd->delegate_prefix, empty_tuple, NULL );
     if ( result == NULL ) 
         return -1;
     
@@ -2246,11 +2247,12 @@ setattr_property1 ( trait_object      * traito,
                     PyObject          * value ) {
                        
     PyObject * result;
+    PyObject * args;
     
     if ( value == NULL )
         return set_delete_property_error( obj, name );
     
-    PyObject * args = PyTuple_New( 1 );
+    args = PyTuple_New( 1 );
     if ( args == NULL )
         return -1;
     
@@ -2273,11 +2275,12 @@ setattr_property2 ( trait_object      * traito,
                     PyObject          * value ) {
                        
     PyObject * result;
+    PyObject * args;
     
     if ( value == NULL )
         return set_delete_property_error( obj, name );
     
-    PyObject * args = PyTuple_New( 2 );
+    args = PyTuple_New( 2 );
     if ( args == NULL )
         return -1;
     
@@ -2302,11 +2305,12 @@ setattr_property3 ( trait_object      * traito,
                     PyObject          * value ) {
                        
     PyObject * result;
+    PyObject * args;
     
     if ( value == NULL )
         return set_delete_property_error( obj, name );
     
-    PyObject * args = PyTuple_New( 3 );
+    args = PyTuple_New( 3 );
     if ( args == NULL )
         return -1;
     
