@@ -10,7 +10,7 @@
 from PyQt4 import QtCore, QtGui
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Enum, Instance, Tuple
+from enthought.traits.api import Bool, Enum, Instance, Str, Tuple
 
 # Local imports.
 from enthought.pyface.image_cache import ImageCache
@@ -24,6 +24,9 @@ class ToolBarManager(ActionManager):
 
     # The size of tool images (width, height).
     image_size = Tuple((16, 16))
+
+    # The toolbar name (used to distinguish multiple toolbars).
+    name = Str('ToolBar')
 
     # The orientation of the toolbar.
     orientation = Enum('horizontal', 'vertical')
