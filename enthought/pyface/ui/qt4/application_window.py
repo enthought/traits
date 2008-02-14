@@ -16,7 +16,7 @@ from PyQt4 import QtGui
 # Enthought library imports.
 from enthought.pyface.action.api import MenuBarManager, StatusBarManager
 from enthought.pyface.action.api import ToolBarManager
-from enthought.traits.api import implements, Instance, Unicode
+from enthought.traits.api import implements, Instance, List, Unicode
 
 # Local imports.
 from enthought.pyface.i_application_window import IApplicationWindow, MApplicationWindow
@@ -40,6 +40,8 @@ class ApplicationWindow(MApplicationWindow, Window):
     status_bar_manager = Instance(StatusBarManager)
 
     tool_bar_manager = Instance(ToolBarManager)
+
+    tool_bar_managers = List(ToolBarManager)
 
     #### 'IWindow' interface ##################################################
 
@@ -70,15 +72,17 @@ class ApplicationWindow(MApplicationWindow, Window):
             self.control.setStatusBar(status_bar)
 
     def _create_tool_bar(self, parent):
-        if self.tool_bar_manager is not None:
-            tool_bar = self.tool_bar_manager.create_tool_bar(parent)
-            self.control.addToolBar(tool_bar)
+        tool_bar_managers = self._get_tool_bar_managers()
+        if len(tool_bar_managers) > 0:
+            for tool_bar_manager in tool_bar_managers:
+                tool_bar = tool_bar_manager.create_tool_bar(parent)
+                self.control.addToolBar(tool_bar)
 
-            # Make sure that the tool bar has a name so that its state can be
-            # saved.
-            if tool_bar.objectName().isEmpty():
-                tool_bar.setObjectName('__toolbar__')
-
+                # Make sure that the tool bar has a name so that its state can
+                # be saved.
+                if tool_bar.objectName().isEmpty():
+                    tool_bar.setObjectName(tool_bar_manager.name)
+                    
     def _set_window_icon(self):
         if self.icon is None:
             icon = ImageResource('application.png')
@@ -122,5 +126,21 @@ class ApplicationWindow(MApplicationWindow, Window):
         control.setAnimated(False)
 
         return control
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _get_tool_bar_managers(self):
+        """ Return all tool bar managers specified for the window. """
+
+        # fixme: V3 remove the old-style single toolbar option!
+        if self.tool_bar_manager is not None:
+            tool_bar_managers = [self.tool_bar_manager]
+
+        else:
+            tool_bar_managers = self.tool_bar_managers
+
+        return tool_bar_managers
 
 #### EOF ######################################################################
