@@ -23,7 +23,8 @@ from enthought.traits.api import Instance, on_trait_change
 from editor import Editor
 from split_tab_widget import SplitTabWidget
 from enthought.pyface.message_dialog import error
-from enthought.pyface.workbench.i_workbench_window_layout import MWorkbenchWindowLayout
+from enthought.pyface.workbench.i_workbench_window_layout import \
+     MWorkbenchWindowLayout
 
 
 # Logging.
@@ -133,7 +134,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             if self.contains_view(v):
                 self._qt4_delete_view_dock_widget(v)
 
-    def create_initial_layout(self):
+    def create_initial_layout(self, parent):
         return self._qt4_editor_area
 
     def contains_view(self, view):
