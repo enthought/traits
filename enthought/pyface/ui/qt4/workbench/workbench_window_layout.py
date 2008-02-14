@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the GPL v2
@@ -24,7 +24,7 @@ from editor import Editor
 from split_tab_widget import SplitTabWidget
 from enthought.pyface.message_dialog import error
 from enthought.pyface.workbench.i_workbench_window_layout import \
-     MWorkbenchWindowLayout
+        MWorkbenchWindowLayout
 
 
 # Logging.
@@ -126,8 +126,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
         return view
 
     def close(self):
-        self._qt4_editor_area.setParent(None)
-        self._qt4_editor_area = SplitTabWidget()
+        self._qt4_editor_area.clear()
 
         # Delete all dock widgets.
         for v in self.window.views:
@@ -135,6 +134,18 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
                 self._qt4_delete_view_dock_widget(v)
 
     def create_initial_layout(self, parent):
+        self._qt4_editor_area = SplitTabWidget(parent)
+
+        QtCore.QObject.connect(self._qt4_editor_area,
+                QtCore.SIGNAL('hasFocus'), self._qt4_editor_focus)
+
+        # We are interested in focus changes but we get them from the editor
+        # area rather than qApp to allow the editor area to restrict them when
+        # needed.
+        QtCore.QObject.connect(self._qt4_editor_area,
+                QtCore.SIGNAL('focusChanged(QWidget *,QWidget *)'),
+                self._qt4_view_focus_changed)
+
         return self._qt4_editor_area
 
     def contains_view(self, view):
@@ -268,20 +279,6 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
     ###########################################################################
     # Private interface.
     ###########################################################################
-
-    def __qt4_editor_area_default(self):
-        """ The trait initialiser. """
-        w = SplitTabWidget()
-
-        w.connect(w, QtCore.SIGNAL('hasFocus'), self._qt4_editor_focus)
-
-        # We are interested in focus changes but we get them from the editor
-        # area rather than qApp to allow the editor area to restrict them when
-        # needed.
-        w.connect(w, QtCore.SIGNAL('focusChanged(QWidget *,QWidget *)'),
-            self._qt4_view_focus_changed)
-
-        return w
 
     def _qt4_editor_focus(self, new):
         """ Handle an editor getting the focus. """
@@ -439,12 +436,14 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
         dw = view._qt4_dock
 
-        # Remove the view first.
-        dw.setWidget(None)
-        view.destroy_control()
+        # Disassociate the view from the dock.
+        if view.control is not None:
+            view.control.setParent(None)
 
-        dw.setParent(None)
         delattr(view, '_qt4_dock')
+
+        # Delete the dock (and the view container).
+        dw.setParent(None)
 
     def _qt4_handle_dock_visibility(self, checked):
         """ Handle the visibility of a dock window changing. """

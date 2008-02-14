@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the GPL v2
@@ -30,6 +30,18 @@ class SplitTabWidget(QtGui.QSplitter):
 
         QtGui.QSplitter.__init__(self, *args)
 
+        self.clear()
+
+        QtCore.QObject.connect(QtGui.qApp,
+                QtCore.SIGNAL('focusChanged(QWidget *,QWidget *)'),
+                self._focus_changed)
+
+    def clear(self):
+        """ Restore the widget to its pristine state. """
+
+        for i in range(self.count()):
+            self.widget(i).setParent(None)
+
         self._repeat_focus_changes = True
         self._rband = None
         self._selected_tab_widget = None
@@ -37,10 +49,6 @@ class SplitTabWidget(QtGui.QSplitter):
 
         self._current_tab_w = None
         self._current_tab_idx = -1
-
-        self.connect(QtGui.qApp,
-                QtCore.SIGNAL('focusChanged(QWidget *,QWidget *)'),
-                self._focus_changed)
 
     def saveState(self):
         """ Returns a Python object containing the saved state of the widget.
