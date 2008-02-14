@@ -291,7 +291,7 @@ class GenericTableFilterRule ( HasPrivateTraits ):
         """ Handles a change to the value of the **name** trait.
         """
         filter = self.filter
-        if filter is not None:
+        if (filter is not None) and (filter._object is not None):
             self.value        = filter._trait_values.get( name )
             self.value_editor = filter._object.base_trait( name ).get_editor()
 
