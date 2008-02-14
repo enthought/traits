@@ -118,6 +118,9 @@ class InstanceChoice ( InstanceChoiceItem ):
 
     # Object associated with the item
     object = Any
+    
+    # The name of the object trait containing its user interface name:
+    name_trait = Str( 'name' )
 
     #---------------------------------------------------------------------------
     #  Returns the name of the item:
@@ -129,8 +132,8 @@ class InstanceChoice ( InstanceChoiceItem ):
         if self.name != '':
             return self.name
 
-        name = getattr( self.object, 'name', None )
-        if isinstance(name, basestring):
+        name = getattr( self.object, self.name_trait, None )
+        if isinstance( name, basestring ):
             return name
 
         return user_name_for( self.object.__class__.__name__ )
