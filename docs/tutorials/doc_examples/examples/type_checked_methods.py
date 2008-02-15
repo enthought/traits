@@ -1,6 +1,10 @@
 # type_checked_methods.py --- Example of traits-based 
 #                             method type checking
+
+#--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, method, Tuple
+
+#--[Code]-----------------------------------------------------------------------
 
 Color = Tuple(int, int, int, int)
 

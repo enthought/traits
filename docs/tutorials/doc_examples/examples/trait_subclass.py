@@ -1,10 +1,10 @@
 # trait_subclass.py -- Example of subclassing a trait class
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Int
+from enthought.traits.api import BaseInt
 
 #--[Code]-----------------------------------------------------------------------
-class OddInt ( Int ):
+class OddInt ( BaseInt ):
 
     # Define the default value
     default_value = 1

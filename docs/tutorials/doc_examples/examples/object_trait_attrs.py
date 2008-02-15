@@ -1,6 +1,9 @@
-# object_trait_attrs.py --- Example of per-object 
-#                           trait attributes
+# object_trait_attrs.py --- Example of per-object trait attributes
+
+#--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Range
+
+#--[Code]-----------------------------------------------------------------------
 
 class GUISlider (HasTraits):
 

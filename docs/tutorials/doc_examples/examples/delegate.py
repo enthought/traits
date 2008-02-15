@@ -1,7 +1,7 @@
 # delegate.py --- Example of trait delegation
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Delegate, HasTraits, Instance, Str, Trait
+from enthought.traits.api import Delegate, HasTraits, Instance, Str
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):

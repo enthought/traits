@@ -1,6 +1,8 @@
+# compound.py -- Example of multiple criteria in a trait definition
+
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api import Range, Trait
+from enthought.traits.api import HasTraits, Range, Trait
 
 #--[Code]-----------------------------------------------------------------------
 
