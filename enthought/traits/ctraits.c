@@ -29,7 +29,8 @@ static PyObject * listener_traits;     /* == "__listener_traits__" */
 static PyObject * editor_property;     /* == "editor" */
 static PyObject * class_prefix;        /* == "__prefix__" */
 static PyObject * empty_tuple;         /* == () */
-static PyObject * undefined;           /* Global 'undefined' value */
+static PyObject * Undefined;           /* Global 'Undefined' value */
+static PyObject * Uninitialized;       /* Global 'Uninitialized' value */
 static PyObject * TraitError;          /* TraitError exception */
 static PyObject * DelegationError;     /* DelegationError exception */
 static PyObject * TraitListObject;     /* TraitListObject class */
@@ -172,7 +173,7 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 +----------------------------------------------------------------------------*/
 
 /* The trait is a Property: */
-#define TRAIT_PROPERTY        0x00000001
+#define TRAIT_PROPERTY 0x00000001
 
 /* Should the delegate be modified (or the original object)? */ 
 #define TRAIT_MODIFY_DELEGATE 0x00000002
@@ -1442,8 +1443,12 @@ getattr_trait ( trait_object      * trait,
                 has_traits_object * obj, 
                 PyObject          * name ) {
  
+    int rc;
+    PyListObject * tnotifiers;
+    PyListObject * onotifiers;
     PyObject * result;
     PyObject * dict = obj->obj_dict;
+    
 	if ( dict == NULL ) {
 		dict = PyDict_New();
 		if ( dict == NULL )
@@ -1453,13 +1458,28 @@ getattr_trait ( trait_object      * trait,
     
 	if ( PyString_Check( name ) ) {
         if ( (result = default_value_for( trait, obj, name )) != NULL ) {
-            if ( PyDict_SetItem( dict, name, result ) >= 0 )
-                return result;
+            if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
+                
+                rc = 0;
+                if ( trait->post_setattr != NULL )
+                    rc = trait->post_setattr( trait, obj, name, result );
+                
+                if ( (rc == 0) && (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+                    tnotifiers = trait->notifiers;
+                    onotifiers = obj->notifiers;
+                    if ( has_notifiers( tnotifiers, onotifiers ) )
+                        rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
+                                             Uninitialized, result );
+                }
+                if ( rc == 0 )
+                    return result;
+            }
             Py_DECREF( result );
         }
         
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
     		PyErr_SetObject( PyExc_AttributeError, name );
+        
         return NULL;
     }
         
@@ -1475,14 +1495,29 @@ getattr_trait ( trait_object      * trait,
     
     if ( (result = default_value_for( trait, obj, name )) != NULL ) {
         if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
-            Py_DECREF( name );
-            return result;
+            
+            rc = 0;
+            if ( trait->post_setattr != NULL )
+                rc = trait->post_setattr( trait, obj, name, result );
+            
+            if ( (rc == 0) && (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+                tnotifiers = trait->notifiers;
+                onotifiers = obj->notifiers;
+                if ( has_notifiers( tnotifiers, onotifiers ) )
+                    rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
+                                         Uninitialized, result );
+            }
+            if ( rc == 0 ) {
+                Py_DECREF( name );
+                return result;
+            }
         }
         Py_DECREF( result );
     }
     
     if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
 		PyErr_SetObject( PyExc_AttributeError, name );
+    
     Py_DECREF( name );
     return NULL;
 #else
@@ -1920,7 +1955,7 @@ setattr_event ( trait_object      * traito,
         if ( ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) &&
              has_notifiers( tnotifiers, onotifiers ) ) 
             return call_notifiers( tnotifiers, onotifiers, obj, name, 
-                                   undefined, value );
+                                   Undefined, value );
     }
     return 0;
 }                    
@@ -1938,6 +1973,8 @@ setattr_trait ( trait_object      * traito,
             
     int rc;
     int changed = 0;
+    int do_notifiers;
+    trait_post_setattr post_setattr;
     PyListObject * tnotifiers     = NULL;
     PyListObject * onotifiers     = NULL;
     PyObject     * old_value      = NULL;
@@ -2063,34 +2100,35 @@ notify:
         Py_INCREF( name );
     }
     
-    old_value = NULL;
-    if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
-        tnotifiers = traito->notifiers;
-        onotifiers = obj->notifiers;
-        if ( (tnotifiers != NULL) || 
-             (onotifiers != NULL) || 
-             (traitd->post_setattr != NULL) ) {
-             old_value = PyDict_GetItem( dict, name );
-             if ( old_value == NULL ) {
-                 old_value = default_value_for( traitd, obj, name );
-                 if ( old_value == NULL ) {
-                     Py_DECREF( name );
-                     Py_DECREF( value );
-                     return -1; 
-                 }    
-             } else {
-                 Py_INCREF( old_value );
-             }
-             changed = (old_value != value );
-             if ( changed &&
-                  ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
-                 changed = PyObject_RichCompareBool( old_value, value, 
-                                                     Py_NE );
-                 if ( changed == -1 ) {
-                     PyErr_Clear();
-                 }
-             }
-         }
+    old_value    = NULL;
+    do_notifiers = ((obj->flags & HASTRAITS_NO_NOTIFY) == 0);
+    if ( do_notifiers ) {
+        tnotifiers    = traito->notifiers;
+        onotifiers    = obj->notifiers;
+        do_notifiers &= has_notifiers( tnotifiers, onotifiers );
+    }
+        
+    post_setattr = traitd->post_setattr;
+    if ( (post_setattr != NULL) || do_notifiers ) { 
+        old_value = PyDict_GetItem( dict, name );
+        if ( old_value == NULL ) {
+            old_value = default_value_for( traitd, obj, name );
+            if ( old_value == NULL ) {
+                Py_DECREF( name );
+                Py_DECREF( value );
+                return -1; 
+            }    
+        } else {
+            Py_INCREF( old_value );
+        }
+        changed = (old_value != value );
+        if ( changed &&
+             ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+            changed = PyObject_RichCompareBool( old_value, value, Py_NE );
+            if ( changed == -1 ) {
+                PyErr_Clear();
+            }
+        }
     }
      
     new_value = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)? 
@@ -2107,15 +2145,14 @@ notify:
     rc = 0;
     
     if ( changed ) {
-        if ( traitd->post_setattr != NULL ) {
-            rc = traitd->post_setattr( traitd, obj, name, 
+        if ( post_setattr != NULL ) 
+            rc = post_setattr( traitd, obj, name, 
                     (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
                     original_value: value );
-        }
-        if ( (rc == 0) && has_notifiers( tnotifiers, onotifiers ) ) { 
+        
+        if ( (rc == 0) && do_notifiers )
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
                                  old_value, new_value );
-        }
     }
     Py_XDECREF( old_value );
     Py_DECREF( name );
@@ -2455,7 +2492,7 @@ setattr_readonly ( trait_object      * traito,
     if ( value == NULL ) 
         return delete_readonly_error( obj, name );
     
-    if ( traitd->default_value != undefined )
+    if ( traitd->default_value != Undefined )
         return set_readonly_error( obj, name );
     
 	dict = obj->obj_dict;
@@ -2479,7 +2516,7 @@ setattr_readonly ( trait_object      * traito,
     
     result = PyDict_GetItem( dict, name );
     Py_DECREF( name );
-    if ( (result == NULL) || (result == undefined) )
+    if ( (result == NULL) || (result == Undefined) )
         return setattr_python( traito, traitd, obj, name, value );
     
     return set_readonly_error( obj, name );
@@ -3133,6 +3170,7 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     
     type = PyTuple_GET_ITEM( type_info, 1 );
     mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+    
     if ( mode == 2 ) {
         args = PyTuple_New( 3 );
         if ( args == NULL )
@@ -3144,12 +3182,14 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
         if ( args == NULL )
             return NULL;
     }
+    
     PyTuple_SET_ITEM( args, 0, value );
     PyTuple_SET_ITEM( args, 1, type );
     Py_INCREF( value );
     Py_INCREF( type );
     result = PyObject_Call( adapt, args, NULL );
     Py_DECREF( args );
+    
     if ( result != NULL ) {
         if ( result != Py_None ) {
             if ( (mode > 0) || (result == value) )  
@@ -4195,15 +4235,18 @@ static PyTypeObject trait_type = {
 };
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'Undefined' and 'Missing' values:
+|  Sets the global 'Undefined' and 'Uninitialized' values:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 _ctraits_undefined ( PyObject * self, PyObject * args ) {
     
-    if ( !PyArg_ParseTuple( args, "O", &undefined ) )
+    if ( !PyArg_ParseTuple( args, "OO", &Undefined, &Uninitialized ) )
         return NULL;
-    Py_INCREF( undefined );
+    
+    Py_INCREF( Undefined );
+    Py_INCREF( Uninitialized );
+    
     Py_INCREF( Py_None );
     return Py_None;
 }    
@@ -4300,7 +4343,7 @@ _ctraits_trait_notification_handler ( PyObject * self, PyObject * args ) {
 
 static PyMethodDef ctraits_methods[] = {
 	{ "_undefined",    (PyCFunction) _ctraits_undefined,    METH_VARARGS,
-	 	PyDoc_STR( "_undefined(Undefined)" ) },
+	 	PyDoc_STR( "_undefined(Undefined,Uninitialized)" ) },
 	{ "_exceptions",   (PyCFunction) _ctraits_exceptions,   METH_VARARGS,
 	 	PyDoc_STR( "_exceptions(TraitError,DelegationError)" ) },
 	{ "_list_classes", (PyCFunction) _ctraits_list_classes, METH_VARARGS,

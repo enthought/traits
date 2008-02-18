@@ -29,7 +29,7 @@ import traceback
 import sys
 
 try:
-    # Requires Python 2.4:
+    # Requires Python version >= 2.4:
     from threading import local as thread_local
 except:
     thread_local = lambda: {}
@@ -42,6 +42,9 @@ from thread \
 
 from types \
     import MethodType
+    
+from trait_base \
+    import Uninitialized
 
 from trait_errors \
     import TraitNotificationError
@@ -269,34 +272,39 @@ class StaticAnyTraitChangeNotifyWrapper:
         return False
 
     def call_0 ( self, object, trait_name, old, new ):
-        try:
-            self.handler()
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler()
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, trait_name )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, trait_name )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, trait_name, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, trait_name, old, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, trait_name, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
 #  'StaticTraitChangeNotifyWrapper' class:
@@ -313,34 +321,39 @@ class StaticTraitChangeNotifyWrapper:
         return False
 
     def call_0 ( self, object, trait_name, old, new ):
-        try:
-            self.handler()
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler()
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, old, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
-        try:
-            self.handler( object, trait_name, old, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        if old is not Uninitialized:
+            try:
+                self.handler( object, trait_name, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
 #  'TraitChangeNotifyWrapper' class:
@@ -393,6 +406,85 @@ class TraitChangeNotifyWrapper:
 
     def dispose ( self ):
         self.object = None
+        
+    def call_0 ( self, object, trait_name, old, new ):
+        if old is not Uninitialized:
+            try:
+                self.dispatch( self.handler )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def call_1 ( self, object, trait_name, old, new ):
+        if old is not Uninitialized:
+            try:
+                self.dispatch( self.handler, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def call_2 ( self, object, trait_name, old, new ):
+        if old is not Uninitialized:
+            try:
+                self.dispatch( self.handler, trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def call_3 ( self, object, trait_name, old, new ):
+        if old is not Uninitialized:
+            try:
+                self.dispatch( self.handler, object, trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def call_4 ( self, object, trait_name, old, new ):
+        if old is not Uninitialized:
+            try:
+                self.dispatch( self.handler, object, trait_name, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def rebind_call_0 ( self, object, trait_name, old, new ):
+        if (self.object is not None) and (old is not Uninitialized):
+            try:
+                self.dispatch( getattr( self.object(), self.name ) )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def rebind_call_1 ( self, object, trait_name, old, new ):
+        if (self.object is not None) and (old is not Uninitialized):
+            try:
+                self.dispatch( getattr( self.object(), self.name ), new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def rebind_call_2 ( self, object, trait_name, old, new ):
+        if (self.object is not None) and (old is not Uninitialized):
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def rebind_call_3 ( self, object, trait_name, old, new ):
+        if (self.object is not None) and (old is not Uninitialized):
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               object, trait_name, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+    def rebind_call_4 ( self, object, trait_name, old, new ):
+        if (self.object is not None) and (old is not Uninitialized):
+            try:
+                self.dispatch( getattr( self.object(), self.name ), 
+                               object, trait_name, old, new )
+            except:
+                handle_exception( object, trait_name, old, new )
+
+#-------------------------------------------------------------------------------
+#  'ExtendedTraitChangeNotifyWrapper' class:
+#-------------------------------------------------------------------------------
+
+class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         
     def call_0 ( self, object, trait_name, old, new ):
         try:
@@ -485,7 +577,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.deferred = None
         
     def call_0 ( self, object, trait_name, old, new ):
-        if self.deferred is None:
+        if (old is not Uninitialized) and (self.deferred is None):
             self.deferred = DeferredTraitNotification( object, trait_name, old, 
                                                        new )
             ui_handler( self.dispatch_0, self.deferred )
@@ -499,12 +591,13 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                               deferred.old, deferred.new )
 
     def call_1 ( self, object, trait_name, old, new ):
-        if self.deferred is None:
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.dispatch_1, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            if self.deferred is None:
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.dispatch_1, self.deferred )
+            else:
+                self.deferred.new = new
             
     def dispatch_1 ( self, deferred ):
         self.deferred = None
@@ -515,12 +608,14 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                               deferred.old, deferred.new )
 
     def call_2 ( self, object, trait_name, old, new ):
-        if (self.deferred is None) or (self.deferred.trait_name != trait_name):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.dispatch_2, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            if ((self.deferred is None) or 
+                (self.deferred.trait_name != trait_name)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.dispatch_2, self.deferred )
+            else:
+                self.deferred.new = new
             
     def dispatch_2 ( self, deferred ):
         self.deferred = None
@@ -531,14 +626,15 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                               deferred.old, deferred.new )
 
     def call_3 ( self, object, trait_name, old, new ):
-        deferred = self.deferred
-        if ((deferred is None) or (deferred.trait_name != trait_name) or
-            (deferred.object is not object)):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.dispatch_3, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            deferred = self.deferred
+            if ((deferred is None) or (deferred.trait_name != trait_name) or
+                (deferred.object is not object)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.dispatch_3, self.deferred )
+            else:
+                self.deferred.new = new
             
     def dispatch_3 ( self, deferred ):
         self.deferred = None
@@ -549,14 +645,15 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                               deferred.old, deferred.new )
 
     def call_4 ( self, object, trait_name, old, new ):
-        deferred = self.deferred
-        if ((deferred is None) or (deferred.trait_name != trait_name) or
-            (deferred.object is not object)):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.dispatch_4, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            deferred = self.deferred
+            if ((deferred is None) or (deferred.trait_name != trait_name) or
+                (deferred.object is not object)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.dispatch_4, self.deferred )
+            else:
+                self.deferred.new = new
             
     def dispatch_4 ( self, deferred ):
         self.deferred = None
@@ -568,7 +665,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                               deferred.old, deferred.new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
-        if self.deferred is None:
+        if (old is not Uninitialized) and (self.deferred is None):
             self.deferred = DeferredTraitNotification( object, trait_name, old, 
                                                        new )
             ui_handler( self.rebind_dispatch_0, self.deferred )
@@ -583,12 +680,13 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                                   deferred.old, deferred.new )
                               
     def rebind_call_1 ( self, object, trait_name, old, new ):
-        if self.deferred is None:
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.rebind_dispatch_1, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            if self.deferred is None:
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.rebind_dispatch_1, self.deferred )
+            else:
+                self.deferred.new = new
             
     def rebind_dispatch_1 ( self, deferred ):
         self.deferred = None
@@ -600,12 +698,14 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                                   deferred.old, deferred.new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
-        if (self.deferred is None) or (self.deferred.trait_name != trait_name):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.rebind_dispatch_2, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            if ((self.deferred is None) or 
+                (self.deferred.trait_name != trait_name)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.rebind_dispatch_2, self.deferred )
+            else:
+                self.deferred.new = new
             
     def rebind_dispatch_2 ( self, deferred ):
         self.deferred = None
@@ -618,14 +718,15 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                                   deferred.old, deferred.new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
-        deferred = self.deferred
-        if ((deferred is None) or (deferred.trait_name != trait_name) or
-            (deferred.object is not object)):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.rebind_dispatch_3, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            deferred = self.deferred
+            if ((deferred is None) or (deferred.trait_name != trait_name) or
+                (deferred.object is not object)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.rebind_dispatch_3, self.deferred )
+            else:
+                self.deferred.new = new
             
     def rebind_dispatch_3 ( self, deferred ):
         self.deferred = None
@@ -638,14 +739,15 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
                                   deferred.old, deferred.new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
-        deferred = self.deferred
-        if ((deferred is None) or (deferred.trait_name != trait_name) or
-            (deferred.object is not object)):
-            self.deferred = DeferredTraitNotification( object, trait_name, old, 
-                                                       new )
-            ui_handler( self.rebind_dispatch_4, self.deferred )
-        else:
-            self.deferred.new = new
+        if old is not Uninitialized:
+            deferred = self.deferred
+            if ((deferred is None) or (deferred.trait_name != trait_name) or
+                (deferred.object is not object)):
+                self.deferred = DeferredTraitNotification( object, trait_name, 
+                                                           old, new )
+                ui_handler( self.rebind_dispatch_4, self.deferred )
+            else:
+                self.deferred.new = new
             
     def rebind_dispatch_4 ( self, deferred ):
         self.deferred = None

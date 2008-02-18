@@ -51,8 +51,9 @@ from trait_types \
 
 from trait_notifiers \
     import StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper, \
-           TraitChangeNotifyWrapper, FastUITraitChangeNotifyWrapper, \
-           UITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper
+           TraitChangeNotifyWrapper, ExtendedTraitChangeNotifyWrapper, \
+           FastUITraitChangeNotifyWrapper, UITraitChangeNotifyWrapper, \
+           NewTraitChangeNotifyWrapper
            
 from trait_handlers \
     import TraitType
@@ -1217,10 +1218,11 @@ class HasTraits ( CHasTraits ):
 
     # Mapping from dispatch type to notification wrapper class type:
     wrappers = {
-        'same':    TraitChangeNotifyWrapper,
-        'new':     NewTraitChangeNotifyWrapper,
-        'fast_ui': FastUITraitChangeNotifyWrapper,
-        'ui':      FastUITraitChangeNotifyWrapper
+        'same':     TraitChangeNotifyWrapper,
+        'extended': ExtendedTraitChangeNotifyWrapper,
+        'new':      NewTraitChangeNotifyWrapper,
+        'fast_ui':  FastUITraitChangeNotifyWrapper,
+        'ui':       FastUITraitChangeNotifyWrapper
         # fixme: Disabling the new ui dispatch mechanism until the problems can
         # be worked out (i.e. breaks Undo/Redo and doesn't handle list item
         # event objects correctly because of the 'new' value replacement not
@@ -2412,7 +2414,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def on_trait_change ( self, handler, name = None, remove = False,
-                                dispatch = 'same' ):
+                                dispatch = 'same', deferred = False ):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
@@ -2589,7 +2591,7 @@ class HasTraits ( CHasTraits ):
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
-        if ((isinstance( name, str ) and
+        if ((isinstance( name, basestring ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
             self._on_trait_change( handler, name, remove, dispatch )
             return
@@ -2634,7 +2636,8 @@ class HasTraits ( CHasTraits ):
                 listener.set( handler         = ListenerHandler( handler ),
                               wrapped_handler = lnw,
                               dispatch        = dispatch,
-                              type            = lnw.type )
+                              type            = lnw.type,
+                              deferred        = deferred )
                 listener.register( self )  
 
     # Make 'on_trait_event' a synonym for 'on_trait_change':
@@ -3290,7 +3293,7 @@ class HasTraits ( CHasTraits ):
         """ Sets up the listener for a method with the @on_trait_change 
             decorator.
         """
-        self.on_trait_change( getattr( self, name ), pattern )
+        self.on_trait_change( getattr( self, name ), pattern, deferred = True )
         
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata. 

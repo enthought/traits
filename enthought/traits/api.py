@@ -18,7 +18,7 @@ Use this module for importing Traits names into your namespace. For example::
 from version import __version__
 
 from trait_base \
-    import Undefined, Missing, Self, python_version
+    import Uninitialized, Undefined, Missing, Self, python_version
 
 from trait_errors \
     import TraitError, TraitNotificationError, DelegationError

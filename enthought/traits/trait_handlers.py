@@ -2529,8 +2529,12 @@ class TraitListObject ( list ):
         return result
 
     def __setstate__ ( self, state ):
-        self.object = ref( state.pop( 'object' ) )
-        self.rename( state.pop( 'name' ) )
+        name   = state.pop( 'name' )
+        object = state.pop( 'object' )
+        if object is not None:
+            self.object = ref( object )
+            self.rename( name )
+            
         self.__dict__.update( state )
 
 
@@ -2812,8 +2816,12 @@ class TraitDictObject ( dict ):
         return result
 
     def __setstate__ ( self, state ):
-        self.object = ref( state.pop( 'object' ) )
-        self.rename( state.pop( 'name' ) )
+        name   = state.pop( 'name' )
+        object = state.pop( 'object' )
+        if object is not None:
+            self.object = ref( object )
+            self.rename( name )
+            
         self.__dict__.update( state )
 
 #-- Private Methods ------------------------------------------------------------

@@ -39,7 +39,7 @@ from has_traits \
     import HasTraits, HasPrivateTraits
     
 from trait_base \
-    import Undefined
+    import Undefined, Uninitialized
     
 from traits \
     import Property
@@ -91,6 +91,13 @@ ListenerType = {
 
 # Invalid destination ( object, name ) reference marker (i.e. ambiguous):
 INVALID_DESTINATION = ( None, None )
+
+# Invalid objects for unregistering:
+InvalidObjects = ( None, Uninitialized )
+
+# Regular expressions used by the parser:
+simple_pat = re.compile( r'^([a-zA-Z_]\w*)(\.|:)([a-zA-Z_]\w*)$' )
+name_pat   = re.compile( r'([a-zA-Z_]\w*)\s*(.*)' )
 
 # Characters valid in a traits name:
 name_chars = string.ascii_letters + string.digits + '_'
@@ -165,6 +172,10 @@ class ListenerBase ( HasPrivateTraits ):
     
     # Should changes to this item generate a notification to the handler?
     # notify = Bool
+    
+    # Should registering listeners for items reachable from this listener item
+    # be deferred until the associated trait is first read or set?
+    # deferred = Bool
     
     #---------------------------------------------------------------------------
     #  Registers new listeners:
@@ -267,6 +278,10 @@ class ListenerItem ( ListenerBase ):
     
     # Should changes to this item generate a notification to the handler?
     notify = Bool( True )
+    
+    # Should registering listeners for items reachable from this listener item
+    # be deferred until the associated trait is first read or set?
+    deferred = Bool( False )
     
     # Is this an 'any_trait' change listener, or does it create explicit
     # listeners for each individual trait?
@@ -402,7 +417,7 @@ class ListenerItem ( ListenerBase ):
             type    = SIMPLE_LISTENER
             handler = trait.handler
             if handler is not None:
-                type = type_map.get( handler.default_value_type, 
+                type = type_map.get( handler.default_value_type,
                                      SIMPLE_LISTENER )
                                      
             # Add the name and type to the list of traits being registered:
@@ -424,7 +439,7 @@ class ListenerItem ( ListenerBase ):
     def unregister ( self, old ):
         """ Unregisters any existing listeners.
         """
-        if old is not None:
+        if old not in InvalidObjects:
             active = self.active.pop( old, None )
             if active is not None:
                 for name, type in active:
@@ -440,14 +455,6 @@ class ListenerItem ( ListenerBase ):
         self.next.unregister( old )
         self.next.register( new )
     
-    def handle_src ( self, object, name, old, new ):
-        """ Handles a trait change for an intermediate link trait when the
-            notification is for the link change itself.
-        """
-        self.handle_simple( object, name, old, new )
-            
-        self.wrapped_handler( object, name, old, new )
-    
     def handle_dst ( self, object, name, old, new ):
         """ Handles a trait change for an intermediate link trait when the
             notification is for the final destination trait.
@@ -455,12 +462,13 @@ class ListenerItem ( ListenerBase ):
         self.next.unregister( old )
         
         object, name = self.next.register( new )
-        if object is None:
-            raise TraitError( "on_trait_change handler signature is "
-                      "incompatible with a change to an intermediate trait" )
-                              
-        self.wrapped_handler( object, name, old, 
-                              getattr( object, name, Undefined ) )
+        if old is not Uninitialized:
+            if object is None:
+                raise TraitError( "on_trait_change handler signature is "
+                         "incompatible with a change to an intermediate trait" )
+                                  
+            self.wrapped_handler( object, name, old, 
+                                  getattr( object, name, Undefined ) )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a list trait:
@@ -477,13 +485,6 @@ class ListenerItem ( ListenerBase ):
         for obj in new:
             register( obj )
     
-    def handle_list_src ( self, object, name, old, new ):
-        """ Handles a trait change for a list trait with notification.
-        """
-        self.handle_list( object, name, old, new )
-                
-        self.wrapped_handler( object, name, old, new )
-    
     #---------------------------------------------------------------------------
     #  Handles a trait change for a list traits items:
     #---------------------------------------------------------------------------
@@ -491,20 +492,7 @@ class ListenerItem ( ListenerBase ):
     def handle_list_items ( self, object, name, old, new ):
         """ Handles a trait change for items of a list trait.
         """
-        unregister = self.next.unregister
-        for obj in new.removed:
-            unregister( obj )
-                
-        register = self.next.register
-        for obj in new.added:
-            register( obj )
-     
-    def handle_list_items_src ( self, object, name, old, new ):
-        """ Handles a trait change for items of a list trait with notification.
-        """
-        self.handle_list_items( object, name, old, new )
-                
-        self.wrapped_handler( object, name, old, new )
+        self.handle_list( object, name, new.removed, new.added )
      
     def handle_list_items_special ( self, object, name, old, new ):
         """ Handles a trait change for items of a list trait with notification.
@@ -525,13 +513,6 @@ class ListenerItem ( ListenerBase ):
         register = self.next.register
         for obj in new.values():
             register( obj )
-    
-    def handle_dict_src ( self, object, name, old, new ):
-        """ Handles a trait change for a dictionary trait with notifications.
-        """
-        self.handle_dict( object, name, old, new )
-                
-        self.wrapped_handler( object, name, old, new )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a dictionary traits items:
@@ -540,27 +521,13 @@ class ListenerItem ( ListenerBase ):
     def handle_dict_items ( self, object, name, old, new ):
         """ Handles a trait change for items of a dictionary trait.
         """
-        unregister = self.next.unregister
-        for obj in new.removed.values():
-            unregister( obj )
-                
-        register = self.next.register
-        for obj in new.added.values():
-            register( obj )
+        self.handle_dict( object, name, new.removed, new.added )
                 
         if len( new.changed ) > 0:
             dict = getattr( object, name )
             for key, obj in new.changed.items():
                 unregister( obj )
                 register( dict[ key ] )
-    
-    def handle_dict_items_src ( self, object, name, old, new ):
-        """ Handles a trait change for items of a dictionary trait with
-            notification.
-        """
-        self.handle_dict_items( object, name, old, new )
-                
-        self.wrapped_handler( object, name, old, new )
 
     #---------------------------------------------------------------------------
     #  Handles an invalid intermediate trait change to a handler that must be
@@ -636,27 +603,37 @@ class ListenerItem ( ListenerBase ):
                                          dispatch = self.dispatch )
             return ( object, name )
         
+        tl_handler = self.handle_simple
         if self.notify:
             if self.type == DST_LISTENER:
-                handler = self.handle_dst
+                if self.dispatch != 'same':
+                    raise TraitError( "Trait notification dispatch type '%s' "
+                      "is not compatible with handler signature and "
+                      "extended trait name notification style" % self.dispatch )
+                tl_handler = self.handle_dst
             else:
-                handler = self.handle_src
-        else:
-            handler = self.handle_simple
+                handler = self.handler()
+                if handler is not Undefined:
+                    object._on_trait_change( handler, name, 
+                                remove = remove, dispatch = self.dispatch )
         
-        object._on_trait_change( handler, name, 
-                                 remove = remove, dispatch = self.dispatch )
+        object._on_trait_change( tl_handler, name, 
+                                 remove = remove, dispatch = 'extended' )
+        
     
         if remove:
             return next.unregister( getattr( object, name ) )
         
-        return next.register( getattr( object, name ) )
+        if not self.deferred:
+            return next.register( getattr( object, name ) )
+            
+        return ( object, name )
         
     #---------------------------------------------------------------------------
     #  Registers a handler for a list trait:  
     #---------------------------------------------------------------------------
                                     
-    def _register_list ( self, object, name, remove ):        
+    def _register_list ( self, object, name, remove ):
         """ Registers a handler for a list trait.
         """
         next = self.next
@@ -676,24 +653,35 @@ class ListenerItem ( ListenerBase ):
                                     
             return ( object, name )
            
+        tl_handler       = self.handle_list
+        tl_handler_items = self.handle_list_items
         if self.notify:
             if self.type == DST_LISTENER:
-                handler = handler_items = self.handle_error
+                tl_handler = tl_handler_items = self.handle_error
             else:
-                handler       = self.handle_list_src
-                handler_items = self.handle_list_items_src
-        else:
-            handler       = self.handle_list
-            handler_items = self.handle_list_items
+                handler = self.handler()
+                if handler is not Undefined:
+                    object._on_trait_change( handler, name, remove = remove, 
+                                             dispatch = self.dispatch )
+                    
+                    if self.is_list_handler:
+                        object._on_trait_change( self.handle_list_items_special,
+                                               name + '_items', remove = remove,
+                                               dispatch = self.dispatch )
+                    elif self.type == ANY_LISTENER:
+                        object._on_trait_change( handler, name + '_items', 
+                                     remove = remove, dispatch = self.dispatch )
 
-        object._on_trait_change( handler, name, 
-                                 remove = remove, dispatch = self.dispatch )
+        object._on_trait_change( tl_handler, name, 
+                                 remove = remove, dispatch = 'extended' )
             
-        object._on_trait_change( handler_items, name + '_items', 
-                                 remove = remove, dispatch = self.dispatch )
+        object._on_trait_change( tl_handler_items, name + '_items', 
+                                 remove = remove, dispatch = 'extended' )
                                 
         if remove:
             handler = next.unregister
+        elif self.deferred:
+            return INVALID_DESTINATION
         else:
             handler = next.register
             
@@ -722,24 +710,31 @@ class ListenerItem ( ListenerBase ):
                                     
             return ( object, name )
            
+        tl_handler       = self.handle_dict
+        tl_handler_items = self.handle_dict_items
         if self.notify:
             if self.type == DST_LISTENER:
-                handler = handler_items = self.handle_error
+                tl_handler = tl_handler_items = self.handle_error
             else:
-                handler       = self.handle_dict_src
-                handler_items = self.handle_dict_items_src
-        else:
-            handler       = self.handle_dict
-            handler_items = self.handle_dict_items
+                handler = self.handler()
+                if handler is not Undefined:
+                    object._on_trait_change( handler, name, remove = remove, 
+                                             dispatch = self.dispatch )
+                                    
+                    if self.type == ANY_LISTENER:
+                        object._on_trait_change( handler, name + '_items', 
+                                     remove = remove, dispatch = self.dispatch )
 
-        object._on_trait_change( handler, name, 
+        object._on_trait_change( tl_handler, name, 
                                  remove = remove, dispatch = self.dispatch )
             
-        object._on_trait_change( handler_items, name + '_items', 
+        object._on_trait_change( tl_handler_items, name + '_items', 
                                  remove = remove, dispatch = self.dispatch )
                                 
         if remove:
             handler = next.unregister
+        elif self.deferred:
+            return INVALID_DESTINATION
         else:
             handler = next.register
             
@@ -751,6 +746,12 @@ class ListenerItem ( ListenerBase ):
 #-------------------------------------------------------------------------------
 #  'ListenerGroup' class:
 #-------------------------------------------------------------------------------
+
+def _set_value ( self, name, value ):
+    for item in self.items:
+        setattr( item, name, value )
+        
+ListProperty = Property( fset = _set_value )
 
 class ListenerGroup ( ListenerBase ):
     
@@ -769,13 +770,17 @@ class ListenerGroup ( ListenerBase ):
     
     # The next level (if any) of ListenerBase object to be called when any of
     # this object's listened-to traits is changed
-    next = Property
+    next = ListProperty
     
     # The type of handler being used:
-    type = Property
+    type = ListProperty
     
     # Should changes to this item generate a notification to the handler?
-    notify = Property
+    notify = ListProperty
+    
+    # Should registering listeners for items reachable from this listener item
+    # be deferred until the associated trait is first read or set?
+    deferred = ListProperty
 
     # The list of ListenerBase objects in the group
     items = List( ListenerBase )
@@ -799,18 +804,6 @@ class ListenerGroup ( ListenerBase ):
             self._dispatch = dispatch
             for item in self.items:
                 item.dispatch = dispatch
-            
-    def _set_next ( self, next ):
-        for item in self.items:
-            item.next = next
-            
-    def _set_type ( self, type ):
-        for item in self.items:
-            item.type = type
-            
-    def _set_notify ( self, notify ):
-        for item in self.items:
-            item.notify = notify
             
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
    
@@ -887,6 +880,9 @@ class ListenerParser ( HasPrivateTraits ):
     # The next character from the string being parsed
     next = Property
     
+    # The next Python attribute name within the string:
+    name = Property
+    
     # The next non-whitespace character
     skip_ws = Property
     
@@ -899,13 +895,12 @@ class ListenerParser ( HasPrivateTraits ):
     #-- Property Implementations -----------------------------------------------
     
     def _get_next ( self ):
-        char  = EOS
-        index = self.index
-        if index < self.len_text:
-            char = self.text[ index ]
+        index       = self.index
         self.index += 1
+        if index >= self.len_text:
+            return EOS
         
-        return char
+        return self.text[ index ]
             
     def _get_backspace ( self ):
         self.index = max( 0, self.index - 1 )
@@ -915,6 +910,15 @@ class ListenerParser ( HasPrivateTraits ):
             c = self.next
             if c not in whitespace:
                 return c
+                
+    def _get_name ( self ):
+        match = name_pat.match( self.text, self.index - 1 )
+        if match is None:
+            return ''
+            
+        self.index = match.start( 2 )
+        
+        return match.group( 1 )
         
     #-- object Method Overrides ------------------------------------------------
     
@@ -940,7 +944,7 @@ class ListenerParser ( HasPrivateTraits ):
         
         # TODO: The use of regexes should be used throughout all of the parsing 
         # functions to speed up all aspects of parsing.
-        match = re.match( r'^([a-zA-Z_]\w*)(\.|:)([a-zA-Z_]\w*)$', self.text )
+        match = simple_pat.match( self.text )
         if match is not None:
             return ListenerItem( 
                        name   = match.group( 1 ),
@@ -987,25 +991,24 @@ class ListenerParser ( HasPrivateTraits ):
             result = self.parse_group()
             c      = self.skip_ws
         else:
-            name = ''
-            if c in name_chars:
-                while True:
-                    name += c
-                    c = self.next
-                    if c not in name_chars:
-                        break
-                if c == ' ':
-                    c = self.skip_ws
+            name = self.name
+            if name != '':
+                c = self.next
                     
             result = ListenerItem( name = name )
             
             if c in '+-':
                 result.name += '*'
                 result.metadata_defined = (c == '+')
-                self.parse_metadata( result )
+                cn = self.skip_ws
+                result.metadata_name = metadata = self.name
+                if metadata != '':
+                    cn = self.skip_ws
+                    
                 result.is_any_trait = ((c == '-') and (name == '') and
-                                       (result.metadata_name == ''))
-                c = self.skip_ws
+                                       (metadata == ''))
+                c = cn
+                
                 if result.is_any_trait and (not ((c == terminator) or
                     ((c == ',') and (terminator == ']')))):
                     self.error( "Expected end of name" )
@@ -1054,14 +1057,10 @@ class ListenerParser ( HasPrivateTraits ):
     def parse_metadata ( self, item ):
         """ Parses the metadata portion of a listener item.
         """
-        name = ''
-        c    = self.skip_ws
-        while c in name_chars:
-            name += c
-            c     = self.next
-                
-        item.metadata_name = name
-        self.backspace
+        self.skip_ws
+        item.metadata_name = name = self.name
+        if name == '':
+            self.backspace
                                     
     #---------------------------------------------------------------------------
     #  Raises a syntax error:

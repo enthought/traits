@@ -226,51 +226,73 @@ TypeTypes     = ( StringType,  UnicodeType, IntType,   LongType, FloatType,
 TraitNotifier = '__trait_notifier__'
 
 #-------------------------------------------------------------------------------
+#  Singleton 'Uninitialized' object:
+#-------------------------------------------------------------------------------
+
+class Uninitialized ( object ):
+    """ The singleton value of this class represents the uninitialized state
+        of a trait and is specified as the 'old' value in the trait change
+        notification that occurs when the value of a trait is read before being
+        set.
+    """
+
+    def __repr__ ( self ):
+        return '<uninitialized>'
+
+# When the first reference to a trait is a 'get' reference, the default value of
+# the trait is implicitly assigned and returned as the value of the trait. 
+# Because of this implicit assignment, a trait change notification is
+# generated with the Uninitialized object as the 'old' value of the trait, and 
+# the default trait value as the 'new' value. This allows other parts of the 
+# traits package to recognize the assignment as the implicit default value
+# assignment, and treat it specially.
+Uninitialized = Uninitialized()
+
+#-------------------------------------------------------------------------------
 #  Singleton 'Undefined' object (used as undefined trait name and/or value):
 #-------------------------------------------------------------------------------
 
-class _Undefined ( object ):
+class Undefined ( object ):
 
-   def __repr__ ( self ):
-       return '<undefined>'
+    def __repr__ ( self ):
+        return '<undefined>'
 
 # Singleton object that indicates that a trait attribute has not yet had a
-# value set (i.e., its value is undefined. This object is used instead of
-# None, because None is often has other meanings, such as that a value
-# is not used. When a trait attribute is first assigned a value, and its
-# associated trait notification handlers are called, Undefined is passed
-# as the *old* parameter, to indicate that the attribute previously had no
-# value.
-Undefined = _Undefined()
+# value set (i.e., its value is undefined). This object is used instead of
+# None, because None often has other meanings, such as that a value is not 
+# used. When a trait attribute is first assigned a value, and its associated
+# trait notification handlers are called, Undefined is passed as the *old* 
+# parameter, to indicate that the attribute previously had no value.
+Undefined = Undefined()
 
-# Tell the C-base code about the 'Undefined' objects:
+# Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
 import ctraits
-ctraits._undefined( Undefined )
+ctraits._undefined( Undefined, Uninitialized )
 
 #-------------------------------------------------------------------------------
 #  Singleton 'Missing' object (used as missing method argument marker):
 #-------------------------------------------------------------------------------
 
-class _Missing ( object ):
+class Missing ( object ):
 
-   def __repr__ ( self ):
-       return '<missing>'
+    def __repr__ ( self ):
+        return '<missing>'
 
 # Singleton object that indicates that a method argument is missing from a
 # type-checked method signature.
-Missing = _Missing()
+Missing = Missing()
 
 #-------------------------------------------------------------------------------
 #  Singleton 'Self' object (used as object reference to current 'object'):
 #-------------------------------------------------------------------------------
 
-class _Self ( object ):
+class Self ( object ):
 
-   def __repr__ ( self ):
-       return '<self>'
+    def __repr__ ( self ):
+        return '<self>'
 
 # Singleton object that references the current 'object'.
-Self = _Self()
+Self = Self()
 
 #-------------------------------------------------------------------------------
 #  Define a special 'string' coercion function:
