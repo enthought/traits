@@ -2434,6 +2434,7 @@ class HasTraits ( CHasTraits ):
         dispatch : string
             A string indicating the thread on which notifications must be run. 
             Possible values are:
+                
                 * 'same': Run notifications on the same thread as this one.
                 * 'ui': Run notifications on the UI thread, and allow them to
                   be queued and deferred.

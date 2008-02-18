@@ -91,9 +91,10 @@ class StatusItem ( HasStrictTraits ):
     name = Str( 'status' )
     
     # The width of the status field. The possible values are:
-    # - abs( width )  > 1.0: Width of the field in pixels = abs( width )
-    # - abs( width ) <= 1.0: Relative width of the field when compared to other
-    #   relative width fields.
+    #
+    #   - abs( width )  > 1.0: Width of the field in pixels = abs( width )
+    #   - abs( width ) <= 1.0: Relative width of the field when compared to other
+    #     relative width fields.
     width = Float( 0.5 )
     
 #-------------------------------------------------------------------------------

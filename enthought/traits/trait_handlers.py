@@ -540,7 +540,7 @@ class TraitType ( BaseTraitHandler ):
     def clone ( self, default_value = Missing, **metadata ):
         """ Clones the contents of this object into a new instance of the same
             class, and then modifies the cloned copy using the specified
-            *default_value* and *metadata". Returns the cloned object as the
+            *default_value* and *metadata*. Returns the cloned object as the
             result.
             
             Note that subclasses can change the signature of this method if
@@ -902,6 +902,7 @@ class TraitString ( TraitHandler ):
     Example
     -------
     ::
+    
         class Person(HasTraits):
             name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
     
@@ -1821,6 +1822,7 @@ class TraitPrefixMap ( TraitMap ):
     Example
     -------
     ::
+        
         boolean_map = Trait('true', TraitPrefixMap( {
                                         'true': 1,
                                         'yes': 1,

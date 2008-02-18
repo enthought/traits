@@ -1804,6 +1804,7 @@ class BaseInstance ( BaseClass ):
         adapt : string
             A string specifying how adaptation should be applied. The possible
             values are:
+                
                 - 'no': Adaptation is not allowed.
                 - 'yes': Adaptation is allowed. If adaptation fails, an 
                     exception should be raised.
@@ -2064,7 +2065,9 @@ class Type ( BaseClass ):
         Parameters
         ----------
         value : class or None
+        
         klass : class or None
+        
         allow_none : boolean
             Indicates whether None is allowed as an assignable value. Even if
             **False**, the default *value* may be **None**.
