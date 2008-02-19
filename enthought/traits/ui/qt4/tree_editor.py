@@ -434,6 +434,9 @@ class SimpleEditor ( Editor ):
         for cnid in self._nodes_for( nid ):
             self._delete_node( cnid )
 
+        if nid is self._tree.invisibleRootItem():
+            return
+
         # See if it is a dummy.
         pnid = nid.parent()
         if pnid is not None and getattr(pnid, '_dummy', None) is nid:
@@ -1016,10 +1019,10 @@ class SimpleEditor ( Editor ):
 
         # Try to get the parent node of the node clicked on:
         pnid = nid.parent()
-        if pnid is not self._tree.invisibleRootItem():
-            _, parent_node, parent_object = self._get_node_data(pnid)
-        else:
+        if pnid is None or pnid is self._tree.invisibleRootItem():
             parent_node = parent_object = None
+        else:
+            _, parent_node, parent_object = self._get_node_data(pnid)
 
         self._menu_node = node
         self._menu_parent_node = parent_node
