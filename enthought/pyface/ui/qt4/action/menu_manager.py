@@ -95,7 +95,10 @@ class _Menu(QtGui.QMenu):
 
         # Listen to the manager being updated.
         self._manager.on_trait_change(self.refresh, 'changed')
+        self._manager.on_trait_change(self._on_enabled_changed, 'enabled')
 
+        return
+    
     ###########################################################################
     # '_Menu' interface.
     ###########################################################################
@@ -127,6 +130,13 @@ class _Menu(QtGui.QMenu):
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    def _on_enabled_changed(self, obj, trait_name, old, new):
+        """ Dynamic trait change handler. """
+
+        self.setEnabled(new)
+        
+        return
 
     def _add_group(self, parent, group, previous_non_empty_group=None):
         """ Adds a group to a menu. """
