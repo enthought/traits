@@ -482,9 +482,10 @@ class ListenerItem ( ListenerBase ):
     def handle_list ( self, object, name, old, new ):
         """ Handles a trait change for a list trait.
         """
-        unregister = self.next.unregister
-        for obj in old:
-            unregister( obj )
+        if old is not Uninitialized:
+            unregister = self.next.unregister
+            for obj in old:
+                unregister( obj )
                 
         register = self.next.register
         for obj in new:
@@ -511,9 +512,10 @@ class ListenerItem ( ListenerBase ):
     def handle_dict ( self, object, name, old, new ):
         """ Handles a trait change for a dictionary trait.
         """
-        unregister = self.next.unregister
-        for obj in old.values():
-            unregister( obj )
+        if old is not Uninitialized:
+            unregister = self.next.unregister
+            for obj in old.values():
+                unregister( obj )
                 
         register = self.next.register
         for obj in new.values():
