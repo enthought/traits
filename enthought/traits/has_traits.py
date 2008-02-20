@@ -249,6 +249,23 @@ def _get_instance_handlers ( class_dict, bases ):
 
     # Return the dictionary of possible arg_lists:
     return instance_traits
+    
+#-------------------------------------------------------------------------------
+#  Returns the correct 'delegate' listener pattern for a specified name and
+#  delegate trait:
+#-------------------------------------------------------------------------------
+    
+def get_delegate_pattern ( name, trait ):
+    """ Returns the correct 'delegate' listener pattern for a specified name and
+        delegate trait.
+    """
+    prefix = trait.prefix
+    if prefix == '':
+        prefix = name
+    elif (len( prefix ) > 1) and (prefix[-1] == '*'):
+        prefix = prefix[:-1] + name
+        
+    return ' %s:%s' % ( trait.delegate, prefix )
 
 #-------------------------------------------------------------------------------
 #  '_SimpleTest' class:
@@ -725,14 +742,11 @@ class MetaHasTraitsObject ( object ):
                                                                          value )
                                                                          
                     elif value_type == 'delegate':
-                        prefix = value.prefix
-                        if prefix == '':
-                            prefix = name
-                        elif (len( prefix ) > 1) and (prefix[-1] == '*'):
-                            prefix = prefix[:-1] + name
-                            
-                        listeners[ name ] = ( 'delegate', ' %s:%s' % ( 
-                                              value.delegate, prefix ) )
+                        # Only add a listener if the trait.listenable metadata
+                        # is not False:
+                        if value.listenable is not False:
+                            listeners[ name ] = ( 'delegate',
+                                           get_delegate_pattern( name, value ) )
                     elif value_type == 'event':
                         on_trait_change = value.on_trait_change
                         if isinstance( on_trait_change, basestring ):
@@ -1238,6 +1252,22 @@ class HasTraits ( CHasTraits ):
     # An event that can be fired to indicate that the state of the object has
     # been modified:
     trait_modified = Event
+    
+    #---------------------------------------------------------------------------
+    #  Handles a 'trait_added' event being fired:
+    #---------------------------------------------------------------------------
+    
+    def _trait_added_changed ( self, name ):
+        """ Handles a 'trait_added' event being fired.
+        """
+        # fixme: This test should be made more comprehensive by also verifying
+        # that if the trait name does end in '_items', its base trait is also
+        # a list or dictionary (in order to eliminate a false positive on an
+        # unfortunately named trait:
+        trait = self.trait( name )
+        if (trait.type == 'delegate') and (name[-6:] != '_items'):
+            self._init_trait_delegate_listener( name, 'delegate', 
+                                           get_delegate_pattern( name, trait ) )
 
     #---------------------------------------------------------------------------
     #  Adds/Removes a trait instance creation monitor:
@@ -3119,7 +3149,7 @@ class HasTraits ( CHasTraits ):
     #  Returns the trait definition for a specified name when there is no
     #  explicit definition in the class:
     #---------------------------------------------------------------------------
-
+        
     def __prefix_trait__ ( self, name ):
         # Never create prefix traits for names of the form '__xxx__':
         if (name[:2] == '__') and (name[-2:] == '__'):
@@ -3321,15 +3351,6 @@ class HasTraits ( CHasTraits ):
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
-        # Only hook up the listener if the trait.propagate metadata is not
-        # False.
-        trait = self._trait( name, 2 )  # 2==create instance trait if needed.
-        if trait.listenable == False:
-            # Explicitly check for equality with False because we want to
-            # interpret None as True.
-            self.__dict__.setdefault( ListenerTraits, {} ).pop( name, None )
-            return
-
         def notify ( object, notify_name, old, new ):
             self.trait_property_changed( notify_name, old, new )
             

@@ -363,12 +363,14 @@ class ListenerItem ( ListenerBase ):
 
             # Handle trait matching based on a common name prefix and/or 
             # matching trait metadata:
-            metadata = { 'type': not_event }
-            if self.metadata_name != '':
-                if self.metadata_defined:
-                    metadata[ self.metadata_name ] = is_not_none
-                else:
-                    metadata[ self.metadata_name ] = is_none
+            metadata = self._metadata
+            if metadata is None:
+                self._metadata = metadata = { 'type': not_event }
+                if self.metadata_name != '':
+                    if self.metadata_defined:
+                        metadata[ self.metadata_name ] = is_not_none
+                    else:
+                        metadata[ self.metadata_name ] = is_none
                     
             # Get all object traits with matching metadata:
             names = new.trait_names( **metadata )
@@ -383,6 +385,9 @@ class ListenerItem ( ListenerBase ):
             # Create the dictionary of selected traits:
             bt     = new.base_trait
             traits = dict( [ ( name, bt( name ) ) for name in names ] )
+            
+            # Handle any new traits added dynamically to the object:
+            new.on_trait_change( self._new_trait_added, 'trait_added' )
         else:
             # Determine if the trait is optional or not:
             optional = (last == '?')
@@ -742,6 +747,34 @@ class ListenerItem ( ListenerBase ):
             handler( obj )
             
         return INVALID_DESTINATION
+        
+    #---------------------------------------------------------------------------
+    #  Handles new traits being added to an object being monitored:
+    #---------------------------------------------------------------------------
+    
+    def _new_trait_added ( self, object, name, new_trait ):
+        """ Handles new traits being added to an object being monitored.
+        """
+        # Set if the new trait matches our prefix and metadata:
+        if new_trait.startswith( self.name[:-1] ):
+            trait = object.base_trait( new_trait )
+            for meta_name, meta_eval in self._metadata.items():
+                if not meta_eval( getattr( trait, meta_name ) ):
+                    return
+        
+        # Determine whether the trait type is simple, list or dictionary:
+        type    = SIMPLE_LISTENER
+        handler = trait.handler
+        if handler is not None:
+            type = type_map.get( handler.default_value_type,
+                                 SIMPLE_LISTENER )
+                                 
+        # Add the name and type to the list of traits being registered:
+        self.active[ object ].append( ( new_trait, type ) )
+        
+        # Set up the appropriate trait listeners on the object for the
+        # new trait:
+        getattr( self, type )( object, new_trait, False )
 
 #-------------------------------------------------------------------------------
 #  'ListenerGroup' class:

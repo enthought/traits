@@ -1093,12 +1093,13 @@ def Delegate ( delegate, prefix = '', modify = False, listenable = True,
     # Use False instead of True so we can detect user explicitly setting
     # 'transient = True' in HasTraits.__getstate__:
     metadata.setdefault( 'transient' , False )
-    metadata[ 'type' ]     = 'delegate'
-    metadata[ 'delegate' ] = delegate
-    metadata[ 'prefix' ]   = prefix
+    metadata[ 'type' ]       = 'delegate'
+    metadata[ 'delegate' ]   = delegate
+    metadata[ 'prefix' ]     = prefix
     metadata[ 'listenable' ] = listenable
 
-    trait.__dict__         = metadata.copy()
+    trait.__dict__ = metadata.copy()
+    
     return trait
 
 #-------------------------------------------------------------------------------
