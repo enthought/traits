@@ -22,6 +22,12 @@ class ToolBarManager(ActionManager):
 
     #### 'ToolBarManager' interface ###########################################
 
+    # Is the tool bar enabled?
+    enabled = Bool(True)
+
+    # Is the tool bar visible?
+    visible = Bool(True)
+    
     # The size of tool images (width, height).
     image_size = Tuple((16, 16))
 
@@ -73,7 +79,7 @@ class ToolBarManager(ActionManager):
             controller = self.controller
 
         # Create the control.
-        tool_bar = QtGui.QToolBar(parent)
+        tool_bar = _ToolBar(self, parent)
 
         tool_bar.setObjectName(self.id)
 
@@ -120,6 +126,51 @@ class ToolBarManager(ActionManager):
                         controller,
                         self.show_tool_names
                     )
+
+        return
+
+
+class _ToolBar(QtGui.QToolBar):
+    """ The toolkit-specific tool bar implementation. """
+
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __init__(self, tool_bar_manager, parent):
+        """ Constructor. """
+
+        QtGui.QToolBar.__init__(self, parent)
+
+        # Listen for changes to the tool bar manager's enablement and
+        # visibility.
+        self.tool_bar_manager = tool_bar_manager
+        
+        self.tool_bar_manager.on_trait_change(
+            self._on_tool_bar_manager_enabled_changed, 'enabled'
+        )
+
+        self.tool_bar_manager.on_trait_change(
+            self._on_tool_bar_manager_visible_changed, 'visible'
+        )
+
+        return
+
+    ###########################################################################
+    # Trait change handlers.
+    ###########################################################################
+
+    def _on_tool_bar_manager_enabled_changed(self, obj, trait_name, old, new):
+        """ Dynamic trait change handler. """
+
+        self.setEnabled(new)
+
+        return
+
+    def _on_tool_bar_manager_visible_changed(self, obj, trait_name, old, new):
+        """ Dynamic trait change handler. """
+
+        self.setVisible(new)
 
         return
 
