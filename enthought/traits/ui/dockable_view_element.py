@@ -7,9 +7,11 @@
 #  (c) Copyright 2005 by Enthought, Inc.
 #  
 #-------------------------------------------------------------------------------
+
 """ Defines the DockableViewElement class, which allows Traits UIs and 
-Traits UI elements to be docked in external PyFace DockWindow windows.
+    Traits UI elements to be docked in external PyFace DockWindow windows.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:  
 #-------------------------------------------------------------------------------

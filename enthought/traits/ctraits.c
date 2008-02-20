@@ -2164,7 +2164,11 @@ notify:
     if ( (post_setattr != NULL) || do_notifiers ) { 
         old_value = PyDict_GetItem( dict, name );
         if ( old_value == NULL ) {
-            old_value = default_value_for( traitd, obj, name );
+            if ( traitd != traito ) {
+                old_value = traito->getattr( traito, obj, name );
+            } else {
+                old_value = default_value_for( traitd, obj, name );
+            }
             if ( old_value == NULL ) {
                 Py_DECREF( name );
                 Py_DECREF( value );
