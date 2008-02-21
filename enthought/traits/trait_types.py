@@ -896,7 +896,7 @@ class BaseFile ( BaseStr ):
     info_text = 'a file name'
     
     def __init__ ( self, value = '', filter = None, auto_set = False, 
-                         entries = 0, exists = False, **metadata ):
+                         entries = 10, exists = False, **metadata ):
         """ Creates a File trait.
 
         Parameters
@@ -945,7 +945,7 @@ class File ( BaseFile ):
     """
     
     def __init__ ( self, value = '', filter = None, auto_set = False, 
-                         entries = 0, exists = False, **metadata ):
+                         entries = 10, exists = False, **metadata ):
         """ Creates a File trait.
 
         Parameters
@@ -984,8 +984,8 @@ class BaseDirectory ( BaseStr ):
     # A description of the type of value this trait accepts:
     info_text = 'a directory name'
                                                         
-    def __init__ ( self, value = '', auto_set = False, exists = False,
-                         **metadata ):
+    def __init__ ( self, value = '', auto_set = False, entries = 10, 
+                         exists = False, **metadata ):
         """ Creates a BaseDirectory trait.
 
         Parameters
@@ -1005,7 +1005,8 @@ class BaseDirectory ( BaseStr ):
         """
         from enthought.traits.ui.editors import DirectoryEditor
         
-        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set ) )
+        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set, 
+                                                        entries  = entries ) )
         self.exists = exists
         
         super( BaseDirectory, self ).__init__( value, **metadata )
@@ -1028,8 +1029,8 @@ class Directory ( BaseDirectory ):
         C-level fast validator.
     """
                                                         
-    def __init__ ( self, value = '', auto_set = False, exists = False,
-                         **metadata ):
+    def __init__ ( self, value = '', auto_set = False, entries = 10, 
+                         exists = False, **metadata ):
         """ Creates a Directory trait.
 
         Parameters
@@ -1052,7 +1053,8 @@ class Directory ( BaseDirectory ):
         if not exists:
             self.fast_validate = ( 11, basestring )
             
-        super( Directory, self ).__init__( value, auto_set, exists, **metadata )
+        super( Directory, self ).__init__( value, auto_set, entries, exists, 
+                                           **metadata )
    
 #-------------------------------------------------------------------------------
 #  'BaseRange' and 'Range' traits:  
