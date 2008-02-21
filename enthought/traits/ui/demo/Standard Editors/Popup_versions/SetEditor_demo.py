@@ -81,8 +81,10 @@ class SetEditorDemo ( HasTraits ):
                   buttons = ['OK']) 
 
 
-# Code to run demo:
+# Create the demo:
 popup =  SetEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
+    

@@ -131,11 +131,11 @@ class PropertyListDemo ( HasPrivateTraits ):
             sleep( 3 )
             self.ticker = True
             
-#-- Run the demo ---------------------------------------------------------------
-
+# Create the demo:
 demo = PropertyListDemo()
 demo.begin
 
+# Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
     

@@ -43,7 +43,7 @@ try:
             
             return viewer
     
-    # Create an instance of the ImageInfoEditor as the demo to run:
+    # Create the demo:
     popup = ImageInfoEditor()
 except:
     raise Exception( 'This demo requires the enthought.developer package '

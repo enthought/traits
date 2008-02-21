@@ -34,8 +34,10 @@ class TupleEditorDemo ( HasTraits ):
                   buttons = ['OK'] )
 
 
-# Hook for 'demo.py' 
+# Create the demo:
 popup = TupleEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
+    

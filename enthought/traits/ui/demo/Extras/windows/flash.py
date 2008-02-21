@@ -38,9 +38,10 @@ class FlashDemo ( HasTraits ):
         )
     )
     
-# Create the demo object:    
+# Create the demo:    
 demo = FlashDemo()
 
+# Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
     

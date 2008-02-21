@@ -1,4 +1,5 @@
-""" Demonstrates one possible approach to writing Model/View/Controller
+""" 
+Demonstrates one possible approach to writing Model/View/Controller
 (i.e. MVC) based applications using Traits.
 """
 

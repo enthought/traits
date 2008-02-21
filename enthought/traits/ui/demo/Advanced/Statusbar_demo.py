@@ -3,7 +3,7 @@ This program demonstrates adding and using a statusbar in a Traits UI window.
 
 A statusbar may contain one or more fields, and each field can be of a fixed
 or variable size. Fixed width fields are specified in pixels, while variable 
-width fields are specified as fraction values relative to other variable
+width fields are specified as fractional values relative to other variable
 width fields.
 
 The content of a statusbar field is specified via the extended trait name of
@@ -80,8 +80,6 @@ class TextEditor ( HasPrivateTraits ):
             self.time = strftime( '%I:%M:%S %p' )
             sleep( 1.0 )
     
-#-- Run the demo ---------------------------------------------------------------
-
 # Create the demo object:
 popup = TextEditor()
 

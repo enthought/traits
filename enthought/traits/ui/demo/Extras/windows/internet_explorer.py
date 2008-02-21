@@ -79,10 +79,11 @@ class InternetExplorerDemo ( HasTraits ):
     def _url_changed ( self, url ):
         self.pages.append( WebPage( url = url.strip() ) )
     
-# Create the demo object:    
+# Create the demo:    
 demo = InternetExplorerDemo(
            pages = [ WebPage( url = 'http://code.enthought.com/traits/' ),
                      WebPage( url = 'http://dmorrill.com' ) ] )
 
+# Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()

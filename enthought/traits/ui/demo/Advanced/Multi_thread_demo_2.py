@@ -69,8 +69,10 @@ class ThreadDemo ( HasTraits ):
             counter.count += 1
             sleep( 0.030 )
         self.counters.remove( counter )
-                         
+              
+# Create the demo:              
 demo = ThreadDemo()
 
+# Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()

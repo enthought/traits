@@ -1,21 +1,21 @@
 """
-This program demonstrates the use of editors that support 'history'. A history 
-is a persistent record of the last 'n' values the user has entered or selected
-for a particular trait.
+This program demonstrates the use of editors that support <i>history</i>. A 
+history is a persistent record of the last 'n' values the user has entered or 
+selected for a particular trait.
 
-In order for the history to be recorded correctly, you must specify an 'id'
+In order for the history to be recorded correctly, you must specify an <i>id</i>
 for both the Item containing the history editor and the View containing the 
-Items.
+Item.
 
 The maximum number of history entries recorded is specified by the value of 
-the history editor's 'entries' trait. If 'entries' is less than or equal to 0, 
-then a normal, non-history, version of the editor will be used.
+the history editor's <i>entries</i> trait. If <i>entries</i> is less than or 
+equal to 0, then a normal, non-history, version of the editor will be used.
 
 A history editor also attempts to restore the last value set as the current
 value for the trait if the current value of the trait is the empty string. You
-can see this for yourself by setting some values in the fields, exiting the
-demo, then restarting it. Each field should have the same value it had when the
-demo was terminated.
+can see this for yourself by setting some values in the fields, selecting a
+different demo, then reselecting this demo. Each field should have the same 
+value it had when the demo was run the previous time.
 """
 
 #-- Imports --------------------------------------------------------------------

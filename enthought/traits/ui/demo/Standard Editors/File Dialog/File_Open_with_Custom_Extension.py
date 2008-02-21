@@ -100,8 +100,7 @@ class FileDialogDemo ( HasTraits ):
         if file_name != '':
             self.file_name = file_name
             
-#-- Set Up The Demo ------------------------------------------------------------
-
+# Create the demo:
 demo = FileDialogDemo()
 
 # Run the demo (if invoked from the command line):

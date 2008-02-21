@@ -35,16 +35,19 @@ class Employee ( HasTraits ):
 
 # The definition of the demo TableEditor:
 table_editor = TableEditor(
-    columns = [ ObjectColumn( name = 'first_name' ),
-                ObjectColumn( name = 'last_name' ),
+    columns = [ ObjectColumn( name = 'first_name', width = 0.20 ),
+                ObjectColumn( name = 'last_name',  width = 0.20 ),
                 ExpressionColumn( 
                     label = 'Full Name', 
+                    width = 0.30,
                     expression = "'%s %s' % (object.first_name, "
                                  "object.last_name )" ),
-                ObjectColumn( name = 'age' ),
-                ObjectColumn( name = 'phone' ) ],
+                ObjectColumn( name = 'age',   width = 0.10, 
+                              horizontal_alignment = 'center' ),
+                ObjectColumn( name = 'phone', width = 0.20 ) ],
     deletable   = True,   
     sort_model  = True,   
+    auto_size   = False,
     orientation = 'vertical',
     edit_view   = View( 
                       Group( 'first_name', 'last_name', 'age', 'phone',

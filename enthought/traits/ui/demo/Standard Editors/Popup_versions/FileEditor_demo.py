@@ -35,8 +35,10 @@ class FileEditorDemo ( HasTraits ):
                   buttons = ['OK'] )
 
 
-# Hook for 'demo.py' 
+# Create the demo:
 popup = FileEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
+    

@@ -40,6 +40,7 @@ class BooleanEditorDemo ( HasTraits ):
 # Hook for 'demo.py' 
 popup = BooleanEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
 

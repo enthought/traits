@@ -44,8 +44,10 @@ class ButtonEditorDemo ( HasTraits ):
                   width = 250 )
 
 
-# Hook for 'demo.py' 
+# Create the demo:
 popup = ButtonEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
+    

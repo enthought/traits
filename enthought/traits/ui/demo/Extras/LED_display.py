@@ -107,8 +107,10 @@ class LEDDemo ( HasTraits ):
         buttons = [ 'OK' ],
         handler = LEDDemoHandler
     )
-                         
+           
+# Create the demo:           
 demo = LEDDemo()
 
+# Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()

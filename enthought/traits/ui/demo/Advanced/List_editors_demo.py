@@ -15,7 +15,7 @@ from enthought.traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
     
 from enthought.traits.ui.api \
-    import View, Item, VSplit, TableEditor, ListEditor
+    import View, Item, Tabbed, TableEditor, ListEditor
     
 from enthought.traits.ui.table_column \
     import ObjectColumn
@@ -53,13 +53,14 @@ people = [
 filters      = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ]
 
 table_editor = TableEditor(
-    columns     = [ ObjectColumn( name = 'name' ),
-                    ObjectColumn( name = 'age' ),
-                    ObjectColumn( name = 'phone' ) ],
+    columns     = [ ObjectColumn( name = 'name',  width = 0.4 ),
+                    ObjectColumn( name = 'age',   width = 0.2 ),
+                    ObjectColumn( name = 'phone', width = 0.4 ) ],
     editable    = True,
     deletable   = True,
     sortable    = True,
     sort_model  = True,
+    auto_size   = False,
     filters     = filters,
     search      = RuleTableFilter(),
     row_factory = Person
@@ -73,15 +74,18 @@ class ListTraitTest ( HasStrictTraits ):
     
     # Traits view definitions:  
     traits_view = View(
-        VSplit(
+        Tabbed(
             Item( 'people',
+                  label  = 'Table',
                   id     = 'table',
                   editor = table_editor ),
             Item( 'people@',
+                  label  = 'List',
                   id     = 'list',
                   editor = ListEditor( style = 'custom', 
                                        rows  = 5 ) ),
             Item( 'people@',
+                  label  = 'Notebook',
                   id     = 'notebook',
                   editor = ListEditor( use_notebook = True, 
                                        deletable    = True,
@@ -92,9 +96,10 @@ class ListTraitTest ( HasStrictTraits ):
         id   = 'enthought.traits.ui.demo.Traits UI Demo.Advanced.List_editors_demo',
         dock = 'horizontal' )
 
-# Set up the demo:
+# Create the demo:
 demo = ListTraitTest( people = people )
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     demo.configure_traits()        
     

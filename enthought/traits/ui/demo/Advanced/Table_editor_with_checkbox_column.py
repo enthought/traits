@@ -23,6 +23,10 @@ from enthought.traits.ui.extras.checkbox_column \
 # Create a specialized column to set the text color differently based upon
 # whether or not the player is in the lineup:
 class PlayerColumn ( ObjectColumn ):
+    
+    # Override some default settings for the column:
+    width                = 0.08
+    horizontal_alignment = 'center'
 
     def get_text_color ( self, object ):
         return [ 'light grey', 'black' ][ object.in_lineup ]
@@ -32,8 +36,11 @@ class PlayerColumn ( ObjectColumn ):
 player_editor = TableEditor(
     sortable     = False,
     configurable = False,
-    columns  = [ CheckboxColumn( name  = 'in_lineup',  label = 'In Lineup' ),
-                 PlayerColumn( name   = 'name',        editable = False ),
+    auto_size    = False,
+    columns  = [ CheckboxColumn( name  = 'in_lineup',  label = 'In Lineup',
+                                 width = 0.12 ),
+                 PlayerColumn( name = 'name', editable = False, width  = 0.24, 
+                               horizontal_alignment = 'left' ),
                  PlayerColumn( name   = 'at_bats',     label  = 'AB' ), 
                  PlayerColumn( name   = 'strike_outs', label  = 'SO' ), 
                  PlayerColumn( name   = 'singles',     label  = 'S' ), 
@@ -42,9 +49,7 @@ player_editor = TableEditor(
                  PlayerColumn( name   = 'home_runs',   label  = 'HR' ), 
                  PlayerColumn( name   = 'walks',       label  = 'W' ), 
                  PlayerColumn( name   =  'average',    label  = 'Ave', 
-                               editable = False,       format = '%0.3f' ) ]
-)
-
+                               editable = False,       format = '%0.3f' ) ] )
 
 # 'Player' class:  
 class Player ( HasStrictTraits ):
@@ -102,11 +107,12 @@ def random_player ( name ):
     return p.set( at_bats = p.strike_outs + p.singles + p.doubles + p.triples +
                             p.home_runs + randint( 100, 200 ) )
     
-# Sample team:  
+# Create the demo:  
 demo = view = Team( players = [ random_player( name ) for name in [
     'Dave', 'Mike', 'Joe', 'Tom', 'Dick', 'Harry', 'Dirk', 'Fields', 'Stretch'
 ] ] )
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     demo.configure_traits()        
     

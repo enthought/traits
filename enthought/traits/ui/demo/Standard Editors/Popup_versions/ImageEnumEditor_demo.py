@@ -59,8 +59,10 @@ class ImageEnumEditorDemo( HasTraits ):
                   buttons=['OK'] ) 
 
 
-# Code to run demo:
+# Create the demo:
 popup = ImageEnumEditorDemo()
 
-#if __name__ == "__main__":
-#    popup.configure_traits()
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
+    popup.configure_traits()
+    

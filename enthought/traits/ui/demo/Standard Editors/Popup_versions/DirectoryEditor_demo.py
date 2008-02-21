@@ -36,9 +36,10 @@ class DirectoryEditorDemo ( HasTraits ):
                   buttons = ['OK'] )
 
 
-# Hook for 'demo.py' 
+# Create the demo:
 popup = DirectoryEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
 

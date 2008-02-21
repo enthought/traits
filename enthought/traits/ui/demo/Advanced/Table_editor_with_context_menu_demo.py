@@ -39,8 +39,11 @@ class AffectsAverageColumn ( ObjectColumn ):
     menu = Menu( Action( name = 'Add', action = 'column.add( object )' ),
                  Action( name = 'Sub', action = 'column.sub( object )' ) )
     
-    # Right-align numeric values:
-    horizontal_alignment = 'right'
+    # Right-align numeric values (override):
+    horizontal_alignment = 'center'
+    
+    # Column width (override):
+    width = 0.09
     
     # Don't allow the data to be edited directly:
     editable = False
@@ -58,28 +61,31 @@ class AffectsAverageColumn ( ObjectColumn ):
         
 # The 'players' trait table editor:
 player_editor = TableEditor(
-    editable = True,
-    sortable = True,
-    columns  = [ ObjectColumn( name     = 'name', 
-                               editable = False ),
-                 AffectsAverageColumn( name  = 'at_bats', 
-                                       label = 'AB' ), 
-                 AffectsAverageColumn( name  = 'strike_outs', 
-                                       label = 'SO' ), 
-                 AffectsAverageColumn( name  = 'singles', 
-                                       label = 'S' ), 
-                 AffectsAverageColumn( name  = 'doubles', 
-                                       label = 'D' ), 
-                 AffectsAverageColumn( name  = 'triples', 
-                                       label = 'T' ), 
-                 AffectsAverageColumn( name  = 'home_runs', 
-                                       label = 'HR' ), 
-                 AffectsAverageColumn( name  = 'walks', 
-                                       label = 'W' ), 
-                 ObjectColumn( name     = 'average', 
-                               label    = 'Ave', 
-                               editable = False,
-                               format   = '%0.3f' ) ]
+    editable  = True,
+    sortable  = True,
+    auto_size = False,
+    columns   = [ ObjectColumn( name     = 'name', 
+                                editable = False, width = 0.28 ),
+                  AffectsAverageColumn( name  = 'at_bats', 
+                                        label = 'AB' ), 
+                  AffectsAverageColumn( name  = 'strike_outs', 
+                                        label = 'SO' ), 
+                  AffectsAverageColumn( name  = 'singles', 
+                                        label = 'S' ), 
+                  AffectsAverageColumn( name  = 'doubles', 
+                                        label = 'D' ), 
+                  AffectsAverageColumn( name  = 'triples', 
+                                        label = 'T' ), 
+                  AffectsAverageColumn( name  = 'home_runs', 
+                                        label = 'HR' ), 
+                  AffectsAverageColumn( name  = 'walks', 
+                                        label = 'W' ), 
+                  ObjectColumn( name     = 'average', 
+                                label    = 'Ave', 
+                                editable = False,
+                                width    = 0.09,
+                                horizontal_alignment = 'center',
+                                format   = '%0.3f' ) ]
 )
         
 
@@ -143,11 +149,12 @@ def random_player ( name ):
     return p.set( at_bats = p.strike_outs + p.singles + p.doubles + p.triples +
                             p.home_runs + randint( 100, 200 ) )
     
-# Sample team:  
+# Create the demo:
 demo = view = Team( players = [ random_player( name ) for name in [
     'Dave', 'Mike', 'Joe', 'Tom', 'Dick', 'Harry', 'Dirk', 'Fields', 'Stretch'
 ] ] )
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     demo.configure_traits()        
     

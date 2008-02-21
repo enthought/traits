@@ -38,8 +38,10 @@ class ListEditorDemo ( HasTraits ):
                   width=400 )
 
 
-# Hook for 'demo.py' 
+# Create the demo:
 popup = ListEditorDemo()
 
-if __name__ == "__main__":
+# Run the demo (if invoked from the command line):
+if __name__ == '__main__':
     popup.configure_traits()
+    

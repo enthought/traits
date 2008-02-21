@@ -1,4 +1,5 @@
-""" This program converts length measurements from one unit system to another.
+""" 
+This program converts length measurements from one unit system to another.
 
 <p>Select the input and output units using the drop down combo-boxes in the
 <b>Input:</b> and <b>Output:</b> sections respectively. Type the input quantity 

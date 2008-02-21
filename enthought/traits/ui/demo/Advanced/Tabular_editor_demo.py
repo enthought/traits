@@ -125,9 +125,7 @@ class Report ( HasTraits ):
     view = View(
         Group(
             Item( 'people', id = 'table', editor = tabular_editor ), 
-            show_labels        = False,
-            item_theme         = Theme( '@BF5', content = ( -3, 0 ) ),
-            group_theme        = '@XG2' 
+            show_labels        = False
         ),
         title     = 'Tabular Editor Demo',
         id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
@@ -199,8 +197,7 @@ for female, male in marrieds:
     
 shuffle( people ) 
 
-#-- Create the demo ------------------------------------------------------------
-
+# Create the demo:
 demo = Report( people = people )
 
 # Run the demo (if invoked from the command line):
