@@ -1495,10 +1495,8 @@ getattr_trait ( trait_object      * trait,
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
                 
                 rc = 0;
-                if ( trait->post_setattr != NULL )
-                    rc = trait->post_setattr( trait, obj, name, result );
                 
-                if ( (rc == 0) && (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+                if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
                     tnotifiers = trait->notifiers;
                     onotifiers = obj->notifiers;
                     if ( has_notifiers( tnotifiers, onotifiers ) )
@@ -2152,6 +2150,8 @@ notify:
         Py_INCREF( name );
     }
     
+    new_value    = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)? 
+                   original_value: value;
     old_value    = NULL;
     do_notifiers = ((obj->flags & HASTRAITS_NO_NOTIFY) == 0);
     if ( do_notifiers ) {
@@ -2188,8 +2188,6 @@ notify:
         }
     }
      
-    new_value = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)? 
-                original_value: value;
     if ( PyDict_SetItem( dict, name, new_value ) < 0 ) { 
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
             PyErr_SetObject( PyExc_AttributeError, name );
