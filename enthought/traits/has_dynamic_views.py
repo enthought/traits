@@ -15,11 +15,11 @@ This capability is particularly useful when the object being 'viewed' with a
 Traits UI is part of a plug-in application -- such as Envisage.  In general, 
 this capability allows:
     
-1. The GUI for an object can be extendable by contributions
+*  The GUI for an object can be extendable by contributions
    other than from the original code writer.
-2. The view can be dynamic in that the elements it is composed
+*  The view can be dynamic in that the elements it is composed
    of can change each time it is requested.
-3. Registration of a handler can be associated with the view contributions.
+*  Registration of a handler can be associated with the view contributions.
     
 Either the original object writer, or a contributor, can use this framework to 
 declare one or more dynamic views that are composed of sub-elements that only 
@@ -110,7 +110,7 @@ class DynamicViewSubElement ( ViewSubElement ):
     #-- Public 'DynamicViewSubElement' Interface -------------------------------
 
     # Keyword arguments passed in during construction of the actual
-    # ViewSubElement instance:
+    # ViewSubElement instance.
     keywords = Dict
 
     # The class of the actual ViewSubElement we are dynamically creating.
@@ -118,7 +118,7 @@ class DynamicViewSubElement ( ViewSubElement ):
     klass = Any 
 
     # The name of this dynamic sub-element.  This controls the metadata
-    # names identifying the sub-elements that compose this element:
+    # names identifying the sub-elements that compose this element.
     name = Str
 
 #-------------------------------------------------------------------------------
@@ -137,19 +137,19 @@ class DynamicView ( HasTraits ):
     #-- Public 'DynamicView' Interface -----------------------------------------
 
     # The ID of the view.  This is the ID that the view's preferences will be
-    # saved under:
+    # saved under.
     id = Str
 
     # The name of the view.  This is the name that should be requested when
-    # calling edit_traits() or configure_traits():
+    # calling edit_traits() or configure_traits().
     name = Str
 
     # Keyword arguments passed in during construction of the actual view
-    # instance:
+    # instance.
     keywords = Dict
 
     # Indicates whether this view should be the default traits view for objects
-    # it is contributed to:
+    # it is contributed to.
     use_as_default = Bool( False )
 
 
@@ -170,7 +170,7 @@ class HasDynamicViews ( HasTraits ):
     #-- Protected 'HasDynamicViews' Interface ----------------------------------
 
     # The registry of dynamic views.  The key is the view name and the value
-    # is the declaration of the dynamic view:
+    # is the declaration of the dynamic view.
     _dynamic_view_registry = Dict( Str, Instance( DynamicView ) )
 
     #---------------------------------------------------------------------------

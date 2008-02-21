@@ -338,8 +338,8 @@ class BaseTraitHandler ( object ):
         interfaces. The default implementation of this method returns a trait
         editor that allows the user to type an arbitrary string as the value.
 
-        For more information on trait user interfaces, refer to the chapter,
-        "GUIs for Trait Attributes: Visualization" in the *Traits User Manual*.
+        For more information on trait user interfaces, refer to the *Traits UI
+        User Guide*.
         """
         if self.editor is None:
             self.editor = self.create_editor()
@@ -368,7 +368,9 @@ class BaseTraitHandler ( object ):
 #-------------------------------------------------------------------------------
                 
 class TraitType ( BaseTraitHandler ):
-    """ This class enables you to define new traits using a class-based
+    """ Base class for new trait types. 
+    
+        This class enables you to define new traits using a class-based
         approach, instead of by calling the Trait() factory function with an 
         instance of a TraitHandler derived object.
         
@@ -1209,7 +1211,7 @@ class ThisClass ( TraitHandler ):
 
         Parameters
         ----------
-        allow_none : boolean
+        allow_none : Boolean
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0)
         """
@@ -1256,7 +1258,7 @@ class ThisClass ( TraitHandler ):
 #  'TraitInstance' class:
 #-------------------------------------------------------------------------------
 
-# Mapping from 'adapt' parameter values to 'fast validate' values:
+# Mapping from 'adapt' parameter values to 'fast validate' values
 AdaptMap = {
    'no':     -1,
    'yes':     0,

@@ -535,14 +535,19 @@ def default_handler ( handler = None ):
 class Controller ( Handler ):
     """ Defines a handler class which provides a view and controller for a
         specified model.
+        
+        This class is used when implementing a standard MVC-based design. The
+        **model** trait contains most, if not all, of the data being viewed,
+        and can be referenced in a Controller instance's View definition using
+        unadorned trait names. (e.g., ``Item('name')``).
     """
     
     #-- Trait Definitions ------------------------------------------------------
     
-    # The model this handler defines a view and controller for:
+    # The model this handler defines a view and controller for
     model = Instance( HasTraits )
     
-    # The Info object associated with the controller:
+    # The Info object associated with the controller
     info = Instance( UIInfo )
     
     #-- HasTraits Method Overrides ---------------------------------------------
@@ -577,6 +582,18 @@ class Controller ( Handler ):
 class ModelView ( Controller ):
     """ Defines a handler class which provides a view and controller for a
         specified model.
+        
+        This class is useful when creating a variant of the standard MVC-based
+        design. A subclass of ModelView reformulates a number of traits on
+        its **model** object as properties on the ModelView subclass itself,
+        usually in order to convert them into a more user-friendly format. In
+        this design, the ModelView subclass supplies not only the view and
+        the controller, but also, in effect, the model (as a set of properties
+        wrapped around the original model). Because of this, the ModelView
+        context dictionary specifies the ModelView instance itself as the 
+        special *object* value, and assigns the original model object as the
+        *model* value. Thus, the traits of the ModelView object can be referenced
+        in its View definition using unadorned trait names. 
     """
     
     #-- HasTraits Method Overrides ---------------------------------------------

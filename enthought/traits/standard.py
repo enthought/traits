@@ -47,14 +47,14 @@ event_trait = Event( editor = button_editor )
 #  Boolean traits: 
 #-------------------------------------------------------------------------------
 
-# Boolean that defaults to False and uses BooleanEditor:
+# Boolean that defaults to False and uses BooleanEditor
 false_trait = Trait( False, bool, editor = boolean_editor )
 
-# Boolean that defaults to True and uses BooleanEditor:
+# Boolean that defaults to True and uses BooleanEditor
 true_trait  = Trait( True,  bool, editor = boolean_editor )
 
 # Boolean that defaults to True, uses a BooleanEditor, and accepts a variety
-# of obvious values for True and False:
+# of obvious values for True and False
 flexible_true_trait = Trait( 'true',  
     { 'true':  1, 't': 1, 'yes': 1, 'y': 1, 'on':  1, 1: 1,
       'false': 0, 'f': 0, 'no':  0, 'n': 0, 'off': 0, 0: 0
@@ -63,7 +63,7 @@ flexible_true_trait = Trait( 'true',
 )
 
 # Boolean that defaults to False, uses a BooleanEditor, and accepts a variety
-# of obvious values for True and False:
+# of obvious values for True and False
 flexible_false_trait = Trait( 'false', flexible_true_trait )
 
 #-------------------------------------------------------------------------------
@@ -221,11 +221,11 @@ day_of_week_short_trait = Trait( 'Sun', [
 #  Telephone Number related traits:
 #-------------------------------------------------------------------------------
 
-# Local United States phone number:
+# Local United States phone number
 phone_short_trait = Trait( '555-1212',
                            TraitString( regex = r'^\d{3,3}[ -]?\d{4,4}$' ) )
                            
-# Long distance United States phone number:                           
+# Long distance United States phone number                           
 phone_long_trait = Trait( '800-555-1212', TraitString( 
                           regex = r'^\d{3,3}[ -]?\d{3,3}[ -]?\d{4,4}$|'
                                   r'^\(\d{3,3}\) ?\d{3,3}[ -]?\d{4,4}$' ) )                         
@@ -234,7 +234,7 @@ phone_long_trait = Trait( '800-555-1212', TraitString(
 #  Miscellaneous traits:
 #-------------------------------------------------------------------------------
 
-# United States Social Security Number:
+# United States Social Security Number
 ssn_trait = Trait( '000-00-0000', 
                    TraitString( regex = r'^\d{3,3}[ -]?\d{2,2}[ -]?\d{4,4}$' ) )
 

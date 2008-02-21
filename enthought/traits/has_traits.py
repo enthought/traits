@@ -112,13 +112,13 @@ ImplementsClass = '__implements__'
 # The default Traits View name
 DefaultTraitsView = 'traits_view'
 
-# Trait types which cannot have default values:
+# Trait types which cannot have default values
 CantHaveDefaultValue = ( 'event', 'delegate', 'constant' )
 
-# An empty list:
+# An empty list
 EmptyList = []
 
-# Quick test for normal vs extended trait name:
+# Quick test for normal vs extended trait name
 extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
 #-------------------------------------------------------------------------------
@@ -1169,7 +1169,7 @@ def cached_property ( function ):
         boilerplate cache management code explicitly. For example::
             
             file_name = File
-            file_contents = Property( depends_on = 'file_name', cached = True )
+            file_contents = Property( depends_on = 'file_name' )
             
             @cached_property
             def _get_file_contents(self):
@@ -1183,6 +1183,11 @@ def cached_property ( function ):
         trait is modified. In all other cases, the cached value 
         **_file_contents**, which maintained by the @cached_property wrapper 
         code, is returned.
+        
+        Note the use, in the example, of the **depends_on** metadata attribute
+        to specify that the value of **file_contents** depends on **file_name**,
+        so that _get_file_contents() is called only when **file_name** changes.
+        For details, see the enthought.traits.traits.Property() function.
     """
     name = function.__name__[ 4: ]
     
@@ -1230,7 +1235,7 @@ class HasTraits ( CHasTraits ):
 
     #-- Class Variables --------------------------------------------------------
 
-    # Mapping from dispatch type to notification wrapper class type:
+    # Mapping from dispatch type to notification wrapper class type
     wrappers = {
         'same':     TraitChangeNotifyWrapper,
         'extended': ExtendedTraitChangeNotifyWrapper,
@@ -1246,11 +1251,11 @@ class HasTraits ( CHasTraits ):
 
     #-- Trait Definitions ------------------------------------------------------
 
-    # An event fired when a new trait is dynamically added to the object:
+    # An event fired when a new trait is dynamically added to the object
     trait_added = Event( basestring )
 
     # An event that can be fired to indicate that the state of the object has
-    # been modified:
+    # been modified
     trait_modified = Event
     
     #---------------------------------------------------------------------------
@@ -1570,7 +1575,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def __getstate__ ( self ):
-        """ Returns dictionary of traits to pickle.
+        """ Returns a dictionary of traits to pickle.
 
         In general, avoid overriding __getstate__ in subclasses. Instead, mark
         traits that should not be pickled with 'transient = True' metadata.
@@ -1680,7 +1685,7 @@ class HasTraits ( CHasTraits ):
                 
         return result
 
-    # Define the deprecated alias for 'trait_get':
+    # Defines the deprecated alias for 'trait_get'
     get = trait_get
 
     #---------------------------------------------------------------------------
@@ -1733,7 +1738,7 @@ class HasTraits ( CHasTraits ):
 
         return self
 
-    # Define the deprecated alias for 'trait_set':
+    # Defines the deprecated alias for 'trait_set'
     set = trait_set
     
     def trait_setq ( self, **traits ):
@@ -2368,7 +2373,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        show_help : boolean
+        show_help : Boolean
             Indicates whether to display additional descriptive information.
         """
 
@@ -2532,35 +2537,35 @@ class HasTraits ( CHasTraits ):
         A *name* is any valid Python attribute name. The semantic meaning of 
         this notation is as follows:
             
-        - item1.item2 means item1 is a trait containing an object (or objects
-          if item1 is a list or dict) with a trait called item2. Changes to
-          either item1 or item2 will cause a notification to be generated.
-        - item1:item2 means item1 is a trait containing an object (or objects
-          if item1 is a list or dict) with a trait called item2. Changes to
-          item2 will cause a notification to be generated, while changes to
-          item1 will not (i.e. the ':' indicates that changes to the *link*
+        - ``item1.item2`` means *item1* is a trait containing an object (or objects
+          if *item1* is a list or dict) with a trait called *item2*. Changes to
+          either *item1* or *item2* cause a notification to be generated.
+        - ``item1:item2`` means *item1* is a trait containing an object (or objects
+          if *item1* is a list or dict) with a trait called *item2*. Changes to
+          *item2* cause a notification to be generated, while changes to
+          *item1* do not (i.e., the ':' indicates that changes to the *link*
           object should not be reported).
-        - [ item, item, ..., item ]: A list which matches any of the
+        - ``[ item1, item2, ..., itemN ]``: A list which matches any of the
           specified items. Note that at the topmost level, the surrounding
           square brackets are optional.
-        - name?: If the current object does not have an attribute called 
+        - ``name?``: If the current object does not have an attribute called 
           *name*, the reference can be ignored. If the '?' character is 
           omitted, the current object must have a trait called *name*, 
           otherwise an exception will be raised.
-        - prefix+: Matches any trait on the current object whose name
+        - ``prefix+``: Matches any trait on the object whose name
           begins with *prefix*.
-        - +metadata_name: Matches any trait on the current object having 
+        - ``+metadata_name``: Matches any trait on the object having 
           *metadata_name* metadata.
-        - -metadata_name: Matches any trait on the current object which 
+        - ``-metadata_name``: Matches any trait on the object which 
           does not have *metadata_name* metadata.
-        - prefix+metadata_name: Matches any trait on the current object
+        - ``prefix+metadata_name``: Matches any trait on the object
           whose name begins with *prefix* and which has *metadata_name* 
           metadata. 
-        - prefix-metadata_name: Matches any trait on the current object
+        - ``prefix-metadata_name``: Matches any trait on the object
           whose name begins with *prefix* and which does not have 
           *metadata_name* metadata.
-        - +: Matches all traits on the current object.
-        - pattern*: Matches object graphs where *pattern* occurs one or
+        - ``+``: Matches all traits on the object.
+        - ``pattern*``: Matches object graphs where *pattern* occurs one or
           more times (useful for setting up listeners on recursive data
           structures like trees or linked lists).
         
@@ -2708,7 +2713,7 @@ class HasTraits ( CHasTraits ):
                               deferred        = deferred )
                 listener.register( self )  
 
-    # Make 'on_trait_event' a synonym for 'on_trait_change':
+    # A synonym for 'on_trait_change'
     on_trait_event = on_trait_change
 
     #---------------------------------------------------------------------------

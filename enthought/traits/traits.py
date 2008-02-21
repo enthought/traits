@@ -1143,7 +1143,18 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             def _get_foo(self):
                 return self._foo
 
-    
+    You can use the **depends_on** metadata attribute to indicate that the 
+    property depends on the value of another trait. The value of **depends_on**
+    is an extended name specifier for traits that the property depends on. The
+    property will a trait change notification if any of the traits specified
+    by **depends_on** change. For example::
+        
+        class Wheel ( Part ):
+            axle     = Instanced( Axle )
+            position = Property( depends_on = 'axle.chassis.position' )
+            
+    For details of the extended trait name syntax, refer to the on_trait_change()
+    method of the HasTraits class.
     """
     metadata[ 'type' ] = 'property'
 
