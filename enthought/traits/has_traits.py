@@ -1692,6 +1692,10 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
+        trait_change_notify : Boolean
+            If **True** (the default), then each value assigned may generate a
+            trait change notification. If **False**, then no trait change 
+            notifications will be generated. (see also: trait_setq)
         traits : list of key/value pairs
             Trait attributes and their values to be set
 
@@ -1708,7 +1712,7 @@ class HasTraits ( CHasTraits ):
         need to be set on an object, or a trait attribute value needs to be set
         in a lambda function. For example, you can write::
 
-            person.set(name='Bill', age=27)
+            person.trait_set(name='Bill', age=27)
 
         instead of::
 
@@ -1731,6 +1735,39 @@ class HasTraits ( CHasTraits ):
 
     # Define the deprecated alias for 'trait_set':
     set = trait_set
+    
+    def trait_setq ( self, **traits ):
+        """ Shortcut for setting object trait attributes.
+
+        Parameters
+        ----------
+        traits : list of key/value pairs
+            Trait attributes and their values to be set. No trait change
+            notifications will be generated for any values assigned (see also:
+            trait_set).
+
+        Returns
+        -------
+        self
+            The method returns this object, after setting attributes.
+
+        Description
+        -----------
+        Treats each keyword argument to the method as the name of a trait
+        attribute and sets the corresponding trait attribute to the value
+        specified. This is a useful shorthand when a number of trait attributes
+        need to be set on an object, or a trait attribute value needs to be set
+        in a lambda function. For example, you can write::
+
+            person.trait_setq(name='Bill', age=27)
+
+        instead of::
+
+            person.name = 'Bill'
+            person.age = 27
+
+        """
+        return self.trait_set( trait_change_notify = False, **traits )
 
     #---------------------------------------------------------------------------
     #  Resets some or all of an object's traits to their default values:
@@ -3149,7 +3186,7 @@ class HasTraits ( CHasTraits ):
     #  Returns the trait definition for a specified name when there is no
     #  explicit definition in the class:
     #---------------------------------------------------------------------------
-        
+    
     def __prefix_trait__ ( self, name ):
         # Never create prefix traits for names of the form '__xxx__':
         if (name[:2] == '__') and (name[-2:] == '__'):
