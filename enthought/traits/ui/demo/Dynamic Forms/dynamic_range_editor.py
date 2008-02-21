@@ -18,8 +18,10 @@ widths can also be specified if desired.
 
 # Imports:  
 from enthought.traits.api \
-    import HasPrivateTraits, Float, Range, RangeEditor, View, Item, Label, \
-           Group, Int
+    import HasPrivateTraits, Float, Range, Int
+           
+from enthought.traits.ui.api \
+    import View, Group, Item, Label, RangeEditor
     
 class DynamicRangeEditor ( HasPrivateTraits ):
     """ Defines an editor for dynamic ranges (i.e. ranges whose bounds can be
