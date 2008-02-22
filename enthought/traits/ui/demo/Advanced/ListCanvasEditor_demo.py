@@ -202,18 +202,22 @@ class PersonMonitor ( ListCanvasItemMonitor ):
                ', '.join( [ item.title for item in self.item.neighbors ] ) )
 
 #-- The main demo ListCanvas adapter class -------------------------------------               
-               
+
+Person_theme_active = ATheme( Theme( '@ui:GL5TB', label  = ( 14, 14, 25, 3 ),
+                                                  border = ( 6, 6, 6, 6 ) ) )
+
+Person_theme_inactive = ATheme( Theme( '@ui:GL5T', label  = ( 14, 14, 25, 3 ),
+                                                   border = ( 6, 6, 6, 6 ) ) )
+
 class TestAdapter ( ListCanvasAdapter ):
     
-    Person_theme_active   = ATheme( Theme( 'Photo_frame_active',   
-                                           label = ( 0, 0, 0, 3 ) ) )
-    Person_theme_inactive = ATheme( Theme( 'Photo_frame_inactive',
-                                           label = ( 0, 0, 0, 3 ) ) )
-    Person_theme_hover    = ATheme( Theme( 'Photo_frame_hover',
-                                           label = ( 0, 0, 0, 3 ) ) )
+    Person_theme_active        = Person_theme_active
+    Person_theme_inactive      = Person_theme_inactive
+    Person_theme_hover         = Person_theme_inactive
     ObjectTrait_theme_active   = ATheme( Theme( '@J08', content = 3 ) )
     ObjectTrait_theme_inactive = ATheme( Theme( '@J07', content = 3 ) )
     ObjectTrait_theme_hover    = ATheme( Theme( '@J0A', content = 3 ) )
+    
     CanvasItems_size    = Tuple( ( 180, 250 ) )
     CanvasSnoop_size    = Tuple( ( 250, 250 ) )
     
