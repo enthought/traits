@@ -49,7 +49,7 @@ class CanvasItems ( HasPrivateTraits ):
     #-- IListCanvasAware Implementation ------------------------------------
     
     # The list canvas item associated with this object:
-    list_canvas_item = Instance( 'ListCanvasItem' )
+    list_canvas_item = Instance( ListCanvasItem )
     
     #-- Private Traits -----------------------------------------------------
     
@@ -121,7 +121,7 @@ class CanvasSnoop ( HasPrivateTraits ):
     #-- IListCanvasAware Implementation ------------------------------------
     
     # The list canvas item associated with this object:
-    list_canvas_item = Instance( 'ListCanvasItem' )
+    list_canvas_item = Instance( ListCanvasItem )
     
     #-- Private Traits -----------------------------------------------------
     
