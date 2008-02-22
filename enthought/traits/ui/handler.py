@@ -555,8 +555,8 @@ class Controller ( Handler ):
     def __init__ ( self, model = None, **metadata ):
         """ Initializes the object and sets the model (if supplied).
         """
-        self.model = model
         super( Controller, self ).__init__( **metadata )
+        self.model = model
 
     def trait_context ( self ):
         """ Returns the default context to use for editing or configuring 
