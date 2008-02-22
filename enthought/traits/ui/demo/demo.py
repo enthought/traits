@@ -120,7 +120,16 @@ class DemoFileHandler ( Handler ):
             demo = DemoError( msg = str( excp ) )
             
         df.demo = demo
-
+  
+    #---------------------------------------------------------------------------
+    #  Closes the view:
+    #---------------------------------------------------------------------------
+    
+    def closed ( self, info, is_ok ):
+        """ Closes the view.
+        """
+        info.object.demo = None
+         
     #---------------------------------------------------------------------------
     #  Get a specified object from the execution dictionary:  
     #---------------------------------------------------------------------------
