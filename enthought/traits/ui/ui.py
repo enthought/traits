@@ -281,6 +281,7 @@ class UI ( HasPrivateTraits ):
     def finish ( self ):
         """ Finishes disposing of a user interface.
         """
+        # Reset the contents of the user interface:
         self.reset( destroy = False )
 
         # Notify the handler that the view has been closed:

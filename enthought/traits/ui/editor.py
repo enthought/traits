@@ -297,6 +297,14 @@ class Editor ( HasPrivateTraits ):
     def _update_editor ( self, object, name, old_value, new_value ):
         """ Performs updates when the object trait changes.
         """
+        # If background threads have modified the trait the editor is bound to,
+        # their trait notifications are queued to the UI thread. It is possible
+        # that by the time the UI thread dispatches these events, the UI the
+        # editor is part of has already been closed. So we need to check if we
+        # are still bound to a live UI, and if not, exit immediately:
+        if self.ui is None:
+            return
+        
         # If the notification is for an object different than the one actually
         # being edited, it is due to editing an item of the form:
         # object.link1.link2.name, where one of the 'link' objects may have 
