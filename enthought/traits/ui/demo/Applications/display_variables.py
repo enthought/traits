@@ -231,6 +231,12 @@ variable_view = View(
     Slider( 'b', label = 'b' )
 )
 
+label_theme = Theme( ImageResource( 'header', 
+                                    search_path = search_path ),
+                     label     = ( 0, 5 ),
+                     alignment = 'center' )
+
+
 #-- ExperimentView Controller Class --------------------------------------------
 
 class ExperimentView ( Controller ):
@@ -240,24 +246,17 @@ class ExperimentView ( Controller ):
     view = View(
         HSplit(
             VGroup(
-                Label( 'Experiment Variables', 
-                       Theme( ImageResource( 'header', 
-                                             search_path = search_path ),
-                              content   = ( 0, 4 ), 
-                              label     = ( 0, 2 ),
-                              alignment = 'center' ) ),
+                Label( 'Experiment Variables', label_theme ), 
                 '_',
                 Item( 'variables',
                       show_label = False,
                       editor = ThemedVerticalNotebookEditor(
                           closed_theme = Theme( 
                               ImageResource( 'notebook_close', 
-                                             search_path = search_path ), 
-                              label = ( -9, 0 ) ),
+                                             search_path = search_path ) ),
                           open_theme = Theme(
                               ImageResource( 'notebook_open', 
-                                             search_path = search_path ),
-                              content = ( -20, 2 ) ),
+                                             search_path = search_path ) ),
                           multiple_open = True,
                           scrollable    = True,
                           double_click  = False,
@@ -270,12 +269,7 @@ class ExperimentView ( Controller ):
                 export = 'DockWindowShell'
             ),
             VGroup(
-                Label( 'Experiment Variables', 
-                       Theme( ImageResource( 'header', 
-                                             search_path = search_path ),
-                              content   = ( 0, 4 ),
-                              label     = ( 0, 2 ), 
-                              alignment = 'center' ) ),
+                Label( 'Experiment Variables', label_theme ), 
                 '_',
                 Item( 'variables',
                       show_label = False,
