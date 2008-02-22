@@ -1781,6 +1781,8 @@ class BaseInstance ( BaseClass ):
         or one of its subclasses.
     """
 
+    adapt_default = 'no'
+
     def __init__ ( self, klass = None, factory = None, args = None, kw = None, 
                    allow_none = True, adapt = None, module = None,
                    **metadata ):
@@ -2005,8 +2007,6 @@ class Instance ( BaseInstance ):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses using a C-level fast validator.
     """
-
-    adapt_default = 'no'
     
     def init_fast_validate ( self ):
         """ Sets up the C-level fast validator.
