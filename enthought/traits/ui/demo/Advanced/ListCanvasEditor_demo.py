@@ -206,11 +206,11 @@ class PersonMonitor ( ListCanvasItemMonitor ):
 class TestAdapter ( ListCanvasAdapter ):
     
     Person_theme_active   = ATheme( Theme( 'Photo_frame_active',   
-                                           label = ( 0, -3 ) ) )
+                                           label = ( 0, 0, 0, 3 ) ) )
     Person_theme_inactive = ATheme( Theme( 'Photo_frame_inactive',
-                                           label = ( 0, -3 ) ) )
+                                           label = ( 0, 0, 0, 3 ) ) )
     Person_theme_hover    = ATheme( Theme( 'Photo_frame_hover',
-                                           label = ( 0, -3 ) ) )
+                                           label = ( 0, 0, 0, 3 ) ) )
     ObjectTrait_theme_active   = ATheme( Theme( '@J08', content = 3 ) )
     ObjectTrait_theme_inactive = ATheme( Theme( '@J07', content = 3 ) )
     ObjectTrait_theme_hover    = ATheme( Theme( '@J0A', content = 3 ) )
