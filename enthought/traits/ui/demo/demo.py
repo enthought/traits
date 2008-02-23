@@ -212,7 +212,8 @@ class DemoButton ( HasPrivateTraits ):
                 spring,
                 Item( 'demo',
                       show_label = False,
-                      editor     = InstanceEditor( label = 'Run demo...' ) ),
+                      editor     = InstanceEditor( label = 'Run demo...', 
+                                                   kind  = 'modal' ) ),
                 spring
             )
         ),
