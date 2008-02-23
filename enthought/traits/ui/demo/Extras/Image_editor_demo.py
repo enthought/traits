@@ -54,11 +54,11 @@ class Employee ( HasTraits ):
     )
     
 # Create the demo:    
-demo = Employee( name  = 'William Murchison', 
-                 dept  = 'Receiving',
-                 email = 'wmurchison@acme.com' )
+popup = Employee( name  = 'William Murchison', 
+                  dept  = 'Receiving',
+                  email = 'wmurchison@acme.com' )
         
 # Run the demo (if invoked form the command line):                 
 if __name__ == '__main__':
-    demo.configure_traits()    
+    popup.configure_traits()    
 
