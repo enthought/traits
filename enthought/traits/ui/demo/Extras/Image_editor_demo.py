@@ -4,6 +4,11 @@ to a Traits UI View.
 """
 
 # Imports:
+import enthought.traits.ui
+
+from os.path \
+    import join, dirname
+    
 from enthought.traits.api \
     import HasTraits, Str
     
@@ -15,6 +20,12 @@ from enthought.traits.ui.wx.extra.image_editor \
 
 from enthought.pyface.image_resource \
     import ImageResource
+    
+# Constants:
+
+# Necessary because of the dynamic way in which the demos are loaded:
+search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
+                      'demo', 'Extras' ) ]
 
 # Define the demo class:    
 class Employee ( HasTraits ):
@@ -30,7 +41,9 @@ class Employee ( HasTraits ):
             VGroup(
                 Item( 'name',
                       show_label = False,
-                      editor = ImageEditor( image = ImageResource( 'info' ) ) )
+                      editor = ImageEditor( 
+                          image = ImageResource( 'info',
+                                                 search_path = search_path) ) )
             ),
             VGroup( 
                 Item( 'name' ),
