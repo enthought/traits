@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the GPL v2
@@ -119,8 +119,8 @@ class ToolkitEditorFactory ( EditorFactory ):
         if handler is not None:
             if isinstance( handler, CTrait ):
                 handler = handler.handler
-            self.low  = handler.low
-            self.high = handler.high
+            self.low  = handler._low
+            self.high = handler._high
         else:
             if (self.low is None) and (self.low_name == ''):
                 self.low  = 0.0
@@ -138,8 +138,9 @@ class ToolkitEditorFactory ( EditorFactory ):
         old_low         = self._low
         self._low = low = self._cast( low )
         self.is_float   = isinstance(low, float)
-        if (self.low_label == '') or (self.low_label == str( old_low )):
-            self.low_label = str( low  )
+
+        if (self.low_label == '') or (self.low_label == unicode(old_low)):
+            self.low_label = unicode(low)
 
     def _get_high ( self ):
         return self._high
@@ -149,8 +150,8 @@ class ToolkitEditorFactory ( EditorFactory ):
         self._high = high = self._cast( high )
         self.is_float     = isinstance(high, float)
 
-        if (self.high_label == '') or (self.high_label == str( old_high )):
-            self.high_label = str( high )
+        if (self.high_label == '') or (self.high_label == unicode(old_high)):
+            self.high_label = unicode(high)
 
     def _cast ( self, value ):
         if type( value ) is not str:
@@ -426,8 +427,10 @@ class SimpleSliderEditor ( Editor ):
                 # 'foo') pretend it didn't happen
                 value = self.value
                 self.control.text.setText(unicode(value))
+
             if not self.factory.is_float:
                 value = int(value)
+
             self.value = value 
             self.control.slider.setValue( 
                 int( ((float( value ) - self.low) / 
@@ -452,6 +455,7 @@ class SimpleSliderEditor ( Editor ):
         except:
             text  = ''
             value = low
+
         if high > low:
             ivalue = int( (float( value - low ) / (high - low)) * 10000.0 )
         else:
@@ -478,7 +482,7 @@ class SimpleSliderEditor ( Editor ):
                 self.value = int( low )
 
         if self._label_lo is not None:
-            self._label_lo.setText(self.format % low )
+            self._label_lo.setText(self.format % low)
             self.update_editor()
 
     def _high_changed ( self, high ):
@@ -487,6 +491,7 @@ class SimpleSliderEditor ( Editor ):
                 self.value = float( high )
             else:
                 self.value = int( high )
+
         if self._label_hi is not None:
             self._label_hi.setText(self.format % high)
             self.update_editor()
@@ -532,9 +537,15 @@ class LargeRangeSliderEditor ( Editor ):
         """        
         factory = self.factory
         if not factory.low_name:
-            self.set( low = factory.low, trait_change_notify = False )
+            self.trait_setq( low = factory.low )
+
         if not factory.high_name:
-            self.set( high = factory.high, trait_change_notify = False )
+            self.trait_setq( high = factory.high )
+
+        # Hook up the traits to listen to the object.
+        self.sync_value( factory.low_name,  'low',  'from' )
+        self.sync_value( factory.high_name, 'high', 'from' )
+
         self.init_range()
         low  = self.cur_low
         high = self.cur_high
@@ -548,10 +559,11 @@ class LargeRangeSliderEditor ( Editor ):
 
         try:
             fvalue_text = self._format % fvalue
-            1 / (factory.low <= fvalue <= factory.high)
+            1 / (low <= fvalue <= high)
         except:
             fvalue_text = ''
-            fvalue      = factory.low
+            fvalue      = low
+
         ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
 
         # Lower limit label:
@@ -604,10 +616,6 @@ class LargeRangeSliderEditor ( Editor ):
         self.set_tooltip(label_hi)
         self.set_tooltip(text)
 
-        # Hook up the traits to listen to the object.
-        self.sync_value( factory.low_name,  'low',  'from' )
-        self.sync_value( factory.high_name, 'high', 'from' )
-
         # Update the ranges and button just in case.
         self.update_range_ui()
 
@@ -656,6 +664,7 @@ class LargeRangeSliderEditor ( Editor ):
         except:
             value = low
         self.value = value
+
         if not self.ui_changing:
             self.init_range()
             self.update_range_ui()
@@ -684,9 +693,10 @@ class LargeRangeSliderEditor ( Editor ):
         """
         value     = self.value
         low, high = self.low, self.high
-        if high is None and low is not None:
+        if (high is None) and (low is not None):
             high = -low
-        mag       = abs( value )
+
+        mag = abs( value )
         if mag <= 10.0:
             cur_low  = max( value - 10, low )
             cur_high = min( value + 10, high )
@@ -760,7 +770,8 @@ class LargeRangeSliderEditor ( Editor ):
             else:
                 self.value = int( low )
 
-        self.update_editor()
+        if self.control is not None:
+            self.update_editor()
 
     def _high_changed ( self, high ):
         if self.value > high:
@@ -769,7 +780,8 @@ class LargeRangeSliderEditor ( Editor ):
             else:
                 self.value = int( high )
 
-        self.update_editor()
+        if self.control is not None:
+            self.update_editor()
 
 #-------------------------------------------------------------------------------
 #  'SimpleSpinEditor' class:
@@ -800,14 +812,16 @@ class SimpleSpinEditor ( Editor ):
         factory = self.factory
         if not factory.low_name:
             self.low = factory.low
+
         if not factory.high_name:
             self.high = factory.high
+
         self.sync_value( factory.low_name,  'low',  'from' )
         self.sync_value( factory.high_name, 'high', 'from' )
         low  = self.low
         high = self.high
 
-        self.control = QtGui.QSpinBox(parent)
+        self.control = QtGui.QSpinBox()
         self.control.setMinimum(low)
         self.control.setMaximum(high)
         self.control.setValue(self.value)
