@@ -46,6 +46,9 @@ from editor_factory \
 from editor \
     import Editor
 
+from helper \
+    import position_window
+
 from constants \
     import DropColor
 
@@ -586,6 +589,9 @@ class SimpleEditor ( CustomEditor ):
                                                   self.name ) 
         ui = self.value.edit_traits( view, self.control, factory.kind,
                                      id = factory.id )
+
+        # Position the window on the display:
+        position_window( ui.control )
 
         # Chain our undo history to the new user interface if it does not have
         # its own:

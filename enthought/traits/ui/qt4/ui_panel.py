@@ -36,7 +36,7 @@ from enthought.traits.ui.menu \
     import UndoButton, RevertButton, HelpButton
 
 from helper \
-    import position_near
+    import position_window
 
 from constants \
     import screen_dx, screen_dy, WindowColor
@@ -987,7 +987,7 @@ class HTMLHelpWindow ( QtGui.QLabel ):
                                int( scale_dy * screen_dy ) ) )
 
         # Position and show the dialog:
-        position_near( parent, self, align_y = -1 )
+        position_window( self, parent = parent )
         self.Show()
 
     #---------------------------------------------------------------------------

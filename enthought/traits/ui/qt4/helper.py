@@ -20,9 +20,6 @@ import os.path
 
 from PyQt4 import QtCore, QtGui
 
-from constants \
-    import screen_dx, screen_dy
-    
 from enthought.traits.api \
     import Enum, CTrait, BaseTraitHandler, TraitError
     
@@ -57,31 +54,59 @@ def pixmap_cache(name):
     return pm
 
 #-------------------------------------------------------------------------------
-#  Positions one window near another:
+#  Positions a window on the screen with a specified width and height so that
+#  the window completely fits on the screen if possible:
 #-------------------------------------------------------------------------------
 
-def position_near ( origin, target, offset_x = 0, offset_y = 0, 
-                                    align_x  = 1, align_y  = 1 ):
-    """ Positions one window near another.
+def position_window ( window, width = None, height = None, parent = None ):
+    """ Positions a window on the screen with a specified width and height so
+        that the window completely fits on the screen if possible.
     """
-    # Calculate the target window position relative to the origin window:                                         
-    gpos = origin.mapToGlobal( QtCore.QPoint() )
-    x = gpos.x()
-    y = gpos.y()
-    dx = target.width()
-    dy = target.height()
-    odx = origin.width()
-    ody = origin.height()
-    if align_x < 0:
-        x = x + odx - dx
-    if align_y < 0:
-        y = y + ody - dy
-    x += offset_x
-    y += offset_y
-    
-    # Position the target window (making sure it will fit on the screen):
-    target.move( max( 0, min( x, screen_dx - dx ) ),
-                 max( 0, min( y, screen_dy - dy ) ) )
+    # Get the available geometry of the screen containing the window.
+    sgeom = QtGui.QApplication.desktop().availableGeometry(window)
+    screen_dx = sgeom.width()
+    screen_dy = sgeom.height()
+
+    # Use the frame geometry even though it is very unlikely that the X11 frame
+    # exists at this point.
+    fgeom = window.frameGeometry()
+    width = width or fgeom.width()
+    height = height or fgeom.height()
+
+    if parent is None:
+        parent = window._parent
+
+    if parent is None:
+        # Center the popup on the screen.
+        window.move((screen_dx - width) / 2, (screen_dy - height) / 2)
+        return
+
+    # Calculate the desired size of the popup control:
+    if isinstance(parent, QtGui.QWidget):
+        gpos = parent.mapToGlobal(QtCore.QPoint())
+        x = gpos.x()
+        y = gpos.y()
+        cdx = parent.width()
+        cdy = parent.height()
+
+        # Get the frame height of the parent and assume that the window will
+        # have a similar frame.  Note that we would really like the height of
+        # just the top of the frame.
+        pw = parent.window()
+        fheight = pw.frameGeometry().height() - pw.height()
+    else:
+        # Special case of parent being a screen position and size tuple (used
+        # to pop-up a dialog for a table cell):
+        x, y, cdx, cdy = parent
+
+        fheight = 0
+
+    x -= (width - cdx) / 2
+    y += cdy + fheight
+
+    # Position the window (making sure it will fit on the screen).
+    window.move(max(0, min(x, screen_dx - width)),
+                max(0, min(y, screen_dy - height)))
     
 #-------------------------------------------------------------------------------
 #  Restores the user preference items for a specified UI:
