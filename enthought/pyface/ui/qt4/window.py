@@ -84,8 +84,10 @@ class Window(MWindow, Widget):
         self._event_filter = None
 
         if self.control is not None:
-            self.control.close()
+            # Avoid problems with recursive calls.
+            control = self.control
             self.control = None
+            control.close()
 
     ###########################################################################
     # Private interface.

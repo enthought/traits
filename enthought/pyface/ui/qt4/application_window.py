@@ -54,7 +54,7 @@ class ApplicationWindow(MApplicationWindow, Window):
     def _create_contents(self, parent):
         panel = QtGui.QWidget(parent)
 
-        palette = panel.palette()
+        palette = QtGui.QPalette(panel.palette())
         palette.setColor(QtGui.QPalette.Window, QtGui.QColor('blue'))
         panel.setPalette(palette)
         panel.setAutoFillBackground(True)
