@@ -170,7 +170,7 @@ class NotificationExceptionHandler ( object ):
         handler_info.handler( object, trait_name, old, new )
         if (handler_info.reraise_exceptions or
             isinstance( excp, TraitNotificationError )):
-            raise excp
+            raise
         
     def _get_handlers ( self ):
         """ Returns the handler stack associated with the currently executing
