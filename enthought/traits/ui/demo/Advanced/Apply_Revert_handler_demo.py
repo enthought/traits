@@ -70,7 +70,7 @@ class ApplyRevertDemo ( HasTraits ):
     )
     
 # Create the demo:
-popup = ApplyRevertDemo()
+modal_popup = ApplyRevertDemo()
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
