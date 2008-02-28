@@ -1465,6 +1465,7 @@ getattr_event ( trait_object      * trait,
     PyErr_Format( PyExc_AttributeError,
         "The %.400s trait of a %.50s instance is an 'event', which is write only.", 
         PyString_AS_STRING( name ), obj->ob_type->tp_name );
+    
     return NULL;            
 }
 
@@ -1487,6 +1488,7 @@ getattr_trait ( trait_object      * trait,
 		dict = PyDict_New();
 		if ( dict == NULL )
             return NULL;
+        
 		obj->obj_dict = dict;
 	}
     
@@ -2288,7 +2290,7 @@ setattr_delegate ( trait_object      * traito,
                 result = traitd->setattr( traitd, traitd, delegate, daname, 
                                           value );
             } else {
-                result = setattr_trait( traito, traitd, obj, name, value );
+                result = traitd->setattr( traito, traitd, obj, name, value );
                 if ( result >= 0 ) {
                     temp = PyObject_CallMethod( (PyObject *) obj, 
                                "_remove_trait_delegate_listener", "(Oi)", 
@@ -2301,6 +2303,7 @@ setattr_delegate ( trait_object      * traito,
                 }
             }
             Py_DECREF( daname );
+            
             return result;
         }
         

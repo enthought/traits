@@ -2268,6 +2268,7 @@ class TraitList ( TraitHandler ):
 def items_event ( ):
     if TraitList._items_event is None:
         TraitList._items_event = Event( TraitListEvent, is_base = False )
+        
     return TraitList._items_event
 
 #-------------------------------------------------------------------------------
@@ -2291,19 +2292,25 @@ class TraitListObject ( list ):
                 validate = trait.item_trait.handler.validate
                 if validate is not None:
                     value = [ validate( object, name, val ) for val in value ]
+                    
                 list.__setslice__( self, 0, 0, value )
+                
                 return
+                
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
+                
         self.len_error( len( value ) )
 
     def __deepcopy__ ( self, memo ):
         id_self = id( self )
         if id_self in memo:
             return memo[ id_self ]
+            
         memo[ id_self ] = result = TraitListObject( self.trait, self.object(),
                          self.name, [ copy.deepcopy( x, memo ) for x in self ] )
+        
         return result
 
     def __setitem__ ( self, key, value ):
@@ -2316,16 +2323,19 @@ class TraitListObject ( list ):
             object   = self.object()
             if validate is not None:
                 value = validate( object, self.name, value )
+                
             list.__setitem__( self, key, value )
             if self.name_items is not None:
                 if key < 0:
                     key = len( self ) + key
+                    
                 try:
                     if removed == value:
                         return
                 except:
                     # Treat incomparable values as unequal:
                     pass
+                
                 setattr( object, self.name_items,
                          TraitListEvent( key, [ removed ], [ value ] ) )
         except TraitError, excp:
@@ -2348,6 +2358,7 @@ class TraitListObject ( list ):
                 if validate is not None:
                     values = [ validate( object, name, value )
                                for value in values ]
+                               
                 list.__setslice__( self, i, j, values )
                 if self.name_items is not None:
                     if delta == 0:
@@ -2359,10 +2370,13 @@ class TraitListObject ( list ):
                             pass
                     setattr( object, self.name_items,
                              TraitListEvent( max( 0, i ), removed, values ) )
+                    
                 return
+                
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
+                
         self.len_error( len( self ) + delta )
 
     def __delitem__ ( self, key ):
@@ -2371,13 +2385,16 @@ class TraitListObject ( list ):
                 removed = [ self[ key ] ]
             except:
                 pass
+            
             list.__delitem__( self, key )
             if self.name_items is not None:
                 if key < 0:
                     key = len( self ) + key + 1
                 setattr( self.object(), self.name_items,
                          TraitListEvent( key, removed ) )
+                
             return
+            
         self.len_error( len( self ) - 1 )
 
     def __delslice__ ( self, i, j ):
@@ -2388,7 +2405,9 @@ class TraitListObject ( list ):
             if (self.name_items is not None) and (len( removed ) != 0):
                 setattr( self.object(), self.name_items,
                          TraitListEvent( max( 0, i ), removed ) )
+                
             return
+            
         self.len_error( len( self ) - delta )
 
     def append ( self, value ):
@@ -2408,9 +2427,11 @@ class TraitListObject ( list ):
                     setattr( object, self.name_items,
                             TraitListEvent( len( self ) - 1, None, [ value ] ) )
                 return
+                
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
+                
         self.len_error( len( self ) + 1 )
 
     def insert ( self, index, value ):
@@ -2420,22 +2441,27 @@ class TraitListObject ( list ):
                 object   = self.object()
                 if validate is not None:
                     value = validate( object, self.name, value )
+                    
                 list.insert( self, index, value )
                 if self.name_items is not None:
                     if index < 0:
                         index = len( self ) + index - 1
                     setattr( object, self.name_items,
                              TraitListEvent( index, None, [ value ] ) )
+                    
                 return
+                
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
+                
         self.len_error( len( self ) + 1 )
 
     def extend ( self, xlist ):
         trait = getattr( self, 'trait', None )
         if trait is None:
             list.extend( self, xlist )
+            
             return
             
         try:
@@ -2451,12 +2477,15 @@ class TraitListObject ( list ):
                 if validate is not None:
                     xlist = [ validate( object, name, value )
                               for value in xlist ]
+                              
                 list.extend( self, xlist )
                 if (self.name_items is not None) and (len( xlist ) != 0):
                     setattr( object, self.name_items,
                              TraitListEvent( len( self ) - len( xlist ), None,
                                              xlist ) )
+                    
                 return
+                
             except TraitError, excp:
                 excp.set_prefix( 'The elements of the' )
                 raise excp
@@ -2470,6 +2499,7 @@ class TraitListObject ( list ):
                 removed = [ self[ index ] ]
             except:
                 pass
+            
             list.remove( self, value )
             if self.name_items is not None:
                 setattr( self.object(), self.name_items,
@@ -2498,17 +2528,21 @@ class TraitListObject ( list ):
                 index = args[0]
             else:
                 index = -1
+                
             try:
                 removed = [ self[ index ] ]
             except:
                 pass
+            
             result = list.pop( self, *args )
             if self.name_items is not None:
                 if index < 0:
                     index = len( self ) + index + 1
                 setattr( self.object(), self.name_items,
                          TraitListEvent( index, removed ) )
+                
             return result
+            
         else:
             self.len_error( len( self ) - 1 )
 
