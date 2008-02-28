@@ -264,9 +264,15 @@ handle_exception       = notification_exception_handler._handle_exception
 class StaticAnyTraitChangeNotifyWrapper:
 
     def __init__ ( self, handler ):
-         self.handler  = handler
-         self.__call__ = getattr( self, 'call_%d' %
-                                        handler.func_code.co_argcount )
+        n = handler.func_code.co_argcount
+        if n > 4:
+            raise TraitNotificationError(
+                ('Invalid number of arguments for the static anytrait change '
+                 'notification handler: %s. A maximum of 4 arguments is '
+                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
+            
+        self.handler  = handler
+        self.__call__ = getattr( self, 'call_%d' % n )
 
     def equals ( self, handler ):
         return False
@@ -313,9 +319,15 @@ class StaticAnyTraitChangeNotifyWrapper:
 class StaticTraitChangeNotifyWrapper:
 
     def __init__ ( self, handler ):
+        n = handler.func_code.co_argcount
+        if n > 4:
+            raise TraitNotificationError(
+                ('Invalid number of arguments for the static trait change '
+                 'notification handler: %s. A maximum of 4 arguments is '
+                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
+                
         self.handler  = handler
-        self.__call__ = getattr( self, 'call_%d' %
-                                       handler.func_code.co_argcount )
+        self.__call__ = getattr( self, 'call_%d' % n )
 
     def equals ( self, handler ):
         return False
@@ -370,17 +382,31 @@ class TraitChangeNotifyWrapper:
             func   = handler.im_func
             object = handler.im_self
             if object is not None:
-                self.object   = weakref.ref( object, self.listener_deleted )
-                self.name     = handler.__name__
-                self.owner    = owner
-                arg_count     = func.func_code.co_argcount - 1
+                self.object = weakref.ref( object, self.listener_deleted )
+                self.name   = handler.__name__
+                self.owner  = owner
+                arg_count   = func.func_code.co_argcount - 1
+                if arg_count > 4:
+                    raise TraitNotificationError(
+                        ('Invalid number of arguments for the dynamic trait '
+                         'change notification handler: %s. A maximum of 4 '
+                         'arguments is allowed, but %s were specified.') %
+                        ( func.__name__, arg_count ) )
+                    
                 self.__call__ = getattr( self, 'rebind_call_%d' % arg_count )
                 
                 return arg_count
                 
+        arg_count = handler.func_code.co_argcount
+        if arg_count > 4:
+            raise TraitNotificationError(
+                ('Invalid number of arguments for the dynamic trait change '
+                 'notification handler: %s. A maximum of 4 arguments is '
+                 'allowed, but %s were specified.') % 
+                ( handler.__name__, arg_count ) )
+            
         self.name     = None
         self.handler  = handler
-        arg_count     = handler.func_code.co_argcount
         self.__call__ = getattr( self, 'call_%d' % arg_count )
         
         return arg_count
