@@ -658,20 +658,6 @@ def ToolbarButton ( label = '', image = None, style = 'toolbar',
 
 ToolbarButton = TraitFactory( ToolbarButton )
 
-def UIDebugger ( **metadata ):
-    ### JMS: Surely there's more to say about this...
-    """ Returns a trait event whose editor is a button that opens debugger window.
-
-    Default Value
-    -------------
-    No default value because events do not store values.
-    """
-    from enthought.traits.ui.wx.ui_debug_editor import ToolkitEditorFactory
-
-    return Event( editor = ToolkitEditorFactory(), **metadata )
-
-UIDebugger = TraitFactory( UIDebugger )
-
 #  Handle circular module dependencies:
 trait_handlers.Event = Event
 

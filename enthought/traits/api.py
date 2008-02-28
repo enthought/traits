@@ -37,7 +37,7 @@ from traits \
     import Event, Constant, CTrait, Trait, Delegate, Property, Button, \
            ToolbarButton, Function, Method, Class, Module, This, self, \
            Either, Python, Disallow, ReadOnly, missing, TraitFactory, \
-           Callable, Default, Color, RGBColor, Font, TraitFactory, UIDebugger
+           Callable, Default, Color, RGBColor, Font, TraitFactory
 
 from trait_types \
     import Any, Int, Long, Float, Complex, Str, Unicode, Bool, CInt, CLong, \
@@ -85,75 +85,6 @@ from trait_numeric \
 from protocols.interfaces \
     import Interface
 
-#-------------------------------------------------------------------------------
-#  ui imports:
-#-------------------------------------------------------------------------------
-
-if False:
-
-    from ui.handler \
-        import Handler, ViewHandler, default_handler
-
-    from ui.view \
-        import View
-
-    from ui.group \
-        import Group, HGroup, VGroup, VGrid, HFlow, VFlow, HSplit, VSplit, Tabbed
-
-    from ui.ui \
-        import UI
-
-    from ui.ui_info \
-        import UIInfo
-
-    from ui.help \
-        import on_help_call
-
-    from ui.include \
-        import Include
-
-    from ui.item \
-        import Item, Label, Heading, Spring, spring
-
-    from ui.editor_factory \
-        import EditorFactory
-
-    from ui.editor \
-        import Editor
-
-    from ui.toolkit \
-        import toolkit
-
-    from ui.undo \
-        import UndoHistory, AbstractUndoItem, UndoItem, ListUndoItem, \
-               UndoHistoryUndoItem
-
-    from ui.view_element \
-        import ViewElement, ViewSubElement
-
-    from ui.help_template \
-        import help_template
-
-    from ui.message \
-        import message, error
-
-    from ui.tree_node \
-        import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode
-
-    from ui.editors \
-        import ArrayEditor, BooleanEditor, ButtonEditor, CheckListEditor, \
-               CodeEditor, ColorEditor, RGBColorEditor, \
-               CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
-               FontEditor, ImageEnumEditor, InstanceEditor, \
-               ListEditor, RangeEditor, TextEditor, TreeEditor, \
-               TableEditor, TupleEditor, DropEditor, DNDEditor, CustomEditor
-
-    from ui.editors \
-        import ColorTrait, RGBColorTrait, FontTrait, SetEditor, HTMLEditor, \
-               KeyBindingEditor, ShellEditor, TitleEditor, ValueEditor, \
-               NullEditor
-
-
 import ui.view_elements
 
 #-------------------------------------------------------------------------------
@@ -170,3 +101,4 @@ has_traits.ViewElements = ui.view_elements.ViewElements
 #-------------------------------------------------------------------------------
 
 has_traits.ViewElement = ui.view_element.ViewElement
+
