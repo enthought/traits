@@ -496,10 +496,20 @@ class GUIToolkit ( Toolkit ):
         import key_binding_editor as kbe
         return kbe.ToolkitEditorFactory( *args, **traits )
 
+    # History:
+    def history_editor ( self, *args, **traits ):
+        import history_editor as he
+        return he.HistoryEditor( *args, **traits )
+
     # HTML:
     def html_editor ( self, *args, **traits ):
         import html_editor as he
         return he.ToolkitEditorFactory( *args, **traits )
+
+    # Image:
+    def image_editor ( self, *args, **traits ):
+        import image_editor as ie
+        return ie.ImageEditor( *args, **traits )
 
     # Image enum(eration):
     def image_enum_editor ( self, *args, **traits ):
