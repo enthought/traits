@@ -70,7 +70,8 @@ class _StringListEditor ( UIEditor ):
         
         self.sync_value( self.factory.choices, 'choices', 'from', 
                          is_list = True )
-                         
+        self.selected = self.value
+        
         return self.edit_traits( parent = parent, kind = 'subpanel' )
         
     @on_trait_change( ' selected' )
@@ -115,12 +116,15 @@ class MultiSelect ( HasPrivateTraits ):
                   show_label = False,
                   editor     = StringListEditor( choices = 'selected' )
             )
-        )
+        ),
+        width  = 0.20,
+        height = 0.25
     )
     
 # Create the demo:
-demo = MultiSelect( choices = [ 'one', 'two', 'three', 'four', 'five', 'six', 
-                                'seven', 'eight', 'nine', 'ten' ] )
+demo = MultiSelect( choices  = [ 'one', 'two', 'three', 'four', 'five', 'six', 
+                                 'seven', 'eight', 'nine', 'ten' ],
+                    selected = [ 'two', 'five', 'nine' ] )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':

@@ -471,11 +471,10 @@ class Editor ( HasPrivateTraits ):
                     self._user_to.append( ( user_object, xuser_name + '_items', 
                                             user_list_modified ) )
                 
-                if mode == 'from':
-                    try:
-                        setattr( self, editor_name, eval( user_value ) )
-                    except:
-                        pass
+                try:
+                    setattr( self, editor_name, eval( user_value ) )
+                except:
+                    pass
                              
             if mode in ( 'to', 'both' ):
 
