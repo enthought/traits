@@ -41,18 +41,11 @@ from enthought.traits.trait_base \
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, VSplit, HSplit, Item, Handler, FileEditor, \
-           InstanceEditor, CodeEditor, UIInfo, spring
+           InstanceEditor, CodeEditor, HistoryEditor, ImageEditor, UIInfo, \
+           spring
     
 from enthought.traits.ui.ui_traits \
     import AView
-    
-# fixme: The HistoryEditor needs to be added to the toolkit...    
-from enthought.traits.ui.wx.history_editor \
-    import HistoryEditor
-    
-# fixme: The ImageEditor needs to be added to the toolkit...    
-from enthought.traits.ui.wx.extra.image_editor \
-    import ImageEditor
     
 from enthought.pyface.api \
     import ImageResource

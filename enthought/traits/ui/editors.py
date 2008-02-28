@@ -134,10 +134,20 @@ def FontEditor ( *args, **traits ):
 def KeyBindingEditor ( *args, **traits ):
     return toolkit().key_binding_editor( *args, **traits )
 
+def HistoryEditor ( *args, **traits ):
+    """ Displays a text field with a history of prior values.
+    """
+    return toolkit().history_editor( *args, **traits )
+
 def HTMLEditor ( *args, **traits ):
     """ Displays formatted HTML text.
     """
     return toolkit().html_editor( *args, **traits )
+
+def ImageEditor ( *args, **traits ):
+    """ Allows an image to be imbedded ina traits ui.
+    """
+    return toolkit().image_editor( *args, **traits )
 
 def ImageEnumEditor ( *args, **traits ):
     """ Allows the user to select an image that represents a value in an

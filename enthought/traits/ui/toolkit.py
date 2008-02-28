@@ -381,7 +381,13 @@ class Toolkit ( HasPrivateTraits ):
     def key_binding_editor ( self, *args, **traits ):
         raise NotImplementedError
 
+    def history_editor ( self, *args, **traits ):
+        raise NotImplementedError
+
     def html_editor ( self, *args, **traits ):
+        raise NotImplementedError
+
+    def image_editor ( self, *args, **traits ):
         raise NotImplementedError
 
     def image_enum_editor ( self, *args, **traits ):
