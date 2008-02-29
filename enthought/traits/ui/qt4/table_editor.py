@@ -35,7 +35,7 @@ from enthought.traits.ui.table_filter \
     import TableFilter
 
 from enthought.traits.ui.ui_traits \
-    import AView
+    import AView, SequenceTypes
 
 from constants \
     import WindowColor
@@ -405,6 +405,8 @@ class TableEditor(Editor):
     # The table model associated with the editor:
     model = Instance(TableModel)
 
+    selected = Any
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
@@ -417,7 +419,21 @@ class TableEditor(Editor):
         factory = self.factory
         self.columns = factory.columns[:]
         self.model = TableModel(editor=self)
+
         self.control = _TableView(editor=self)
+        smodel = self.control.selectionModel()
+
+        # Connect to the mode specific handler.
+        mode = factory.selection_mode
+        mode_slot = getattr(self, '_on_%s_selection' % mode)
+
+        QtCore.QObject.connect(smodel, QtCore.SIGNAL('selectionChanged(QItemSelection, QItemSelection)'), mode_slot)
+
+        is_list = (mode in ('rows', 'columns', 'cells'))
+        self.sync_value(factory.selected, 'selected', is_list=is_list)
+
+        # Select the first row/column/cell.
+        self.control.setCurrentIndex(self.model.createIndex(0, 0))
 
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
@@ -429,12 +445,111 @@ class TableEditor(Editor):
 
         pass
 
+    #---------------------------------------------------------------------------
+    #  Helper methods for TableModel:
+    #---------------------------------------------------------------------------
+
+    def items(self):
+        """Returns the raw sequence of model objects."""
+
+        items = self.value
+        if not isinstance(items, SequenceTypes):
+            items = [items]
+
+        return items
+
+    #---------------------------------------------------------------------------
+    #  Private methods:
+    #---------------------------------------------------------------------------
+
+    def _on_row_selection(self, new, old):
+        """Handle the row selection being changed."""
+
+        items = self.items()
+        indexes = new.indexes()
+
+        rownr = indexes[0].row()
+        self.selected = items[rownr]
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
+    def _on_rows_selection(self, new, old):
+        """Handle the rows selection being changed."""
+
+        items = self.items()
+        indexes = new.indexes()
+
+        rownr_first = indexes[0].row()
+        rownr_last = indexes[-1].row()
+        self.selected = items[rownr_first:rownr_last + 1]
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
+    def _on_column_selection(self, new, old):
+        """Handle the column selection being changed."""
+
+        indexes = new.indexes()
+
+        colnr = indexes[0].column()
+        self.selected = self.columns[colnr].get_label()
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
+    def _on_columns_selection(self, new, old):
+        """Handle the columns selection being changed."""
+
+        indexes = new.indexes()
+
+        colnr_first = indexes[0].column()
+        colnr_last = indexes[-1].column()
+        col_range = self.columns[colnr_first:colnr_last + 1]
+        self.selected = [col.get_label() for col in col_range]
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
+    def _on_cell_selection(self, new, old):
+        """Handle the cell selection being changed."""
+
+        items = self.items()
+        indexes = new.indexes()
+
+        rownr = indexes[0].row()
+        colnr = indexes[0].column()
+        self.selected = self.columns[colnr].get_value(items[rownr])
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
+    def _on_cells_selection(self, new, old):
+        """Handle the cells selection being changed."""
+
+        items = self.items()
+        indexes = new.indexes()
+
+        self.selected = [self.columns[mi.row()].get_value(items[mi.row()]) for mi in indexes]
+
+        self.ui.evaluate(self.factory.on_select, self.selected)
+
 #-------------------------------------------------------------------------------
 #  '_TableView' class:
 #-------------------------------------------------------------------------------
 
 class _TableView(QtGui.QTableView):
     """A QTableView configured to behave as expected by TraitsUI."""
+
+    _SELECTION_MAP = {
+        'row':      (QtGui.QAbstractItemView.SelectRows,
+                            QtGui.QAbstractItemView.SingleSelection),
+        'rows':     (QtGui.QAbstractItemView.SelectRows,
+                            QtGui.QAbstractItemView.ExtendedSelection),
+        'column':   (QtGui.QAbstractItemView.SelectColumns,
+                            QtGui.QAbstractItemView.SingleSelection),
+        'columns':  (QtGui.QAbstractItemView.SelectColumns,
+                            QtGui.QAbstractItemView.ExtendedSelection),
+        'cell':     (QtGui.QAbstractItemView.SelectItems,
+                            QtGui.QAbstractItemView.SingleSelection),
+        'cells':    (QtGui.QAbstractItemView.SelectItems,
+                            QtGui.QAbstractItemView.ExtendedSelection)
+    }
 
     def __init__(self, editor):
         """Initialise the object."""
@@ -443,12 +558,26 @@ class _TableView(QtGui.QTableView):
 
         self._editor = editor
 
-        self.setModel(self._editor.model)
+        factory = editor.factory
+
+        self.setModel(editor.model)
         self.verticalHeader().hide()
 
-        if self._editor.factory.auto_size:
-            self.horizontalHeader().setStretchLastSection(True)
-            self.resizeColumnsToContents()
+        # Configure the column headings.
+        hheader = self.horizontalHeader()
+
+        if factory.show_column_labels:
+            hheader.setHighlightSections(False)
+            hheader.setStretchLastSection(True)
+        else:
+            hheader.hide()
+
+        self.resizeColumnsToContents()
+
+        # Configure the selection behaviour.
+        behav, mode = self._SELECTION_MAP[factory.selection_mode]
+        self.setSelectionBehavior(behav)
+        self.setSelectionMode(mode)
 
     def sizeHint(self):
         """Reimplemented to support auto_size."""

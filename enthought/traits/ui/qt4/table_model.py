@@ -17,8 +17,6 @@
 
 from PyQt4 import QtCore
 
-from enthought.traits.ui.ui_traits import SequenceTypes
-
 
 class TableModel(QtCore.QAbstractTableModel):
     """The model for table data."""
@@ -36,7 +34,7 @@ class TableModel(QtCore.QAbstractTableModel):
         if role != QtCore.Qt.DisplayRole:
             return QtCore.QVariant()
 
-        row = self._items()[mi.row()]
+        row = self._editor.items()[mi.row()]
         column = self._editor.columns[mi.column()]
         cell = column.get_value(row)
 
@@ -56,18 +54,9 @@ class TableModel(QtCore.QAbstractTableModel):
     def rowCount(self, mi):
         """Reimplemented to return the number of rows."""
 
-        return len(self._items())
+        return len(self._editor.items())
 
     def columnCount(self, mi):
         """Reimplemented to return the number of columns."""
 
         return len(self._editor.columns)
-
-    def _items(self):
-        """Returns the raw sequence of model objects."""
-
-        items = self._editor.value
-        if not isinstance(items, SequenceTypes):
-            items = [items]
-
-        return items
