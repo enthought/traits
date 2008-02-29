@@ -37,7 +37,7 @@ from ui_info \
     import UIInfo
 
 from ui_traits \
-    import Border, Margin, StatusItem, Title
+    import Border, Margin, StatusItem
 
 from help \
     import on_help_call
@@ -90,7 +90,7 @@ from editors \
 from editors \
     import CustomEditor, ColorTrait, RGBColorTrait, FontTrait, SetEditor, \
            HistoryEditor, HTMLEditor, KeyBindingEditor, ShellEditor, \
-           TitleEditor, ValueEditor, NullEditor
+           TitleEditor, Title, ValueEditor, NullEditor
 
 import view_elements
 

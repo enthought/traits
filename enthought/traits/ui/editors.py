@@ -1,25 +1,32 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
 #
-# Author: David C. Morrill
-# Date: 10/21/2004
-#  Symbols defined: InstanceEditor
+#  Date: 10/21/2004
+#
 #------------------------------------------------------------------------------
+
 """ Defines "factory functions" for all of the standard EditorFactorys
-subclasses.
+    subclasses.
 
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from enthought.traits.api \
+    import Str
+    
 from toolkit \
     import toolkit
 
@@ -216,6 +223,8 @@ def TitleEditor ( *args, **traits ):
     """ Displays a dynamic value using a title control.
     """
     return toolkit().title_editor( *args, **traits )
+    
+Title = Str( editor = TitleEditor() )
 
 def TreeEditor ( *args, **traits ):
     """ Allows the user to modify a tree data structure.
@@ -227,4 +236,5 @@ def TupleEditor ( *args, **traits ):
 
 def ValueEditor ( *args, **traits ):
     return toolkit().value_editor( *args, **traits )
+    
 

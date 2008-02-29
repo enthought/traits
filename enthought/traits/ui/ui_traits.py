@@ -30,16 +30,10 @@ from enthought.traits.api \
            
 from enthought.traits.trait_base \
     import get_resource_path
-    
-from enthought.traits.ui.editors \
-    import TitleEditor
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
-        
-# Title trait:
-Title = Str( editor = TitleEditor() )
 
 # Orientation trait:
 Orientation = Trait( 'vertical',
