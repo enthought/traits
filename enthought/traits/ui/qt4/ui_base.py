@@ -381,7 +381,10 @@ class BaseDialog(BasePanel):
         ui.handler.position(ui.info)
         restore_window(ui)
 
-        ui.control.show()
+        if style == BaseDialog.NONMODAL:
+            ui.control.show()
+        else:
+            ui.control.exec_()
 
     def _set_icon(self, icon=None):
         """Sets the dialog's icon."""
