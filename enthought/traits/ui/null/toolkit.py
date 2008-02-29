@@ -61,99 +61,15 @@ class GUIToolkit ( Toolkit ):
     #  'EditorFactory' factory methods:
     #---------------------------------------------------------------------------
 
-    def array_editor ( self, *args, **traits ):
-        return null_editor_factory
+    def __getattribute__(self, attr):
+        """ Return a method that returns null_editor_factory for any request to
+        an unimplemented *_editor() method.
 
-    def boolean_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def button_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def check_list_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def code_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def color_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def compound_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def custom_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def directory_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def drop_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def dnd_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def enum_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def file_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def font_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def key_binding_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def html_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def image_enum_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def instance_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def list_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def null_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def ordered_set_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def plot_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def range_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def rgb_color_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def rgba_color_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def shell_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def table_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def text_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def title_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def tree_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def tuple_editor ( self, *args, **traits ):
-        return null_editor_factory
-
-    def value_editor ( self, *args, **traits ):
-        return null_editor_factory
+        This must be __getattribute__ to make sure that we override the
+        definitions in the superclass which raise NotImplementedError.
+        """
+        if attr.endswith('_editor'):
+            return lambda *args, **kwds: null_editor_factory
+        else:
+            return super(GUIToolkit, self).__getattribute__(attr)
 
