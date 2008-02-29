@@ -14,10 +14,10 @@ from enthought.traits.api \
     import HasPrivateTraits, List, Str, Property, on_trait_change
     
 from enthought.traits.ui.api \
-    import View, HGroup, Item
+    import View, HGroup, Item, TabularEditor
     
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
  
 from enthought.traits.ui.wx.ui_editor \
     import UIEditor

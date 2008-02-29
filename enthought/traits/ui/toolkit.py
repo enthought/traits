@@ -423,6 +423,9 @@ class Toolkit ( HasPrivateTraits ):
     def table_editor ( self, *args, **traits ):
         raise NotImplementedError
 
+    def tabular_editor ( self, *args, **traits ):
+        raise NotImplementedError
+
     def text_editor ( self, *args, **traits ):
         raise NotImplementedError
 

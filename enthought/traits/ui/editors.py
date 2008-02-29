@@ -193,6 +193,11 @@ def TableEditor ( *args, **traits ):
     """
     return toolkit().table_editor( *args, **traits )
 
+def TabularEditor ( *args, **traits ):
+    """ Allows the user to modify a list of objects using a table editor.
+    """
+    return toolkit().tabular_editor( *args, **traits )
+
 def TextEditor ( *args, **traits ):
     """ Allows the user to modify a text string.
 

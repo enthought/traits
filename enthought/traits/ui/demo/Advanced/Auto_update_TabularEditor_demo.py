@@ -17,10 +17,10 @@ from enthought.traits.api \
     import HasTraits, Str, Float, List, Instance, Button
     
 from enthought.traits.ui.api \
-    import View, HGroup, Item, spring
+    import View, HGroup, Item, TabularEditor, spring
     
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
     
 #-- EmployeeAdapter Class ------------------------------------------------------
 

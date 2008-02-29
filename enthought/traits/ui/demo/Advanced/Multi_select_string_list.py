@@ -6,10 +6,10 @@ from enthought.traits.api \
     import HasPrivateTraits, List, Str, Property
     
 from enthought.traits.ui.api \
-    import View, HGroup, Item
+    import View, HGroup, Item, TabularEditor
     
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
 
 class MultiSelectAdapter ( TabularAdapter ):
 

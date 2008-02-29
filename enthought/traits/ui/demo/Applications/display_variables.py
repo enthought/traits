@@ -76,7 +76,8 @@ from enthought.traits.api \
            cached_property
     
 from enthought.traits.ui.api \
-    import Controller, View, HSplit, HGroup, VGroup, Item, Label, Theme
+    import Controller, View, HSplit, HGroup, VGroup, Item, Label, Theme, \
+           TabularEditor
     
 from enthought.traits.ui.ui_traits \
     import ATheme
@@ -87,8 +88,8 @@ from enthought.traits.ui.wx.themed_vertical_notebook_editor \
 from enthought.traits.ui.wx.themed_slider_editor \
     import ThemedSliderEditor
     
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
 
 from enthought.pyface.image_resource \
     import ImageResource

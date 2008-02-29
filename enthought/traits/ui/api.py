@@ -56,6 +56,9 @@ from basic_editor_factory \
 
 from editor \
     import Editor
+    
+from ui_editor \
+    import UIEditor
 
 from toolkit \
     import toolkit
@@ -85,12 +88,12 @@ from editors \
            CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
            FontEditor, ImageEditor, ImageEnumEditor, InstanceEditor, \
            ListEditor, RangeEditor, TextEditor, TreeEditor, \
-           TableEditor, TupleEditor, DropEditor, DNDEditor, CustomEditor
+           TableEditor, TabularEditor, TupleEditor, DropEditor, DNDEditor
 
 from editors \
-    import ColorTrait, RGBColorTrait, FontTrait, SetEditor, HistoryEditor, \
-           HTMLEditor, KeyBindingEditor, ShellEditor, TitleEditor, \
-           ValueEditor, NullEditor
+    import CustomEditor, ColorTrait, RGBColorTrait, FontTrait, SetEditor, \
+           HistoryEditor, HTMLEditor, KeyBindingEditor, ShellEditor, \
+           TitleEditor, ValueEditor, NullEditor
 
 import view_elements
 

@@ -11,7 +11,7 @@ from enthought.traits.api \
            cached_property, on_trait_change
 
 from enthought.traits.ui.api \
-    import View, Item, ListEditor, ValueEditor
+    import View, Item, ListEditor, ValueEditor, TabularEditor
     
 from enthought.traits.ui.ui_traits \
     import ATheme
@@ -19,8 +19,8 @@ from enthought.traits.ui.ui_traits \
 from enthought.traits.ui.theme \
     import Theme
     
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
     
 from enthought.traits.ui.wx.extra.list_canvas_editor \
     import ListCanvasAdapter, IListCanvasAware, ListCanvasEditor, \
