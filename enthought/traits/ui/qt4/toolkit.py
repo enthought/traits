@@ -526,6 +526,11 @@ class GUIToolkit ( Toolkit ):
         import list_editor as le
         return le.ToolkitEditorFactory( *args, **traits )
 
+    # ListStr:
+    def list_str_editor ( self, *args, **traits ):
+        import list_str_editor as lse
+        return lse.ListStrEditor( *args, **traits )
+
     # Null:
     def null_editor ( self, *args, **traits ):
         import null_editor as ne
@@ -565,6 +570,11 @@ class GUIToolkit ( Toolkit ):
     def table_editor ( self, *args, **traits ):
         import table_editor as te
         return te.ToolkitEditorFactory( *args, **traits )
+
+    # Tabular:
+    def tabular_editor ( self, *args, **traits ):
+        import tabular_editor as te
+        return te.TabularEditor( *args, **traits )
 
     # Text:
     def text_editor ( self, *args, **traits ):
