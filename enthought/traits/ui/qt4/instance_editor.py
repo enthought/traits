@@ -586,17 +586,20 @@ class SimpleEditor ( CustomEditor ):
         factory = self.factory
         view    = self.ui.handler.trait_view_for( self.ui.info, factory.view,
                                                   self.value, self.object_name, 
-                                                  self.name ) 
+                                                  self.name )
         ui = self.value.edit_traits( view, self.control, factory.kind,
                                      id = factory.id )
 
-        # Position the window on the display:
-        position_window( ui.control )
+        # Check to see if the view was 'modal', in which case it will already
+        # have been closed (i.e. is None) by the time we get control back:
+        if ui.control is not None:
+            # Position the window on the display:
+            position_window( ui.control )
 
-        # Chain our undo history to the new user interface if it does not have
-        # its own:
-        if ui.history is None:
-            ui.history = self.ui.history
+            # Chain our undo history to the new user interface if it does not
+            # have its own:
+            if ui.history is None:
+                ui.history = self.ui.history
 
     #---------------------------------------------------------------------------
     #  Resynchronizes the contents of the editor when the object trait changes
