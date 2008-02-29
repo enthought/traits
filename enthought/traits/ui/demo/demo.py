@@ -4,7 +4,7 @@
 #  
 #  Written by: David C. Morrill
 #  
-#  Date: 09/115/2005
+#  Date: 09/15/2005
 #  
 #  (c) Copyright 2005 by Enthought, Inc.
 #  
@@ -23,7 +23,7 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import TreeEditor, ObjectTreeNode, TreeNodeObject, View, Item, VSplit, \
            Tabbed, VGroup, HGroup, Heading, Handler, UIInfo, InstanceEditor, \
-           spring
+           Include, spring
 
 from string \
     import uppercase, lowercase
@@ -111,11 +111,15 @@ class DemoFileHandler ( Handler ):
         sys.modules[ '__main__' ].__file__ = df.path
         try:
             execfile( df.path, locals, locals )
-            demo = self._get_object( 'popup', locals )
+            demo = self._get_object( 'modal_popup', locals )
             if demo is not None:
-                demo = DemoButton( demo = demo )
-            else:    
-                demo = self._get_object( 'demo', locals )
+                demo = ModalDemoButton( demo = demo )
+            else:
+                demo = self._get_object( 'popup', locals )
+                if demo is not None:
+                    demo = DemoButton( demo = demo )
+                else:    
+                    demo = self._get_object( 'demo', locals )
         except Exception, excp:
             demo = DemoError( msg = str( excp ) )
             
@@ -198,6 +202,12 @@ class DemoButton ( HasPrivateTraits ):
     # The demo to be launched via a button:
     demo = Instance( HasTraits )
     
+    # The demo view item to use:
+    demo_item = Item( 'demo',
+        show_label = False,
+        editor     = InstanceEditor( label = 'Run demo...', kind = 'livemodal' )
+    )
+    
     #---------------------------------------------------------------------------
     #  Traits view definitions:  
     #---------------------------------------------------------------------------
@@ -210,15 +220,28 @@ class DemoButton ( HasPrivateTraits ):
             ),
             HGroup( 
                 spring,
-                Item( 'demo',
-                      show_label = False,
-                      editor     = InstanceEditor( label = 'Run demo...', 
-                                                   kind  = 'modal' ) ),
+                Include( 'demo_item' ),
                 spring
             )
         ),
         resizable = True
     ) 
+                        
+#-------------------------------------------------------------------------------
+#  'ModalDemoButton' class:  
+#-------------------------------------------------------------------------------
+                      
+class ModalDemoButton ( DemoButton ):
+    
+    #---------------------------------------------------------------------------
+    #  Trait definitions:  
+    #---------------------------------------------------------------------------
+    
+    # The demo view item to use:
+    demo_item = Item( 'demo',
+        show_label = False,
+        editor     = InstanceEditor( label = 'Run demo...', kind = 'modal' )
+    )
      
 #-------------------------------------------------------------------------------
 #  'DemoTreeNodeObject' class:  
@@ -450,8 +473,7 @@ class DemoPath ( DemoTreeNodeObject ):
             self._description, source = parse_source( 
                                               join( self.path, '__init__.py' ) )
         else:
-            self._description = ('<img src="traits_ui_demo.jpg" '
-                                 'width="640" height="480">')
+            self._description = ('<img src="traits_ui_demo.jpg">')
             source = ''
             
         self._source = exec_str + source 
