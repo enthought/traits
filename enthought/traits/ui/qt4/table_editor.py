@@ -416,22 +416,8 @@ class TableEditor(Editor):
 
         factory = self.factory
         self.columns = factory.columns[:]
-        self.model = TableModel()
-
-        self.control = QtGui.QTableView()
-        self.control.setModel(self.model)
-
-    #---------------------------------------------------------------------------
-    #  Disposes of the contents of an editor:
-    #---------------------------------------------------------------------------
-
-    def dispose(self):
-        """Disposes of the contents of an editor. """
-
-        self.control.setModel(None)
-        self.model = None
-
-        super(TableEditor, self).dispose()
+        self.model = TableModel(editor=self)
+        self.control = _TableView(editor=self)
 
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
@@ -442,3 +428,39 @@ class TableEditor(Editor):
         editor."""
 
         pass
+
+#-------------------------------------------------------------------------------
+#  '_TableView' class:
+#-------------------------------------------------------------------------------
+
+class _TableView(QtGui.QTableView):
+    """A QTableView configured to behave as expected by TraitsUI."""
+
+    def __init__(self, editor):
+        """Initialise the object."""
+
+        QtGui.QTableView.__init__(self)
+
+        self._editor = editor
+
+        self.setModel(self._editor.model)
+        self.verticalHeader().hide()
+
+        if self._editor.factory.auto_size:
+            self.horizontalHeader().setStretchLastSection(True)
+            self.resizeColumnsToContents()
+
+    def sizeHint(self):
+        """Reimplemented to support auto_size."""
+
+        sh = QtGui.QTableView.sizeHint(self)
+
+        if self._editor.factory.auto_size:
+            w = 0
+
+            for colnr in range(len(self._editor.columns)):
+                w += self.sizeHintForColumn(colnr)
+
+            sh.setWidth(w)
+
+        return sh
