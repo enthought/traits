@@ -84,7 +84,7 @@ from editors \
            CodeEditor, ColorEditor, RGBColorEditor, \
            CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
            FontEditor, ImageEditor, ImageEnumEditor, InstanceEditor, \
-           ListEditor, RangeEditor, TextEditor, TreeEditor, \
+           ListEditor, ListStrEditor, RangeEditor, TextEditor, TreeEditor, \
            TableEditor, TabularEditor, TupleEditor, DropEditor, DNDEditor
 
 from editors \

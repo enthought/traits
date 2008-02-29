@@ -399,6 +399,9 @@ class Toolkit ( HasPrivateTraits ):
     def list_editor ( self, *args, **traits ):
         raise NotImplementedError
 
+    def list_str_editor ( self, *args, **traits ):
+        raise NotImplementedError
+
     def null_editor ( self, *args, **traits ):
         raise NotImplementedError
 

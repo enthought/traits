@@ -10,10 +10,7 @@ from enthought.traits.api \
     import HasTraits, List, Str
     
 from enthought.traits.ui.api \
-    import View, Item
-    
-from enthought.traits.ui.wx.extra.list_str_editor \
-    import ListStrEditor
+    import View, Item, ListStrEditor
 
 #-- ShoppingListDemo Class -----------------------------------------------------
 

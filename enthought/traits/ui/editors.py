@@ -169,6 +169,12 @@ def ListEditor ( *args, **traits ):
     """
     return toolkit().list_editor( *args, **traits )
 
+def ListStrEditor ( *args, **traits ):
+    """ Allows the user to modify a list of strings (or values that can be
+        mapped to strings).
+    """
+    return toolkit().list_str_editor( *args, **traits )
+
 def NullEditor ( *args, **traits ):
     """ Defines an empty (placeholder) editor.
     """
