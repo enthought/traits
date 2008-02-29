@@ -30,9 +30,6 @@ from trait_notifiers \
 from category \
     import Category
 
-from trait_db \
-    import tdb
-
 from traits \
     import Event, Constant, CTrait, Trait, Delegate, Property, Button, \
            ToolbarButton, Function, Method, Class, Module, This, self, \

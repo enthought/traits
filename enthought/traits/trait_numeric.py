@@ -1,16 +1,20 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill
-# Date: 12/13/2004
+#
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
+#
+#  Date:   12/13/2004
+#
 #------------------------------------------------------------------------------
+
 """ Trait definitions related to the numpy library.
 """
 
@@ -37,13 +41,13 @@ from trait_types \
 #-------------------------------------------------------------------------------
 
 ndarray = None
-asarray   = None
+asarray = None
 
 #-------------------------------------------------------------------------------
 #  numpy dtype mapping:
 #-------------------------------------------------------------------------------
 
-def dtype2trait( dtype ):
+def dtype2trait ( dtype ):
     """ Get the corresponding trait for a numpy dtype.
     """
 
@@ -51,13 +55,15 @@ def dtype2trait( dtype ):
 
     if dtype.char in numpy.typecodes['Float']:
         return TFloat
+        
     elif dtype.char in numpy.typecodes['AllInteger']:
         return TInt
+        
     elif dtype.char[0] == 'S':
         return Str
+        
     else:
         return Any
-
 
 #-------------------------------------------------------------------------------
 #  'AbstractArray' trait base class:  
@@ -88,24 +94,22 @@ class AbstractArray ( TraitType ):
         metadata.setdefault( 'rich_compare', False )
     
         if typecode is not None:
-            warnings.warn("typecode is a deprecated argument; use dtype instead",
-                DeprecationWarning)
-            if dtype is not None and dtype != typecode:
-                raise TraitError( "Inconsistent usage of the dtype and typecode "
-                                  "arguments; use dtype alone" )
+            warnings.warn( 'typecode is a deprecated argument; use dtype '
+                           'instead', DeprecationWarning )
+            
+            if (dtype is not None) and (dtype != typecode):
+                raise TraitError( 'Inconsistent usage of the dtype and '
+                                  'typecode arguments; use dtype alone.' )
             else:
                 dtype = typecode
 
         if dtype is not None:
             try:
-                # Convert the argument into an actual numpy dtype object.
-                dtype = numpy.dtype(dtype)
-            except TypeError, e:
-                raise TraitError( "could not convert %r to a numpy dtype" % dtype)
-    
-        # XXX: Ack! Ick! Ptooie!
-#        if isinstance( typecode, SequenceTypes ):
-#            shape, typecode = typecode, shape
+                # Convert the argument into an actual numpy dtype object:
+                dtype = numpy.dtype( dtype )
+            except TypeError:
+                raise TraitError( 'could not convert %r to a numpy dtype' % 
+                                  dtype )
     
         if shape is not None:
             if isinstance( shape, SequenceTypes ):
@@ -117,6 +121,7 @@ class AbstractArray ( TraitType ):
                          ((item[1] is None) or ((type( item[1] ) is int) and
                            (item[0] <= item[1]))))):
                         continue
+                        
                     raise TraitError, "shape should be a list or tuple"
             else:
                 raise TraitError, "shape should be a list or tuple"
@@ -145,9 +150,9 @@ class AbstractArray ( TraitType ):
                     size.append( item )
                 value = zeros( size, dt )
                 
-        self.dtype    = dtype
-        self.shape    = shape
-        self.coerce   = coerce
+        self.dtype  = dtype
+        self.shape  = shape
+        self.coerce = coerce
         
         super( AbstractArray, self ).__init__( value, **metadata )
         
