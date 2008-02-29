@@ -56,9 +56,6 @@ from basic_editor_factory \
 
 from editor \
     import Editor
-    
-from ui_editor \
-    import UIEditor
 
 from toolkit \
     import toolkit
