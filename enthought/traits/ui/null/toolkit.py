@@ -63,7 +63,7 @@ class GUIToolkit ( Toolkit ):
 
     def __getattribute__(self, attr):
         """ Return a method that returns null_editor_factory for any request to
-        an unimplemented *_editor() method.
+        an unimplemented ``*_editor()`` method.
 
         This must be __getattribute__ to make sure that we override the
         definitions in the superclass which raise NotImplementedError.

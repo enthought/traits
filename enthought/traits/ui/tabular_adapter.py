@@ -320,7 +320,7 @@ class TabularAdapter ( HasPrivateTraits ):
             return None
     
     def len ( self, object, trait ):
-        """ Returns the number of items in the specified *object.trait" list.
+        """ Returns the number of items in the specified *object.trait* list.
         """
         return len( getattr( object, trait ) )
     

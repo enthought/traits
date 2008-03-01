@@ -147,7 +147,7 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
     
     Parameters
     ----------
-    from_ : type or interface
+    ``from_`` : type or interface
         What the adapter adapts *from*, or a list of such types or interfaces 
         (the '_' suffix is used because 'from' is a Python keyword).
     to : type or interface

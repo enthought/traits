@@ -194,7 +194,7 @@ class ListStrAdapter ( HasPrivateTraits ):
     #-- Adapter methods that are not sensitive to item type --------------------
     
     def len ( self, object, trait ):
-        """ Returns the number of items in the specified *object.trait" list.
+        """ Returns the number of items in the specified *object.trait* list.
         """
         return len( getattr( object, trait ) )
     
