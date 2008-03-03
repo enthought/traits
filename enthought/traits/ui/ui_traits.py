@@ -165,9 +165,12 @@ def convert_image ( value, level = 3 ):
     result = image_resource_cache.get( key )
     if result is None:
         if is_traits_image:
-            from image import ImageLibrary
-            
-            result = ImageLibrary.image_resource( value )
+            try:
+                from enthought.traits.ui.image.image import ImageLibrary
+                
+                result = ImageLibrary.image_resource( value )
+            except:
+                result = None
         else:
             result = ImageResource( value, search_path = [ search_path ] )
             
@@ -234,9 +237,13 @@ def convert_theme ( value, level = 3 ):
         return value
         
     if (value[:1] == '@') and (value.find( ':' ) >= 2):
-        from image import ImageLibrary
+        try:
+            from enthought.traits.ui.image.image import ImageLibrary
+            
+            info = ImageLibrary.image_info( value )
+        except:
+            info = None
         
-        info = ImageLibrary.image_info( value )
         if info is not None:
             return info.theme
         
