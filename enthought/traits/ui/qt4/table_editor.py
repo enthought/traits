@@ -233,18 +233,22 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # The selection mode of the table. The meaning of the various values are as
     # follows:
-    # - row:     Entire rows are selected. At most one row can be selected at 
-    #            once. This is the default.
-    # - rows:    Entire rows are selected. More than one row can be selected at 
-    #            once.
-    # - column:  Entire columns are selected. At most one column can be selected
-    #            at once.
-    # - columns: Entire columns are selected. More than one column can be 
-    #            selected at once.
-    # - cell:    Single cells are selected. Only one cell can be selected at 
-    #            once.
-    # - cells:   Single cells are selected. More than one cell can be selected 
-    #            at once.
+    #
+    # row
+    #   Entire rows are selected. At most one row can be selected at once.
+    #   This is the default.
+    # rows
+    #   Entire rows are selected. More than one row can be selected at once.
+    # column
+    #   Entire columns are selected. At most one column can be selected at
+    #   once.
+    # columns
+    #   Entire columns are selected. More than one column can be selected at
+    #   once.
+    # cell
+    #   Single cells are selected. Only one cell can be selected at once.
+    # cells
+    #   Single cells are selected. More than one cell can be selected at once.
     selection_mode = Enum( 'row', 'rows', 'column', 'columns', 'cell', 'cells' )
 
     # The optional extended name of the trait that the current selection is
