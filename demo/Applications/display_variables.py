@@ -97,8 +97,8 @@ from enthought.pyface.image_resource \
 #-- Constants ------------------------------------------------------------------
 
 # Necessary because of the dynamic way in which the demos are loaded:
-search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
-                      'demo', 'Applications' ) ]
+search_path = [ join( dirname( enthought.traits.api.__file__ ),
+                      '..', '..', 'demo', 'Applications' ) ]
     
 #-- Variable Class -------------------------------------------------------------
 

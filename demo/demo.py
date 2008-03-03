@@ -205,7 +205,7 @@ class DemoButton ( HasPrivateTraits ):
     # The demo view item to use:
     demo_item = Item( 'demo',
         show_label = False,
-        editor     = InstanceEditor( label = 'Run demo...', kind = 'livemodal' )
+        editor     = InstanceEditor( label = 'Run demo...', kind = 'live' )
     )
     
     #---------------------------------------------------------------------------

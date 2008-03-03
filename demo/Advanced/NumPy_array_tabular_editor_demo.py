@@ -38,8 +38,9 @@ from enthought.pyface.image_resource \
 # Necessary because of the dynamic way in which the demos are loaded:
 import enthought.traits.ui.api
 
-search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
-                      'demo', 'Advanced' ) ]
+search_path = [ join( dirname( enthought.traits.api.__file__ ),
+                      '..', '..', 'demo', 'Advanced' ) ]
+print "search_path:", search_path
 
 #-- Tabular Adapter Definition -------------------------------------------------
 
