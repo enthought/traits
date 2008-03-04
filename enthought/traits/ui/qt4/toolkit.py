@@ -30,20 +30,11 @@ if QtGui.QApplication.startingUp():
     import sys
     _app = QtGui.QApplication(sys.argv)
 
-from enthought.traits.api \
-    import HasPrivateTraits, Instance, Property, Category, cached_property, Any
+from enthought.traits.trait_notifiers import set_ui_handler
 
-from enthought.traits.trait_notifiers \
-    import set_ui_handler
+from enthought.traits.ui.toolkit import Toolkit
 
-from enthought.traits.ui.api \
-    import UI, Theme
-
-from enthought.traits.ui.toolkit \
-    import Toolkit
-
-from constants \
-    import screen_dx, screen_dy
+from constants import screen_dx, screen_dy
 
 #-------------------------------------------------------------------------------
 #  Handles UI notification handler requests that occur on a thread other than
