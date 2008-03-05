@@ -23,9 +23,6 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-
-from enthought.traits.api \
-    import Str
     
 from toolkit \
     import toolkit
@@ -223,8 +220,6 @@ def TitleEditor ( *args, **traits ):
     """ Displays a dynamic value using a title control.
     """
     return toolkit().title_editor( *args, **traits )
-    
-Title = Str( editor = TitleEditor() )
 
 def TreeEditor ( *args, **traits ):
     """ Allows the user to modify a tree data structure.

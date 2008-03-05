@@ -37,11 +37,11 @@ from traits \
            Callable, Default, Color, RGBColor, Font, TraitFactory
 
 from trait_types \
-    import Any, Int, Long, Float, Complex, Str, Unicode, Bool, CInt, CLong, \
-           CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, Code, HTML, \
-           Password, Expression, PythonValue, File, Directory, Range, Enum, \
-           Tuple, List, CList, Dict, Instance, AdaptedTo, AdaptsTo, Type, \
-           WeakRef, false, true, undefined
+    import Any, Int, Long, Float, Complex, Str, Title, Unicode, Bool, CInt, \
+           CLong, CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, \
+           Code, HTML, Password, Expression, PythonValue, File, Directory, \
+           Range, Enum, Tuple, List, CList, Dict, Instance, AdaptedTo, \
+           AdaptsTo, Type, WeakRef, false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \

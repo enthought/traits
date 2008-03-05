@@ -322,6 +322,19 @@ class Str ( BaseStr ):
     # Define the C-level fast validator to use:
     fast_validate = ( 11, basestring )
 
+
+class Title ( Str ):
+    """ Defines a string type which by default uses the traits ui TitleEditor
+        when used in a View.
+    """
+        
+    def create_editor ( self ):
+        """ Returns the default traits UI editor to use for a trait. 
+        """
+        from enthought.traits.ui.api import TitleEditor
+        
+        return TitleEditor()
+
 #-------------------------------------------------------------------------------
 #  'BaseUnicode' and 'Unicode' traits:
 #-------------------------------------------------------------------------------
