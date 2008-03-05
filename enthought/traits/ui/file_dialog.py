@@ -404,7 +404,8 @@ class FileExistsHandler ( Handler ):
         VGroup(
             HGroup(
                  Item( 'handler.message',
-                       editor = ImageEditor( image = 'dialog-warning' )
+                       editor = ImageEditor( 
+                                    image = ImageResource( 'dialog-warning' ) )
                  ),
                  Item( 'handler.message', style = 'readonly' ),
                  show_labels = False
@@ -485,7 +486,8 @@ class OpenFileDialog ( Handler ):
     # The OK, Cancel and create directory buttons:
     ok      = Button( 'OK' )
     cancel  = Button( 'Cancel' )
-    create  = Button( image = 'folder-new', style = 'toolbar' )
+    create  = Button( image = ImageResource( 'folder-new' ), 
+                      style = 'toolbar' )
     
     #-- Handler Class Method Overrides -----------------------------------------
     
@@ -619,7 +621,8 @@ class OpenFileDialog ( Handler ):
                           show_label   = False,
                           style        = 'custom',
                           defined_when = 'is_save_file',
-                          enabled_when = 'can_create_dir'
+                          enabled_when = 'can_create_dir',
+                          tooltip      = 'Create a new directory'
                     ),
                     Item( 'file_name',
                           id      = 'history',
