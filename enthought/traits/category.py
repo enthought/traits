@@ -1,26 +1,27 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill
-# Date: 11/06/2004
+#
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
+#  Date: 11/06/2004
+#
 #------------------------------------------------------------------------------
 
-""" Adds a "category" capability to Traits-based classes, 
-similar to that provided by the Cocoa (Objective-C) environment for the 
-Macintosh.
+""" Adds a "category" capability to Traits-based classes, similar to that
+    provided by the Cocoa (Objective-C) environment for the Macintosh.
 
-You can use categories to extend an existing HasTraits class, as an alternative
-to subclassing. An advantage of categories over subclassing is that you can 
-access the added members on instances of the original class, without having to
-change them to instances of a subclass. Unlike subclassing, categories do not
-allow overriding trait attributes.
+    You can use categories to extend an existing HasTraits class, as an
+    alternative to subclassing. An advantage of categories over subclassing is 
+    that you can access the added members on instances of the original class, 
+    without having to change them to instances of a subclass. Unlike 
+    subclassing, categories do not allow overriding trait attributes.
 """
 
 #-------------------------------------------------------------------------------
