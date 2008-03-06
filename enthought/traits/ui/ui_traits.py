@@ -220,9 +220,12 @@ class Image ( TraitType ):
         """
         from enthought.pyface.image_resource import ImageResource
         
-        value = convert_image( value, 4 )
-        if (value is None) or isinstance( value, ImageResource ):
-            return value
+        if value is None:
+            return None
+            
+        new_value = convert_image( value, 4 )
+        if isinstance( new_value, ImageResource ):
+            return new_value
             
         self.error( object, name, value )
         
@@ -277,9 +280,12 @@ class ATheme ( TraitType ):
         """
         from theme import Theme
         
-        value = convert_theme( value, 4 )
-        if (value is None) or isinstance( value, Theme ):
-            return value
+        if value is None:
+            return None
+            
+        new_value = convert_theme( value, 4 )
+        if isinstance( new_value, Theme ):
+            return new_value
             
         self.error( object, name, value )
 
