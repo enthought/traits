@@ -54,6 +54,10 @@ handler_trait = Instance( BaseTraitHandler )
 rows_trait = Range( 1, 50, 5,
                     desc = 'the number of list rows to display' )
 
+# The visible number of columns displayed
+columns_trait = Range( 1, 10, 5,
+                    desc = 'the number of list columns to display' )
+
 editor_trait = Instance( UIEditorFactory )                    
 
 #-------------------------------------------------------------------------------
@@ -77,8 +81,11 @@ class ToolkitEditorFactory ( EditorFactory ):
     # The trait handler for each list item:
     trait_handler = handler_trait 
 
-    # Number of list rows to display:
+    # The number of list rows to display:
     rows = rows_trait 
+
+    # The number of list columns to create:
+    columns = columns_trait 
 
     # Use a notebook for a custom view?
     use_notebook = Bool(False)
@@ -298,6 +305,7 @@ class SimpleEditor ( Editor ):
             values = [ item_trait.default_value()[1] ]
 
         editor = self._editor
+        # FIXME: Add support for more than one column.
         for value in values:
             if resizable:
                 control = IconButton('list_editor.png', self.popup_menu)
