@@ -29,12 +29,17 @@ def etsdep(p, min, max=None, literal=False):
     return require
 
 
-# Declare our ETS project dependencies.
-APPTOOLS = etsdep('AppTools', '3.0.0b1')  # -- import of enthought.resource from traits/ui/image.py
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')  # -- from traits/trait_base.py
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- direct imports in ui/file_dialog.py and when anyone uses api.UIDebugger
+# Declare our ETS project dependencies:
+
+# Import of enthought.resource from traits/ui/image.py:
+APPTOOLS = etsdep('AppTools', '3.0.0b1')
+
+# from traits/trait_base.py
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
+
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')
 TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.0b1')
-TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.0b1')
+TRAITSGUI_DOCK  = etsdep('TraitsGUI[dock]', '3.0.0b1')
 
 
 setup(
