@@ -561,9 +561,10 @@ class SimpleEditor ( Editor ):
         layout = list_pane.layout()
 
         for control in list_pane.children():
-            if hasattr( control, '_editor' ):
-                control._editor.dispose()
-                control._editor.control = None
+            editor = getattr( control, '_editor', None )
+            if editor is not None:
+                editor.dispose()
+                editor.control = None
             elif control is not layout:
                 control.setParent(None)
 
