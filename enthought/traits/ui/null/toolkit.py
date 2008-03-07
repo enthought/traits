@@ -1,28 +1,33 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-# Author: David C. Morrill
-# Date: 02/14/2005
-#
-#  Symbols defined: GUIToolkit
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   02/14/2005
 #
 #------------------------------------------------------------------------------
+
 """ Defines the concrete implementations of the traits Toolkit interface for
-the 'null' (do nothing) user interface toolkit.
+    the 'null' (do nothing) user interface toolkit.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.ui.toolkit        import Toolkit
-from enthought.traits.ui.editor_factory import EditorFactory
+from enthought.traits.ui.toolkit \
+    import Toolkit
+    
+from enthought.traits.ui.editor_factory \
+    import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  Constants:
