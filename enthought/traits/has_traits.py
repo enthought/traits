@@ -121,6 +121,9 @@ EmptyList = []
 # Quick test for normal vs extended trait name
 extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
+# Generic 'Any' trait:
+any_trait = Any().as_ctrait()
+
 #-------------------------------------------------------------------------------
 #  Filter for selecting traits whose metadata is not 'event':
 #-------------------------------------------------------------------------------
@@ -3192,9 +3195,12 @@ class HasTraits ( CHasTraits ):
     #  explicit definition in the class:
     #---------------------------------------------------------------------------
     
-    def __prefix_trait__ ( self, name ):
+    def __prefix_trait__ ( self, name, is_set ):
         # Never create prefix traits for names of the form '__xxx__':
         if (name[:2] == '__') and (name[-2:] == '__'):
+            if is_set:
+                return any_trait
+                
             raise AttributeError, "'%s' object has no attribute '%s'" % (
                                   self.__class__.__name__, name )
 

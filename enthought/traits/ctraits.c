@@ -648,17 +648,19 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
 +----------------------------------------------------------------------------*/
 
 static trait_object *
-get_prefix_trait ( has_traits_object * obj, PyObject * name ) {
+get_prefix_trait ( has_traits_object * obj, PyObject * name, int is_set ) {
     
     PyObject * trait = PyObject_CallMethod( (PyObject *) obj, 
-                                            "__prefix_trait__", "(O)", name );
+                           "__prefix_trait__", "(Oi)", name, is_set );
 
     if ( trait != NULL ) {
         assert( obj->ctrait_dict != NULL );
 	    PyDict_SetItem( (PyObject *) obj->ctrait_dict, name, trait );
         Py_DECREF( trait );
+        
         if ( has_traits_setattro( obj, trait_added, name ) < 0 )
             return NULL;
+        
         trait = get_trait( obj, name, 0 );
         Py_DECREF( trait );
     }
@@ -682,7 +684,7 @@ has_traits_setattro ( has_traits_object * obj,
            NULL) ) {
         trait = (trait_object *) dict_getitem( obj->ctrait_dict, name );
         if ( (trait == NULL) && 
-             ((trait = get_prefix_trait( obj, name )) == NULL) )
+             ((trait = get_prefix_trait( obj, name, 1 )) == NULL) )
             return -1;
     }
     
@@ -893,7 +895,7 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
     
     PyErr_Clear();
     
-    if ( (trait = get_prefix_trait( obj, name )) != NULL )
+    if ( (trait = get_prefix_trait( obj, name, 0 )) != NULL )
         return trait->getattr( trait, obj, name );
     
     return NULL;
@@ -943,7 +945,7 @@ get_trait ( has_traits_object * obj, PyObject * name, int instance ) {
             Py_INCREF( Py_None );
             return Py_None;
         }
-        if ( (trait = get_prefix_trait( obj, name )) == NULL )
+        if ( (trait = get_prefix_trait( obj, name, 0 )) == NULL )
             return NULL;
     }
                                     
@@ -1063,7 +1065,7 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
                       daname )) == NULL)) &&
              ((trait = (trait_object *) dict_getitem( delegate->ctrait_dict, 
                       daname )) == NULL) &&
-             ((trait = get_prefix_trait( delegate, daname2 )) == NULL) ) { 
+             ((trait = get_prefix_trait( delegate, daname2, 0 )) == NULL) ) { 
             bad_delegate_error( obj, name );
             break;
         }
@@ -2275,7 +2277,7 @@ setattr_delegate ( trait_object      * traito,
                       daname )) == NULL)) &&
              ((traitd = (trait_object *) dict_getitem( delegate->ctrait_dict, 
                       daname )) == NULL) &&
-             ((traitd = get_prefix_trait( delegate, daname )) == NULL) ) {
+             ((traitd = get_prefix_trait( delegate, daname, 1 )) == NULL) ) {
             Py_DECREF( daname );
             return bad_delegate_error( obj, name );
         }
