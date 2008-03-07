@@ -1019,49 +1019,6 @@ def TraitPython ( **metadata ):
 
 def Delegate ( delegate, prefix = '', modify = False, listenable = True, 
                **metadata ):
-    """ Creates a "delegator" trait, whose definition and default value are
-    delegated to a *delegate* trait attribute on another object.
-
-    Parameters
-    ----------
-    delegate : string
-        Name of the attribute on the current object which references the object
-        that is the trait's delegate
-    prefix : string
-        A prefix or substitution applied to the original attribute when looking
-        up the delegated attribute
-    modify : Boolean
-        Indicates whether changes are made to the delegate attribute,
-        rather than to the delegator attribute
-    listenable : Boolean
-        Indicates whether a listener can be attached to this attribute such that
-        changes to the delagate attribute will trigger it
-
-    Description
-    -----------
-    An object containing a delegator trait attribute must contain a second
-    attribute that references the object containing the delegate trait attribute.
-    The name of this second attribute is passed as the *delegate* argument to
-    the Delegate() function.
-
-    The following rules govern the application of the prefix parameter:
-
-    * If *prefix* is empty or omitted, the delegation is to an attribute of
-      the delegate object with the same name as the delegator attribute.
-    * If *prefix* is a valid Python attribute name, then the delegation is
-      to an attribute whose name is the value of *prefix*.
-    * If *prefix* ends with an asterisk ('*') and is longer than one
-      character, then the delegation is to an attribute whose name is the
-      value of *prefix*, minus the trailing asterisk, prepended to the
-      delegator attribute name.
-    * If *prefix* is equal to a single asterisk, the delegation is to an
-      attribute whose name is the value of the delegator object's
-      __prefix__ attribute prepended to delegator attribute name.
-
-    If *modify* is True, then any changes to the delegator attribute are
-    actually applied to the delegate attribute.
-
-    """
     if prefix == '':
         prefix_type = 0
     elif prefix[-1:] != '*':
@@ -1087,6 +1044,101 @@ def Delegate ( delegate, prefix = '', modify = False, listenable = True,
     trait.__dict__ = metadata.copy()
     
     return trait
+    
+# Define a trait delegate that matches the standard 'delegate' design pattern:    
+def DelegatesTo ( delegate, prefix = '', listenable = True, **metadata ):
+    """ Creates a "delegator" trait, whose definition and default value are
+    delegated to a *delegate* trait attribute on another object.
+
+    Parameters
+    ----------
+    delegate : string
+        Name of the attribute on the current object which references the object
+        that is the trait's delegate
+    prefix : string
+        A prefix or substitution applied to the original attribute when looking
+        up the delegated attribute
+    listenable : Boolean
+        Indicates whether a listener can be attached to this attribute such that
+        changes to the delagate attribute will trigger it
+
+    Description
+    -----------
+    An object containing a delegator trait attribute must contain a second
+    attribute that references the object containing the delegate trait 
+    attribute. The name of this second attribute is passed as the *delegate* 
+    argument to the DelegatesTo() function.
+
+    The following rules govern the application of the prefix parameter:
+
+    * If *prefix* is empty or omitted, the delegation is to an attribute of
+      the delegate object with the same name as the delegator attribute.
+    * If *prefix* is a valid Python attribute name, then the delegation is
+      to an attribute whose name is the value of *prefix*.
+    * If *prefix* ends with an asterisk ('*') and is longer than one
+      character, then the delegation is to an attribute whose name is the
+      value of *prefix*, minus the trailing asterisk, prepended to the
+      delegator attribute name.
+    * If *prefix* is equal to a single asterisk, the delegation is to an
+      attribute whose name is the value of the delegator object's
+      __prefix__ attribute prepended to delegator attribute name.
+
+    Note that any changes to the delegator attribute are actually applied to 
+    the corresponding attribute on the delegate object. The original object
+    containing the delegator trait is not modified.
+    """
+    return Delegate( delegate, prefix     = prefix, 
+                               modify     = True, 
+                               listenable = listenable, **metadata )
+    
+# Define a trait delegate that matches the standard 'prototype' design pattern:    
+def PrototypedFrom ( prototype, prefix = '', listenable = True, **metadata ):
+    """ Creates a "prototyped" trait, whose definition and default value are
+    obtained from a trait attribute on another object.
+
+    Parameters
+    ----------
+    prototype : string
+        Name of the attribute on the current object which references the object
+        that is the trait's prototype
+    prefix : string
+        A prefix or substitution applied to the original attribute when looking
+        up the prototyped attribute
+    listenable : Boolean
+        Indicates whether a listener can be attached to this attribute such that
+        changes to the corresponding attribute on the prototype object will
+        trigger it
+
+    Description
+    -----------
+    An object containing a prototyped trait attribute must contain a second
+    attribute that references the object containing the prototype trait 
+    attribute. The name of this second attribute is passed as the *prototype* 
+    argument to the PrototypedFrom() function.
+
+    The following rules govern the application of the prefix parameter:
+
+    * If *prefix* is empty or omitted, the prototype delegation is to an 
+      attribute of the prototype object with the same name as the prototyped
+      attribute.
+    * If *prefix* is a valid Python attribute name, then the prototype 
+      delegation is to an attribute whose name is the value of *prefix*.
+    * If *prefix* ends with an asterisk ('*') and is longer than one
+      character, then the prototype delegation is to an attribute whose name is 
+      the value of *prefix*, minus the trailing asterisk, prepended to the
+      prototyped attribute name.
+    * If *prefix* is equal to a single asterisk, the prototype delegation is to
+      an attribute whose name is the value of the prototype object's
+      __prefix__ attribute prepended to the prototyped attribute name.
+
+    Note that any changes to the prototyped attribute are made to the original
+    object, not the prototype object. The prototype object is only used to
+    define to trait type and default value.
+
+    """
+    return Delegate( prototype, prefix     = prefix, 
+                                modify     = False, 
+                                listenable = listenable, **metadata )
 
 #-------------------------------------------------------------------------------
 #  Factory function for creating C-based trait properties:

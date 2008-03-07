@@ -31,10 +31,11 @@ from category \
     import Category
 
 from traits \
-    import Event, Constant, CTrait, Trait, Delegate, Property, Button, \
-           ToolbarButton, Function, Method, Class, Module, This, self, \
-           Either, Python, Disallow, ReadOnly, missing, TraitFactory, \
-           Callable, Default, Color, RGBColor, Font, TraitFactory
+    import Event, Constant, CTrait, Trait, Delegate, DelegatesTo, \
+           PrototypedFrom, Property, Button, ToolbarButton, Function, Method, \
+           Class, Module, This, self, Either, Python, Disallow, ReadOnly, \
+           missing, TraitFactory, Callable, Default, Color, RGBColor, Font, \
+           TraitFactory
 
 from trait_types \
     import Any, Int, Long, Float, Complex, Str, Title, Unicode, Bool, CInt, \
