@@ -7,18 +7,16 @@
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
+#
 #  Thanks for using Enthought open source!
 #  
 #  Author: Jason Sugg
-#
-#  Date: 03/28/2006
-#
-#  Description: Define the table column descriptor used for toggleable
-#               columns.
-#
-#  Symbols defined: CheckboxColumn
+#  Date:   03/28/2006
 #
 #------------------------------------------------------------------------------
+
+""" Defines the table column descriptor used for toggleable columns.
+"""
 
 #-------------------------------------------------------------------------------
 #  Imports:
