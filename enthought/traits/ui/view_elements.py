@@ -1,27 +1,29 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill
-# Date: 10/18/2004
 #
-#  Symbols defined: ViewElements
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill
+#  Date:   10/18/2004
 #
 #------------------------------------------------------------------------------
-""" Define the ViewElements class, which is used to define a (typically
-class-based) hierarchical name space of related ViewElement objects.
 
-Normally there is a ViewElements object associated with each Traits-based 
-class, which contains all of the ViewElement objects associated with the class.
-The ViewElements object is also linked to the ViewElements objects of its 
-associated class's parent classes.
+""" Define the ViewElements class, which is used to define a (typically
+    class-based) hierarchical name space of related ViewElement objects.
+
+    Normally there is a ViewElements object associated with each Traits-based 
+    class, which contains all of the ViewElement objects associated with the
+    class. The ViewElements object is also linked to the ViewElements objects 
+    of its associated class's parent classes.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------

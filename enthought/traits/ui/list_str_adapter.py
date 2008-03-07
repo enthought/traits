@@ -1,16 +1,21 @@
 #-------------------------------------------------------------------------------
 #
-#  Adapter interfaces for use with the ListStrEditor.
+#  Copyright (c) 2008, Enthought, Inc.
+#  All rights reserved.
 #
-#  Written by: David C. Morrill
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  Date: 02/29/2008
+#  Thanks for using Enthought open source!
 #
-#  (c) Copyright 2008 by Enthought, Inc.
+#  Author: David C. Morrill
+#  Date:   02/29/2008
 #
 #-------------------------------------------------------------------------------
 
-""" Traits UI editor for editing lists of strings.
+"""  Defines adapter interfaces for use with the ListStrEditor.
 """
 
 #-------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 #  Thanks for using Enthought open source!
 # 
 #  Author: David C. Morrill
-#  Date: 10/21/2004
+#  Date:   10/21/2004
 #
 #------------------------------------------------------------------------------
 

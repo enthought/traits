@@ -1,12 +1,17 @@
 #-------------------------------------------------------------------------------
 #
-#  Written by: David C. Morrill
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
 #
-#  Date: 05/20/2005
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#  (c) Copyright 2005 by Enthought, Inc.
+#  Thanks for using Enthought open source!
 #
-#  Classes defined: KeyBinding, KeyBindings
+#  Author: David C. Morrill
+#  Date:   05/20/2005
 #
 #-------------------------------------------------------------------------------
 

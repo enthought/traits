@@ -1,18 +1,24 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
 #
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+# 
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-# Author: David C. Morrill
-# Date: 10/07/2004
+#  Thanks for using Enthought open source!
+# 
+#  Author: David C. Morrill
+#  Date:   10/07/2004
+#
 #------------------------------------------------------------------------------
-""" Manager for Undo and Redo history for Traits user interface support.
+
+""" Defines the manager for Undo and Redo history for Traits user interface 
+    support.
 """
+
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
