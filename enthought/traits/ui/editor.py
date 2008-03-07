@@ -243,7 +243,7 @@ class Editor ( HasPrivateTraits ):
     #  Returns the text representation of a specified object trait value:
     #---------------------------------------------------------------------------
   
-    def string_value ( self, value ):
+    def string_value ( self, value, format_func = None ):
         """ Returns the text representation of a specified object trait value.
 
             If the **format_func** attribute is set on the editor factory, then
@@ -258,6 +258,9 @@ class Editor ( HasPrivateTraits ):
             
         if factory.format_str != '':
             return factory.format_str % value
+            
+        if format_func is not None:
+            return format_func( value )
             
         return str( value )
         
