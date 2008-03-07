@@ -3196,11 +3196,15 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
     
     def __prefix_trait__ ( self, name, is_set ):
-        # Never create prefix traits for names of the form '__xxx__':
+        # Check to see if the name is of the form '__xxx__':
         if (name[:2] == '__') and (name[-2:] == '__'):
+            # If this is for purposes of performing a 'setattr', always map the
+            # name to an 'Any' trait:
             if is_set:
                 return any_trait
                 
+            # Otherwise, it is a 'getattr' request, so indicate that no such 
+            # attribute exists:
             raise AttributeError, "'%s' object has no attribute '%s'" % (
                                   self.__class__.__name__, name )
 
