@@ -1676,7 +1676,7 @@ class _TreeWidget(QtGui.QTreeWidget):
             else:
                 data = node._drop_object( object, data )
                 if data is not None:
-                    editor._undoable_append( node, object, data )
+                    editor._undoable_append( node, object, data, False )
         else:
             to_node, to_object, to_index = editor._node_index( nid )
             if to_node is not None:
