@@ -1,7 +1,7 @@
 # delegate.py --- Example of trait delegation
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Delegate, HasTraits, Instance, Str
+from enthought.traits.api import DelegatesTo, HasTraits, Instance, Str
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):
@@ -10,7 +10,7 @@ class Parent(HasTraits):
 
 class Child(HasTraits):
     first_name = Str
-    last_name  = Delegate('father')
+    last_name  = DelegatesTo('father')
     father     = Instance(Parent)
     mother     = Instance(Parent)
     
@@ -25,7 +25,10 @@ print sally.last_name
 # Output: Jones
 
 # Assign an explicit value to the child's 'last_name'
-sally.last_name = 'Smith'
+sally.last_name = 'Cooper'
+print tony.last_name
+#Output: Cooper
+
 # Validation is still controlled by the father's 'last_name' trait
 sally.last_name = sally.mother # ERR: string expected
 """

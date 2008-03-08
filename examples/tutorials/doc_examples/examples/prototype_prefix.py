@@ -1,7 +1,7 @@
-# delegate_prefix.py --- Examples of Delegate() prefix parameter
+# prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Delegate, Float, HasTraits, Instance, Str
+from enthought.traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 #--[Code]-----------------------------------------------------------------------
 
@@ -13,9 +13,9 @@ class Parent (HasTraits):
 
 class Child (HasTraits):
     __prefix__ = 'child_'
-    first_name = Delegate('mother', prefix='favorite_*')
-    last_name  = Delegate('father', prefix='family_name')
-    allowance  = Delegate('father', prefix='*')
+    first_name = PrototypedFrom('mother', 'favorite_*')
+    last_name  = PrototypedFrom('father', 'family_name')
+    allowance  = PrototypedFrom('father', '*')
     father     = Instance(Parent)
     mother     = Instance(Parent)
     

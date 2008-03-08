@@ -1,7 +1,7 @@
-# delegation_notification.py -- Example of notification with delegation
+# deferring_notification.py -- Example of notification with deferring
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Instance, Delegate, Str
+from enthought.traits.api import HasTraits, Instance, PrototypedFrom, Str
 
 #--[Code]-----------------------------------------------------------------------
 class Parent ( HasTraits ):
@@ -16,7 +16,7 @@ class Child ( HasTraits ):
 
     father = Instance( Parent )
     first_name = Str
-    last_name  = Delegate( 'father' )
+    last_name  = PrototypedFrom( 'father' )
 
     def _last_name_changed(self, new):
         print "Child's last name changed to %s." % new
