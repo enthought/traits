@@ -17,6 +17,7 @@
 #-------------------------------------------------------------------------------
 
 import logging
+from string import capitalize
 
 from PyQt4 import QtCore, QtGui
 
@@ -125,8 +126,9 @@ class SimpleEditor ( EditorWithList ):
     def list_updated ( self, values ):
         """ Handles updates to the list of legal checklist values.
         """
+        sv = self.string_value
         if (len( values ) > 0) and isinstance( values[0], basestring ):
-           values = [ ( x, x.capitalize() ) for x in values ]
+           values = [ ( x, sv( x, capitalize ) ) for x in values ]
         self.values = valid_values = [ x[0] for x in values ]
         self.names  =                [ x[1] for x in values ]
 

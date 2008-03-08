@@ -152,7 +152,7 @@ class SimpleEditor ( Editor ):
             widget.
         """
         label = self.factory.label or self.item.get_label( self.ui )
-        self.control = QtGui.QPushButton(label)
+        self.control = QtGui.QPushButton(self.string_value(label))
         self.sync_value( self.factory.label_value, 'label', 'from' )
         QtCore.QObject.connect(self.control, QtCore.SIGNAL('clicked()'),
                 self.update_object )
@@ -163,7 +163,7 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def _label_changed ( self, label ):
-        self.control.setText(label)
+        self.control.setText(self.string_value(label))
 
     #---------------------------------------------------------------------------
     #  Handles the user clicking the button by setting the value on the object:
@@ -220,7 +220,7 @@ class CustomEditor ( SimpleEditor ):
 
         btype = self._STYLE_MAP.get(factory.style, QtGui.QPushButton)
         self.control = btype()
-        self.control.setText(factory.label)
+        self.control.setText(self.string_value(factory.label))
 
         if factory.image is not None:
             self.control.setIcon(factory.image.create_icon())

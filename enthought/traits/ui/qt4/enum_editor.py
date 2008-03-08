@@ -16,11 +16,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from string import capitalize
+    
 from PyQt4 import QtCore, QtGui
 
-from string \
-    import ascii_lowercase
-    
 from editor \
     import Editor
     
@@ -374,7 +373,7 @@ class SimpleEditor ( BaseEditor ):
                                
 class RadioEditor ( BaseEditor ):
     """ Enumeration editor, used for the "custom" style, that displays radio
-    buttons.
+        buttons.
     """
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
@@ -455,8 +454,7 @@ class RadioEditor ( BaseEditor ):
             for j in range( cols ):
                 if n > 0:
                     name = label = names[ index ]
-                    if label[:1] in ascii_lowercase:
-                        label = label.capitalize()
+                    label = self.string_value( label, capitalize )
                     rb = QtGui.QRadioButton(label)
                     rb.value = mapping[name]
 
@@ -478,7 +476,7 @@ class RadioEditor ( BaseEditor ):
                                
 class ListEditor ( BaseEditor ):
     """ Enumeration editor, used for the "custom" style, that displays a list
-    box.
+        box.
     """
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit

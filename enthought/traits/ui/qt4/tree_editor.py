@@ -1700,6 +1700,6 @@ class _TreeWidget(QtGui.QTreeWidget):
                     data = to_node._drop_object( to_object, data )
                     if data is not None:
                         editor._undoable_insert( to_node, to_object, to_index,
-                                               data )
+                                               data, False )
 
         e.acceptProposedAction()
