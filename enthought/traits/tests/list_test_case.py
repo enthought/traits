@@ -1,6 +1,6 @@
 import unittest
 
-from enthought.traits.api import HasTraits, Instance, List, Str, TraitError
+from enthought.traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
 
 class Foo(HasTraits):
     l = List(Str)
@@ -22,6 +22,9 @@ class DeepBaz(HasTraits):
 class DeepBazBazRef(HasTraits):
     baz = Instance(BazRef)
     
+class CFoo(HasTraits):
+    ints = CList(Int)
+    strs = CList(Str)
     
 class ListTestCase(unittest.TestCase):
     
@@ -223,6 +226,31 @@ class ListTestCase(unittest.TestCase):
         
         return
     
+    def test_coercion(self):
+        f = CFoo()
+
+        # Test coercion from basic built-in types
+        f.ints = [1,2,3]
+        desired = [1,2,3]
+        self.failUnlessEqual( f.ints, desired )
+        f.ints = (1,2,3)
+        self.failUnlessEqual( f.ints, desired )
+        
+        f.strs = ("abc", "def", "ghi")
+        self.failUnlessEqual( f.strs, ["abc", "def", "ghi"] )
+        f.strs = "abcdef"
+        self.failUnlessEqual( f.strs, list("abcdef") )
+
+        try:
+            from numpy import array
+            f.ints = array([1,2,3])
+            self.failUnlessEqual( f.ints, [1,2,3] )
+            f.strs = array( ("abc", "def", "ghi") )
+            self.failUnlessEqual( f.strs, ["abc", "def", "ghi"] )
+        except ImportError:
+            pass
+
+
         
 ### EOF
         

@@ -1630,8 +1630,15 @@ class CList ( List ):
         """
         if isinstance( value, list ):
             return super( CList, self ).validate( object, name, value )
-            
-        return super( CList, self ).validate( object, name, [ value ] )
+
+        try:
+            # Should work for all iterables as well as strings (which do
+            # not define an __iter__ method)
+            new_value = list(value)
+        except (ValueError, TypeError):
+            new_value = [value]
+
+        return super( CList, self ).validate( object, name, new_value )
 
     def info ( self ):
         """ Returns a description of the trait.
