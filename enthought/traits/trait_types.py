@@ -31,7 +31,7 @@ from weakref \
 from os.path \
     import isfile, isdir
 
-from enthought.traits.protocols._speedups \
+from enthought.traits.protocols.api \
     import adapt
 
 from trait_base \

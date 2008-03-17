@@ -35,7 +35,7 @@ import sys
 import re
 import copy
 
-from enthought.traits.protocols._speedups \
+from enthought.traits.protocols.api \
     import adapt
 
 from types \
