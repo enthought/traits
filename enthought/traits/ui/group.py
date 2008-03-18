@@ -131,7 +131,7 @@ class Group ( ViewSubElement ):
     layout = Layout
 
     # The number of columns in the group
-    columns = Range( 1, 10 )
+    columns = Range( 1, 50 )
 
     # Should a border be drawn around group? If set to True, the **label** text
     # is embedded in the border. If set to False, the label appears as a banner
