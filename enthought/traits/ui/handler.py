@@ -332,7 +332,7 @@ class Handler ( HasPrivateTraits ):
     def can_drop ( self, info, object ):
         """ Can the specified object be inserted into the view?
         """
-        from enthought.pyface.dock.core import DockControl
+        from enthought.pyface.dock.api import DockControl
         
         if isinstance( object, DockControl ):
             return self.can_import( info, object.export )
@@ -356,9 +356,9 @@ class Handler ( HasPrivateTraits ):
     def dock_control_for ( self, info, parent, object ):
         """ Returns the DockControl object for a specified object.
         """
-        from enthought.pyface.dock.core import IDockable, DockControl
-        from view                       import View
-        from dockable_view_element      import DockableViewElement
+        from enthought.pyface.dock.api import IDockable, DockControl
+        from view                      import View
+        from dockable_view_element     import DockableViewElement
         
         try:
             name = object.name
@@ -418,7 +418,7 @@ class Handler ( HasPrivateTraits ):
     def open_view_for ( self, control, use_mouse = True ):
         """ Creates a new view of a specified control.
         """
-        from enthought.pyface.dock.core import DockWindowShell
+        from enthought.pyface.dock.api import DockWindowShell
         
         DockWindowShell( control, use_mouse = use_mouse )
         
