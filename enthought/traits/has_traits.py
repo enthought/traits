@@ -1646,6 +1646,8 @@ class HasTraits ( CHasTraits ):
             self._init_trait_listeners()
             self.trait_set( trait_change_notify = trait_change_notify, **state )
             self.traits_init()
+            
+        self.traits_inited( True )
 
     #---------------------------------------------------------------------------
     #  Shortcut for retrieving the value of a list of traits:
@@ -1967,12 +1969,19 @@ class HasTraits ( CHasTraits ):
         if memo is None:
             memo = {}
             
+        if traits is None:
+            traits = self.copyable_trait_names( **metadata )
+        elif (traits == 'all') or (len( traits ) == 0):
+            traits = self.all_trait_names()
+            memo[ 'traits_to_copy' ] = 'all'
+            
         memo[ 'traits_copy_mode' ] = copy
         new = self.__new__( self.__class__ )
         memo[ id( self ) ] = new
         new._init_trait_listeners()
         new.copy_traits( self, traits, memo, copy, **metadata )
         new.traits_init()
+        new.traits_inited( True )
         
         return new
 

@@ -1205,7 +1205,15 @@ _has_traits_init ( has_traits_object * obj ) {
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-_has_traits_inited ( has_traits_object * obj ) {
+_has_traits_inited ( has_traits_object * obj, PyObject * args ) {
+    
+    int traits_inited = -1;
+    
+	if ( !PyArg_ParseTuple( args, "|i", &traits_inited ) ) 
+        return NULL;
+    
+    if ( traits_inited > 0 ) 
+        obj->flags |= HASTRAITS_INITED;
  
     if ( obj->flags & HASTRAITS_INITED ) {
         Py_INCREF( Py_True );
@@ -1308,9 +1316,8 @@ static PyMethodDef has_traits_methods[] = {
 	{ "traits_init", (PyCFunction) _has_traits_init,
       METH_NOARGS,
       PyDoc_STR( "traits_init()" ) },
-	{ "traits_inited", (PyCFunction) _has_traits_inited,
-      METH_NOARGS,
-      PyDoc_STR( "traits_inited()" ) },
+	{ "traits_inited", (PyCFunction) _has_traits_inited,       METH_VARARGS,
+      PyDoc_STR( "traits_inited([True])" ) },
 	{ "_trait",           (PyCFunction) _has_traits_trait,     METH_VARARGS,
       PyDoc_STR( "_trait(name,instance) -> trait" ) },
 	{ "_instance_traits", (PyCFunction) _has_traits_instance_traits,
