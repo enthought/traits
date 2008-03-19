@@ -100,13 +100,13 @@ class QualityAgentView(Dialog):
 
         # 'Cancel' button.
         cancel = wx.Button(parent, wx.ID_CANCEL, "Cancel")
-        wx.EVT_BUTTON(parent, wx.ID_CANCEL, self._on_cancel)
+        wx.EVT_BUTTON(parent, wx.ID_CANCEL, self._wx_on_cancel)
         sizer.Add(cancel, 0, wx.LEFT, 10)
 
         # 'Help' button.
         if len(self.help_id) > 0:
             help = wx.Button(parent, wx.ID_HELP, "Help")
-            wx.EVT_BUTTON(parent, wx.ID_HELP, self._on_help)
+            wx.EVT_BUTTON(parent, wx.ID_HELP, self._wx_on_help)
             sizer.Add(help, 0, wx.LEFT, 10)
 
         return sizer
