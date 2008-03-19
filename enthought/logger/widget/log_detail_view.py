@@ -28,6 +28,7 @@ class TextView(Dialog):
     size = Tuple((400, 200))
     title = Str('Text') 
     style = 'nonmodal'
+
     
     ###########################################################################
     # Protected 'Dialog' interface.
@@ -45,7 +46,7 @@ class TextView(Dialog):
 
         # The 'guts' of the dialog.
         dialog_area = self._create_dialog_area(dialog)
-        sizer.Add(dialog_area, 1, wx.EXPAND | wx.ALL, self.dialog_area_border)
+        sizer.Add(dialog_area, 1, wx.EXPAND | wx.ALL, 5)
 
         # Resize the dialog to match the sizer's minimal size.
         if self.size != (-1,-1):
@@ -79,7 +80,7 @@ class TextView(Dialog):
 
         # 'Close' button.
         close = wx.Button(panel, wx.ID_CANCEL, "Close")
-        wx.EVT_BUTTON(panel, wx.ID_CANCEL, self._on_cancel)
+        wx.EVT_BUTTON(panel, wx.ID_CANCEL, self._wx_on_cancel)
         sizer.Add(close, 0, wx.ALIGN_CENTER | wx.BOTTOM | wx.TOP, 5)
         
         return panel
