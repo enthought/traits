@@ -29,7 +29,7 @@ from string \
     import find, rfind
 
 from enthought.traits.api \
-    import Instance, Str, Float, Range, Constant, false, Callable, Property, \
+    import Instance, Str, Float, Range, Constant, Bool, Callable, Property, \
            Delegate, cached_property
 
 from enthought.traits.trait_base \
@@ -131,17 +131,17 @@ class Item ( ViewSubElement ):
     # fill any extra space that is available in the display. If set to True
     # for more than one item in the same View, any extra space is divided
     # between them.
-    resizable = false
+    resizable = Bool( False )
 
     # Should the item use extra space along its Group's layout orientation?
-    springy = false
+    springy = Bool( False )
 
     # Should the item's label use emphasized text? If the label is not shown,
     # this attribute is ignored.
-    emphasized = false
+    emphasized = Bool( False )
 
     # Should the item receive focus initially?
-    has_focus = false
+    has_focus = Bool( False )
 
     # Pre-condition for including the item in the display. If the expression
     # evaluates to False, the item is not defined in the display. Conditions
@@ -452,7 +452,7 @@ class Spring ( Item ):
     name = 'spring'
 
     # Should a label be displayed?
-    show_label = false
+    show_label = Bool( False )
 
     # Editor to use for the item
     editor = Instance( 'enthought.traits.ui.api.NullEditor', () )

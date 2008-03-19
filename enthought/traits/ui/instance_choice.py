@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Str, Any, Dict, Tuple, Callable, true, false
+    import HasPrivateTraits, Str, Any, Dict, Tuple, Callable, Bool
 
 from ui_traits \
     import AView
@@ -49,7 +49,7 @@ class InstanceChoiceItem ( HasPrivateTraits ):
     view = AView
 
     # Does this item create new instances?
-    is_factory = false
+    is_factory = Bool( False )
 
     #---------------------------------------------------------------------------
     #  Returns the name of the item:
@@ -167,10 +167,10 @@ class InstanceFactoryChoice ( InstanceChoiceItem ):
 
     # Indicates whether an instance compatible with this item can be dragged and
     # dropped rather than created
-    droppable = false
+    droppable = Bool( False )
 
     # Indicates whether the item can be selected by the user
-    selectable = true
+    selectable = Bool( True )
 
     # A class (or other callable) that can be used to create an item compatible
     # with this item

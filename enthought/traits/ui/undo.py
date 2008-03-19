@@ -28,7 +28,7 @@ from operator \
 
 from enthought.traits.api \
     import HasStrictTraits, HasPrivateTraits, HasTraits, Trait, List, Int, Str,\
-           Any, Event, Property, Instance, false
+           Any, Event, Property, Instance
 
 from enthought.traits.trait_base \
     import enumerate

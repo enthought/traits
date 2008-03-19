@@ -18,11 +18,13 @@
 
 import wx
 
-from enthought.traits.api    import Trait, HasTraits, Str, Int, Range, List, Event,\
-                                File, Directory, true, Color, Font, Enum
-from enthought.traits.ui.api import View, Handler, Item, CheckListEditor, \
-                                ButtonEditor, FileEditor, DirectoryEditor, \
-                                ImageEnumEditor
+from enthought.traits.api \
+    import Trait, HasTraits, Str, Int, Range, List, Event, File, Directory, \
+           Bool, Color, Font, Enum
+           
+from enthought.traits.ui.api \
+    import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
+           DirectoryEditor, ImageEnumEditor
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -45,7 +47,7 @@ class Instance ( HasTraits ):
                          cols = 3 )
     float_range  = Range( 0.0, 10.0, 10.0 )
     int_range    = Range( 1, 5 )
-    boolean      = true
+    boolean      = Bool( True )
     
     view         = View( 'integer_text', 'enumeration', 'float_range', 
                          'int_range', 'boolean' )
@@ -68,7 +70,7 @@ class TraitsTest ( HasTraits ):
     int_range2   = Range( 1, 50 )
     compound     = Trait( 1, Range( 1, 6 ), 
                           'one', 'two', 'three', 'four', 'five', 'six' )
-    boolean      = true
+    boolean      = Bool( True )
     instance     = Trait( Instance() )
     color        = Color
     font         = Font

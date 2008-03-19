@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Instance, false
+    import HasPrivateTraits, Instance, Bool
     
 from ui \
     import UI
@@ -61,7 +61,7 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
     element = Instance( ViewSubElement )
     
     # Should the DockControl be closed on redocking?
-    should_close = false
+    should_close = Bool( False )
     
 #-- IDockable interface --------------------------------------------------------
     

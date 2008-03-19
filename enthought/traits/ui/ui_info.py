@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Instance, Constant, false
+    import HasPrivateTraits, Instance, Constant, Bool
 
 #-------------------------------------------------------------------------------
 #  'UIInfo' class:
@@ -43,7 +43,7 @@ class UIInfo ( HasPrivateTraits ):
     ui = Instance( 'enthought.traits.ui.ui.UI', allow_none = True )
     
     # Indicates whether the UI has finished initialization
-    initialized = false
+    initialized = Bool( False )
     
     #---------------------------------------------------------------------------
     #  Bind's all of the associated context objects as traits of the object:   

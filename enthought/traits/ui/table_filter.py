@@ -24,7 +24,7 @@
 
 from enthought.traits.api \
     import HasPrivateTraits, Str, Any, Instance, Trait, List, Property, Event, \
-           Expression, Enum, false, true, Callable
+           Expression, Enum, Callable, Bool
 
 from enthought.traits.ui.api \
     import View, Group, Item, Include, Handler, EnumEditor, EditorFactory
@@ -77,7 +77,7 @@ class TableFilter ( HasPrivateTraits ):
     allowed = Callable( lambda object: True, transient = True )
 
     # Is the filter a template (i.e., non-deletable, non-editable)?
-    template = false
+    template = Bool( False )
 
     #---------------------------------------------------------------------------
     #  Class constants:
@@ -244,7 +244,7 @@ class GenericTableFilterRule ( HasPrivateTraits ):
     filter = Instance( 'RuleTableFilter' )
 
     # Is this rule enabled?
-    enabled = false
+    enabled = Bool( False )
 
     # Is this rule an 'and' rule or an 'or' rule?
     and_or = Enum( 'and', 'or' )

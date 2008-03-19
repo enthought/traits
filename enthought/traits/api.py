@@ -37,7 +37,7 @@ from category \
     import Category
 
 from traits \
-    import Event, Constant, CTrait, Trait, Delegate, DelegatesTo, \
+    import Constant, CTrait, Trait, Delegate, DelegatesTo, \
            PrototypedFrom, Property, Button, ToolbarButton, Function, Method, \
            Class, Module, This, self, Either, Python, Disallow, ReadOnly, \
            missing, TraitFactory, Callable, Default, Color, RGBColor, Font, \
@@ -48,7 +48,7 @@ from trait_types \
            CLong, CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, \
            Code, HTML, Password, Expression, PythonValue, File, Directory, \
            Range, Enum, Tuple, List, CList, Dict, Instance, AdaptedTo, \
-           AdaptsTo, Type, WeakRef, false, true, undefined
+           AdaptsTo, Event, Type, WeakRef, false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \

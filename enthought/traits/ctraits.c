@@ -1998,16 +1998,17 @@ setattr_event ( trait_object      * traito,
                 PyObject          * name,
                 PyObject          * value ) {
     
+    int rc = 0;
     PyListObject * tnotifiers;
     PyListObject * onotifiers;
     
     if ( value != NULL ) {
         if ( traitd->validate != NULL ) {
             value = traitd->validate( traitd, obj, name, value );
-            if ( value == NULL ) { 
+            if ( value == NULL ) 
                 return -1;
-            }
-            Py_DECREF( value );
+        } else {
+            Py_INCREF( value );
         }
         
         tnotifiers = traito->notifiers;
@@ -2015,10 +2016,13 @@ setattr_event ( trait_object      * traito,
         
         if ( ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) &&
              has_notifiers( tnotifiers, onotifiers ) ) 
-            return call_notifiers( tnotifiers, onotifiers, obj, name, 
-                                   Undefined, value );
+            rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
+                                 Undefined, value );
+            
+        Py_DECREF( value );
     }
-    return 0;
+    
+    return rc;
 }                    
 
 /*-----------------------------------------------------------------------------
@@ -2739,6 +2743,7 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
         Py_INCREF( value );
         return value;
     }
+    
 	result = trait->validate( trait, (has_traits_object *) obj, name, value );
     if ( result == NULL ) {
         PyErr_Clear();
@@ -2751,6 +2756,7 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
             PyErr_Format( PyExc_ValueError, "Invalid value for trait." );
         Py_XDECREF( info );
     }
+    
     return result;
 }    
 
@@ -2764,7 +2770,9 @@ trait_getattro ( trait_object * obj, PyObject * name ) {
     PyObject * value = PyObject_GenericGetAttr( (PyObject *) obj, name );
     if ( value != NULL ) 
         return value;
+    
     PyErr_Clear();
+    
     Py_INCREF( Py_None );
     return Py_None;
 }
@@ -2782,22 +2790,26 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
     if ( PyArg_ParseTuple( args, "" ) ) {
         if ( trait->default_value == NULL ) 
             return Py_BuildValue( "iO", 0, Py_None );
+        
         return Py_BuildValue( "iO", trait->default_value_type, 
                                     trait->default_value );
     }
     if ( !PyArg_ParseTuple( args, "iO", &value_type, &value ) ) 
         return NULL;
+    
     PyErr_Clear();
     if ( (value_type < 0) || (value_type > 8) ) {
         PyErr_Format( PyExc_ValueError, 
                 "The default value type must be 0..8, but %d was specified.", 
                 value_type );
+        
         return NULL;
     }
     Py_INCREF( value );
     Py_XDECREF( trait->default_value );
     trait->default_value_type = value_type;
     trait->default_value = value;
+    
     Py_INCREF( Py_None );
     return Py_None;
 } 
@@ -2815,6 +2827,7 @@ validate_trait_python ( trait_object * trait, has_traits_object * obj,
     PyObject * args = PyTuple_New( 3 );
     if ( args == NULL )
         return NULL;
+    
     Py_INCREF( obj );
     Py_INCREF( name );
     Py_INCREF( value );
@@ -2823,6 +2836,7 @@ validate_trait_python ( trait_object * trait, has_traits_object * obj,
     PyTuple_SET_ITEM( args, 2, value );
     result = PyObject_Call( trait->py_validate, args, NULL );                            
     Py_DECREF( args );
+    
     return result;
 }                            
 
@@ -2839,6 +2853,7 @@ call_validator ( PyObject * validator, has_traits_object * obj,
     PyObject * args = PyTuple_New( 3 );
     if ( args == NULL )
         return NULL;
+    
     PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
     PyTuple_SET_ITEM( args, 1, name );
     PyTuple_SET_ITEM( args, 2, value );
@@ -2847,6 +2862,7 @@ call_validator ( PyObject * validator, has_traits_object * obj,
     Py_INCREF( value );
     result = PyObject_Call( validator, args, NULL );
     Py_DECREF( args );
+    
     return result;
 }
 
@@ -2862,10 +2878,12 @@ type_converter ( PyObject * type, PyObject * value ) {
     PyObject * args = PyTuple_New( 1 );
     if ( args == NULL )
         return NULL;
+    
     PyTuple_SET_ITEM( args, 0, value );
     Py_INCREF( value );
     result = PyObject_Call( type, args, NULL );
     Py_DECREF( args );
+    
     return result;
 }
 
@@ -2883,9 +2901,11 @@ validate_trait_type ( trait_object * trait, has_traits_object * obj,
     if ( ((kind == 3) && (value == Py_None)) ||
          PyObject_TypeCheck( value, 
                  (PyTypeObject *) PyTuple_GET_ITEM( type_info, kind - 1 ) ) ) {
+    
         Py_INCREF( value );
         return value;
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -2906,6 +2926,7 @@ validate_trait_instance ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -2924,6 +2945,7 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -2956,6 +2978,7 @@ validate_trait_int ( trait_object * trait, has_traits_object * obj,
                     goto error;
             }
         }
+        
         if ( high != Py_None ) {
             if ( (exclude_mask & 2) != 0 ) {
                 if ( int_value >= PyInt_AS_LONG( high ) )
@@ -2965,6 +2988,7 @@ validate_trait_int ( trait_object * trait, has_traits_object * obj,
                     goto error;
             }
         }
+        
         Py_INCREF( value );
         return value;
     }
@@ -2998,9 +3022,11 @@ validate_trait_float ( trait_object * trait, has_traits_object * obj,
     } else {
         float_value = PyFloat_AS_DOUBLE( value );
     }
+    
     low          = PyTuple_GET_ITEM( type_info, 1 );
     high         = PyTuple_GET_ITEM( type_info, 2 );
     exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
+    
     if ( low != Py_None ) {
         if ( (exclude_mask & 1) != 0 ) {
             if ( float_value <= PyFloat_AS_DOUBLE( low ) )
@@ -3010,6 +3036,7 @@ validate_trait_float ( trait_object * trait, has_traits_object * obj,
                 goto error;
         }
     }
+    
     if ( high != Py_None ) {
         if ( (exclude_mask & 2) != 0 ) {
             if ( float_value >= PyFloat_AS_DOUBLE( high ) )
@@ -3019,6 +3046,7 @@ validate_trait_float ( trait_object * trait, has_traits_object * obj,
                 goto error;
         }
     }
+    
     Py_INCREF( value );
     return value;
 error:
@@ -3038,6 +3066,7 @@ validate_trait_enum ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -3054,6 +3083,7 @@ validate_trait_map ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -3072,6 +3102,7 @@ validate_trait_prefix_map ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( mapped_value );
         return mapped_value;
     }
+    
     return call_validator( PyTuple_GET_ITEM( trait->py_validate, 2 ),
                            obj, name, value );
 }                            
@@ -3100,11 +3131,13 @@ validate_trait_tuple_check ( PyObject * traits, has_traits_object * obj,
                     Py_INCREF( aitem );
                 } else
                     aitem = itrait->validate( itrait, obj, name, bitem );
+                
                 if ( aitem == NULL ) {
                     PyErr_Clear();
                     Py_XDECREF( tuple );
                     return NULL;
                 }
+                
                 if ( tuple != NULL ) 
                     PyTuple_SET_ITEM( tuple, i, aitem );
                 else if ( aitem != bitem ) {
@@ -3122,10 +3155,12 @@ validate_trait_tuple_check ( PyObject * traits, has_traits_object * obj,
             }
             if ( tuple != NULL ) 
                 return tuple;
+            
             Py_INCREF( value );
             return value;
         }
     }
+    
     return NULL;
 }                            
 
@@ -3138,6 +3173,7 @@ validate_trait_tuple ( trait_object * trait, has_traits_object * obj,
                             obj, name, value );
     if ( result != NULL )
         return result;
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -3158,21 +3194,25 @@ validate_trait_coerce_type ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     n = PyTuple_GET_SIZE( type_info );
     for ( i = 2; i < n; i++ ) {
         type2 = PyTuple_GET_ITEM( type_info, i );
         if ( type2 == Py_None )
             break;
+        
         if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) {
             Py_INCREF( value );
             return value;
         }
     }
+    
     for ( i++; i < n; i++ ) {
         type2 = PyTuple_GET_ITEM( type_info, i ); 
         if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
             return type_converter( type, value );
     }
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -3192,8 +3232,10 @@ validate_trait_cast_type ( trait_object * trait, has_traits_object * obj,
         Py_INCREF( value );
         return value;
     }
+    
     if ( (result = type_converter( type, value )) != NULL )
         return result;
+    
     return raise_trait_error( trait, obj, name, value );
 }                            
 
@@ -3211,7 +3253,9 @@ validate_trait_function ( trait_object * trait, has_traits_object * obj,
                              obj, name, value );
     if ( result != NULL )
         return result;
+    
     PyErr_Clear();
+    
     return raise_trait_error( trait, obj, name, value );
 } 
 
@@ -3244,6 +3288,7 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
         args = PyTuple_New( 3 );
         if ( args == NULL )
             return NULL;
+        
         PyTuple_SET_ITEM( args, 2, Py_None );
         Py_INCREF( Py_None );
     } else {
@@ -3300,20 +3345,23 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                      PyObject_TypeCheck( value, (PyTypeObject *) 
                                     PyTuple_GET_ITEM( type_info, kind - 1 ) ) )
                     goto done;
-                break;    
+                break;  
+                
             case 1:  /* Instance check: */
                 kind = PyTuple_GET_SIZE( type_info );
                 if ( ((kind == 3) && (value == Py_None)) ||
                     (PyObject_IsInstance( value, 
                          PyTuple_GET_ITEM( type_info, kind - 1 ) ) > 0) ) 
                     goto done;
-                break;    
+                break; 
+                
             case 2:  /* Self type check: */
                 if ( ((PyTuple_GET_SIZE( type_info ) == 2) && 
                       (value == Py_None)) ||
                       PyObject_TypeCheck( value, obj->ob_type ) )  
                     goto done;
                 break;    
+                
             case 3:  /* Integer range check: */
                 if ( PyInt_Check( value ) ) {
                     int_value    = PyInt_AS_LONG( value );
@@ -3342,10 +3390,12 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     goto done;
                 }
                 break;
+                
             case 4:  /* Floating point range check: */
                 if ( !PyFloat_Check( value ) ) {
                     if ( !PyInt_Check( value ) )
                         break;
+                    
                     float_value = (double) PyInt_AS_LONG( value );
                     value       = PyFloat_FromDouble( float_value );
                     if ( value == NULL ) {
@@ -3379,10 +3429,12 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     }
                 }
                 goto done2;
+                
             case 5:  /* Enumerated item check: */
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ), 
                                           value ) > 0 )  
                     goto done;
+                    
                 break;
             case 6:  /* Mapped item check: */
                 if ( PyDict_GetItem( PyTuple_GET_ITEM( type_info, 1 ), 
@@ -3390,17 +3442,21 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     goto done;
                 PyErr_Clear();
                 break;
+                
             case 8:  /* Perform 'slow' validate check: */
                 return PyObject_CallMethod( PyTuple_GET_ITEM( type_info, 1 ), 
                                   "slow_validate", "(OOO)", obj, name, value );
+                
             case 9:  /* Tuple item check: */
                 result = validate_trait_tuple_check( 
                              PyTuple_GET_ITEM( type_info, 1 ), 
                              obj, name, value );
                 if ( result != NULL ) 
                     return result;
+                
                 PyErr_Clear();
                 break;
+                
             case 10:  /* Prefix map item check: */
                 result = PyDict_GetItem( PyTuple_GET_ITEM( type_info, 1 ), 
                                          value );
@@ -3414,10 +3470,12 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     return result;
                 PyErr_Clear();
                 break;
+                
             case 11:  /* Coercable type check: */
                 type = PyTuple_GET_ITEM( type_info, 1 ); 
                 if ( PyObject_TypeCheck( value, (PyTypeObject *) type ) ) 
                     goto done;
+                
                 k = PyTuple_GET_SIZE( type_info );
                 for ( j = 2; j < k; j++ ) {
                     type2 = PyTuple_GET_ITEM( type_info, j );
@@ -3426,27 +3484,34 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
                         goto done;
                 }
+                
                 for ( j++; j < k; j++ ) {
                     type2 = PyTuple_GET_ITEM( type_info, j ); 
                     if ( PyObject_TypeCheck( value, (PyTypeObject *) type2 ) ) 
                         return type_converter( type, value );
                 }
                 break;
+                
             case 12:  /* Castable type check */
                 type = PyTuple_GET_ITEM( type_info, 1 ); 
                 if ( PyObject_TypeCheck( value, (PyTypeObject *) type ) ) 
                     goto done;
+                
                 if ( (result = type_converter( type, value )) != NULL )
                     return result;
+                
                 PyErr_Clear();
                 break;
+                
             case 13:  /* Function validator check: */
                 result = call_validator( PyTuple_GET_ITEM( type_info, 1 ), 
                                          obj, name, value );
                 if ( result != NULL )
                     return result;
+                
                 PyErr_Clear();
                 break;
+                
             /* case 14: Python-based validator check: */
             /* case 15..18: Property 'setattr' validate checks: */
             case 19:  /* PyProtocols 'adapt' check: */
@@ -3461,6 +3526,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     args = PyTuple_New( 3 );
                     if ( args == NULL )
                         return NULL;
+                    
                     PyTuple_SET_ITEM( args, 2, Py_None );
                     Py_INCREF( Py_None );
                 } else {
@@ -3468,6 +3534,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     if ( args == NULL )
                         return NULL;
                 }
+                
                 PyTuple_SET_ITEM( args, 0, value );
                 PyTuple_SET_ITEM( args, 1, type );
                 Py_INCREF( value );
@@ -3482,6 +3549,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                         }
                         return result;
                     }
+                    
                     Py_DECREF( result );
                     result = default_value_for( trait, obj, name );
                     if ( result != NULL )
@@ -3530,14 +3598,18 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
     
     if ( !PyArg_ParseTuple( args, "O", &validate ) )
         return NULL;
+    
     if ( PyCallable_Check( validate ) ) {
         kind = 14;
         goto done;
     } 
+    
     if ( PyTuple_CheckExact( validate ) ) { 
         n = PyTuple_GET_SIZE( validate );
         if ( n > 0 ) {
+            
             kind = PyInt_AsLong( PyTuple_GET_ITEM( validate, 0 ) );
+            
             switch ( kind ) {
                 case 0:  /* Type check: */
                     if ( (n <= 3) && 
@@ -3545,19 +3617,22 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                          ((n == 2) || 
                           (PyTuple_GET_ITEM( validate, 1 ) == Py_None)) ) 
                         goto done;
-                    break;    
+                    break; 
+                    
                 case 1:  /* Instance check: */
                     if ( (n <= 3) && 
                          ((n == 2) || 
                           (PyTuple_GET_ITEM( validate, 1 ) == Py_None)) ) 
                         goto done;
-                    break;    
+                    break; 
+                    
                 case 2:  /* Self type check: */
                     if ( (n == 1) ||
                          ((n == 2) && 
                           (PyTuple_GET_ITEM( validate, 1 ) == Py_None)) ) 
                         goto done;
                     break;    
+                    
                 case 3:  /* Integer range check: */
                     if ( n == 4 ) {
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3569,6 +3644,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 4:  /* Floating point range check: */
                     if ( n == 4 ) {
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3580,6 +3656,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 5:  /* Enumerated item check: */
                     if ( n == 2 ) { 
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3587,6 +3664,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 6:  /* Mapped item check: */
                     if ( n == 2 ) { 
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3594,6 +3672,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 7:  /* TraitComplex item check: */
                     if ( n == 2 ) { 
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3601,6 +3680,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 /* case 8: 'Slow' validate check: */    
                 case 9:  /* TupleOf item check: */
                     if ( n == 2 ) { 
@@ -3609,6 +3689,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 10:  /* Prefix map item check: */
                     if ( n == 3 ) { 
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3616,14 +3697,17 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 case 11:  /* Coercable type check: */
                     if ( n >= 2 ) 
                        goto done;
                     break;
+                    
                 case 12:  /* Castable type check: */
                     if ( n == 2 ) 
                        goto done;
                     break;
+                    
                 case 13:  /* Function validator check: */
                     if ( n == 2 ) { 
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -3631,6 +3715,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+                    
                 /* case 14: Python-based validator check: */
                 /* case 15..18: Property 'setattr' validate checks: */
                 case 19:  /* PyProtocols 'adapt' check: */
@@ -3647,17 +3732,37 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
             }
 		}
     } 
+    
     PyErr_SetString( PyExc_ValueError, 
                      "The argument must be a tuple or callable." );
+    
     return NULL;
+    
 done:   
     trait->validate = validate_handlers[ kind ]; 
     Py_INCREF( validate );
     Py_XDECREF( trait->py_validate ); 
     trait->py_validate = validate;
+    
     Py_INCREF( Py_None );
     return Py_None;
 }    
+
+/*-----------------------------------------------------------------------------
+|  Gets the value of the 'validate' field of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_get_validate ( trait_object * trait ) {
+    
+    if ( trait->validate != NULL ) {
+        Py_INCREF( trait->py_validate ); 
+        return trait->py_validate;
+    }
+        
+    Py_INCREF( Py_None );
+    return Py_None;
+}
 
 /*-----------------------------------------------------------------------------
 |  Validates that a particular value can be assigned to an object trait:
@@ -4224,6 +4329,8 @@ static PyMethodDef trait_methods[] = {
 	 	PyDoc_STR( "default_value(default_value)" ) },
 	{ "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
 	 	PyDoc_STR( "set_validate(validate_function)" ) },
+	{ "get_validate",  (PyCFunction) _trait_get_validate,  METH_NOARGS,
+	 	PyDoc_STR( "get_validate()" ) },
 	{ "validate",      (PyCFunction) _trait_validate,      METH_VARARGS,
 	 	PyDoc_STR( "validate(object,name,value)" ) },
 	{ "delegate",      (PyCFunction) _trait_delegate,      METH_VARARGS,

@@ -1,16 +1,22 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
-# All rights reserved.
-# 
-# This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
-# is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
-# 
-# Author: David C. Morrill Date: 11/02/2004 Description: Test case for Traits
-# User Interface
+#
+#  Copyright (c) 2005, Enthought, Inc.
+#  All rights reserved.
+#  
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+#  Thanks for using Enthought open source!
+#  
+#  Author: David C. Morrill 
+#  Date:   11/02/2004 
+#  
 # ------------------------------------------------------------------------------
+
+""" Traits Test case
+"""
 
 #-------------------------------------------------------------------------------
 #  Imports:
@@ -18,12 +24,15 @@
 
 import wx
 
-from enthought.traits.api    import Trait, HasTraits, Str, Int, Range, List, Event,\
-                                File, Directory, true
-from enthought.traits.ui.api import View, Handler, Item, CheckListEditor, \
-                                ButtonEditor, FileEditor, DirectoryEditor, \
-                                ImageEnumEditor
-from enthought.traits.api import Color, Font
+from enthought.traits.api \
+    import Trait, HasTraits, Str, Int, Range, List, Event, File, Directory, Bool
+    
+from enthought.traits.ui.api \
+    import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
+           DirectoryEditor, ImageEnumEditor
+           
+from enthought.traits.api \
+    import Color, Font
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -46,7 +55,7 @@ class Instance ( HasTraits ):
                           cols = 3 )
     float_range  = Range( 0.0, 10.0, 10.0 )
     int_range    = Range( 1, 5 )
-    boolean      = true
+    boolean      = Bool( True )
     
     view         = View( 'integer_text', 'enumeration', 'float_range', 
                          'int_range', 'boolean' )
@@ -72,7 +81,7 @@ class TraitsTest ( HasTraits ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
     
-    enabled      = true
+    enabled      = Bool( True )
     integer_text = Int( 1 )
     enumeration  = Trait( 'one', 'two', 'three', 'four', 'five', 'six', 
                           cols = 3 )
@@ -81,7 +90,7 @@ class TraitsTest ( HasTraits ):
     int_range2   = Range( 1, 50 )
     compound     = Trait( 1, Range( 1, 6 ), 
                           'one', 'two', 'three', 'four', 'five', 'six' )
-    boolean      = true
+    boolean      = Bool( True )
     instance     = Trait( Instance() )
     color        = Color( 'cyan' )
     font         = Font()

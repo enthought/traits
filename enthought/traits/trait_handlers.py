@@ -627,7 +627,11 @@ class TraitType ( BaseTraitHandler ):
                             validate, n )
             metadata.setdefault( 'type', 'property' )
         else:
-            trait = CTrait( 0 )
+            if metadata.get( 'type' ) == 'event':
+                trait = CTrait( 2 )
+            else:
+                trait = CTrait( 0 )
+                
             trait.default_value( *self.get_default_value() )
             
             validate = getattr( self, 'fast_validate', None )
@@ -2268,7 +2272,8 @@ class TraitList ( TraitHandler ):
 
 def items_event ( ):
     if TraitList._items_event is None:
-        TraitList._items_event = Event( TraitListEvent, is_base = False )
+        TraitList._items_event = \
+            Event( TraitListEvent, is_base = False ).as_ctrait()
         
     return TraitList._items_event
 
@@ -2701,7 +2706,9 @@ class TraitDict ( TraitHandler ):
 
     def items_event ( self ):
         if TraitDict._items_event is None:
-            TraitDict._items_event = Event( TraitDictEvent, is_base = False )
+            TraitDict._items_event = \
+                Event( TraitDictEvent, is_base = False ).as_ctrait()
+                
         return TraitDict._items_event
 
 #-------------------------------------------------------------------------------

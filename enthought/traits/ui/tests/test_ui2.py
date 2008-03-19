@@ -18,11 +18,14 @@
 
 import wx
 
-from enthought.kiva.traits.kiva_font_trait import KivaFont
-from enthought.enable2.traits.api import RGBAColor
+from enthought.kiva.traits.kiva_font_trait \
+    import KivaFont
+    
+from enthought.enable2.traits.api \
+    import RGBAColor
 
 from enthought.traits.api \
-    import Trait, HasTraits, Str, Int, Range, List, Event, true
+    import Trait, HasTraits, Str, Int, Range, List, Event, Bool
 
 from enthought.traits.ui.api \
     import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
@@ -103,7 +106,7 @@ class Person ( HasTraits ):
     coolness  = Range( 0.0, 10.0, 10.0 )
     number    = Trait( 1, Range( 1, 6 ),
                        'one', 'two', 'three', 'four', 'five', 'six' )
-    human     = true
+    human     = Bool( True )
     employer  = Trait( Employer( company = 'Enthought, Inc.', boss = 'eric' ) )
     eye_color = RGBAColor
     set       = List( editor = CheckListEditor(

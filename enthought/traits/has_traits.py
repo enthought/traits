@@ -43,12 +43,11 @@ from ctraits \
     import CHasTraits, CTraitMethod, _HasTraits_monitors
     
 from traits \
-    import Trait, CTrait, Python, Event, Disallow, TraitFactory, \
-           trait_factory, Property, ForwardProperty, generic_trait, \
-           __newobj__, SpecialNames
+    import Trait, CTrait, Python, Disallow, TraitFactory, trait_factory, \
+           Property, ForwardProperty, generic_trait, __newobj__, SpecialNames
 
 from trait_types \
-    import Any, Enum, Instance, false
+    import Any, Enum, Instance, Event, Bool
 
 from trait_notifiers \
     import StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper, \
@@ -729,7 +728,6 @@ class MetaHasTraitsObject ( object ):
                     if value_type == 'trait':
                        handler = value.handler
                        if handler is not None:
-                           
                            if handler.has_items:
                                items_trait = _clone_trait( 
                                    handler.items_event(), value.__dict__ )
@@ -3532,7 +3530,7 @@ class SingletonHasPrivateTraits ( HasPrivateTraits ):
 class Vetoable ( HasStrictTraits ):
 
     # Should the request be vetoed? (Can only be set to 'True')
-    veto = false
+    veto = Bool( False )
 
     def _veto_changed ( self, state ):
         self._trait_veto_notify( state )

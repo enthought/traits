@@ -28,7 +28,7 @@ from types import \
     FunctionType, MethodType
     
 from enthought.traits.api \
-    import HasTraits, HasPrivateTraits, Instance, List, Any, Str, false
+    import HasTraits, HasPrivateTraits, Instance, List, Any, Str, Bool
     
 from enthought.traits.ui.api \
     import View, Item, TreeEditor, TreeNode, TreeNodeObject, ObjectTreeNode
@@ -58,7 +58,7 @@ class SingleValueTreeNodeObject ( TreeNodeObject ):
     value = Any
     
     # Is the value readonly?
-    readonly = false
+    readonly = Bool( False )
 
     #---------------------------------------------------------------------------
     #  Returns whether chidren of this object are allowed or not:  

@@ -24,6 +24,7 @@
 
 import sys
 import re
+import trait_handlers
 
 from weakref \
     import ref
@@ -43,7 +44,7 @@ from trait_handlers \
            TraitDictEvent, ThisClass, items_event, RangeTypes
     
 from traits \
-    import Trait, Event, trait_from, _InstanceArgs, code_editor, html_editor, \
+    import Trait, trait_from, _InstanceArgs, code_editor, html_editor, \
            password_editor, shell_editor
 
 from trait_errors \
@@ -1731,7 +1732,8 @@ class Dict ( TraitType ):
     def items_event ( self ):
         cls = self.__class__
         if cls._items_event is None:
-            cls._items_event = Event( TraitDictEvent, is_base = False )
+            cls._items_event = \
+                Event( TraitDictEvent, is_base = False ).as_ctrait()
             
         return cls._items_event
 
@@ -1764,6 +1766,7 @@ class BaseClass ( TraitType ):
         klass = self.validate_class( self.find_class( self.klass ) )
         if klass is None:
             self.validate_failed( object, name, value )
+            
         self.klass = klass
      
     def validate_class ( self, klass ):
@@ -1782,6 +1785,7 @@ class BaseClass ( TraitType ):
                 mod = __import__( module )
                 for component in module.split( '.' )[1:]:
                     mod = getattr( mod, component )
+                    
                 theClass = getattr( mod, klass, None )
             except:
                 pass
@@ -1845,8 +1849,9 @@ class BaseInstance ( BaseClass ):
         default value assigned is a unique instance.
         """
         if klass is None:
-            raise TraitError( "An Instance trait must have a class specified." )
-            
+            raise TraitError( 'A %s trait must have a class specified.' % 
+                              self.__class__.__name__ )
+           
         metadata.setdefault( 'copy', 'deep' )
         metadata.setdefault( 'instance_handler', '_instance_changed_handler' )
         
@@ -1859,8 +1864,10 @@ class BaseInstance ( BaseClass ):
                 args, factory = factory, klass
             elif isinstance( args, dict ):
                 factory, args, kw = klass, factory, args
+                
         elif (kw is None) and isinstance( factory, dict ):
             kw, factory = factory, klass
+            
         elif ((args is not None) or (kw is not None)) and (factory is None):
             factory = klass
             
@@ -1873,6 +1880,7 @@ class BaseInstance ( BaseClass ):
         else:
             if not isinstance( klass, ClassTypes ):
                 klass = klass.__class__
+                
             self.klass = klass
             self.init_fast_validate()
         
@@ -2106,11 +2114,13 @@ class Type ( BaseClass ):
         if value is None:
             if klass is None:
                 klass = object
+                
         elif klass is None:
             klass = value
             
         if isinstance( klass, basestring ):
             self.validate = self.resolve
+            
         elif not isinstance( klass, ClassTypes ):
             raise TraitError( "A Type trait must specify a class." )
             
@@ -2120,7 +2130,6 @@ class Type ( BaseClass ):
         
         super( Type, self ).__init__( value, **metadata )
         
-
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
         """
@@ -2180,6 +2189,36 @@ class Type ( BaseClass ):
                                   self.klass )
                 
         return self.klass
+        
+#-------------------------------------------------------------------------------
+#  'Event' trait:
+#-------------------------------------------------------------------------------
+
+class Event ( TraitType ):
+    
+    def __init__ ( self, trait = None, **metadata ):
+        metadata[ 'type' ] = 'event'
+        
+        super( Event, self ).__init__( **metadata )
+        
+        self.trait = None
+        if trait is not None:
+            self.trait = trait_from( trait )
+            validate   = self.trait.get_validate()
+            if validate is not None:
+                self.fast_validate = validate
+
+    def info ( self ):
+        """ Returns a description of the trait.
+        """
+        trait = self.trait
+        if trait is None:
+            return 'any value'
+            
+        return trait.info()
+
+#  Handle circular module dependencies:
+trait_handlers.Event = Event
     
 if python_version >= 2.5:
     

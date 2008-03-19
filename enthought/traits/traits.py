@@ -565,30 +565,8 @@ def Constant ( value, **metadata ):
     return Trait( value, **metadata )
 
 #-------------------------------------------------------------------------------
-#  Factory function for creating C-based events:
+#  Factory function for creating event buttons:
 #-------------------------------------------------------------------------------
-
-def Event ( *value_type, **metadata ):
-    """ Returns a trait event whose assigned value must meet the specified criteria.
-
-    Parameters
-    ----------
-    value_type : any valid arguments for Trait()
-        Specifies the criteria for successful assignment to the trait event.
-
-    Default Value
-    -------------
-    No default value because events do not store values.
-    """
-    metadata[ 'type' ]      = 'event'
-    metadata[ 'transient' ] = True
-    result = Trait( *value_type, **metadata )
-    if 'instance_handler' in result.__dict__:
-        del result.instance_handler
-        
-    return result
-
-Event = TraitFactory( Event )
 
 def Button ( label = '', image = None, style = 'button',
              orientation = 'vertical', width_padding = 7, height_padding = 5,
@@ -614,7 +592,8 @@ def Button ( label = '', image = None, style = 'button',
     -------------
     No default value because events do not store values.
     """
-
+    
+    from trait_types             import Event
     from enthought.traits.ui.api import ButtonEditor
 
     return Event( editor = ButtonEditor(
@@ -658,9 +637,6 @@ def ToolbarButton ( label = '', image = None, style = 'toolbar',
                    height_padding, **metadata )
 
 ToolbarButton = TraitFactory( ToolbarButton )
-
-#  Handle circular module dependencies:
-trait_handlers.Event = Event
 
 #-------------------------------------------------------------------------------
 #  Factory function for creating C-based traits:
@@ -799,29 +775,38 @@ class _TraitMaker ( object ):
     def define ( self, *value_type, **metadata ):
         default_value_type = -1
         default_value      = handler = clone = None
+        
         if len( value_type ) > 0:
             default_value = value_type[0]
             value_type    = value_type[1:]
+            
             if ((len( value_type ) == 0) and
                 (type( default_value ) in SequenceTypes)):
                 default_value, value_type = default_value[0], default_value
+                
             if len( value_type ) == 0:
                 default_value = try_trait_cast( default_value )
+                
                 if default_value in PythonTypes:
                     handler       = TraitCoerceType( default_value )
                     default_value = DefaultValues.get( default_value )
+                    
                 elif isinstance( default_value, CTrait ):
                     clone = default_value
                     default_value_type, default_value = clone.default_value()
                     metadata[ 'type' ] = clone.type
+                    
                 elif isinstance( default_value, TraitHandler ):
                     handler       = default_value
                     default_value = None
+                    
                 elif default_value is ThisClass:
                     handler       = ThisClass()
                     default_value = None
+                    
                 else:
                     typeValue = type( default_value )
+                    
                     if isinstance(default_value, basestring):
                         string_options = self.extract( metadata, 'min_len',
                                                        'max_len', 'regex' )
@@ -829,8 +814,10 @@ class _TraitMaker ( object ):
                             handler = TraitCastType( typeValue )
                         else:
                             handler = TraitString( **string_options )
+                            
                     elif typeValue in TypeTypes:
                         handler = TraitCastType( typeValue )
+                        
                     else:
                         metadata.setdefault( 'instance_handler',
                                              '_instance_changed_handler' )
@@ -842,6 +829,7 @@ class _TraitMaker ( object ):
                 other = []
                 map   = {}
                 self.do_list( value_type, enum, map, other )
+                
                 if (((len( enum )  == 1) and (enum[0] is None)) and
                     ((len( other ) == 1) and
                      isinstance( other[0], TraitInstance ))):
@@ -853,28 +841,37 @@ class _TraitMaker ( object ):
                     if (((len( map ) + len( other )) == 0) and
                         (default_value not in enum)):
                         enum.insert( 0, default_value )
+                        
                     other.append( TraitEnum( enum ) )
+                    
                 if len( map ) > 0:
                     other.append( TraitMap( map ) )
+                    
                 if len( other ) == 0:
                     handler = TraitHandler()
+                    
                 elif len( other ) == 1:
                     handler = other[0]
                     if isinstance( handler, CTrait ):
                         clone, handler = handler, None
                         metadata[ 'type' ] = clone.type
+                        
                     elif isinstance( handler, TraitInstance ):
                         metadata.setdefault( 'instance_handler',
                                              '_instance_changed_handler' )
+                        
                         if default_value is None:
                             handler.allow_none()
+                            
                         elif isinstance( default_value, _InstanceArgs ):
                             default_value_type = 7
                             default_value = ( handler.create_default_value,
                                 default_value.args, default_value.kw )
+                            
                         elif (len( enum ) == 0) and (len( map ) == 0):
                             aClass    = handler.aClass
                             typeValue = type( default_value )
+                            
                             if typeValue is dict:
                                 default_value_type = 7
                                 default_value = ( aClass, (), default_value )
@@ -900,6 +897,7 @@ class _TraitMaker ( object ):
         # Save the results:
         self.handler = handler
         self.clone   = clone
+        
         if default_value_type < 0:
             if isinstance( default_value, Default ):
                 default_value_type = 7
@@ -907,21 +905,19 @@ class _TraitMaker ( object ):
             else:
                 if (handler is None) and (clone is not None):
                     handler = clone.handler
+                    
                 if handler is not None:
                     default_value_type = handler.default_value_type
-###                 fixme: Is this path every used??? Remove it if not...
-###                 if default_value_type >= 0:
-###                     if hasattr( handler, 'default_value' ):
-###                         default_value = handler.default_value(default_value)
-###                 else:
                     if default_value_type < 0:
                         try:
                             default_value = handler.validate( None, '',
                                                               default_value )
                         except:
                             pass
+                        
                 if default_value_type < 0:
                     default_value_type = _default_value_type( default_value )
+                    
         self.default_value_type = default_value_type
         self.default_value      = default_value
         self.metadata           = metadata.copy()
@@ -937,18 +933,25 @@ class _TraitMaker ( object ):
             else:
                 item     = try_trait_cast( item )
                 typeItem = type( item )
+                
                 if typeItem in ConstantTypes:
                     enum.append( item )
+                    
                 elif typeItem in SequenceTypes:
                     self.do_list( item, enum, map, other )
+                    
                 elif typeItem is DictType:
                     map.update( item )
+                    
                 elif typeItem in CallableTypes:
                     other.append( TraitFunction( item ) )
+                    
                 elif item is ThisClass:
                     other.append( ThisClass() )
+                    
                 elif isinstance( item, TraitTypes ):
                     other.append( item )
+                    
                 else:
                     other.append( TraitInstance( item ) )
 
@@ -973,6 +976,7 @@ class _TraitMaker ( object ):
             validate      = getattr( handler, 'fast_validate', None )
             if validate is None:
                 validate = handler.validate
+                
             trait.set_validate( validate )
             
             post_setattr = getattr( handler, 'post_setattr', None )
