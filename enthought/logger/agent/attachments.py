@@ -42,20 +42,9 @@ class Attachments:
             dir = single_project.location
             self._attach_directory(dir)
 
-    def package_proava2_project(self):
-        if self.app is None:
-            pass
-
-        plugin = self.app.service_registry.get_service('cp.proava2.IAttributeManager')
-        if (plugin is not None) and (plugin.active_project is not None):
-            dir = os.path.join(plugin.active_project.path, plugin.active_project.name)
-            self._attach_directory(dir)
-
-
     def package_any_relevant_files(self):
         self.package_workspace()
         self.package_single_project()
-        self.package_proava2_project()
         return
 
     def _attach_directory(self, dir):

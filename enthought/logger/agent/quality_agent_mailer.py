@@ -46,7 +46,7 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
 
     # First section is simple ASCII data ...
     m = []
-    m.append("CPLab Bug Report")
+    m.append("Bug Report")
     m.append("==============================")
     m.append("")
 

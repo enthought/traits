@@ -49,9 +49,9 @@ ID = "enthought.logger"
 
 preferences = Preferences(
     defaults = {
-        'log_level' : 'Debug',
-        'smtp_server' : 'mailhost.conocophillips.net',
-        'to_address' : 'proava2-dev@enthought.com',
+        'log_level' : 'Info',
+        'smtp_server' : 'mail.yourhost.com',
+        'to_address' : 'support@yourhost.com',
         'from_address' : '',
         'enable_agent' : False
     }
@@ -112,7 +112,7 @@ PluginDefinition(
 
     # General information about the plugin.
     name          = "Application Logger Plugin",
-    version       = "1.0.0",
+    version       = "2.0.4",
     provider_name = "Enthought Inc",
     provider_url  = "www.enthought.com",
     enabled       = True,
