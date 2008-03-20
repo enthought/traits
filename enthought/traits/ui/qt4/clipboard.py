@@ -45,7 +45,7 @@ class PyMimeData(QtCore.QMimeData):
             # We may not be able to pickle the data.
             try:
                 pdata = dumps(data)
-            except TypeError:
+            except:
                 return
 
             # This format (as opposed to using a single sequence) allows the
