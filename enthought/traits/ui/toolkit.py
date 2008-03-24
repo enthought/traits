@@ -332,6 +332,13 @@ class Toolkit ( HasPrivateTraits ):
 
     def kiva_font_trait ( self, *args, **traits ):
         raise NotImplementedError
+        
+    #---------------------------------------------------------------------------
+    #  'Editor' class methods:
+    #---------------------------------------------------------------------------
+    
+    def ui_editor ( self ):
+        raise NotImplementedError
 
     #---------------------------------------------------------------------------
     #  'EditorFactory' factory methods:

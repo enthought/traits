@@ -48,7 +48,7 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import View, Item
 
-from enthought.traits.ui.wx.extra.array_view_editor \
+from enthought.traits.ui.ui_editors.array_view_editor \
     import ArrayViewEditor
 
 #-- ShowArray demo class -------------------------------------------------------

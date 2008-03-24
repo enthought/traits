@@ -22,6 +22,9 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+    
+from toolkit \
+    import toolkit
 
 from handler \
     import Handler, Controller, ModelView, ViewHandler, default_handler
@@ -96,4 +99,6 @@ from editors \
            TitleEditor, ValueEditor, NullEditor
 
 import view_elements
+
+UIEditor = toolkit().ui_editor()
 
