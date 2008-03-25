@@ -24,7 +24,10 @@ from enthought.traits.api \
     import HasTraits, Instance, Property, List, Str, Bool
     
 from enthought.traits.ui.api \
-    import View, Item, TabularEditor, UIEditor, BasicEditorFactory
+    import View, Item, TabularEditor, BasicEditorFactory
+    
+from enthought.traits.ui.ui_editor \
+    import UIEditor
     
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter

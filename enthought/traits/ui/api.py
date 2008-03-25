@@ -13,7 +13,6 @@
 #  Author: David C. Morrill
 #  Date:   10/07/2004
 #
-#
 #------------------------------------------------------------------------------
 
 """ Exports the symbols defined by the traits.ui package.
@@ -22,9 +21,6 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-    
-from toolkit \
-    import toolkit
 
 from handler \
     import Handler, Controller, ModelView, ViewHandler, default_handler
@@ -99,6 +95,4 @@ from editors \
            TitleEditor, ValueEditor, NullEditor
 
 import view_elements
-
-UIEditor = toolkit().ui_editor()
 
