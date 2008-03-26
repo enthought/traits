@@ -32,9 +32,6 @@ Notes:
  - A careful reader will also observe that this example contains only 
    declarative code. No imperative code is required to handle the automatic 
    updating of the Entree list.
-   
- - Try dragging the Kitchen tab so that both the Order and Menu tab's contents
-   can be seen simultaneously.
 """
 
 #-- Imports --------------------------------------------------------------------
@@ -43,7 +40,7 @@ from enthought.traits.api \
     import HasPrivateTraits, Str, List, Constant
     
 from enthought.traits.ui.api \
-    import View, Item, VGroup, Tabbed, EnumEditor, CheckListEditor
+    import View, Item, VGroup, HSplit, EnumEditor, CheckListEditor
     
 #-- The list of possible entrees -----------------------------------------------
 
@@ -81,7 +78,7 @@ class OrderMenu ( HasPrivateTraits ):
     
     # The user interface view:
     view = View(
-        Tabbed(
+        HSplit(
             VGroup(
                 Item( 'entree',
                       editor = EnumEditor(
@@ -102,10 +99,7 @@ class OrderMenu ( HasPrivateTraits ):
                 dock        = 'tab'
             )
         ),
-        title     = 'Dynamic EnumEditor Demo',
-        width     = 0.3,
-        height    = 0.3,
-        resizable = True
+        title = 'Dynamic EnumEditor Demo',
     )
 
 #-------------------------------------------------------------------------------
