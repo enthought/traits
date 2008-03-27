@@ -65,8 +65,12 @@ from trait_errors \
     import TraitError
     
 from protocols.api \
-    import Interface, Protocol, addClassAdvisor, declareAdapter, \
+    import InterfaceClass, Protocol, addClassAdvisor, declareAdapter, \
            declareImplementation
+
+# Set CHECK_INTERFACES to True if you want to ensure that classes actually 
+# implement the interfaces they say they do:
+CHECK_INTERFACES = False
 
 #-------------------------------------------------------------------------------
 #  Deferred definitions:
@@ -78,7 +82,6 @@ from protocols.api \
 #
 #  Note: We need to look at whether the Category support could be used to
 #        allow us to implement this better.
-#
 #-------------------------------------------------------------------------------
 
 class ViewElement ( object ):
@@ -675,6 +678,30 @@ class MetaHasTraits ( type ):
     remove_listener = classmethod( remove_listener )
 
 #-------------------------------------------------------------------------------
+#  'MetaInterface' class:
+#-------------------------------------------------------------------------------
+
+class MetaInterface ( MetaHasTraits, InterfaceClass ):
+    """ Meta class for interfaces.
+
+        This combines trait and PyProtocols functionality.
+    """
+    
+    def __call__( self, *args, **kw ):
+        """ This method is copied over from the PyProtocols 'InterfaceClass'
+            (and cleaned up a little). It is needed here because:
+
+            a) the 'InterfaceClass' is no longer the first class in the 
+               hierarchy.
+            b) the reference to 'Interface' now needs to reference *our* 
+               Interface.
+        """
+        if self.__init__ is Interface.__init__:
+            return Protocol.__call__( self, *args, **kw )
+        
+        return type.__call__( self, *args, **kw )
+
+#-------------------------------------------------------------------------------
 #  'MetaHasTraitsObject' class:
 #-------------------------------------------------------------------------------
 
@@ -1135,6 +1162,13 @@ def implements ( *interfaces ):
             
         # Tell PyProtocols that the class implements its interfaces:
         declareImplementation( target, instancesProvide = list( interfaces ) )
+
+        # Make sure the class actually does implement the interfaces it claims
+        # to:
+        if CHECK_INTERFACES:
+            from interface_checker import check_implements
+            
+            check_implements( klass, interfaces )
         
         return klass
 
@@ -3536,6 +3570,16 @@ class Vetoable ( HasStrictTraits ):
         self._trait_veto_notify( state )
 
 VetoableEvent = Event( Vetoable )
+
+#-------------------------------------------------------------------------------
+#  'Interface' class:
+#-------------------------------------------------------------------------------
+
+class Interface ( HasTraits ):
+    """ The base class for all interfaces.
+    """
+    
+    __metaclass__ = MetaInterface
 
 #-------------------------------------------------------------------------------
 #  'ISerializable' interface:

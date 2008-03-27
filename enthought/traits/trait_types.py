@@ -53,9 +53,6 @@ from trait_errors \
 from types \
     import FunctionType, MethodType, ClassType, InstanceType
     
-from protocols.api \
-    import Interface
-
 #-------------------------------------------------------------------------------
 #  Numeric type fast validator definitions:  
 #-------------------------------------------------------------------------------
@@ -2040,6 +2037,8 @@ class Instance ( BaseInstance ):
     def init_fast_validate ( self ):
         """ Sets up the C-level fast validator.
         """
+        from has_traits import Interface
+        
         if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
             fast_validate = [ 1, self.klass ]
             if self._allow_none:

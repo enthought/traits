@@ -67,7 +67,7 @@ if python_version >= 2.5:
         import UUID
 
 from has_traits \
-    import method, HasTraits, HasStrictTraits, HasPrivateTraits, \
+    import method, HasTraits, HasStrictTraits, HasPrivateTraits, Interface, \
            SingletonHasTraits, SingletonHasStrictTraits, \
            SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent, \
            implements, traits_super, on_trait_change, cached_property
@@ -85,9 +85,6 @@ from adapter \
 
 from trait_numeric \
     import Array, CArray
-
-from protocols.interfaces \
-    import Interface
 
 import ui.view_elements
 
