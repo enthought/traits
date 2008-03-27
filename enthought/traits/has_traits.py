@@ -68,8 +68,11 @@ from protocols.api \
     import InterfaceClass, Protocol, addClassAdvisor, declareAdapter, \
            declareImplementation
 
-# Set CHECK_INTERFACES to True if you want to ensure that classes actually 
-# implement the interfaces they say they do, and False if you don't:
+#-------------------------------------------------------------------------------
+#  Set CHECK_INTERFACES to True if you want to ensure that classes actually 
+#  implement the interfaces they say they do, and False if you don't:
+#-------------------------------------------------------------------------------
+
 CHECK_INTERFACES = True
 
 #-------------------------------------------------------------------------------
