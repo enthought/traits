@@ -73,7 +73,7 @@ from protocols.api \
 #  implement the interfaces they say they do, and False if you don't:
 #-------------------------------------------------------------------------------
 
-CHECK_INTERFACES = True
+CHECK_INTERFACES = False
 
 #-------------------------------------------------------------------------------
 #  Deferred definitions:

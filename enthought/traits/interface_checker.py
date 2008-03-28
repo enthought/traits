@@ -36,10 +36,12 @@ from enthought.traits.has_traits \
 #-------------------------------------------------------------------------------
 
 # Message templates for interface errors.
-BAD_SIGNATURE  = ('The class %s signature for method %s is different from '
-                  'that of interface %s.')
-MISSING_METHOD = 'The class %s does not implement method %s of interface %s.'
-MISSING_TRAIT  = 'The class %s does not implement trait %s of interface %s.'
+BAD_SIGNATURE  = ("The '%s' class signature for the '%s' method is different "
+                  "from that of the '%s' interface.")
+MISSING_METHOD = ("The '%s' class does not implement the '%s' method of the "
+                  "'%s' interface.")
+MISSING_TRAIT  = ("The '%s' class does not implement the %s trait(s) of the "
+                  "'%s' interface.")
 
 #-------------------------------------------------------------------------------
 #  'InterfaceError' class:
@@ -109,27 +111,26 @@ class InterfaceChecker ( HasTraits ):
         for name in interface_methods:
             if name not in cls_methods:
                 raise InterfaceError( MISSING_METHOD % 
-                                      ( cls, name, interface ) )
+                          ( self._class_name( cls ), name, 
+                            self._class_name( interface ) ) )
 
             # Check that the method signatures are the same:
             cls_argspec       = getargspec( cls_methods[ name ] )
             interface_argspec = getargspec( interface_methods[ name ] )
 
             if cls_argspec != interface_argspec:
-                raise InterfaceError( BAD_SIGNATURE % ( cls, name, interface ) )
+                raise InterfaceError( BAD_SIGNATURE % ( self._class_name( cls ), 
+                                      name, self._class_name( interface ) ) )
 
     def _check_traits ( self, cls, interface ):
         """ Checks that a class implements the traits on an interface.
         """
-        cls_traits       = self._get_public_traits( cls )
-        interface_traits = self._get_public_traits( interface )
+        missing = set( interface.class_traits() ).difference(
+                  set( cls.class_traits() ) )
         
-        for name in interface_traits:
-            if name not in cls_traits:
-                raise InterfaceError( MISSING_TRAIT % ( cls, name, interface ) )
-
-            # fixme: Check that the types are the same (or same-ish?)...
-            pass
+        if len( missing ) > 0:
+            raise InterfaceError( MISSING_TRAIT % ( self._class_name( cls ),
+                      `list( missing )`[1:-1], self._class_name( interface ) ) )
 
     def _get_public_methods ( self, cls ):
         """ Returns all public methods on a class.
@@ -148,21 +149,10 @@ class InterfaceChecker ( HasTraits ):
                     public_methods[ name ] = value
 
         return public_methods
+        
+    def _class_name ( self, cls ):
+        return cls.__name__
 
-    def _get_public_traits ( self, cls ):
-        """ Returns all public traits on a class.
-
-            Returns a dictionary containing all public traits keyed by name.
-        """
-        # Calling 'class_traits' returns all traits from the inheritance
-        # hierarchy, so we don't have to walk up the MRO:
-        public_traits = {}
-        for trait_name, trait in cls.class_traits().items():
-            if ((not trait_name.startswith( '_' )) and
-                (not trait_name.startswith( 'trait' ))):
-                public_traits[ trait_name ] = trait
-
-        return public_traits
 
 # A default interface checker:
 checker = InterfaceChecker()
