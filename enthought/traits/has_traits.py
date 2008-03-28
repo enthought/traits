@@ -69,11 +69,16 @@ from protocols.api \
            declareImplementation
 
 #-------------------------------------------------------------------------------
-#  Set CHECK_INTERFACES to True if you want to ensure that classes actually 
-#  implement the interfaces they say they do, and False if you don't:
+#  Set CHECK_INTERFACES to one of the following values:
+#
+#  - 0: Does not check to see if classes implement their declared interfaces.
+#  - 1: Ensures that classes implement the interfaces they say they do, and 
+#       logs a warning if they don't.
+#  - 2: Ensures that classes implement the interfaces they say they do, and 
+#       raises an InterfaceError if they don't.
 #-------------------------------------------------------------------------------
 
-CHECK_INTERFACES = False
+CHECK_INTERFACES = 0
 
 #-------------------------------------------------------------------------------
 #  Deferred definitions:

@@ -22,6 +22,8 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+import enthought.traits.has_traits as has_traits
+
 from types \
     import FunctionType
 
@@ -30,6 +32,14 @@ from inspect \
     
 from enthought.traits.has_traits \
     import HasTraits
+
+#-------------------------------------------------------------------------------
+#  Logging:
+#-------------------------------------------------------------------------------
+
+import logging
+
+logger = logging.getLogger( __name__ )
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -110,17 +120,18 @@ class InterfaceChecker ( HasTraits ):
         
         for name in interface_methods:
             if name not in cls_methods:
-                raise InterfaceError( MISSING_METHOD % 
-                          ( self._class_name( cls ), name, 
-                            self._class_name( interface ) ) )
+                self._handle_error( MISSING_METHOD % 
+                                    ( self._class_name( cls ), name, 
+                                      self._class_name( interface ) ) )
+                
 
             # Check that the method signatures are the same:
             cls_argspec       = getargspec( cls_methods[ name ] )
             interface_argspec = getargspec( interface_methods[ name ] )
 
             if cls_argspec != interface_argspec:
-                raise InterfaceError( BAD_SIGNATURE % ( self._class_name( cls ), 
-                                      name, self._class_name( interface ) ) )
+                self._handle_error( BAD_SIGNATURE % ( self._class_name( cls ), 
+                                    name, self._class_name( interface ) ) )
 
     def _check_traits ( self, cls, interface ):
         """ Checks that a class implements the traits on an interface.
@@ -129,7 +140,7 @@ class InterfaceChecker ( HasTraits ):
                   set( cls.class_traits() ) )
         
         if len( missing ) > 0:
-            raise InterfaceError( MISSING_TRAIT % ( self._class_name( cls ),
+            self._handle_error( MISSING_TRAIT % ( self._class_name( cls ),
                       `list( missing )`[1:-1], self._class_name( interface ) ) )
 
     def _get_public_methods ( self, cls ):
@@ -152,6 +163,12 @@ class InterfaceChecker ( HasTraits ):
         
     def _class_name ( self, cls ):
         return cls.__name__
+        
+    def _handle_error ( self, msg ):
+        if has_traits.CHECK_INTERFACES != 1:
+            raise InterfaceError( msg )
+            
+        logger.warning( msg )
 
 
 # A default interface checker:

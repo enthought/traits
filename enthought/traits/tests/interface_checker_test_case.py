@@ -14,7 +14,7 @@ from enthought.traits.interface_checker import InterfaceError, check_implements
 # Make sure implicit interface checking is turned off, so that we can make the
 # checks explicitly:
 import enthought.traits.has_traits
-enthought.traits.has_traits.CHECK_INTERFACES = False
+enthought.traits.has_traits.CHECK_INTERFACES = 0
 
     
 class InterfaceCheckerTestCase(unittest.TestCase):
