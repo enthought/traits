@@ -22,8 +22,6 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import enthought.traits.has_traits as has_traits
-
 from types \
     import FunctionType
 
@@ -74,7 +72,7 @@ class InterfaceChecker ( HasTraits ):
     #  'InterfaceChecker' interface:
     #---------------------------------------------------------------------------
 
-    def check_implements ( self, cls, interfaces ):
+    def check_implements ( self, cls, interfaces, error_mode ):
         """ Checks that the class implements the specified interfaces.
 
             'interfaces' can be a single interface or a list of interfaces.
@@ -89,30 +87,36 @@ class InterfaceChecker ( HasTraits ):
         # methods on the specified interfaces:
         if issubclass( cls, HasTraits ):
             for interface in interfaces:
-                self._check_has_traits_class( cls, interface )
+                if not self._check_has_traits_class( cls, interface, 
+                                                     error_mode ):
+                    return False
 
         # Otherwise, just check that the class implements all methods on the
         # specified interface:
         else:
             for interface in interfaces:
-                self._check_non_has_traits_class( cls, interface )
+                if not self._check_non_has_traits_class( cls, interface, 
+                                                         error_mode ):
+                    return False
+                    
+        return True
 
     #---------------------------------------------------------------------------
     #  Private interface:
     #---------------------------------------------------------------------------
 
-    def _check_has_traits_class ( self, cls, interface ):
+    def _check_has_traits_class ( self, cls, interface, error_mode ):
         """ Checks that a 'HasTraits' class implements an interface. 
         """
-        self._check_traits(  cls, interface )
-        self._check_methods( cls, interface )
+        return (self._check_traits(  cls, interface, error_mode ) and
+                self._check_methods( cls, interface, error_mode ))
 
-    def _check_non_has_traits_class ( self, cls, interface ):
+    def _check_non_has_traits_class ( self, cls, interface, error_mode ):
         """ Checks that a non-'HasTraits' class implements an interface.
         """
-        self._check_methods( cls, interface )
+        return self._check_methods( cls, interface, error_mode )
 
-    def _check_methods ( self, cls, interface ):
+    def _check_methods ( self, cls, interface, error_mode ):
         """ Checks that a class implements the methods on an interface.
         """
         cls_methods       = self._get_public_methods( cls )
@@ -120,9 +124,9 @@ class InterfaceChecker ( HasTraits ):
         
         for name in interface_methods:
             if name not in cls_methods:
-                self._handle_error( MISSING_METHOD % 
-                                    ( self._class_name( cls ), name, 
-                                      self._class_name( interface ) ) )
+                return self._handle_error( MISSING_METHOD % 
+                           ( self._class_name( cls ), name, 
+                             self._class_name( interface ) ), error_mode )
                 
 
             # Check that the method signatures are the same:
@@ -130,18 +134,24 @@ class InterfaceChecker ( HasTraits ):
             interface_argspec = getargspec( interface_methods[ name ] )
 
             if cls_argspec != interface_argspec:
-                self._handle_error( BAD_SIGNATURE % ( self._class_name( cls ), 
-                                    name, self._class_name( interface ) ) )
+                return self._handle_error( BAD_SIGNATURE % 
+                           ( self._class_name( cls ), name, 
+                             self._class_name( interface ) ), error_mode )
+                
+        return True
 
-    def _check_traits ( self, cls, interface ):
+    def _check_traits ( self, cls, interface, error_mode ):
         """ Checks that a class implements the traits on an interface.
         """
         missing = set( interface.class_traits() ).difference(
                   set( cls.class_traits() ) )
         
         if len( missing ) > 0:
-            self._handle_error( MISSING_TRAIT % ( self._class_name( cls ),
-                      `list( missing )`[1:-1], self._class_name( interface ) ) )
+            return self._handle_error( MISSING_TRAIT % 
+                       ( self._class_name( cls ), `list( missing )`[1:-1],
+                         self._class_name( interface ) ), error_mode )
+                
+        return True
 
     def _get_public_methods ( self, cls ):
         """ Returns all public methods on a class.
@@ -164,20 +174,23 @@ class InterfaceChecker ( HasTraits ):
     def _class_name ( self, cls ):
         return cls.__name__
         
-    def _handle_error ( self, msg ):
-        if has_traits.CHECK_INTERFACES != 1:
+    def _handle_error ( self, msg, error_mode ):
+        if error_mode > 1:
             raise InterfaceError( msg )
             
-        logger.warning( msg )
+        if error_mode == 1:
+            logger.warning( msg )
+            
+        return False
 
 
 # A default interface checker:
 checker = InterfaceChecker()
 
-def check_implements ( cls, interfaces ):
+def check_implements ( cls, interfaces, error_mode = 0 ):
     """ Checks that the class implements the specified interfaces.
     
         'interfaces' can be a single interface or a list of interfaces.
     """
-    return checker.check_implements( cls, interfaces )
+    return checker.check_implements( cls, interfaces, error_mode )
 

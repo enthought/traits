@@ -1176,7 +1176,7 @@ def implements ( *interfaces ):
         if CHECK_INTERFACES:
             from interface_checker import check_implements
             
-            check_implements( klass, interfaces )
+            check_implements( klass, interfaces, CHECK_INTERFACES )
         
         return klass
 

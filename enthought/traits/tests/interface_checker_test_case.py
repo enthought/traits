@@ -54,7 +54,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         # The checker will raise an exception if the class does not implement
         # the interface.
-        check_implements(Foo, IFoo)
+        check_implements(Foo, IFoo, 2)
 
         return
     
@@ -72,7 +72,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         # The checker will raise an exception if the class does not implement
         # the interface.
-        check_implements(Foo, IFoo)
+        check_implements(Foo, IFoo, 2)
 
         return
 
@@ -91,7 +91,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def foo(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -106,7 +106,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             implements(IFoo)
 
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -122,7 +122,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             implements(IFoo)
 
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -148,7 +148,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             
         # The checker will raise an exception if the class does not implement
         # the interface.
-        check_implements(Foo, [IFoo, IBar, IBaz])
+        check_implements(Foo, [IFoo, IBar, IBaz], 2)
 
         return
 
@@ -182,7 +182,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         self.failUnlessRaises(
-            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz]
+            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
         return
@@ -207,7 +207,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             y = Int
 
         self.failUnlessRaises(
-            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz]
+            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
         return
@@ -238,7 +238,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         self.failUnlessRaises(
-            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz]
+            InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
         return
@@ -265,7 +265,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             
         # The checker will raise an exception if the class does not implement
         # the interface.
-        check_implements(Foo, IBaz)
+        check_implements(Foo, IBaz, 2)
 
         return
 
@@ -298,7 +298,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def baz(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -321,7 +321,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
             y = Int
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -350,7 +350,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def bar(self):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz)
+        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
