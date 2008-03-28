@@ -1289,7 +1289,7 @@ class HasTraits ( CHasTraits ):
     }
 
     #-- Trait Definitions ------------------------------------------------------
-
+    
     # An event fired when a new trait is dynamically added to the object
     trait_added = Event( basestring )
 
@@ -3243,6 +3243,9 @@ class HasTraits ( CHasTraits ):
     def __prefix_trait__ ( self, name, is_set ):
         # Check to see if the name is of the form '__xxx__':
         if (name[:2] == '__') and (name[-2:] == '__'):
+            if name == '__class__':
+                return generic_trait
+                
             # If this is for purposes of performing a 'setattr', always map the
             # name to an 'Any' trait:
             if is_set:

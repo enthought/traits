@@ -1,16 +1,20 @@
 /******************************************************************************
-* Copyright (c) 2005, Enthought, Inc.
-* All rights reserved.
+*
+*  Description: C based implementation of the Traits package
 * 
-* This software is provided without warranty under the terms of the BSD
-* license included in enthought/LICENSE.txt and may be redistributed only
-* under the conditions described in the aforementioned license.  The license
-* is also available online at http://www.enthought.com/licenses/BSD.txt
-* Thanks for using Enthought open source!
+*  Copyright (c) 2005, Enthought, Inc.
+*  All rights reserved.
+*  
+*  This software is provided without warranty under the terms of the BSD
+*  license included in enthought/LICENSE.txt and may be redistributed only
+*  under the conditions described in the aforementioned license.  The license
+*  is also available online at http://www.enthought.com/licenses/BSD.txt
 * 
-* Author: David C. Morrill
-* Date: 06/15/2004
-* Description: C based implementation of the Traits package
+*  Thanks for using Enthought open source!
+*  
+*  Author: David C. Morrill
+*  Date:   06/15/2004
+*
 ******************************************************************************/
 
 /*-----------------------------------------------------------------------------
@@ -1291,7 +1295,8 @@ get_has_traits_dict ( has_traits_object * obj, void * closure ) {
 +----------------------------------------------------------------------------*/
 
 static int
-set_has_traits_dict ( has_traits_object * obj, PyObject * value, void * closure ) {
+set_has_traits_dict ( has_traits_object * obj, PyObject * value, 
+                      void * closure ) {
 
     if ( !PyDict_Check( value ) ) 
         return dictionary_error();
@@ -1333,7 +1338,8 @@ static PyMethodDef has_traits_methods[] = {
 +----------------------------------------------------------------------------*/
 
 static PyGetSetDef has_traits_properties[] = {
-	{ "__dict__", (getter) get_has_traits_dict, (setter) set_has_traits_dict },
+	{ "__dict__",  (getter) get_has_traits_dict, 
+                   (setter) set_has_traits_dict },
 	{ 0 }
 };
 
@@ -1374,9 +1380,9 @@ static PyTypeObject has_traits_type = {
 	0,                                                  /* tp_members */
 	has_traits_properties,                              /* tp_getset */
 	DEFERRED_ADDRESS( &PyBaseObject_Type ),             /* tp_base */
-	0,				        	                            /* tp_dict */
-	0,				        	                            /* tp_descr_get */
-	0,				        	                            /* tp_descr_set */
+	0,				        	                        /* tp_dict */
+	0,				        	                        /* tp_descr_get */
+	0,				        	                        /* tp_descr_set */
 	sizeof( has_traits_object ) - sizeof( PyObject * ), /* tp_dictoffset */
 	has_traits_init,                                    /* tp_init */
 	DEFERRED_ADDRESS( PyType_GenericAlloc ),            /* tp_alloc */
@@ -2624,7 +2630,9 @@ static trait_getattr getattr_handlers[] = {
     getattr_event,     getattr_disallow,  getattr_trait,  getattr_constant,
     getattr_generic,
 /*  The following entries are used by the __getstate__ method: */    
-    getattr_property0, getattr_property1, getattr_property2,
+    getattr_property0, getattr_property1, getattr_property2, 
+    getattr_property2, /* <-- Padding for symmetry with the setattr_handlers */
+/*  End of __getstate__ method entries */
     NULL
 };    
 
@@ -2634,6 +2642,7 @@ static trait_setattr setattr_handlers[] = {
     setattr_generic,
 /*  The following entries are used by the __getstate__ method: */    
     setattr_property0, setattr_property1, setattr_property2, setattr_property3,
+/*  End of __setstate__ method entries */
     NULL
 };    
     
@@ -2697,6 +2706,7 @@ trait_traverse ( trait_object * trait, visitproc visit, void * arg ) {
     Py_VISIT( (PyObject *) trait->notifiers );
     Py_VISIT( trait->handler );
     Py_VISIT( trait->obj_dict );
+    
 	return 0;
 }
 
@@ -4153,9 +4163,11 @@ _trait_getstate ( trait_object * trait, PyObject * args ) {
     
     if ( !PyArg_ParseTuple( args, "" ) ) 
         return NULL;
+    
     result = PyTuple_New( 15 );
     if ( result == NULL )
         return NULL;
+    
     PyTuple_SET_ITEM( result,  0, PyInt_FromLong( func_index( 
                   (void *) trait->getattr, (void **) getattr_handlers ) ) );
     PyTuple_SET_ITEM( result,  1, PyInt_FromLong( func_index( 
@@ -4177,7 +4189,8 @@ _trait_getstate ( trait_object * trait, PyObject * args ) {
                   (void **) delegate_attr_name_handlers ) ) );
     PyTuple_SET_ITEM( result, 12, get_value( NULL ) ); /* trait->notifiers */
     PyTuple_SET_ITEM( result, 13, get_value( trait->handler ) ); 
-    PyTuple_SET_ITEM( result, 14, get_value( trait->obj_dict ) ); 
+    PyTuple_SET_ITEM( result, 14, get_value( trait->obj_dict ) );
+    
     return result;
 } 
 
@@ -4224,6 +4237,7 @@ _trait_setstate ( trait_object * trait, PyObject * args ) {
         Py_DECREF( PyTuple_GET_ITEM( temp, 2 ) );
         PyTuple_SET_ITEM( temp, 2, temp2 );
     }
+    
     if ( PyInt_Check( trait->py_post_setattr ) )
         trait->py_post_setattr = PyObject_GetAttrString( trait->handler, 
                                                          "post_setattr" );
