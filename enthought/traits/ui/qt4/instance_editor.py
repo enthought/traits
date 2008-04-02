@@ -84,6 +84,18 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Is the current value of the object trait editable (vs. merely selectable)?
     editable = Bool(True)
 
+    # Should the object trait value be selectable from a list of objects (a
+    # value of True forces a selection list to be displayed, while a value of
+    # False displays a selection list only if at least one object in the list
+    # of possible object values is selectable):
+    selectable = Bool( False )
+
+    # Should the editor support drag and drop of objects to set the trait value
+    # (a value of True forces the editor to allow drag and drop, while a value
+    # of False only supports drag and drop if at least one item in the list of
+    # possible objects supports drag and drop):
+    droppable = Bool( False )
+
     # Should factory-created objects be cached?
     cachable = Bool(True)
 
@@ -180,7 +192,8 @@ class CustomEditor ( Editor ):
             self.control = self._panel = parent = QtGui.QWidget()
 
         # Build the instance selector if needed:
-        selectable = droppable = False
+        selectable = factory.selectable
+        droppable  = factory.droppable
         items      = self.items
         for item in items:
             droppable  |= item.is_droppable()
@@ -204,6 +217,8 @@ class CustomEditor ( Editor ):
             if factory.name != '':
                 self._object.on_trait_change( self.rebuild_items, 
                                               self._name, dispatch = 'ui' )
+                self._object.on_trait_change( self.rebuild_items,
+                                 self._name + '_items', dispatch = 'ui' )
 
             factory.on_trait_change( self.rebuild_items, 'values',
                                      dispatch = 'ui' )
@@ -472,6 +487,8 @@ class CustomEditor ( Editor ):
             if self._object is not None:
                 self._object.on_trait_change( self.rebuild_items,
                                               self._name, remove = True )
+                self._object.on_trait_change( self.rebuild_items,
+                                 self._name + '_items', remove = True )
 
             self.factory.on_trait_change( self.rebuild_items, 'values',
                                           remove = True )
