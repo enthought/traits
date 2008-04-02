@@ -56,10 +56,7 @@ from enthought.traits.api \
            Instance, Property, cached_property
     
 from enthought.traits.ui.api \
-    import View, Item, HSplit, VSplit
-    
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
+    import View, Item, HSplit, VSplit, TabularEditor, TabularAdapter
 
 from enthought.pyface.image_resource \
     import ImageResource

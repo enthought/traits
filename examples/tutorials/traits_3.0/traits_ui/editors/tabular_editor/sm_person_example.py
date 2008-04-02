@@ -53,13 +53,10 @@ from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Margins
+    import View, Group, Item, Margins, TabularEditor, TabularAdapter
     
 from enthought.traits.ui.menu \
     import NoButtons
-    
-from enthought.traits.ui.wx.extra.tabular_editor \
-    import TabularEditor, TabularAdapter
 
 from enthought.pyface.image_resource \
     import ImageResource
