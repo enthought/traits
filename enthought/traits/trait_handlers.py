@@ -653,9 +653,11 @@ class TraitType ( BaseTraitHandler ):
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
                 
-            trait.rich_comparison( metadata.get( 'rich_compare', True ) )
+            trait.rich_comparison( metadata.get( 'rich_compare', True ) is True)
             metadata.setdefault( 'type', 'trait' )
             
+        trait.value_allowed( metadata.get( 'trait_value', False ) is True )
+        
         trait.handler = self
             
         trait.__dict__ = metadata.copy()

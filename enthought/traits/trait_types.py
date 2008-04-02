@@ -108,6 +108,18 @@ class Any ( TraitType ):
     
     # A description of the type of value this trait accepts:
     info_text = 'any value'
+    
+#-------------------------------------------------------------------------------
+#  'Generic' trait:
+#-------------------------------------------------------------------------------
+
+class Generic ( Any ):
+    """ Defines a trait whose value can be anything and whose definition can
+        be redefined via assinment using a TraitValue object.
+    """
+    
+    # Define the metadata to allow TraitValue objects to be assigned:
+    metadata = { 'trait_value': True }
                        
 #-------------------------------------------------------------------------------
 #  'BaseInt' and 'Int' traits:

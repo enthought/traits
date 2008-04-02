@@ -44,11 +44,11 @@ from traits \
            TraitFactory
 
 from trait_types \
-    import Any, Int, Long, Float, Complex, Str, Title, Unicode, Bool, CInt, \
-           CLong, CFloat, CComplex, CStr, CUnicode, CBool, String, Regex, \
-           Code, HTML, Password, Expression, PythonValue, File, Directory, \
-           Range, Enum, Tuple, List, CList, Dict, Instance, AdaptedTo, \
-           AdaptsTo, Event, Type, WeakRef, false, true, undefined
+    import Any, Generic, Int, Long, Float, Complex, Str, Title, Unicode, Bool, \
+           CInt, CLong, CFloat, CComplex, CStr, CUnicode, CBool, String, \
+           Regex, Code, HTML, Password, Expression, PythonValue, File, \
+           Directory, Range, Enum, Tuple, List, CList, Dict, Instance, \
+           AdaptedTo, AdaptsTo, Event, Type, WeakRef, false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \
@@ -79,6 +79,9 @@ from trait_handlers \
            TraitPrefixMap, TraitCompound, TraitList, TraitListObject, \
            TraitListEvent, TraitDict, TraitDictObject, TraitDictEvent, \
            TraitTuple
+           
+from trait_value \
+    import TraitValue
 
 from adapter \
     import Adapter, adapts
