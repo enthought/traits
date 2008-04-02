@@ -30,15 +30,12 @@ class View(MView):
 
         from PyQt4 import QtGui
 
-        # By default we create a red panel!
         control = QtGui.QWidget(parent)
 
-        pal = control.palette()
-        pal.setColour(QtGui.QPalette.Window, QtCore.Qt.red)
-        control.setPalette(pal)
-
+        palette = control.palette()
+        palette.setColor(QtGui.QPalette.Window, QtGui.QColor('red'))
+        control.setPalette(palette)
         control.setAutoFillBackground(True)
-        control.resize(100, 200)
 
         return control
 
