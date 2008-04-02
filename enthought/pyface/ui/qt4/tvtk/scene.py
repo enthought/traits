@@ -32,7 +32,7 @@ from enthought.tvtk import messenger
 from enthought.traits.api import Instance, Button, Any, Bool
 from enthought.traits.ui.api import View, Group, Item, InstanceEditor
 
-from enthought.pyface.api import Widget, GUI
+from enthought.pyface.api import Widget, GUI, FileDialog, OK
 from enthought.pyface.tvtk import picker
 from enthought.pyface.tvtk import light_manager
 from enthought.pyface.tvtk.tvtk_scene import TVTKScene
@@ -91,9 +91,6 @@ class _VTKRenderWindowInteractor(QVTKRenderWindowInteractor):
         scene = self._scene
         camera = scene.camera
 
-        if key in [QtCore.Qt.Key_S, QtCore.Qt.Key_W, QtCore.Qt.Key_E, QtCore.Qt.Key_Q]:
-            return
-
         if key in [QtCore.Qt.Key_Minus]:
             camera.zoom(0.8)
             scene.render()
@@ -102,6 +99,12 @@ class _VTKRenderWindowInteractor(QVTKRenderWindowInteractor):
         if key in [QtCore.Qt.Key_Equal, QtCore.Qt.Key_Plus]:
             camera.zoom(1.25)
             scene.render()
+            return
+
+        if key in [QtCore.Qt.Key_E, QtCore.Qt.Key_Q, QtCore.Qt.Key_Escape]:
+            return
+
+        if key in [QtCore.Qt.Key_W]:
             return
 
         if key in [QtCore.Qt.Key_P] and modifiers == QtCore.Qt.NoModifier:
@@ -124,6 +127,12 @@ class _VTKRenderWindowInteractor(QVTKRenderWindowInteractor):
 
         if key in [QtCore.Qt.Key_L] and modifiers == QtCore.Qt.NoModifier:
             scene.light_manager.configure()
+            return
+
+        if key in [QtCore.Qt.Key_S] and modifiers == QtCore.Qt.NoModifier:
+            fname = popup_save(self.parent())
+            if len(fname) != 0:
+                self.save(fname)
             return
 
         shift = ((modifiers & QtCore.Qt.ShiftModifier) == QtCore.Qt.ShiftModifier)
@@ -191,6 +200,29 @@ class _VTKRenderWindowInteractor(QVTKRenderWindowInteractor):
             self._scene.busy = False
 
 
+######################################################################
+# Utility functions.
+######################################################################
+def popup_save(parent=None):
+    """Popup a dialog asking for an image name to save the scene to.
+    This is used mainly to save a scene in full screen mode. Returns a
+    filename, returns empty string if action was cancelled. `parent` is
+    the parent widget over which the dialog will be popped up.
+    """
+    extns = ['*.png', '*.jpg', '*.jpeg', '*.tiff', '*.bmp', '*.ps', '*.eps',
+             '*.tex', '*.rib', '*.wrl', '*.oogl', '*.pdf', '*.vrml', '*.obj',
+             '*.iv']
+    wildcard='|'.join(extns)
+
+    dialog = FileDialog(
+        parent = parent, title='Save scene to image',
+        action='save as', wildcard=wildcard
+    )
+    if dialog.open() == OK:
+        return dialog.path
+    else:
+        return ''
+
 
 ######################################################################
 # `FullScreen` class.
@@ -214,19 +246,13 @@ class FullScreen(object):
         # Remove the renderer from the current render window.
         self.old_rw.remove_renderer(self.ren)
 
-        # Creates renderwindow tha should be used ONLY for
+        # Creates renderwindow that should be used ONLY for
         # visualization in full screen
         full_rw = tvtk.RenderWindow(stereo_capable_window=True,
                                     full_screen=True
                                     )
         # add the current visualization
         full_rw.add_renderer(self.ren)
-
-        # Under OS X there is no support for creating a full screen
-        # window so we set the size of the window here.
-        # FIXME: Is this problem wx specific?
-        if sys.platform  == 'darwin':
-            full_rw.size = tuple(wx.GetDisplaySize())
 
         # provides a simple interactor
         style = tvtk.InteractorStyleTrackballCamera()
@@ -349,6 +375,8 @@ class Scene(TVTKScene, Widget):
         # The light manager needs creating.
         self.light_manager = None
 
+        self._cursor = QtCore.Qt.ArrowCursor
+
     def __get_pure_state__(self):
         """Allows us to pickle the scene."""
         # The control attribute is not picklable since it is a VTK
@@ -376,6 +404,15 @@ class Scene(TVTKScene, Widget):
     def set_size(self, size):
         """Set the size of the window."""
         self._vtk_control.resize(*size)
+
+    def hide_cursor(self):
+        """Hide the cursor."""
+        self._cursor = self._vtk_control.cursor().shape()
+        self._vtk_control.setCursor(QtCore.Qt.BlankCursor)
+
+    def show_cursor(self):
+        """Show the cursor."""
+        self._vtk_control.setCursor(self._cursor)
 
     ###########################################################################
     # 'TVTKScene' interface.

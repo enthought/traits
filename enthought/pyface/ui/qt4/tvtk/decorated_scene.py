@@ -191,7 +191,7 @@ class DecoratedScene(Scene):
                     image = ImageResource('16x16/fullscreen',
                         search_path = [self._get_image_path()],
                         ),
-                    tooltip = 'Full Screen (press "q" or "e" to exit fullscreen)',
+                    tooltip = 'Full Screen (press "q" or "e" or Esc to exit fullscreen)',
                     style="push",
                     on_perform = self._full_screen_fired,
                     ),
