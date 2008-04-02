@@ -35,8 +35,11 @@ from enthought.traits.api \
     import HasTraits, Property, Array
     
 from enthought.traits.ui.api \
-    import View, Item, TabularEditor, TabularAdapter
-    
+    import View, Item, TabularEditor
+
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
+
 from enthought.traits.ui.menu \
     import NoButtons
 

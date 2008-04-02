@@ -53,7 +53,10 @@ from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Margins, TabularEditor, TabularAdapter
+    import View, Group, Item, Margins, TabularEditor
+    
+from enthought.traits.ui.tabular_adapter \
+    import TabularAdapter
     
 from enthought.traits.ui.menu \
     import NoButtons
