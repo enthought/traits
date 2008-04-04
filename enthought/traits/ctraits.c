@@ -2950,6 +2950,7 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
         return Py_BuildValue( "iO", trait->default_value_type, 
                                     trait->default_value );
     }
+    
     if ( !PyArg_ParseTuple( args, "iO", &value_type, &value ) ) 
         return NULL;
     
@@ -2961,6 +2962,7 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
         
         return NULL;
     }
+    
     Py_INCREF( value );
     Py_XDECREF( trait->default_value );
     trait->default_value_type = value_type;
@@ -4591,45 +4593,45 @@ static PyGetSetDef trait_properties[] = {
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject trait_type = {
-	PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
-	0,
-	"cTrait",
-	sizeof( trait_object ),
-	0,
-	(destructor) trait_dealloc,                    /* tp_dealloc */
-	0,                                             /* tp_print */
-	0,                                             /* tp_getattr */
-	0,                                             /* tp_setattr */
-	0,                                             /* tp_compare */
-	0,                                             /* tp_repr */
-	0,                                             /* tp_as_number */
-	0,                                             /* tp_as_sequence */
-	0,                                             /* tp_as_mapping */
-	0,                                             /* tp_hash */
-	0,                                             /* tp_call */
-	0,                                             /* tp_str */
-	(getattrofunc) trait_getattro,                 /* tp_getattro */
-	0,                                             /* tp_setattro */
-	0,					                           /* tp_as_buffer */
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,/* tp_flags */
-	0,                                             /* tp_doc */
-	(traverseproc) trait_traverse,                 /* tp_traverse */
-	(inquiry) trait_clear,                         /* tp_clear */
-	0,                                             /* tp_richcompare */
-	0,                                             /* tp_weaklistoffset */
-	0,                                             /* tp_iter */
-	0,                                             /* tp_iternext */
-	trait_methods,                                 /* tp_methods */
-	0,                                             /* tp_members */
-	trait_properties,                              /* tp_getset */
-	DEFERRED_ADDRESS( &PyBaseObject_Type ),        /* tp_base */
+    PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
+    0,
+    "cTrait",
+    sizeof( trait_object ),
+    0,
+    (destructor) trait_dealloc,                    /* tp_dealloc */
+    0,                                             /* tp_print */
+    0,                                             /* tp_getattr */
+    0,                                             /* tp_setattr */
+    0,                                             /* tp_compare */
+    0,                                             /* tp_repr */
+    0,                                             /* tp_as_number */
+    0,                                             /* tp_as_sequence */
+    0,                                             /* tp_as_mapping */
+    0,                                             /* tp_hash */
+    0,                                             /* tp_call */
+    0,                                             /* tp_str */
+    (getattrofunc) trait_getattro,                 /* tp_getattro */
+    0,                                             /* tp_setattro */
+    0,					                           /* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE | Py_TPFLAGS_HAVE_GC,/* tp_flags */
+    0,                                             /* tp_doc */
+    (traverseproc) trait_traverse,                 /* tp_traverse */
+    (inquiry) trait_clear,                         /* tp_clear */
+    0,                                             /* tp_richcompare */
+    0,                                             /* tp_weaklistoffset */
+    0,                                             /* tp_iter */
+    0,                                             /* tp_iternext */
+    trait_methods,                                 /* tp_methods */
+    0,                                             /* tp_members */
+    trait_properties,                              /* tp_getset */
+    DEFERRED_ADDRESS( &PyBaseObject_Type ),        /* tp_base */
     0,                                             /* tp_dict */
     0,                                             /* tp_descr_get */
     0,                                             /* tp_descr_set */
-	sizeof( trait_object ) - sizeof( PyObject * ), /* tp_dictoffset */
-	(initproc) trait_init,                         /* tp_init */
-	DEFERRED_ADDRESS( PyType_GenericAlloc ),       /* tp_alloc */
-	DEFERRED_ADDRESS( PyType_GenericNew )          /* tp_new */
+    sizeof( trait_object ) - sizeof( PyObject * ), /* tp_dictoffset */
+    (initproc) trait_init,                         /* tp_init */
+    DEFERRED_ADDRESS( PyType_GenericAlloc ),       /* tp_alloc */
+    DEFERRED_ADDRESS( PyType_GenericNew )          /* tp_new */
 };
 
 /*-----------------------------------------------------------------------------

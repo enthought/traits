@@ -69,6 +69,12 @@ RangeTypes    = ( int, long, float )
 
 CallableTypes = ( FunctionType, MethodType, CTraitMethod )
 
+# Mapping from trait metadata 'type' to CTrait 'type':
+trait_types = {
+    'python': 1,
+    'event':  2
+}    
+
 #-------------------------------------------------------------------------------
 #  Forward references:
 #-------------------------------------------------------------------------------
@@ -627,11 +633,10 @@ class TraitType ( BaseTraitHandler ):
                             validate, n )
             metadata.setdefault( 'type', 'property' )
         else:
-            if metadata.get( 'type' ) == 'event':
-                trait = CTrait( 2 )
-            else:
-                trait = CTrait( 0 )
-                
+            type = getattr( self, 'ctrait_type', None )
+            if type is None:
+                type = trait_types.get( metadata.get( 'type' ), 0 ) 
+            trait = CTrait( type )
             trait.default_value( *self.get_default_value() )
             
             validate = getattr( self, 'fast_validate', None )
@@ -1108,14 +1113,18 @@ class TraitCoerceType ( TraitHandler ):
         if self.aType is bool:
             if self.editor is None:
                 from enthought.traits.ui.api import BooleanEditor
+                
                 self.editor = BooleanEditor()
+                
             return self.editor
 
         # Otherwise, map all other types to a text editor:
         auto_set = trait.auto_set
         if auto_set is None:
             auto_set = True
+            
         from enthought.traits.ui.api import TextEditor
+        
         return TextEditor( auto_set  = auto_set,
                            enter_set = trait.enter_set or False,
                            evaluate  = self.fast_validate[1] )
@@ -1256,6 +1265,7 @@ class ThisClass ( TraitHandler ):
     def get_editor ( self, trait ):
         if self.editor is None:
             from enthought.traits.ui.api import InstanceEditor
+            
             self.editor = InstanceEditor( label = trait.label or '',
                                           view  = trait.view  or '',
                                           kind  = trait.kind  or 'live' )
@@ -1642,6 +1652,7 @@ class TraitEnum ( TraitHandler ):
 
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import EnumEditor
+        
         return EnumEditor( values   = self,
                            cols     = trait.cols or 3,
                            evaluate = trait.evaluate,
@@ -1725,6 +1736,7 @@ class TraitPrefixList ( TraitHandler ):
 
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import EnumEditor
+        
         return EnumEditor( values = self,
                            cols   = trait.cols or 3  )
 
@@ -1732,6 +1744,7 @@ class TraitPrefixList ( TraitHandler ):
         result = self.__dict__.copy()
         if 'fast_validate' in result:
             del result[ 'fast_validate' ]
+            
         return result
 
 #-------------------------------------------------------------------------------
@@ -2035,6 +2048,7 @@ class TraitCompound ( TraitHandler ):
                 if count > 1:
                     continue
             editors.append( editor )
+            
         return CompoundEditor( editors = editors )
 
     def items_event ( self ):
@@ -2110,6 +2124,7 @@ class TraitTuple ( TraitHandler ):
 
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import TupleEditor
+        
         return TupleEditor( traits = self.traits,
                             labels = trait.labels or [],
                             cols   = trait.cols   or 1  )
@@ -2241,6 +2256,7 @@ class TraitList ( TraitHandler ):
         handler = self.item_trait.handler
         if isinstance( handler, TraitInstance ) and (trait.mode != 'list'):
             from enthought.traits.api import HasTraits
+            
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
@@ -2249,6 +2265,7 @@ class TraitList ( TraitHandler ):
                          EvalFilterTemplate, RuleFilterTemplate, \
                          MenuFilterTemplate, EvalTableFilter
                     from enthought.traits.ui.api import TableEditor
+                    
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
                                         for name in object.editable_traits() ],
@@ -2264,6 +2281,7 @@ class TraitList ( TraitHandler ):
                     pass
 
         from enthought.traits.ui.api import ListEditor
+        
         return ListEditor( trait_handler = self,
                            rows          = trait.rows or 5,
                            use_notebook  = trait.use_notebook is True,
@@ -2703,7 +2721,9 @@ class TraitDict ( TraitHandler ):
     def get_editor ( self, trait ):
         if self.editor is None:
             from enthought.traits.ui.api import TextEditor
+            
             self.editor = TextEditor( evaluate = eval )
+            
         return self.editor
 
     def items_event ( self ):

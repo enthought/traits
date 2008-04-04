@@ -24,13 +24,13 @@
 #-------------------------------------------------------------------------------
 
 from traits \
-    import CTrait, Callable
+    import CTrait
 
 from has_traits \
     import HasTraits, HasPrivateTraits
            
 from trait_types \
-    import Tuple, Dict, Any, Str, Instance, Event
+    import Tuple, Dict, Any, Str, Instance, Event, Callable
     
 from trait_handlers \
     import TraitType, _read_only, _write_only, _arg_count

@@ -50,9 +50,6 @@ import sys
 import trait_handlers
 import enthought.traits.protocols.interfaces as interfaces
 
-from inspect \
-    import stack
-
 from ctraits \
     import cTrait, CTraitMethod
 
@@ -64,16 +61,15 @@ from trait_errors \
     import TraitError
 
 from trait_handlers \
-    import TraitHandler, TraitInstance, TraitList, TraitDict, TraitFunction, \
-           TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap, \
-           TraitString, ThisClass, TraitRange, TraitTuple, TraitCallable, \
-           TraitExpression, TraitWeakRef, TraitType, _arg_count, _read_only, \
-           _write_only, _undefined_get, _undefined_set
+    import TraitHandler, TraitInstance, TraitFunction, TraitCoerceType, \
+           TraitCastType, TraitEnum, TraitCompound, TraitMap, TraitString, \
+           ThisClass, TraitType, _arg_count, _read_only, _write_only, \
+           _undefined_get, _undefined_set
 
 from types \
     import NoneType, IntType, LongType, FloatType, ComplexType, StringType, \
            UnicodeType, ListType, TupleType, DictType, FunctionType, \
-           ClassType, ModuleType, MethodType, InstanceType, TypeType
+           ClassType, MethodType, InstanceType, TypeType
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -394,8 +390,6 @@ CallableTypes    = ( FunctionType, MethodType )
 
 TraitTypes       = ( TraitHandler, CTrait )
 
-MutableTypes     = ( list, dict )
-
 DefaultValues = {
     StringType:  '',
     UnicodeType: u'',
@@ -487,6 +481,7 @@ def trait_factory ( trait ):
     tid = id( trait )
     if tid not in _trait_factory_instances:
         _trait_factory_instances[ tid ] = trait()
+        
     return _trait_factory_instances[ tid ]
 
 #-------------------------------------------------------------------------------
@@ -569,111 +564,6 @@ class Default ( object ):
     """
     def __init__ ( self, func = None, args = (), kw = None ):
         self.default_value = ( func, args, kw )
-
-#-------------------------------------------------------------------------------
-#  Factory function for creating constant traits:
-#-------------------------------------------------------------------------------
-
-def Constant ( value, **metadata ):
-    """ Returns a read-only trait whose value is *value*.
-
-    Parameters
-    ----------
-    value : any type except a list or dictionary
-        The default value for the trait
-
-    Default Value
-    -------------
-    *value*
-
-    Description
-    -----------
-    Traits of this type are very space efficient (and fast) because *value* is
-    not stored in each instance using the trait, but only in the trait object
-    itself. The *value* cannot be a list or dictionary, because those types have
-    mutable values.
-    """
-    if type( value ) in MutableTypes:
-        raise TraitError, \
-              "Cannot define a constant using a mutable list or dictionary"
-    metadata[ 'type' ]      = 'constant'
-    metadata[ 'transient' ] = True
-    
-    return Trait( value, **metadata )
-
-#-------------------------------------------------------------------------------
-#  Factory function for creating event buttons:
-#-------------------------------------------------------------------------------
-
-def Button ( label = '', image = None, style = 'button',
-             orientation = 'vertical', width_padding = 7, height_padding = 5,
-             view = None, **metadata ):
-    """ Returns a trait event whose editor is a button.
-
-    Parameters
-    ----------
-    label : string
-        The label for the button
-    image : enthought.pyface.ImageResource
-        An image to display on the button
-    style : one of: 'button', 'radio', 'toolbar', 'checkbox'
-        The style of button to display
-    orientation : one of: 'horizontal', 'vertical'
-        The orientation of the label relative to the image
-    width_padding : integer between 0 and 31
-        Extra padding (in pixels) added to the left and right sides of the button
-    height_padding : integer between 0 and 31
-        Extra padding (in pixels) added to the top and bottom of the button
-
-    Default Value
-    -------------
-    No default value because events do not store values.
-    """
-    
-    from trait_types             import Event
-    from enthought.traits.ui.api import ButtonEditor
-
-    return Event( editor = ButtonEditor(
-                               label          = label,
-                               image          = image,
-                               style          = style,
-                               orientation    = orientation,
-                               width_padding  = width_padding,
-                               height_padding = height_padding,
-                               view           = view,
-                               **metadata ) )
-
-Button = TraitFactory( Button )
-
-def ToolbarButton ( label = '', image = None, style = 'toolbar',
-                    orientation = 'vertical', width_padding = 2,
-                    height_padding = 2, **metadata ):
-    """ Returns a trait event whose editor is a toolbar button.
-
-    Parameters
-    ----------
-    label : string
-        The label for the button
-    image : enthought.pyface.ImageResource
-        An image to display on the button
-    style : one of: 'button', 'radio', 'toolbar', 'checkbox'
-        The style of button to display
-    orientation : one of: 'horizontal', 'vertical'
-        The orientation of the label relative to the image
-    width_padding : integer between 0 and 31
-        Extra padding (in pixels) added to the left and right sides of the button
-    height_padding : integer between 0 and 31
-        Extra padding (in pixels) added to the top and bottom of the button
-
-    Default Value
-    -------------
-    No default value because events do not store values.
-
-    """
-    return Button( label, image, style, orientation, width_padding,
-                   height_padding, **metadata )
-
-ToolbarButton = TraitFactory( ToolbarButton )
 
 #-------------------------------------------------------------------------------
 #  Factory function for creating C-based traits:
@@ -1044,146 +934,6 @@ class _TraitMaker ( object ):
         return to_dict
 
 #-------------------------------------------------------------------------------
-#  Factory function for creating traits with standard Python behavior:
-#-------------------------------------------------------------------------------
-
-def TraitPython ( **metadata ):
-    """ Returns a trait that has standard Python behavior.
-    """
-    metadata.setdefault( 'type', 'python' )
-    trait = CTrait( 1 )
-    trait.default_value( 0, Undefined )
-    trait.__dict__ = metadata.copy()
-    return trait
-
-#-------------------------------------------------------------------------------
-#  Factory function for creating C-based trait delegates:
-#-------------------------------------------------------------------------------
-
-def Delegate ( delegate, prefix = '', modify = False, listenable = True, 
-               **metadata ):
-    if prefix == '':
-        prefix_type = 0
-    elif prefix[-1:] != '*':
-        prefix_type = 1
-    else:
-        prefix = prefix[:-1]
-        if prefix != '':
-            prefix_type = 2
-        else:
-            prefix_type = 3
-
-    trait = CTrait( 3 )
-    trait.delegate( delegate, prefix, prefix_type, modify )
-
-    # Use False instead of True so we can detect user explicitly setting
-    # 'transient = True' in HasTraits.__getstate__:
-    metadata.setdefault( 'transient' , False )
-    metadata[ 'type' ]       = 'delegate'
-    metadata[ 'delegate' ]   = delegate
-    metadata[ 'prefix' ]     = prefix
-    metadata[ 'listenable' ] = listenable
-
-    trait.__dict__ = metadata.copy()
-    
-    return trait
-    
-# Define a trait delegate that matches the standard 'delegate' design pattern:    
-def DelegatesTo ( delegate, prefix = '', listenable = True, **metadata ):
-    """ Creates a "delegator" trait, whose definition and default value are
-    delegated to a *delegate* trait attribute on another object.
-
-    Parameters
-    ----------
-    delegate : string
-        Name of the attribute on the current object which references the object
-        that is the trait's delegate
-    prefix : string
-        A prefix or substitution applied to the original attribute when looking
-        up the delegated attribute
-    listenable : Boolean
-        Indicates whether a listener can be attached to this attribute such that
-        changes to the delagate attribute will trigger it
-
-    Description
-    -----------
-    An object containing a delegator trait attribute must contain a second
-    attribute that references the object containing the delegate trait 
-    attribute. The name of this second attribute is passed as the *delegate* 
-    argument to the DelegatesTo() function.
-
-    The following rules govern the application of the prefix parameter:
-
-    * If *prefix* is empty or omitted, the delegation is to an attribute of
-      the delegate object with the same name as the delegator attribute.
-    * If *prefix* is a valid Python attribute name, then the delegation is
-      to an attribute whose name is the value of *prefix*.
-    * If *prefix* ends with an asterisk ('*') and is longer than one
-      character, then the delegation is to an attribute whose name is the
-      value of *prefix*, minus the trailing asterisk, prepended to the
-      delegator attribute name.
-    * If *prefix* is equal to a single asterisk, the delegation is to an
-      attribute whose name is the value of the delegator object's
-      __prefix__ attribute prepended to delegator attribute name.
-
-    Note that any changes to the delegator attribute are actually applied to 
-    the corresponding attribute on the delegate object. The original object
-    containing the delegator trait is not modified.
-    """
-    return Delegate( delegate, prefix     = prefix, 
-                               modify     = True, 
-                               listenable = listenable, **metadata )
-    
-# Define a trait delegate that matches the standard 'prototype' design pattern:    
-def PrototypedFrom ( prototype, prefix = '', listenable = True, **metadata ):
-    """ Creates a "prototyped" trait, whose definition and default value are
-    obtained from a trait attribute on another object.
-
-    Parameters
-    ----------
-    prototype : string
-        Name of the attribute on the current object which references the object
-        that is the trait's prototype
-    prefix : string
-        A prefix or substitution applied to the original attribute when looking
-        up the prototyped attribute
-    listenable : Boolean
-        Indicates whether a listener can be attached to this attribute such that
-        changes to the corresponding attribute on the prototype object will
-        trigger it
-
-    Description
-    -----------
-    An object containing a prototyped trait attribute must contain a second
-    attribute that references the object containing the prototype trait 
-    attribute. The name of this second attribute is passed as the *prototype* 
-    argument to the PrototypedFrom() function.
-
-    The following rules govern the application of the prefix parameter:
-
-    * If *prefix* is empty or omitted, the prototype delegation is to an 
-      attribute of the prototype object with the same name as the prototyped
-      attribute.
-    * If *prefix* is a valid Python attribute name, then the prototype 
-      delegation is to an attribute whose name is the value of *prefix*.
-    * If *prefix* ends with an asterisk ('*') and is longer than one
-      character, then the prototype delegation is to an attribute whose name is 
-      the value of *prefix*, minus the trailing asterisk, prepended to the
-      prototyped attribute name.
-    * If *prefix* is equal to a single asterisk, the prototype delegation is to
-      an attribute whose name is the value of the prototype object's
-      __prefix__ attribute prepended to the prototyped attribute name.
-
-    Note that any changes to the prototyped attribute are made to the original
-    object, not the prototype object. The prototype object is only used to
-    define to trait type and default value.
-
-    """
-    return Delegate( prototype, prefix     = prefix, 
-                                modify     = False, 
-                                listenable = listenable, **metadata )
-
-#-------------------------------------------------------------------------------
 #  Factory function for creating C-based trait properties:
 #-------------------------------------------------------------------------------
 
@@ -1316,7 +1066,7 @@ class ForwardProperty ( object ):
         self.handler  = handler
 
 #-------------------------------------------------------------------------------
-#  Dictionary used to handler return type mapping special cases:
+#  Dictionary used to handle return type mapping special cases:
 #-------------------------------------------------------------------------------
 
 SpecialNames = {
@@ -1336,69 +1086,8 @@ SpecialNames = {
 #  Create predefined, reusable trait instances:
 #-------------------------------------------------------------------------------
 
-# Function values only (i.e., types.FunctionType); default value is None.
-Function = Trait( FunctionType )
-
-# Method values only (i.e., types.MethodType); default value is None.
-Method = Trait( MethodType )
-
-# Class values (old-style, i.e., type.ClassType) only; default value is None.
-Class = Trait( ClassType )
-
-# Module values only (i.e., types.ModuleType); default value is None.
-Module = Trait( ModuleType )
-
-# Allows only class values of the same class (or a subclass) as the object
-# containing the trait attribute; default value is None.
-This = Trait( ThisClass )
-
-# Same as This; default value is the object containing the trait attribute
-# defined using this trait..
-self = Trait( Self, ThisClass )
-
-# Either(A,B,...,Z) allows any of the traits A,B,...,Z. ('Either' is
-# grammatically imprecise, but it reads better than 'AnyOf' or 'OneOf'.)
-Either = lambda *args: Trait(None, *args)
-
-# This trait provides behavior identical to a standard Python attribute.
-# That is, it allows any value to be assigned, and raises an ValueError if
-# an attempt is made to get the value before one has been assigned. It has no
-# default value. This trait is most often used in conjunction with wildcard
-# naming. See the *Traits User Manual* for details on wildcards.
-Python = TraitPython()
-
-# Prevents any value from being assigned or read.
-# That is, any attempt to get or set the value of the trait attribute raises
-# an exception. This trait is most often used in conjunction with wildcard
-# naming, for example, to catch spelling mistakes in attribute names. See the
-# *Traits User Manual* for details on wildcards.
-Disallow = CTrait( 5 )
-
-# This trait is write-once, and then read-only.
-# The initial value of the attribute is the special, singleton object
-# Undefined. The trait allows any value to be assigned to the attribute
-# if the current value is the Undefined object. Once any other value is
-# assigned, no further assignment is allowed. Normally, the initial assignment
-# to the attribute is performed in the class constructor, based on information
-# passed to the constructor. If the read-only value is known in advance of
-# run time, use the Constant() function instead of ReadOnly to define
-# the trait.
-ReadOnly = CTrait( 6 )
-ReadOnly.default_value( 0, Undefined )  # This allows it to be written once
-
-# Indicates that a parameter is missing from a type-checked method signature.
-# Allows any value to be assigned; no type-checking is performed; default value
-# is the singleton Missing object.
-# See **enthought.traits.has_traits.method()**.
-missing         = CTrait( 0 )
-missing.handler = TraitHandler()
-missing.default_value( 1, Missing )
-
 # Generic trait with 'object' behavior:
 generic_trait = CTrait( 8 )
-
-# Callable values; default is None:
-Callable = Trait( TraitCallable(), copy = 'ref' )
 
 #-------------------------------------------------------------------------------
 #  User interface related color and font traits:
@@ -1421,6 +1110,7 @@ def Color ( *args, **metadata ):
     For wxPython, 0x000000 (that is, white)
     """
     from enthought.traits.ui.api import ColorTrait
+    
     return ColorTrait( *args, **metadata )
 
 Color = TraitFactory( Color )
@@ -1444,6 +1134,7 @@ def RGBColor ( *args, **metadata ):
     For wxPython, (0.0, 0.0, 0.0) (that is, white)
     """
     from enthought.traits.ui.api import RGBColorTrait
+    
     return RGBColorTrait( *args, **metadata )
 
 RGBColor = TraitFactory( RGBColor )
@@ -1465,6 +1156,7 @@ def Font ( *args, **metadata ):
     For wxPython, 'Arial 10'
     """
     from enthought.traits.ui.api import FontTrait
+    
     return FontTrait( *args, **metadata )
 
 Font = TraitFactory( Font )

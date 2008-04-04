@@ -43,11 +43,11 @@ from ctraits \
     import CHasTraits, CTraitMethod, _HasTraits_monitors
     
 from traits \
-    import Trait, CTrait, Python, Disallow, TraitFactory, trait_factory, \
+    import Trait, CTrait, TraitFactory, trait_factory, \
            Property, ForwardProperty, generic_trait, __newobj__, SpecialNames
 
 from trait_types \
-    import Any, Enum, Instance, Event, Bool
+    import Any, Enum, Instance, Event, Bool, Python, Disallow, This
 
 from trait_notifiers \
     import StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper, \
@@ -59,7 +59,7 @@ from trait_handlers \
     import TraitType
 
 from trait_base \
-    import Missing, enumerate, SequenceTypes, Undefined
+    import Missing, enumerate, SequenceTypes, Undefined, add_article
 
 from trait_errors \
     import TraitError
@@ -273,13 +273,13 @@ def get_delegate_pattern ( name, trait ):
     """ Returns the correct 'delegate' listener pattern for a specified name and
         delegate trait.
     """
-    prefix = trait.prefix
+    prefix = trait._prefix
     if prefix == '':
         prefix = name
     elif (len( prefix ) > 1) and (prefix[-1] == '*'):
         prefix = prefix[:-1] + name
         
-    return ' %s:%s' % ( trait.delegate, prefix )
+    return ' %s:%s' % ( trait._delegate, prefix )
 
 #-------------------------------------------------------------------------------
 #  '_SimpleTest' class:
@@ -294,7 +294,7 @@ class _SimpleTest:
 #  possible):
 #-------------------------------------------------------------------------------
 
-def _check_method ( cls, class_dict, name, func ):
+def _check_method ( class_dict, name, func ):
     method_name  = name
     return_trait = Any
     
@@ -421,7 +421,7 @@ def trait_method ( func, return_type, **arg_types ):
     Parameters
     ----------
     func : function
-        The method to be type-checkd
+        The method to be type-checked
     return_type : trait or a value that can be converted to a trait using Trait()
         The return type of the method
     arg_types : zero or more '*keyword* = *trait*' pairs
@@ -647,7 +647,7 @@ class MetaHasTraits ( type ):
     _listeners = {}
 
     def __new__ ( cls, class_name, bases, class_dict ):
-        MetaHasTraitsObject( cls, class_name, bases, class_dict, False )
+        mhto = MetaHasTraitsObject( cls, class_name, bases, class_dict, False )
 
         # Finish building the class using the updated class dictionary:
         klass = type.__new__( cls, class_name, bases, class_dict )
@@ -656,6 +656,10 @@ class MetaHasTraits ( type ):
                 if issubclass( base, _HasTraits ):
                     getattr( base, SubclassTraits ).append( klass )
         setattr( klass, SubclassTraits, [] )
+        
+        # Fix up all self referential traits to refer to this class:
+        for trait in mhto.self_referential:
+            trait.set_validate( ( 11, klass ) )
 
         # Call all listeners that registered for this specific class:
         name = '%s.%s' % ( klass.__module__, klass.__name__ )
@@ -723,13 +727,14 @@ class MetaHasTraitsObject ( object ):
         """
         # Create the various class dictionaries, lists and objects needed to
         # hold trait and view information and definitions:
-        base_traits    = {}
-        class_traits   = {}
-        prefix_traits  = {}
-        listeners      = {}
-        prefix_list    = []
-        override_bases = bases
-        view_elements  = ViewElements()
+        base_traits      = {}
+        class_traits     = {}
+        prefix_traits    = {}
+        listeners        = {}
+        prefix_list      = []
+        override_bases   = bases
+        view_elements    = ViewElements()
+        self_referential = []
 
         # Create a list of just those base classes that derive from HasTraits:
         hastraits_bases = [ base for base in bases
@@ -777,11 +782,16 @@ class MetaHasTraitsObject ( object ):
                            if handler.is_mapped:
                                class_traits[ name + '_' ] = _mapped_trait_for(
                                                                          value )
+                               
+                           if isinstance( handler, This ):
+                               handler.info_text = \
+                                   add_article( class_name ) + ' instance'
+                               self_referential.append( value )
                                                                          
                     elif value_type == 'delegate':
                         # Only add a listener if the trait.listenable metadata
                         # is not False:
-                        if value.listenable is not False:
+                        if value._listenable is not False:
                             listeners[ name ] = ( 'delegate',
                                            get_delegate_pattern( name, value ) )
                     elif value_type == 'event':
@@ -798,7 +808,7 @@ class MetaHasTraitsObject ( object ):
                 if pattern is not None:
                     listeners[ name ] = ( 'method', pattern )
                     
-                _check_method( cls, class_dict, name, value )
+                _check_method( class_dict, name, value )
                 
             elif isinstance( value, property ):
                 class_traits[ name ] = generic_trait
@@ -1012,6 +1022,9 @@ class MetaHasTraitsObject ( object ):
             implements_class = _create_implements_class( class_name, EmptyList, 
                                                          implements )
 
+        # Save the list of self referential traits:
+        self.self_referential = self_referential
+        
         # Add the traits meta-data to the class:
         self.add_traits_meta_data(
             bases, class_dict, base_traits, class_traits, instance_traits,
@@ -3457,7 +3470,7 @@ class HasTraits ( CHasTraits ):
         """ Sets up the listener for a delegate trait.
         """
         def notify ( object, notify_name, old, new ):
-            self.trait_property_changed( notify_name, old, new )
+            self.trait_property_changed( name, old, new )
             
         self.on_trait_change( notify, 
                               self._trait_delegate_name( name, pattern ) )
