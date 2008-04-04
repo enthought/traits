@@ -4333,10 +4333,8 @@ _trait_notifiers ( trait_object * trait, PyObject * args ) {
     result = (PyObject *) trait->notifiers;
     if ( result == NULL ) {
         result = Py_None;
-        if ( force_create && ((list = PyList_New( 0 )) != NULL) ) {
+        if ( force_create && ((list = PyList_New( 0 )) != NULL) )
             trait->notifiers = (PyListObject *) (result = list);
-            Py_INCREF( result );
-        }
     }
     
     Py_INCREF( result );
