@@ -917,7 +917,7 @@ class MetaHasTraitsObject ( object ):
         # Make sure there is a definition for 'undefined' traits:
         if (prefix_traits.get( '' ) is None) and (not is_category):
             prefix_list.append( '' )
-            prefix_traits[''] = Python()
+            prefix_traits[''] = Python().as_ctrait()
 
         # Save a link to the prefix_list:
         prefix_traits['*'] = prefix_list
