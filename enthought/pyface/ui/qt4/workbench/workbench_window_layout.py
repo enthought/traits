@@ -92,7 +92,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
         return editor
 
-    def add_view(self, view, position, relative_to=None, size=(-1, -1)):
+    def add_view(self, view, position=None, relative_to=None, size=(-1, -1)):
         if view is None:
             return None
 
@@ -348,6 +348,11 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
     def _qt4_add_view(self, view, position, relative_to, size):
         """ Add a view. """
 
+        # If no specific position is specified then use the view's default
+        # position.
+        if position is None:
+            position = view.position
+            
         dw = self._qt4_create_view_dock_widget(view, size)
         mw = self.window.control
 
