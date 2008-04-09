@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the GPL v2
@@ -275,6 +275,7 @@ class SimpleEditor ( BaseEditor ):
                     self.update_text_object)
 
         self._no_enum_update = 0
+        self.set_tooltip()
 
     #---------------------------------------------------------------------------
     #  Handles the user selecting a new value from the combo box:
@@ -495,6 +496,7 @@ class ListEditor ( BaseEditor ):
                 self.update_object)
 
         self.rebuild_editor()
+        self.set_tooltip()
    
     #---------------------------------------------------------------------------
     #  Handles the user selecting a list box item:
