@@ -125,6 +125,7 @@ typedef int Py_ssize_t;
 
 static PyTypeObject trait_type;
 static PyTypeObject trait_method_type;
+static PyTypeObject has_traits_type;
 
 /*-----------------------------------------------------------------------------
 |  'ctraits' module doc string:
@@ -678,7 +679,7 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
 		hash = PyObject_Hash( key );
 		if ( hash == -1 ) {
 			PyErr_Clear();
-			return NULL;
+            return NULL;
 		}
 	}
     
@@ -1168,38 +1169,39 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
     
     /* Follow the delegation chain until we find a non-delegated trait: */
     delegate = obj;
-    daname   = name;
+    Py_INCREF( delegate );
+    
+    daname = name;
     Py_INCREF( daname );
     for ( i = 0; ; ) {
         
         if ( trait->delegate_attr_name == NULL ) {
-            Py_INCREF( trait );
+            Py_DECREF( delegate );
             Py_DECREF( daname );
             return (PyObject *) trait;
         }
                                   
         dict = delegate->obj_dict;
-        if ( (dict != NULL) &&
-             ((temp_delegate = (has_traits_object *) PyDict_GetItem( dict, 
-                                          trait->delegate_name )) != NULL) ) {
-                delegate = temp_delegate;
-        } else {
-            // fixme: Handle the case when the delegate is not in the 
-            //        instance dictionary (could be a method that returns 
-            //        the real delegate)
-            delegate = (has_traits_object *) has_traits_getattro( delegate, 
-                                                       trait->delegate_name );
-            if ( delegate == NULL ) 
-                break;
-            
-            Py_DECREF( delegate );
+        if ( ((dict == NULL) ||
+              ((temp_delegate = (has_traits_object *) PyDict_GetItem( dict, 
+                                          trait->delegate_name )) == NULL)) &&
+              ((temp_delegate = (has_traits_object *) has_traits_getattro(
+                  delegate, trait->delegate_name )) == NULL) ) 
+            break;
+        
+        Py_DECREF( delegate );
+        delegate = temp_delegate;
+        Py_INCREF( delegate );
+        
+        if ( !PyHasTraits_Check( delegate ) ) {
+            bad_delegate_error2( obj, name );
+            break;
         }
-        // fixme: We need to verify that 'delegate' is of type 'CHasTraits'
-        //        before we do the following...
         
         daname2 = trait->delegate_attr_name( trait, obj, daname );
         Py_DECREF( daname );
         daname = daname2;
+        Py_DECREF( trait );
         if ( ((delegate->itrait_dict == NULL) ||
               ((trait = (trait_object *) dict_getitem( delegate->itrait_dict, 
                       daname )) == NULL)) &&
@@ -1219,7 +1221,10 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
             delegation_recursion_error2( obj, name );
             break;
         }
+        
+        Py_INCREF( trait );
     }
+    Py_DECREF( delegate );
     Py_DECREF( daname );
     
     return NULL;
@@ -1737,13 +1742,13 @@ getattr_delegate ( trait_object      * trait,
     
     if ( (dict == NULL) || 
          ((delegate = PyDict_GetItem( dict, trait->delegate_name )) == NULL) ){
-        // fixme: Handle the case when the delegate is not in the instance
-        //        dictionary (could be a method that returns the real delegate)
+        // Handle the case when the delegate is not in the instance dictionary 
+        // (could be a method that returns the real delegate):
         delegate = has_traits_getattro( obj, trait->delegate_name );
-        if ( delegate == NULL ) 
+        if ( delegate == NULL )
             return NULL;
-        
-        Py_DECREF( delegate );
+    } else {
+        Py_INCREF( delegate );
     }
     
 	if ( PyString_Check( name ) ) {
@@ -1752,33 +1757,33 @@ getattr_delegate ( trait_object      * trait,
         
     	if ( tp->tp_getattro != NULL ) {
     		result = (*tp->tp_getattro)( delegate, delegate_attr_name );
-            Py_DECREF( delegate_attr_name );
-            return result;
+            goto done2;
         }
         
     	if ( tp->tp_getattr != NULL ) { 
     		result = (*tp->tp_getattr)( delegate, 
                                      PyString_AS_STRING( delegate_attr_name ) );
-            Py_DECREF( delegate_attr_name );
-            return result;
+            goto done2;
         }
                                       
     	PyErr_Format( DelegationError,
     	    "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
     		obj->ob_type->tp_name, PyString_AS_STRING( name ),
             tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
-        Py_DECREF( delegate_attr_name );
-        
-    	return NULL;
+        result = NULL;
+        goto done2;
     }        
         
 #ifdef Py_USING_UNICODE
     if ( PyUnicode_Check( name ) ) {
         name = PyUnicode_AsEncodedString( name, NULL, NULL );
-        if ( name == NULL )
+        if ( name == NULL ) {
+            Py_DECREF( delegate );
 		    return NULL;
+        }
     } else {
         invalid_attribute_error();
+        Py_DECREF( delegate );
         
         return NULL;
     }
@@ -1788,31 +1793,39 @@ getattr_delegate ( trait_object      * trait,
     
 	if ( tp->tp_getattro != NULL ) { 
 		result = (*tp->tp_getattro)( delegate, delegate_attr_name );
-        Py_DECREF( name );
-        Py_DECREF( delegate_attr_name );
-        
-        return result;
+        goto done;
     }
     
 	if ( tp->tp_getattr != NULL ) { 
 		result = (*tp->tp_getattr)( delegate, 
                                     PyString_AS_STRING( delegate_attr_name ) );
-        Py_DECREF( name );
-        Py_DECREF( delegate_attr_name );
-        
-        return result;
-    }                                    
+        goto done;
+    }
                                   
 	PyErr_Format( DelegationError,
 	    "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
 		obj->ob_type->tp_name, PyString_AS_STRING( name ),
         tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
+    result = NULL;
+    
+done:    
     Py_DECREF( name );
+done2:    
     Py_DECREF( delegate_attr_name );
-	return NULL;
+    Py_DECREF( delegate );
+    
+	return result;
 #else
     invalid_attribute_error();
+    Py_DECREF( delegate );
+    
     return NULL;
+    
+done2:    
+    Py_DECREF( delegate_attr_name );
+    Py_DECREF( delegate );
+    
+	return result;
 #endif
 }
 
@@ -2426,7 +2439,6 @@ setattr_delegate ( trait_object      * traito,
         }
         
         // Verify that 'delegate' is of type 'CHasTraits':
-        // fixme: Is there a faster way to do this check?
         if ( !PyHasTraits_Check( delegate ) ) {
             Py_DECREF( daname );
             return bad_delegate_error2( obj, name );
