@@ -42,6 +42,7 @@ static PyObject * TraitListObject;     /* TraitListObject class */
 static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * TraitValue;          /* TraitValue class */
 static PyObject * adapt;               /* PyProtocols 'adapt' function */
+static PyObject * validate_implements; /* 'validate implementation' function */
 static PyObject * is_callable;         /* Marker for 'callable' value */
 static PyObject * _HasTraits_monitors; /* Object creation monitors. */
 static PyObject * _trait_notification_handler; /* User supplied trait */ 
@@ -3441,7 +3442,7 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     PyObject * args;
     PyObject * type;
     PyObject * type_info = trait->py_validate;
-    long mode;
+    long mode, rc;
     
     if ( value == Py_None ) {
         if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) ) {
@@ -3472,22 +3473,44 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     Py_INCREF( value );
     Py_INCREF( type );
     result = PyObject_Call( adapt, args, NULL );
-    Py_DECREF( args );
-    
     if ( result != NULL ) {
-        if ( result != Py_None ) {
-            if ( (mode > 0) || (result == value) )  
+        if ( result != Py_None ) { 
+            if ( (mode > 0) || (result == value) ) {  
+                Py_DECREF( args );
                 return result;
+            }
             Py_DECREF( result );
-        } else {
-            Py_DECREF( result );
-            result = default_value_for( trait, obj, name );
-            if ( result != NULL )
-                return result;
+            goto check_implements;
         }
+        
+        Py_DECREF( result );
+        result = PyObject_Call( validate_implements, args, NULL );
+        rc     = PyInt_AS_LONG( result );
+        Py_DECREF( args );
+        Py_DECREF( result );
+        if ( rc ) {
+            Py_INCREF( value );
+            return value;
+        }
+        
+        result = default_value_for( trait, obj, name );
+        if ( result != NULL )
+            return result;
+        
+        PyErr_Clear();
+        return raise_trait_error( trait, obj, name, value );
     }
-    
     PyErr_Clear();
+check_implements:
+    result = PyObject_Call( validate_implements, args, NULL );
+    rc     = PyInt_AS_LONG( result );
+    Py_DECREF( args );
+    Py_DECREF( result );
+    if ( rc ) {
+        Py_INCREF( value );
+        return value;
+    }
+
     return raise_trait_error( trait, obj, name, value );
 } 
 
@@ -3500,15 +3523,18 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
     int    i, j, k, kind;
-    long   int_value, exclude_mask, mode;
+    long   int_value, exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
     
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
     for ( i = 0; i < n; i++ ) {
+        
         type_info = PyTuple_GET_ITEM( list_type_info, i );
+        
         switch ( PyInt_AsLong( PyTuple_GET_ITEM( type_info, 0 ) ) ) {
+            
             case 0:  /* Type check: */
                 kind = PyTuple_GET_SIZE( type_info );
                 if ( ((kind == 3) && (value == Py_None)) ||
@@ -3683,7 +3709,9 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 break;
                 
             /* case 14: Python-based validator check: */
+            
             /* case 15..18: Property 'setattr' validate checks: */
+            
             case 19:  /* PyProtocols 'adapt' check: */
                 if ( value == Py_None ) {
                     if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) ) 
@@ -3710,23 +3738,40 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 Py_INCREF( value );
                 Py_INCREF( type );
                 result = PyObject_Call( adapt, args, NULL );
-                Py_DECREF( args );
                 if ( result != NULL ) {
                     if ( result != Py_None ) { 
                         if ( (mode == 0) && (result != value) ) {
                             Py_DECREF( result );
-                            break;
+                            goto check_implements;
                         }
+                        Py_DECREF( args );
                         return result;
                     }
                     
                     Py_DECREF( result );
+                    result = PyObject_Call( validate_implements, args, NULL );
+                    rc     = PyInt_AS_LONG( result );
+                    Py_DECREF( args );
+                    Py_DECREF( result );
+                    if ( rc )
+                        goto done;
                     result = default_value_for( trait, obj, name );
                     if ( result != NULL )
                         return result;
+                    
+                    PyErr_Clear();
+                    break;
                 }
                 PyErr_Clear();
+check_implements:
+                result = PyObject_Call( validate_implements, args, NULL );
+                rc     = PyInt_AS_LONG( result );
+                Py_DECREF( args );
+                Py_DECREF( result );
+                if ( rc )
+                    goto done;
                 break;
+                
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
         }
@@ -4728,6 +4773,23 @@ _ctraits_adapt ( PyObject * self, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
+|  Sets the global 'validate_implements' reference to the Python level 
+|  function:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_ctraits_validate_implements ( PyObject * self, PyObject * args ) {
+    
+    if ( !PyArg_ParseTuple( args, "O", &validate_implements ) )
+        return NULL;
+    
+    Py_INCREF( validate_implements );
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}    
+
+/*-----------------------------------------------------------------------------
 |  Sets the global 'ctrait_type' class reference:
 +----------------------------------------------------------------------------*/
 
@@ -4786,6 +4848,8 @@ static PyMethodDef ctraits_methods[] = {
 	 	PyDoc_STR( "_value_class(TraitValue)" ) },
 	{ "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
 	 	PyDoc_STR( "_adapt(PyProtocols._speedups.adapt)" ) },
+	{ "_validate_implements", (PyCFunction) _ctraits_validate_implements, 
+        METH_VARARGS, PyDoc_STR( "_validate_implements(validate_implements)" )},
 	{ "_ctrait",       (PyCFunction) _ctraits_ctrait,       METH_VARARGS,
 	 	PyDoc_STR( "_ctrait(CTrait_class)" ) },
 	{ "_trait_notification_handler", 

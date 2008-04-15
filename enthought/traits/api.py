@@ -80,7 +80,7 @@ from trait_handlers \
            TraitTuple
            
 from trait_value \
-    import TraitValue
+    import BaseTraitValue, TraitValue
 
 from adapter \
     import Adapter, adapts

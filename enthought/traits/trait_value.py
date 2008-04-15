@@ -36,10 +36,92 @@ from trait_handlers \
     import TraitType, _read_only, _write_only, _arg_count
     
 #-------------------------------------------------------------------------------
+#  'BaseTraitValue' class:
+#-------------------------------------------------------------------------------
+
+class BaseTraitValue ( HasPrivateTraits ):
+    
+    # Subclasses can define this trait as a property:
+    # value = Property
+    
+    #-- Public Methods ---------------------------------------------------------
+    
+    def as_ctrait ( self, original_trait ):
+        """ Returns the low-level C-based trait for this TraitValue.
+        """
+        notifiers = original_trait._notifiers( 0 )
+        
+        if self._ctrait is not None:
+            if (notifiers is None) or (len( notifiers ) == 0):
+                return self._ctrait
+                
+            trait = CTrait( 0 )
+            trait.clone( self._ctrait )
+        else:
+            trait = self._as_ctrait( original_trait )
+        
+        if ((trait     is not None) and 
+            (notifiers is not None) and 
+            (len( notifiers ) > 0)):
+            trait._notifiers( 1 ).extend( notifiers )
+        
+        return trait
+        
+    #-- Private Methods --------------------------------------------------------
+            
+    def _as_ctrait ( self, original_trait ):
+        """ Returns the low-level C-based trait for this TraitValue.
+        """
+        value_trait = self.trait( 'value' )
+        if value_trait is None:
+            return None
+            
+        if value_trait.type != 'property':
+            raise TraitError( "Invalid TraitValue specified." )
+            
+        metadata = { 'type':         'property',
+                     '_trait_value': self }
+            
+        getter, setter, validate = value_trait.property()
+        if getter is not _read_only:
+            getter = self._getter
+            metadata[ 'transient' ] =  True
+            
+        if setter is not _write_only:
+            setter = self._setter
+            metadata[ 'transient' ] =  True
+            
+        return self._property_trait( getter, setter, validate, metadata )
+       
+    def _property_trait ( self, getter, setter, validate, metadata ):
+        """ Returns a properly constructed 'property' trait.
+        """
+        n = 0
+        if validate is not None:
+            n = _arg_count( validate )
+                
+        trait = CTrait( 4 )
+        trait.property( getter,   _arg_count( getter ),
+                        setter,   _arg_count( setter ),
+                        validate, n )
+            
+        trait.value_allowed(  True )
+        trait.value_property( True )
+        trait.__dict__ = metadata
+        
+        return trait
+    
+    def _getter ( self, object, name ):
+        return self.value
+        
+    def _setter ( self, object, name, value ):
+        self.value = value
+
+#-------------------------------------------------------------------------------
 #  'TraitValue' class:
 #-------------------------------------------------------------------------------
 
-class TraitValue ( HasPrivateTraits ):
+class TraitValue ( BaseTraitValue ):
     
     # The callable used to define a default value:
     default = Callable
@@ -59,21 +141,12 @@ class TraitValue ( HasPrivateTraits ):
     # The name of the trait on the delegate object to get the new value from:
     name = Str
     
-    #-- Public Methods ---------------------------------------------------------
+    #-- Private Methods --------------------------------------------------------
     
-    def as_ctrait ( self, original_trait ):
+    def _as_ctrait ( self, original_trait ):
         """ Returns the low-level C-based trait for this TraitValue.
         """
-        notifiers = original_trait._notifiers( 0 )
-        
-        if self._ctrait is not None:
-            if (notifiers is None) or (len( notifiers ) == 0):
-                return self._ctrait
-                
-            trait = CTrait( 0 )
-            trait.clone( self._ctrait )
-            
-        elif self.default is not None:
+        if self.default is not None:
             trait = CTrait( 0 )
             trait.clone( original_trait )
             if original_trait.__dict__ is not None:
@@ -99,68 +172,29 @@ class TraitValue ( HasPrivateTraits ):
             self._ctrait = trait = type.as_ctrait()
             trait.value_allowed( True )
             
-        else:
-            metadata = { 'type':         'property',
-                         '_trait_value': self }
-                         
-            if self.delegate is not None:
-                if self.name == '':
-                    raise TraitError( "You must specify a non-empty string "
-                        "value for the 'name' attribute when using the "
-                        "'delegate' trait of a TraitValue instance." )
-                    
-                metadata[ 'transient' ] =  True
-                
-                getter   = self._delegate_getter
-                setter   = self._delegate_setter
-                validate = None
-                
-                self.add_trait( 'value', Event() )
-                self.delegate.on_trait_change( self._delegate_modified,
-                                               self.name )
-            
-            else:
-                value_trait = self.trait( 'value' )
-                if value_trait is None:
-                    return None
-                    
-                if value_trait.type != 'property':
-                    raise TraitError( "Invalid TraitValue specified." )
-                    
-                getter, setter, validate = value_trait.property()
-                if getter is not _read_only:
-                    getter = self._getter
-                    metadata[ 'transient' ] =  True
-                    
-                if setter is not _write_only:
-                    setter = self._setter
-                    metadata[ 'transient' ] =  True
-                    
-            n = 0
-            if validate is not None:
-                n = _arg_count( validate )
-                    
-            trait = CTrait( 4 )
-            trait.property( getter,   _arg_count( getter ),
-                            setter,   _arg_count( setter ),
-                            validate, n )
-                
-            trait.value_allowed( True )
-            trait.value_property( True )
-            trait.__dict__ = metadata
+        elif self.delegate is None:
+            return None
         
-        if (notifiers is not None) and (len( notifiers ) > 0):
-            trait._notifiers( 1 ).extend( notifiers )
+        else:
+            if self.name == '':
+                raise TraitError( "You must specify a non-empty string "
+                    "value for the 'name' attribute when using the "
+                    "'delegate' trait of a TraitValue instance." )
+                
+            metadata = { 'type':         'property',
+                         '_trait_value': self,
+                         'transient':    True }
+            
+            getter   = self._delegate_getter
+            setter   = self._delegate_setter
+            validate = None
+            
+            self.add_trait( 'value', Event() )
+            self.delegate.on_trait_change( self._delegate_modified, self.name )
+            
+            trait = self._property_trait( getter, setter, validate, metadata )
         
         return trait
-
-    #-- Private Methods --------------------------------------------------------
-    
-    def _getter ( self, object, name ):
-        return self.value
-        
-    def _setter ( self, object, name, value ):
-        self.value = value
         
     def _delegate_getter ( self, object, name ):
         return getattr( self.delegate, self.name )
@@ -174,9 +208,9 @@ class TraitValue ( HasPrivateTraits ):
         self.value = True
 
 #-------------------------------------------------------------------------------
-#  Tell the C-based traits module about the 'TraitValue' class:
+#  Tell the C-based traits module about the 'BaseTraitValue' class:
 #-------------------------------------------------------------------------------
 
 import ctraits
-ctraits._value_class( TraitValue )
+ctraits._value_class( BaseTraitValue )
 

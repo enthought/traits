@@ -160,6 +160,9 @@ class Editor ( HasPrivateTraits ):
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
+        if self.ui is None:
+            return
+            
         self.context_object.on_trait_change( self._update_editor, 
                                 self.extended_name, remove = True )
                         

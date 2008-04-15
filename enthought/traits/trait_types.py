@@ -2207,7 +2207,27 @@ class BaseClass ( TraitType ):
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
             
         self.error( object, name, msg )
-                
+
+def validate_implements ( value, klass, unused = None ):
+    """ Checks to see if a specified value implements the instance class
+        interface (if it is an interface).
+    """
+    from has_traits        import Interface
+    from interface_checker import check_implements
+    from protocols.api     import declareImplementation
+    
+    rc = (issubclass( klass, Interface) and 
+          check_implements( value.__class__, klass ))
+    if rc:
+        declareImplementation( value.__class__, instancesProvide = [ klass ] )            
+        
+    return rc
+    
+# Tell the C-base code about the 'validate_implements' function (used by the
+# 'fast_validate' code for Instance types):
+import ctraits
+ctraits._validate_implements( validate_implements )
+
 class BaseInstance ( BaseClass ):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses.
@@ -2333,17 +2353,22 @@ class BaseInstance ( BaseClass ):
                 if value is adapt( value, self.klass ):
                     return value
             except:
-                pass
+                if validate_implements( value, self.klass ):
+                    return value
                 
         elif self.adapt == 1:
             try:
                 return adapt( value, self.klass )
             except:
-                pass
+                if validate_implements( value, self.klass ):
+                    return value
                 
         else:
             result = adapt( value, self.klass, None )
             if result is None:
+                if validate_implements( value, self.klass ):
+                    return value
+                    
                 result = self.default_value
                 if isinstance( result, _InstanceArgs ):
                     result = result[0]( *result[1], **result[2] )
