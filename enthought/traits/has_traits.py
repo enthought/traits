@@ -129,6 +129,9 @@ CantHaveDefaultValue = ( 'event', 'delegate', 'constant' )
 # An empty list
 EmptyList = []
 
+# The trait types that should be copied last when doing a 'copy_traits':
+DeferredCopy = ( 'delegate', 'property' )
+
 # Quick test for normal vs extended trait name
 extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
@@ -1651,7 +1654,7 @@ class HasTraits ( CHasTraits ):
         # Save all traits which do not have any 'transient' metadata:
         result = self.trait_get( transient = _is_none )
         
-        # Add all delegate traits that explcitly have 'transient = False' 
+        # Add all delegate traits that explicitly have 'transient = False' 
         # metadata:
         dic    = self.__dict__
         result.update( dict( [ ( name, dic[ name ] ) 
@@ -1938,7 +1941,7 @@ class HasTraits ( CHasTraits ):
         for name in traits:
             try:
                 trait = self.trait( name )
-                if trait.type == 'delegate':
+                if trait.type in DeferredCopy:
                     deferred.append( name )
                     continue
 
