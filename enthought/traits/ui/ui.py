@@ -170,6 +170,7 @@ class UI ( HasPrivateTraits ):
 
     # List of top-level groups used to build the user interface
     _groups = Property
+    _groups_cache = Any
 
     # Count of levels of nesting for undoable actions
     _undoable = Int( -1 )
@@ -189,10 +190,9 @@ class UI ( HasPrivateTraits ):
     # List of traits that are reset when a user interface is recycled 
     # (i.e. rebuilt).
     recyclable_traits = [
-        'parent', 'control', 'owner', 
         '_context', '_revert', '_defined', '_visible', '_enabled', '_checked', 
         '_search', '_dispatchers', '_editors', '_names', '_active_group', 
-        '_undoable', '_rebuild', '__groups'
+        '_undoable', '_rebuild', '_groups_cache'
     ]
 
     # List of additional traits that are discarded when a user interface is 
@@ -268,9 +268,8 @@ class UI ( HasPrivateTraits ):
         # Reset all user interface editors:
         self.reset( destroy = False )
 
-        # Destroy the view control:        
+        # Discard any context object associated with the ui view control: 
         self.control._object = None
-        toolkit().destroy_control( self.control )
 
         # Reset all recyclable traits:
         self.reset_traits( self.recyclable_traits )
@@ -314,7 +313,7 @@ class UI ( HasPrivateTraits ):
         """
         for editor in self._editors:
             if editor._ui is not None:
-                # Propagate result to enclosed ui objects.
+                # Propagate result to enclosed ui objects:
                 editor._ui.result = self.result
             editor.dispose()
             
@@ -408,7 +407,7 @@ class UI ( HasPrivateTraits ):
             created.
         """
         # Invoke all of the editor 'name_defined' methods we've accumulated:
-        info = self.info
+        info = self.info.set( initialized = False )
         for method in self._defined:
             method( info )
 
@@ -797,17 +796,18 @@ class UI ( HasPrivateTraits ):
         """ Returns the top-level Groups for the view (after resolving 
         Includes. (Implements the **_groups** property.)
         """
-        if self.__groups is None:
-            shadow_group  = self.view.content.get_shadow( self )
-            self.__groups = shadow_group.get_content()
-            for item in self.__groups:
+        if self._groups_cache is None:
+            shadow_group       = self.view.content.get_shadow( self )
+            self._groups_cache = shadow_group.get_content()
+            for item in self._groups_cache:
                 if isinstance( item, Item ):
-                    self.__groups = [ ShadowGroup(
-                                          shadow  = Group( *self.__groups ),
-                                          content = self.__groups,
-                                          groups  = 1 ) ]
+                    self._groups_cache = [ 
+                        ShadowGroup( shadow  = Group( *self._groups_cache ),
+                                     content = self._groups_cache,
+                                     groups  = 1 )
+                    ]
                     break
-        return self.__groups
+        return self._groups_cache
 
 #-- Event handlers -------------------------------------------------------------
 

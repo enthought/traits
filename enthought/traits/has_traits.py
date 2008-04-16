@@ -1841,7 +1841,8 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def reset_traits ( self, traits = None, **metadata ):
-        """ Resets some or all of an object's trait attributes to their default values.
+        """ Resets some or all of an object's trait attributes to their default
+        values.
 
         Parameters
         ----------
