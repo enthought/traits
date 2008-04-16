@@ -641,12 +641,13 @@ class OpenFileDialog ( Handler ):
                     )
                 )
             ),
-            title     = self.title,
-            id        = self.id,
-            kind      = 'livemodal',
-            width     = width,
-            height    = height,
-            resizable = True
+            title        = self.title,
+            id           = self.id,
+            kind         = 'livemodal',
+            width        = width,
+            height       = height,
+            close_result = False,
+            resizable    = True
         )
 
     def _file_already_exists ( self ):
