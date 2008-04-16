@@ -3,6 +3,6 @@
 # to define the version number in two places.
 try:
     import pkg_resources
-    __version__ = pkg_resources.require('enthought.traits')[0].version
+    __version__ = pkg_resources.require('Traits')[0].version
 except:
-    __version__ = ''
+    __version__ = '3.0.0'
