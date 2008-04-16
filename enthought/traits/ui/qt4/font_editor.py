@@ -213,6 +213,8 @@ class CustomFontEditor ( Editor ):
         """ Handles the user changing the contents of the font text control.
         """
         self.value = unicode(self._font.text())
+        self._set_font(self.factory.to_pyqt_font(self))
+        self.update_editor()
 
     #---------------------------------------------------------------------------
     #  Handles the user modifying one of the font components:
@@ -232,7 +234,7 @@ class CustomFontEditor ( Editor ):
         self.value = self.factory.from_pyqt_font(fnt)
 
         self._font.setText(self.str_value)
-        self._font.setFont(fnt)
+        self._set_font(fnt)
 
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
@@ -264,6 +266,14 @@ class CustomFontEditor ( Editor ):
         """ Returns the text representation of a specified font value.
         """
         return self.factory.str_font( font ) 
+
+    #-- Private Methods --------------------------------------------------------
+
+    def _set_font ( self, font ):
+        """ Sets the font used by the text control to the specified font.
+        """
+        font.setPointSize( min( 10, font.pointSize() ) )
+        self._font.setFont( font )
 
 #-------------------------------------------------------------------------------
 #  'TextFontEditor' class:

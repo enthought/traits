@@ -660,6 +660,8 @@ class NotebookEditor ( Editor ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
+        self._uis = []
+
         # Create a tab widget to hold each separate object's view:
         self.control = QtGui.QTabWidget()
         QtCore.QObject.connect(self.control,
@@ -733,13 +735,12 @@ class NotebookEditor ( Editor ):
     def close_all ( self ):
         """ Closes all currently open notebook pages.
         """
-        if self._uis is not None:
-            page_name = self.factory.page_name[1:]
+        page_name = self.factory.page_name[1:]
 
-            for _, object, monitoring in self._uis:
-                if monitoring:
-                    object.on_trait_change(self.update_page_name, page_name,
-                            remove=True)
+        for _, object, monitoring in self._uis:
+            if monitoring:
+                object.on_trait_change(self.update_page_name, page_name,
+                        remove=True)
 
         # Reset the list of ui's and dictionary of page name counts:
         self._uis = []
