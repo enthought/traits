@@ -34,7 +34,17 @@ APPTOOLS        = etsdep( 'AppTools',        '3.0.0b1' )
 ENTHOUGHTBASE   = etsdep( 'EnthoughtBase',   '3.0.0b1' )
 TRAITSBACKENDWX = etsdep( 'TraitsBackendWX', '3.0.0b1' )
 TRAITSBACKENDQT = etsdep( 'TraitsBackendQt', '3.0.0b1' )
-TRAITSGUI_DOCK  = etsdep( 'TraitsGUI[dock]', '3.0.0b1' )
+TRAITSGUI       = etsdep( 'TraitsGUI',       '3.0.0b1' )
+
+# Notes:
+# - enthought\traits\ui\handler.py and 
+#   enthought\traits\ui\dockable_view_element.py depend upon files in 
+#   TraitsGUI[dock]. But the dependencies are all due to calls made to those
+#   modules from TraitsGUI[dock] or by features used by TraitsBackendWX. Since
+#   TraitsBackendWX depends upon TraitsGUI[dock], and TraitsGUI[dock] depends 
+#   upon Traits, we opt to omit the TraitsGUI[dock] dependency, since in 
+#   practice it should not cause any  problems. Leaving the dependency in
+#   pulls the TraitsBackendWX egg in, even if it is not needed.
 
 
 setup(
@@ -70,7 +80,7 @@ setup(
         # the 'real' backends (i.e. 'qt4' or 'wx') if you actually want to 
         # create real user interfaces:
         'ui': [
-            TRAITSGUI_DOCK
+            TRAITSGUI,
         ],
             
         # Extra denoting that the Traits UI backend for wxPython should be 

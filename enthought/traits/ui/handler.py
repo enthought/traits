@@ -336,9 +336,9 @@ class Handler ( HasPrivateTraits ):
         
         if isinstance( object, DockControl ):
             return self.can_import( info, object.export )
-        else:
-            drop_class = info.ui.view.drop_class
-            return ((drop_class is not None) and 
+            
+        drop_class = info.ui.view.drop_class
+        return ((drop_class is not None) and 
                     isinstance( object, drop_class ))
                     
     #---------------------------------------------------------------------------
