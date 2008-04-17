@@ -173,7 +173,7 @@ def enum_values_changed ( values ):
 
 def open_fbi():
     try:
-        from enthought.debug.fbi import if_fbi
+        from enthought.developer.helper.fbi import if_fbi
         if not if_fbi():
             import traceback
             traceback.print_exc()
