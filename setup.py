@@ -32,19 +32,19 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies:
-APPTOOLS        = etsdep( 'AppTools',        '3.0.0b1' )  
+APPTOOLS        = etsdep( 'AppTools',        '3.0.0b1' )
 ENTHOUGHTBASE   = etsdep( 'EnthoughtBase',   '3.0.0b1' )
 TRAITSBACKENDWX = etsdep( 'TraitsBackendWX', '3.0.0b1' )
 TRAITSBACKENDQT = etsdep( 'TraitsBackendQt', '3.0.0b1' )
 TRAITSGUI       = etsdep( 'TraitsGUI',       '3.0.0b1' )
 
 # Notes:
-# - enthought\traits\ui\handler.py and 
-#   enthought\traits\ui\dockable_view_element.py depend upon files in 
+# - enthought\traits\ui\handler.py and
+#   enthought\traits\ui\dockable_view_element.py depend upon files in
 #   TraitsGUI[dock]. But the dependencies are all due to calls made to those
 #   modules from TraitsGUI[dock] or by features used by TraitsBackendWX. Since
-#   TraitsBackendWX depends upon TraitsGUI[dock], and TraitsGUI[dock] depends 
-#   upon Traits, we opt to omit the TraitsGUI[dock] dependency, since in 
+#   TraitsBackendWX depends upon TraitsGUI[dock], and TraitsGUI[dock] depends
+#   upon Traits, we opt to omit the TraitsGUI[dock] dependency, since in
 #   practice it should not cause any  problems. Leaving the dependency in
 #   pulls the TraitsBackendWX egg in, even if it is not needed.
 
@@ -53,46 +53,46 @@ setup(
     author       = 'David C. Morrill',
     author_email = 'dmorrill@enthought.com',
     description  = 'Explicitly typed Python attributes package',
-    
+
     extras_require = {
-    
-        # Extra denoting that the standard ETS configuration package should be 
-        # used. If omitted, Traits will use its own package local configuration, 
-        # which is a subset of ETS Config containing just the parts used by 
+
+        # Extra denoting that the standard ETS configuration package should be
+        # used. If omitted, Traits will use its own package local configuration,
+        # which is a subset of ETS Config containing just the parts used by
         # Traits.
-        
+
         # Completely optional, not triggered by imports:
         'etsconfig': [
             ENTHOUGHTBASE,
         ],
-            
-        # Extra denoting that the Traits UI backend for Qt 4.0 should be 
+
+        # Extra denoting that the Traits UI backend for Qt 4.0 should be
         # installed.
 
         # Completely optional, not triggered by imports:
         'qt4': [
             TRAITSBACKENDQT,
         ],
-            
+
         # The Traits UI package is always installed as part of the Traits core
-        # egg. This is an extra denoting that the Traits UI should be functional 
-        # after installation (meaning that all Traits UI modules should load 
-        # without getting any import errors). Any actual UI's created will only 
-        # work with the default 'null' backend. You must also install one of 
-        # the 'real' backends (i.e. 'qt4' or 'wx') if you actually want to 
+        # egg. This is an extra denoting that the Traits UI should be functional
+        # after installation (meaning that all Traits UI modules should load
+        # without getting any import errors). Any actual UI's created will only
+        # work with the default 'null' backend. You must also install one of
+        # the 'real' backends (i.e. 'qt4' or 'wx') if you actually want to
         # create real user interfaces:
         'ui': [
             TRAITSGUI,
         ],
-            
-        # Extra denoting that the Traits UI backend for wxPython should be 
+
+        # Extra denoting that the Traits UI backend for wxPython should be
         # installed.
 
         # Completely optional, not triggered by imports:
         'wx': [
             TRAITSBACKENDWX,
         ],
-        
+
         # Extra denoting that all packages needed to run the Traits unit tests
         # should be installed:
         'test': [
@@ -105,12 +105,11 @@ setup(
             'numpy >= 1.0.0',
         ],
     },
-        
-    install_requires = [
-    ],
-        
+
     ext_modules          = [ ctraits, speedups ],
     include_package_data = True,
+    install_requires = [
+    ],
     license              = 'BSD',
     name                 = 'Traits',
     namespace_packages = [
