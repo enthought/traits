@@ -82,6 +82,8 @@ class _ModalDialog(BaseDialog):
             ui.context = self._copy_context(context)
             ui._revert = self._copy_context(context)
 
+        self.set_icon(view.icon)
+
         # Convert the buttons to actions.
         buttons = [self.coerce_button(button) for button in view.buttons]
         nr_buttons = len(buttons)

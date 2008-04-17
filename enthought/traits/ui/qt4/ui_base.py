@@ -242,7 +242,8 @@ class BasePanel(object):
         """Handles a request to revert all changes.
         """
         ui = self.ui
-        ui.history.revert()
+        if ui.history is not None:
+            ui.history.revert()
         ui.handler.revert(ui.info)
 
     def _on_revertable(self, state):
@@ -329,8 +330,6 @@ class BaseDialog(BasePanel):
         QtCore.QObject.connect(control, QtCore.SIGNAL('finished(int)'),
                 self._on_finished)
 
-        self._set_icon(view.icon)
-
     def add_contents(self, panel, buttons):
         """Add a panel (either a widget, layout or None) and optional buttons
         to the dialog."""
@@ -386,7 +385,7 @@ class BaseDialog(BasePanel):
         else:
             ui.control.exec_()
 
-    def _set_icon(self, icon=None):
+    def set_icon(self, icon=None):
         """Sets the dialog's icon."""
 
         from enthought.pyface.image_resource import ImageResource

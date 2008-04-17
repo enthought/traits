@@ -86,6 +86,8 @@ class _LiveWindow(BaseDialog):
         else:
             self.create_dialog(parent, style)
 
+        self.set_icon(view.icon)
+
         # Convert the buttons to actions.
         buttons = [self.coerce_button(button) for button in view.buttons]
         nr_buttons = len(buttons)
