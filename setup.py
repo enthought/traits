@@ -4,6 +4,7 @@ from setuptools import setup, Extension, find_packages
 ctraits = Extension(
     'enthought.traits.ctraits',
     sources = [ 'enthought/traits/ctraits.c' ],
+    extra_compile_args = [ '-DNDEBUG=1', '-O3' ],
 )
 
 speedups = Extension(
@@ -11,6 +12,7 @@ speedups = Extension(
     # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can play
     # with each other. See #1364
     sources = [ 'enthought/traits/protocols/_speedups.c' ],
+    extra_compile_args = [ '-DNDEBUG=1', '-O3' ],
 )
 
 
