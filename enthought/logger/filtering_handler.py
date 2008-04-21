@@ -29,20 +29,21 @@ class FilteringHandler(logging.Handler):
 
     Example
     -------
-
-    from enthought.logger.api import DebugHandler, logger
-
-    handler = FilteringHandler(
-        include = {
-            'enthought.envisage.core' : True
-        },
-
-        exclude = {
-            'enthought.envisage.core.application' : False
-        }
-    )
-
-    logger.addHandler(handler)
+    ::
+        
+        from enthought.logger.api import DebugHandler, logger
+    
+        handler = FilteringHandler(
+            include = {
+                'enthought.envisage.core' : True
+            },
+    
+            exclude = {
+                'enthought.envisage.core.application' : False
+            }
+        )
+    
+        logger.addHandler(handler)
 
     Notes
     -----
@@ -54,8 +55,6 @@ class FilteringHandler(logging.Handler):
     The above example includes all log messages from anything contained in, or
     under the 'enthought.envisage.core' package, EXCEPT for any log messages
     from the 'enthought.envisage.core.application' module.
-
-    You get the picture...
 
     """
 
