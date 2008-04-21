@@ -432,10 +432,11 @@ def onetrue(seq):
 
 def allpairs(x):
     """
-    return all possible pairs in sequence x
+    Return all possible pairs in sequence x
 
-    Condensed by Alex Martelli from this thread on c.l.python
-    http://groups.google.com/groups?q=all+pairs+group:*python*&hl=en&lr=&ie=UTF-8&selm=mailman.4028.1096403649.5135.python-list%40python.org&rnum=1    
+    Condensed by Alex Martelli from this thread on comp.lang.python::
+        
+        http://groups.google.com/groups?q=all+pairs+group:*python*&hl=en&lr=&ie=UTF-8&selm=mailman.4028.1096403649.5135.python-list%40python.org&rnum=1    
     """
     return [ (s, f) for i, f in enumerate(x) for s in x[i+1:] ]
 

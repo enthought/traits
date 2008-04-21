@@ -41,9 +41,10 @@ def clean_timestamp(dt=None, microseconds=False):
         Description
         -----------
         The timestamp is in ISO-8601 format with the following exceptions:
-            Colons ':' are replaced by underscores '_'.
-            Microseconds are not displayed if the 'microseconds' parameter is
-                False.
+
+        * Colons ':' are replaced by underscores '_'.
+        * Microseconds are not displayed if the 'microseconds' parameter is
+          False.
 
         Parameters
         ----------

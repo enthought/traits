@@ -14,13 +14,14 @@ class Equivalence(HasTraits):
 
         An equivalence relation is a binary relation ~ on a set A with the
         following properties:
-            Reflexivity:  a ~ a
-            Symmetry:     a ~ b iff b ~ a
-            Transitivity: a ~ b and b ~ c implies a ~ c
+
+        * Reflexivity:  a ~ a
+        * Symmetry:     a ~ b iff b ~ a
+        * Transitivity: a ~ b and b ~ c implies a ~ c
 
         For our purposes, the set A is the set of all hashable python objects.
 
-        Examples:
+        Examples::
 
             >>> e = Equivalence(list('foo'), list('bar'), list('baz'))
             >>> e.equivalent('f', 'o')

@@ -11,7 +11,7 @@ def partial(f, *a, **k): # (2.5 provides this)
     return g
 
 def compose(*fs):
-    ''' compose(f,g,...,h)(*args, **kw) == f(g(...(h(*args, **kw))))
+    ''' ``compose(f,g,...,h)(*args, **kw) == f(g(...(h(*args, **kw))))``
 
         >>> compose(len, str)(100)
         3

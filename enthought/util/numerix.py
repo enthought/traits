@@ -4,13 +4,12 @@ the purposes of TVTK.
 numerix imports either Numeric, numarray or numpy based on various
 selectors.
 
-0.  If the value "--numarray" or "--numeric" or "--numpy" is specified
+* 0:  If the value "--numarray" or "--numeric" or "--numpy" is specified
 on the command line, then numerix imports the specified array package.
-
-1. If the environment variable NUMERIX exists,  it's value is used to
+* 1: If the environment variable NUMERIX exists,  it's value is used to
 choose Numeric, numarray or numpy.
+* 2: If none of the above is done, the default array package is numpy.
 
-2. If none of the above is done, the default array package is numpy.
 """
 
 import sys, os
