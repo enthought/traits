@@ -1318,7 +1318,7 @@ class BaseFile ( BaseStr ):
     info_text = 'a file name'
     
     def __init__ ( self, value = '', filter = None, auto_set = False, 
-                         entries = 10, exists = False, **metadata ):
+                         entries = 0, exists = False, **metadata ):
         """ Creates a File trait.
 
         Parameters
@@ -1367,7 +1367,7 @@ class File ( BaseFile ):
     """
     
     def __init__ ( self, value = '', filter = None, auto_set = False, 
-                         entries = 10, exists = False, **metadata ):
+                         entries = 0, exists = False, **metadata ):
         """ Creates a File trait.
 
         Parameters
@@ -1406,7 +1406,7 @@ class BaseDirectory ( BaseStr ):
     # A description of the type of value this trait accepts:
     info_text = 'a directory name'
                                                         
-    def __init__ ( self, value = '', auto_set = False, entries = 10, 
+    def __init__ ( self, value = '', auto_set = False, entries = 0, 
                          exists = False, **metadata ):
         """ Creates a BaseDirectory trait.
 
@@ -1451,7 +1451,7 @@ class Directory ( BaseDirectory ):
         C-level fast validator.
     """
                                                         
-    def __init__ ( self, value = '', auto_set = False, entries = 10, 
+    def __init__ ( self, value = '', auto_set = False, entries = 0, 
                          exists = False, **metadata ):
         """ Creates a Directory trait.
 
