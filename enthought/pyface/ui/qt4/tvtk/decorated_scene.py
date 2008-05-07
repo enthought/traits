@@ -12,9 +12,6 @@ from os.path import dirname
 
 from PyQt4 import QtGui
 
-# So that we can find the images.
-import enthought.pyface.tvtk.api
-
 # Enthought library imports.
 from enthought.pyface.api import ImageResource, FileDialog, OK
 from enthought.pyface.action.api import ToolBarManager, Group, Action
@@ -220,6 +217,10 @@ class DecoratedScene(Scene):
     def _get_image_path(self):
         """Returns the directory which contains the images used by the
         toolbar."""
+
+        # So that we can find the images.
+        import enthought.pyface.tvtk.api
+
         return dirname(enthought.pyface.tvtk.api.__file__)
 
     def _toggle_projection(self):
