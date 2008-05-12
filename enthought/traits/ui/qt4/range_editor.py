@@ -536,11 +536,10 @@ class LargeRangeSliderEditor ( Editor ):
             widget.
         """        
         factory = self.factory
-        if not factory.low_name:
-            self.trait_setq( low = factory.low )
 
-        if not factory.high_name:
-            self.trait_setq( high = factory.high )
+        # Initialize using the factory range defaults:
+        self.low = factory.low
+        self.high = factory.high
 
         # Hook up the traits to listen to the object.
         self.sync_value( factory.low_name,  'low',  'from' )
@@ -564,7 +563,10 @@ class LargeRangeSliderEditor ( Editor ):
             fvalue_text = ''
             fvalue      = low
 
-        ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
+        if high > low:
+            ivalue = int( (float( fvalue - low ) / (high - low)) * 10000 )
+        else:
+            ivalue = low
 
         # Lower limit label:
         panel.label_lo = label_lo = QtGui.QLabel()
@@ -678,7 +680,11 @@ class LargeRangeSliderEditor ( Editor ):
         self.control.label_lo.setText( self._format % low )
         self.control.label_hi.setText( self._format % high )
 
-        ivalue = int( (float( value - low ) / (high - low)) * 10000.0 )
+        if high > low:
+            ivalue = int( (float( value - low ) / (high - low)) * 10000.0 )
+        else:
+            ivalue = low
+
         blocked = self.control.slider.blockSignals(True)
         self.control.slider.setValue( ivalue )
         self.control.slider.blockSignals(blocked)
@@ -764,23 +770,23 @@ class LargeRangeSliderEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def _low_changed ( self, low ):
-        if self.value < low:
-            if self.factory.is_float:
-                self.value = float( low )
-            else:
-                self.value = int( low )
-
         if self.control is not None:
+            if self.value < low:
+                if self.factory.is_float:
+                    self.value = float( low )
+                else:
+                    self.value = int( low )
+
             self.update_editor()
 
     def _high_changed ( self, high ):
-        if self.value > high:
-            if self.factory.is_float:
-                self.value = float( high )
-            else:
-                self.value = int( high )
-
         if self.control is not None:
+            if self.value > high:
+                if self.factory.is_float:
+                    self.value = float( high )
+                else:
+                    self.value = int( high )
+
             self.update_editor()
 
 #-------------------------------------------------------------------------------
