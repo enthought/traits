@@ -349,9 +349,10 @@ class Scene(TVTKScene, Widget):
                                        show_label=False),
                                   ),
                             label='Scene'),
-                        Group( Item(name='light_manager',
+                         Group( Item(name='light_manager',
                                 style='custom', show_label=False),
-                                label='Lights')
+                                label='Lights'),
+                         buttons=['OK', 'Cancel']
                         )
 
     ########################################
