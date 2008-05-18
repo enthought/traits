@@ -69,6 +69,7 @@ class _SceneEditor(Editor):
         
         # Remove the current scene.
         if self._scene is not None:
+            self._scene.close()
             self._scene = None
 
         # This will destroy self.control and all of its children, including the
