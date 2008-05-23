@@ -17,7 +17,7 @@ import os
 from PyQt4 import QtCore, QtGui
 
 # Enthought library imports.
-from enthought.traits.api import Enum, implements, Int, Unicode
+from enthought.traits.api import Enum, implements, Int, Unicode, List
 
 # Local imports.
 from enthought.pyface.i_file_dialog import IFileDialog, MFileDialog
@@ -33,7 +33,7 @@ class FileDialog(MFileDialog, Dialog):
 
     #### 'IFileDialog' interface ##############################################
 
-    action = Enum('open', 'save as')
+    action = Enum('open', 'open files', 'save as')
 
     default_directory = Unicode
 
@@ -46,6 +46,8 @@ class FileDialog(MFileDialog, Dialog):
     filename = Unicode
 
     path = Unicode
+
+    paths = List(Unicode)
 
     wildcard = Unicode
 
@@ -69,8 +71,10 @@ class FileDialog(MFileDialog, Dialog):
 
         if files:
             self.path = unicode(files[0])
+            self.paths = [unicode(file) for file in files]
         else:
             self.path = ''
+            self.paths = ['']
 
         # Extract the directory and filename.
         self.directory, self.filename = os.path.split(self.path)
@@ -122,6 +126,9 @@ class FileDialog(MFileDialog, Dialog):
         if self.action == 'open':
             dlg.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
             dlg.setFileMode(QtGui.QFileDialog.ExistingFile)
+        elif self.action == 'open files':
+            dlg.setAcceptMode(QtGui.QFileDialog.AcceptOpen)
+            dlg.setFileMode(QtGui.QFileDialog.ExistingFiles)
         else:
             dlg.setAcceptMode(QtGui.QFileDialog.AcceptSave)
             dlg.setFileMode(QtGui.QFileDialog.AnyFile)
