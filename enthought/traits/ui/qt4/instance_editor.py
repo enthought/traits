@@ -296,7 +296,7 @@ class CustomEditor ( Editor ):
         adapter = factory.adapter
         for value in values:
             if not isinstance( value, InstanceChoiceItem ):
-                value = adatpter( object = value )
+                value = adapter( object = value )
             items.append( value )
 
         self._items = items
