@@ -300,7 +300,7 @@ class Handler ( HasPrivateTraits ):
         #       or method result which is defined on the handler:
         klass = object.__class__.__name__
         cname = '%s_%s' % ( object_name, trait_name )
-        aview = view
+        aview = ''
         if view:
             aview = '_' + view
         names = [ '%s_%s%s' % ( cname, klass, aview ),
