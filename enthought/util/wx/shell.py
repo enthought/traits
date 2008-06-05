@@ -21,8 +21,8 @@ __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
 __cvsid__ = "$Id: shell.py,v 1.2 2003/06/13 17:59:34 dmorrill Exp $"
 __revision__ = "$Revision: 1.2 $"[11:-2]
 
-from wxPython.wx import *
-from wxPython.stc import *
+from wx.wx import *
+from wx.stc import *
 import keyword
 import os
 import sys

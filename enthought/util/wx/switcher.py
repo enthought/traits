@@ -19,7 +19,7 @@
 
 # Major package imports.
 import wx
-from wxPython.lib.scrolledpanel import wxScrolledPanel
+from wx.lib.scrolledpanel import wxScrolledPanel
 
 # Enthought library imports.
 from enthought.traits.api import HasTraits
