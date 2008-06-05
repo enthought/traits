@@ -29,9 +29,9 @@ class test_math(unittest.TestCase):
         self.assert_(is_monotonic(a) == False)
     
     def check_brange(self):
-        a = brange(1,4,1)
-        b = arange(1,5,1)
-        self.assert_(a == b)
+        a = arange(1,5,1)
+        b = brange(1,4,1)
+        self.assert_(allclose(a, b))
         
     
 def test_suite(level=1):
