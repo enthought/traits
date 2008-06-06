@@ -77,7 +77,7 @@ class ShowArray ( HasTraits ):
     data = Array
     
     view = View(
-        Item( 'data', editor = tabular_editor, show_label = False ),
+        Item( 'data', editor = tabular_editor, show_label = False, style = 'readonly' ),
         title     = 'Array Viewer',
         width     = 0.3,
         height    = 0.8,
