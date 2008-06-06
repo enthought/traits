@@ -11,16 +11,15 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-from enthought.util.Worker import Worker
 import threading
 import time
 import unittest 
-  
+
+from enthought.util.Worker import Worker
+
 snooze = 1
 
 class test_worker_thread(unittest.TestCase):
-    
-    
     
     def check_cancel(self):
         start = time.time()
@@ -76,11 +75,11 @@ def test_suite(level=1):
     total_suite = unittest.TestSuite(suites)
     return total_suite
 
-def test(level=10,verbosity=1):
+def test(level=10, verbosity=1):
     all_tests = test_suite(level=level)
     runner = unittest.TextTestRunner(verbosity=verbosity)
     runner.run(all_tests)
     return runner
 
 if __name__ == "__main__":
-    test()       
+    test()
