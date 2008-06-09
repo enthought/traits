@@ -88,11 +88,11 @@ def toolkit ( *toolkits ):
         try:
             _toolkit = _import_toolkit("null")
             import warnings
-            warnings.warn("Unable to import the %s backend for traits UI; using the 'null' toolkit instead.")
+            warnings.warn("Unable to import the '%s' backend for traits UI; using the 'null' toolkit instead." % toolkit_name)
             return _toolkit
         except ImportError:
-            raise TraitError, ("Could not find any UI toolkit called: %s" %
-                               ', '.join( toolkits ))
+            raise TraitError, ("Could not find any UI toolkit called '%s'" %
+                               toolkit_name)
 
 #-------------------------------------------------------------------------------
 #  'Toolkit' class (abstract base class):
