@@ -862,6 +862,7 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
     PyObject * handler;
     PyObject * handler_args;
     int n;
+    int has_listeners;
     Py_ssize_t i = 0;
     
     /* Make sure no non-keyword arguments were specified: */
@@ -869,8 +870,9 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
         return -1;
     
     /* Make sure all of the object's listeners have been set up: */
-    if ( PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
-                                         listener_traits ) ) > 0 ) {
+    has_listeners = (PyMapping_Size( PyDict_GetItem( obj->ob_type->tp_dict,
+                                     listener_traits ) ) > 0);
+    if ( has_listeners ) {
         value = PyObject_CallMethod( obj, "_init_trait_listeners", "()" );
         if ( value == NULL ) 
             return -1;
@@ -885,6 +887,16 @@ has_traits_init ( PyObject * obj, PyObject * args, PyObject * kwds ) {
                  == -1 ) 
                 return -1;
         }
+    }
+    
+    /* Make sure all post constructor argument assignment listeners have been
+       set up: */
+    if ( has_listeners ) {
+        value = PyObject_CallMethod( obj, "_post_init_trait_listeners", "()" );
+        if ( value == NULL ) 
+            return -1;
+        
+        Py_DECREF( value );
     }
 
     /* Notify any interested monitors that a new object has been created: */

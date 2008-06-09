@@ -1203,16 +1203,27 @@ def implements ( *interfaces ):
 #  'HasTraits' decorators:  
 #-------------------------------------------------------------------------------
                 
-def on_trait_change ( name, *names ):
+def on_trait_change ( name, post_init = False, *names ):
     """ Marks the following method definition as being a handler for the 
         extended trait change specified by *name(s)*.
         
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for 
         the *name(s)* argument.
+        
+        A handler defined using this decorator is normally effective 
+        immediately. However, if *post_init* is **True**, then the handler only 
+        become effective after all object constructor arguments have been 
+        processed. That is, trait values assigned as part of object construction 
+        will not cause the handler to be invoked.
     """
     def decorator ( function ):
-        function.on_trait_change = ','.join( [ name ] + list( names ) )
+        prefix = '<'
+        if post_init:
+            prefix = '>'
+            
+        function.on_trait_change = prefix + \
+                                   (','.join( [ name ] + list( names ) ))
         
         return function
         
@@ -1685,7 +1696,7 @@ class HasTraits ( CHasTraits ):
     #  Restores the previously pickled state of an object:
     #---------------------------------------------------------------------------
 
-    def __setstate__ ( self, state, trait_change_notify=True ):
+    def __setstate__ ( self, state, trait_change_notify = True ):
         """ Restores the previously pickled state of an object.
         """
         pop = state.pop
@@ -1701,6 +1712,7 @@ class HasTraits ( CHasTraits ):
             # Otherwise, apply the Traits 3.0 restore logic:
             self._init_trait_listeners()
             self.trait_set( trait_change_notify = trait_change_notify, **state )
+            self._post_init_trait_listeners()
             self.traits_init()
             
         self.traits_inited( True )
@@ -2037,6 +2049,7 @@ class HasTraits ( CHasTraits ):
         memo[ id( self ) ] = new
         new._init_trait_listeners()
         new.copy_traits( self, traits, memo, copy, **metadata )
+        new._post_init_trait_listeners()
         new.traits_init()
         new.traits_inited( True )
         
@@ -3434,6 +3447,18 @@ class HasTraits ( CHasTraits ):
     #  traits listeners (called at object creation and unpickling times):
     #---------------------------------------------------------------------------
     
+    def _post_init_trait_listeners ( self ):
+        """ Initializes the object's statically parsed, but dynamically 
+            registered, traits listeners (called at object creation and 
+            unpickling times).
+        """
+        for name, data in self.__class__.__listener_traits__.items():
+            if data[0] == 'method':
+                pattern = data[1]
+                if pattern[:1] == '>':
+                    self.on_trait_change( getattr( self, name ), pattern[1:],
+                                          deferred = True )
+    
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically 
             registered, traits listeners (called at object creation and 
@@ -3446,7 +3471,9 @@ class HasTraits ( CHasTraits ):
         """ Sets up the listener for a method with the @on_trait_change 
             decorator.
         """
-        self.on_trait_change( getattr( self, name ), pattern, deferred = True )
+        if pattern[:1] == '<':
+            self.on_trait_change( getattr( self, name ), pattern[1:],
+                                  deferred = True )
         
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata. 
