@@ -253,10 +253,16 @@ Uninitialized = Uninitialized()
 #  Singleton 'Undefined' object (used as undefined trait name and/or value):
 #-------------------------------------------------------------------------------
 
-class Undefined ( object ):
+class _Undefined ( object ):
 
     def __repr__ ( self ):
         return '<undefined>'
+
+    def __eq__( self, other ):
+        return type(self) == type(other)
+
+    def __ne__( self, other ):
+        return type(self) != type(other)
 
 # Singleton object that indicates that a trait attribute has not yet had a
 # value set (i.e., its value is undefined). This object is used instead of
@@ -264,7 +270,7 @@ class Undefined ( object ):
 # used. When a trait attribute is first assigned a value, and its associated
 # trait notification handlers are called, Undefined is passed as the *old* 
 # parameter, to indicate that the attribute previously had no value.
-Undefined = Undefined()
+Undefined = _Undefined()
 
 # Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
 import ctraits
