@@ -483,7 +483,7 @@ class ListenerItem ( ListenerBase ):
     def handle_list ( self, object, name, old, new ):
         """ Handles a trait change for a list trait.
         """
-        if old is not Uninitialized:
+        if old not in InvalidObjects:
             unregister = self.next.unregister
             for obj in old:
                 unregister( obj )
