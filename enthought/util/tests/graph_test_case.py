@@ -9,6 +9,13 @@ class GraphDocTestCase(doctest_for_module(G)):
     pass
 
 
+class MapTestCase(unittest.TestCase): 
+    def test_map(self): 
+        self.assertEqual(G.map(str, {}), {}) 
+        self.assertEqual(G.map(str, {1:[2,3]}), {'1':['2','3']}) 
+        self.assertEqual(G.map(lambda x: x, {1:[2,3]}), {1:[2,3]})
+
+
 class ReachableGraphTestCase(unittest.TestCase):
 
     def _base(self, graph, nodes, result, error=None):
