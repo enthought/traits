@@ -5,8 +5,8 @@ import unittest
 
 from enthought.util.ui.exception_handler import ExceptionHandler
 
-class ExceptionHandlerTestCase( unittest.TestCase ):
-    
+class ExceptionHandlerTestCase(unittest.TestCase):
+
     def test_simple(self):
         try:
             ex_handler = None
@@ -14,22 +14,16 @@ class ExceptionHandlerTestCase( unittest.TestCase ):
 
         except:
             ex_handler = ExceptionHandler(message='Your message here!')
-            t,v,tb = sys.exc_info()
+            t, v, tb = sys.exc_info()
             
-            self.failUnlessEqual(t, ex_handler.ex_type)
-            self.failUnlessEqual(v, ex_handler.ex_value)
-            self.failUnlessEqual(tb, ex_handler.ex_traceback)
+            self.assertEqual(t, ex_handler.ex_type)
+            self.assertEqual(v, ex_handler.ex_value)
+            self.assertEqual(tb, ex_handler.ex_traceback)
+            self.assert_(str(ex_handler).startswith('Your message here!'))
+            self.assert_(str(ex_handler).endswith('Exception: test exception'))
+        
+        self.assert_(ex_handler is not None)
 
-            text = """Your message here!
-Traceback (most recent call last):
-  File "%s", line 13, in test_simple
-    raise Exception, 'test exception'
-Exception: test exception""" % __file__
-            self.failUnlessEqual(text, str(ex_handler))
-        
-        self.failIfEqual(ex_handler, None)
-        
-        return
     
     def ui_simple_dialog(self):
         try:
@@ -37,9 +31,10 @@ Exception: test exception""" % __file__
             raise Exception, 'test exception'
 
         except:
-            ex_handler = ExceptionHandler(message='Your application message here!')
+            ex_handler = ExceptionHandler(message=
+                                          'Your application message here!')
             ex_handler.configure_traits()
-        return
+
     
     def ui_file_not_found(self):
         try:
@@ -49,8 +44,7 @@ Exception: test exception""" % __file__
         except:
             ex_handler = ExceptionHandler(message='Unable to find your file.')
             ex_handler.configure_traits()
-        
-        return
+
 
     def ui_syntax_error(self):
         try:
@@ -60,7 +54,7 @@ Exception: test exception""" % __file__
         except:
             ex_handler = ExceptionHandler(message='Trouble with your source.')
             ex_handler.configure_traits()
-        
-        return
-    
-### EOF
+
+
+if __name__ == "__main__":
+    unittest.main()
