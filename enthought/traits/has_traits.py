@@ -999,7 +999,7 @@ class MetaHasTraitsObject ( object ):
                 
                 cached = trait.cached
                 if cached is True:
-                    cached = '_' + name
+                    cached = '_traits_cache_' + name
                     
                 depends_on = trait.depends_on
                 if isinstance( depends_on, SequenceTypes ):
@@ -1260,7 +1260,7 @@ def cached_property ( function ):
         so that _get_file_contents() is called only when **file_name** changes.
         For details, see the enthought.traits.traits.Property() function.
     """
-    name = function.__name__[ 4: ]
+    name = '_traits_cache_' + function.__name__[ 5: ]
     
     def decorator ( self ):
         result = self.__dict__.get( name )
@@ -1303,6 +1303,11 @@ class HasTraits ( CHasTraits ):
     attribute *favorite_sport* are not listed.
     """
     __metaclass__ = MetaHasTraits
+    
+    #-- Trait Prefix Rules -----------------------------------------------------
+    
+    # Make traits 'property cache' values private with no type checking:
+    __traits_cache_ = Any( private = True, transient = True )
 
     #-- Class Variables --------------------------------------------------------
 
