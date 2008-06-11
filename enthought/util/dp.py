@@ -12,8 +12,7 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 
-# Enthought library imports.
-from enthought.util.scipyx import arange, sqrt, argmax, zeros, nonzero, take, absolute
+from numpy import arange, sqrt, argmax, zeros, nonzero, take, absolute
 
 
 def decimate(x, y, tolerance):
@@ -70,14 +69,14 @@ def _decimate(x, y, keep, si, ei, tolerance):
     return 
     
 if __name__ == "__main__":
-    from enthought.util.randomx import random
+    from numpy.random import random
 
     x = arange(0,4,0.1)
     y = zeros(len(x))
     y = random(len(x))
     tolerance = .1
     print tolerance
-    nx,ny = decimate(x,y,tolerance)
+    nx,ny = decimate(x, y, tolerance)
     
     print 'before ', len(x)
     print 'after ', len(nx)
