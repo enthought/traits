@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2008, Enthought, Inc.
 # All rights reserved.
 # 
 # This software is provided without warranty under the terms of the BSD
@@ -11,6 +11,7 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
+import os.path
 import subprocess
 import unittest
 
@@ -27,7 +28,8 @@ class RefreshTestCase(unittest.TestCase):
     def test_run(self):
         """ Run `refresh_run.py` as a spawned process and test return value
         """
-        retcode = subprocess.call(['python', 'refresh_run.py'])
+        retcode = subprocess.call(['python', 'refresh_run.py'],
+                                  cwd=os.path.dirname(__file__))
         self.assert_(retcode == 0)
         
 
