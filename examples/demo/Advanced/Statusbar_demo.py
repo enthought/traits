@@ -44,6 +44,7 @@ class TextEditor ( HasPrivateTraits ):
     
     # The current time:
     time = Str
+    time_dummy = Str
     
     # The view definition:
     view = View(
@@ -76,9 +77,14 @@ class TextEditor ( HasPrivateTraits ):
     def _clock ( self ):
         """ Update the statusbar time once every second.
         """
+        self.on_trait_change(self._modify_main_time, 'time_dummy', dispatch='ui')
+        
         while True:
-            self.time = strftime( '%I:%M:%S %p' )
+            self.time_dummy = strftime( '%T:%M:%S %p' )
             sleep( 1.0 )
+
+    def _modify_main_time( self ):
+        self.time = strftime( '%I:%M:%S %p' )
     
 # Create the demo object:
 popup = TextEditor()
