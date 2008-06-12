@@ -91,20 +91,16 @@ def safe_len(a):
     return safelen
 
 def safe_flat(a):
-    # Return a flat version of the input array or input if it is a scalar
-    from enthought.util.numerix import which
+    """ Return a flat version of the input array or input if it is a scalar
+    """
     try:
-        if which[0]=='numpy':
-            safeflat = a.flatten()
-        else:
-            safeflat = a.flat
+        safeflat = a.flatten()
     except:
         safeflat = a
     return safeflat
 
 def safe_nonzero(a):
-    """
-    Gracefully handle the case where the input is a scalar
+    """ Gracefully handle the case where the input is a scalar
     """
     try:
         result = nonzero(a)
