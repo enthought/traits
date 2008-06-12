@@ -21,25 +21,27 @@
     
     >>> # save the current state in a variable named "old_state"
     >>> old_state = RandomState()
-    >>> stochastic_calculation()
-    ...
-    ...
+    
+    Perform some stochastic calculation...
+    
     >>> # Now if you want to have stochastic_calculation() return identical 
     >>> # results without disrupting other calculations that use random values
     >>> # do the following:
     >>> rsm = RandomStateManager()
     >>> rsm.save_state()
     >>> rsm.set_state(old_state)
-    >>> stochastic_calculation()
+
+    Perform some stochastic calculation...
+    
     >>> rsm.restore_state()    
     
     Note that these routines currently only support the state of random and
     scipy.stats.  If you use other random number generators, their states
     will not be managed correctly.
 """
-import scipy.stats
 import random
-from scipyx import get_seed, set_seed
+from numpy.random import get_state as get_seed
+from numpy.random import set_state as set_seed
 
 class RandomState:
     def __init__(self):
@@ -74,5 +76,10 @@ class RandomStateManager:
             self.set_state(previous_state)
         except:
             
-            raise IndexError, "trying to call restore_state without matching"\
-                              " call to save_state"
+            raise IndexError("trying to call restore_state without matching"
+                             " call to save_state")
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
