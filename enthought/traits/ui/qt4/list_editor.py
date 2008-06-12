@@ -20,10 +20,10 @@ from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import Trait, HasTraits, BaseTraitHandler, Range, Str, Any, Instance, \
-           Property, Bool
+           Property, Bool, Callable
 
 from enthought.traits.trait_base \
-    import user_name_for, enumerate
+    import user_name_for, enumerate, xgetattr
 
 from enthought.traits.ui.api \
     import View, Item, EditorFactory as UIEditorFactory
@@ -106,6 +106,10 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Name of the view to use in notebook mode:
     view = AView
+
+    # A factory function that can be used to define that actual object to be
+    # edited (i.e. view_object = factory( object )):
+    factory = Callable
 
     # Extended name to use for each notebook page. It can be either the actual
     # name or the name of an attribute on the object in the form:
@@ -688,10 +692,10 @@ class NotebookEditor ( Editor ):
 
         # Create a tab page for each object in the trait's value:
         for object in self.value:
-            page, monitoring = self._create_page(object)
+            page, view_object, monitoring = self._create_page(object)
 
             # Remember the page for later deletion processing:
-            self._uis.append([page, object, monitoring])
+            self._uis.append([page, object, view_object, monitoring])
 
     #---------------------------------------------------------------------------
     #  Handles some subset of the trait's list being updated:
@@ -706,9 +710,9 @@ class NotebookEditor ( Editor ):
         page_name = self.factory.page_name[1:]
 
         for i in event.removed:
-            page, object, monitoring = self._uis[index]
+            page, _, view_object, monitoring = self._uis[index]
             if monitoring:
-                object.on_trait_change(self.update_page_name, page_name,
+                view_object.on_trait_change(self.update_page_name, page_name,
                         remove=True)
 
             self.control.removeTab(self.control.indexOf(page))
@@ -718,8 +722,8 @@ class NotebookEditor ( Editor ):
         # Add a page for each added object:
         first_page = None
         for object in event.added:
-            page, monitoring  = self._create_page(object)
-            self._uis[index:index] = [[page, object, monitoring]]
+            page, view_object, monitoring  = self._create_page(object)
+            self._uis[index:index] = [[page, object, view_object, monitoring]]
             index += 1
 
             if first_page is None:
@@ -737,9 +741,9 @@ class NotebookEditor ( Editor ):
         """
         page_name = self.factory.page_name[1:]
 
-        for _, object, monitoring in self._uis:
+        for _, _, view_object, monitoring in self._uis:
             if monitoring:
-                object.on_trait_change(self.update_page_name, page_name,
+                view_object.on_trait_change(self.update_page_name, page_name,
                         remove=True)
 
         # Reset the list of ui's and dictionary of page name counts:
@@ -769,8 +773,8 @@ class NotebookEditor ( Editor ):
         """ Handles the trait defining a particular page's name being changed.
         """
         for i, value in enumerate(self._uis):
-            page, ui_object, _ = value
-            if object is ui_object:
+            page, user_object, _, _ = value
+            if object is user_object:
                 name = None
                 handler = getattr(self.ui.handler,
                         '%s_%s_page_name' % (self.object_name, self.name),
@@ -780,7 +784,7 @@ class NotebookEditor ( Editor ):
                     name = handler(self.ui.info, object)
 
                 if name is None:
-                    name = str(getattr(object, self.factory.page_name[1:], '???'))
+                    name = str(xgetattr(object, self.factory.page_name[1:], '???'))
                 self.control.setTabText(self.control.indexOf(page), name)
                 break
 
@@ -790,8 +794,12 @@ class NotebookEditor ( Editor ):
 
     def _create_page ( self, object ):
         # Create the view for the object:
-        ui = object.edit_traits( parent = self.control,
-                                 view   = self.factory.view,
+        view_object = object
+        factory = self.factory
+        if factory.factory is not None:
+            view_object = factory.factory(object)
+        ui = view_object.edit_traits( parent = self.control,
+                                 view   = factory.view,
                                  kind   = 'subpanel' ).set(
                                  parent = self.ui )
 
@@ -799,9 +807,9 @@ class NotebookEditor ( Editor ):
         name       = ''
         monitoring = False
         prefix     = '%s_%s_page_' % ( self.object_name, self.name )
-        page_name  = self.factory.page_name
+        page_name  = factory.page_name
         if page_name[0:1] == '.':
-            name       = getattr( object, page_name[1:], None )
+            name       = xgetattr( view_object, page_name[1:], None )
             monitoring = (name is not None)
             if monitoring:
                 handler_name = None
@@ -812,14 +820,15 @@ class NotebookEditor ( Editor ):
                     name = handler_name
                 else:
                     name = str( name ) or '???'
-                object.on_trait_change( self.update_page_name, 
+                view_object.on_trait_change( self.update_page_name, 
                                         page_name[1:], dispatch = 'ui' )
             else:
                 name = ''
         elif page_name != '':
             name = page_name
+
         if name == '':
-            name = user_name_for( object.__class__.__name__ )
+            name = user_name_for( view_object.__class__.__name__ )
 
         # Make sure the name is not a duplicate:
         if not monitoring:
@@ -829,7 +838,6 @@ class NotebookEditor ( Editor ):
 
         # Return the control for the ui, and whether or not its name is being
         # monitored:
-        factory = self.factory
         image   = None
         method  = getattr( self.ui.handler, prefix + 'image', None )
         if method is not None:
@@ -840,7 +848,7 @@ class NotebookEditor ( Editor ):
         else:
             self.control.addTab(ui.control, image, name)
 
-        return (ui.control, monitoring)
+        return (ui.control, view_object, monitoring)
 
     #---------------------------------------------------------------------------
     #  Handles a notebook tab being 'activated' (i.e. clicked on) by the user:  
@@ -852,7 +860,7 @@ class NotebookEditor ( Editor ):
         """
         w = self.control.widget(idx)
 
-        for page, object, _ in self._uis:
+        for page, object, _, _ in self._uis:
             if page is w:
                 self.selected = object
                 break
@@ -864,7 +872,7 @@ class NotebookEditor ( Editor ):
     def _selected_changed(self, selected):
         """ Handles the **selected** trait being changed.
         """
-        for page, object, _ in self._uis:
+        for page, object, _, _ in self._uis:
             if selected is object:
                 self.control.setCurrentWidget(page)
                 break
