@@ -17,14 +17,14 @@
     access to variables available to the code snippet during a run.  For 
     example, the following fails:
 
-        >>> a = 1 
-        >>> profile.run("main(a)")
+        a = 1
+        profile.run("main(a)")
 
     This is because the variable 'a' will not properly be found.  This function
     fixes the problem.
 """
 
-from profile import *
+import profile
 
 def run(statement, filename=None):
     """ Runs 'statement' under profiler, optionally saving results in 
@@ -38,7 +38,7 @@ def run(statement, filename=None):
     standard name string (file/line/function-name) that is presented in
     each line.
     """
-    prof = Profile()
+    prof = profile.Profile()
     try:
         import sys
         fr = sys._getframe().f_back
@@ -49,3 +49,5 @@ def run(statement, filename=None):
         prof.dump_stats(filename)
     else:
         return prof.print_stats()
+
+
