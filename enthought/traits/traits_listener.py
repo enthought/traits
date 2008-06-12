@@ -359,8 +359,14 @@ class ListenerItem ( ListenerBase ):
         if last == '*':
             # Handle the special case of an 'anytrait' change listener:
             if self.is_any_trait:
-                self.active[ new ] = [ ( '', ANYTRAIT_LISTENER ) ]
-                return self._register_anytrait( new, '', False )
+                try:
+                    self.active[ new ] = [ ( '', ANYTRAIT_LISTENER ) ]
+                    return self._register_anytrait( new, '', False )
+                except TypeError:
+                    # This error can occur if 'new' is a list or other object
+                    # for which a weakref cannot be created as the dictionary
+                    # key for 'self.active':
+                    return INVALID_DESTINATION
 
             # Handle trait matching based on a common name prefix and/or 
             # matching trait metadata:
@@ -446,10 +452,16 @@ class ListenerItem ( ListenerBase ):
         """ Unregisters any existing listeners.
         """
         if old not in InvalidObjects:
-            active = self.active.pop( old, None )
-            if active is not None:
-                for name, type in active:
-                    getattr( self, type )( old, name, True )
+            try:
+                active = self.active.pop( old, None )
+                if active is not None:
+                    for name, type in active:
+                        getattr( self, type )( old, name, True )
+            except TypeError:
+                # An error can occur if 'old' is a list or other object for
+                # which a weakref cannot be created and used an a key for
+                # 'self.active':
+                pass
     
     #---------------------------------------------------------------------------
     #  Handles a trait change for an intermediate link trait:
