@@ -14,8 +14,7 @@
 """ Color utilities. """
 
 
-# Major package imports.
-from enthought.util.numerix import asarray, array
+from numpy import asarray, array
 
 
 # fixme: This should move into enable.
