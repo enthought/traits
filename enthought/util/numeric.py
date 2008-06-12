@@ -16,8 +16,8 @@ A placeholder for numeric functions that are not yet implemented in SciPy.
 """
 
 import scipy
-from numerix import Float64, PyObject, nonzero, which
-from scipy import take, amin, amax, arange, asarray, mean, std, isnan,\
+from numpy.oldnumeric import PyObject, nonzero
+from scipy import take, amin, amax, arange, asarray, mean, std, isnan, \
                   product, shape, array, isfinite, compress
 
 """
