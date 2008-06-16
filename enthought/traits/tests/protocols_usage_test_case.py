@@ -76,7 +76,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
     def test_factory(self):
         """ factory """
-
+        
         class IInputStream(Interface):
             """ Fake interface for input stream. """
 
