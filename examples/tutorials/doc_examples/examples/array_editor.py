@@ -1,13 +1,12 @@
 # array_editor.py -- Example of using array editors
 
-#--[Imports]--------------------------------------------------------------------
-from enthought.util.numerix import Int, Float
+from numpy.numarray import Int, Float
+
 from enthought.traits.api import HasPrivateTraits, Array
 from enthought.traits.ui.api \
     import View, ArrayEditor, Item
 from enthought.traits.ui.menu import NoButtons
    
-#--[Code]-----------------------------------------------------------------------
 
 class ArrayEditorTest ( HasPrivateTraits ):
         
@@ -33,4 +32,3 @@ class ArrayEditorTest ( HasPrivateTraits ):
                      
 if __name__ == '__main__':
     ArrayEditorTest().configure_traits()
-
