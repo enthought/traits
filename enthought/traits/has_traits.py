@@ -2422,7 +2422,7 @@ class HasTraits ( CHasTraits ):
                     import cPickle
                     fd = open( filename, 'wb' )
                     cPickle.Pickler( fd, True ).dump( self )
-                except:
+                finally:
                     if fd is not None:
                         fd.close()
             return rc
