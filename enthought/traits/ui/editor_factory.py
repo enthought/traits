@@ -81,19 +81,22 @@ class EditorFactory ( HasPrivateTraits ):
         """ Returns the value of a specified extended name of the form: name or 
             context_object_name.name[.name...]:
         """
-        col = name.find( '.' )
-        if col < 0:
+        names = name.split( '.' )
+        
+        if len( names ) == 1:
             # fixme: This will produce incorrect values if the actual Item the
             # factory is being used with does not use the default object='name'
             # value, and the specified 'name' does not contain a '.'. The 
             # solution will probably involve providing the Item as an argument,
             # but it is currently not available at the time this method needs to 
             # be called...
-            object = 'object'
-        else:
-            object, name = name[ : col ], name[ col + 1: ]
+            names.insert( 0, 'object' )
             
-        return getattr( ui.context[ object ], name )
+        value = ui.context[ names[0] ]
+        for name in names[1:]:
+            value = getattr( value, name )
+            
+        return value
     
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:

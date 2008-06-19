@@ -1759,13 +1759,13 @@ class BaseRange ( TraitType ):
             self._type_desc = 'a number'
             
             if isinstance( high, basestring ):
-                self._high_name, high = high, 'object.' + high
+                self._high_name = high = 'object.' + high
             else:
                 self._vtype = type( high )
             high = compile( str( high ), '<string>', 'eval' )
             
             if isinstance( low, basestring ):
-                self._low_name, low = low, 'object.' + low
+                self._low_name = low = 'object.' + low
             else:
                 self._vtype = type( low )
             low = compile( str( low ), '<string>', 'eval' )
