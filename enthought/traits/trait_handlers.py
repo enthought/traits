@@ -620,6 +620,27 @@ class TraitType ( BaseTraitHandler ):
                     pass
             
         return new
+        
+    def get_value ( self, object, name, trait = None ):
+        """ Returns the current value of a property-based trait.
+        """
+        cname = '_traits_cache_' + name
+        value = object.__dict__.get( cname, Undefined )
+        if (value is Undefined) and (trait is not None):
+            object.__dict__[ cname ] = value = \
+                trait.default_value_for( object, name )
+                
+        return value
+        
+    def set_value ( self, object, name, value ):
+        """ Sets the cached value of a property-based trait and fires the
+            appropriate trait change event.
+        """
+        cname = '_traits_cache_' + name
+        old   = object.__dict__.get( cname, Undefined )
+        if value != old:
+            object.__dict__[ cname ] = value
+            object.trait_property_change( name, old, value )
             
     #-- Private Methods --------------------------------------------------------
 

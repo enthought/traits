@@ -1918,7 +1918,8 @@ class BaseRange ( TraitType ):
         if old is Undefined:
             old = eval( self._value )
         object.__dict__[ cname ] = value
-        object.trait_property_changed( name, old, value )
+        if value != old:
+            object.trait_property_changed( name, old, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
