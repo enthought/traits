@@ -74,7 +74,7 @@ class TraitError ( exceptions.Exception ):
         # commas.
         if obj is not None:
             self.args = ( "%s '%s' trait of %s instance%s must be %s, "
-                          "but a value of %r was specified." % (
+                          "but a value of %s was specified." % (
                           self.prefix, self.name, class_of( obj ), extra,
                           self.info, self.value ) ),
         else:

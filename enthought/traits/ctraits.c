@@ -1924,8 +1924,31 @@ getattr_property2 ( trait_object      * trait,
     return result;
 }   
 
+static PyObject *
+getattr_property3 ( trait_object      * trait, 
+                    has_traits_object * obj, 
+                    PyObject          * name ) {
+    
+    PyObject * result;
+    
+    PyObject * args = PyTuple_New( 3 );
+    if ( args == NULL ) 
+        return NULL;
+    
+    PyTuple_SET_ITEM( args, 0, (PyObject *) obj );
+    Py_INCREF( obj );
+    PyTuple_SET_ITEM( args, 1, name );
+    Py_INCREF( name );
+    PyTuple_SET_ITEM( args, 2, (PyObject *) trait );
+    Py_INCREF( trait );
+    result = PyObject_Call( trait->delegate_name, args, NULL );
+    Py_DECREF( args );
+    
+    return result;
+}   
+
 static trait_getattr getattr_property_handlers[] = { 
-    getattr_property0, getattr_property1, getattr_property2
+    getattr_property0, getattr_property1, getattr_property2, getattr_property3
 };    
 
 /*-----------------------------------------------------------------------------
@@ -2802,7 +2825,7 @@ static trait_getattr getattr_handlers[] = {
     getattr_generic,
 /*  The following entries are used by the __getstate__ method: */    
     getattr_property0, getattr_property1, getattr_property2, 
-    getattr_property2, /* <-- Padding for symmetry with the setattr_handlers */
+    getattr_property3, 
 /*  End of __getstate__ method entries */
     NULL
 };    
@@ -2830,6 +2853,7 @@ trait_init ( trait_object * trait, PyObject * args, PyObject * kwds ) {
         trait->setattr = setattr_handlers[ kind ];
         return 0;
     } 
+    
     return bad_trait_error();
 }
 
@@ -2848,6 +2872,7 @@ trait_clear ( trait_object * trait ) {
     Py_CLEAR( trait->notifiers );
     Py_CLEAR( trait->handler );
     Py_CLEAR( trait->obj_dict );
+    
     return 0;
 }
 
@@ -2995,6 +3020,23 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
     
     Py_INCREF( Py_None );
     return Py_None;
+} 
+
+/*-----------------------------------------------------------------------------
+|  Gets the default value of a CTrait instance for a specified object and trait 
+|  name:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_default_value_for ( trait_object * trait, PyObject * args ) {
+ 
+    PyObject * object;
+    PyObject * name;
+    
+    if ( !PyArg_ParseTuple( args, "OO", &object, &name ) ) 
+        return NULL;
+    
+    return default_value_for( trait, (has_traits_object *) object, name );
 } 
 
 /*-----------------------------------------------------------------------------
@@ -4314,9 +4356,9 @@ _trait_property ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "OiOiOi", &get, &get_n, &set, &set_n, 
                                             &validate, &validate_n ) ) 
         return NULL;
-    if ( !PyCallable_Check( get ) || !PyCallable_Check( set ) ||
+    if ( !PyCallable_Check( get ) || !PyCallable_Check( set )     ||
          ((validate != Py_None) && !PyCallable_Check( validate )) ||
-         (get_n < 0)      || (get_n > 2) || 
+         (get_n < 0)      || (get_n > 3) || 
          (set_n < 0)      || (set_n > 3) ||
          (validate_n < 0) || (validate_n > 3) ) {
         PyErr_SetString( PyExc_ValueError, "Invalid arguments." );
@@ -4612,6 +4654,8 @@ static PyMethodDef trait_methods[] = {
 	 	PyDoc_STR( "__setstate__(state)" ) },
 	{ "default_value", (PyCFunction) _trait_default_value, METH_VARARGS,
 	 	PyDoc_STR( "default_value(default_value)" ) },
+	{ "default_value_for", (PyCFunction) _trait_default_value_for, METH_VARARGS,
+	 	PyDoc_STR( "default_value_for(object,name)" ) },
 	{ "set_validate",  (PyCFunction) _trait_set_validate,  METH_VARARGS,
 	 	PyDoc_STR( "set_validate(validate_function)" ) },
 	{ "get_validate",  (PyCFunction) _trait_get_validate,  METH_NOARGS,

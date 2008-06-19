@@ -1671,6 +1671,302 @@ class BaseRange ( TraitType ):
                             enter_set  = self.enter_set or False,
                             low_label  = self.low  or '',
                             high_label = self.high or '' )
+                    
+class BaseRange ( TraitType ):
+    """ Defines a trait whose numeric value must be in a specified range.
+    """
+    
+    def __init__ ( self, low = None, high = None, value = None,
+                         exclude_low = False, exclude_high = False, 
+                         **metadata ):
+        """ Creates a Range trait.
+
+        Parameters
+        ----------
+        low : integer, float or string (i.e. extended trait name)
+            The low end of the range.
+        high : integer, float or string (i.e. extended trait name)
+            The high end of the range.
+        value : integer, float or string (i.e. extended trait name)
+            The default value of the trait
+        exclude_low : Boolean
+            Indicates whether the low end of the range is exclusive.
+        exclude_high : Boolean
+            Indicates whether the high end of the range is exclusive.
+      
+        The *low*, *high*, and *value* arguments must be of the same type 
+        (integer or float), except in the case where either *low* or *high* is
+        a string (i.e. extended trait name).
+      
+        Default Value
+        -------------
+        *value*; if *value* is None or omitted, the default value is *low*,
+        unless *low* is None or omitted, in which case the default value is
+        *high*.
+        """
+        if value is None:
+            if low is not None:
+                value = low
+            else:
+                value = high
+                
+        super( BaseRange, self ).__init__( value, **metadata )
+
+        vtype = type( high )
+        if ((low is not None) and
+            (not issubclass( vtype, ( float, basestring ) ))):
+            vtype = type( low )
+            
+        is_static = (not issubclass( vtype, basestring ))
+        if is_static and (vtype not in RangeTypes):
+            raise TraitError, ("Range can only be use for int, long or float "
+                               "values, but a value of type %s was specified." % 
+                               vtype)
+                
+        self._low_name = self._high_name = ''
+        
+        if vtype is float:
+            self._validate  = 'float_validate'
+            kind            = 4
+            self._type_desc = 'a floating point number'
+            if low is not None:
+                low = float( low )
+                
+            if high is not None:
+                high = float( high )
+                
+        elif vtype is long:
+            self._validate  = 'long_validate'
+            self._type_desc = 'a long integer'
+            if low is not None:
+                low = long( low )
+                
+            if high is not None:
+                high = long( high )
+                
+        elif vtype is int:
+            self._validate  = 'int_validate'
+            kind            = 3
+            self._type_desc = 'an integer'
+            if low is not None:
+                low = int( low )
+                
+            if high is not None:
+                high = int( high )
+        else:
+            self.get, self.set, self.validate = self._get, self._set, None
+            self._vtype     = None
+            self._type_desc = 'a number'
+            
+            if isinstance( high, basestring ):
+                self._high_name, high = high, 'object.' + high
+            else:
+                self._vtype = type( high )
+            high = compile( str( high ), '<string>', 'eval' )
+            
+            if isinstance( low, basestring ):
+                self._low_name, low = low, 'object.' + low
+            else:
+                self._vtype = type( low )
+            low = compile( str( low ), '<string>', 'eval' )
+            
+            if isinstance( value, basestring ):
+                value = 'object.' + value
+            self._value = compile( str( value ), '<string>', 'eval' )
+                
+        exclude_mask = 0
+        if exclude_low:
+            exclude_mask |= 1
+            
+        if exclude_high:
+            exclude_mask |= 2
+            
+        if is_static and (vtype is not long):
+            self.init_fast_validator( kind, low, high, exclude_mask )
+
+        # Assign type-corrected arguments to handler attributes:
+        self._low          = low
+        self._high         = high
+        self._exclude_low  = exclude_low
+        self._exclude_high = exclude_high
+        
+    def init_fast_validator ( self, *args ):
+        """ Does nothing for the BaseRange class. Used in the Range class to 
+            set up the fast validator.
+        """
+        pass
+
+    def validate ( self, object, name, value ):
+        """ Validate that the value is in the specified range.
+        """
+        return getattr( self, self._validate )( object, name, value )
+
+    def float_validate ( self, object, name, value ):
+        """ Validate that the value is a float value in the specified range.
+        """
+        try:
+            if (isinstance( value, RangeTypes ) and
+                ((self._low is None) or
+                 (self._exclude_low and (self._low < value)) or
+                 ((not self._exclude_low) and (self._low <= value))) and
+                ((self._high is None) or
+                 (self._exclude_high and (self._high > value)) or
+                 ((not self._exclude_high) and (self._high >= value)))):
+               return float( value )
+        except:
+            pass
+            
+        self.error( object, name, self.repr( value ) )
+
+    def int_validate ( self, object, name, value ):
+        """ Validate that the value is an int value in the specified range.
+        """
+        try:
+            if (isinstance( value, int ) and
+                ((self._low is None) or
+                 (self._exclude_low and (self._low < value)) or
+                 ((not self._exclude_low) and (self._low <= value))) and
+                ((self._high is None) or
+                 (self._exclude_high and (self._high > value)) or
+                 ((not self._exclude_high) and (self._high >= value)))):
+               return value
+        except:
+            pass
+            
+        self.error( object, name, self.repr( value ) )
+
+    def long_validate ( self, object, name, value ):
+        """ Validate that the value is a long value in the specified range.
+        """
+        try:
+            if (isinstance( value, long ) and
+                ((self._low is None) or
+                 (self._exclude_low and (self._low < value)) or
+                 ((not self._exclude_low) and (self._low <= value))) and
+                ((self._high is None) or
+                 (self._exclude_high and (self._high > value)) or
+                 ((not self._exclude_high) and (self._high >= value)))):
+               return value
+        except:
+            pass
+            
+        self.error( object, name, self.repr( value ) )
+        
+    def _get ( self, object, name, trait ):
+        """ Returns the current value of a dynamic range trait.
+        """
+        cname = '_traits_cache_' + name
+        value = object.__dict__.get( cname, Undefined )
+        if value is Undefined:
+            object.__dict__[ cname ] = value = eval( self._value )
+            
+        low  = eval( self._low )
+        high = eval( self._high )
+        if (low is not None) and (value < low):
+            value = low
+        elif (high is not None) and (value > high):
+            value = high
+            
+        return self._typed_value( value, low, high )
+    
+    def _set ( self, object, name, value ):
+        """ Sets the current value of a dynamic range trait.
+        """
+        if not isinstance( value, basestring ):
+            try:
+                low  = eval( self._low )
+                high = eval( self._high )
+                if (low is None) and (high is None):
+                    if isinstance( value, RangeTypes ):
+                        self._set_value( object, name, value )
+                        return
+                else:
+                    new_value = self._typed_value( value, low, high )
+                    if (((low is None) or
+                        (self._exclude_low and (low < new_value)) or
+                        ((not self._exclude_low) and (low <= new_value))) and
+                        ((high is None) or
+                        (self._exclude_high and (high > new_value)) or
+                        ((not self._exclude_high) and (high >= new_value)))):
+                        self._set_value( object, name, new_value )
+                        return
+            except:
+                pass
+            
+        self.error( object, name, self.repr( value ) )
+        
+    def _typed_value ( self, value, low, high ):
+        """ Returns the specified value with the correct type for the current
+            dynamic range.
+        """
+        vtype = self._vtype
+        if vtype is None:
+            if low is not None:
+                vtype = type( low )
+            elif high is not None:
+                vtype = type( high )
+            else:
+                vtype = lambda x: x
+                
+        return vtype( value )
+        
+    def _set_value ( self, object, name, value ):
+        """ Sets the specified value as the value of the dynamic range.
+        """        
+        cname = '_traits_cache_' + name
+        old   = object.__dict__.get( cname, Undefined )
+        if old is Undefined:
+            old = eval( self._value )
+        object.__dict__[ cname ] = value
+        object.trait_property_changed( name, old, value )
+
+    def full_info ( self, object, name, value ):
+        """ Returns a description of the trait.
+        """
+        if hasattr( self, '_vtype' ):
+            low       = eval( self._low )
+            high      = eval( self._high )
+            low, high = ( self._typed_value( low,  low, high ),   
+                          self._typed_value( high, low, high ) )   
+        else:
+            low  = self._low
+            high = self._high
+            
+        if low is None:
+            if high is None:
+                return self._type_desc
+                
+            return '%s <%s %s' % (
+                   self._type_desc, '='[ self._exclude_high: ], high )
+                   
+        elif high is None:
+            return  '%s >%s %s' % (
+                    self._type_desc, '='[ self._exclude_low: ], low )
+                    
+        return '%s <%s %s <%s %s' % (
+               low, '='[ self._exclude_low: ], self._type_desc,
+               '='[ self._exclude_high: ], high )
+
+    def create_editor ( self ):
+        """ Returns the default UI editor for the trait.
+        """
+        # fixme: Needs to support a dynamic range editor.
+        
+        auto_set = self.auto_set
+        if auto_set is None:
+            auto_set = True
+            
+        from enthought.traits.ui.api import RangeEditor
+        
+        return RangeEditor( self,
+                            mode       = self.mode or 'auto',
+                            cols       = self.cols or 3,
+                            auto_set   = auto_set,
+                            enter_set  = self.enter_set or False,
+                            low_label  = self.low  or '',
+                            high_label = self.high or '',
+                            low_name   = self._low_name,
+                            high_name  = self._high_name )
 
                             
 class Range ( BaseRange ):                            
@@ -1862,14 +2158,15 @@ class BaseTuple ( TraitType ):
             
         self.error( object, name, value )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         if self.no_type_check:
             return 'a tuple'
             
-        return 'a tuple of the form: (%s)' % (', '.join( [ trait.info() 
-                                                   for trait in self.traits ] ))
+        return 'a tuple of the form: (%s)' % (', '.join(
+            [ trait.full_info( object, name, value ) 
+              for trait in self.traits ] ))
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
@@ -1959,7 +2256,7 @@ class List ( TraitType ):
             
         self.error( object, name, value )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         if self.minlen == 0:
@@ -1974,7 +2271,8 @@ class List ( TraitType ):
                 size = 'from %s to %s items' % (
                        self.minlen, self.maxlen )
             
-        return 'a list of %s which are %s' % ( size, self.item_trait.info() )
+        return 'a list of %s which are %s' % ( 
+                   size, self.item_trait.full_info( object, name, value ) )
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
@@ -2048,11 +2346,12 @@ class CList ( List ):
 
         return super( CList, self ).validate( object, name, new_value )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
-        return '%s or %s' % ( self.item_trait.info(), 
-                              super( CList, self ).info() )
+        return '%s or %s' % (
+                   self.item_trait.full_info( object, name, value), 
+                   super( CList, self ).full_info( object, name, value ) )
     
 #-------------------------------------------------------------------------------
 #  'Dict' trait:  
@@ -2116,11 +2415,13 @@ class Dict ( TraitType ):
             
         self.error( object, name, value )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         return ('a dictionary with keys which are %s and with values which '
-                'are %s') % ( self.key_trait.info(), self.value_trait.info() ) 
+                'are %s') % ( 
+                self.key_trait.full_info(   object, name, value ), 
+                self.value_trait.full_info( object, name, value ) ) 
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
@@ -2642,14 +2943,14 @@ class Event ( TraitType ):
             if validate is not None:
                 self.fast_validate = validate
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         trait = self.trait
         if trait is None:
             return 'any value'
             
-        return trait.info()
+        return trait.full_info( object, name, value )
 
 #  Handle circular module dependencies:
 trait_handlers.Event = Event

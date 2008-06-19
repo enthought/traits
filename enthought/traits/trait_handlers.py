@@ -167,7 +167,8 @@ class BaseTraitHandler ( object ):
         the problem, or, in the case of compound traits, provides a chance for
         another trait handler to handle to validate the value.
         """
-        raise TraitError, ( object, name, self.info(), value )
+        raise TraitError( object, name, self.full_info( object, name, value ), 
+                          value )
 
     def arg_error ( self, method, arg_num, object, name, value ):
         """ Raises a TraitError exception to notify the user that a method on
@@ -193,7 +194,8 @@ class BaseTraitHandler ( object ):
         raise TraitError, ("The '%s' parameter (argument %d) of the %s method "
                            "of %s instance must be %s, but a value of %s was "
                            "specified." % ( name, arg_num, method.tm_name,
-                           class_of( object ), self.info(), value ) )
+                           class_of( object ), 
+                           self.full_info( object, name, value ), value ) )
 
     def keyword_error ( self, method, object, name, value ):
         """ Raises a TraitError exception to notify the user that a method on
@@ -217,7 +219,8 @@ class BaseTraitHandler ( object ):
         raise TraitError, ("The '%s' keyword argument of the %s method of "
                            "%s instance must be %s, but a value of %s was "
                            "specified." % ( name, method.tm_name,
-                           class_of( object ), self.info(), value ) )
+                           class_of( object ), self.info( object, name, value ), 
+                           value ) )
 
     def missing_arg_error ( self, method, arg_num, object, name ):
         """ Raises a TraitError exception to notify the user that a method on
@@ -291,6 +294,39 @@ class BaseTraitHandler ( object ):
                            method.tm_name, class_of( object ), self.info(),
                            value ) )
 
+    def full_info ( self, object, name, value ):
+        """Returns a string describing the type of value accepted by the
+        trait handler.
+
+        Parameters
+        ----------
+        object : object
+            The object whose attribute is being assigned
+        name : string
+            The name of the attribute being assigned
+        value
+            The proposed new value for the attribute
+
+        Description
+        -----------
+        The string should be a phrase describing the type defined by the
+        TraitHandler subclass, rather than a complete sentence. For example, use
+        the phrase, "a square sprocket" instead of the sentence, "The value must
+        be a square sprocket." The value returned by full_info() is combined
+        with other information whenever an error occurs and therefore makes more
+        sense to the user if the result is a phrase. The full_info() method is
+        similar in purpose and use to the **info** attribute of a validator
+        function.
+
+        Note that the result can include information specific to the particular
+        trait handler instance. For example, TraitRange instances return a
+        string indicating the range of values acceptable to the handler (e.g.,
+        "an integer in the range from 1 to 9"). If the full_info() method is not 
+        overridden, the default method returns the value of calling the info()
+        method.
+        """
+        return self.info()
+
     def info ( self ):
         """Must return a string describing the type of value accepted by the
         trait handler.
@@ -308,7 +344,8 @@ class BaseTraitHandler ( object ):
         trait handler instance. For example, TraitRange instances return a
         string indicating the range of values acceptable to the handler (e.g.,
         "an integer in the range from 1 to 9"). If the info() method is not
-        overridden, the default method returns the string 'a legal value'.
+        overridden, the default method returns the value of the 'info_text'
+        attribute.
         """
         return self.info_text
 
@@ -327,6 +364,7 @@ class BaseTraitHandler ( object ):
         """
         if type( value ) is InstanceType:
             return 'class '  + value.__class__.__name__
+            
         return repr( value )
 
     def get_editor ( self, trait = None ):
@@ -635,9 +673,8 @@ class TraitType ( BaseTraitHandler ):
         else:
             type = getattr( self, 'ctrait_type', None )
             if type is None:
-                type = trait_types.get( metadata.get( 'type' ), 0 ) 
+                type = trait_types.get( metadata.get( 'type' ), 0 )
             trait = CTrait( type )
-            trait.default_value( *self.get_default_value() )
             
             validate = getattr( self, 'fast_validate', None )
             if validate is None:
@@ -661,6 +698,8 @@ class TraitType ( BaseTraitHandler ):
             trait.rich_comparison( metadata.get( 'rich_compare', True ) is True)
             metadata.setdefault( 'type', 'trait' )
             
+        trait.default_value( *self.get_default_value() )
+        
         trait.value_allowed( metadata.get( 'trait_value', False ) is True )
         
         trait.handler = self
@@ -1889,7 +1928,7 @@ class TraitPrefixMap ( TraitMap ):
             self.error( object, name, self.repr( value ) )
 
     def info ( self ):
-        return TraitMap.info( self ) + ' (or any unique prefix)'
+        return super( TraitPrefixMap, self ).info() + ' (or any unique prefix)'
 
 #-------------------------------------------------------------------------------
 #  'TraitExpression' class:
@@ -2015,6 +2054,10 @@ class TraitCompound ( TraitHandler ):
                pass
         self.error( object, name, self.repr( value ) )
 
+    def full_info ( self, object, name, value ):
+        return ' or '.join( [ x.full_info( object, name, value )
+                              for x in self.handlers ] )
+        
     def info ( self ):
         return ' or '.join( [ x.info() for x in self.handlers ] )
 
@@ -2109,18 +2152,20 @@ class TraitTuple ( TraitHandler ):
                     return tuple( values )
         except:
             pass
+        
         self.error( object, name, self.repr( value ) )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         return 'a tuple of the form: (%s)' % (', '.join(
-               [ self._trait_info( trait ) for trait in self.traits ] ))
+               [ self._trait_info( trait, object, name, value ) 
+                 for trait in self.traits ] ))
 
-    def _trait_info ( self, trait ):
+    def _trait_info ( self, trait, object, name, value ):
         handler = trait.handler
         if handler is None:
             return 'any value'
-        else:
-            return handler.info()
+            
+        return handler.full_info( object, name, value )
 
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import TupleEditor
@@ -2233,7 +2278,7 @@ class TraitList ( TraitHandler ):
             
         self.error( object, name, self.repr( value ) )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         if self.minlen == 0:
             if self.maxlen == sys.maxint:
                 size = 'items'
@@ -2249,7 +2294,8 @@ class TraitList ( TraitHandler ):
         if handler is None:
             info = ''
         else:
-            info = ' which are %s' % handler.info()
+            info = ' which are %s' % handler.full_info( object, name, value )
+            
         return 'a list of %s%s' % ( size, info )
 
     def get_editor ( self, trait ):
@@ -2579,9 +2625,10 @@ class TraitListObject ( list ):
             self.trait = trait.handler
 
     def len_error ( self, len ):
-        raise TraitError, ( "The '%s' trait of %s instance must be %s, "
+        raise TraitError( "The '%s' trait of %s instance must be %s, "
                   "but you attempted to change its length to %d element%s." % (
-                  self.name, class_of( self.object() ), self.trait.info(),
+                  self.name, class_of( self.object() ), 
+                  self.trait.full_info( self.object(), self.name, Undefined ),
                   len, 's'[ len == 1: ] ) )
 
     def __getstate__ ( self ):
@@ -2704,18 +2751,20 @@ class TraitDict ( TraitHandler ):
             return TraitDictObject( self, object, name, value )
         self.error( object, name, self.repr( value ) )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         extra   = ''
         handler = self.key_trait.handler
         if handler is not None:
-            extra = ' with keys which are %s' % handler.info()
+            extra = (' with keys which are %s' % 
+                     handler.full_info( object, name, value))
         handler = self.value_handler
         if handler is not None:
             if extra == '':
                 extra = ' with'
             else:
                 extra += ' and'
-            extra += ' values which are %s' % handler.info()
+            extra += (' values which are %s' % 
+                      handler.full_info( object, name, value ))
         return 'a dictionary%s' % extra
 
     def get_editor ( self, trait ):
