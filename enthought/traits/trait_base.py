@@ -451,12 +451,12 @@ def get_resource_path ( level = 2 ):
 
 #-------------------------------------------------------------------------------
 #  Returns the value of an extended object attribute name of the form: 
-#      name[.name2[.name3...]]:
+#  name[.name2[.name3...]]:
 #-------------------------------------------------------------------------------
 
 def xgetattr( object, xname, default = Undefined ):
     """ Returns the value of an extended object attribute name of the form: 
-            name[.name2[.name3...]].
+        name[.name2[.name3...]].
     """
     names = xname.split( '.' )
     for name in names[:-1]:
@@ -471,4 +471,19 @@ def xgetattr( object, xname, default = Undefined ):
         return getattr( object, names[-1] )
         
     return getattr( object, names[-1], default )
+
+#-------------------------------------------------------------------------------
+#  Sets the value of an extended object attribute name of the form: 
+#  name[.name2[.name3...]]:
+#-------------------------------------------------------------------------------
+
+def xsetattr( object, xname, value ):
+    """ Sets the value of an extended object attribute name of the form: 
+        name[.name2[.name3...]].
+    """
+    names = xname.split( '.' )
+    for name in names[:-1]:
+        object = getattr( object, name )
+                
+    setattr( object, names[-1], value )
         

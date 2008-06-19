@@ -33,7 +33,7 @@ from enthought.traits.api \
            Bool, Property, Interface, cached_property
            
 from enthought.traits.trait_base \
-    import SequenceTypes, get_resource_path
+    import SequenceTypes, get_resource_path, xgetattr, xsetattr
     
 from enthought.traits.ui.view \
     import View
@@ -44,7 +44,7 @@ from enthought.traits.ui.view \
 
 class TreeNode ( HasPrivateTraits ):
     """ Represents a tree node. Used by the tree editor and tree editor factory
-    classes.
+        classes.
     """
     
     #---------------------------------------------------------------------------
@@ -56,6 +56,9 @@ class TreeNode ( HasPrivateTraits ):
     
     # Name of trait containing label ('=label' = constant)
     label = Str
+
+    # Name of trait containing tooltip ('=tooltip' = constant)
+    tooltip = Str
     
     # Name to use for a new instance
     name = Str  
@@ -101,6 +104,9 @@ class TreeNode ( HasPrivateTraits ):
     
     # Function for formatting the label
     formatter = Callable
+
+    # Function for formatting the tooltip
+    tooltip_formatter = Callable
     
     # Function for handling selecting an object
     on_select = Callable
@@ -266,9 +272,12 @@ class TreeNode ( HasPrivateTraits ):
         label = self.label
         if label[:1] == '=':
             return label[1:]
-        label = getattr( object, label )
+            
+        label = xgetattr( object, label, '' )
+        
         if self.formatter is None:
             return label
+            
         return self.formatter( object, label )
         
     #---------------------------------------------------------------------------
@@ -280,7 +289,7 @@ class TreeNode ( HasPrivateTraits ):
         """
         label_name = self.label
         if label_name[:1] != '=':
-            setattr( object, label_name, label )
+            xsetattr( object, label_name, label )
         
     #---------------------------------------------------------------------------
     #  Sets up/Tears down a listener for 'label changed' on a specified object:
@@ -294,6 +303,27 @@ class TreeNode ( HasPrivateTraits ):
         if label[:1] != '=':
             object.on_trait_change( listener, label, remove = remove, 
                                     dispatch = 'ui' )
+
+    #---------------------------------------------------------------------------
+    #  Gets the tooltip to display for a specified object:    
+    #---------------------------------------------------------------------------
+        
+    def get_tooltip ( self, object ):
+        """ Gets the tooltip to display for a specified object.
+        """
+        tooltip = self.tooltip
+        if tooltip == '':
+            return tooltip
+            
+        if tooltip[:1] == '=':
+            return tooltip[1:]
+            
+        tooltip = xgetattr( object, tooltip, '' )
+        
+        if self.tooltip_formatter is None:
+            return tooltip
+            
+        return self.tooltip_formatter( object, tooltip )
         
     #---------------------------------------------------------------------------
     #  Returns the icon for a specified object:  
@@ -723,6 +753,15 @@ class ObjectTreeNode ( TreeNode ):
         specified object.
         """
         return object.tno_when_label_changed( self, listener, remove )
+
+    #---------------------------------------------------------------------------
+    #  Gets the tooltip to display for a specified object:    
+    #---------------------------------------------------------------------------
+        
+    def get_tooltip ( self, object ):
+        """ Gets the tooltip to display for a specified object.
+        """
+        return object.tno_get_tooltip( self )
         
     #---------------------------------------------------------------------------
     #  Returns the icon for a specified object:  
@@ -1039,9 +1078,12 @@ class TreeNodeObject ( HasPrivateTraits ):
         label = node.label
         if label[:1] == '=':
             return label[1:]
-        label = getattr( self, label )
+            
+        label = xgetattr( self, label )
+        
         if node.formatter is None:
             return label
+            
         return node.formatter( self, label )
         
     #---------------------------------------------------------------------------
@@ -1053,7 +1095,7 @@ class TreeNodeObject ( HasPrivateTraits ):
         """
         label_name = node.label
         if label_name[:1] != '=':
-            setattr( self, label_name, label )
+            xsetattr( self, label_name, label )
         
     #---------------------------------------------------------------------------
     #  Sets up/Tears down a listener for 'label changed' on a specified object:
@@ -1067,6 +1109,27 @@ class TreeNodeObject ( HasPrivateTraits ):
         if label[:1] != '=':
             self.on_trait_change( listener, label, remove = remove,
                                   dispatch = 'ui' )
+
+    #---------------------------------------------------------------------------
+    #  Gets the tooltip to display for a specified object:    
+    #---------------------------------------------------------------------------
+        
+    def tno_get_tooltip ( self, node ):
+        """ Gets the tooltip to display for a specified object.
+        """
+        tooltip = node.tooltip
+        if tooltip == '':
+            return tooltip
+            
+        if tooltip[:1] == '=':
+            return tooltip[1:]
+            
+        tooltip = xgetattr( self, tooltip )
+        
+        if node.tooltip_formatter is None:
+            return tooltip
+            
+        return node.tooltip_formatter( self, tooltip )
         
     #---------------------------------------------------------------------------
     #  Returns the icon for a specified object:  
@@ -1077,8 +1140,10 @@ class TreeNodeObject ( HasPrivateTraits ):
         """
         if not self.tno_allows_children( node ):
             return node.icon_item
+            
         if is_expanded:
             return node.icon_open
+            
         return node.icon_group
         
     #---------------------------------------------------------------------------
