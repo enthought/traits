@@ -40,8 +40,9 @@ from trait_base \
            ClassTypes, Undefined, Missing, python_version
     
 from trait_handlers \
-    import TraitType, TraitInstance, TraitListObject, TraitDictObject, \
-           TraitDictEvent, ThisClass, items_event, RangeTypes
+    import TraitType, TraitInstance, TraitListObject, TraitSetObject, \
+           TraitSetEvent, TraitDictObject, TraitDictEvent, ThisClass, \
+           items_event, RangeTypes
     
 from traits \
     import Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor, \
@@ -58,6 +59,7 @@ from types \
 #-------------------------------------------------------------------------------
 
 MutableTypes = ( list, dict )
+SetTypes     = SequenceTypes + ( set, )
 
 #-------------------------------------------------------------------------------
 #  Numeric type fast validator definitions:  
@@ -2335,17 +2337,15 @@ class CList ( List ):
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid list.
         """
-        if isinstance( value, list ):
-            return super( CList, self ).validate( object, name, value )
+        if not isinstance( value, list ):
+            try:
+                # Should work for all iterables as well as strings (which do
+                # not define an __iter__ method)
+                value = list( value )
+            except (ValueError, TypeError):
+                value = [ value ]
 
-        try:
-            # Should work for all iterables as well as strings (which do
-            # not define an __iter__ method)
-            new_value = list(value)
-        except (ValueError, TypeError):
-            new_value = [value]
-
-        return super( CList, self ).validate( object, name, new_value )
+        return super( CList, self ).validate( object, name, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
@@ -2353,6 +2353,145 @@ class CList ( List ):
         return '%s or %s' % (
                    self.item_trait.full_info( object, name, value), 
                    super( CList, self ).full_info( object, name, value ) )
+        
+#-------------------------------------------------------------------------------
+#  'Set' trait: 
+#-------------------------------------------------------------------------------
+
+class Set ( TraitType ):
+    """ Defines a trait whose value must be a set whose items are of the 
+        specified trait type.
+    """    
+
+    info_trait         = None
+    default_value_type = 9
+    _items_event       = None
+    
+    def __init__ ( self, trait = None, value = None, items = True, **metadata ):
+        """ Returns a Set trait.
+    
+        Parameters
+        ----------
+        trait : a trait or value that can be converted to a trait using Trait()
+            The type of item that the list contains. If not specified, the list 
+            can contain items of any type.
+        value :
+            Default value for the set
+    
+        Default Value
+        -------------
+        *value* or None
+        """
+        metadata.setdefault( 'copy', 'deep' )
+        
+        if isinstance( trait, SetTypes ):
+            trait, value = value, set( trait )
+            
+        if value is None:
+            value = set()
+            
+        self.item_trait = trait_from( trait )
+        self.has_items  = items
+            
+        super( Set, self ).__init__( value, **metadata )
+
+    def validate ( self, object, name, value ):
+        """ Validates that the values is a valid set.
+        """
+        if isinstance( value, set ):
+            if object is None:
+                return value
+                
+            return TraitSetObject( self, object, name, value )
+            
+        self.error( object, name, value )
+
+    def full_info ( self, object, name, value ):
+        """ Returns a description of the trait.
+        """
+        return 'a set of %s' % self.item_trait.full_info( object, name, value )
+
+    def create_editor ( self ):
+        """ Returns the default UI editor for the trait.
+        """
+        # fixme: Needs to be customized for sets.
+        handler = self.item_trait.handler
+        if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
+            from enthought.traits.api import HasTraits
+            
+            if issubclass( handler.aClass, HasTraits ):
+                try:
+                    object = handler.aClass()
+                    from enthought.traits.ui.table_column import ObjectColumn
+                    from enthought.traits.ui.table_filter import \
+                         EvalFilterTemplate, RuleFilterTemplate, \
+                         MenuFilterTemplate, EvalTableFilter
+                    from enthought.traits.ui.api import TableEditor
+                    
+                    return TableEditor(
+                            columns = [ ObjectColumn( name = name )
+                                        for name in object.editable_traits() ],
+                            filters     = [ RuleFilterTemplate,
+                                            MenuFilterTemplate,
+                                            EvalFilterTemplate ],
+                            edit_view   = '',
+                            orientation = 'vertical',
+                            search      = EvalTableFilter(),
+                            deletable   = True,
+                            row_factory = handler.aClass )
+                except:
+                    pass
+
+        from enthought.traits.ui.api import ListEditor
+        
+        return ListEditor( trait_handler = self,
+                           rows          = self.rows or 5,
+                           use_notebook  = self.use_notebook is True,
+                           page_name     = self.page_name or '' )
+
+    def inner_traits ( self ):
+        """ Returns the *inner trait* (or traits) for this trait.
+        """
+        return ( self.item_trait, )
+                           
+    #-- Private Methods --------------------------------------------------------
+
+    def items_event ( self ):
+        if self.__class__._items_event is None:
+            self.__class__._items_event = \
+                Event( TraitSetEvent, is_base = False ).as_ctrait()
+                
+        return self.__class__._items_event
+        
+#-------------------------------------------------------------------------------
+#  'CSet' trait:  
+#-------------------------------------------------------------------------------        
+        
+class CSet ( Set ):
+    """ Defines a trait whose values must be a set whose items are of the 
+        specified trait type or which can be coerced to a set whose values are 
+        of the specified trait type.
+    """
+    
+    def validate ( self, object, name, value ):
+        """ Validates that the values is a valid list.
+        """
+        if not isinstance( value, set ):
+            try:
+                # Should work for all iterables as well as strings (which do
+                # not define an __iter__ method)
+                value = set( value )
+            except ( ValueError, TypeError ):
+                value = set( [ value ] )
+
+        return super( CList, self ).validate( object, name, value )
+
+    def full_info ( self, object, name, value ):
+        """ Returns a description of the trait.
+        """
+        return '%s or %s' % (
+                   self.item_trait.full_info( object, name, value), 
+                   super( CSet, self ).full_info( object, name, value ) )
     
 #-------------------------------------------------------------------------------
 #  'Dict' trait:  

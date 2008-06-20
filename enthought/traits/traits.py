@@ -316,6 +316,19 @@ class CTrait ( cTrait ):
     #  Returns a description of the trait:
     #---------------------------------------------------------------------------
 
+    def full_info ( self, object, name, value ):
+        """ Returns a description of the trait.
+        """
+        handler = self.handler
+        if handler is not None:
+            return handler.full_info( object, name, value )
+
+        return 'any value'
+
+    #---------------------------------------------------------------------------
+    #  Returns a description of the trait:
+    #---------------------------------------------------------------------------
+
     def info ( self ):
         """ Returns a description of the trait.
         """

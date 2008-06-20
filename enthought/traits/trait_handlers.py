@@ -2223,14 +2223,14 @@ class TraitListEvent ( object ):
 
     def __init__ ( self, index = 0, removed = None, added = None ):
         self.index = index
+        
         if removed is None:
-            self.removed = []
-        else:
-            self.removed = removed
+            removed = []
+        self.removed = removed
+        
         if added is None:
-            self.added = []
-        else:
-            self.added = added
+            added = []
+        self.added = added
 
 #-------------------------------------------------------------------------------
 #  'TraitList' class:
@@ -2669,6 +2669,183 @@ class TraitListObject ( list ):
             
         self.__dict__.update( state )
 
+#-------------------------------------------------------------------------------
+#  'TraitSetEvent' class:
+#-------------------------------------------------------------------------------
+
+class TraitSetEvent ( object ):
+
+    #---------------------------------------------------------------------------
+    #  Initialize the object:
+    #---------------------------------------------------------------------------
+
+    def __init__ ( self, removed = None, added = None ):
+        if removed is None:
+            removed = set()
+        self.removed = removed
+        
+        if added is None:
+            added = set()
+        self.added = added
+
+#-------------------------------------------------------------------------------
+#  'TraitSetObject' class:
+#-------------------------------------------------------------------------------
+
+class TraitSetObject ( set ):
+
+    def __init__ ( self, trait, object, name, value ):
+        self.trait      = trait
+        self.object     = ref( object )
+        self.name       = name
+        self.name_items = None
+        if trait.has_items:
+            self.name_items = name + '_items'
+
+        # Validate and assign the initial set value:
+        try:
+            validate = trait.item_trait.handler.validate
+            if validate is not None:
+                value = [ validate( object, name, val ) for val in value ]
+                
+            super( TraitSetObject, self ).__init__( value )
+            
+            return
+            
+        except TraitError, excp:
+            excp.set_prefix( 'Each element of the' )
+            raise excp
+
+    def __deepcopy__ ( self, memo ):
+        id_self = id( self )
+        if id_self in memo:
+            return memo[ id_self ]
+            
+        memo[ id_self ] = result = TraitSetObject( self.trait, self.object(),
+                         self.name, [ copy.deepcopy( x, memo ) for x in self ] )
+        
+        return result
+        
+    def update ( self, value ):
+        try:
+            added = value.difference( self )
+            if len( added ) > 0:
+                object   = self.object()
+                validate = self.trait.item_trait.handler.validate
+                if validate is not None:
+                    name  = self.name
+                    added = set( [ validate( object, name, item ) 
+                                   for item in added ] )
+                    
+                set.update( self, added )
+                
+                if self.name_items is not None:
+                    setattr( object, self.name_items,
+                             TraitSetEvent( None, added ) )
+        except TraitError, excp:
+            excp.set_prefix( 'Each element of the' )
+            raise excp
+        
+    def intersection_update ( self, value ):
+        removed = self.difference( value )
+        if len( removed ) > 0:
+            set.difference_update( self, removed )
+            
+            if self.name_items is not None:
+                setattr( self.object(), self.name_items,
+                         TraitSetEvent( removed ) )
+        
+    def difference_update ( self, value ):
+        removed = self.intersection( value )
+        if len( removed ) > 0:
+            set.difference_update( self, removed )
+            
+            if self.name_items is not None:
+                setattr( self.object(), self.name_items,
+                         TraitSetEvent( removed ) )
+        
+    def symmetric_difference_update ( self, value ):
+        removed = self.intersection( value )
+        added   = value.difference( self )
+        if (len( removed ) > 0) or (len( added ) > 0):
+            object = self.object()
+            set.difference_update( self, removed )
+            
+            if len( added ) > 0:
+                validate = self.trait.item_trait.handler.validate
+                if validate is not None:
+                    name  = self.name
+                    added = set( [ validate( object, name, item ) 
+                                   for item in added ] )
+                    
+                set.update( self, added )
+            
+            if self.name_items is not None:
+                setattr( self.object(), self.name_items,
+                         TraitSetEvent( removed, added ) )
+        
+    def add ( self, value ):
+        if value not in self:
+            try:
+                object   = self.object()
+                validate = self.trait.item_trait.handler.validate
+                if validate is not None:
+                    value = validate( object, self.name, value ) 
+                    
+                set.add( self, value )
+                
+                if self.name_items is not None:
+                    setattr( object, self.name_items,
+                             TraitSetEvent( None, set( [ value ] ) ) )
+            except TraitError, excp:
+                excp.set_prefix( 'Each element of the' )
+                raise excp
+        
+    def remove ( self, value ):
+        set.remove( self, value )
+        if self.name_items is not None:
+            setattr( self.object(), self.name_items,
+                     TraitSetEvent( set( [ value ] ) ) )
+        
+    def discard ( self, value ):
+        if value in self:
+            self.remove( value )
+        
+    def pop ( self ):
+        value = set.pop( self )
+        if self.name_items is not None:
+            setattr( self.object(), self.name_items,
+                     TraitSetEvent( set( [ value ] ) ) )
+            
+        return value
+
+    def clear ( self ):
+        removed = set( self )
+        set.clear( self )
+        if self.name_items is not None:
+            setattr( self.object(), self.name_items,
+                     TraitSetEvent( removed ) )
+
+    def __getstate__ ( self ):
+        result = self.__dict__.copy()
+        result[ 'object' ] = self.object()
+        if 'trait' in result:
+            del result[ 'trait' ]
+            
+        return result
+
+    def __setstate__ ( self, state ):
+        name   = state.pop( 'name' )
+        object = state.pop( 'object' )
+        if object is not None:
+            self.object = ref( object )
+            self.rename( name )
+            
+        self.__dict__.update( state )
+
+#-------------------------------------------------------------------------------
+#  'TraitDictEvent' class:
+#-------------------------------------------------------------------------------
 
 class TraitDictEvent ( object ):
 
@@ -2686,19 +2863,17 @@ class TraitDictEvent ( object ):
         # Construct new empty dicts every time instead of using a default value
         # in the method argument, just in case someone gets the bright idea of
         # modifying the dict they get in-place.
-        if added:
-            self.added = added
-        else:
-            self.added = {}
-        if changed:
-            self.changed = changed
-        else:
-            self.changed = {}
-        if removed:
-            self.removed = removed
-        else:
-            self.removed = {}
-        return
+        if added is None:
+            added = {}
+        self.added = added
+            
+        if changed is None:
+            changed = {}
+        self.changed = changed
+            
+        if removed is None:
+            removed = {}
+        self.removed = removed
 
 #-------------------------------------------------------------------------------
 #  'TraitDict' class:
@@ -2995,11 +3170,11 @@ class TraitDictObject ( dict ):
         return new_dic
 
 #-------------------------------------------------------------------------------
-#  Tell the C-based traits module about 'TraitListObject' and 'TraitDictObject',
-#  and the PyProtocols 'adapt' function:
+#  Tell the C-based traits module about 'TraitListObject', 'TraitSetObject and
+#  'TraitDictObject', and the PyProtocols 'adapt' function:
 #-------------------------------------------------------------------------------
 
 import ctraits
-ctraits._list_classes( TraitListObject, TraitDictObject )
+ctraits._list_classes( TraitListObject, TraitSetObject, TraitDictObject )
 ctraits._adapt( adapt ) 
 

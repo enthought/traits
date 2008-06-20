@@ -46,8 +46,8 @@ from trait_types \
            Method, Class, Module, Python, ReadOnly, Disallow, missing, \
            Constant, Delegate, DelegatesTo, PrototypedFrom, Expression, \
            PythonValue, File, Directory, Range, Enum, Tuple, List, CList, \
-           Dict, Instance, AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, \
-           Either, Type, WeakRef, false, true, undefined
+           Set, CSet, Dict, Instance, AdaptedTo, AdaptsTo, Event, Button, \
+           ToolbarButton, Either, Type, WeakRef, false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \
@@ -76,8 +76,8 @@ from trait_handlers \
            TraitCoerceType, TraitCastType, TraitInstance, ThisClass, \
            TraitClass, TraitFunction, TraitEnum, TraitPrefixList, TraitMap, \
            TraitPrefixMap, TraitCompound, TraitList, TraitListObject, \
-           TraitListEvent, TraitDict, TraitDictObject, TraitDictEvent, \
-           TraitTuple
+           TraitListEvent, TraitSetObject, TraitSetEvent, TraitDict, \
+           TraitDictObject, TraitDictEvent, TraitTuple
            
 from trait_value \
     import BaseTraitValue, TraitValue

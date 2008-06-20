@@ -39,6 +39,7 @@ static PyObject * Uninitialized;       /* Global 'Uninitialized' value */
 static PyObject * TraitError;          /* TraitError exception */
 static PyObject * DelegationError;     /* DelegationError exception */
 static PyObject * TraitListObject;     /* TraitListObject class */
+static PyObject * TraitSetObject;      /* TraitSetObject class */
 static PyObject * TraitDictObject;     /* TraitDictObject class */
 static PyObject * TraitValue;          /* TraitValue class */
 static PyObject * adapt;               /* PyProtocols 'adapt' function */
@@ -1603,6 +1604,9 @@ default_value_for ( trait_object      * trait,
                 return value;
             }
             break;
+        case 9:
+            return call_class( TraitSetObject, trait, obj, name, 
+                               trait->default_value );
     }           
     return result;
 }    
@@ -3005,9 +3009,9 @@ _trait_default_value ( trait_object * trait, PyObject * args ) {
         return NULL;
     
     PyErr_Clear();
-    if ( (value_type < 0) || (value_type > 8) ) {
+    if ( (value_type < 0) || (value_type > 9) ) {
         PyErr_Format( PyExc_ValueError, 
-                "The default value type must be 0..8, but %d was specified.", 
+                "The default value type must be 0..9, but %d was specified.", 
                 value_type );
         
         return NULL;
@@ -4780,16 +4784,19 @@ _ctraits_exceptions ( PyObject * self, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
-|  Sets the global 'TraitListObject' and 'TraitDictObject' classes:
+|  Sets the global 'TraitListObject', TraitSetObject and 'TraitDictObject'
+|  classes:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 _ctraits_list_classes ( PyObject * self, PyObject * args ) {
     
-    if ( !PyArg_ParseTuple( args, "OO", &TraitListObject, &TraitDictObject ) )
+    if ( !PyArg_ParseTuple( args, "OOO", &TraitListObject, &TraitSetObject, 
+                                         &TraitDictObject ) )
         return NULL;
     
     Py_INCREF( TraitListObject );
+    Py_INCREF( TraitSetObject );
     Py_INCREF( TraitDictObject );
     
     Py_INCREF( Py_None );
@@ -4899,7 +4906,7 @@ static PyMethodDef ctraits_methods[] = {
 	{ "_exceptions",   (PyCFunction) _ctraits_exceptions,   METH_VARARGS,
 	 	PyDoc_STR( "_exceptions(TraitError,DelegationError)" ) },
 	{ "_list_classes", (PyCFunction) _ctraits_list_classes, METH_VARARGS,
-	 	PyDoc_STR( "_list_classes(TraitListObject,TraitDictObject)" ) },
+	 	PyDoc_STR( "_list_classes(TraitListObject,TraitSetObject,TraitDictObject)" ) },
 	{ "_value_class", (PyCFunction) _ctraits_value_class,   METH_VARARGS,
 	 	PyDoc_STR( "_value_class(TraitValue)" ) },
 	{ "_adapt", (PyCFunction) _ctraits_adapt, METH_VARARGS,
