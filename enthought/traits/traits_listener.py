@@ -70,11 +70,13 @@ ANYTRAIT_LISTENER = '_register_anytrait'
 SIMPLE_LISTENER   = '_register_simple'
 LIST_LISTENER     = '_register_list'
 DICT_LISTENER     = '_register_dict'
+SET_LISTENER      = '_register_set'
 
 # Mapping from trait default value types to listener types
 type_map = {
     5: LIST_LISTENER,
-    6: DICT_LISTENER
+    6: DICT_LISTENER,
+    9: SET_LISTENER
 }
 
 # Listener types:
@@ -425,7 +427,8 @@ class ListenerItem ( ListenerBase ):
         self.active[ new ] = active = []
         for name, trait in traits.items():
             
-            # Determine whether the trait type is simple, list or dictionary:
+            # Determine whether the trait type is simple, list, set or 
+            # dictionary:
             type    = SIMPLE_LISTENER
             handler = trait.handler
             if handler is not None:
@@ -489,11 +492,11 @@ class ListenerItem ( ListenerBase ):
                                   getattr( object, name, Undefined ) )
         
     #---------------------------------------------------------------------------
-    #  Handles a trait change for a list trait:
+    #  Handles a trait change for a list (or set) trait:
     #---------------------------------------------------------------------------
     
     def handle_list ( self, object, name, old, new ):
-        """ Handles a trait change for a list trait.
+        """ Handles a trait change for a list (or set) trait.
         """
         if old not in InvalidObjects:
             unregister = self.next.unregister
@@ -505,16 +508,17 @@ class ListenerItem ( ListenerBase ):
             register( obj )
     
     #---------------------------------------------------------------------------
-    #  Handles a trait change for a list traits items:
+    #  Handles a trait change for a list (or set) traits items:
     #---------------------------------------------------------------------------
     
     def handle_list_items ( self, object, name, old, new ):
-        """ Handles a trait change for items of a list trait.
+        """ Handles a trait change for items of a list (or set) trait.
         """
         self.handle_list( object, name, new.removed, new.added )
      
     def handle_list_items_special ( self, object, name, old, new ):
-        """ Handles a trait change for items of a list trait with notification.
+        """ Handles a trait change for items of a list (or set) trait with 
+            notification.
         """
         self.wrapped_handler( object, name, new.removed, new.added )
         
@@ -710,6 +714,16 @@ class ListenerItem ( ListenerBase ):
             
         return INVALID_DESTINATION
         
+    # Handle 'sets' the same as 'lists':
+    # Note: Currently the behavior of sets is almost identical to that of lists,
+    # so we are able to share the same code for both. This includes some 'duck
+    # typing' that occurs with the TraitListEvent and TraitSetEvent, that define
+    # 'removed' and 'added' attributes that behave similarly enough (from the
+    # point of view of this module) that they can be treated as equivalent. If
+    # the behavior of sets ever diverges from that of lists, then this code may
+    # need to be changed.
+    _register_set = _register_list
+        
     #---------------------------------------------------------------------------
     #  Registers a handler for a dictionary trait:
     #---------------------------------------------------------------------------
@@ -777,7 +791,7 @@ class ListenerItem ( ListenerBase ):
                 if not meta_eval( getattr( trait, meta_name ) ):
                     return
         
-        # Determine whether the trait type is simple, list or dictionary:
+        # Determine whether the trait type is simple, list, set or dictionary:
         type    = SIMPLE_LISTENER
         handler = trait.handler
         if handler is not None:
