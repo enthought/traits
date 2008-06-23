@@ -188,8 +188,9 @@ class Editor ( HasPrivateTraits ):
             implementation).
         """
         object_name = self.object_name
-        if object_name != '':
-            return self.ui.context[ object_name.split( '.', 1 )[0] ]
+        context_key = object_name.split( '.', 1 )[0]
+        if object_name != '' and context_key in self.ui.context:
+            return self.ui.context[ context_key ]
         
         # This handles the case of a 'ListItemProxy', which is not in the
         # ui.context, but is the editor 'object':
