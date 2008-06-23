@@ -17,6 +17,16 @@ import unittest
 
 from enthought.util.Worker import Worker
 
+def slow_eval(worker, sleep_time):
+    for i in range(10):
+        if worker.abort():
+            return
+        else:
+            # pretend to do some intensive computation 
+            time.sleep(sleep_time)
+            print worker.getName(),' sleeping for: ', sleep_time
+    return sleep_time
+
 snooze = 1
 
 class test_worker_thread(unittest.TestCase):
@@ -28,7 +38,7 @@ class test_worker_thread(unittest.TestCase):
         worker.start()   
         time.sleep(3 * snooze)
         worker.cancel()
-    
+
         worker = Worker(name = "Second EnVisage worker thread")
         worker.perform_work(slow_eval, snooze)
         worker.start()
@@ -36,9 +46,9 @@ class test_worker_thread(unittest.TestCase):
         worker.cancel()
 
         duration = time.time() - start
-        self.assert_(duration > 5 * snooze)
-        self.assert_(duration < 10 * snooze)
-        
+        self.assert_(duration > 2.0 * snooze)
+        self.assert_(duration < 10.0 * snooze)
+
     def check_concurrent(self):
         start = time.time()
         
@@ -55,16 +65,6 @@ class test_worker_thread(unittest.TestCase):
         
         # !! todo block on completion and check it is less than twice
         # the time for a single thread
-
-def slow_eval(worker, sleep_time):   
-    for i in range(10):
-        if worker.abort():
-            return
-        else:
-            # pretend to do some intensive computation 
-            time.sleep(sleep_time)
-            print worker.getName(),' sleeping for: ', sleep_time
-    return sleep_time
 
 def test_suite(level=1):
     suites = []
