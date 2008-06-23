@@ -46,7 +46,7 @@ class test_worker_thread(unittest.TestCase):
         worker.cancel()
 
         duration = time.time() - start
-        self.assert_(duration > 2.0 * snooze)
+        self.assert_(duration >= 5.0 * snooze)
         self.assert_(duration < 10.0 * snooze)
 
     def check_concurrent(self):
