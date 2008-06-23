@@ -15,64 +15,33 @@ from enthought.traits.api \
 # Test class.
 class Person(HasTraits):
     """ A person! """
-
     name = Str
     age  = Int
 
-
 class ProtocolsUsageTestCase(unittest.TestCase):
     """ Tests for protocols usage. """
-
-    ###########################################################################
-    # 'TestCase' interface.
-    ###########################################################################
-
-    def setUp(self):
-        """ Prepares the test fixture before each test method is called. """
-                   
-        return
-
-    def tearDown(self):
-        """ Called immediately after each test method has been called. """
-        
-        return
-    
-    ###########################################################################
-    # Tests.
-    ###########################################################################
-
     def test_adapts(self):
-        """ adapts """
-
         class IFoo(Interface):
             """ A simple interface. """
-
             def foo(self):
-                """ With a single method. """
+                """ The only method for the IFoo interface. """
 
-                
         class Bar(HasTraits):
             """ A type that *doesn't* implement 'IFoo'. """
 
-
         class BarToIFooAdapter(Adapter):
             """ Adapts from Bar to IFoo. """
-
             adapts(Bar, to=IFoo)
 
             def foo(self):
-                """ An implementation of the single. """
-
+                """ An implementation of the single method in the interface."""
                 return 'foo'
-            
 
         b = Bar()
 
         # Make sure that the Bar instance can be adapted to 'IFoo'.
         self.assertNotEqual(None, IFoo(b))
         self.assertEqual('foo', IFoo(b).foo())
-
-        return
 
     def test_factory(self):
         """ factory """

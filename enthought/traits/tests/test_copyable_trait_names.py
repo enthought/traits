@@ -26,24 +26,21 @@ class Foo(HasTraits):
         return id(self)
     
 class TestCopyableTraitNames( unittest.TestCase ):
-    """ Validate that copyable_trait_names returns the appropraite result.
+    """ Validate that copyable_trait_names returns the appropriate result.
     """
     def setUp(self):
-
         foo = Foo()
         self.names = foo.copyable_trait_names()
-        return
-    
+
     def test_events_not_copyable(self):
         self.failIf( 'e' in self.names )
-    
+
     def test_delegate_not_copyable(self):
         self.failIf( 'd' in self.names )
 
     def test_read_only_property_not_copyable(self):
         self.failIf( 'p_ro' in self.names )
 
-    
     def test_any_copyable(self):
         self.failUnless( 'a' in self.names )
 

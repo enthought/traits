@@ -189,11 +189,17 @@ class InterfacesTest ( unittest.TestCase ):
             
     def test_instance_adapt_no ( self ):
         ta = TestInterface()
-        self.assertRaises( TraitError, ta.set, a_no = SampleAverage() )
+
+        # Verify that SampleAverage() does not raise an error (it is an instance
+        # of the IAverage interface).
+        ta.a_no = SampleAverage()
+
+        # These are not instances of the IAverage interface, and therefore
+        # cannot be set to the trait.
         self.assertRaises( TraitError, ta.set, a_no = SampleList() )
         self.assertRaises( TraitError, ta.set, a_no = Sample() )
         self.assertRaises( TraitError, ta.set, a_no = SampleBad() )
-            
+
     def test_instance_adapt_yes ( self ):
         ta = TestInterface()
         

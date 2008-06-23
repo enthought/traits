@@ -44,7 +44,7 @@ class ArgCheckBase ( HasTraits ):
     calls = Int( 0 )
     tc    = Any
     
-class ArgCheckSimple ( ArgCheckBase ):    
+class ArgCheckSimple ( ArgCheckBase ):
         
     def arg_check0 ( self ):
         self.calls += 1
@@ -71,7 +71,7 @@ class ArgCheckSimple ( ArgCheckBase ):
         self.tc.assertEqual( old, (self.value - 1) )
         self.tc.assertEqual( new, self.value )
     
-class ArgCheckDecorator ( ArgCheckBase ):    
+class ArgCheckDecorator ( ArgCheckBase ):
         
     @on_trait_change( 'value' )
     def arg_check0 ( self ):
@@ -417,7 +417,7 @@ class OnTraitChangeTest ( unittest.TestCase ):
         l1 = List1( tc = self )
         for i in range( 3 ):
             ac = ArgCheckBase()
-            l1.set( exp_object = l1, exp_name = 'refs_items', type_old = None, 
+            l1.set( exp_object = l1, exp_name = 'refs_items', type_old = None,
                     exp_old = Undefined, type_new = TraitListEvent )
             l1.refs.append( ac )
         self.assertEqual( l1.calls, (3 * 3) )

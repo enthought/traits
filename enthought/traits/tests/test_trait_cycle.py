@@ -9,9 +9,8 @@ import unittest
 from enthought.traits.api import HasTraits, Any
 
 class TestCase(unittest.TestCase):
-
     def _simple_cycle_helper(self, foo_class):
-        """ Can the garbage collector clean up a cylce with traits objects?
+        """ Can the garbage collector clean up a cycle with traits objects?
         """
 
         # Create two Foo objects that refer to each other.
@@ -25,7 +24,7 @@ class TestCase(unittest.TestCase):
         # delete the items so that they can be garbage collected
         del first, second
 
-        # tell the garbage colleter to pick up the litter.
+        # tell the garbage collector to pick up the litter.
         gc.collect()
 
         # Now grab all objects in the process and ask for their ids
@@ -36,20 +35,17 @@ class TestCase(unittest.TestCase):
             self.assertTrue(foo_id not in all_ids)
 
     def test_simple_cycle_oldstyle_class(self):
-        """ Can the garbage collector clean up a cylce with old style class?
+        """ Can the garbage collector clean up a cycle with old style class?
         """
-
         class Foo:
             def __init__(self,child=None):
                 self.child = child
 
-
         self._simple_cycle_helper(Foo)
 
     def test_simple_cycle_newstyle_class(self):
-        """ Can the garbage collector clean up a cylce with new style class?
+        """ Can the garbage collector clean up a cycle with new style class?
         """
-
         class Foo(object):
             def __init__(self,child=None):
                 self.child = child
@@ -57,9 +53,8 @@ class TestCase(unittest.TestCase):
         self._simple_cycle_helper(Foo)
 
     def test_simple_cycle_hastraits(self):
-        """ Can the garbage collector clean up a cylce with traits objects?
+        """ Can the garbage collector clean up a cycle with traits objects?
         """
-
         class Foo(HasTraits):
             child = Any
 
@@ -80,9 +75,13 @@ class TestCase(unittest.TestCase):
 
         referrers = gc.get_referrers(foo)
 
+        # It seems lie foo sometimes has not finished construction yet, so the
+        # frame found by referrers is not _exactly_ the same as Foo(). For more
+        # information, see the gc doc: http://docs.python.org/lib/module-gc.html
+        time.sleep(0.1)
+
         self.assertTrue(len(referrers) > 0)
         self.assertTrue(foo in referrers)
-
 
 if __name__ == '__main__':
     unittest.main()
