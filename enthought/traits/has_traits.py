@@ -1942,17 +1942,31 @@ class HasTraits ( CHasTraits ):
     def copyable_trait_names ( self, **metadata ):
         """ Returns the list of trait names to copy or clone by default.
         """
+
         # Read-only properties, events and delegates are not copyable traits.
         # Everything else should be included.
 
-        # FIXME: Ideally this wouldn't overwrite the original metadata fields,
-        # but would add to them (such that the two lambda functions called the
-        # ones that were in metadata before.
+        def extend_meta(func, given):
+            """ Create a lambda function which combines the two arguments. """
+
+            if callable(given):
+                return lambda v: func(v) and given(v)
+            else:
+                return lambda v: func(v) and v == given
+
+        # Set default values for 'property' and 'type' queries to always eval
+        # to True (so that all Traits match).
+        for key in ('property', 'type'):
+            if not metadata.has_key(key):
+                metadata[key] = lambda f: True
 
         metadata.update({
-            'property': lambda f: not f() or f()[1].__name__ != '_read_only',
-            'type': lambda t: t not in ('event', 'delegate')
+            'property': extend_meta(lambda f: not f() or \
+                f()[1].__name__ != '_read_only', metadata['property']),
+            'type': extend_meta(lambda t: t not in ('event', 'delegate'),
+                                metadata['type'])
         })
+
         return self.trait_names( **metadata )
 
     #---------------------------------------------------------------------------

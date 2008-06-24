@@ -75,9 +75,14 @@ class TestCase(unittest.TestCase):
 
         referrers = gc.get_referrers(foo)
 
-        # It seems lie foo sometimes has not finished construction yet, so the
+        # It seems like foo sometimes has not finished construction yet, so the
         # frame found by referrers is not _exactly_ the same as Foo(). For more
         # information, see the gc doc: http://docs.python.org/lib/module-gc.html
+        #
+        # The documentation says that this (get_referrers) should be used for no
+        # purpose other than debugging, so this is really not a good way to test
+        # the code.
+
         time.sleep(0.1)
 
         self.assertTrue(len(referrers) > 0)
