@@ -5,12 +5,36 @@
 import pickle, unittest, weakref, os
 
 # Enthought library imports.
-from enthought.io.api \
-    import File
-
 from enthought.traits.api \
     import Any, Bool, HasTraits, Instance, Int, Interface, Str, implements, \
-           Adapter, adapts
+           Adapter, adapts, Property
+
+# NOTE: There is a File class in enthought.io module, but since we want to
+# eliminate dependencies of Traits on other modules, we create another 
+# minimal File class here to test the adapter implementation.
+
+# Test class
+class File(HasTraits):
+
+    # The path name of this file/folder.
+    path = Str
+
+    # Is this an existing file?
+    is_file = Property(Bool)
+    
+    # Is this an existing folder?
+    is_folder = Property(Bool)
+
+    def _get_is_file(self):
+        """ Returns True if the path exists and is a file. """
+
+        return os.path.exists(self.path) and os.path.isfile(self.path)
+
+    def _get_is_folder(self):
+        """ Returns True if the path exists and is a folder. """
+
+        return os.path.exists(self.path) and os.path.isdir(self.path)
+
 
 # Test class.
 class Person(HasTraits):
@@ -81,11 +105,11 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File(os.path.abspath(__file__))
+        f = File(path=os.path.abspath(__file__))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
-        g = File('..')
+        g = File(path='..')
         self.assert_(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
@@ -126,11 +150,11 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File(os.path.abspath(__file__))
+        f = File(path=os.path.abspath(__file__))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
-        g = File('..')
+        g = File(path='..')
         self.assert_(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
@@ -224,8 +248,9 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         self.assertEqual(False, ISaveable(wilma).dirty)
 
         # Clean up.
-        File('fred.pickle').delete()
-        File('wilma.pickle').delete()
+        for path in ['fred.pickle', 'wilma.pickle']:
+           if os.access(path, os.W_OK):
+               os.remove(path)
 
         return
 
