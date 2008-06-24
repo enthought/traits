@@ -15,6 +15,7 @@ from enthought.traits.api \
 # Test class.
 class Person(HasTraits):
     """ A person! """
+
     name = Str
     age  = Int
 
@@ -64,7 +65,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
             return adapter
 
-        
+
         class FileToIInputStreamAdapter(Adapter):
             """ An adapter from 'File' to 'IInputStream'. """
 
@@ -79,13 +80,13 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
                 return file(self.adaptee.path, 'r')
 
-        # A file... actually, *this* file ;^)
-        f = File('protocols_usage_test_case.py')
-        self.assertEqual(True, f.is_file)
+        # Create a reference to this file
+        f = File('enthought/traits/tests/protocols_usage_test_case.py')
+        self.assert_(f.is_file)
 
-        # A folder... actually, the folder that *this* file is in.
+        # A reference to the parent folder
         g = File('..')
-        self.assertEqual(True, g.is_folder)
+        self.assert_(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
         self.assertNotEqual(None, IInputStream(f, None))
@@ -97,7 +98,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # sure that it starts with the right doc string).
         stream = IInputStream(f).get_input_stream()
         self.assert_(stream.read().startswith('"""' + __doc__))
-        
+
         return
 
     def test_when_expression(self):
@@ -124,13 +125,13 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
                 return file(self.adaptee.path, 'r')
 
-        # A file... actually, *this* file ;^)
-        f = File('protocols_usage_test_case.py')
-        self.assertEqual(True, f.is_file)
+        # Create a reference to this file
+        f = File('enthought/traits/tests/protocols_usage_test_case.py')
+        self.assert_(f.is_file)
 
-        # A folder... actually, the folder that *this* file is in.
+        # A reference to the parent folder
         g = File('..')
-        self.assertEqual(True, g.is_folder)
+        self.assert_(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
         self.assertNotEqual(None, IInputStream(f, None))
@@ -142,7 +143,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # sure that it starts with the right doc string).
         stream = IInputStream(f).get_input_stream()
         self.assert_(stream.read().startswith('"""' + __doc__))
-        
+
         return
 
     def test_cached(self):
@@ -153,7 +154,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
             # Is the object 'dirty'?
             dirty = Bool(False)
-            
+
             def save(self, output_stream):
                 """ Save the object to an output stream. """
 
@@ -167,7 +168,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
             # Is the object 'dirty'?
             dirty = Bool(False)
-            
+
             def save(self, output_stream):
                 """ Save the object to an output stream. """
 
@@ -175,7 +176,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 self.dirty = False
 
                 return
-            
+
             #### Private interface ############################################
 
             def _adaptee_changed(self, old, new):
@@ -188,7 +189,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                     new.on_trait_change(self._set_dirty)
 
                 self._set_dirty()
-                
+
                 return
 
             def _set_dirty(self):
@@ -227,8 +228,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         File('wilma.pickle').delete()
 
         return
-    
-# Run the unit tests (if invoked from the command line):        
+
+# Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':
     unittest.main()
-

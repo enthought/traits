@@ -192,7 +192,11 @@ class InterfacesTest ( unittest.TestCase ):
 
         # Verify that SampleAverage() does not raise an error (it is an instance
         # of the IAverage interface).
-        ta.a_no = SampleAverage()
+        try:
+            ta.a_no = SampleAverage()
+        except TraitError:
+            self.fail("Setting instance of interface should not require " \
+                      "adaptation")
 
         # These are not instances of the IAverage interface, and therefore
         # cannot be set to the trait.
