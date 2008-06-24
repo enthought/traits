@@ -830,8 +830,9 @@ class UI ( HasPrivateTraits ):
                 self.history = parent.history
                 
             # Link our KeyBindings object as a child of our parent's 
-            # KeyBindings object:
-            parent.key_bindings.children.append( self.key_bindings )
+            # KeyBindings object (if any):
+            if parent.key_bindings is not None:
+                parent.key_bindings.children.append( self.key_bindings )
 
 #-------------------------------------------------------------------------------
 #  'Dispatcher' class:

@@ -37,7 +37,7 @@ from menu \
     import Menu
     
 from ui_traits \
-    import ATheme, Image, AView
+    import ATheme, Image, AView, EditorStyle
 
 from toolkit \
     import toolkit
@@ -357,6 +357,9 @@ class ObjectColumn ( TableColumn ):
     # Trait editor used to edit the contents of this column:
     editor = Instance( EditorFactory )
     
+    # The editor style to use to edit the contents of this column:
+    style = EditorStyle   
+    
     # Format string to apply to column values:
     format = Str( '%s' )
     
@@ -448,6 +451,15 @@ class ObjectColumn ( TableColumn ):
             return self.editor
             
         return self.get_object( object ).base_trait( self.name ).get_editor()
+
+    #---------------------------------------------------------------------------
+    #  Gets the editor style for the column of a specified object:  
+    #---------------------------------------------------------------------------
+
+    def get_style ( self, object ):
+        """ Gets the editor style for the column of a specified object.
+        """
+        return self.style
         
     #---------------------------------------------------------------------------
     #  Returns the result of comparing the column of two different objects:  
