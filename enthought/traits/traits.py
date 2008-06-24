@@ -50,6 +50,8 @@ import sys
 
 import trait_handlers
 
+import enthought.traits.protocols.interfaces as interfaces
+
 from ctraits \
     import cTrait, CTraitMethod
 
