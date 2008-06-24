@@ -2,7 +2,7 @@
 
 
 # Standard library imports.
-import pickle, unittest, weakref
+import pickle, unittest, weakref, os
 
 # Enthought library imports.
 from enthought.io.api \
@@ -81,7 +81,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File('enthought/traits/tests/protocols_usage_test_case.py')
+        f = File(os.path.abspath(__file__))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
@@ -126,7 +126,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File('enthought/traits/tests/protocols_usage_test_case.py')
+        f = File(os.path.abspath(__file__))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
