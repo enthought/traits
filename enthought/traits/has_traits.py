@@ -1943,14 +1943,7 @@ class HasTraits ( CHasTraits ):
         """ Returns the list of trait names to copy or clone by default.
         """
 
-        # Read-only properties, events and delegates are not copyable traits.
-        # Everything else should be included.
-
-        metadata.setdefault('property', lambda f: not f() or \
-                (f()[1].__name__ != '_read_only' and
-                 f()[0].__name__ != '_write_only'))
-        metadata.setdefault('type', lambda t: t != 'event')
-
+        metadata.setdefault('transient', lambda t: t is not True)
         return self.trait_names( **metadata )
 
     #---------------------------------------------------------------------------
