@@ -28,7 +28,7 @@ from enthought.traits.api \
            Property, Expression, Constant, Any, Callable, Bool, cached_property
     
 from enthought.traits.trait_base \
-    import user_name_for
+    import user_name_for, xgetattr
     
 from enthought.traits.ui.api \
     import View, Group, EditorFactory, TextEditor
@@ -414,7 +414,7 @@ class ObjectColumn ( TableColumn ):
         """ Gets the unformatted value of the column for a specified object.
         """
         try:
-            return getattr( self.get_object( object ), self.name )
+            return xgetattr( self.get_object( object ), self.name )
         except:
             return None
         
@@ -438,7 +438,8 @@ class ObjectColumn ( TableColumn ):
     def set_value ( self, object, value ):
         """ Sets the value of the column for a specified object.
         """
-        setattr( self.get_object( object ), self.name, value )
+        target, name = self.target_name( object )
+        setattr( target, name, value )
 
     #---------------------------------------------------------------------------
     #  Gets the editor for the column of a specified object:  
@@ -450,7 +451,9 @@ class ObjectColumn ( TableColumn ):
         if self.editor is not None:
             return self.editor
             
-        return self.get_object( object ).base_trait( self.name ).get_editor()
+        target, name = self.target_name( object )
+        
+        return target.base_trait( name ).get_editor()
 
     #---------------------------------------------------------------------------
     #  Gets the editor style for the column of a specified object:  
@@ -482,14 +485,29 @@ class ObjectColumn ( TableColumn ):
         """
         if self.droppable:
             try:
-                object = self.get_object( object )
-                object.base_trait( self.name ).validate( object, self.name, 
-                                                         value )
+                target, name = self.target_name( object )
+                target.base_trait( name ).validate( target, name, value )
                 return True
             except:
                 pass
+            
         return False
         
+    #---------------------------------------------------------------------------
+    #  Returns the target object and name for the column:
+    #---------------------------------------------------------------------------
+    
+    def target_name ( self, object ):
+        """ Returns the target object and name for the column.
+        """
+        object = self.get_object( object )
+        name   = self.name
+        col    = name.rfind( '.' )
+        if col < 0:
+            return ( object, name )
+            
+        return ( xgetattr( object, name[ :col ] ), name[ col + 1: ] )
+                  
 #-------------------------------------------------------------------------------
 #  'ExpressionColumn' class:  
 #-------------------------------------------------------------------------------

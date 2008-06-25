@@ -1726,6 +1726,7 @@ class BaseRange ( TraitType ):
                                vtype)
                 
         self._low_name = self._high_name = ''
+        self._vtype    = Undefined
         
         if vtype is float:
             self._validate  = 'float_validate'
@@ -1926,7 +1927,7 @@ class BaseRange ( TraitType ):
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
-        if hasattr( self, '_vtype' ):
+        if self._vtype is not Undefined:
             low       = eval( self._low )
             high      = eval( self._high )
             low, high = ( self._typed_value( low,  low, high ),   

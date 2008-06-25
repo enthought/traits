@@ -676,8 +676,10 @@ class UI ( HasPrivateTraits ):
     def key_handler ( self, event, skip = True ):
         """ Handles key events.
         """
-        handled = self.key_bindings.do( event, [], self.info, 
-                                        recursive = (self.parent is None) )
+        key_bindings = self.key_bindings
+        handled      = ((key_bindings is not None) and
+                         key_bindings.do( event, [], self.info, 
+                                          recursive = (self.parent is None) ))
             
         if (not handled) and (self.parent is not None):
             handled = self.parent.key_handler( event, False )
