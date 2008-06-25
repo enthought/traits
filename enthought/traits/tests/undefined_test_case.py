@@ -14,7 +14,7 @@ class Foo(HasTraits):
             self.original_name = self.name
 
 class Bar(HasTraits):
-    name = Str(Undefined())
+    name = Str(Undefined)
 
 class UndefinedTestCase(unittest.TestCase):
     def test_initial_value(self):
