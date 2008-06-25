@@ -3073,7 +3073,8 @@ class Type ( BaseClass ):
 class Event ( TraitType ):
     
     def __init__ ( self, trait = None, **metadata ):
-        metadata[ 'type' ] = 'event'
+        metadata[ 'type' ]      = 'event'
+        metadata[ 'transient' ] = True
         
         super( Event, self ).__init__( **metadata )
         
