@@ -117,6 +117,11 @@ class TableColumn ( HasPrivateTraits ):
     # width, > 1.0: absolute width in pixels):
     width = Float( -1.0 )
     
+    # The height of the column cell's row while it is being edited 
+    # (< 0.0: Default, 0.0..1.0: fraction of total table height, 
+    # > 1.0: absolute height in pixels):
+    height = Float( -1.0 )
+    
     # The view (if any) to display when clicking a non-editable cell:
     view = AView
     
@@ -151,6 +156,16 @@ class TableColumn ( HasPrivateTraits ):
         """ Returns the width of the column.
         """
         return self.width
+        
+    #---------------------------------------------------------------------------
+    #  Returns the height of the column cell's row while it is being edited:
+    #---------------------------------------------------------------------------
+                
+    def get_height ( self ):
+        """ Returns the height of the column cell's row while it is being 
+            edited.
+        """
+        return self.height
 
     #---------------------------------------------------------------------------
     #  Gets the type of data for the column for a specified object:  
