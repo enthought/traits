@@ -105,7 +105,8 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File(path=os.path.abspath(__file__))
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
@@ -150,7 +151,8 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return file(self.adaptee.path, 'r')
 
         # Create a reference to this file
-        f = File(path=os.path.abspath(__file__))
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
