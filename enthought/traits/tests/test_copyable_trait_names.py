@@ -4,31 +4,31 @@ from enthought.traits.api import HasTraits, \
     Any, Bool, Delegate, Event, Instance, Property, Str
 
 class Foo(HasTraits):
-    
+
     a = Any
     b = Bool
     s = Str
     i = Instance(HasTraits)
     e = Event
     d = Delegate( 'i' )
-    
+
     p = Property
-    
+
     def _get_p(self):
         return self._p
-    
+
     def _set_p(self, p):
         self._p = p
-    
+
     # Read Only Property
     p_ro = Property
-    
+
     def _get_p_ro(self):
         return id(self)
-    
+
     # Write-only property
     p_wo = Property
-    
+
     def _set_p_wo(self, p_wo):
         self._p_wo = p_wo
 
