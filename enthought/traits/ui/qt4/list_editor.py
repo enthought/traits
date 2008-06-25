@@ -8,7 +8,7 @@
 # Author: Riverbank Computing Limited
 #------------------------------------------------------------------------------
 
-""" Defines the various list editors and the list editor factory for the 
+""" Defines the various list editors and the list editor factory for the
     PyQt user interface toolkit..
 """
 
@@ -58,7 +58,7 @@ rows_trait = Range( 1, 50, 5,
 columns_trait = Range( 1, 10, 5,
                     desc = 'the number of list columns to display' )
 
-editor_trait = Instance( UIEditorFactory )                    
+editor_trait = Instance( UIEditorFactory )
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -79,13 +79,13 @@ class ToolkitEditorFactory ( EditorFactory ):
     style = style_trait
 
     # The trait handler for each list item:
-    trait_handler = handler_trait 
+    trait_handler = handler_trait
 
     # The number of list rows to display:
-    rows = rows_trait 
+    rows = rows_trait
 
     # The number of list columns to create:
-    columns = columns_trait 
+    columns = columns_trait
 
     # Use a notebook for a custom view?
     use_notebook = Bool(False)
@@ -99,10 +99,10 @@ class ToolkitEditorFactory ( EditorFactory ):
     dock_theme = Any
 
     # Dock page style to use for each DockControl:
-    dock_style = DockStyle 
+    dock_style = DockStyle
 
     # Export class for each item in a notebook:
-    export = Str 
+    export = Str
 
     # Name of the view to use in notebook mode:
     view = AView
@@ -116,19 +116,19 @@ class ToolkitEditorFactory ( EditorFactory ):
     # '.name[.name...]'
     page_name = Str
 
-    # Name of the [object.]trait[.trait...] to synchronize notebook page 
+    # Name of the [object.]trait[.trait...] to synchronize notebook page
     # selection with:
     selected = Str
 
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
 
     traits_view = View( [ [ 'use_notebook{Use a notebook in a custom view}',
                             '|[Style]' ],
                           [ Item( 'page_name',
                                   enabled_when = 'object.use_notebook' ),
-                            Item( 'view', 
+                            Item( 'view',
                                   enabled_when = 'object.use_notebook' ),
                             '|[Notebook options]' ],
                           [ Item( 'rows',
@@ -141,44 +141,44 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     def simple_editor ( self, ui, object, name, description, parent ):
         return SimpleEditor( parent,
-                             factory     = self, 
-                             ui          = ui, 
-                             object      = object, 
-                             name        = name, 
+                             factory     = self,
+                             ui          = ui,
+                             object      = object,
+                             name        = name,
                              description = description,
                              kind        = self.style + '_editor' )
 
     def custom_editor ( self, ui, object, name, description, parent ):
         if self.use_notebook:
             return NotebookEditor( parent,
-                                   factory     = self, 
-                                   ui          = ui, 
-                                   object      = object, 
-                                   name        = name, 
+                                   factory     = self,
+                                   ui          = ui,
+                                   object      = object,
+                                   name        = name,
                                    description = description )
         return CustomEditor( parent,
-                             factory     = self, 
-                             ui          = ui, 
-                             object      = object, 
-                             name        = name, 
+                             factory     = self,
+                             ui          = ui,
+                             object      = object,
+                             name        = name,
                              description = description,
                              kind        = self.style + '_editor' )
 
     def text_editor ( self, ui, object, name, description, parent ):
         return CustomEditor( parent,
-                             factory     = self, 
-                             ui          = ui, 
-                             object      = object, 
-                             name        = name, 
+                             factory     = self,
+                             ui          = ui,
+                             object      = object,
+                             name        = name,
                              description = description,
                              kind        = 'text_editor' )
 
     def readonly_editor ( self, ui, object, name, description, parent ):
         return CustomEditor( parent,
-                             factory     = self, 
-                             ui          = ui, 
-                             object      = object, 
-                             name        = name, 
+                             factory     = self,
+                             ui          = ui,
+                             object      = object,
+                             name        = name,
                              description = description,
                              kind        = self.style + '_editor',
                              mutable     = False )
@@ -204,7 +204,7 @@ class SimpleEditor ( Editor ):
     mutable = Bool( True )
 
     #---------------------------------------------------------------------------
-    #  Class constants:  
+    #  Class constants:
     #---------------------------------------------------------------------------
 
     # Whether the list is displayed in a single row
@@ -223,7 +223,7 @@ class SimpleEditor ( Editor ):
        ---
        Move &Up        [_menu_up]:     self.move_up()
        Move &Down      [_menu_down]:   self.move_down()
-       Move to &Top    [_menu_top]:    self.move_top() 
+       Move to &Top    [_menu_top]:    self.move_top()
        Move to &Bottom [_menu_bottom]: self.move_bottom()
     """
 
@@ -260,24 +260,25 @@ class SimpleEditor ( Editor ):
         layout.setMargin(0)
 
         # Remember the editor to use for each individual list item:
-        editor = self.factory.editor 
+        editor = self.factory.editor
         if editor is None:
-            editor = trait_handler.item_trait.get_editor() 
+            editor = trait_handler.item_trait.get_editor()
         self._editor = getattr( editor, self.kind )
 
         # Set up the additional 'list items changed' event handler needed for
         # a list based trait:
-        self.context_object.on_trait_change( self.update_editor_item, 
+        self.context_object.on_trait_change( self.update_editor_item,
                                self.extended_name + '_items?', dispatch = 'ui' )
+        self.set_tooltip()
 
     #---------------------------------------------------------------------------
-    #  Disposes of the contents of an editor:    
+    #  Disposes of the contents of an editor:
     #---------------------------------------------------------------------------
 
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        self.context_object.on_trait_change( self.update_editor_item, 
+        self.context_object.on_trait_change( self.update_editor_item,
                                  self.extended_name + '_items?', remove = True )
 
         super( SimpleEditor, self ).dispose()
@@ -287,10 +288,10 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def update_editor ( self ):
-        """ Updates the editor when the object trait changes externally to the 
+        """ Updates the editor when the object trait changes externally to the
             editor.
         """
-        # Disconnect the editor from any control about to be destroyed:        
+        # Disconnect the editor from any control about to be destroyed:
         self._dispose_items()
 
         list_pane = self._list_pane
@@ -320,7 +321,7 @@ class SimpleEditor ( Editor ):
                                        item_trait, value )
                 if resizable:
                     control.proxy = proxy
-                peditor = editor( self.ui, proxy, 'value', self.description, 
+                peditor = editor( self.ui, proxy, 'value', self.description,
                                   list_pane ).set( object_name = '' )
                 peditor.prepare( list_pane )
                 pcontrol = peditor.control
@@ -338,7 +339,7 @@ class SimpleEditor ( Editor ):
             index += 1
 
         if is_fake:
-           self._cur_control = control   
+           self._cur_control = control
            self.empty_list()
            control.setParent(None)
 
@@ -347,8 +348,8 @@ class SimpleEditor ( Editor ):
         else:
             rows = self.factory.rows
 
-        #list_pane.SetSize( wx.Size( 
-        #     width + ((trait_handler.maxlen > rows) * scrollbar_dx), 
+        #list_pane.SetSize( wx.Size(
+        #     width + ((trait_handler.maxlen > rows) * scrollbar_dx),
         #     height * rows ) )
 
         # QScrollArea can have problems if the widget being scrolled is set too
@@ -357,12 +358,12 @@ class SimpleEditor ( Editor ):
             self.control.setWidget(list_pane)
 
     #---------------------------------------------------------------------------
-    #  Updates the editor when an item in the object trait changes external to 
+    #  Updates the editor when an item in the object trait changes external to
     #  the editor:
     #---------------------------------------------------------------------------
 
     def update_editor_item ( self, event ):
-        """ Updates the editor when an item in the object trait changes 
+        """ Updates the editor when an item in the object trait changes
         externally to the editor.
         """
         # If this is not a simple, single item update, rebuild entire editor:
@@ -370,8 +371,8 @@ class SimpleEditor ( Editor ):
             self.update_editor()
             return
 
-        # Otherwise, find the proxy for this index and update it with the 
-        # changed value: 
+        # Otherwise, find the proxy for this index and update it with the
+        # changed value:
         for control in self.control.widget().children():
             if isinstance(control, QtGui.QLayout):
                 continue
@@ -400,7 +401,7 @@ class SimpleEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def reload_sizer ( self, controls, extra = 0 ):
-        """ Reloads the layout from the specified list of ( button, proxy ) 
+        """ Reloads the layout from the specified list of ( button, proxy )
             pairs.
         """
         layout = self._list_pane.layout()
@@ -437,7 +438,7 @@ class SimpleEditor ( Editor ):
         """ Displays the empty list editor popup menu.
         """
         self._cur_control = control
-        control.PopupMenuXY( MakeMenu( self.empty_list_menu, self, True, 
+        control.PopupMenuXY( MakeMenu( self.empty_list_menu, self, True,
                                        control ).menu, 0, 0 )
 
     #---------------------------------------------------------------------------
@@ -470,7 +471,7 @@ class SimpleEditor ( Editor ):
         """ Adds a new value at the specified list index.
         """
         list, index = self.get_info()
-        index      += offset 
+        index      += offset
         item_trait  = self._trait_handler.item_trait
         dv          = item_trait.default_value()
         if dv[0] == 7:
@@ -530,7 +531,7 @@ class SimpleEditor ( Editor ):
         """ Move the current item up one in the list.
         """
         list, index = self.get_info()
-        self.value  = (list[:index-1] + [ list[index], list[index-1] ] + 
+        self.value  = (list[:index-1] + [ list[index], list[index-1] ] +
                        list[index+1:])
 
     #---------------------------------------------------------------------------
@@ -541,7 +542,7 @@ class SimpleEditor ( Editor ):
         """ Moves the current item down one in the list.
         """
         list, index = self.get_info()
-        self.value  = (list[:index] + [ list[index+1], list[index] ] + 
+        self.value  = (list[:index] + [ list[index+1], list[index] ] +
                        list[index+2:])
 
     #---------------------------------------------------------------------------
@@ -562,7 +563,7 @@ class SimpleEditor ( Editor ):
         """ Moves the current item to the bottom of the list.
         """
         list, index = self.get_info()
-        self.value  = list[:index] + list[index+1:] + [ list[index] ] 
+        self.value  = list[:index] + list[index+1:] + [ list[index] ]
 
     #-- Private Methods --------------------------------------------------------
 
@@ -593,19 +594,19 @@ class CustomEditor ( SimpleEditor ):
     """
 
     #---------------------------------------------------------------------------
-    #  Class constants:  
+    #  Class constants:
     #---------------------------------------------------------------------------
 
-    # Whether the list is displayed in a single row. This value overrides the 
+    # Whether the list is displayed in a single row. This value overrides the
     # default.
     single_row = False
 
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
 
     # Is the list editor is scrollable? This values overrides the default.
-    scrollable = True 
+    scrollable = True
 
 #-------------------------------------------------------------------------------
 #  'ListItemProxy' class:
@@ -646,7 +647,7 @@ class NotebookEditor ( Editor ):
     """
 
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
 
     # Is the notebook editor scrollable? This values overrides the default:
@@ -673,7 +674,7 @@ class NotebookEditor ( Editor ):
 
         # Set up the additional 'list items changed' event handler needed for
         # a list based trait:
-        self.context_object.on_trait_change( self.update_editor_item, 
+        self.context_object.on_trait_change( self.update_editor_item,
                                self.extended_name + '_items?', dispatch = 'ui' )
 
         # Set of selection synchronization:
@@ -684,7 +685,7 @@ class NotebookEditor ( Editor ):
     #---------------------------------------------------------------------------
 
     def update_editor ( self ):
-        """ Updates the editor when the object trait changes externally to the 
+        """ Updates the editor when the object trait changes externally to the
             editor.
         """
         # Destroy the views on each current notebook page:
@@ -733,7 +734,7 @@ class NotebookEditor ( Editor ):
             self.control.setCurrentWidget(first_page)
 
     #---------------------------------------------------------------------------
-    #  Closes all currently open notebook pages:  
+    #  Closes all currently open notebook pages:
     #---------------------------------------------------------------------------
 
     def close_all ( self ):
@@ -753,13 +754,13 @@ class NotebookEditor ( Editor ):
         self.control.clear()
 
     #---------------------------------------------------------------------------
-    #  Disposes of the contents of an editor:    
+    #  Disposes of the contents of an editor:
     #---------------------------------------------------------------------------
 
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        self.context_object.on_trait_change( self.update_editor_item, 
+        self.context_object.on_trait_change( self.update_editor_item,
                                 self.name + '_items?', remove = True )
         self.close_all()
 
@@ -813,14 +814,14 @@ class NotebookEditor ( Editor ):
             monitoring = (name is not None)
             if monitoring:
                 handler_name = None
-                method       = getattr( self.ui.handler, prefix + 'name', None ) 
+                method       = getattr( self.ui.handler, prefix + 'name', None )
                 if method is not None:
                     handler_name = method( self.ui.info, object )
                 if handler_name is not None:
                     name = handler_name
                 else:
                     name = str( name ) or '???'
-                view_object.on_trait_change( self.update_page_name, 
+                view_object.on_trait_change( self.update_page_name,
                                         page_name[1:], dispatch = 'ui' )
             else:
                 name = ''
@@ -851,11 +852,11 @@ class NotebookEditor ( Editor ):
         return (ui.control, view_object, monitoring)
 
     #---------------------------------------------------------------------------
-    #  Handles a notebook tab being 'activated' (i.e. clicked on) by the user:  
+    #  Handles a notebook tab being 'activated' (i.e. clicked on) by the user:
     #---------------------------------------------------------------------------
 
     def _tab_activated(self, idx):
-        """ Handles a notebook tab being "activated" (i.e. clicked on) by the 
+        """ Handles a notebook tab being "activated" (i.e. clicked on) by the
             user.
         """
         w = self.control.widget(idx)
@@ -866,7 +867,7 @@ class NotebookEditor ( Editor ):
                 break
 
     #---------------------------------------------------------------------------
-    #  Handles the 'selected' trait being changed:  
+    #  Handles the 'selected' trait being changed:
     #---------------------------------------------------------------------------
 
     def _selected_changed(self, selected):

@@ -211,7 +211,8 @@ class SourceEditor ( Editor ):
             control.connect(control,
                     QtCore.SIGNAL('cursorPositionChanged(int, int)'),
                     self._position_changed)
-            
+        self.set_tooltip()
+    
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
     #---------------------------------------------------------------------------
