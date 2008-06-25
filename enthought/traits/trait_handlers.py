@@ -407,10 +407,14 @@ class BaseTraitHandler ( object ):
             **List** are ( **Int**, ).
         """
         return ()
-        
+
 #-------------------------------------------------------------------------------
 #  'TraitType' (base class for class-based trait definitions:
 #-------------------------------------------------------------------------------
+
+# Create a singleton object for use in the TraitType constructor:
+class NoDefaultSpecified ( object ): pass
+NoDefaultSpecified = NoDefaultSpecified()
                 
 class TraitType ( BaseTraitHandler ):
     """ Base class for new trait types. 
@@ -510,7 +514,7 @@ class TraitType ( BaseTraitHandler ):
     default_value = Undefined
     metadata      = {}
     
-    def __init__ ( self, default_value = Undefined, **metadata ):
+    def __init__ ( self, default_value = NoDefaultSpecified, **metadata ):
         """ This constructor method is the only method normally called 
             directly by client code. It defines the trait. The
             default implementation accepts an optional, untype-checked default 
@@ -518,7 +522,7 @@ class TraitType ( BaseTraitHandler ):
             whenever a different method signature or a type-checked 
             default value is needed.
         """
-        if default_value is not Undefined:
+        if default_value is not NoDefaultSpecified:
             self.default_value = default_value
             
         if len( metadata ) > 0:
@@ -566,6 +570,8 @@ class TraitType ( BaseTraitHandler ):
                   *object* is the object containing the trait. If the trait has
                   a validate() method, the validate() method is also called to
                   validate the result.
+                - 9: A new instance of TraitSetObject constructed using the
+                  *default_value* set is the default value.
         """
         dv  = self.default_value
         dvt = self.default_value_type
@@ -579,6 +585,8 @@ class TraitType ( BaseTraitHandler ):
                 dvt = 6
             elif isinstance( dv, dict ):
                 dvt = 4
+            elif isinstance( dv, TraitSetObject ):
+                dvt = 9
                 
             self.default_value_type = dvt
         
