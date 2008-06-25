@@ -22,9 +22,9 @@ class Worker(threading.Thread):
     Typical usage:
 
     >>> worker = Worker(name = "my worker thread")
-    >>> # worker.perform_work(my_function_name, args)
-    >>> # worker.start()
-    >>> # worker.cancel()
+    >>> worker.perform_work(my_function_name, args)
+    >>> worker.start()
+    >>> worker.cancel()
     """
 
     def __init__(self, **kwds):
