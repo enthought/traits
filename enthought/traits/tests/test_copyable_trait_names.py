@@ -26,6 +26,12 @@ class Foo(HasTraits):
     def _get_p_ro(self):
         return id(self)
 
+    # Write-only property
+    p_wo = Property
+
+    def _set_p_wo(self, p_wo):
+        self._p_wo = p_wo
+
 class TestCopyableTraitNames(unittest.TestCase):
     """ Validate that copyable_trait_names returns the appropriate result.
     """
@@ -37,26 +43,29 @@ class TestCopyableTraitNames(unittest.TestCase):
     def test_events_not_copyable(self):
         self.failIf( 'e' in self.names )
 
-    def test_delegate_not_copyable(self):
-        self.failIf( 'd' in self.names )
-
     def test_read_only_property_not_copyable(self):
         self.failIf( 'p_ro' in self.names )
 
+    def test_write_only_property_not_copyable(self):
+        self.failIf( 'p_wo' in self.names )
+
     def test_any_copyable(self):
-        self.failUnless( 'a' in self.names )
+        self.assert_( 'a' in self.names )
 
     def test_bool_copyable(self):
-        self.failUnless( 'b' in self.names )
+        self.assert_( 'b' in self.names )
 
     def test_str_copyable(self):
-        self.failUnless( 's' in self.names )
+        self.assert_( 's' in self.names )
+
+    def test_delegate_copyable(self):
+        self.assert_( 'd' in self.names )
 
     def test_instance_copyable(self):
-        self.failUnless( 'i' in self.names )
+        self.assert_( 'i' in self.names )
 
     def test_property_copyable(self):
-        self.failUnless( 'p' in self.names )
+        self.assert_( 'p' in self.names )
 
 class TestCopyableTraitNameQueries(unittest.TestCase):
 
@@ -89,5 +98,18 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
         })
 
         self.assertEquals(['s'], names)
+    
+    def test_queries_not_combined(self):
+        """ Verify that metadata is not merged with metadata to find the
+            copyable traits.
+        """
+
+        eval_true = lambda x: True
+
+        names = self.foo.copyable_trait_names(property=eval_true,
+                                              type=eval_true)
+
+        self.assertEquals(['a', 'b', 'e', 'd', 'i', 'trait_added', 'p', 's',
+                           'trait_modified', 'p_ro', 'p_wo'], names)
 
 ### EOF

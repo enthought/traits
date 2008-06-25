@@ -1946,26 +1946,10 @@ class HasTraits ( CHasTraits ):
         # Read-only properties, events and delegates are not copyable traits.
         # Everything else should be included.
 
-        def extend_meta(func, given):
-            """ Create a lambda function which combines the two arguments. """
-
-            if callable(given):
-                return lambda v: func(v) and given(v)
-            else:
-                return lambda v: func(v) and v == given
-
-        # Set default values for 'property' and 'type' queries to always eval
-        # to True (so that all Traits match).
-        for key in ('property', 'type'):
-            if not metadata.has_key(key):
-                metadata[key] = lambda f: True
-
-        metadata.update({
-            'property': extend_meta(lambda f: not f() or \
-                f()[1].__name__ != '_read_only', metadata['property']),
-            'type': extend_meta(lambda t: t not in ('event', 'delegate'),
-                                metadata['type'])
-        })
+        metadata.setdefault('property', lambda f: not f() or \
+                (f()[1].__name__ != '_read_only' and
+                 f()[0].__name__ != '_write_only'))
+        metadata.setdefault('type', lambda t: t != 'event')
 
         return self.trait_names( **metadata )
 
