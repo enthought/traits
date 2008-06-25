@@ -19,7 +19,7 @@ This demonstration shows three variations of using a TitleEditor:
 
 # Imports:
 from enthought.traits.api \
-    import HasTraits, Enum, Str, Float, Property
+    import HasTraits, Enum, Str, Float, Property, cached_property
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, Item, TitleEditor
