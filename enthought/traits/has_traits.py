@@ -2284,6 +2284,13 @@ class HasTraits ( CHasTraits ):
         # If the specified default name is in the list, return its View:
         if name in names:
             return view_elements.find( name )
+            
+        if handler is not None:
+            method = getattr( handler, name, None )
+            if callable( method ):
+                result = method()
+                if isinstance( result, ViewElement ):
+                    return result
 
         # If there is only one View, return it:
         if len( names ) == 1:
