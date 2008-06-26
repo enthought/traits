@@ -53,7 +53,7 @@ from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Margins, TabularEditor
+    import View, Group, Item, Margin, TabularEditor
     
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
@@ -115,7 +115,7 @@ class ReportAdapter ( TabularAdapter ):
 tabular_editor = TabularEditor(
     adapter    = ReportAdapter(),
     operations = [ 'move' ],
-    images     = [ ImageResource( 'red_flag', search_path = search_path ) ]
+    images     = [ ImageResource( 'red_flag', search_path = search_path ) ],
 )
 
 #--[Report Class]---------------------------------------------------------------
@@ -123,14 +123,14 @@ tabular_editor = TabularEditor(
 class Report ( HasTraits ):
 
     people = List( Person )
-    
+
     view = View(
         Group(
             Item( 'people', id = 'table', editor = tabular_editor ), 
             show_labels        = False,
-            item_theme         = '@BF5',
-            item_theme_margins = Margins( left = -3, right = -3 ),
-            group_theme        = '@XG2' 
+            #item_theme         = '@BF5',
+            #item_theme_margins = Margin( left = -3, right = -3 ),
+            #group_theme        = '@XG2' 
         ),
         title     = 'Tabular Editor Demo',
         id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
@@ -139,6 +139,7 @@ class Report ( HasTraits ):
         resizable = True,
         buttons   = NoButtons
     )
+    
 
 #--<Generate People>------------------------------------------------------------
 
@@ -205,4 +206,3 @@ shuffle( people )
 #--[Example Code*]--------------------------------------------------------------
 
 demo = Report( people = people )
-
