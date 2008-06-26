@@ -1224,9 +1224,21 @@ def implements ( *interfaces ):
         
         target.__implements__ = _create_implements_class( 
             target.__name__, interfaces, bases ) 
+
+        # Compute the closure of all the interfaces (i.e. include all interface
+        # superclasses which are also interfaces):
+        closure = set( interfaces )
+        for interface in interfaces:
+            for subclass in interface.__mro__:
+                if subclass is Interface:
+                    break
+                    
+                if issubclass( subclass, Interface ):
+                    closure.add( subclass )
+                   
             
         # Tell PyProtocols that the class implements its interfaces:
-        declareImplementation( target, instancesProvide = list( interfaces ) )
+        declareImplementation( target, instancesProvide = list( closure ) )
 
         # Make sure the class actually does implement the interfaces it claims
         # to:
