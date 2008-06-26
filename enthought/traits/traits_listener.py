@@ -791,19 +791,20 @@ class ListenerItem ( ListenerBase ):
                 if not meta_eval( getattr( trait, meta_name ) ):
                     return
         
-        # Determine whether the trait type is simple, list, set or dictionary:
-        type    = SIMPLE_LISTENER
-        handler = trait.handler
-        if handler is not None:
-            type = type_map.get( handler.default_value_type,
-                                 SIMPLE_LISTENER )
-                                 
-        # Add the name and type to the list of traits being registered:
-        self.active[ object ].append( ( new_trait, type ) )
-        
-        # Set up the appropriate trait listeners on the object for the
-        # new trait:
-        getattr( self, type )( object, new_trait, False )
+            # Determine whether the trait type is simple, list, set or 
+            # dictionary:
+            type    = SIMPLE_LISTENER
+            handler = trait.handler
+            if handler is not None:
+                type = type_map.get( handler.default_value_type,
+                                     SIMPLE_LISTENER )
+                                     
+            # Add the name and type to the list of traits being registered:
+            self.active[ object ].append( ( new_trait, type ) )
+            
+            # Set up the appropriate trait listeners on the object for the
+            # new trait:
+            getattr( self, type )( object, new_trait, False )
 
 #-------------------------------------------------------------------------------
 #  'ListenerGroup' class:
