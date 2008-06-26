@@ -90,7 +90,8 @@ class test_base2(unittest.TestCase):
             for value in bad_values:
                 self.assertRaises(TraitError, setattr, obj, name, value)
         except:
-            print 'Failed while testing %s for value: %s(%s) in %s' %(msg, value, value.__class__.__name__, self.__class__.__name__)
+            print 'Failed while testing %s for value: %s(%s) in %s' % (
+                msg, value, value.__class__.__name__, self.__class__.__name__)
             raise
  
 #-------------------------------------------------------------------------------
