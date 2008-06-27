@@ -19,7 +19,7 @@ PyQt user interface toolkit.
 from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
-    import true
+    import Bool
 
 from enthought.traits.ui.api \
     import View
@@ -57,7 +57,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     #---------------------------------------------------------------------------
     
     # Is the underlying color trait mapped?
-    mapped = true 
+    mapped = Bool( True )
     
     #---------------------------------------------------------------------------
     #  Traits view definition:  

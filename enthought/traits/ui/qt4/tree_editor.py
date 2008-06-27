@@ -380,6 +380,7 @@ class SimpleEditor ( Editor ):
                 nid = QtGui.QTreeWidgetItem(tree)
                 nid.setText(0, node.get_label(object))
                 nid.setIcon(0, self._get_icon(node, object))
+                nid.setToolTip(0, node.get_tooltip(object))
 
             self._map[ id( object ) ] = [ ( node.children, nid ) ]
             self._add_listeners( node, object )
@@ -403,6 +404,7 @@ class SimpleEditor ( Editor ):
         cnid = QtGui.QTreeWidgetItem(nid)
         cnid.setText(0, node.get_label(object))
         cnid.setIcon(0, self._get_icon(node, object))
+        cnid.setToolTip(0, node.get_tooltip(object))
 
         has_children = node._has_children(object)
         self._set_node_data( cnid, ( False, node, object ) )

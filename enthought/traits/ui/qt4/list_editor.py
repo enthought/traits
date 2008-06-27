@@ -20,7 +20,7 @@ from PyQt4 import QtCore, QtGui
 
 from enthought.traits.api \
     import Trait, HasTraits, BaseTraitHandler, Range, Str, Any, Instance, \
-           Property, Bool, Callable
+           Property, Bool, Callable, Enum
 
 from enthought.traits.trait_base \
     import user_name_for, enumerate, xgetattr
@@ -106,6 +106,9 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Name of the view to use in notebook mode:
     view = AView
+
+    # The type of UI to construct ('panel', 'subpanel', etc)
+    ui_kind = Enum( 'subpanel', 'panel' )
 
     # A factory function that can be used to define that actual object to be
     # edited (i.e. view_object = factory( object )):
@@ -801,7 +804,7 @@ class NotebookEditor ( Editor ):
             view_object = factory.factory(object)
         ui = view_object.edit_traits( parent = self.control,
                                  view   = factory.view,
-                                 kind   = 'subpanel' ).set(
+                                 kind   = factory.ui_kind ).set(
                                  parent = self.ui )
 
         # Get the name of the page being added to the notebook:
