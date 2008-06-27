@@ -61,15 +61,15 @@ def toolkit ( *toolkits ):
     Use this function to get a reference to the current toolkit.
     """
     global _toolkit
+    # If _toolkit has already been set, simply return it.
+    if _toolkit is not None:
+        return _toolkit
 
-    # If a toolkit has already been selected then check we can use it:
+    # If a toolkit has already been set for ETSConfig, then check we can use 
+    # it:
     if ETSConfig.toolkit:
         toolkits = ( ETSConfig.toolkit, )
-
-    if len( toolkits ) == 0:
-        if _toolkit is not None:
-            return _toolkit
-
+    elif len(toolkits) == 0:
         toolkits = TraitUIToolkits
 
     for toolkit_name in toolkits:
