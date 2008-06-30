@@ -19,10 +19,8 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies:
 ENTHOUGHTBASE      = etsdep( 'EnthoughtBase',       '3.0.0b1' )
 DEVTOOLS_DEVELOPER = etsdep( 'DevTools[developer]', '3.0.0b1' )  
-MAYAVI             = etsdep( 'Mayavi',              '3.0.0a1' )
 TRAITS             = etsdep( 'Traits',              '3.0.0b1' )
 TRAITSGUI          = etsdep( 'TraitsGUI',           '3.0.0b1' )
-TRAITSGUI_TVTK     = etsdep( 'TraitsGUI[tvtk]',     '3.0.0b1' )
 
 
 setup(
@@ -37,13 +35,6 @@ setup(
         # debugger should be installed:
         'debug': [
             DEVTOOLS_DEVELOPER,
-        ],
-    
-        # Extra denoting that the TVTK (i.e. Trait VTK) support should be
-        # installed:
-        'tvtk': [
-            MAYAVI,
-            TRAITSGUI_TVTK,
         ],
 
         # All non-ets dependencies should be in this extra to ensure users can

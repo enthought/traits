@@ -1,6 +1,4 @@
 [debug]
 
 
-[tvtk]
-enthought.pyface.ui.qt4.tvtk = *
 
