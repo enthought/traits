@@ -32,7 +32,6 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies:
-APPTOOLS        = etsdep( 'AppTools',        '3.0.0b1' )
 ENTHOUGHTBASE   = etsdep( 'EnthoughtBase',   '3.0.0b1' )
 TRAITSBACKENDWX = etsdep( 'TraitsBackendWX', '3.0.0b1' )
 TRAITSBACKENDQT = etsdep( 'TraitsBackendQt', '3.0.0b1' )
@@ -91,12 +90,6 @@ setup(
         # Completely optional, not triggered by imports:
         'wx': [
             TRAITSBACKENDWX,
-        ],
-
-        # Extra denoting that all packages needed to run the Traits unit tests
-        # should be installed:
-        'test': [
-            APPTOOLS,
         ],
 
         # All non-ets dependencies should be in this extra to ensure users can
