@@ -1,4 +1,4 @@
-# transient_metadata.py – Example of using 'transient' metadata
+# transient_metadata.py - Example of using 'transient' metadata
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, File, Any

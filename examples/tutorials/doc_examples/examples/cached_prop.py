@@ -1,4 +1,4 @@
-# cached_prop.py – Example of @cached_property decorator 
+# cached_prop.py - Example of @cached_property decorator 
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasPrivateTraits, List, Int,\

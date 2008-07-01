@@ -1,4 +1,4 @@
-# interface_definition.py –- Example of defining an interface
+# interface_definition.py - Example of defining an interface
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import Interface

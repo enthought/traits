@@ -1,4 +1,4 @@
-# scratch_adapter.py – Example of writing an adapter from scratch
+# scratch_adapter.py - Example of writing an adapter from scratch
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Instance, adapts

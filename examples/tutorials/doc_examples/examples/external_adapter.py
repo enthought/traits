@@ -1,5 +1,5 @@
-# external_adapter.py –- Example of declaring a class as an adapter 
-#                        externally to the class
+# external_adapter.py - Example of declaring a class as an adapter 
+#                       externally to the class
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import adapts

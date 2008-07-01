@@ -1,4 +1,4 @@
-# interface_implementation.py –- Example of implementing an interface
+# interface_implementation.py - Example of implementing an interface
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, implements, Str
@@ -21,7 +21,7 @@ class Person(HasTraits):
 
 class Apartment(HasTraits):
     renter = Instance(IName)
-william = Person(first_name=’William’, last_name=’Adams’)
+william = Person(first_name='William', last_name='Adams')
 apt1 = Apartment( renter=william )
 print 'Renter is: ', apt1.renter.get_name()
 # Result: Renter is: William Adams

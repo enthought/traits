@@ -1,4 +1,4 @@
-# adapt_metadata.py – Example of using 'adapt' metadata
+# adapt_metadata.py - Example of using 'adapt' metadata
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Instance

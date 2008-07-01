@@ -1,4 +1,4 @@
-# simple_adapter.py –- Example of adaptation using Adapter
+# simple_adapter.py - Example of adaptation using Adapter
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import Adapter, Instance, implements
