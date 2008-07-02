@@ -1235,7 +1235,6 @@ def implements ( *interfaces ):
                     
                 if issubclass( subclass, Interface ):
                     closure.add( subclass )
-                   
             
         # Tell PyProtocols that the class implements its interfaces:
         declareImplementation( target, instancesProvide = list( closure ) )

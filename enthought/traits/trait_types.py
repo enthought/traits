@@ -2661,7 +2661,7 @@ def validate_implements ( value, klass, unused = None ):
     rc = (issubclass( klass, Interface) and 
           check_implements( value.__class__, klass ))
     if rc:
-        declareImplementation( value.__class__, instancesProvide = [ klass ] )            
+        declareImplementation( value.__class__, instancesProvide = [ klass ] )
         
     return rc
     
