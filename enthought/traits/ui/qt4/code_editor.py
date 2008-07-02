@@ -20,7 +20,10 @@ from PyQt4 import QtCore, QtGui, Qsci
 
 from enthought.traits.api \
     import Instance, Str, List, Int, Color, Enum, Event, Bool, TraitError
-    
+
+from enthought.traits.trait_base \
+    import SequenceTypes
+
 from enthought.traits.ui.key_bindings \
     import KeyBindings
     
@@ -222,7 +225,10 @@ class SourceEditor ( Editor ):
         """
         if not self._locked:
             try:
-                self.value = unicode(self.control.text())
+                value = unicode(self.control.text())
+                if isinstance( self.value, SequenceTypes ):
+                    value = value.split()
+                self.value = value
                 self.control.lexer().setPaper(OKColor)
             except TraitError, excp:
                 pass
@@ -236,7 +242,9 @@ class SourceEditor ( Editor ):
             editor.
         """
         self._locked = True
-        new_value = self.str_value
+        new_value = self.value
+        if isinstance( new_value, SequenceTypes ):
+            new_value = '\n'.join( [ line.rstrip() for line in new_value ] )
         control = self.control
         if control.text() != new_value:
             readonly = control.isReadOnly()
