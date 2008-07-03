@@ -15,10 +15,12 @@
 from PyQt4 import QtCore, QtGui
 
 # Enthought library imports.
-from enthought.traits.api import Bool, implements, Instance, Unicode
+from enthought.traits.api import Bool, implements, Instance, List, Property, \
+        Unicode
 from enthought.pyface.api import Dialog
 from enthought.pyface.wizard.i_wizard import IWizard, MWizard
-from enthought.pyface.wizard.wizard_controller import WizardController
+from enthought.pyface.wizard.i_wizard_controller import IWizardController
+from enthought.pyface.wizard.i_wizard_page import IWizardPage
 
 
 class Wizard(MWizard, Dialog):
@@ -32,7 +34,9 @@ class Wizard(MWizard, Dialog):
 
     #### 'IWizard' interface ##################################################
 
-    controller = Instance(WizardController)
+    pages = Property(List(IWizardPage))
+
+    controller = Instance(IWizardController)
 
     show_cancel = Bool(True)
 
@@ -83,6 +87,25 @@ class Wizard(MWizard, Dialog):
 
         # FIXME: Hook into a help system.
         print "Show help for", self.help_id
+
+    #### Trait handlers #######################################################
+
+    def _controller_default(self):
+        """ Provide a default controller. """
+
+        from enthought.pyface.wizard.wizard_controller import WizardController
+
+        return WizardController()
+
+    def _get_pages(self):
+        """ Returns the pages in the wizard. """
+
+        return self.controller.pages
+
+    def _set_pages(self, pages):
+        """ Sets the pages in the wizard. """
+
+        self.controller.pages = pages
 
 
 class _Wizard(QtGui.QWizard):
