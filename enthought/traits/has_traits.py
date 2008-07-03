@@ -1280,7 +1280,7 @@ def on_trait_change ( name, post_init = False, *names ):
         return function
         
     return decorator
-    
+   
 def cached_property ( function ):
     """ Marks the following method definition as being a "cached property".
         That is, it is a property getter which, for performance reasons, caches
@@ -1315,8 +1315,8 @@ def cached_property ( function ):
     name = '_traits_cache_' + function.__name__[ 5: ]
     
     def decorator ( self ):
-        result = self.__dict__.get( name )
-        if result is None:
+        result = self.__dict__.get( name, Undefined )
+        if result is Undefined:
             self.__dict__[ name ] = result = function( self )
             
         return result
@@ -2565,7 +2565,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _on_trait_change ( self, handler, name = None, remove = False,
-                                 dispatch = 'same' ):
+                                 dispatch = 'same', priority = False ):
         """Causes the object to invoke a handler whenever a trait attribute
         is modified, or removes the association.
 
@@ -2591,7 +2591,8 @@ class HasTraits ( CHasTraits ):
 
         if type( name ) is list:
             for name_i in name:
-                self._on_trait_change( handler, name_i, remove, dispatch )
+                self._on_trait_change( handler, name_i, remove, dispatch, 
+                                       priority )
                 
             return
 
@@ -2624,7 +2625,12 @@ class HasTraits ( CHasTraits ):
             if notifier.equals( handler ):
                 break
         else:
-            notifiers.append( self.wrappers[ dispatch ]( handler, notifiers ) )
+            wrapper = self.wrappers[ dispatch ]( handler, notifiers )
+            
+            if priority:
+                notifiers.insert( 0, wrapper )
+            else:
+                notifiers.append( wrapper )
     
     #---------------------------------------------------------------------------
     #  Add/Remove handlers for an extended set of one or more traits being 
@@ -2635,7 +2641,8 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def on_trait_change ( self, handler, name = None, remove = False,
-                                dispatch = 'same', deferred = False ):
+                                dispatch = 'same', priority = False,
+                                deferred = False ):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
@@ -2815,7 +2822,8 @@ class HasTraits ( CHasTraits ):
         # handler:
         if ((isinstance( name, basestring ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
-            self._on_trait_change( handler, name, remove, dispatch )
+            self._on_trait_change( handler, name, remove, dispatch, priority )
+            
             return
             
         from traits_listener \
@@ -2824,7 +2832,9 @@ class HasTraits ( CHasTraits ):
             
         if isinstance( name, list ):
             for name_i in name:
-                self.on_trait_change( handler, name_i, remove, dispatch )
+                self.on_trait_change( handler, name_i, remove, dispatch, 
+                                      priority )
+                                      
             return
             
         # Make sure we have a name string:
@@ -2857,8 +2867,9 @@ class HasTraits ( CHasTraits ):
                 listeners.append( lnw )
                 listener.set( handler         = ListenerHandler( handler ),
                               wrapped_handler = lnw,
-                              dispatch        = dispatch,
                               type            = lnw.type,
+                              dispatch        = dispatch,
+                              priority        = priority,
                               deferred        = deferred )
                 listener.register( self )  
 
@@ -3556,10 +3567,19 @@ class HasTraits ( CHasTraits ):
             def notify ( ):
                 self.trait_property_changed( name, None )
         else:
+            cached_old = cached + ':old'
+            def pre_notify ( ):
+                dict = self.__dict__
+                old  = dict.get( cached_old, Undefined )
+                if old is Undefined:
+                    dict[ cached_old ] = dict.pop( cached, None )
+                    
+            self.on_trait_change( pre_notify, pattern, priority = True )
+                    
             def notify ( ):
-                old = self.__dict__.get( cached )
-                self.__dict__[ cached ] = None
-                self.trait_property_changed( name, old )
+                old = self.__dict__.pop( cached_old, Undefined )
+                if old is not Undefined:
+                    self.trait_property_changed( name, old )
                 
         self.on_trait_change( notify, pattern )
 

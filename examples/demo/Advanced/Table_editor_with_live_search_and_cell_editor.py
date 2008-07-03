@@ -1,8 +1,7 @@
 """
 This example demonstrates how to implement 'live search' using a TableEditor,
 as well as how to embed more sophisticated editors, such as a CodeEditor, within
-a table cell. This example also makes fairly extensive use of cached and
-non-cached properties.
+a table cell. This example also makes extensive use of cached properties.
 
 The example is a fairly simple source code file search utility. You determine 
 which files to search and what to search for using the various controls spread 
@@ -357,7 +356,7 @@ class SourceFile ( HasTraits ):
         except:
             return ''
         
-    #@cached_property
+    @cached_property
     def _get_matches ( self ):
         search = self.live_search.search
         if search == '':
@@ -369,14 +368,10 @@ class SourceFile ( HasTraits ):
                      for i, line in enumerate( self.contents )
                      if line.find( search ) >= 0 ]
         
-        try:
-         search = search.lower()
-         return [ '%5d: %s' % ( (i + 1), line.strip() )
+        search = search.lower()
+        return [ '%5d: %s' % ( (i + 1), line.strip() )
                  for i, line in enumerate( self.contents )
                  if line.lower().find( search ) >= 0 ]
-        except:
-            print i, line, self.full_name
-            return []
     
 #-- Set up and run the demo ----------------------------------------------------
 

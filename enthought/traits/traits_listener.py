@@ -166,6 +166,10 @@ class ListenerBase ( HasPrivateTraits ):
     # The dispatch mechanism to use when invoking the handler:
     #dispatch = Str
     
+    # Does the handler go at the beginning (True) or end (False) of the
+    # notification handlers list?
+    #priority = Bool( False )
+    
     # The next level (if any) of ListenerBase object to be called when any of
     # our listened to traits is changed:
     #next = Instance( ListenerBase )
@@ -271,6 +275,10 @@ class ListenerItem ( ListenerBase ):
     
     # The dispatch mechanism to use when invoking the handler:
     dispatch = Str
+    
+    # Does the handler go at the beginning (True) or end (False) of the
+    # notification handlers list?
+    priority = Bool( False )
     
     # The next level (if any) of ListenerBase object to be called when any of
     # this object's listened-to traits is changed:
@@ -596,6 +604,16 @@ class ListenerItem ( ListenerBase ):
         """
         if self.next is not None:
             self.next.dispatch = dispatch
+    
+    #---------------------------------------------------------------------------
+    #  Handles the 'priority' trait being changed:
+    #---------------------------------------------------------------------------
+    
+    def _priority_changed ( self, priority ):
+        """ Handles the **priority** trait being changed.
+        """
+        if self.next is not None:
+            self.next.priority = priority
         
     #-- Private Methods --------------------------------------------------------
     
@@ -609,7 +627,9 @@ class ListenerItem ( ListenerBase ):
         handler = self.handler()
         if handler is not Undefined:
             object._on_trait_change( handler, remove   = remove,
-                                              dispatch = self.dispatch )
+                                              dispatch = self.dispatch,
+                                              priority = self.priority )
+                                              
         return ( object, name )
         
     #---------------------------------------------------------------------------
@@ -623,8 +643,11 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name, remove = remove,
-                                         dispatch = self.dispatch )
+                object._on_trait_change( handler, name, 
+                                         remove   = remove,
+                                         dispatch = self.dispatch,
+                                         priority = self.priority )
+                                         
             return ( object, name )
         
         tl_handler = self.handle_simple
@@ -639,11 +662,14 @@ class ListenerItem ( ListenerBase ):
                 handler = self.handler()
                 if handler is not Undefined:
                     object._on_trait_change( handler, name, 
-                                remove = remove, dispatch = self.dispatch )
-        
+                                             remove   = remove, 
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
+                                
         object._on_trait_change( tl_handler, name, 
-                                 remove = remove, dispatch = 'extended' )
-        
+                                 remove   = remove, 
+                                 dispatch = 'extended',
+                                 priority = self.priority )
     
         if remove:
             return next.unregister( getattr( object, name ) )
@@ -664,16 +690,23 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name, remove = remove, 
-                                         dispatch = self.dispatch )
+                object._on_trait_change( handler, name, 
+                                         remove   = remove, 
+                                         dispatch = self.dispatch,
+                                         priority = self.priority )
         
                 if self.is_list_handler:
                     object._on_trait_change( self.handle_list_items_special,
-                                             name + '_items', remove = remove,
-                                             dispatch = self.dispatch )
+                                             name + '_items', 
+                                             remove   = remove,
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
+                                             
                 elif self.type == ANY_LISTENER:
                     object._on_trait_change( handler, name + '_items', 
-                                     remove = remove, dispatch = self.dispatch )
+                                             remove   = remove, 
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
                                     
             return ( object, name )
            
@@ -685,22 +718,32 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name, remove = remove, 
-                                             dispatch = self.dispatch )
+                    object._on_trait_change( handler, name, 
+                                             remove   = remove, 
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
                     
                     if self.is_list_handler:
                         object._on_trait_change( self.handle_list_items_special,
-                                               name + '_items', remove = remove,
-                                               dispatch = self.dispatch )
+                                               name + '_items', 
+                                               remove   = remove,
+                                               dispatch = self.dispatch,
+                                               priority = self.priority )
                     elif self.type == ANY_LISTENER:
                         object._on_trait_change( handler, name + '_items', 
-                                     remove = remove, dispatch = self.dispatch )
+                                                 remove   = remove, 
+                                                 dispatch = self.dispatch,
+                                                 priority = self.priority )
 
         object._on_trait_change( tl_handler, name, 
-                                 remove = remove, dispatch = 'extended' )
+                                 remove   = remove, 
+                                 dispatch = 'extended',
+                                 priority = self.priority )
             
         object._on_trait_change( tl_handler_items, name + '_items', 
-                                 remove = remove, dispatch = 'extended' )
+                                 remove   = remove, 
+                                 dispatch = 'extended',
+                                 priority = self.priority )
                                 
         if remove:
             handler = next.unregister
@@ -735,12 +778,16 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name, remove = remove, 
-                                         dispatch = self.dispatch )
+                object._on_trait_change( handler, name, 
+                                         remove   = remove, 
+                                         dispatch = self.dispatch,
+                                         priority = self.priority )
                                 
                 if self.type == ANY_LISTENER:
                     object._on_trait_change( handler, name + '_items', 
-                                     remove = remove, dispatch = self.dispatch )
+                                             remove   = remove,
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
                                     
             return ( object, name )
            
@@ -752,18 +799,26 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name, remove = remove, 
-                                             dispatch = self.dispatch )
+                    object._on_trait_change( handler, name, 
+                                             remove   = remove, 
+                                             dispatch = self.dispatch,
+                                             priority = self.priority )
                                     
                     if self.type == ANY_LISTENER:
                         object._on_trait_change( handler, name + '_items', 
-                                     remove = remove, dispatch = self.dispatch )
+                                                 remove   = remove, 
+                                                 dispatch = self.dispatch,
+                                                 priority = self.priority )
 
         object._on_trait_change( tl_handler, name, 
-                                 remove = remove, dispatch = self.dispatch )
+                                 remove   = remove, 
+                                 dispatch = self.dispatch,
+                                 priority = self.priority )
             
         object._on_trait_change( tl_handler_items, name + '_items', 
-                                 remove = remove, dispatch = self.dispatch )
+                                 remove   = remove, 
+                                 dispatch = self.dispatch,
+                                 priority = self.priority )
                                 
         if remove:
             handler = next.unregister
@@ -830,6 +885,10 @@ class ListenerGroup ( ListenerBase ):
     
     # The dispatch mechanism to use when invoking the handler:
     dispatch = Property
+    
+    # Does the handler go at the beginning (True) or end (False) of the
+    # notification handlers list?
+    priority = ListProperty
     
     # The next level (if any) of ListenerBase object to be called when any of
     # this object's listened-to traits is changed
