@@ -868,8 +868,15 @@ class ListenerItem ( ListenerBase ):
 def _set_value ( self, name, value ):
     for item in self.items:
         setattr( item, name, value )
+
+def _get_value ( self, name ):
+    # Use the attribute on the first item. If there are no items, return None.
+    if self.items:
+        return getattr( self.items[0], name )
+    else:
+        return None
         
-ListProperty = Property( fset = _set_value )
+ListProperty = Property( fget = _get_value, fset = _set_value )
 
 class ListenerGroup ( ListenerBase ):
     
