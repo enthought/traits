@@ -59,6 +59,16 @@ the Ctrl-Up and Ctrl-Down cursor keys. You can also use the Ctrl-Left and
 Ctrl-Right cursor keys to move to the previous or next column on the same line.
 
 You can also exit the 'Matches' code editor by pressing the Escape key.
+
+Finally:
+    
+  - You can click and drag the little circle to the right of the currently
+    selected file to drag and drop the file. This can be useful, for example, to 
+    drag and drop the file into your favorite text editor.
+    
+  - Similarly, you can also drag the contents of the 'Name' column into your 
+    favorite text editor to edit the file corresponding to that line in the 
+    table.
 """
 
 #-- Imports --------------------------------------------------------------------
@@ -105,6 +115,11 @@ class MatchesColumn2 ( ObjectColumn ):
     
     def is_editable ( self, object ):
         return (len( object.matches ) > 0)
+        
+class FileColumn ( ObjectColumn ):
+    
+    def get_drag_value ( self, object ):
+        return object.full_name
 
 table_editor = TableEditor(
     columns = [
@@ -123,7 +138,7 @@ table_editor = TableEditor(
                         style       = 'readonly',
                         edit_width  = 0.95,
                         edit_height = 0.33 ),
-        ObjectColumn(   name        = 'base_name',
+        FileColumn(     name        = 'base_name',
                         label       = 'Name',
                         width       = 0.30,
                         editable    = False ),
@@ -132,10 +147,12 @@ table_editor = TableEditor(
                         width       = 0.30,
                         editable    = False ),
     ],
-    filter_name  = 'filter',
-    auto_size    = False,
-    show_toolbar = False,
-    selected     = 'selected'
+    filter_name        = 'filter',
+    auto_size          = False,
+    show_toolbar       = False,
+    selected           = 'selected',
+    selection_color    = 0x000000,
+    selection_bg_color = 0xFBD391
 )    
     
 #-- LiveSearch class -----------------------------------------------------------

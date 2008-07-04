@@ -460,6 +460,15 @@ class ObjectColumn ( TableColumn ):
             return 'Format!'
         
     #---------------------------------------------------------------------------
+    #  Returns the drag value for the column:
+    #---------------------------------------------------------------------------
+    
+    def get_drag_value ( self, object ):
+        """Returns the drag value for the column.
+        """
+        return self.get_raw_value( object )
+        
+    #---------------------------------------------------------------------------
     #  Sets the value of the column for a specified object:  
     #---------------------------------------------------------------------------
         
