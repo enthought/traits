@@ -3,6 +3,7 @@
 
 # Standard library imports
 import gc
+import time
 import unittest
 
 # Enthought library imports
@@ -73,8 +74,6 @@ class TestCase(unittest.TestCase):
 
         foo = Foo()
 
-        referrers = gc.get_referrers(foo)
-
         # It seems like foo sometimes has not finished construction yet, so the
         # frame found by referrers is not _exactly_ the same as Foo(). For more
         # information, see the gc doc: http://docs.python.org/lib/module-gc.html
@@ -84,6 +83,7 @@ class TestCase(unittest.TestCase):
         # the code.
 
         time.sleep(0.1)
+        referrers = gc.get_referrers(foo.__dict__)
 
         self.assertTrue(len(referrers) > 0)
         self.assertTrue(foo in referrers)

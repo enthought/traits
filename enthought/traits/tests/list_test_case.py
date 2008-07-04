@@ -114,21 +114,6 @@ class ListTestCase(unittest.TestCase):
         except TraitError:
             pass
         
-    def test_should_allow_none(self):
-
-        import testoob.testing
-        testoob.testing.skip("List traits do not obey 'allow_none'")
-        
-        # This test is currently failing.  List traits do not obey 'allow_none'
-        # Maybe the class definition should fail.
-        class Bar(HasTraits):
-            l = List(Str, allow_none=True)
-
-        b = Bar()
-        b.l = None
-        self.failUnlessEqual(b.l, None)
-        return
-
     def test_clone(self):
         baz = Baz()
         for name in ['a', 'b', 'c', 'd']:

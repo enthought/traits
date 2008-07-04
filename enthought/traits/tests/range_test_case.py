@@ -71,6 +71,8 @@ class RangeTestCase(unittest.TestCase):
         return
     
     def ui_test_events(self):
+        import nose
+        raise nose.SkipTest('Requires GUI')
         print
         print 'enter the value 34.56 in the range text box and tab out or enter.'
         print 'Notice that the changed handler call count is 2.'
@@ -90,6 +92,8 @@ class RangeTestCase(unittest.TestCase):
         return
     
     def ui_test_int_events(self):
+        import nose
+        raise nose.SkipTest('Requires GUI')
         print
         print 'enter the value 95 in the range text box.'
         print 'Notice that the changed handler call count is 2.'

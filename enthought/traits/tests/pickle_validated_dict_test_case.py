@@ -23,17 +23,3 @@ class PickleValidatedDictTestCase(unittest.TestCase):
         except AttributeError, e:
             self.fail('Unpickling raised an AttributeError: %s' % e)
 
-# Here is a hack to work around a testoob+traits error:
-#
-#   Traceback (most recent call last):
-#     File "/src/enthought/src/lib/enthought/traits/tests/regression/pickle_validated_dict_test_case.py", line 21, in test
-#       x = dumps(C())
-#   PicklingError: Can't pickle <class 'pickle_validated_dict_test_case.C'>: import of module pickle_validated_dict_test_case failed
-#
-# We simply force the two classes to be the same.
-import pickle_validated_dict_test_case
-pickle_validated_dict_test_case.C = C
-
-if __name__ == '__main__':
-    import sys
-    unittest.main(argv=sys.argv)
