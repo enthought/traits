@@ -67,7 +67,7 @@ from os.path \
     
 from enthought.traits.api \
     import HasTraits, File, Directory, Str, Bool, Int, Enum, Instance, \
-           Property, Any, Callable, cached_property
+           Property, Any, Callable, cached_property, property_depends_on
     
 from enthought.traits.ui.api \
     import View, VGroup, VSplit, HGroup, Item, TableEditor, CodeEditor, \
@@ -154,31 +154,31 @@ class LiveSearch ( HasTraits ):
     case_sensitive = Bool( False )
     
     # The live search table filter:
-    filter = Property( depends_on = 'search, case_sensitive' )
+    filter = Property # Instance( TableFilter )
     
     # The current list of source files being searched:
-    source_files = Property( depends_on = 'root, recursive, file_type' )
+    source_files = Property # List( SourceFile )
     
     # The currently selected source file:
     selected = Any # Instance( SourceFile )
     
     # The contents of the currently selected source file:
-    selected_contents = Property( depends_on = 'selected' )
+    selected_contents = Property # List( Str )
     
     # The currently selected match:
     selected_match = Int
     
     # The text line corresponding to the selected match:
-    selected_line = Property( depends_on = 'selected, selected_match' )
+    selected_line = Property # Int
     
     # The full name of the currently selected source file:
-    selected_full_name = Property( depends_on = 'selected' )
+    selected_full_name = Property # File
     
     # The list of marked lines for the currently selected file:
-    mark_lines = Property( depends_on = 'selected' )
+    mark_lines = Property # List( Int )
     
     # Summary of current number of files and matches:
-    summary = Property( depends_on = 'source_files, search, case_sensitive' )
+    summary = Property # Str
     
     #-- Traits UI Views --------------------------------------------------------
     
@@ -224,14 +224,14 @@ class LiveSearch ( HasTraits ):
         
     #-- Property Implementations -----------------------------------------------
     
-    @cached_property
+    @property_depends_on( 'search, case_sensitive' )
     def _get_filter ( self ):
         if len( self.search ) == 0:
             return lambda x: True
           
         return lambda x: len( x.matches ) > 0
     
-    @cached_property
+    @property_depends_on( 'root, recursive, file_type' )
     def _get_source_files ( self ):
         root = self.root
         if root == '':
@@ -253,14 +253,14 @@ class LiveSearch ( HasTraits ):
                  for file_name in listdir( root )
                  if splitext( file_name )[1] in file_types ]
                  
-    @cached_property
+    @property_depends_on( 'selected' )
     def _get_selected_contents ( self ):
         if self.selected is None:
             return ''
             
         return ''.join( self.selected.contents )
         
-    @cached_property
+    @property_depends_on( 'selected' )
     def _get_mark_lines ( self ):
         if self.selected is None:
             return []
@@ -268,7 +268,7 @@ class LiveSearch ( HasTraits ):
         return [ int( match.split( ':', 1 )[0] ) 
                  for match in self.selected.matches ]
                  
-    @cached_property
+    @property_depends_on( 'selected, selected_match' )
     def _get_selected_line ( self ):
         selected = self.selected
         if (selected is None) or (len( selected.matches ) == 0):
@@ -277,14 +277,14 @@ class LiveSearch ( HasTraits ):
         return int( selected.matches[ self.selected_match - 1 
                                     ].split( ':', 1 )[0] )
         
-    @cached_property
+    @property_depends_on( 'selected' )
     def _get_selected_full_name ( self ):
         if self.selected is None:
             return ''
             
         return self.selected.full_name
         
-    @cached_property
+    @property_depends_on( 'source_files, search, case_sensitive' )
     def _get_summary ( self ):
         source_files = self.source_files
         search       = self.search
@@ -324,29 +324,28 @@ class SourceFile ( HasTraits ):
     full_name = File
     
     # The base file name of the source file:
-    base_name = Property( depends_on = 'full_name' )
+    base_name = Property # Str
     
     # The portion of the file path beyond the root search path:
-    ext_path = Property( depends_on = 'full_name' )
+    ext_path = Property # Str
     
     # The contents of the source file:
-    contents = Property( depends_on = 'full_name' )
+    contents = Property # List( Str )
     
     # The list of matches for the current search criteria:
-    matches = Property( 
-                depends_on = 'full_name, live_search.[search, case_sensitive]' )
+    matches = Property # List( Str )
     
     #-- Property Implementations -----------------------------------------------
     
-    @cached_property
+    @property_depends_on( 'full_name' )
     def _get_base_name ( self ):
         return basename( self.full_name )
         
-    @cached_property
+    @property_depends_on( 'full_name' )
     def _get_ext_path ( self ):
         return dirname( self.full_name )[ len( self.live_search.root ): ]
         
-    @cached_property
+    @property_depends_on( 'full_name' )
     def _get_contents ( self ):
         try:
             fh = open( self.full_name, 'rb' )
@@ -356,7 +355,7 @@ class SourceFile ( HasTraits ):
         except:
             return ''
         
-    @cached_property
+    @property_depends_on( 'full_name, live_search.[search, case_sensitive]' )
     def _get_matches ( self ):
         search = self.live_search.search
         if search == '':

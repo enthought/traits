@@ -1052,8 +1052,9 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         if ('editor' not in metadata) and (trait.editor is not None):
             metadata[ 'editor' ] = trait.editor
 
+    metadata.setdefault( 'depends_on', getattr( fget, 'depends_on', None ) )
     if ((metadata.get( 'depends_on' ) is not None) and
-        getattr( fget, 'cached_property', False )):
+         getattr( fget, 'cached_property', False )):
         metadata.setdefault( 'cached', True )
 
     n     = 0

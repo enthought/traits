@@ -69,7 +69,8 @@ from has_traits \
     import method, HasTraits, HasStrictTraits, HasPrivateTraits, Interface, \
            SingletonHasTraits, SingletonHasStrictTraits, \
            SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent, \
-           implements, traits_super, on_trait_change, cached_property
+           implements, traits_super, on_trait_change, cached_property, \
+           property_depends_on
 
 from trait_handlers \
     import BaseTraitHandler, TraitType, TraitHandler, TraitRange, TraitString, \
