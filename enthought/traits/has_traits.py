@@ -139,6 +139,9 @@ extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
 
+# The standard Traits property cache prefix:
+TraitsCache = '_traits_cache_'
+
 #-------------------------------------------------------------------------------
 #  Filter for selecting traits whose metadata is not 'event':
 #-------------------------------------------------------------------------------
@@ -795,15 +798,18 @@ class MetaHasTraitsObject ( object ):
             rc    = isinstance( value, CTrait )
 
             if (not rc) and isinstance( value, ForwardProperty ):
-                rc       = True
+                rc     = True
+                getter = _property_method( class_dict, '_get_' + name )
+                setter = _property_method( class_dict, '_set_' + name )
+                if ((setter is None) and (getter is not None) and 
+                    getattr( getter, 'settable', False )):
+                    setter = HasTraits._set_traits_cache
                 validate = _property_method( class_dict, '_validate_' + name )
                 if validate is None:
                     validate = value.validate
                     
-                value = Property(
-                            _property_method( class_dict, '_get_' + name ),
-                            _property_method( class_dict, '_set_' + name ),
-                            validate, True, value.handler, **value.metadata )
+                value = Property( getter, setter, validate, True, 
+                                  value.handler, **value.metadata )
             if rc:
                 del class_dict[ name ]
                 if name[-1:] != '_':
@@ -1040,7 +1046,7 @@ class MetaHasTraitsObject ( object ):
                 
                 cached = trait.cached
                 if cached is True:
-                    cached = '_traits_cache_' + name
+                    cached = TraitsCache + name
                     
                 depends_on = trait.depends_on
                 if isinstance( depends_on, SequenceTypes ):
@@ -1312,7 +1318,7 @@ def cached_property ( function ):
         so that _get_file_contents() is called only when **file_name** changes.
         For details, see the enthought.traits.traits.Property() function.
     """
-    name = '_traits_cache_' + function.__name__[ 5: ]
+    name = TraitsCache + function.__name__[ 5: ]
     
     def decorator ( self ):
         result = self.__dict__.get( name, Undefined )
@@ -1325,7 +1331,7 @@ def cached_property ( function ):
     
     return decorator        
    
-def property_depends_on ( dependency ):
+def property_depends_on ( dependency, settable = False ):
     """ Marks the following method definition as being a "cached property"
         that depends on the specified extended trait names. That is, it is a 
         property getter which, for performance reasons, caches its most recently 
@@ -1355,7 +1361,7 @@ def property_depends_on ( dependency ):
         code, is returned.
     """
     def decorator ( function ):
-        name = '_traits_cache_' + function.__name__[ 5: ]
+        name = TraitsCache + function.__name__[ 5: ]
         
         def wrapper ( self ):
             result = self.__dict__.get( name, Undefined )
@@ -1366,6 +1372,7 @@ def property_depends_on ( dependency ):
         
         wrapper.cached_property = True
         wrapper.depends_on      = dependency
+        wrapper.settable        = settable
             
         return wrapper
     
@@ -1405,7 +1412,7 @@ class HasTraits ( CHasTraits ):
     #-- Trait Prefix Rules -----------------------------------------------------
     
     # Make traits 'property cache' values private with no type checking:
-    __traits_cache_ = Any( private = True, transient = True )
+    _traits_cache__ = Any( private = True, transient = True )
 
     #-- Class Variables --------------------------------------------------------
 
@@ -3393,6 +3400,19 @@ class HasTraits ( CHasTraits ):
 
     class_trait_names = classmethod( class_trait_names )
 
+    #---------------------------------------------------------------------------
+    #  Explicitly sets the value of a cached property: 
+    #---------------------------------------------------------------------------
+    
+    def _set_traits_cache ( self, name, value ):
+        """ Explicitly sets the value of a cached property.
+        """
+        cached    = TraitsCache + name
+        old_value = self.__dict__.get( cached, Undefined )
+        self.__dict__[ cached ] = value
+        if old_value != value:
+            self.trait_property_changed( name, old_value, value )
+        
     #---------------------------------------------------------------------------
     #  Returns the trait definition for a specified name when there is no
     #  explicit definition in the class:
