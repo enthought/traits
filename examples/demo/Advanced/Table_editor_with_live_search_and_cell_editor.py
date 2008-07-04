@@ -75,7 +75,7 @@ from enthought.traits.api \
     
 from enthought.traits.ui.api \
     import View, VGroup, VSplit, HGroup, Item, TableEditor, CodeEditor, \
-           TitleEditor, HistoryEditor
+           TitleEditor, HistoryEditor, DNDEditor
     
 from enthought.traits.ui.table_column \
     import ObjectColumn
@@ -189,10 +189,15 @@ class LiveSearch ( HasTraits ):
     view = View(
         VGroup(
             HGroup(
-                Item( 'root', label = 'Path', width = 0.5 ), 
+                Item( 'root', 
+                      id    = 'root',
+                      label = 'Path',
+                      width = 0.5
+                ), 
                 Item( 'recursive' ),
                 Item( 'file_type', label = 'Type' ),
                 Item( 'search', 
+                      id     = 'search',
                       width  = 0.5, 
                       editor = HistoryEditor( auto_set = True )
                 ),
@@ -200,14 +205,27 @@ class LiveSearch ( HasTraits ):
             ),
             VSplit(
                 VGroup(
-                    Item( 'summary',      editor = TitleEditor() ),
-                    Item( 'source_files', editor = table_editor ),
+                    Item( 'summary',
+                          editor = TitleEditor()
+                    ),
+                    Item( 'source_files',
+                          id     = 'source_files',
+                          editor = table_editor
+                    ),
                     dock        = 'horizontal',
                     show_labels = False
                 ),
                 VGroup(
-                    Item( 'selected_full_name',
-                          editor = TitleEditor()
+                    HGroup(
+                        Item( 'selected_full_name',
+                              editor  = TitleEditor(),
+                              springy = True
+                        ),
+                        Item( 'selected_full_name',
+                              editor  = DNDEditor(),
+                              tooltip = 'Drag this file'
+                        ),
+                        show_labels = False
                     ),
                     Item( 'selected_contents',
                           style  = 'readonly',
