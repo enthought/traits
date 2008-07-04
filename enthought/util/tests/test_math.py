@@ -13,24 +13,24 @@
 #------------------------------------------------------------------------------
 import unittest
 
-import scipy as S
+import numpy
 import enthought.util.math as M
 
 
 class test_math(unittest.TestCase):
     
     def test_is_monotonic(self):
-        a = S.array((1,2,3,4,5,6,7))
+        a = numpy.array((1,2,3,4,5,6,7))
         self.assert_(M.is_monotonic(a) == True)
-        a = S.array((1,2,3,-1000,5,6,7))
+        a = numpy.array((1,2,3,-1000,5,6,7))
         self.assert_(M.is_monotonic(a) == False)
-        a = S.array((1))
+        a = numpy.array((1))
         self.assert_(M.is_monotonic(a) == False)
     
     def test_brange(self):
-        a = S.arange(1,5,1)
+        a = numpy.arange(1,5,1)
         b = M.brange(1,4,1)
-        self.assert_(S.allclose(a, b))
+        self.assert_(numpy.allclose(a, b))
         
     
 if __name__ == "__main__":

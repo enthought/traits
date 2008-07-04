@@ -15,10 +15,10 @@
 A placeholder for numeric functions that are not yet implemented in SciPy.
 """
 
-import scipy
-from numpy.oldnumeric import PyObject, nonzero
-from scipy import take, amin, amax, arange, asarray, mean, std, isnan, \
-                  product, shape, array, isfinite, compress
+import warnings
+
+import numpy
+from scipy import stats
 
 """
 The following safe_ methods were written to handle both arrays amd scalars to
@@ -29,7 +29,7 @@ to determine the type of the data.
 def safe_take(a,indices):
     # Slice the input if it is an array but not if it is a scalar
     try:
-        a = take(a,indices)
+        a = numpy.take(a,indices)
     except ValueError:
         # a is scalar
         pass
@@ -50,7 +50,7 @@ def safe_min(a):
     # Return the minimum of the input array or the input if it is a scalar
     b = discard_nans(a)
     try:
-        safemin = amin(b)
+        safemin = numpy.amin(b)
     except:
         safemin = b
     return safemin
@@ -59,7 +59,7 @@ def safe_max(a):
     # Return the maximum of the input array or the input if it is a scalar
     b = discard_nans(a)
     try:
-        safemax = amax(b)
+        safemax = numpy.amax(b)
     except:
         safemax = b
     return safemax
@@ -68,7 +68,7 @@ def safe_mean(a):
     # Return the mean of the input array or the input if it is a scalar
     b = discard_nans(a)
     try:
-        safemean = mean(b)
+        safemean = numpy.mean(b)
     except:
         safemean = b
     return safemean
@@ -77,7 +77,7 @@ def safe_std(a):
     # Return the std of the input array or the input if it is a scalar
     b = discard_nans(a)
     try:
-        safestd = std(b)
+        safestd = numpy.std(b)
     except:
         safestd = 0.
     return safestd
@@ -102,19 +102,8 @@ def safe_flat(a):
 def safe_nonzero(a):
     """ Gracefully handle the case where the input is a scalar
     """
-    try:
-        result = nonzero(a)
-    except:
-        if a == 0:
-            if which[0] == "numpy":
-                result = (array([]),)
-            else:
-                result = array([])
-        else:
-            if which[0] == "numpy":
-                result = (array([0]),)
-            else:
-                result = array([0])
+    a = numpy.atleast_1d(a)
+    result = numpy.nonzero(a)[0]
     return result
 
 def discard_nans(a):
@@ -127,49 +116,42 @@ def discard_nans(a):
         np = len(a)
     except:
         # scalar
-        if isnan(a):
+        if numpy.isnan(a):
             return  0
         return a
     # array
     # isnan(a) ignores Infs, so use isfinite(a)
     
-    ids = compress(isfinite(a),range(np)) # indexes of non-nans
+    ids = numpy.nonzero(numpy.isfinite(a))[0]
     nids = safe_len(ids)
     if nids == np:
         # everything is finite
         pass
     elif nids == 0:
         # everything is nans, no finites
-        result = array([])
+        result = numpy.array([])
     else:
         # found some nans
-        result = take(result, ids)
+        result = result[ids]
     return result
 
 
 
 #### Miscellaneous math functions .....
 
-def concatenate(arys,axis=0):
-    """ The standard concatenate fails if any of the arrays have
-        a dimension of 0 along any axis.  This method searches
-        out such arrays, and removes them before calling the standard
-        concatenate method
+def concatenate(arys, axis=0):
+    """ This used to replace Numeric.concatenate to work around Numeric's old
+    behavior of not handling 0-element arrays.
+
+    numpy exhibits the desired behavior, so this function is deprecated.
     """
-
-    # remove any zero dimensional arrays
-    arys = [ary for ary in arys if product(shape(ary)) != 0]
-
-    # if the list is empty, return an empty array.
-    if len(arys) == 0:
-        result = array(())
-    else:
-        result = scipy.concatenate(arys, axis=axis)
-
+    warnings.warn("This function is no longer necessary. Use numpy.concatenate instead.",
+        DeprecationWarning)
+    result = numpy.concatenate(arys, axis=axis)
     return result
 
 def pretty_print(arrays, header=None, max_record=0, line_number=True):
-    """ Returns a String representation of a List of arrays
+    """ Returns a string representation of a list of arrays
 
         Parameters
         ----------
@@ -182,7 +164,7 @@ def pretty_print(arrays, header=None, max_record=0, line_number=True):
 
     # add a new column to the front of the list
     if line_number:
-        lines = arange(0, len(arrays[0]), 1)
+        lines = numpy.arange(0, len(arrays[0]), 1)
         arrays.insert(0, lines)
     # construct an underline bar - =======
     UNDER_LINE = '=' * (COL_WIDTH * len(arrays))
@@ -223,14 +205,14 @@ def string_to_array(data):
         2-D character array. If the input data is not a String or a sequence of
         Strings return the original data object.
     """
-    if type(data) is str:
+    if isinstance(data, basestring):
         # handle a single string as input.
-        data = asarray((data,),PyObject)
+        data = numpy.asarray((data,), dtype=object)
     else:
         try:
             # handle a sequence of strings
-            if type(data[0]) is str:
-                data = asarray(data,PyObject)
+            if isinstance(data[0], basestring):
+                data = numpy.asarray(data, dtype=object)
         except TypeError:
             # if data wasn't a string or sequence of strings, an
             # unchanged data is returned.
@@ -240,49 +222,26 @@ def string_to_array(data):
 
 #### Distribution functions ... ################################################
 
-from scipy import stats
 
 def single_norm(meanval, std):
-    # the scipy interface changed. Grrr.
-    try:
-        value = stats.norm(loc = meanval, scale = std)[0]
-    except:
-        value = stats.norm(loc = meanval, scale = std).rvs()[0]
-    return value
+    return numpy.random.normal(meanval, std)
 
 def single_trunc_norm(mean, std, min, max):
-    # the scipy interface changed. Grrr.
-
     # Need to scale the clipping values ....
     a = (min - mean) / float(std)
     b = (max - mean) / float(std)
 
-    try:
-        value = stats.truncnorm(a, b, loc = mean, scale = std)[0]
-    except:
-        value = stats.truncnorm(a, b, loc = mean, scale = std).rvs()[0]
+    value = stats.truncnorm(a, b, loc=mean, scale=std).rvs()[0]
     return value
 
 
 def single_triang(ratio, start, width):
-    # the scipy interface changed. Grrr.
-    try:
-        value = stats.triang(ratio, start, width)[0]
-    except:
-        value = stats.triang(ratio, start, width).rvs()[0]
+    value = stats.triang(ratio, start, width).rvs()[0]
     return value
 
 
 def single_uniform(min, max):
-    # the scipy interface changed. Grrr.
-
-    width = max - min
-
-    try:
-        value = stats.uniform(loc = min, scale = width)[0]
-    except:
-        value = stats.uniform(loc = min, scale = width).rvs()[0]
-    return value
+    return numpy.random.uniform(min, max)
 
 
 def nearest_index(index_array, value):
@@ -290,10 +249,7 @@ def nearest_index(index_array, value):
 
     # find the index of the last data point that is smaller than the 'value'
     # we are looking for ....
-    if which[0] == "numpy":
-        ind1 = len(index_array.compress(index_array < value))  
-    else:
-        ind1 = nonzero(index_array <= value)[-1]  
+    ind1 = len(index_array.compress(index_array < value))  
 
     # if we are at the very end of the array then this is our best estimate ...
     if ind1 == len(index_array)-1:

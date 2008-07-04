@@ -62,7 +62,6 @@
 # December 9, 2003   Fixed MAX_RANDOM, which was going over sys.maxint
 #
 
-import math
 import random
 import socket
 import sys

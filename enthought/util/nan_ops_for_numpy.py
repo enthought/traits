@@ -1,7 +1,7 @@
 ### Note, these are placeholder solutions
 
 from numpy import amin, amax, mean, median, reshape, asarray, isnan, \
-                  compress, isfinite
+                  compress, isfinite, where, inf
 
 def _asarray1d(arr):
     """ Ensure 1d array for one array.

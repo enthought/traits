@@ -11,7 +11,7 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-import os.path
+import os
 import subprocess
 import unittest
 

@@ -33,7 +33,7 @@ def strip_math(s):
     for r in remove:  s = s.replace(r,'')
     return s
 
-class Bunch:
+class Bunch(object):
    """
    Often we want to just collect a bunch of stuff together, naming each
    item of the bunch; a dictionary's OK for that, but a small do- nothing
@@ -100,7 +100,7 @@ def flatten(seq, scalarp=is_scalar):
 
 
 
-class Sorter:
+class Sorter(object):
    """
 
    Sort by attribute or item
@@ -211,7 +211,7 @@ def soundex(name, len=4):
 
 
 
-class Null:
+class Null(object):
     """ Null objects always and reliably "do nothing." """
 
     def __init__(self, *args, **kwargs): pass
@@ -242,13 +242,13 @@ def dict_delall(d, keys):
         except KeyError: pass
         
 
-class RingBuffer:
+class RingBuffer(object):
     """ class that implements a not-yet-full buffer """
     def __init__(self,size_max):
         self.max = size_max
         self.data = []
 
-    class __Full:
+    class __Full(object):
         """ class that implements a full buffer """
         def append(self, x):
             """ Append an element overwriting the oldest one. """
@@ -264,13 +264,13 @@ class RingBuffer:
         if len(self.data) == self.max:
             self.cur = 0
             # Permanently change self's class from non-full to full
-            self.__class__ = __Full
+            self.__class__ = RingBuffer.__Full
 
     def get(self):
         """ Return a list of elements from the oldest to the newest. """
         return self.data
 
-    def __get_item__(self, i):
+    def __getitem__(self, i):
        return self.data[i % len(self.data)]
 
 
@@ -470,11 +470,11 @@ def popd(d, *args):
 
 
 
-class Stack:
+class Stack(object):
     """
     Implement a stack where elements can be pushed on and you can move
-    back and forth.  But no pop.  Should mimib home / back / forward
-    in a browser
+    back and forth.  But no pop.  Should mimic home / back / forward
+    in a browser.
     """
 
     def __init__(self, default=None):

@@ -12,10 +12,10 @@
 # Description: <Enthought statistical distribution package component>
 #------------------------------------------------------------------------------
 
-""" Base class representing ditribution input variables used for stocastic modeling """
+""" Base class representing distribution input variables used for stocastic modeling """
 
-from enthought.traits.api import HasTraits, Enum, Property, Float, Int
-from enthought.traits.ui.api import View, Item, Handler, InstanceEditor
+from enthought.traits.api import HasTraits, Property, Float, Int
+from enthought.traits.ui.api import View, Item
 
 import numpy
 

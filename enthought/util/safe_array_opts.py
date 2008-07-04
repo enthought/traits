@@ -15,8 +15,10 @@
 A placeholder for numeric functions that are not yet implemented in SciPy.
 """
 
-import scipy
+import warnings
+
 import numpy
+from scipy import stats
 
 """
 The following safe_ methods were written to handle both arrays amd scalars to
@@ -100,13 +102,8 @@ def safe_nonzero(a):
     """
     Gracefully handle the case where the input is a scalar
     """
-    try:
-        result = numpy.nonzero(a)
-    except:
-        if a == 0:
-            result = (numpy.array([]),)
-        else:
-            result = (numpy.array([0]),)
+    a = numpy.atleast_1d(a)
+    result = numpy.nonzero(a)[0]
     return result
 
 def discard_nans(a):
@@ -142,22 +139,15 @@ def discard_nans(a):
 
 #### Miscellaneous math functions .....
 
-def concatenate(arys,axis=0):
-    """ The standard concatenate fails if any of the arrays have
-        a dimension of 0 along any axis.  This method searches
-        out such arrays, and removes them before calling the standard
-        concatenate method
+def concatenate(arys, axis=0):
+    """ This used to replace Numeric.concatenate to work around Numeric's old
+    behavior of not handling 0-element arrays.
+
+    numpy exhibits the desired behavior, so this function is deprecated.
     """
-
-    # remove any zero dimensional arrays
-    arys = [ary for ary in arys if numpy.product(numpy.shape(ary)) != 0]
-
-    # if the list is empty, return an empty array.
-    if len(arys) == 0:
-        result = numpy.array(())
-    else:
-        result = scipy.concatenate(arys, axis=axis)
-
+    warnings.warn("This function is no longer necessary. Use numpy.concatenate instead.",
+        DeprecationWarning)
+    result = numpy.concatenate(arys, axis=axis)
     return result
 
 def pretty_print(arrays, header=None, max_record=0, line_number=True):
@@ -232,49 +222,25 @@ def string_to_array(data):
 
 #### Distribution functions ... ################################################
 
-from scipy import stats
-
 def single_norm(meanval, std):
-    # the scipy interface changed. Grrr.
-    try:
-        value = stats.norm(loc = meanval, scale = std)[0]
-    except:
-        value = stats.norm(loc = meanval, scale = std).rvs()[0]
-    return value
+    return numpy.random.normal(meanval, std)
 
 def single_trunc_norm(mean, std, min, max):
-    # the scipy interface changed. Grrr.
-
     # Need to scale the clipping values ....
     a = (min - mean) / float(std)
     b = (max - mean) / float(std)
 
-    try:
-        value = stats.truncnorm(a, b, loc = mean, scale = std)[0]
-    except:
-        value = stats.truncnorm(a, b, loc = mean, scale = std).rvs()[0]
+    value = stats.truncnorm(a, b, loc=mean, scale=std).rvs()[0]
     return value
 
 
 def single_triang(ratio, start, width):
-    # the scipy interface changed. Grrr.
-    try:
-        value = stats.triang(ratio, start, width)[0]
-    except:
-        value = stats.triang(ratio, start, width).rvs()[0]
+    value = stats.triang(ratio, start, width).rvs()[0]
     return value
 
 
 def single_uniform(min, max):
-    # the scipy interface changed. Grrr.
-
-    width = max - min
-
-    try:
-        value = stats.uniform(loc = min, scale = width)[0]
-    except:
-        value = stats.uniform(loc = min, scale = width).rvs()[0]
-    return value
+    return numpy.random.uniform(min, max)
 
 
 def nearest_index(index_array, value):

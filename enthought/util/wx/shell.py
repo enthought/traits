@@ -1241,7 +1241,7 @@ class ShellMenu:
             EVT_UPDATE_UI(self, ID_FILLING_SHOW_MODULE, self.OnUpdateMenu)
 
     def OnExit(self, event):
-        self.Close(true)
+        self.Close(True)
 
     def OnUndo(self, event):
         self.shell.Undo()

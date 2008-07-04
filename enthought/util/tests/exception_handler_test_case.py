@@ -1,11 +1,19 @@
 
 
+import logging
+from StringIO import StringIO
 import sys
 import unittest
 
 from enthought.util.ui.exception_handler import ExceptionHandler
 
+
 class ExceptionHandlerTestCase(unittest.TestCase):
+
+    def setUp(self):
+        # Silence "lack of logger handler" messages.
+        f = StringIO()
+        logging.basicConfig(stream=f)
 
     def test_simple(self):
         try:

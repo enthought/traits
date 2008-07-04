@@ -1,7 +1,5 @@
 'Non-standard higher-order functions'
 
-from copy import copy
-
 def partial(f, *a, **k): # (2.5 provides this)
     # Don't mutate 'a' or 'k' since each call to 'g' shares them
     def g(*b, **l):

@@ -13,25 +13,26 @@
 #------------------------------------------------------------------------------
 import unittest
 
+from numpy import arange, array
 import enthought.util.numeric as N
 
 
 class test_numeric(unittest.TestCase):
     
     def test_safe_take(self):
-        a = N.array((1,2,3,4,2,2,7))
-        b = N.array((2,2,2))
-        indices = N.array((1,4,5))
+        a = array((1,2,3,4,2,2,7))
+        b = array((2,2,2))
+        indices = array((1,4,5))
         x = N.safe_take(a,indices)
         self.assert_(all(x == b))
     
         a = 2
-        indices = N.array((0))
+        indices = array((0))
         x = N.safe_take(a,indices)
         self.assert_(x == a)
     
     def test_safe_copy(self):
-        a = N.arange(1,4,1)
+        a = arange(1,4,1)
         x = N.safe_copy(a)
         self.assert_(all(x == a))
         
@@ -40,7 +41,7 @@ class test_numeric(unittest.TestCase):
         self.assert_(x == a)
     
     def test_safe_min(self):
-        a = N.array((1,2,3,4,5,-6,-7))
+        a = array((1,2,3,4,5,-6,-7))
         x = N.safe_min(a)
         self.assert_(x == -7)
         
@@ -49,7 +50,7 @@ class test_numeric(unittest.TestCase):
         self.assert_(x == 5.)
     
     def test_safe_max(self):
-        a = N.array((1,2,3,4,5,-6,-7))
+        a = array((1,2,3,4,5,-6,-7))
         x = N.safe_max(a)
         self.assert_(x == 5)
         
@@ -58,7 +59,7 @@ class test_numeric(unittest.TestCase):
         self.assert_(x == 5.)
     
     def test_safe_len(self):
-        a = N.array((1,2,3,4,5,-6,-7))
+        a = array((1,2,3,4,5,-6,-7))
         x = N.safe_len(a)
         self.assert_(x == 7)
         

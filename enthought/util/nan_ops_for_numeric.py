@@ -1,4 +1,3 @@
-import types
 import Numeric as _nx
 from Numeric import asarray, reshape, argmin, argmax, compress
 from scipy.stats import mean, median

@@ -14,7 +14,7 @@
 """ A placeholder for math functionality that is not implemented in SciPy.
 """
 
-from scipy import amin, array, arange
+import numpy
 
 def is_monotonic(array):
     """ Does the array increase monotonically?
@@ -31,7 +31,7 @@ def is_monotonic(array):
     """
     
     try: 
-        min_increment = amin(array[1:] - array[:-1])
+        min_increment = numpy.amin(array[1:] - array[:-1])
         if min_increment >= 0:
             return True
     except Exception:
@@ -53,18 +53,18 @@ def brange(min_value, max_value, increment):
     array([ 1.,  2.,  3.,  4.])
     """
     
-    return arange(min_value, max_value + increment / 2.0, increment)
+    return numpy.arange(min_value, max_value + increment / 2.0, increment)
     
 
 def norm(mean, std):
-    """ Returns a single value from a normal distribution. """
+    """ Returns a single random value from a normal distribution. """
     
-    return stats.norm(mean, std)[0]
+    return numpy.random.normal(mean, std)
     
 
 def discrete_std (counts, bin_centers):
     """ Returns a standard deviation from binned data. """
 
-    mean = stats.sum(counts * bin_centers)/stats.sum(counts)
+    mean = numpy.sum(counts * bin_centers)/numpy.sum(counts)
 
-    return sqrt((stats.sum((counts-mean)**2))/len(counts))
+    return numpy.sqrt((numpy.sum((counts-mean)**2))/len(counts))

@@ -11,7 +11,6 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-import threading
 import time
 import unittest 
 
@@ -27,11 +26,11 @@ def slow_eval(worker, sleep_time):
             print worker.getName(),' sleeping for: ', sleep_time
     return sleep_time
 
-snooze = 1
+snooze = 0.1
 
 class test_worker_thread(unittest.TestCase):
     
-    def check_cancel(self):
+    def test_cancel(self):
         start = time.time()
         worker = Worker(name = "First EnVisage worker thread")
         worker.perform_work(slow_eval, snooze)
@@ -49,7 +48,7 @@ class test_worker_thread(unittest.TestCase):
         self.assert_(duration >= 5.0 * snooze)
         self.assert_(duration < 10.0 * snooze)
 
-    def check_concurrent(self):
+    def test_concurrent(self):
         start = time.time()
         
         worker = Worker(name = "First EnVisage worker thread")
@@ -65,21 +64,3 @@ class test_worker_thread(unittest.TestCase):
         
         # !! todo block on completion and check it is less than twice
         # the time for a single thread
-
-def test_suite(level=1):
-    suites = []
-    if level > 0:
-        suites.append( unittest.makeSuite(test_worker_thread,'check_') )
-    if level > 5:
-        pass
-    total_suite = unittest.TestSuite(suites)
-    return total_suite
-
-def test(level=10, verbosity=1):
-    all_tests = test_suite(level=level)
-    runner = unittest.TextTestRunner(verbosity=verbosity)
-    runner.run(all_tests)
-    return runner
-
-if __name__ == "__main__":
-    test()

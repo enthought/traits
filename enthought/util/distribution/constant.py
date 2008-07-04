@@ -12,10 +12,12 @@
 # Description: <Enthought statistical distribution package component>
 #------------------------------------------------------------------------------
 
-from distribution import Distribution
+import numpy
 
 from enthought.traits.api import Float
 from enthought.traits.ui.api import View, Item
+
+from distribution import Distribution
 
 class Constant(Distribution):
     """ A constant distribution where all values are the same """
