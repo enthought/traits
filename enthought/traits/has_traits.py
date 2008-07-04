@@ -1285,11 +1285,11 @@ def cached_property ( function ):
     """ Marks the following method definition as being a "cached property".
         That is, it is a property getter which, for performance reasons, caches
         its most recently computed result in an attribute whose name is of the
-        form: *_name*, where *name* is the name of the property. A method 
-        marked as being a cached property needs only to compute and return its
-        result. The @cached_property decorator automatically wraps the decorated
-        method in cache management code, eliminating the need to write 
-        boilerplate cache management code explicitly. For example::
+        form: *_traits_cache_name*, where *name* is the name of the property. A 
+        method marked as being a cached property needs only to compute and 
+        return its result. The @cached_property decorator automatically wraps 
+        the decorated method in cache management code, eliminating the need to 
+        write boilerplate cache management code explicitly. For example::
             
             file_name = File
             file_contents = Property( depends_on = 'file_name' )
