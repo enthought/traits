@@ -24,7 +24,11 @@ drop-down and selecting a file type such as Python or C from the list.
 
 You can specify what string to search for by typing into the 'Search' field.
 The set of source files containing the search string is automatically updated
-as you type (this is the 'live search' feature).
+as you type (this is the 'live search' feature). The search field also maintains
+a history of previous searches, so you can click on the drop-down arrow to
+display and select a previous search. Note that entries are only added to the
+search history when the enter key is pressed. This prevents each partial
+substring typed from being added to the history as a separate entry.
 
 You can specify whether the search is case sensitive or not by toggling the
 'Case sensitive' checkbox on or off.
@@ -71,7 +75,7 @@ from enthought.traits.api \
     
 from enthought.traits.ui.api \
     import View, VGroup, VSplit, HGroup, Item, TableEditor, CodeEditor, \
-           TitleEditor
+           TitleEditor, HistoryEditor
     
 from enthought.traits.ui.table_column \
     import ObjectColumn
@@ -188,7 +192,10 @@ class LiveSearch ( HasTraits ):
                 Item( 'root', label = 'Path', width = 0.5 ), 
                 Item( 'recursive' ),
                 Item( 'file_type', label = 'Type' ),
-                Item( 'search', width = 0.5 ),
+                Item( 'search', 
+                      width  = 0.5, 
+                      editor = HistoryEditor( auto_set = True )
+                ),
                 Item( 'case_sensitive' )
             ),
             VSplit(
