@@ -49,7 +49,7 @@ from ctraits \
 
 from trait_base \
     import strx, SequenceTypes, Undefined, TypeTypes, ClassTypes, \
-           CoercableTypes, class_of, enumerate, Missing
+           CoercableTypes, TraitsCache, class_of, enumerate, Missing
 
 from trait_errors \
     import TraitError
@@ -632,9 +632,12 @@ class TraitType ( BaseTraitHandler ):
     def get_value ( self, object, name, trait = None ):
         """ Returns the current value of a property-based trait.
         """
-        cname = '_traits_cache_' + name
+        cname = TraitsCache + name
         value = object.__dict__.get( cname, Undefined )
-        if (value is Undefined) and (trait is not None):
+        if value is Undefined:
+            if trait is None:
+                trait = object.trait( name )
+                
             object.__dict__[ cname ] = value = \
                 trait.default_value_for( object, name )
                 
@@ -644,7 +647,7 @@ class TraitType ( BaseTraitHandler ):
         """ Sets the cached value of a property-based trait and fires the
             appropriate trait change event.
         """
-        cname = '_traits_cache_' + name
+        cname = TraitsCache + name
         old   = object.__dict__.get( cname, Undefined )
         if value != old:
             object.__dict__[ cname ] = value

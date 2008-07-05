@@ -226,6 +226,9 @@ TypeTypes     = ( StringType,  UnicodeType, IntType,   LongType, FloatType,
 
 TraitNotifier = '__trait_notifier__'
 
+# The standard Traits property cache prefix:
+TraitsCache = '_traits_cache_'
+
 #-------------------------------------------------------------------------------
 #  Singleton 'Uninitialized' object:
 #-------------------------------------------------------------------------------

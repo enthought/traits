@@ -37,7 +37,7 @@ from enthought.traits.protocols.api \
 
 from trait_base \
     import strx, get_module_name, class_of, SequenceTypes, TypeTypes, \
-           ClassTypes, Undefined, Missing, python_version
+           ClassTypes, Undefined, Missing, TraitsCache, python_version
     
 from trait_handlers \
     import TraitType, TraitInstance, TraitListObject, TraitSetObject, \
@@ -3201,7 +3201,68 @@ class Either ( TraitType ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
         return self.trait_maker.as_ctrait()
+        
+#-------------------------------------------------------------------------------
+#  'Symbol' trait:  
+#-------------------------------------------------------------------------------
     
+class Symbol ( TraitType ):
+    
+    # A description of the type of value this trait accepts:
+    info_text = ("an object or a string of the form "
+        "'[package.package...package.]module[:symbol[([arg1,...,argn])]]' "
+        "specifying where to locate the object")
+
+    def get ( self, object, name ):
+        value = object.__dict__.get( name, Undefined )
+        if value is Undefined:
+            cache = TraitsCache + name
+            ref   = object.__dict__.get( cache )
+            if ref is None:
+                object.__dict__[ cache ] = ref = \
+                    object.trait( name ).default_value_for( object, name )
+                    
+            if isinstance( ref, basestring ):
+                object.__dict__[ name ] = value = self._resolve( ref )
+                
+        return value
+        
+    def set ( self, object, name, value ):
+        dict = object.__dict__
+        old  = dict.get( name, Undefined )
+        if isinstance( value, basestring ):
+            dict.pop( name, None )
+            dict[ TraitsCache + name ] = value
+            object.trait_property_changed( name, old )
+        else:
+            dict[ name ] = value
+            object.trait_property_changed( name, old, value )
+            
+    def _resolve ( self, ref ):
+        try:
+            path   = ref.split( ':', 1 )
+            module = __import__( path[0] )
+            for component in path[0].split( '.' )[1:]:
+                module = getattr( module, component )
+                
+            if len( path ) == 1:
+                return module
+                
+            elements = path[1].split( '(', 1 )
+            symbol   = getattr( module, elements[0] )
+            if len( elements ) == 1:
+                return symbol
+                
+            args = eval( '(' + elements[1] )
+            if not isinstance( args, tuple ):
+                args = ( args, )
+                
+            return symbol( *args )
+        except:
+            raise TraitError( "Could not resolve '%s' into a valid symbol." % 
+                              ref )
+
+
 if python_version >= 2.5:
     
     import uuid 

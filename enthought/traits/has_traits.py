@@ -59,7 +59,8 @@ from trait_handlers \
     import TraitType
 
 from trait_base \
-    import Missing, enumerate, SequenceTypes, Undefined, add_article
+    import Missing, enumerate, SequenceTypes, Undefined, TraitsCache, \
+           add_article
 
 from trait_errors \
     import TraitError
@@ -138,9 +139,6 @@ extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
-
-# The standard Traits property cache prefix:
-TraitsCache = '_traits_cache_'
 
 #-------------------------------------------------------------------------------
 #  Filter for selecting traits whose metadata is not 'event':
