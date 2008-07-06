@@ -28,7 +28,7 @@ import trait_handlers
 
 from weakref \
     import ref
-    
+
 from os.path \
     import isfile, isdir
 
@@ -38,19 +38,19 @@ from enthought.traits.protocols.api \
 from trait_base \
     import strx, get_module_name, class_of, SequenceTypes, TypeTypes, \
            ClassTypes, Undefined, Missing, TraitsCache, python_version
-    
+
 from trait_handlers \
     import TraitType, TraitInstance, TraitListObject, TraitSetObject, \
            TraitSetEvent, TraitDictObject, TraitDictEvent, ThisClass, \
            items_event, RangeTypes
-    
+
 from traits \
     import Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor, \
            html_editor, password_editor, shell_editor
 
 from trait_errors \
     import TraitError
-    
+
 from types \
     import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
@@ -62,17 +62,17 @@ MutableTypes = ( list, dict )
 SetTypes     = SequenceTypes + ( set, )
 
 #-------------------------------------------------------------------------------
-#  Numeric type fast validator definitions:  
+#  Numeric type fast validator definitions:
 #-------------------------------------------------------------------------------
 
 if sys.modules.get( 'numpy' ) is not None:
-    # The numpy enhanced definitions:    
+    # The numpy enhanced definitions:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate     = ( 11, int, integer )
     long_fast_validate    = ( 11, long, None, int, integer )
     float_fast_validate   = ( 11, float, floating, None, int, integer )
-    complex_fast_validate = ( 11, complex, complexfloating, None, 
+    complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
     bool_fast_validate    = ( 11, bool, bool_ )
 else:
@@ -82,41 +82,41 @@ else:
     float_fast_validate   = ( 11, float,   None, int )
     complex_fast_validate = ( 11, complex, None, float, int )
     bool_fast_validate    = ( 11, bool )
-        
+
 #-------------------------------------------------------------------------------
-#  Returns a default text editor: 
+#  Returns a default text editor:
 #-------------------------------------------------------------------------------
 
 def default_text_editor ( trait, type = None ):
     auto_set = trait.auto_set
     if auto_set is None:
         auto_set = True
-        
+
     enter_set = trait.enter_set or False
-    
+
     from enthought.traits.ui.api import TextEditor
 
     if type is None:
         return TextEditor( auto_set = auto_set, enter_set = enter_set )
-        
+
     return TextEditor( auto_set  = auto_set,
                        enter_set = enter_set,
                        evaluate  = type )
 
 #-------------------------------------------------------------------------------
-#  'Any' trait:  
+#  'Any' trait:
 #-------------------------------------------------------------------------------
-                  
+
 class Any ( TraitType ):
     """ Defines a trait whose value can be anything.
     """
-    
+
     # The default value for the trait:
     default_value = None
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'any value'
-    
+
 #-------------------------------------------------------------------------------
 #  'Generic' trait:
 #-------------------------------------------------------------------------------
@@ -125,10 +125,10 @@ class Generic ( Any ):
     """ Defines a trait whose value can be anything and whose definition can
         be redefined via assinment using a TraitValue object.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'trait_value': True }
-                       
+
 #-------------------------------------------------------------------------------
 #  'BaseInt' and 'Int' traits:
 #-------------------------------------------------------------------------------
@@ -136,24 +136,24 @@ class Generic ( Any ):
 class BaseInt ( TraitType ):
     """ Defines a trait whose value must be a Python int.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = int
-    
+
     # The default value for the trait:
     default_value = 0
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'an integer'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, int ):
             return value
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
@@ -161,12 +161,12 @@ class BaseInt ( TraitType ):
         """
         return default_text_editor( self, int )
 
-        
+
 class Int ( BaseInt ):
     """ Defines a trait whose value must be a Python int using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = int_fast_validate
 
@@ -177,27 +177,27 @@ class Int ( BaseInt ):
 class BaseLong ( TraitType ):
     """ Defines a trait whose value must be a Python long.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = long
-    
+
     # The default value for the trait:
     default_value = 0L
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a long'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, long ):
             return value
-            
+
         if isinstance( value, int ):
             return long( value )
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
@@ -205,12 +205,12 @@ class BaseLong ( TraitType ):
         """
         return default_text_editor( self, long )
 
-        
+
 class Long ( BaseLong ):
     """ Defines a trait whose value must be a Python long using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = long_fast_validate
 
@@ -223,37 +223,37 @@ class BaseFloat ( TraitType ):
     """
     # The function to use for evaluating strings to this type:
     evaluate = float
-    
+
     # The default value for the trait:
     default_value = 0.0
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a float'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, float ):
             return value
-            
+
         if isinstance( value, int ):
             return float( value )
-            
+
         self.error( object, name, value )
-        
+
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         return default_text_editor( self, float )
 
-        
+
 class Float ( BaseFloat ):
     """ Defines a trait whose value must be a Python float using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = float_fast_validate
 
@@ -264,27 +264,27 @@ class Float ( BaseFloat ):
 class BaseComplex ( TraitType ):
     """ Defines a trait whose value must be a Python complex.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = complex
-    
+
     # The default value for the trait:
     default_value = 0.0 + 0.0j
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a complex number'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, complex ):
             return value
-            
+
         if isinstance( value, ( float, int ) ):
             return complex( value )
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
@@ -292,12 +292,12 @@ class BaseComplex ( TraitType ):
         """
         return default_text_editor( self, complex )
 
-        
+
 class Complex ( BaseComplex ):
     """ Defines a trait whose value must be a Python complex using a C-level
         fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = complex_fast_validate
 
@@ -308,36 +308,36 @@ class Complex ( BaseComplex ):
 class BaseStr ( TraitType ):
     """ Defines a trait whose value must be a Python string.
     """
-    
+
     # The default value for the trait:
     default_value = ''
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a string'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, basestring ):
             return value
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from traits import multi_line_text_editor
-        
+
         return multi_line_text_editor()
 
-        
+
 class Str ( BaseStr ):
     """ Defines a trait whose value must be a Python string using a C-level
         fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, basestring )
 
@@ -346,12 +346,12 @@ class Title ( Str ):
     """ Defines a string type which by default uses the traits ui TitleEditor
         when used in a View.
     """
-        
+
     def create_editor ( self ):
-        """ Returns the default traits UI editor to use for a trait. 
+        """ Returns the default traits UI editor to use for a trait.
         """
         from enthought.traits.ui.api import TitleEditor
-        
+
         return TitleEditor()
 
 #-------------------------------------------------------------------------------
@@ -361,39 +361,39 @@ class Title ( Str ):
 class BaseUnicode ( TraitType ):
     """ Defines a trait whose value must be a Python unicode string.
     """
-    
+
     # The default value for the trait:
     default_value = u''
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a unicode string'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, unicode ):
             return value
-            
+
         if isinstance( value, str ):
             return unicode( value )
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from traits import multi_line_text_editor
-        
+
         return multi_line_text_editor()
 
-        
+
 class Unicode ( BaseUnicode ):
-    """ Defines a trait whose value must be a Python unicode string using a 
+    """ Defines a trait whose value must be a Python unicode string using a
         C-level fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, unicode, None, str )
 
@@ -404,39 +404,39 @@ class Unicode ( BaseUnicode ):
 class BaseBool ( TraitType ):
     """ Defines a trait whose value must be a Python boolean.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = bool
-    
+
     # The default value for the trait:
     default_value = False
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a boolean'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, bool ):
             return value
-            
+
         self.error( object, name, value )
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from enthought.traits.ui.api import BooleanEditor
-        
+
         return BooleanEditor()
 
-        
+
 class Bool ( BaseBool ):
     """ Defines a trait whose value must be a Python boolean using a C-level
         fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = bool_fast_validate
 
@@ -448,13 +448,13 @@ class BaseCInt ( BaseInt ):
     """ Defines a trait whose value must be a Python int and which supports
         coercions of non-int values to int.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = int
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -462,12 +462,12 @@ class BaseCInt ( BaseInt ):
         except:
             self.error( object, name, value )
 
-            
+
 class CInt ( BaseCInt ):
     """ Defines a trait whose value must be a Python int and which supports
         coercions of non-int values to int using a C-level fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, int )
 
@@ -479,13 +479,13 @@ class BaseCLong ( BaseLong ):
     """ Defines a trait whose value must be a Python long and which supports
         coercions of non-long values to long.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = long
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -493,12 +493,12 @@ class BaseCLong ( BaseLong ):
         except:
             self.error( object, name, value )
 
-            
+
 class CLong ( BaseCLong ):
     """ Defines a trait whose value must be a Python long and which supports
         coercions of non-long values to long using a C-level fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, long )
 
@@ -510,13 +510,13 @@ class BaseCFloat ( BaseFloat ):
     """ Defines a trait whose value must be a Python float and which supports
         coercions of non-float values to float.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = float
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -524,12 +524,12 @@ class BaseCFloat ( BaseFloat ):
         except:
             self.error( object, name, value )
 
-            
+
 class CFloat ( BaseCFloat ):
     """ Defines a trait whose value must be a Python float and which supports
         coercions of non-float values to float using a C-level fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, float )
 
@@ -541,13 +541,13 @@ class BaseCComplex ( BaseComplex ):
     """ Defines a trait whose value must be a Python complex and which supports
         coercions of non-complex values to complex.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = complex
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -555,13 +555,13 @@ class BaseCComplex ( BaseComplex ):
         except:
             self.error( object, name, value )
 
-            
+
 class CComplex ( BaseCComplex ):
     """ Defines a trait whose value must be a Python complex and which supports
         coercions of non-complex values to complex using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, complex )
 
@@ -576,7 +576,7 @@ class BaseCStr ( BaseStr ):
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -587,13 +587,13 @@ class BaseCStr ( BaseStr ):
             except:
                 self.error( object, name, value )
 
-                
+
 class CStr ( BaseCStr ):
     """ Defines a trait whose value must be a Python string and which supports
-        coercions of non-string values to string using a C-level fast 
+        coercions of non-string values to string using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 7, ( ( 12, str ), ( 12, unicode ) ) )
 
@@ -608,7 +608,7 @@ class BaseCUnicode ( BaseUnicode ):
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -616,13 +616,13 @@ class BaseCUnicode ( BaseUnicode ):
         except:
             self.error( object, name, value )
 
-            
+
 class CUnicode ( BaseCUnicode ):
     """ Defines a trait whose value must be a Python unicode string and which
         supports coercions of non-unicode values to unicode using a C-level
         fast validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, unicode )
 
@@ -634,13 +634,13 @@ class BaseCBool ( BaseBool ):
     """ Defines a trait whose value must be a Python boolean and which supports
         coercions of non-boolean values to boolean.
     """
-    
+
     # The function to use for evaluating strings to this type:
     evaluate = bool
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         try:
@@ -648,27 +648,27 @@ class BaseCBool ( BaseBool ):
         except:
             self.error( object, name, value )
 
-            
+
 class CBool ( BaseCBool ):
     """ Defines a trait whose value must be a Python boolean and which supports
         coercions of non-boolean values to boolean using a C-level fast
         validator.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 12, bool )
 
 #-------------------------------------------------------------------------------
-#  'String' trait:  
+#  'String' trait:
 #-------------------------------------------------------------------------------
 
-class String ( TraitType ):                                      
+class String ( TraitType ):
     """ Defines a trait whose value must be a Python string whose length is
-        optionally in a specified range, and which optionally matches a 
+        optionally in a specified range, and which optionally matches a
         specified regular expression.
     """
-                                      
-    def __init__ ( self, value = '', minlen = 0, maxlen = sys.maxint, 
+
+    def __init__ ( self, value = '', minlen = 0, maxlen = sys.maxint,
                    regex = '', **metadata ):
         """ Creates a String trait.
 
@@ -703,14 +703,14 @@ class String ( TraitType ):
             self._validate = 'validate_str'
         else:
             self._validate = 'validate_len'
-            
+
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid string.
         """
         return getattr( self, self._validate )( object, name, value )
 
     def validate_all ( self, object, name, value ):
-        """ Validates that the value is a valid string in the specified length 
+        """ Validates that the value is a valid string in the specified length
             range which matches the specified regular expression.
         """
         try:
@@ -720,7 +720,7 @@ class String ( TraitType ):
                 return value
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def validate_str ( self, object, name, value ):
@@ -730,11 +730,11 @@ class String ( TraitType ):
             return strx( value )
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def validate_len ( self, object, name, value ):
-        """ Validates that the value is a valid string in the specified length 
+        """ Validates that the value is a valid string in the specified length
             range.
         """
         try:
@@ -743,11 +743,11 @@ class String ( TraitType ):
                 return value
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def validate_regex ( self, object, name, value ):
-        """ Validates that the value is a valid string which matches the 
+        """ Validates that the value is a valid string which matches the
             specified regular expression.
         """
         try:
@@ -756,7 +756,7 @@ class String ( TraitType ):
                 return value
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def info ( self ):
@@ -782,13 +782,13 @@ class String ( TraitType ):
         return default_text_editor( self )
 
     def __getstate__ ( self ):
-        """ Returns the current state of the trait. 
+        """ Returns the current state of the trait.
         """
         result = self.__dict__.copy()
         for name in [ 'validate', 'match' ]:
             if name in result:
                 del result[ name ]
-                
+
         return result
 
     def __setstate__ ( self, state ):
@@ -796,7 +796,7 @@ class String ( TraitType ):
         """
         self.__dict__.update( state )
         self._init()
-        
+
 #-------------------------------------------------------------------------------
 #  'Regex' trait:
 #-------------------------------------------------------------------------------
@@ -805,24 +805,24 @@ class Regex ( String ):
     """ Defines a trait whose value is a Python string that matches a specified
         regular expression.
     """
-    
+
     def __init__ ( self, value = '', regex = '.*', **metadata ):
         """ Creates a Regex trait.
-    
+
         Parameters
         ----------
         value : string
             The default value of the trait
         regex : string
             The regular expression that the trait value must match.
-    
+
         Default Value
         -------------
         *value* or ''
         """
         super( Regex, self ).__init__( value = value, regex = regex,
                                        **metadata )
-        
+
 #-------------------------------------------------------------------------------
 #  'Code' trait:
 #-------------------------------------------------------------------------------
@@ -831,35 +831,35 @@ class Code ( String ):
     """ Defines a trait whose value is a Python string that represents source
         code in some language.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'editor': code_editor }
 
 #-------------------------------------------------------------------------------
-#  'HTML' trait:  
+#  'HTML' trait:
 #-------------------------------------------------------------------------------
-                
+
 class HTML ( String ):
     """ Defines a trait whose value must be a string that is interpreted as
     being HTML. By default the value is parsed and displayed as HTML in
     TraitsUI views. The validation of the value does not enforce HTML syntax.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'editor': html_editor }
 
 #-------------------------------------------------------------------------------
-#  'Password' trait:  
+#  'Password' trait:
 #-------------------------------------------------------------------------------
-                
+
 class Password ( String ):
     """ Defines a trait whose value must be a string, optionally of constrained
     length or matching a regular expression.
 
-    The trait is indentical to a String trait except that by default it uses a 
+    The trait is indentical to a String trait except that by default it uses a
     PasswordEditor in TraitsUI views, which obscures text entered by the user.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'editor': password_editor }
 
@@ -870,22 +870,22 @@ class Password ( String ):
 class Callable ( TraitType ):
     """ Defines a trait whose value must be a Python callable.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'copy': 'ref' }
-    
+
     # The default value for the trait:
     default_value = None
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a callable value'
-    
+
     def validate ( self, object, name, value ):
         """ Validates that the value is a Python callable.
         """
         if (value is None) or callable( value ):
             return value
-            
+
         self.error( object, name, self.repr( value ) )
 
 #-------------------------------------------------------------------------------
@@ -895,39 +895,39 @@ class Callable ( TraitType ):
 class BaseType ( TraitType ):
     """ Defines a trait whose value must be an instance of a simple Python type.
     """
-    
+
     # The default value for the trait:
     default_value = None
-    
+
     def validate ( self, object, name, value ):
         """ Validates that the value is a Python callable.
         """
         if isinstance( value, self.fast_validate[1:] ):
             return value
-            
+
         self.error( object, name, self.repr( value ) )
-    
-    
+
+
 class This ( BaseType ):
     """ Defines a trait whose value must be an instance of the defining class.
     """
-    
+
 
 class self ( This ):
     """ Defines a trait whose value must be an instance of the defining class
         and whose default value is the object containing the trait.
     """
-    
+
     default_value_type = 2
 
 
 class Function ( TraitType ):
     """ Defines a trait whose value must be a Python function.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, FunctionType )
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a function'
 
@@ -935,10 +935,10 @@ class Function ( TraitType ):
 class Method ( TraitType ):
     """ Defines a trait whose value must be a Python method.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, MethodType )
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a method'
 
@@ -946,10 +946,10 @@ class Method ( TraitType ):
 class Class ( TraitType ):
     """ Defines a trait whose value must be an old-style Python class.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, ClassType )
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'an old-style class'
 
@@ -957,10 +957,10 @@ class Class ( TraitType ):
 class Module ( TraitType ):
     """ Defines a trait whose value must be a Python module.
     """
-    
+
     # The C-level fast validator to use:
     fast_validate = ( 11, ModuleType )
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a module'
 
@@ -969,17 +969,17 @@ class Module ( TraitType ):
 #-------------------------------------------------------------------------------
 
 class Python ( TraitType ):
-    """ Defines a trait that provides behavior identical to a standard Python 
-        attribute. That is, it allows any value to be assigned, and raises an 
-        ValueError if an attempt is made to get the value before one has been 
-        assigned. It has no default value. This trait is most often used in 
-        conjunction with wildcard naming. See the *Traits User Manual* for 
+    """ Defines a trait that provides behavior identical to a standard Python
+        attribute. That is, it allows any value to be assigned, and raises an
+        ValueError if an attempt is made to get the value before one has been
+        assigned. It has no default value. This trait is most often used in
+        conjunction with wildcard naming. See the *Traits User Manual* for
         details on wildcards.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'type': 'python' }
-    
+
     # The default value for the trait:
     default_value = Undefined
 
@@ -987,24 +987,24 @@ class Python ( TraitType ):
 #  'ReadOnly' trait:
 #-------------------------------------------------------------------------------
 
-class ReadOnly ( TraitType ): 
+class ReadOnly ( TraitType ):
     """ Defines a trait that is write-once, and then read-only.
         The initial value of the attribute is the special, singleton object
         Undefined. The trait allows any value to be assigned to the attribute
         if the current value is the Undefined object. Once any other value is
-        assigned, no further assignment is allowed. Normally, the initial 
-        assignment to the attribute is performed in the class constructor, 
+        assigned, no further assignment is allowed. Normally, the initial
+        assignment to the attribute is performed in the class constructor,
         based on information passed to the constructor. If the read-only value
         is known in advance of run time, use the Constant() function instead of
         ReadOnly to define the trait.
     """
-    
+
     # Defines the CTrait type to use for this trait:
     ctrait_type = 6
-    
+
     # The default value for the trait:
     default_value = Undefined
-    
+
 # Create a singleton instance as the trait:
 ReadOnly = ReadOnly()
 
@@ -1014,36 +1014,36 @@ ReadOnly = ReadOnly()
 
 class Disallow ( TraitType ):
     """ Defines a trait that prevents any value from being assigned or read.
-        That is, any attempt to get or set the value of the trait attribute 
+        That is, any attempt to get or set the value of the trait attribute
         raises an exception. This trait is most often used in conjunction with
-        wildcard naming, for example, to catch spelling mistakes in attribute 
+        wildcard naming, for example, to catch spelling mistakes in attribute
         names. See the *Traits User Manual* for details on wildcards.
     """
-    
+
     # Defines the CTrait type to use for this trait:
     ctrait_type = 5
-    
-# Create a singleton instance as the trait:    
-Disallow = Disallow()    
+
+# Create a singleton instance as the trait:
+Disallow = Disallow()
 
 #-------------------------------------------------------------------------------
 #  'missing' trait:
 #-------------------------------------------------------------------------------
 
 class missing ( TraitType ):
-    """ Defines a trait used to indicate that a parameter is missing from a 
-        type-checked method signature. Allows any value to be assigned; no 
-        type-checking is performed; default value is the singleton Missing 
+    """ Defines a trait used to indicate that a parameter is missing from a
+        type-checked method signature. Allows any value to be assigned; no
+        type-checking is performed; default value is the singleton Missing
         object.
-        
+
         See the **enthought.traits.has_traits.method()**.
     """
-    
+
     # The default value for the trait:
     default_value = Missing
-    
-# Create a singleton instance as the trait:    
-missing = missing()    
+
+# Create a singleton instance as the trait:
+missing = missing()
 
 #-------------------------------------------------------------------------------
 #  'Constant' trait:
@@ -1052,36 +1052,36 @@ missing = missing()
 class Constant ( TraitType ):
     """  Defines a trait whose value is a constant.
     """
-    
+
     # Defines the CTrait type to use for this trait:
     ctrait_type = 7
-     
+
     # The standard metadata for the trait:
     metadata = { 'type': 'constant', 'transient': True }
-   
+
     def __init__ ( self, value, **metadata ):
         """ Returns a constant, read-only trait whose value is *value*.
-    
+
             Parameters
             ----------
             value : any type except a list or dictionary
                 The default value for the trait
-        
+
             Default Value
             -------------
             *value*
-        
+
             Description
             -----------
             Traits of this type are very space efficient (and fast) because
             *value* is not stored in each instance using the trait, but only in
-            the trait object itself. The *value* cannot be a list or dictionary, 
+            the trait object itself. The *value* cannot be a list or dictionary,
             because those types have mutable values.
         """
         if type( value ) in MutableTypes:
             raise TraitError, \
                   "Cannot define a constant using a mutable list or dictionary"
-                  
+
         super( Constant, self ).__init__( value, **metadata )
 
 #-------------------------------------------------------------------------------
@@ -1091,14 +1091,14 @@ class Constant ( TraitType ):
 class Delegate ( TraitType ):
     """ Defines a trait whose value is delegated to a trait on another object.
     """
-    
+
     # Defines the CTrait type to use for this trait:
     ctrait_type = 3
-    
+
     # The standard metadata for the trait:
     metadata = { 'type': 'delegate', 'transient': False }
-    
-    def __init__ ( self, delegate, prefix = '', modify = False, 
+
+    def __init__ ( self, delegate, prefix = '', modify = False,
                          listenable = True, **metadata ):
         """ Creates a Delegate trait.
         """
@@ -1116,9 +1116,9 @@ class Delegate ( TraitType ):
         metadata[ '_delegate' ]   = delegate
         metadata[ '_prefix' ]     = prefix
         metadata[ '_listenable' ] = listenable
-        
+
         super( Delegate, self ).__init__( **metadata )
-                
+
         self.delegate    = delegate
         self.prefix      = prefix
         self.prefix_type = prefix_type
@@ -1130,64 +1130,64 @@ class Delegate ( TraitType ):
         trait = super( Delegate, self ).as_ctrait()
         trait.delegate( self.delegate, self.prefix, self.prefix_type,
                         self.modify )
-        
+
         return trait
-    
+
 #-------------------------------------------------------------------------------
 #  'DelegatesTo' trait:
 #-------------------------------------------------------------------------------
 
 class DelegatesTo ( Delegate ):
-    """ Defines a trait delegate that matches the standard 'delegate' design 
+    """ Defines a trait delegate that matches the standard 'delegate' design
         pattern.
     """
-    
+
     def __init__ ( self, delegate, prefix = '', listenable = True, **metadata ):
         """ Creates a "delegator" trait, whose definition and default value are
             delegated to a *delegate* trait attribute on another object.
-    
+
             Parameters
             ----------
             delegate : string
-                Name of the attribute on the current object which references the 
+                Name of the attribute on the current object which references the
                 object that is the trait's delegate
             prefix : string
-                A prefix or substitution applied to the original attribute when 
+                A prefix or substitution applied to the original attribute when
                 looking up the delegated attribute
             listenable : Boolean
                 Indicates whether a listener can be attached to this attribute
                 such that changes to the delagate attribute will trigger it
-        
+
             Description
             -----------
-            An object containing a delegator trait attribute must contain a 
-            second attribute that references the object containing the delegate 
-            trait attribute. The name of this second attribute is passed as the 
+            An object containing a delegator trait attribute must contain a
+            second attribute that references the object containing the delegate
+            trait attribute. The name of this second attribute is passed as the
             *delegate* argument to the DelegatesTo() function.
-        
+
             The following rules govern the application of the prefix parameter:
-        
-            * If *prefix* is empty or omitted, the delegation is to an attribute 
-              of the delegate object with the same name as the delegator 
+
+            * If *prefix* is empty or omitted, the delegation is to an attribute
+              of the delegate object with the same name as the delegator
               attribute.
             * If *prefix* is a valid Python attribute name, then the delegation
               is to an attribute whose name is the value of *prefix*.
             * If *prefix* ends with an asterisk ('*') and is longer than one
-              character, then the delegation is to an attribute whose name is 
-              the value of *prefix*, minus the trailing asterisk, prepended to 
+              character, then the delegation is to an attribute whose name is
+              the value of *prefix*, minus the trailing asterisk, prepended to
               the delegator attribute name.
             * If *prefix* is equal to a single asterisk, the delegation is to an
               attribute whose name is the value of the delegator object's
               __prefix__ attribute prepended to delegator attribute name.
-        
-            Note that any changes to the delegator attribute are actually 
-            applied to the corresponding attribute on the delegate object. The 
+
+            Note that any changes to the delegator attribute are actually
+            applied to the corresponding attribute on the delegate object. The
             original object containing the delegator trait is not modified.
         """
-        super( DelegatesTo, self ).__init__( delegate, 
-                                             prefix     = prefix, 
-                                             modify     = True, 
-                                             listenable = listenable, 
+        super( DelegatesTo, self ).__init__( delegate,
+                                             prefix     = prefix,
+                                             modify     = True,
+                                             listenable = listenable,
                                              **metadata )
 
 #-------------------------------------------------------------------------------
@@ -1198,12 +1198,12 @@ class PrototypedFrom ( Delegate ):
     """ Defines a trait delegate that matches the standard 'prototype' design
         pattern.
     """
-    
-    def __init__ ( self, prototype, prefix = '', listenable = True, 
+
+    def __init__ ( self, prototype, prefix = '', listenable = True,
                          **metadata ):
         """ Creates a "prototyped" trait, whose definition and default value are
             obtained from a trait attribute on another object.
-        
+
             Parameters
             ----------
             prototype : string
@@ -1213,41 +1213,41 @@ class PrototypedFrom ( Delegate ):
                 A prefix or substitution applied to the original attribute when
                 looking up the prototyped attribute
             listenable : Boolean
-                Indicates whether a listener can be attached to this attribute 
-                such that changes to the corresponding attribute on the 
+                Indicates whether a listener can be attached to this attribute
+                such that changes to the corresponding attribute on the
                 prototype object will trigger it
-        
+
             Description
             -----------
-            An object containing a prototyped trait attribute must contain a 
-            second attribute that references the object containing the prototype 
+            An object containing a prototyped trait attribute must contain a
+            second attribute that references the object containing the prototype
             trait attribute. The name of this second attribute is passed as the
             *prototype* argument to the PrototypedFrom() function.
-        
+
             The following rules govern the application of the prefix parameter:
-        
-            * If *prefix* is empty or omitted, the prototype delegation is to an 
-              attribute of the prototype object with the same name as the 
+
+            * If *prefix* is empty or omitted, the prototype delegation is to an
+              attribute of the prototype object with the same name as the
               prototyped attribute.
-            * If *prefix* is a valid Python attribute name, then the prototype 
+            * If *prefix* is a valid Python attribute name, then the prototype
               delegation is to an attribute whose name is the value of *prefix*.
             * If *prefix* ends with an asterisk ('*') and is longer than one
               character, then the prototype delegation is to an attribute whose
-              name is the value of *prefix*, minus the trailing asterisk, 
+              name is the value of *prefix*, minus the trailing asterisk,
               prepended to the prototyped attribute name.
-            * If *prefix* is equal to a single asterisk, the prototype 
-              delegation is to an attribute whose name is the value of the 
-              prototype object's __prefix__ attribute prepended to the 
+            * If *prefix* is equal to a single asterisk, the prototype
+              delegation is to an attribute whose name is the value of the
+              prototype object's __prefix__ attribute prepended to the
               prototyped attribute name.
-        
-            Note that any changes to the prototyped attribute are made to the 
+
+            Note that any changes to the prototyped attribute are made to the
             original object, not the prototype object. The prototype object is
             only used to define to trait type and default value.
-    
+
         """
-        super( PrototypedFrom, self ).__init__( prototype, 
-                                                prefix     = prefix, 
-                                                modify     = False, 
+        super( PrototypedFrom, self ).__init__( prototype,
+                                                prefix     = prefix,
+                                                modify     = False,
                                                 listenable = listenable,
                                                 **metadata )
 
@@ -1256,18 +1256,18 @@ class PrototypedFrom ( Delegate ):
 #-------------------------------------------------------------------------------
 
 class Expression ( TraitType ):
-    """ Defines a trait whose value must be a valid Python expression. The 
-        compiled form of a valid expression is stored as the mapped value of 
+    """ Defines a trait whose value must be a valid Python expression. The
+        compiled form of a valid expression is stored as the mapped value of
         the trait.
     """
-    
+
     # The default value for the trait:
     default_value = '0'
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a valid Python expression'
 
-    # Indicate that this is a mapped trait:    
+    # Indicate that this is a mapped trait:
     is_mapped = True
 
     def validate ( self, object, name, value ):
@@ -1282,18 +1282,18 @@ class Expression ( TraitType ):
         """ Performs additional post-assignment processing.
         """
         object.__dict__[ name + '_' ] = value
-        
+
     def mapped_value ( self, value ):
         """ Returns the 'mapped' value for the specified **value**.
         """
         return compile( value, '<string>', 'eval' )
-        
+
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
-        # Tell the C code that 'setattr' should store the original, unadapted 
+        # Tell the C code that 'setattr' should store the original, unadapted
         # value passed to it:
-        return super( Expression, self 
+        return super( Expression, self
                     ).as_ctrait().setattr_original_value( True )
 
 #-------------------------------------------------------------------------------
@@ -1301,10 +1301,10 @@ class Expression ( TraitType ):
 #-------------------------------------------------------------------------------
 
 class PythonValue ( Any ):
-    """ Defines a trait whose value can be of any type, and whose default 
+    """ Defines a trait whose value can be of any type, and whose default
     editor is a Python shell.
     """
-    
+
     # The standard metadata for the trait:
     metadata = { 'editor': shell_editor }
 
@@ -1315,11 +1315,11 @@ class PythonValue ( Any ):
 class BaseFile ( BaseStr ):
     """ Defines a trait whose value must be the name of a file.
     """
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a file name'
-    
-    def __init__ ( self, value = '', filter = None, auto_set = False, 
+
+    def __init__ ( self, value = '', filter = None, auto_set = False,
                          entries = 0, exists = False, **metadata ):
         """ Creates a File trait.
 
@@ -1336,39 +1336,39 @@ class BaseFile ( BaseStr ):
         exists : boolean
             Indicates whether the trait value must be an existing file or
             not.
-            
+
         Default Value
         -------------
         *value* or ''
         """
         from enthought.traits.ui.editors import FileEditor
-        
+
         metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
                                                    auto_set = auto_set,
                                                    entries  = entries ) )
         self.exists = exists
-        
+
         super( BaseFile, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if not self.exists:
             return super( BaseFile, self ).validate( object, name, value )
-            
+
         if isfile( value ):
             return value
-            
+
         self.error( object, name, value )
-        
+
 class File ( BaseFile ):
     """ Defines a trait whose value must be the name of a file using a C-level
         fast validator.
     """
-    
-    def __init__ ( self, value = '', filter = None, auto_set = False, 
+
+    def __init__ ( self, value = '', filter = None, auto_set = False,
                          entries = 0, exists = False, **metadata ):
         """ Creates a File trait.
 
@@ -1385,7 +1385,7 @@ class File ( BaseFile ):
         exists : boolean
             Indicates whether the trait value must be an existing file or
             not.
-            
+
         Default Value
         -------------
         *value* or ''
@@ -1393,10 +1393,10 @@ class File ( BaseFile ):
         if not exists:
             # Define the C-level fast validator to use:
             fast_validate = ( 11, basestring )
-            
-        super( File, self ).__init__( value, filter, auto_set, entries, exists, 
+
+        super( File, self ).__init__( value, filter, auto_set, entries, exists,
                                       **metadata )
-    
+
 #-------------------------------------------------------------------------------
 #  'BaseDirectory' and 'Directory' traits:
 #-------------------------------------------------------------------------------
@@ -1404,11 +1404,11 @@ class File ( BaseFile ):
 class BaseDirectory ( BaseStr ):
     """ Defines a trait whose value must be the name of a directory.
     """
-    
+
     # A description of the type of value this trait accepts:
     info_text = 'a directory name'
-                                                        
-    def __init__ ( self, value = '', auto_set = False, entries = 0, 
+
+    def __init__ ( self, value = '', auto_set = False, entries = 0,
                          exists = False, **metadata ):
         """ Creates a BaseDirectory trait.
 
@@ -1417,43 +1417,43 @@ class BaseDirectory ( BaseStr ):
         value : string
             The default value for the trait
         auto_set : boolean
-            Indicates whether the directory editor updates the trait value 
+            Indicates whether the directory editor updates the trait value
             after every key stroke.
         exists : boolean
             Indicates whether the trait value must be an existing directory or
             not.
-        
+
         Default Value
         -------------
         *value* or ''
         """
         from enthought.traits.ui.editors import DirectoryEditor
-        
-        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set, 
+
+        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set,
                                                         entries  = entries ) )
         self.exists = exists
-        
+
         super( BaseDirectory, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-        
+
             Note: The 'fast validator' version performs this check in C.
         """
         if not self.exists:
             return super( BaseDirectory, self ).validate( object, name, value )
-            
+
         if isdir( value ):
             return value
-            
+
         self.error( object, name, value )
-        
+
 class Directory ( BaseDirectory ):
-    """ Defines a trait whose value must be the name of a directory using a 
+    """ Defines a trait whose value must be the name of a directory using a
         C-level fast validator.
     """
-                                                        
-    def __init__ ( self, value = '', auto_set = False, entries = 0, 
+
+    def __init__ ( self, value = '', auto_set = False, entries = 0,
                          exists = False, **metadata ):
         """ Creates a Directory trait.
 
@@ -1462,12 +1462,12 @@ class Directory ( BaseDirectory ):
         value : string
             The default value for the trait
         auto_set : boolean
-            Indicates whether the directory editor updates the trait value 
+            Indicates whether the directory editor updates the trait value
             after every key stroke.
         exists : boolean
             Indicates whether the trait value must be an existing directory or
             not.
-        
+
         Default Value
         -------------
         *value* or ''
@@ -1476,210 +1476,20 @@ class Directory ( BaseDirectory ):
         # test is not required:
         if not exists:
             self.fast_validate = ( 11, basestring )
-            
-        super( Directory, self ).__init__( value, auto_set, entries, exists, 
+
+        super( Directory, self ).__init__( value, auto_set, entries, exists,
                                            **metadata )
-   
+
 #-------------------------------------------------------------------------------
-#  'BaseRange' and 'Range' traits:  
+#  'BaseRange' and 'Range' traits:
 #-------------------------------------------------------------------------------
-                    
+
 class BaseRange ( TraitType ):
     """ Defines a trait whose numeric value must be in a specified range.
     """
-    
+
     def __init__ ( self, low = None, high = None, value = None,
-                         exclude_low = False, exclude_high = False, 
-                         **metadata ):
-        """ Creates a Range trait.
-
-        Parameters
-        ----------
-        low : integer or float
-            The low end of the range.
-        high : integer or float
-            The high end of the range.
-        value : integer or float
-            The default value of the trait
-        exclude_low : Boolean
-            Indicates whether the low end of the range is exclusive.
-        exclude_high : Boolean
-            Indicates whether the high end of the range is exclusive.
-      
-        The *low*, *high*, and *value* arguments must be of the same type 
-        (integer or float).
-      
-        Default Value
-        -------------
-        *value*; if *value* is None or omitted, the default value is *low*,
-        unless *low* is None or omitted, in which case the default value is
-        *high*.
-        """
-        if value is None:
-            if low is not None:
-                value = low
-            else:
-                value = high
-                
-        super( BaseRange, self ).__init__( value, **metadata )
-
-        vtype = type( high )
-        if (low is not None) and (vtype is not float):
-            vtype = type( low )
-            
-        if vtype not in RangeTypes:
-            raise TraitError, ("TraitRange can only be use for int, long or "
-                               "float values, but a value of type %s was "
-                               "specified." % vtype)
-                               
-        if vtype is float:
-            self._validate  = 'float_validate'
-            kind            = 4
-            self._type_desc = 'a floating point number'
-            if low is not None:
-                low = float( low )
-                
-            if high is not None:
-                high = float( high )
-                
-        elif vtype is long:
-            self._validate  = 'long_validate'
-            self._type_desc = 'a long integer'
-            if low is not None:
-                low = long( low )
-                
-            if high is not None:
-                high = long( high )
-                
-        else:
-            self._validate  = 'int_validate'
-            kind            = 3
-            self._type_desc = 'an integer'
-            if low is not None:
-                low = int( low )
-                
-            if high is not None:
-                high = int( high )
-                
-        exclude_mask = 0
-        if exclude_low:
-            exclude_mask |= 1
-            
-        if exclude_high:
-            exclude_mask |= 2
-            
-        if vtype is not long:
-            self.init_fast_validator( kind, low, high, exclude_mask )
-
-        # Assign type-corrected arguments to handler attributes:
-        self._low          = low
-        self._high         = high
-        self._exclude_low  = exclude_low
-        self._exclude_high = exclude_high
-        
-    def init_fast_validator ( self, *args ):
-        """ Does nothing for the BaseRange class. Used in the Range class to 
-            set up the fast validator.
-        """
-        pass
-
-    def validate ( self, object, name, value ):
-        """ Validate that the value is in the specified range.
-        """
-        return getattr( self, self._validate )( object, name, value )
-
-    def float_validate ( self, object, name, value ):
-        """ Validate that the value is a float value in the specified range.
-        """
-        try:
-            if (isinstance( value, RangeTypes ) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return float( value )
-        except:
-            pass
-            
-        self.error( object, name, self.repr( value ) )
-
-    def int_validate ( self, object, name, value ):
-        """ Validate that the value is an int value in the specified range.
-        """
-        try:
-            if (isinstance( value, int ) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return value
-        except:
-            pass
-            
-        self.error( object, name, self.repr( value ) )
-
-    def long_validate ( self, object, name, value ):
-        """ Validate that the value is a long value in the specified range.
-        """
-        try:
-            if (isinstance( value, long ) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return value
-        except:
-            pass
-            
-        self.error( object, name, self.repr( value ) )
-
-    def info ( self ):
-        """ Returns a description of the trait.
-        """
-        if self._low is None:
-            if self._high is None:
-                return self._type_desc
-                
-            return '%s <%s %s' % (
-                   self._type_desc, '='[ self._exclude_high: ], self._high )
-                   
-        elif self._high is None:
-            return  '%s >%s %s' % (
-                    self._type_desc, '='[ self._exclude_low: ], self._low )
-                    
-        return '%s <%s %s <%s %s' % (
-               self._low, '='[ self._exclude_low: ], self._type_desc,
-               '='[ self._exclude_high: ], self._high )
-
-    def create_editor ( self ):
-        """ Returns the default UI editor for the trait.
-        """
-        auto_set = self.auto_set
-        if auto_set is None:
-            auto_set = True
-            
-        from enthought.traits.ui.api import RangeEditor
-        
-        return RangeEditor( self,
-                            mode       = self.mode or 'auto',
-                            cols       = self.cols or 3,
-                            auto_set   = auto_set,
-                            enter_set  = self.enter_set or False,
-                            low_label  = self.low  or '',
-                            high_label = self.high or '' )
-                    
-class BaseRange ( TraitType ):
-    """ Defines a trait whose numeric value must be in a specified range.
-    """
-    
-    def __init__ ( self, low = None, high = None, value = None,
-                         exclude_low = False, exclude_high = False, 
+                         exclude_low = False, exclude_high = False,
                          **metadata ):
         """ Creates a Range trait.
 
@@ -1695,11 +1505,11 @@ class BaseRange ( TraitType ):
             Indicates whether the low end of the range is exclusive.
         exclude_high : Boolean
             Indicates whether the high end of the range is exclusive.
-      
-        The *low*, *high*, and *value* arguments must be of the same type 
+
+        The *low*, *high*, and *value* arguments must be of the same type
         (integer or float), except in the case where either *low* or *high* is
         a string (i.e. extended trait name).
-      
+
         Default Value
         -------------
         *value*; if *value* is None or omitted, the default value is *low*,
@@ -1711,79 +1521,79 @@ class BaseRange ( TraitType ):
                 value = low
             else:
                 value = high
-                
+
         super( BaseRange, self ).__init__( value, **metadata )
 
         vtype = type( high )
         if ((low is not None) and
             (not issubclass( vtype, ( float, basestring ) ))):
             vtype = type( low )
-            
+
         is_static = (not issubclass( vtype, basestring ))
         if is_static and (vtype not in RangeTypes):
             raise TraitError, ("Range can only be use for int, long or float "
-                               "values, but a value of type %s was specified." % 
+                               "values, but a value of type %s was specified." %
                                vtype)
-                
+
         self._low_name = self._high_name = ''
         self._vtype    = Undefined
-        
+
         if vtype is float:
             self._validate  = 'float_validate'
             kind            = 4
             self._type_desc = 'a floating point number'
             if low is not None:
                 low = float( low )
-                
+
             if high is not None:
                 high = float( high )
-                
+
         elif vtype is long:
             self._validate  = 'long_validate'
             self._type_desc = 'a long integer'
             if low is not None:
                 low = long( low )
-                
+
             if high is not None:
                 high = long( high )
-                
+
         elif vtype is int:
             self._validate  = 'int_validate'
             kind            = 3
             self._type_desc = 'an integer'
             if low is not None:
                 low = int( low )
-                
+
             if high is not None:
                 high = int( high )
         else:
             self.get, self.set, self.validate = self._get, self._set, None
             self._vtype     = None
             self._type_desc = 'a number'
-            
+
             if isinstance( high, basestring ):
                 self._high_name = high = 'object.' + high
             else:
                 self._vtype = type( high )
             high = compile( str( high ), '<string>', 'eval' )
-            
+
             if isinstance( low, basestring ):
                 self._low_name = low = 'object.' + low
             else:
                 self._vtype = type( low )
             low = compile( str( low ), '<string>', 'eval' )
-            
+
             if isinstance( value, basestring ):
                 value = 'object.' + value
             self._value = compile( str( value ), '<string>', 'eval' )
-                
+
         exclude_mask = 0
         if exclude_low:
             exclude_mask |= 1
-            
+
         if exclude_high:
             exclude_mask |= 2
-            
+
         if is_static and (vtype is not long):
             self.init_fast_validator( kind, low, high, exclude_mask )
 
@@ -1792,9 +1602,9 @@ class BaseRange ( TraitType ):
         self._high         = high
         self._exclude_low  = exclude_low
         self._exclude_high = exclude_high
-        
+
     def init_fast_validator ( self, *args ):
-        """ Does nothing for the BaseRange class. Used in the Range class to 
+        """ Does nothing for the BaseRange class. Used in the Range class to
             set up the fast validator.
         """
         pass
@@ -1818,7 +1628,7 @@ class BaseRange ( TraitType ):
                return float( value )
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def int_validate ( self, object, name, value ):
@@ -1835,7 +1645,7 @@ class BaseRange ( TraitType ):
                return value
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
 
     def long_validate ( self, object, name, value ):
@@ -1852,9 +1662,9 @@ class BaseRange ( TraitType ):
                return value
         except:
             pass
-            
+
         self.error( object, name, self.repr( value ) )
-        
+
     def _get ( self, object, name, trait ):
         """ Returns the current value of a dynamic range trait.
         """
@@ -1862,16 +1672,16 @@ class BaseRange ( TraitType ):
         value = object.__dict__.get( cname, Undefined )
         if value is Undefined:
             object.__dict__[ cname ] = value = eval( self._value )
-            
+
         low  = eval( self._low )
         high = eval( self._high )
         if (low is not None) and (value < low):
             value = low
         elif (high is not None) and (value > high):
             value = high
-            
+
         return self._typed_value( value, low, high )
-    
+
     def _set ( self, object, name, value ):
         """ Sets the current value of a dynamic range trait.
         """
@@ -1895,9 +1705,9 @@ class BaseRange ( TraitType ):
                         return
             except:
                 pass
-            
+
         self.error( object, name, self.repr( value ) )
-        
+
     def _typed_value ( self, value, low, high ):
         """ Returns the specified value with the correct type for the current
             dynamic range.
@@ -1910,12 +1720,12 @@ class BaseRange ( TraitType ):
                 vtype = type( high )
             else:
                 vtype = lambda x: x
-                
+
         return vtype( value )
-        
+
     def _set_value ( self, object, name, value ):
         """ Sets the specified value as the value of the dynamic range.
-        """        
+        """
         cname = '_traits_cache_' + name
         old   = object.__dict__.get( cname, Undefined )
         if old is Undefined:
@@ -1930,23 +1740,23 @@ class BaseRange ( TraitType ):
         if self._vtype is not Undefined:
             low       = eval( self._low )
             high      = eval( self._high )
-            low, high = ( self._typed_value( low,  low, high ),   
-                          self._typed_value( high, low, high ) )   
+            low, high = ( self._typed_value( low,  low, high ),
+                          self._typed_value( high, low, high ) )
         else:
             low  = self._low
             high = self._high
-            
+
         if low is None:
             if high is None:
                 return self._type_desc
-                
+
             return '%s <%s %s' % (
                    self._type_desc, '='[ self._exclude_high: ], high )
-                   
+
         elif high is None:
             return  '%s >%s %s' % (
                     self._type_desc, '='[ self._exclude_low: ], low )
-                    
+
         return '%s <%s %s <%s %s' % (
                low, '='[ self._exclude_low: ], self._type_desc,
                '='[ self._exclude_high: ], high )
@@ -1955,13 +1765,13 @@ class BaseRange ( TraitType ):
         """ Returns the default UI editor for the trait.
         """
         # fixme: Needs to support a dynamic range editor.
-        
+
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
-            
+
         from enthought.traits.ui.api import RangeEditor
-        
+
         return RangeEditor( self,
                             mode       = self.mode or 'auto',
                             cols       = self.cols or 3,
@@ -1972,62 +1782,62 @@ class BaseRange ( TraitType ):
                             low_name   = self._low_name,
                             high_name  = self._high_name )
 
-                            
-class Range ( BaseRange ):                            
+
+class Range ( BaseRange ):
     """ Defines a trait whose numeric value must be in a specified range using
         a C-level fast validator.
     """
-    
+
     def init_fast_validator ( self, *args ):
         """ Set up the C-level fast validator.
         """
-        self.fast_validate = args 
-        
+        self.fast_validate = args
+
 #-------------------------------------------------------------------------------
-#  'BaseEnum' and 'Enum' traits:  
+#  'BaseEnum' and 'Enum' traits:
 #-------------------------------------------------------------------------------
-                   
+
 class BaseEnum ( TraitType ):
     """ Defines a trait whose value must be one of a specified set of values.
     """
-    
+
     def __init__ ( self, *values, **metadata ):
         """ Returns an Enum trait.
-    
+
         Parameters
         ----------
         values : list or tuple
             The enumeration of all legal values for the trait
-    
+
         Default Value
         -------------
         values[0]
         """
         default_value = values[0]
-        if (len( values ) == 1) and (type( values[0] ) in SequenceTypes): 
+        if (len( values ) == 1) and (type( values[0] ) in SequenceTypes):
             values        = default_value
             default_value = values[0]
         elif (len( values ) == 2) and isinstance( values[1], SequenceTypes ):
             values = values[1]
-            
+
         self.values = tuple( values )
         self.init_fast_validator( 5, self.values )
-            
+
         super( BaseEnum, self ).__init__( default_value, **metadata )
-        
+
     def init_fast_validator ( self, *args ):
-        """ Does nothing for the BaseEnum class. Used in the Enum class to set 
+        """ Does nothing for the BaseEnum class. Used in the Enum class to set
             up the fast validator.
         """
         pass
 
     def validate ( self, object, name, value ):
-        """ Validates that the value is one of the enumerated set of valid 
+        """ Validates that the value is one of the enumerated set of valid
             values.
         """
         if value in self.values:
             return value
-            
+
         self.error( object, name, self.repr( value ) )
 
     def info ( self ):
@@ -2039,98 +1849,98 @@ class BaseEnum ( TraitType ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import EnumEditor
-        
+
         return EnumEditor( values   = self,
                            cols     = self.cols or 3,
                            evaluate = self.evaluate,
                            mode     = self.mode or 'radio' )
 
-                           
+
 class Enum ( BaseEnum ):
     """ Defines a trait whose value must be one of a specified set of values
         using a C-level fast validator.
     """
-    
+
     def init_fast_validator ( self, *args ):
         """ Set up the C-level fast validator.
         """
-        self.fast_validate = args 
+        self.fast_validate = args
 
 #-------------------------------------------------------------------------------
-#  'BaseTuple' and 'Tuple' traits:  
+#  'BaseTuple' and 'Tuple' traits:
 #-------------------------------------------------------------------------------
-                    
+
 class BaseTuple ( TraitType ):
     """ Defines a trait whose value must be a tuple of specified trait types.
     """
-    
+
     def __init__ ( self, *traits, **metadata ):
         """ Returns a Tuple trait.
 
         Parameters
         ----------
         traits : zero or more arguments
-            Definition of the default and allowed tuples. If the first item of 
-            *traits* is a tuple, it is used as the default value. 
+            Definition of the default and allowed tuples. If the first item of
+            *traits* is a tuple, it is used as the default value.
             The remaining argument list is used to form a tuple that constrains
-            the  values assigned to the returned trait. The trait's value must 
+            the  values assigned to the returned trait. The trait's value must
             be a tuple of the same length as the remaining argument list, whose
             elements must match the types specified by the corresponding items
             of the remaining argument list.
-    
+
         Default Value
         -------------
          1. If no arguments are specified, the default value is ().
          2. If a tuple is specified as the first argument, it is the default
             value.
-         3. If a tuple is not specified as the first argument, the default 
-            value is a tuple whose length is the length of the argument list, 
+         3. If a tuple is not specified as the first argument, the default
+            value is a tuple whose length is the length of the argument list,
             and whose values are the default values for the corresponding trait
             types.
-    
+
         Example for case #2::
-    
+
             mytuple = Tuple(('Fred', 'Betty', 5))
-    
-        The trait's value must be a 3-element tuple whose first and second 
-        elements are strings, and whose third element is an integer. The 
+
+        The trait's value must be a 3-element tuple whose first and second
+        elements are strings, and whose third element is an integer. The
         default value is ('Fred', 'Betty', 5).
-    
+
         Example for case #3::
-    
+
             mytuple = Tuple('Fred', 'Betty', 5)
-    
-        The trait's value must be a 3-element tuple whose first and second 
-        elements are strings, and whose third element is an integer. The 
+
+        The trait's value must be a 3-element tuple whose first and second
+        elements are strings, and whose third element is an integer. The
         default value is ('','',0).
         """
         if len( traits ) == 0:
             self.init_fast_validator( 11, tuple, None, list )
-            
+
             super( BaseTuple, self ).__init__( (), **metadata )
-            
+
             return
 
         default_value = None
-        
+
         if isinstance( traits[0], tuple ):
             default_value, traits = traits[0], traits[1:]
             if len( traits ) == 0:
                 traits = [ Trait( element ) for element in default_value ]
-                
+
         self.traits = tuple( [ trait_from( trait ) for trait in traits ] )
         self.init_fast_validator( 9, self.traits )
-                
+
         if default_value is None:
-            default_value = tuple( [ trait.default_value()[1] 
+            default_value = tuple( [ trait.default_value()[1]
                                      for trait in self.traits ] )
-                                     
+
         super( BaseTuple, self ).__init__( default_value, **metadata )
-        
+
     def init_fast_validator ( self, *args ):
-        """ Saves the validation parameters. 
+        """ Saves the validation parameters.
         """
-        self.no_type_check = (args[0] == 11) 
+        self.no_type_check = (args[0] == 11)
 
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid tuple.
@@ -2138,28 +1948,28 @@ class BaseTuple ( TraitType ):
         if self.no_type_check:
             if isinstance( value, tuple ):
                 return value
-                
+
             if isinstance( value, list ):
                 return tuple( value )
-                
+
             self.error( object, name, value )
-            
+
         try:
             if isinstance( value, list ):
                 value = tuple( value )
-                
+
             if isinstance( value, tuple ):
                 traits = self.traits
                 if len( value ) == len( traits ):
                     values = []
                     for i, trait in enumerate( traits ):
-                        values.append( trait.validate( object, name, 
+                        values.append( trait.validate( object, name,
                                                        value[i] ) )
-                                                       
+
                     return tuple( values )
         except:
             pass
-            
+
         self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
@@ -2167,53 +1977,53 @@ class BaseTuple ( TraitType ):
         """
         if self.no_type_check:
             return 'a tuple'
-            
+
         return 'a tuple of the form: (%s)' % (', '.join(
-            [ trait.full_info( object, name, value ) 
+            [ trait.full_info( object, name, value )
               for trait in self.traits ] ))
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import TupleEditor
-        
+
         return TupleEditor( traits = self.traits,
                             labels = self.labels or [],
                             cols   = self.cols or 1 )
-                    
+
 class Tuple ( BaseTuple ):
     """ Defines a trait whose value must be a tuple of specified trait types
         using a C-level fast validator.
     """
-    
+
     def init_fast_validator ( self, *args ):
         """ Set up the C-level fast validator.
         """
         super( Tuple, self ).init_fast_validator( *args )
-        
-        self.fast_validate = args 
-        
+
+        self.fast_validate = args
+
 #-------------------------------------------------------------------------------
-#  'List' trait: 
+#  'List' trait:
 #-------------------------------------------------------------------------------
 
 class List ( TraitType ):
-    """ Defines a trait whose value must be a list whose items are of the 
+    """ Defines a trait whose value must be a list whose items are of the
         specified trait type.
-    """    
+    """
 
     info_trait         = None
     default_value_type = 5
     _items_event       = None
-    
-    def __init__ ( self, trait = None, value = None, minlen = 0, 
+
+    def __init__ ( self, trait = None, value = None, minlen = 0,
                    maxlen = sys.maxint, items = True, **metadata ):
         """ Returns a List trait.
-    
+
         Parameters
         ----------
         trait : a trait or value that can be converted to a trait using Trait()
-            The type of item that the list contains. If not specified, the list 
+            The type of item that the list contains. If not specified, the list
             can contain items of any type.
         value :
             Default value for the list
@@ -2221,31 +2031,31 @@ class List ( TraitType ):
             The minimum length of a list that can be assigned to the trait.
         maxlen : integer
             The maximum length of a list that can be assigned to the trait.
-    
+
         The length of the list assigned to the trait must be such that::
-    
+
             minlen <= len(list) <= maxlen
-    
+
         Default Value
         -------------
         *value* or None
         """
         metadata.setdefault( 'copy', 'deep' )
-        
+
         if isinstance( trait, SequenceTypes ):
             trait, value = value, list( trait )
-            
+
         if value is None:
             value = []
-            
+
         self.item_trait = trait_from( trait )
         self.minlen     = max( 0, minlen )
         self.maxlen     = max( minlen, maxlen )
         self.has_items  = items
-            
+
         if self.item_trait.instance_handler == '_instance_changed_handler':
             metadata.setdefault( 'instance_handler', '_list_changed_handler' )
-            
+
         super( List, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
@@ -2255,9 +2065,9 @@ class List ( TraitType ):
            (self.minlen <= len( value ) <= self.maxlen)):
             if object is None:
                 return value
-                
+
             return TraitListObject( self, object, name, value )
-            
+
         self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
@@ -2274,8 +2084,8 @@ class List ( TraitType ):
             else:
                 size = 'from %s to %s items' % (
                        self.minlen, self.maxlen )
-            
-        return 'a list of %s which are %s' % ( 
+
+        return 'a list of %s which are %s' % (
                    size, self.item_trait.full_info( object, name, value ) )
 
     def create_editor ( self ):
@@ -2284,7 +2094,7 @@ class List ( TraitType ):
         handler = self.item_trait.handler
         if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
             from enthought.traits.api import HasTraits
-            
+
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
@@ -2293,7 +2103,7 @@ class List ( TraitType ):
                          EvalFilterTemplate, RuleFilterTemplate, \
                          MenuFilterTemplate, EvalTableFilter
                     from enthought.traits.ui.api import TableEditor
-                    
+
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
                                         for name in object.editable_traits() ],
@@ -2309,7 +2119,7 @@ class List ( TraitType ):
                     pass
 
         from enthought.traits.ui.api import ListEditor
-        
+
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
                            use_notebook  = self.use_notebook is True,
@@ -2319,22 +2129,22 @@ class List ( TraitType ):
         """ Returns the *inner trait* (or traits) for this trait.
         """
         return ( self.item_trait, )
-                           
+
     #-- Private Methods --------------------------------------------------------
-    
+
     def items_event ( self ):
         return items_event()
-        
+
 #-------------------------------------------------------------------------------
-#  'CList' trait:  
-#-------------------------------------------------------------------------------        
-        
+#  'CList' trait:
+#-------------------------------------------------------------------------------
+
 class CList ( List ):
-    """ Defines a trait whose values must be a list whose items are of the 
-        specified trait type or which can be coerced to a list whose values are 
+    """ Defines a trait whose values must be a list whose items are of the
+        specified trait type or which can be coerced to a list whose values are
         of the specified trait type.
     """
-    
+
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid list.
         """
@@ -2352,48 +2162,48 @@ class CList ( List ):
         """ Returns a description of the trait.
         """
         return '%s or %s' % (
-                   self.item_trait.full_info( object, name, value), 
+                   self.item_trait.full_info( object, name, value),
                    super( CList, self ).full_info( object, name, value ) )
-        
+
 #-------------------------------------------------------------------------------
-#  'Set' trait: 
+#  'Set' trait:
 #-------------------------------------------------------------------------------
 
 class Set ( TraitType ):
-    """ Defines a trait whose value must be a set whose items are of the 
+    """ Defines a trait whose value must be a set whose items are of the
         specified trait type.
-    """    
+    """
 
     info_trait         = None
     default_value_type = 9
     _items_event       = None
-    
+
     def __init__ ( self, trait = None, value = None, items = True, **metadata ):
         """ Returns a Set trait.
-    
+
         Parameters
         ----------
         trait : a trait or value that can be converted to a trait using Trait()
-            The type of item that the list contains. If not specified, the list 
+            The type of item that the list contains. If not specified, the list
             can contain items of any type.
         value :
             Default value for the set
-    
+
         Default Value
         -------------
         *value* or None
         """
         metadata.setdefault( 'copy', 'deep' )
-        
+
         if isinstance( trait, SetTypes ):
             trait, value = value, set( trait )
-            
+
         if value is None:
             value = set()
-            
+
         self.item_trait = trait_from( trait )
         self.has_items  = items
-            
+
         super( Set, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
@@ -2402,9 +2212,9 @@ class Set ( TraitType ):
         if isinstance( value, set ):
             if object is None:
                 return value
-                
+
             return TraitSetObject( self, object, name, value )
-            
+
         self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
@@ -2419,7 +2229,7 @@ class Set ( TraitType ):
         handler = self.item_trait.handler
         if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
             from enthought.traits.api import HasTraits
-            
+
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
@@ -2428,7 +2238,7 @@ class Set ( TraitType ):
                          EvalFilterTemplate, RuleFilterTemplate, \
                          MenuFilterTemplate, EvalTableFilter
                     from enthought.traits.ui.api import TableEditor
-                    
+
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
                                         for name in object.editable_traits() ],
@@ -2444,7 +2254,7 @@ class Set ( TraitType ):
                     pass
 
         from enthought.traits.ui.api import ListEditor
-        
+
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
                            use_notebook  = self.use_notebook is True,
@@ -2454,26 +2264,26 @@ class Set ( TraitType ):
         """ Returns the *inner trait* (or traits) for this trait.
         """
         return ( self.item_trait, )
-                           
+
     #-- Private Methods --------------------------------------------------------
 
     def items_event ( self ):
         if self.__class__._items_event is None:
             self.__class__._items_event = \
                 Event( TraitSetEvent, is_base = False ).as_ctrait()
-                
+
         return self.__class__._items_event
-        
+
 #-------------------------------------------------------------------------------
-#  'CSet' trait:  
-#-------------------------------------------------------------------------------        
-        
+#  'CSet' trait:
+#-------------------------------------------------------------------------------
+
 class CSet ( Set ):
-    """ Defines a trait whose values must be a set whose items are of the 
-        specified trait type or which can be coerced to a set whose values are 
+    """ Defines a trait whose values must be a set whose items are of the
+        specified trait type or which can be coerced to a set whose values are
         of the specified trait type.
     """
-    
+
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid list.
         """
@@ -2491,18 +2301,18 @@ class CSet ( Set ):
         """ Returns a description of the trait.
         """
         return '%s or %s' % (
-                   self.item_trait.full_info( object, name, value), 
+                   self.item_trait.full_info( object, name, value),
                    super( CSet, self ).full_info( object, name, value ) )
-    
+
 #-------------------------------------------------------------------------------
-#  'Dict' trait:  
+#  'Dict' trait:
 #-------------------------------------------------------------------------------
-          
+
 class Dict ( TraitType ):
     """ Defines a trait whose value must be a dictionary, optionally with
         specified types for keys and values.
     """
-    
+
     info_trait         = None
     default_value_type = 6
     _items_event       = None
@@ -2514,7 +2324,7 @@ class Dict ( TraitType ):
         Parameters
         ----------
         key_trait : a trait or value that can convert to a trait using Trait()
-            The trait type for keys in the dictionary; if not specified, any 
+            The trait type for keys in the dictionary; if not specified, any
             values can be used as keys.
         value_trait : a trait or value that can convert to a trait using Trait()
             The trait type for values in the dictionary; if not specified, any
@@ -2523,27 +2333,27 @@ class Dict ( TraitType ):
             The default value for the returned trait
         items : Boolean
             Indicates whether the value contains items
-    
+
         Default Value
         -------------
         *value* or {}
         """
         if isinstance( key_trait, dict ):
             key_trait, value_trait, value = value_trait, value, key_trait
-            
+
         if value is None:
             value = {}
 
         self.key_trait   = trait_from( key_trait )
         self.value_trait = trait_from( value_trait )
         self.has_items   = items
-        
+
         handler = self.value_trait.handler
         if (handler is not None) and handler.has_items:
             handler = handler.clone()
             handler.has_items = False
         self.value_handler = handler
-        
+
         super( Dict, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
@@ -2553,22 +2363,22 @@ class Dict ( TraitType ):
             if value is None:
                 return value
             return TraitDictObject( self, object, name, value )
-            
+
         self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         return ('a dictionary with keys which are %s and with values which '
-                'are %s') % ( 
-                self.key_trait.full_info(   object, name, value ), 
-                self.value_trait.full_info( object, name, value ) ) 
+                'are %s') % (
+                self.key_trait.full_info(   object, name, value ),
+                self.value_trait.full_info( object, name, value ) )
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import TextEditor
-        
+
         return TextEditor( evaluate = eval )
 
     def inner_traits ( self ):
@@ -2577,17 +2387,17 @@ class Dict ( TraitType ):
         return ( self.key_trait, self.value_trait )
 
     #-- Private Methods --------------------------------------------------------
-        
+
     def items_event ( self ):
         cls = self.__class__
         if cls._items_event is None:
             cls._items_event = \
                 Event( TraitDictEvent, is_base = False ).as_ctrait()
-            
+
         return cls._items_event
 
 #-------------------------------------------------------------------------------
-#  'BaseInstance' and 'Instance' traits:  
+#  'BaseInstance' and 'Instance' traits:
 #-------------------------------------------------------------------------------
 
 # Allowed values and mappings for the 'adapt' keyword:
@@ -2600,13 +2410,13 @@ AdaptMap = {
 class BaseClass ( TraitType ):
     """ Base class for types which have an associated class which can be
         determined dynamically by specifying a string name for the class (e.g.
-        'package1.package2.module.class'. 
-        
+        'package1.package2.module.class'.
+
         Any subclass must define instances with 'klass' and 'module' attributes
         that contain the string name of the class (or actual class object) and
         the module name that contained the original trait definition (used for
         resolving local class names (e.g. 'LocalClass')).
-        
+
         This is an abstract class that only provides helper methods used to
         resolve the class name into an actual class object.
     """
@@ -2615,9 +2425,9 @@ class BaseClass ( TraitType ):
         klass = self.validate_class( self.find_class( self.klass ) )
         if klass is None:
             self.validate_failed( object, name, value )
-            
+
         self.klass = klass
-     
+
     def validate_class ( self, klass ):
         return klass
 
@@ -2627,18 +2437,18 @@ class BaseClass ( TraitType ):
         if col >= 0:
             module = klass[ : col ]
             klass = klass[ col + 1: ]
-            
+
         theClass = getattr( sys.modules.get( module ), klass, None )
         if (theClass is None) and (col >= 0):
             try:
                 mod = __import__( module )
                 for component in module.split( '.' )[1:]:
                     mod = getattr( mod, component )
-                    
+
                 theClass = getattr( mod, klass, None )
             except:
                 pass
-                
+
         return theClass
 
     def validate_failed ( self, object, name, value ):
@@ -2647,7 +2457,7 @@ class BaseClass ( TraitType ):
             msg = 'class %s' % value.__class__.__name__
         else:
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
-            
+
         self.error( object, name, msg )
 
 def validate_implements ( value, klass, unused = None ):
@@ -2657,14 +2467,14 @@ def validate_implements ( value, klass, unused = None ):
     from has_traits        import Interface
     from interface_checker import check_implements
     from protocols.api     import declareImplementation
-    
-    rc = (issubclass( klass, Interface) and 
+
+    rc = (issubclass( klass, Interface) and
           check_implements( value.__class__, klass ))
     if rc:
         declareImplementation( value.__class__, instancesProvide = [ klass ] )
-        
+
     return rc
-    
+
 # Tell the C-base code about the 'validate_implements' function (used by the
 # 'fast_validate' code for Instance types):
 import ctraits
@@ -2677,21 +2487,21 @@ class BaseInstance ( BaseClass ):
 
     adapt_default = 'no'
 
-    def __init__ ( self, klass = None, factory = None, args = None, kw = None, 
+    def __init__ ( self, klass = None, factory = None, args = None, kw = None,
                    allow_none = True, adapt = None, module = None,
                    **metadata ):
         """ Returns an Instance trait.
-    
+
         Parameters
         ----------
         klass : class or instance
-            The object that forms the basis for the trait; if it is an 
-            instance, then trait values must be instances of the same class or 
-            a subclass. This object is not the default value, even if it is an 
+            The object that forms the basis for the trait; if it is an
+            instance, then trait values must be instances of the same class or
+            a subclass. This object is not the default value, even if it is an
             instance.
         factory : callable
-            A callable, typically a class, that when called with *args* and 
-            *kw*, returns the default value for the trait. If not specified, 
+            A callable, typically a class, that when called with *args* and
+            *kw*, returns the default value for the trait. If not specified,
             or *None*, *klass* is used as the factory.
         args : tuple
             Positional arguments for generating the default value.
@@ -2702,62 +2512,62 @@ class BaseInstance ( BaseClass ):
         adapt : string
             A string specifying how adaptation should be applied. The possible
             values are:
-                
+
                 - 'no': Adaptation is not allowed.
-                - 'yes': Adaptation is allowed. If adaptation fails, an 
+                - 'yes': Adaptation is allowed. If adaptation fails, an
                     exception should be raised.
-                - 'default': Adapation is allowed. If adaptation fails, the 
+                - 'default': Adapation is allowed. If adaptation fails, the
                     default value for the trait should be used.
-    
+
         Default Value
         -------------
-        **None** if *klass* is an instance or if it is a class and *args* and 
-        *kw* are not specified. Otherwise, the default value is the instance 
-        obtained by calling ``klass(*args, **kw)``. Note that the constructor 
-        call is performed each time a default value is assigned, so each 
+        **None** if *klass* is an instance or if it is a class and *args* and
+        *kw* are not specified. Otherwise, the default value is the instance
+        obtained by calling ``klass(*args, **kw)``. Note that the constructor
+        call is performed each time a default value is assigned, so each
         default value assigned is a unique instance.
         """
         if klass is None:
-            raise TraitError( 'A %s trait must have a class specified.' % 
+            raise TraitError( 'A %s trait must have a class specified.' %
                               self.__class__.__name__ )
-           
+
         metadata.setdefault( 'copy', 'deep' )
         metadata.setdefault( 'instance_handler', '_instance_changed_handler' )
-        
+
         adapt = adapt or self.adapt_default
         if adapt not in AdaptMap:
             raise TraitError( "'adapt' must be 'yes', 'no' or 'default'." )
-                       
+
         if isinstance( factory, tuple ):
             if args is None:
                 args, factory = factory, klass
             elif isinstance( args, dict ):
                 factory, args, kw = klass, factory, args
-                
+
         elif (kw is None) and isinstance( factory, dict ):
             kw, factory = factory, klass
-            
+
         elif ((args is not None) or (kw is not None)) and (factory is None):
             factory = klass
-            
+
         self._allow_none = allow_none
         self.adapt       = AdaptMap[ adapt ]
         self.module      = module or get_module_name()
-        
+
         if isinstance( klass, basestring ):
             self.klass = klass
         else:
             if not isinstance( klass, ClassTypes ):
                 klass = klass.__class__
-                
+
             self.klass = klass
             self.init_fast_validate()
-        
+
         value = factory
         if factory is not None:
             if args is None:
                 args = ()
-                
+
             if kw is None:
                 if isinstance( args, dict ):
                     kw   = args
@@ -2766,16 +2576,16 @@ class BaseInstance ( BaseClass ):
                     kw = {}
             elif not isinstance( kw, dict ):
                 raise TraitError( "The 'kw' argument must be a dictionary." )
-                
-            if ((not callable( factory )) and 
+
+            if ((not callable( factory )) and
                 (not isinstance( factory, basestring ))):
                 if (len( args ) > 0) or (len( kw ) > 0):
                     raise TraitError( "'factory' must be callable" )
             else:
                 value = _InstanceArgs( factory, args, kw )
-           
+
         self.default_value = value
-        
+
         super( BaseInstance, self ).__init__( value, **metadata )
 
     def validate ( self, object, name, value ):
@@ -2784,12 +2594,12 @@ class BaseInstance ( BaseClass ):
         if value is None:
             if self._allow_none:
                 return value
-                
+
             self.validate_failed( object, name, value )
-                
+
         if isinstance( self.klass, basestring ):
             self.resolve_class( object, name, value )
-            
+
         if self.adapt == 0:
             try:
                 if value is adapt( value, self.klass ):
@@ -2797,26 +2607,26 @@ class BaseInstance ( BaseClass ):
             except:
                 if validate_implements( value, self.klass ):
                     return value
-                
+
         elif self.adapt == 1:
             try:
                 return adapt( value, self.klass )
             except:
                 if validate_implements( value, self.klass ):
                     return value
-                
+
         else:
             result = adapt( value, self.klass, None )
             if result is None:
                 if validate_implements( value, self.klass ):
                     return value
-                    
+
                 result = self.default_value
                 if isinstance( result, _InstanceArgs ):
                     result = result[0]( *result[1], **result[2] )
-                    
+
             return result
-            
+
         self.validate_failed( object, name, value )
 
     def info ( self ):
@@ -2825,18 +2635,18 @@ class BaseInstance ( BaseClass ):
         klass = self.klass
         if not isinstance( klass, basestring ):
             klass = klass.__name__
-            
+
         if self.adapt == 0:
             result = class_of( klass )
         else:
-            result = ('an implementor of, or can be adapted to implement, %s' % 
+            result = ('an implementor of, or can be adapted to implement, %s' %
                       klass)
-                      
+
         if self._allow_none:
             return result + ' or None'
-            
+
         return result
-        
+
     def get_default_value ( self ):
         """ Returns a tuple of the form: ( default_value_type, default_value )
             which describes the default value for this trait.
@@ -2846,21 +2656,21 @@ class BaseInstance ( BaseClass ):
         if dvt < 0:
             if not isinstance( dv, _InstanceArgs ):
                 return super( BaseInstance, self ).get_default_value()
-                
+
             self.default_value_type = dvt = 7
             dv = ( self.create_default_value, dv.args, dv.kw )
-        
+
         return ( dvt, dv )
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from enthought.traits.ui.api import InstanceEditor
-        
+
         return InstanceEditor( label = self.label or '',
                                view  = self.view  or '',
                                kind  = self.kind  or 'live' )
-        
+
     #-- Private Methods --------------------------------------------------------
 
     def create_default_value ( self, *args, **kw ):
@@ -2869,7 +2679,7 @@ class BaseInstance ( BaseClass ):
             klass = self.validate_class( self.find_class( klass ) )
             if klass is None:
                 raise TraitError, 'Unable to locate class: ' + args[0]
-                
+
         return klass( *args[1:], **kw )
 
     # fixme: Do we still need this method using the new style?...
@@ -2879,7 +2689,7 @@ class BaseInstance ( BaseClass ):
 
     def init_fast_validate ( self ):
         """ Does nothing for the BaseInstance' class. Used by the 'Instance',
-            'AdaptedTo' and 'AdaptsTo' classes to set up the C-level fast 
+            'AdaptedTo' and 'AdaptsTo' classes to set up the C-level fast
             validator.
         """
         pass
@@ -2902,61 +2712,61 @@ class BaseInstance ( BaseClass ):
             item_trait = getattr( handler, 'item_trait', None )
             if item_trait is not None:
                 trait = item_trait
-            
+
         if self.fast_validate is not None:
             trait.set_validate( self.fast_validate )
-                
+
 class Instance ( BaseInstance ):
     """ Defines a trait whose value must be an instance of a specified class,
         or one of its subclasses using a C-level fast validator.
     """
-    
+
     def init_fast_validate ( self ):
         """ Sets up the C-level fast validator.
         """
         from has_traits import Interface
-        
+
         if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
             fast_validate = [ 1, self.klass ]
             if self._allow_none:
                 fast_validate = [ 1, None, self.klass ]
-                
+
             if self.klass in TypeTypes:
                 fast_validate[0] = 0
-                
+
             self.fast_validate = tuple( fast_validate )
         else:
             self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
-                                   
-class AdaptedTo ( Instance ):  
- 
-    adapt_default = 'yes'  
-  
-    def post_setattr ( self, object, name, value ):  
-        """ Performs additional post-assignment processing.  
-        """  
-        # Save the original, unadapted value in the mapped trait:  
-        object.__dict__[ name + '_' ] = value  
-  
-    def as_ctrait ( self ):  
-        """ Returns a CTrait corresponding to the trait defined by this class.  
-        """  
-        return self.modify_ctrait( super( AdaptedTo, self ).as_ctrait() )  
-          
-    def modify_ctrait ( self, ctrait ):  
-          
-        # Tell the C code that the 'post_setattr' method wants the original,  
-        # unadapted value passed to 'setattr':  
-        return ctrait.post_setattr_original_value( True )  
-      
-class AdaptsTo ( AdaptedTo ):      
-          
-    def modify_ctrait ( self, ctrait ):  
-        # Tell the C code that 'setattr' should store the original, unadapted   
-        # value passed to it:  
+
+class AdaptedTo ( Instance ):
+
+    adapt_default = 'yes'
+
+    def post_setattr ( self, object, name, value ):
+        """ Performs additional post-assignment processing.
+        """
+        # Save the original, unadapted value in the mapped trait:
+        object.__dict__[ name + '_' ] = value
+
+    def as_ctrait ( self ):
+        """ Returns a CTrait corresponding to the trait defined by this class.
+        """
+        return self.modify_ctrait( super( AdaptedTo, self ).as_ctrait() )
+
+    def modify_ctrait ( self, ctrait ):
+
+        # Tell the C code that the 'post_setattr' method wants the original,
+        # unadapted value passed to 'setattr':
+        return ctrait.post_setattr_original_value( True )
+
+class AdaptsTo ( AdaptedTo ):
+
+    def modify_ctrait ( self, ctrait ):
+        # Tell the C code that 'setattr' should store the original, unadapted
+        # value passed to it:
         return ctrait.setattr_original_value( True )
-        
+
 #-------------------------------------------------------------------------------
 #  'Type' trait:
 #-------------------------------------------------------------------------------
@@ -2965,47 +2775,47 @@ class Type ( BaseClass ):
     """ Defines a trait whose value must be a subclass of a specified class.
     """
 
-    def __init__ ( self, value = None, klass = None, allow_none = True, 
+    def __init__ ( self, value = None, klass = None, allow_none = True,
                          **metadata ):
         """ Returns an Type trait.
-    
+
         Parameters
         ----------
         value : class or None
-        
+
         klass : class or None
-        
+
         allow_none : boolean
             Indicates whether None is allowed as an assignable value. Even if
             **False**, the default *value* may be **None**.
-    
+
         Default Value
         -------------
-        **None** if *klass* is an instance or if it is a class and *args* and 
-        *kw* are not specified. Otherwise, the default value is the instance 
-        obtained by calling ``klass(*args, **kw)``. Note that the constructor 
-        call is performed each time a default value is assigned, so each 
+        **None** if *klass* is an instance or if it is a class and *args* and
+        *kw* are not specified. Otherwise, the default value is the instance
+        obtained by calling ``klass(*args, **kw)``. Note that the constructor
+        call is performed each time a default value is assigned, so each
         default value assigned is a unique instance.
         """
         if value is None:
             if klass is None:
                 klass = object
-                
+
         elif klass is None:
             klass = value
-            
+
         if isinstance( klass, basestring ):
             self.validate = self.resolve
-            
+
         elif not isinstance( klass, ClassTypes ):
             raise TraitError( "A Type trait must specify a class." )
-            
+
         self.klass       = klass
         self._allow_none = allow_none
         self.module      = get_module_name()
-        
+
         super( Type, self ).__init__( value, **metadata )
-        
+
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
         """
@@ -3015,18 +2825,18 @@ class Type ( BaseClass ):
         except:
             if (value is None) and (self._allow_none):
                 return value
-        
+
         self.error( object, name, value )
-        
+
     def resolve ( self, object, name, value ):
         """ Resolves a class originally specified as a string into an actual
-            class, then resets the trait so that future calls will be handled by 
+            class, then resets the trait so that future calls will be handled by
             the normal validate method.
         """
         if isinstance( self.klass, basestring ):
             self.resolve_class( object, name, value )
             del self.validate
-        
+
         return self.validate( object, name, value )
 
     def info ( self ):
@@ -3035,23 +2845,23 @@ class Type ( BaseClass ):
         klass = self.klass
         if not isinstance( klass, basestring ):
             klass = klass.__name__
-            
+
         result = 'a subclass of ' + klass
-                      
+
         if self._allow_none:
             return result + ' or None'
-            
+
         return result
-        
+
     def get_default_value ( self ):
         """ Returns a tuple of the form: ( default_value_type, default_value )
             which describes the default value for this trait.
         """
         if not isinstance( self.default_value, basestring ):
             return super( Type, self ).get_default_value()
-            
+
         return ( 7, ( self.resolve_default_value, (), None ) )
-        
+
     def resolve_default_value ( self ):
         """ Resolves a class name into a class so that it can be used to
             return the class as the default value of the trait.
@@ -3061,23 +2871,23 @@ class Type ( BaseClass ):
                 self.resolve_class( None, None, None )
                 del self.validate
             except:
-                raise TraitError( 'Could not resolve %s into a valid class' % 
+                raise TraitError( 'Could not resolve %s into a valid class' %
                                   self.klass )
-                
+
         return self.klass
-        
+
 #-------------------------------------------------------------------------------
 #  'Event' trait:
 #-------------------------------------------------------------------------------
 
 class Event ( TraitType ):
-    
+
     def __init__ ( self, trait = None, **metadata ):
         metadata[ 'type' ]      = 'event'
         metadata[ 'transient' ] = True
-        
+
         super( Event, self ).__init__( **metadata )
-        
+
         self.trait = None
         if trait is not None:
             self.trait = trait_from( trait )
@@ -3091,7 +2901,7 @@ class Event ( TraitType ):
         trait = self.trait
         if trait is None:
             return 'any value'
-            
+
         return trait.full_info( object, name, value )
 
 #  Handle circular module dependencies:
@@ -3104,59 +2914,12 @@ trait_handlers.Event = Event
 class Button ( Event ):
     """ Defines a trait whose UI editor is a button.
     """
-    
+
     def __init__ ( self, label = '', image = None, style = 'button',
-                         orientation = 'vertical', width_padding = 7, 
+                         orientation = 'vertical', width_padding = 7,
                          height_padding = 5, view = None, **metadata ):
         """ Returns a trait event whose editor is a button.
-    
-            Parameters
-            ----------
-            label : string
-                The label for the button
-            image : enthought.pyface.ImageResource
-                An image to display on the button
-            style : one of: 'button', 'radio', 'toolbar', 'checkbox'
-                The style of button to display
-            orientation : one of: 'horizontal', 'vertical'
-                The orientation of the label relative to the image
-            width_padding : integer between 0 and 31
-                Extra padding (in pixels) added to the left and right sides of 
-                the button
-            height_padding : integer between 0 and 31
-                Extra padding (in pixels) added to the top and bottom of the
-                button
-        
-            Default Value
-            -------------
-            No default value because events do not store values.
-        """
-        from enthought.traits.ui.api import ButtonEditor
-    
-        self.editor = ButtonEditor( label          = label,
-                                    image          = image,
-                                    style          = style,
-                                    orientation    = orientation,
-                                    width_padding  = width_padding,
-                                    height_padding = height_padding,
-                                    view           = view )
-        
-        super( Button, self ).__init__( **metadata )
 
-#-------------------------------------------------------------------------------
-#  'ToolbarButton' trait:
-#-------------------------------------------------------------------------------
-
-class ToolbarButton ( Button ):
-    """ Defines a trait whose UI editor is a button that can be used on a 
-        toolbar.
-    """
-    
-    def __init__ ( self, label = '', image = None, style = 'toolbar',
-                         orientation = 'vertical', width_padding = 2,
-                         height_padding = 2, **metadata ):
-        """ Returns a trait event whose editor is a toolbar button.
-    
             Parameters
             ----------
             label : string
@@ -3173,14 +2936,61 @@ class ToolbarButton ( Button ):
             height_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the top and bottom of the
                 button
-        
+
             Default Value
             -------------
             No default value because events do not store values.
-    
+        """
+        from enthought.traits.ui.api import ButtonEditor
+
+        self.editor = ButtonEditor( label          = label,
+                                    image          = image,
+                                    style          = style,
+                                    orientation    = orientation,
+                                    width_padding  = width_padding,
+                                    height_padding = height_padding,
+                                    view           = view )
+
+        super( Button, self ).__init__( **metadata )
+
+#-------------------------------------------------------------------------------
+#  'ToolbarButton' trait:
+#-------------------------------------------------------------------------------
+
+class ToolbarButton ( Button ):
+    """ Defines a trait whose UI editor is a button that can be used on a
+        toolbar.
+    """
+
+    def __init__ ( self, label = '', image = None, style = 'toolbar',
+                         orientation = 'vertical', width_padding = 2,
+                         height_padding = 2, **metadata ):
+        """ Returns a trait event whose editor is a toolbar button.
+
+            Parameters
+            ----------
+            label : string
+                The label for the button
+            image : enthought.pyface.ImageResource
+                An image to display on the button
+            style : one of: 'button', 'radio', 'toolbar', 'checkbox'
+                The style of button to display
+            orientation : one of: 'horizontal', 'vertical'
+                The orientation of the label relative to the image
+            width_padding : integer between 0 and 31
+                Extra padding (in pixels) added to the left and right sides of
+                the button
+            height_padding : integer between 0 and 31
+                Extra padding (in pixels) added to the top and bottom of the
+                button
+
+            Default Value
+            -------------
+            No default value because events do not store values.
+
         """
         super( ToolbarButton, self ).__init__( label, image, style, orientation,
-                                               width_padding, height_padding, 
+                                               width_padding, height_padding,
                                                **metadata )
 
 #-------------------------------------------------------------------------------
@@ -3190,24 +3000,24 @@ class ToolbarButton ( Button ):
 class Either ( TraitType ):
     """ Defines a trait whose value can be any of of a specified list of traits.
     """
-    
+
     def __init__ ( self, *traits, **metadata ):
-        """ Creates a trait whose value can be any of of a specified list of 
+        """ Creates a trait whose value can be any of of a specified list of
             traits.
         """
         self.trait_maker = _TraitMaker( None, *traits, **metadata )
-        
+
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.
         """
         return self.trait_maker.as_ctrait()
-        
+
 #-------------------------------------------------------------------------------
-#  'Symbol' trait:  
+#  'Symbol' trait:
 #-------------------------------------------------------------------------------
-    
+
 class Symbol ( TraitType ):
-    
+
     # A description of the type of value this trait accepts:
     info_text = ("an object or a string of the form "
         "'[package.package...package.]module[:symbol[([arg1,...,argn])]]' "
@@ -3221,12 +3031,12 @@ class Symbol ( TraitType ):
             if ref is None:
                 object.__dict__[ cache ] = ref = \
                     object.trait( name ).default_value_for( object, name )
-                    
+
             if isinstance( ref, basestring ):
                 object.__dict__[ name ] = value = self._resolve( ref )
-                
+
         return value
-        
+
     def set ( self, object, name, value ):
         dict = object.__dict__
         old  = dict.get( name, Undefined )
@@ -3237,65 +3047,65 @@ class Symbol ( TraitType ):
         else:
             dict[ name ] = value
             object.trait_property_changed( name, old, value )
-            
+
     def _resolve ( self, ref ):
         try:
             path   = ref.split( ':', 1 )
             module = __import__( path[0] )
             for component in path[0].split( '.' )[1:]:
                 module = getattr( module, component )
-                
+
             if len( path ) == 1:
                 return module
-                
+
             elements = path[1].split( '(', 1 )
             symbol   = getattr( module, elements[0] )
             if len( elements ) == 1:
                 return symbol
-                
+
             args = eval( '(' + elements[1] )
             if not isinstance( args, tuple ):
                 args = ( args, )
-                
+
             return symbol( *args )
         except:
-            raise TraitError( "Could not resolve '%s' into a valid symbol." % 
+            raise TraitError( "Could not resolve '%s' into a valid symbol." %
                               ref )
 
 
 if python_version >= 2.5:
-    
-    import uuid 
-    
+
+    import uuid
+
     #---------------------------------------------------------------------------
-    #  'UUID' trait:  
+    #  'UUID' trait:
     #---------------------------------------------------------------------------
-                       
+
     class UUID ( TraitType ):
         """ Defines a trait whose value is a globally unique UUID (type 4).
         """
-    
+
         # A description of the type of value this trait accepts:
         info_text = 'a read-only UUID'
-        
+
         def __init__ ( self, **metadata ):
             """ Returns a UUID trait.
             """
             super( UUID, self ).__init__( None, **metadata )
-    
+
         def validate ( self, object, name, value ):
             """ Raises an error, since no values can be assigned to the trait.
             """
             raise TraitError( "The '%s' trait of %s instance is a read-only "
                               "UUID." % ( name, class_of( object ) ) )
-            
+
         def get_default_value ( self ):
             return ( 7, ( self._create_uuid, (), None ) )
-             
+
         #-- Private Methods ---------------------------------------------------
-         
+
         def _create_uuid ( self ):
-            return uuid.uuid4()         
+            return uuid.uuid4()
 
 #-------------------------------------------------------------------------------
 #  'WeakRef' trait:
@@ -3308,31 +3118,31 @@ class WeakRef ( Instance ):
     assigned value.
     """
 
-    def __init__ ( self, klass = 'enthought.traits.has_traits.HasTraits', 
+    def __init__ ( self, klass = 'enthought.traits.has_traits.HasTraits',
                          allow_none = False, adapt = 'yes', **metadata ):
         """ Returns a WeakRef trait.
-        
+
         Only a weak reference is maintained to any object assigned to a WeakRef
-        trait. If no other references exist to the assigned value, the value 
-        may be garbage collected, in which case the value of the trait becomes 
-        None. In all other cases, the value returned by the trait is the 
+        trait. If no other references exist to the assigned value, the value
+        may be garbage collected, in which case the value of the trait becomes
+        None. In all other cases, the value returned by the trait is the
         original object.
-    
+
         Parameters
         ----------
         klass : class or instance
-            The object that forms the basis for the trait. If *klass* is 
+            The object that forms the basis for the trait. If *klass* is
             omitted, then values must be an instance of HasTraits.
         allow_none : boolean
             Indicates whether None can be assigned
-    
+
         Default Value
         -------------
         **None** (even if allow_none==False)
         """
-    
+
         metadata.setdefault( 'copy', 'ref' )
-        
+
         super( WeakRef, self ).__init__( klass, allow_none = allow_none,
                          adapt = adapt, module = get_module_name(), **metadata )
 
@@ -3340,13 +3150,13 @@ class WeakRef ( Instance ):
         value = getattr( object, name + '_', None )
         if value is not None:
             return value.value()
-            
+
         return None
 
     def set ( self, object, name, value ):
         if value is not None:
             value = HandleWeakRef( object, name, value )
-            
+
         object.__dict__[ name + '_' ] = value
 
     def resolve_class ( self, object, name, value ):
@@ -3357,18 +3167,18 @@ class WeakRef ( Instance ):
         klass = self.find_class( self.klass )
         if klass is None:
             self.validate_failed( object, name, value )
-            
+
         self.klass = klass
-     
+
 #-- Private Class --------------------------------------------------------------
 
 class HandleWeakRef ( object ):
-    
+
     def __init__ ( self, object, name, value ):
         self.object = ref( object )
         self.name   = name
         self.value  = ref( value, self._value_freed )
-        
+
     def _value_freed ( self, ref ):
         object = self.object()
         if object is not None:
@@ -3429,7 +3239,7 @@ ListThis = List( ThisClass )
 # be inserted. The default value is {}.
 DictStrAny = Dict( str, Any )
 
-# Only a dictionary of string:string values can be assigned; only string keys 
+# Only a dictionary of string:string values can be assigned; only string keys
 # with string values can be inserted. The default value is {}.
 DictStrStr = Dict( str, str )
 
@@ -3441,7 +3251,7 @@ DictStrInt = Dict( str, int )
 # keys with long-integer values can be inserted. The default value is {}.
 DictStrLong = Dict( str, long )
 
-# Only a dictionary of string:float values can be assigned; only string keys 
+# Only a dictionary of string:float values can be assigned; only string keys
 # with float values can be inserted. The default value is {}.
 DictStrFloat = Dict( str, float )
 
@@ -3449,7 +3259,7 @@ DictStrFloat = Dict( str, float )
 # with Boolean values can be inserted. The default value is {}.
 DictStrBool = Dict( str, bool )
 
-# Only a dictionary of string:list values can be assigned; only string keys 
+# Only a dictionary of string:list values can be assigned; only string keys
 # with list values can be assigned. The default value is {}.
 DictStrList = Dict( str, list )
-        
+
