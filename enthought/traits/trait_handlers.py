@@ -651,7 +651,7 @@ class TraitType ( BaseTraitHandler ):
         old   = object.__dict__.get( cname, Undefined )
         if value != old:
             object.__dict__[ cname ] = value
-            object.trait_property_change( name, old, value )
+            object.trait_property_changed( name, old, value )
             
     #-- Private Methods --------------------------------------------------------
 

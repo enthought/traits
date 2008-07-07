@@ -1801,7 +1801,7 @@ class BaseEnum ( TraitType ):
     """ Defines a trait whose value must be one of a specified set of values.
     """
 
-    def __init__ ( self, *values, **metadata ):
+    def __init__ ( self, *args, **metadata ):
         """ Returns an Enum trait.
 
         Parameters
@@ -1813,16 +1813,31 @@ class BaseEnum ( TraitType ):
         -------------
         values[0]
         """
-        default_value = values[0]
-        if (len( values ) == 1) and (type( values[0] ) in SequenceTypes):
-            values        = default_value
-            default_value = values[0]
-        elif (len( values ) == 2) and isinstance( values[1], SequenceTypes ):
-            values = values[1]
-
-        self.values = tuple( values )
-        self.init_fast_validator( 5, self.values )
-
+        values = metadata.pop( 'values', None )
+        if isinstance( values, basestring ):
+            n = len( args )
+            if n == 0:
+                default_value = None
+            elif n == 1:
+                default_value = args[0]
+            else:
+                raise TraitError( "Incorrect number of arguments specified "
+                                  "when using the 'values' keyword" )
+            self.name   = values
+            self.values = compile( 'object.' + values, '<string>', 'eval' )
+            self.get, self.set, self.validate = self._get, self._set, None
+        else:
+            default_value = args[0]
+            if (len( args ) == 1) and isinstance( default_value, SequenceTypes): 
+                args          = default_value
+                default_value = args[0]
+            elif (len( args ) == 2) and isinstance( args[1], SequenceTypes ):
+                args = args[1]
+                
+            self.name   = ''
+            self.values = tuple( args )
+            self.init_fast_validator( 5, self.values )
+                
         super( BaseEnum, self ).__init__( default_value, **metadata )
 
     def init_fast_validator ( self, *args ):
@@ -1840,21 +1855,50 @@ class BaseEnum ( TraitType ):
 
         self.error( object, name, self.repr( value ) )
 
-    def info ( self ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
-        return ' or '.join( [ repr( x ) for x in self.values ] )
+        if self.name == '':
+            values = self.values
+        else:
+            value = eval( self.values )
+            
+        return ' or '.join( [ repr( x ) for x in values ] )
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import EnumEditor
 
-        return EnumEditor( values   = self,
+        values = self
+        if self.name != '':
+            values = None
+                
+        return EnumEditor( values   = values,
+                           name     = self.name,
                            cols     = self.cols or 3,
                            evaluate = self.evaluate,
                            mode     = self.mode or 'radio' )
-
+        
+    def _get ( self, object, name, trait ):
+        """ Returns the current value of a dynamic enum trait.
+        """
+        value  = self.get_value( object, name, trait )
+        values = eval( self.values )
+        if value not in values:
+            value = None
+            if len( values ) > 0:
+                value = values[0]
+        
+        return value
+    
+    def _set ( self, object, name, value ):
+        """ Sets the current value of a dynamic range trait.
+        """
+        if value in eval( self.values ):
+            self.set_value( object, name, value )
+        else:    
+            self.error( object, name, self.repr( value ) )
 
 class Enum ( BaseEnum ):
     """ Defines a trait whose value must be one of a specified set of values
