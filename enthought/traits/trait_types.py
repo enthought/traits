@@ -2753,12 +2753,17 @@ class BaseInstance ( BaseClass ):
         trait   = object.base_trait( name )
         handler = trait.handler
         if handler is not self:
-            item_trait = getattr( handler, 'item_trait', None )
-            if item_trait is not None:
-                trait = item_trait
+            set_validate = getattr( handler, 'set_validate', None )
+            if set_validate is not None:
+                set_validate()
+            else:
+                item_trait = getattr( handler, 'item_trait', None )
+                if item_trait is not None:
+                    trait   = item_trait
+                    handler = self
 
-        if self.fast_validate is not None:
-            trait.set_validate( self.fast_validate )
+        if handler.fast_validate is not None:
+            trait.set_validate( handler.fast_validate )
 
 class Instance ( BaseInstance ):
     """ Defines a trait whose value must be an instance of a specified class,

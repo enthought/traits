@@ -2024,14 +2024,20 @@ class TraitCompound ( TraitHandler ):
         """
         if (len( handlers ) == 1) and (type( handlers[0] ) in SequenceTypes):
             handlers = handlers[0]
-        self.handlers       = handlers
-        mapped_handlers     = []
-        post_setattrs       = []
-        self.validates      = validates = []
-        self.slow_validates = slow_validates = []
-        fast_validates      = []
-        self.reversable     = True
-        for handler in handlers:
+        self.handlers = handlers
+        self.set_validate()
+            
+    def set_validate ( self ):            
+        self.is_mapped  = False
+        self.has_items  = False
+        self.reversable = True
+        post_setattrs   = []
+        mapped_handlers = []
+        validates       = []
+        fast_validates  = []
+        slow_validates  = []
+        
+        for handler in self.handlers:
             fv = getattr( handler, 'fast_validate', None )
             if fv is not None:
                 validates.append( handler.validate )
@@ -2044,17 +2050,27 @@ class TraitCompound ( TraitHandler ):
                     fast_validates.append( fv )
             else:
                 slow_validates.append( handler.validate )
+                
             post_setattr = getattr( handler, 'post_setattr', None )
             if post_setattr is not None:
                 post_setattrs.append( post_setattr )
+                
             if handler.is_mapped:
                 self.is_mapped = True
                 mapped_handlers.append( handler )
-                self.mapped_handlers = mapped_handlers
             else:
                 self.reversable = False
+                
             if handler.has_items:
                 self.has_items = True
+                
+        self.validates      = validates
+        self.slow_validates = slow_validates
+                
+        if self.is_mapped:
+            self.mapped_handlers = mapped_handlers
+        elif hasattr( self, 'mapped_handlers' ):
+            del self.mapped_handlers
 
         # If there are any fast validators, then we create a 'complex' fast
         # validator that composites them:
@@ -2065,10 +2081,14 @@ class TraitCompound ( TraitHandler ):
                 fast_validates.append( ( 8, self ) )
             # Create the 'complex' fast validator:
             self.fast_validate = ( 7, tuple( fast_validates ) )
+        elif hasattr( self, 'fast_validate' ):
+            del self.fast_validate
 
         if len( post_setattrs ) > 0:
             self.post_setattrs = post_setattrs
             self.post_setattr  = self._post_setattr
+        elif hasattr( self, 'post_setattr' ):
+            del self.post_setattr
 
     def validate ( self, object, name, value ):
         for validate in self.validates:
