@@ -8,7 +8,9 @@ class Team ( HasTraits ):
     
     view = View( Item( 'batting_order', editor = SetEditor( name    = 'roster',
                                                             ordered = True ) ),
-                 '_', 'roster@' )
+                 '_', 'roster@',
+                 height=500, 
+                 resizable=True)
                  
 if __name__ == '__main__':
     Team().configure_traits()                 
