@@ -120,6 +120,9 @@ class _Wizard(QtGui.QWizard):
         self._controller = controller
         self._ids = {}
 
+        QtCore.QObject.connect(self, QtCore.SIGNAL('currentIdChanged(int)'),
+                self._update_controller)
+
     def addWizardPage(self, page):
         """ Add a page that implements IWizardPage. """
 
@@ -164,6 +167,12 @@ class _Wizard(QtGui.QWizard):
         next = self._controller.get_next_page(current)
 
         return self._page_to_id(next)
+
+    def _update_controller(self, id):
+        """ Called when the current page has changed. """
+
+        # Keep the controller in sync with the wizard.
+        self._controller.current_page = self._ids.get(id)
 
     def _page_to_id(self, page):
         """ Return the id of the given page. """
