@@ -490,3 +490,13 @@ def xsetattr( object, xname, value ):
                 
     setattr( object, names[-1], value )
         
+#-------------------------------------------------------------------------------
+#  Traits metadata selection functions:
+#-------------------------------------------------------------------------------
+
+def not_none ( value ):
+    return (value is not None)
+    
+def is_str ( value ):
+    return isinstance( value, basestring )
+    

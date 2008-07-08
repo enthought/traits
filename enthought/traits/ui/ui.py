@@ -34,7 +34,7 @@ from enthought.traits.api \
            TraitError, Property, Bool, Event, Callable, Str
 
 from enthought.traits.trait_base \
-    import traits_home
+    import traits_home, is_str
 
 from editor \
     import Editor
@@ -413,6 +413,9 @@ class UI ( HasPrivateTraits ):
 
         # Then reset the list, since we don't need it anymore:
         del self._defined[:]
+        
+        # Synchronize all context traits with associated editor traits:
+        self.sync_view()
 
         # Hook all keyboard events: 
         toolkit().hook_events( self, self.control, 'keys', self.key_handler )
@@ -463,6 +466,41 @@ class UI ( HasPrivateTraits ):
 
         # Indicate that the user interface has been initialized:
         info.initialized = True
+        
+    #---------------------------------------------------------------------------
+    #  Synchronize context object traits with view editor traits:
+    #---------------------------------------------------------------------------
+    
+    def sync_view ( self ):
+        """ Synchronize context object traits with view editor traits.
+        """
+        for name, object in self.context.items():
+            self._sync_view( name, object, 'sync_to_view',   'from' )
+            self._sync_view( name, object, 'sync_from_view', 'to'   )
+            self._sync_view( name, object, 'sync_with_view', 'both' )
+                
+    def _sync_view ( self, name, object, metadata, direction ):
+        info = self.info
+        for trait_name, trait in object.traits( **{metadata: is_str} ).items():
+            for sync in getattr( trait, metadata ).split( ',' ):
+                try:
+                    editor_id, editor_name = [ item.strip() 
+                                               for item in sync.split( '.' ) ]
+                except:
+                    raise TraitError( "The '%s' metadata for the '%s' trait in "
+                        "the '%s' context object should be of the form: "
+                        "'id1.trait1[,...,idn.traitn]." %  
+                        ( metadata, trait_name, name ) ) 
+                    
+                editor = getattr( info, editor_id, None )
+                if editor is not None:
+                    editor.sync_value( '%s.%s' % ( name, trait_name ), 
+                                       editor_name, direction )
+                else:
+                    raise TraitError( "No editor with id = '%s' was found for "
+                        "the '%s' metadata for the '%s' trait in the '%s' "
+                        "context object." % 
+                        ( editor_id,metadata, trait_name, name ) )
         
     #---------------------------------------------------------------------------
     #  Gets the current value of a specified extended trait name:  
