@@ -621,6 +621,25 @@ class UI ( HasPrivateTraits ):
                                 flag = mode, protocol = -1 )
         except:
             return None
+            
+    #---------------------------------------------------------------------------
+    #  Returns the list of editor error controls contained by the user 
+    #  interface:
+    #---------------------------------------------------------------------------
+    
+    def get_error_controls ( self ):
+        """ Returns the list of editor error controls contained by the user 
+            interface.
+        """
+        controls = []
+        for editor in self._editors:
+            control = editor.get_error_control()
+            if isinstance( control, list ):
+                controls.extend( control )
+            else:
+                controls.append( control )
+                
+        return controls
 
     #---------------------------------------------------------------------------
     #  Adds a Handler method to the list of methods to be called once the user
