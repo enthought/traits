@@ -227,6 +227,10 @@ class Item ( ViewSubElement ):
     # the view minus the height of any item's with fixed pixel sizes (i.e. 
     # height values not in the 0.0 to 1.0 range).
     height = Float( -1.0 )
+    
+    # The extended trait name of the trait containing the item's invalid state
+    # status (passed through to the item's editor):
+    invalid = Str
 
     #---------------------------------------------------------------------------
     #  Initialize the object:

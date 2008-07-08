@@ -116,6 +116,9 @@ class Editor ( HasPrivateTraits ):
     # The trait the editor is editing (not its value, but the trait itself):
     value_trait = Property
     
+    # The current editor invalid state status:
+    invalid = Bool( False )
+    
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
@@ -129,6 +132,9 @@ class Editor ( HasPrivateTraits ):
         except AttributeError:
             # Getting the attribute will fail for 'Event' traits:
             self.old_value = Undefined
+            
+        # Synchronize the application invalid state status with the editor's:
+        self.sync_value( self.factory.invalid, 'invalid', 'from' )
             
     #---------------------------------------------------------------------------
     #  Finishes editor set-up:  
@@ -530,7 +536,7 @@ class Editor ( HasPrivateTraits ):
                     except:
                         pass
         
-#-- UI preference save/restore interface ---------------------------------------
+    #-- UI preference save/restore interface -----------------------------------
 
     #---------------------------------------------------------------------------
     #  Restores any saved user preference information associated with the 
@@ -552,5 +558,3 @@ class Editor ( HasPrivateTraits ):
         """
         return None
         
-#-- End UI preference save/restore interface -----------------------------------                         
-

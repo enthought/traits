@@ -50,6 +50,10 @@ class EditorFactory ( HasPrivateTraits ):
     
     # Are created editors initially enabled?
     enabled = Bool( True )
+    
+    # The extended trait name of the trait containing editor invalid state
+    # status:
+    invalid = Str
 
     #---------------------------------------------------------------------------
     #  Initializes the object:
