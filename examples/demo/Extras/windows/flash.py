@@ -6,7 +6,7 @@ from enthought.traits.ui.wx.extra.windows.flash_editor \
     import FlashEditor
     
 from enthought.traits.api \
-    import Enum
+    import Enum, HasTraits
     
 from enthought.traits.ui.api \
     import View, HGroup, Item

@@ -6,7 +6,7 @@ from enthought.traits.ui.wx.extra.windows.ie_html_editor \
     import IEHTMLEditor
     
 from enthought.traits.api \
-    import Str, List, Button
+    import Str, List, Button, HasTraits
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, Item, TextEditor, ListEditor, spring
