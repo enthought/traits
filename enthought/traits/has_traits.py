@@ -799,9 +799,11 @@ class MetaHasTraitsObject ( object ):
                 rc     = True
                 getter = _property_method( class_dict, '_get_' + name )
                 setter = _property_method( class_dict, '_set_' + name )
-                if ((setter is None) and (getter is not None) and 
-                    getattr( getter, 'settable', False )):
-                    setter = HasTraits._set_traits_cache
+                if (setter is None) and (getter is not None):
+                    if getattr( getter, 'settable', False ):
+                        setter = HasTraits._set_traits_cache
+                    elif getattr( getter, 'flushable', False ):
+                        setter = HasTraits._flush_traits_cache
                 validate = _property_method( class_dict, '_validate_' + name )
                 if validate is None:
                     validate = value.validate
@@ -1329,7 +1331,7 @@ def cached_property ( function ):
     
     return decorator        
    
-def property_depends_on ( dependency, settable = False ):
+def property_depends_on ( dependency, settable = False, flushable = False ):
     """ Marks the following method definition as being a "cached property"
         that depends on the specified extended trait names. That is, it is a 
         property getter which, for performance reasons, caches its most recently 
@@ -1371,6 +1373,7 @@ def property_depends_on ( dependency, settable = False ):
         wrapper.cached_property = True
         wrapper.depends_on      = dependency
         wrapper.settable        = settable
+        wrapper.flushable       = flushable
             
         return wrapper
     
@@ -3410,6 +3413,16 @@ class HasTraits ( CHasTraits ):
         self.__dict__[ cached ] = value
         if old_value != value:
             self.trait_property_changed( name, old_value, value )
+
+    #---------------------------------------------------------------------------
+    #  Explicitly flushes the value of a cached property: 
+    #---------------------------------------------------------------------------
+    
+    def _flush_traits_cache ( self, name, value ):
+        """ Explicitly flushes the value of a cached property.
+        """
+        self.trait_property_changed(
+            name, self.__dict__.pop( TraitsCache + name, Undefined ) )
         
     #---------------------------------------------------------------------------
     #  Returns the trait definition for a specified name when there is no
