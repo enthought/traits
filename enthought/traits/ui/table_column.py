@@ -107,6 +107,10 @@ class TableColumn ( HasPrivateTraits ):
     # Is this column editable?
     editable = Bool( True )
     
+    # Is the column automatically edited/viewed (i.e. should the column editor
+    # or popup be activated automatically on mouse over)?
+    auto_editable = Bool( False )
+    
     # Can external objects be dropped on the column?
     droppable = Bool( False )
     
@@ -291,6 +295,17 @@ class TableColumn ( HasPrivateTraits ):
         """ Returns whether the column is editable for a specified object.
         """
         return self.editable
+        
+    #---------------------------------------------------------------------------
+    #  Returns whether the column is autoamtically edited/viewed for a specified 
+    #  object:  
+    #---------------------------------------------------------------------------
+                
+    def is_auto_editable ( self, object ):
+        """ Returns whether the column is automatically edited/viewed for a 
+            specified object.
+        """
+        return self.auto_editable
                     
     #---------------------------------------------------------------------------
     #  Returns whether a specified value is valid for dropping on the column 
