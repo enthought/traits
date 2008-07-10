@@ -91,7 +91,7 @@ factors_view = View(
           editor     = factor_table_editor
     ),
     id     = 'enthought.traits.examples.demo.Advanced.factors_view',
-    kind   = 'popup',
+    kind   = 'info',
     height = 0.30,
 )    
 
