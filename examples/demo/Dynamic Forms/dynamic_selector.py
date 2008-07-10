@@ -23,10 +23,10 @@ trait attributes.)
 
 # Imports:
 from enthought.traits.api \
-    import HasTraits, Str, Enum, TraitEnum
+    import HasTraits, Str, Enum, List
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Handler, EnumEditor
+    import View, Item, Handler, EnumEditor
 
     
 # Dictionary of defined states and cities.

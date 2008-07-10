@@ -81,7 +81,7 @@ from os.path \
     
 from enthought.traits.api \
     import HasTraits, File, Directory, Str, Bool, Int, Enum, Instance, \
-           Property, Any, Callable, cached_property, property_depends_on
+           Property, Any, property_depends_on
     
 from enthought.traits.ui.api \
     import View, VGroup, VSplit, HGroup, Item, TableEditor, CodeEditor, \

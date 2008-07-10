@@ -19,7 +19,7 @@ from time \
     import sleep
     
 from enthought.traits.api \
-    import HasTraits, Int, Button
+    import HasTraits, Int, Button, List
     
 from enthought.traits.ui.api \
     import View, Item, ListEditor

@@ -51,7 +51,7 @@ from enthought.traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
     
 from enthought.traits.ui.api \
-    import View, Group, Item, Theme, TabularEditor
+    import View, Group, Item, TabularEditor
     
 from enthought.traits.ui.menu \
     import NoButtons

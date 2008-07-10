@@ -12,7 +12,7 @@ changes made in one editor are automatically reflected in the others.
 
 # Imports:  
 from enthought.traits.api \
-    import HasStrictTraits, Str, Int, Regex, List, Instance
+    import HasStrictTraits, Str, Int, Regex, List
     
 from enthought.traits.ui.api \
     import View, Item, Tabbed, TableEditor, ListEditor
@@ -21,7 +21,7 @@ from enthought.traits.ui.table_column \
     import ObjectColumn
     
 from enthought.traits.ui.table_filter \
-    import TableFilter, RuleTableFilter, RuleFilterTemplate, \
+    import RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
         
 # 'Person' class:  

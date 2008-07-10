@@ -25,7 +25,7 @@
 import sys
 
 from enthought.traits.api \
-    import HasTraits, HasPrivateTraits, Str, List, Instance, Property, Any, \
+    import HasTraits, HasPrivateTraits, Str, Instance, Property, Any, \
            Code, HTML, true, false
            
 from enthought.traits.ui.api \
@@ -33,9 +33,6 @@ from enthought.traits.ui.api \
            Tabbed, VGroup, HGroup, Heading, Handler, UIInfo, InstanceEditor, \
            Include, spring
 
-from string \
-    import uppercase, lowercase
-    
 from os \
     import listdir
     
@@ -668,8 +665,6 @@ class Demo ( HasPrivateTraits ):
 #-------------------------------------------------------------------------------
         
 if __name__ == '__main__':
-    import sys
-    
     path, name = split( dirname( abspath( sys.argv[0] ) ) )
     Demo( path = path, 
           root = DemoPath( name = name, use_files = False )

@@ -10,7 +10,7 @@ from time \
     import sleep
     
 from enthought.traits.api \
-    import HasTraits, Instance, Int, Bool
+    import HasTraits, Instance, Int, Bool, Float
     
 from enthought.traits.ui.api \
     import View, Item, HGroup, Handler, UIInfo, spring

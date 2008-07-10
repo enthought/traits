@@ -13,7 +13,7 @@ from enthought.traits.api \
     import HasTraits, Str, Regex, List, Instance
     
 from enthought.traits.ui.api \
-    import Item, Group, View, TreeEditor, TreeNode
+    import Item, View, TreeEditor, TreeNode
 
 class Employee ( HasTraits ):
     name  = Str( '<unknown>' )

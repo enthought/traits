@@ -6,7 +6,7 @@ from os.path \
     import join, dirname, abspath
     
 from enthought.traits.api \
-    import HasTraits, File, Bool, Int
+    import HasTraits, File, Bool
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, Item, EnumEditor

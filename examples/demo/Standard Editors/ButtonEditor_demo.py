@@ -12,9 +12,6 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import Item, View, Group
     
-from enthought.traits.ui.message \
-    import message
-
 # Define the demo class:
 class ButtonEditorDemo ( HasTraits ): 
     """ Defines the main ButtonEditor demo class. """

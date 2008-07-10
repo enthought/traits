@@ -27,7 +27,7 @@ Notes:
 #-- Imports --------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasPrivateTraits, Str, Int, Enum, Instance, Button, on_trait_change
+    import HasPrivateTraits, Str, Int, Enum, Instance, Button
     
 from enthought.traits.ui.api \
     import View, HGroup, Item, Handler, UIInfo, spring

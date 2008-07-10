@@ -9,7 +9,7 @@ from enthought.traits.api \
     import Str, List, Button, HasTraits
     
 from enthought.traits.ui.api \
-    import View, VGroup, HGroup, Item, TextEditor, ListEditor, spring
+    import View, VGroup, HGroup, Item, TextEditor, ListEditor
     
 # The web page class:    
 class WebPage ( HasTraits ):

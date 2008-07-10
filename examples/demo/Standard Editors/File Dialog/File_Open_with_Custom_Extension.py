@@ -12,11 +12,8 @@ over the standard OS file dialog, select the <b>File Open</b> demo.
 from os.path \
     import getsize
     
-from cPickle \
-    import load
-    
 from enthought.traits.api \
-    import HasTraits, File, Button
+    import HasTraits, File, Button, Property, cached_property
     
 from enthought.traits.ui.api \
     import View, VGroup, HGroup, Item

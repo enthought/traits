@@ -71,7 +71,7 @@ from os.path \
     import join, dirname
 
 from enthought.traits.api \
-    import HasTraits, Str, Int, List, Instance, Expression, Delegate, Array, \
+    import HasTraits, Str, List, Instance, Expression, Array, \
            Range, Property, Any, TraitListEvent, on_trait_change, \
            cached_property
     

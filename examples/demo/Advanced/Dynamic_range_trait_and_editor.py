@@ -50,6 +50,9 @@ Notes:
 
 #-- Imports --------------------------------------------------------------------
 
+import logging, sys
+logging.basicConfig(stream=sys.stderr)
+
 from random \
     import choice
     
@@ -174,5 +177,6 @@ demo = Hotel( guests = [ Guest() for i in range( 5 ) ] )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
+    logging.info('Start!')
     demo.configure_traits()
     
