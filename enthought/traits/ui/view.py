@@ -106,7 +106,8 @@ title_trait = Str( desc = 'the window title for the view' )
 #   **Finish** button on the last page.
 kind_trait = Trait( 'live', TraitPrefixList( 
                                'panel', 'subpanel', 'modal', 'nonmodal',
-                               'livemodal', 'live', 'popup', 'info', 'wizard' ), 
+                               'livemodal', 'live', 'popup', 'popover', 'info',
+                               'wizard' ), 
                     desc = 'the kind of view window to create',
                     cols = 4 )
            

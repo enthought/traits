@@ -184,6 +184,11 @@ def NullEditor ( *args, **traits ):
     """
     return toolkit().null_editor( *args, **traits )
 
+def PopupEditor ( *args, **traits ):
+    """ Allows the user to use a clickable popup editor.
+    """
+    return toolkit().popup_editor( *args, **traits )
+
 def RangeEditor ( *args, **traits ):
     """ Allows the user to specify a value within a range.
     """

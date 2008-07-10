@@ -149,6 +149,12 @@ class Toolkit ( HasPrivateTraits ):
         """
         raise NotImplementedError
 
+    def ui_popover ( self, ui, parent ):
+        """ Creates a GUI-toolkit-specific temporary "live update" popup dialog
+            user interface using information from the specified UI object.
+        """
+        raise NotImplementedError
+
     def ui_info ( self, ui, parent ):
         """ Creates a GUI-toolkit-specific temporary "live update" popup dialog 
             user interface using information from the specified UI object.

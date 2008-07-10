@@ -92,7 +92,7 @@ from editors \
 from editors \
     import CustomEditor, ColorTrait, RGBColorTrait, FontTrait, SetEditor, \
            HistoryEditor, HTMLEditor, KeyBindingEditor, ShellEditor, \
-           TitleEditor, ValueEditor, NullEditor
+           TitleEditor, ValueEditor, PopupEditor, NullEditor
 
 import view_elements
 
