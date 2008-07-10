@@ -49,7 +49,8 @@ class ThreadDemo ( HasTraits ):
         Item( 'counters', style      = 'custom',
                           show_label = False,
                           editor     = ListEditor( use_notebook = True,
-                                                   dock_style   = 'tab' ) )
+                                                   dock_style   = 'tab' ) ),
+        resizable=True
     )
     
     def __init__ ( self, **traits ):
