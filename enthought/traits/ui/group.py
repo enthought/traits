@@ -130,6 +130,9 @@ class Group ( ViewSubElement ):
     # only one sub-group.
     layout = Layout
 
+    # Should the group be scrollable along the direction of orientation?
+    scrollable = Bool( False )
+
     # The number of columns in the group
     columns = Range( 1, 50 )
 
@@ -610,6 +613,9 @@ class ShadowGroup ( Group ):
 
     # Layout style of the group
     layout = ShadowDelegate
+
+    # Should the group be scrollable along the direction of orientation?
+    scrollable = ShadowDelegate
 
     # The number of columns in the group
     columns = ShadowDelegate
