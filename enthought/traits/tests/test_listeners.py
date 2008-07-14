@@ -15,6 +15,8 @@
 #  Imports:  
 #-------------------------------------------------------------------------------
 
+import unittest
+
 from enthought.traits.api \
     import HasTraits, Str, Int, Float
     
@@ -36,6 +38,8 @@ class GenerateEvents ( HasTraits ):
 #  'ListenEvents' class:  
 #-------------------------------------------------------------------------------
 
+log = {} # dict of events
+
 class ListenEvents ( HasTraits ):
     
     #---------------------------------------------------------------------------
@@ -43,39 +47,75 @@ class ListenEvents ( HasTraits ):
     #---------------------------------------------------------------------------
         
     def _name_changed ( self, object, name, old, new ):
-        print "_name_changed:", object, name, old, new
+        log["_name_changed"] = (name, old, new)
         
     def _age_changed ( self, object, name, old, new ):
-        print "_age_changed:", object, name, old, new
+        log["_age_changed"] = (name, old, new)
         
     def _weight_changed ( self, object, name, old, new ):
-        print "_weight_changed:", object, name, old, new
+        log["_weight_changed"] = (name, old, new)
         
     def alt_name_changed ( self, object, name, old, new ):
-        print "alt_name_changed:", object, name, old, new
+        log["alt_name_changed"] = (name, old, new)
         
     def alt_weight_changed ( self, object, name, old, new ):
-        print "alt_weight_changed:", object, name, old, new
+        log["alt_weight_changed"] = (name, old, new)
         
 #-------------------------------------------------------------------------------
-#  Run the tests:  
+#  unit test class:
 #-------------------------------------------------------------------------------
-                
-ge = GenerateEvents()
-le = ListenEvents()
-print 'Starting test: No Listeners'
-ge.set( name = 'Joe', age = 22, weight = 152.0 )
-print 'Adding default listener'
-ge.add_trait_listener( le )
-ge.set( name = 'Mike', age = 34, weight = 178.0 )
-print 'Adding alternate listener'
-ge.add_trait_listener( le, 'alt' )
-ge.set( name = 'Gertrude', age = 39, weight = 108.0 )
-print 'Removing default listener'
-ge.remove_trait_listener( le )
-ge.set( name = 'Sally', age = 46, weight = 118.0 )
-print 'Removing alternate listener'
-ge.remove_trait_listener( le, 'alt' )
-ge.set( name = 'Ralph', age = 29, weight = 198.0 )
-print 'Test Completed'
 
+class Test_Listeners ( unittest.TestCase ):
+
+    def test(self):
+        global log
+        
+        # FIXME: comparing floats
+        ge = GenerateEvents()
+        le = ListenEvents()
+        
+        # Starting test: No Listeners
+        ge.set( name = 'Joe', age = 22, weight = 152.0 )
+        
+        # Adding default listener
+        ge.add_trait_listener( le )
+        log = {}
+        ge.set( name = 'Mike', age = 34, weight = 178.0 )
+        self.assertEqual(log, {
+            '_age_changed': ('age', 22, 34),
+            '_weight_changed': ('weight', 152.0, 178.0),
+            '_name_changed': ('name', 'Joe', 'Mike'),
+            })
+        
+        # Adding alternate listener
+        ge.add_trait_listener( le, 'alt' )
+        log = {}
+        ge.set( name = 'Gertrude', age = 39, weight = 108.0 )
+        self.assertEqual(log, {
+            '_age_changed': ('age', 34, 39),
+            '_name_changed': ('name', 'Mike', 'Gertrude'),
+            '_weight_changed': ('weight', 178.0, 108.0),
+            'alt_name_changed': ('name', 'Mike', 'Gertrude'),
+            'alt_weight_changed': ('weight', 178.0, 108.0),
+            })
+        
+        # Removing default listener
+        ge.remove_trait_listener( le )
+        log = {}
+        ge.set( name = 'Sally', age = 46, weight = 118.0 )
+        self.assertEqual(log, {
+            'alt_name_changed': ('name', 'Gertrude', 'Sally'),
+            'alt_weight_changed': ('weight', 108.0, 118.0),
+            })
+        
+        # Removing alternate listener
+        ge.remove_trait_listener( le, 'alt' )
+        log = {}
+        ge.set( name = 'Ralph', age = 29, weight = 198.0 )
+        self.assertEqual(log, {})
+ 
+
+
+# Run the unit tests (if invoked from the command line):        
+if __name__ == '__main__':
+    unittest.main()
