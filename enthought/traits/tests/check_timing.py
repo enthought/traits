@@ -18,7 +18,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from time             import time
+from time import time
 from enthought.traits.api import *
 
 #-------------------------------------------------------------------------------
@@ -46,34 +46,34 @@ def measure ( func ):
     
 class old_style_value:
        
-   def measure ( self ):
-       global t0
-       self.init()
+    def measure ( self ):
+        global t0
+        self.init()
        
-       if t0 < 0.0:
-          t0 = measure( self.null )
-       t1    = measure( self.do_get )
-       t2    = measure( self.do_set )
-       scale = 1.0e6 / n
-       print self.__class__.__name__ + ':'
-       print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-       print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-       print
+        if t0 < 0.0:
+            t0 = measure( self.null )
+        t1 = measure( self.do_get )
+        t2 = measure( self.do_set )
+        scale = 1.0e6 / n
+        print self.__class__.__name__ + ':'
+        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
+        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
+        print
        
-   def null ( self ):
-       for i in range(n):
-           pass
+    def null ( self ):
+        for i in range(n):
+            pass
 
-   def init ( self ):
-       self.value = -1
+    def init ( self ):
+        self.value = -1
 
-   def do_set ( self ):
-       for i in range(n):
-           self.value = i
+    def do_set ( self ):
+        for i in range(n):
+            self.value = i
    
-   def do_get ( self ):
-       for i in range(n):
-           self.value   
+    def do_get ( self ):
+        for i in range(n):
+            self.value   
 
 #-------------------------------------------------------------------------------
 #  'New style' Python attribute get/set:
@@ -81,34 +81,34 @@ class old_style_value:
     
 class new_style_value ( object ):
        
-   def measure ( self ):
-       global t0
-       self.init()
+    def measure ( self ):
+        global t0
+        self.init()
        
-       if t0 < 0.0:
-          t0 = measure( self.null )
-       t1    = measure( self.do_get )
-       t2    = measure( self.do_set )
-       scale = 1.0e6 / n
-       print self.__class__.__name__ + ':'
-       print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-       print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-       print
+        if t0 < 0.0:
+            t0 = measure( self.null )
+        t1 = measure( self.do_get )
+        t2 = measure( self.do_set )
+        scale = 1.0e6 / n
+        print self.__class__.__name__ + ':'
+        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
+        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
+        print
        
-   def null ( self ):
-       for i in range(n):
-           pass
+    def null ( self ):
+        for i in range(n):
+            pass
 
-   def init ( self ):
-       self.value = -1
+    def init ( self ):
+        self.value = -1
 
-   def do_set ( self ):
-       for i in range(n):
-           self.value = i
+    def do_set ( self ):
+        for i in range(n):
+            self.value = i
    
-   def do_get ( self ):
-       for i in range(n):
-           self.value   
+    def do_get ( self ):
+        for i in range(n):
+            self.value   
 
 #-------------------------------------------------------------------------------
 #  Python 'property' get/set:
@@ -116,13 +116,13 @@ class new_style_value ( object ):
     
 class property_value ( new_style_value ):
     
-   def get_value ( self ):
-       return self._value
+    def get_value ( self ):
+        return self._value
 
-   def set_value ( self, value ):
-       self._value = value
+    def set_value ( self, value ):
+        self._value = value
    
-   value = property( get_value, set_value )
+    value = property( get_value, set_value )
 
 #-------------------------------------------------------------------------------
 #  Python 'global' get/set:
@@ -130,19 +130,19 @@ class property_value ( new_style_value ):
     
 class global_value ( new_style_value ):
 
-   def init ( self ):
-       global gvalue
-       gvalue = -1
+    def init ( self ):
+        global gvalue
+        gvalue = -1
 
-   def do_set ( self ):
-       global gvalue
-       for i in range(n):
-           gvalue = i
+    def do_set ( self ):
+        global gvalue
+        for i in range(n):
+            gvalue = i
    
-   def do_get ( self ):
-       global gvalue
-       for i in range(n):
-           gvalue   
+    def do_get ( self ):
+        global gvalue
+        for i in range(n):
+            gvalue   
  
 #-------------------------------------------------------------------------------
 #  Trait that can have any value:
@@ -150,7 +150,7 @@ class global_value ( new_style_value ):
   
 class any_value ( HasTraits, new_style_value ):
     
-   value = Any
+    value = Any
    
 #-------------------------------------------------------------------------------
 #  Trait that can only have 'float' values: 
@@ -158,7 +158,7 @@ class any_value ( HasTraits, new_style_value ):
    
 class int_value ( any_value ):
     
-   value = Int
+    value = Int
    
 #-------------------------------------------------------------------------------
 #  Trait that can only have 'range' values: 
@@ -166,7 +166,7 @@ class int_value ( any_value ):
    
 class range_value ( any_value ):
     
-   value = Range( -1, 2000000000 )
+    value = Range( -1, 2000000000 )
        
 #-------------------------------------------------------------------------------
 #  Executes method when float trait is changed:
@@ -174,8 +174,8 @@ class range_value ( any_value ):
        
 class change_value ( int_value ):
     
-   def _value_changed ( self, old, new ):
-       pass
+    def _value_changed ( self, old, new ):
+        pass
 
 #-------------------------------------------------------------------------------
 #  Notifies handler when float trait is changed:
@@ -183,11 +183,11 @@ class change_value ( int_value ):
 
 class monitor_value ( int_value ):
     
-   def init ( self ):
-       self.on_trait_change( self.on_value_change, 'value' )
+    def init ( self ):
+        self.on_trait_change( self.on_value_change, 'value' )
 
-   def on_value_change ( self, object, trait_name, old, new ):
-       pass
+    def on_value_change ( self, object, trait_name, old, new ):
+        pass
    
 #-------------------------------------------------------------------------------
 #  Float trait is delegated to another object:
@@ -195,11 +195,11 @@ class monitor_value ( int_value ):
    
 class delegate_value ( HasTraits, new_style_value ):
     
-   value    = Delegate( 'delegate' )
-   delegate = Any
-   
-   def init ( self ):
-       self.delegate = int_value()
+    value    = Delegate( 'delegate' )
+    delegate = Any
+    
+    def init ( self ):
+        self.delegate = int_value()
    
 #-------------------------------------------------------------------------------
 #  Float trait is delegated through one object to another object:
@@ -207,9 +207,9 @@ class delegate_value ( HasTraits, new_style_value ):
    
 class delegate_2_value ( delegate_value ):
     
-   def init ( self ):
-       self.delegate = delegate_value()
-       self.delegate.init()
+    def init ( self ):
+        self.delegate = delegate_value()
+        self.delegate.init()
          
 #-------------------------------------------------------------------------------
 #  Float trait is delegated through two objects to another object:
@@ -217,24 +217,24 @@ class delegate_2_value ( delegate_value ):
          
 class delegate_3_value ( delegate_value ):
     
-   def init ( self ):
-       self.delegate = delegate_2_value()
-       self.delegate.init()
+    def init ( self ):
+        self.delegate = delegate_2_value()
+        self.delegate.init()
        
 #-------------------------------------------------------------------------------
 #  Run the timing measurements:
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-   old_style_value().measure()
-   new_style_value().measure()
-   property_value().measure()
-   global_value().measure()
-   any_value().measure()
-   int_value().measure()
-   range_value().measure()
-   change_value().measure()
-   monitor_value().measure()
-   delegate_value().measure()
-   delegate_2_value().measure()
-   delegate_3_value().measure()
+    old_style_value().measure()
+    new_style_value().measure()
+    property_value().measure()
+    global_value().measure()
+    any_value().measure()
+    int_value().measure()
+    range_value().measure()
+    change_value().measure()
+    monitor_value().measure()
+    delegate_value().measure()
+    delegate_2_value().measure()
+    delegate_3_value().measure()
