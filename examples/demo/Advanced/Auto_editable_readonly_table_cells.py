@@ -77,9 +77,10 @@ factor_table_editor = TableEditor(
                       editable             = False,
                       horizontal_alignment = 'center' )
     ],
-    sortable     = False,
-    auto_size    = False,
-    show_toolbar = False
+    sortable           = False,
+    auto_size          = False,
+    show_toolbar       = False,
+    show_column_labels = False
 )    
         
 #-- The table editor used for the main view ------------------------------------
