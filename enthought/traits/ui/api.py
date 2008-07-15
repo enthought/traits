@@ -86,13 +86,13 @@ from editors \
            CodeEditor, ColorEditor, RGBColorEditor, \
            CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
            FontEditor, ImageEditor, ImageEnumEditor, InstanceEditor, \
-           ListEditor, ListStrEditor, RangeEditor, TextEditor, TreeEditor, \
-           TableEditor, TabularEditor, TupleEditor, DropEditor, DNDEditor
+           ListEditor, ListStrEditor, RangeEditor, ScrubberEditor, TextEditor, \
+           TreeEditor, TableEditor, TabularEditor, TupleEditor, DropEditor
 
 from editors \
-    import CustomEditor, ColorTrait, RGBColorTrait, FontTrait, SetEditor, \
-           HistoryEditor, HTMLEditor, KeyBindingEditor, ShellEditor, \
-           TitleEditor, ValueEditor, PopupEditor, NullEditor
+    import DNDEditor, CustomEditor, ColorTrait, RGBColorTrait, FontTrait, \
+           SetEditor, HistoryEditor, HTMLEditor, KeyBindingEditor, \
+           ShellEditor, TitleEditor, ValueEditor, PopupEditor, NullEditor
 
 import view_elements
 

@@ -197,6 +197,9 @@ def RangeEditor ( *args, **traits ):
 def RGBColorEditor ( *args, **traits ):
     return toolkit().rgb_color_editor( *args, **traits )
 
+def ScrubberEditor ( *args, **traits ):
+    return toolkit().scrubber_editor( *args, **traits )
+
 def SetEditor ( *args, **traits ):
     return toolkit().set_editor( *args, **traits )
 
