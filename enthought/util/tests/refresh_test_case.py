@@ -8,20 +8,24 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 # 
-# Author: Enthought, Inc.
-# Description: <Enthought util package component>
+# Author: Ilan Schnell, Enthought, Inc.
+#
+# Description:
+#     Unittest to run another (unittest) script directly.
+#     In some cases this is necessary when things cannot be tested
+#     with nosetests itself.
 #------------------------------------------------------------------------------
 import os
 import subprocess
 import unittest
 
 # NOTE:
-# `refresh_run.py` can not be run by nosetests directly because of
-# the function refresh() in enthought.util.refresh.
-# Therefore the test in this file (which nosetests will execute) will
-# spawn a python interpreter running `refresh_run.py`.
-# This test checks the return code of the process and will fail if
-# the return code is non-zero.
+#   `refresh_run.py` can not be run by nosetests directly because of
+#   the function refresh() in enthought.util.refresh.
+#   Therefore the test in this file (which nosetests will execute) will
+#   spawn a python interpreter running `refresh_run.py`.
+#   This test checks the return code of the process and will fail if
+#   the return code is non-zero.
 
 class RefreshTestCase(unittest.TestCase):
     
@@ -30,7 +34,8 @@ class RefreshTestCase(unittest.TestCase):
         """
         retcode = subprocess.call(['python', 'refresh_run.py'],
                                   cwd=os.path.dirname(__file__))
-        self.assert_(retcode == 0)
+        
+        self.assertEqual(retcode, 0)
         
 
 if __name__ == "__main__":          
