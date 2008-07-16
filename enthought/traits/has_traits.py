@@ -735,6 +735,17 @@ class MetaInterface ( MetaHasTraits, InterfaceClass ):
         
         return type.__call__( self, *args, **kw )
 
+    def getBases(self):
+        """ Overridden to make sure we don't return our 'Interface' class. """
+
+        bases = [
+            base for base in self.__bases__
+
+            if isinstance(base, InterfaceClass) and base is not Interface
+        ]
+
+        return bases
+
 
 #-------------------------------------------------------------------------------
 #  'MetaHasTraitsObject' class:
