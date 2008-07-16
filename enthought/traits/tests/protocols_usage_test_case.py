@@ -77,18 +77,28 @@ class ProtocolsUsageTestCase(unittest.TestCase):
             def get_input_stream(self):
                 """ Get an input stream. """
 
+        class AdapterFactory(object):
+            def __call__(self, obj):
+                if not obj.is_folder:
+                    adapter = FileToIInputStreamAdapter(adaptee=obj)
 
-        def factory(obj):
-            """ A factory for File to IInputStream adapters. """
+                else:
+                    adapter = None
+
+                return adapter
+                
+##         def factory(obj):
+##             """ A factory for File to IInputStream adapters. """
             
-            if not obj.is_folder:
-                adapter = FileToIInputStreamAdapter(adaptee=obj)
+##             if not obj.is_folder:
+##                 adapter = FileToIInputStreamAdapter(adaptee=obj)
 
-            else:
-                adapter = None
+##             else:
+##                 adapter = None
 
-            return adapter
+##             return adapter
 
+        factory = AdapterFactory()
 
         class FileToIInputStreamAdapter(Adapter):
             """ An adapter from 'File' to 'IInputStream'. """
@@ -126,51 +136,50 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         return
 
-    def test_when_expression(self):
-        """ when expression """
+##     def test_when_expression(self):
+##         """ when expression """
 
-        class IInputStream(Interface):
-            """ Fake interface for input stream. """
+##         class IInputStream(Interface):
+##             """ Fake interface for input stream. """
 
-            def get_input_stream(self):
-                """ Get an input stream. """
+##             def get_input_stream(self):
+##                 """ Get an input stream. """
 
+##         class FileToIInputStreamAdapter(Adapter):
+##             """ An adapter from 'File' to 'IInputStream'. """
 
-        class FileToIInputStreamAdapter(Adapter):
-            """ An adapter from 'File' to 'IInputStream'. """
+##             adapts(File, to=IInputStream, when='not adaptee.is_folder')
 
-            adapts(File, to=IInputStream, when='not adaptee.is_folder')
+##             ###################################################################
+##             # 'IInputStream' interface.
+##             ###################################################################
 
-            ###################################################################
-            # 'IInputStream' interface.
-            ###################################################################
+##             def get_input_stream(self):
+##                 """ Get an input stream. """
 
-            def get_input_stream(self):
-                """ Get an input stream. """
+##                 return file(self.adaptee.path, 'r')
 
-                return file(self.adaptee.path, 'r')
+##         # Create a reference to this file
+##         cwd = os.path.dirname(os.path.abspath(__file__))
+##         f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
+##         self.assert_(f.is_file)
 
-        # Create a reference to this file
-        cwd = os.path.dirname(os.path.abspath(__file__))
-        f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
-        self.assert_(f.is_file)
+##         # A reference to the parent folder
+##         g = File(path='..')
+##         self.assert_(g.is_folder)
 
-        # A reference to the parent folder
-        g = File(path='..')
-        self.assert_(g.is_folder)
+##         # We should be able to adapt the file to an input stream...
+##         self.assertNotEqual(None, IInputStream(f, None))
 
-        # We should be able to adapt the file to an input stream...
-        self.assertNotEqual(None, IInputStream(f, None))
+##         # ... but not the folder.
+##         self.assertEqual(None, IInputStream(g, None))
 
-        # ... but not the folder.
-        self.assertEqual(None, IInputStream(g, None))
+##         # Make sure we can use the stream (this reads this module and makes
+##         # sure that it starts with the right doc string).
+##         stream = IInputStream(f).get_input_stream()
+##         self.assert_(stream.read().startswith('"""' + __doc__))
 
-        # Make sure we can use the stream (this reads this module and makes
-        # sure that it starts with the right doc string).
-        stream = IInputStream(f).get_input_stream()
-        self.assert_(stream.read().startswith('"""' + __doc__))
-
-        return
+##         return
 
     def test_cached(self):
         """ cached """

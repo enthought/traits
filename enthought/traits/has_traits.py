@@ -66,9 +66,9 @@ from trait_errors \
     import TraitError
     
 from protocols.api \
-    import Protocol, addClassAdvisor, declareAdapter, declareImplementation
+    import InterfaceClass, Protocol, addClassAdvisor, declareAdapter, \
+           declareImplementation
 
-from protocols.interfaces import AbstractBaseMeta
 
 #-------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
@@ -698,49 +698,11 @@ class MetaHasTraits ( type ):
 #  'MetaInterface' class:
 #-------------------------------------------------------------------------------
 
-class MetaInterface ( MetaHasTraits, Protocol ):
+class MetaInterface ( MetaHasTraits, InterfaceClass ):
     """ Meta class for interfaces.
 
         This combines trait and PyProtocols functionality.
     """
-
-    def __init__( self, __name__, __bases__, __dict__ ):
-        """ Constructor.
-
-        This method is copied over from PyProtocols 'AbstractBaseMeta' (and
-        then cleaned up a bit) to avoid trying to inherit from multiple
-        metaclasses as it causes weird problems with PyProtocols!
-
-        """
-        
-        type.__init__( self, __name__, __bases__, __dict__ )
-        Protocol.__init__( self )
-
-        for b in __bases__:
-            if isinstance( b, AbstractBaseMeta) and b.__bases__<>( object, ):
-                self.addImpliedProtocol( b )
-
-        return
-    
-    def __setattr__( self, name, value ):
-        """ Set an attribute on the object.
-
-        This method is copied over from PyProtocols 'AbstractBaseMeta' (and
-        then cleaned up a bit) to avoid trying to inherit from multiple
-        metaclasses as it causes weird problems with PyProtocols!
-
-        """
-        
-        # We could probably support changing __bases__, as long as we checked
-        # that no bases are *removed*.  But it'd be a pain, since we'd have to
-        # do callbacks, remove entries from our __implies registry, etc. So
-        # just punt for now.
-        if name == '__bases__':
-            raise TypeError( "Can't change interface __bases__", self )
-
-        type.__setattr__(self, name, value)
-
-        return
     
     def __call__( self, *args, **kw ):
         """ This method is copied over from the PyProtocols 'InterfaceClass'
