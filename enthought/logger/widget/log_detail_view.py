@@ -13,31 +13,33 @@
 #------------------------------------------------------------------------------
 
 # Standard library imports.
+import sys
+
+# Major library imports.
 import wx
 
 # Enthought library imports.
 from enthought.pyface.api import Dialog
-from enthought.traits.api import Str, Tuple
+from enthought.traits.api import Any, Str, Tuple
 
-###############################################################################
-# Generic dialog to display text
-###############################################################################
+
 class TextView(Dialog):
 
     msg = Str('')
+    
+    # The associated LoggerService. This is unused in this class, but we include
+    # it to match the interface of the QualityAgent.
+    service = Any()
     size = Tuple((400, 200))
     title = Str('Text') 
-    style = 'nonmodal'
+    style = 'modal'
 
     
-    ###########################################################################
-    # Protected 'Dialog' interface.
-    ###########################################################################
+    #### Dialog interface. #####################################################
 
     def _create_contents(self, parent):
         """ Creates the window contents.
         """
-
         dialog = parent
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -59,7 +61,6 @@ class TextView(Dialog):
  
     def _create_dialog_area(self, parent):
         """ Creates the main content of the dialog. """
-
         # Add the main panel 
         sizer = wx.BoxSizer(wx.VERTICAL)
         panel = wx.Panel(parent, -1)
@@ -67,23 +68,29 @@ class TextView(Dialog):
         panel.SetAutoLayout(True)
         
         # Add the log details view ...
-        details = wx.TextCtrl(panel, -1, self.msg, 
-                              style=wx.TE_MULTILINE |
-                                    wx.TE_READONLY |
-                                    wx.HSCROLL |
-                                    wx.VSCROLL |
-                                    wx.TE_RICH2)
+        style = (wx.TE_MULTILINE |
+                 wx.TE_READONLY |
+                 wx.VSCROLL |
+                 wx.TE_RICH2)
+        if sys.platform == 'darwin':
+            # Workaround for platform's buggy wx.
+            style |= wx.TE_LINEWRAP
+        else:
+            style |= wx.HSCROLL
+        details = wx.TextCtrl(panel, -1, self.msg, style=style)
         # Set the font to not be proportional 
-        font = wx.Font(8, wx.MODERN, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
         details.SetStyle(0, len(self.msg), wx.TextAttr(font=font))
         sizer.Add(details, 1, wx.EXPAND | wx.ALL, 5)
 
         # 'Close' button.
         close = wx.Button(panel, wx.ID_CANCEL, "Close")
+        close.SetDefault()
         wx.EVT_BUTTON(panel, wx.ID_CANCEL, self._wx_on_cancel)
         sizer.Add(close, 0, wx.ALIGN_CENTER | wx.BOTTOM | wx.TOP, 5)
         
         return panel
+
 
 
 ###############################################################################

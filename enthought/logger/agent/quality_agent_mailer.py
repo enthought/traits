@@ -18,10 +18,6 @@ import os
 
 # Enthought library imports.
 from enthought.util.home_directory import get_home_directory
-from enthought.envisage import get_application
-
-#local imports
-from attachments import Attachments
 
 
 # Setup a logger for this module.
@@ -107,13 +103,16 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
             logger.exception('Failed to include environment variables with message')
 
 
-    # Attach the project if requested ...
-    if include_project:
-        try:
-            attachments = Attachments(message)
-            attachments.package_any_relevant_files()
-        except:
-            logger.exception('Failed to include workspace files with message')
+# FIXME: no project plugins exist for Envisage 3, yet, and this isn't the right
+# way to do it, either. See the docstring of attachments.py.
+#    # Attach the project if requested ...
+#    if include_project:
+#        from attachments import Attachments
+#        try:
+#            attachments = Attachments(message)
+#            attachments.package_any_relevant_files()
+#        except:
+#            logger.exception('Failed to include workspace files with message')
 
     return message
 

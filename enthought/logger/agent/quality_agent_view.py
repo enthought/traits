@@ -17,9 +17,6 @@ import logging
 import wx
 
 # Enthought library imports.
-from enthought.envisage import get_application
-from enthought.logger.agent.quality_agent_mailer import create_email_message
-from enthought.logger.plugin.logger_plugin import LoggerPlugin
 from enthought.pyface.api import Dialog
 from enthought.traits.api import Any, Str, Tuple
 
@@ -36,15 +33,18 @@ class QualityAgentView(Dialog):
     size = Tuple((700, 900))
     title = Str('Quality Agent')
 
+    # The associated LoggerService.
+    service = Any()
+
     msg = Str('')
     subject = Str('Untitled Error Report')
-    to_address = Str(LoggerPlugin.instance.to_address)
+    to_address = Str()
     cc_address = Str('')
-    from_address = Str(LoggerPlugin.instance.from_address)
-    smtp_server = Str(LoggerPlugin.instance.smtp_server)
+    from_address = Str()
+    smtp_server = Str()
     priority = Str(priority_levels[2])
     comments = Str('None')
-    include_project = Any
+    include_userdata = Any
 
     ###########################################################################
     # Protected 'Dialog' interface.
@@ -114,7 +114,7 @@ class QualityAgentView(Dialog):
     def _on_help(self, event):
         """Called when the 'Help' button is pressed. """
 
-        hp = get_application().get_service('enthought.help.IHelp')
+        hp = self.service.application.get_service('enthought.help.IHelp')
         hp.library.show_topic(self.help_id)
 
         return
@@ -140,7 +140,7 @@ class QualityAgentView(Dialog):
                                     wx.CLIP_CHILDREN)
         details.SetSizeHints(minW=-1, minH=75)
         # Set the font to not be proportional
-        font = wx.Font(8, wx.MODERN, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
         details.SetStyle(0, len(self.msg), wx.TextAttr(font=font))
         sizer.Add(details, 1, wx.EXPAND|wx.ALL|wx.CLIP_CHILDREN, 5)
 
@@ -168,14 +168,14 @@ class QualityAgentView(Dialog):
                                            wx.TE_RICH2 |
                                            wx.CLIP_CHILDREN)
         comments_field.SetSizeHints(minW=-1, minH=75)
-        font = wx.Font(8, wx.MODERN, wx.NORMAL, wx.NORMAL)
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
         comments_field.SetStyle(0, len(self.comments), wx.TextAttr(font=font))
         sizer.Add(comments_field, 1, wx.ALL|wx.EXPAND|wx.CLIP_CHILDREN, 5)
         wx.EVT_TEXT(parent, comments_field.GetId(), self._on_comments)
 
         # Include the project combobox?
-        sizer.Add(self._create_project_upload(parent), 0, wx.ALL, border=5)
-
+        if len(self.service.mail_files) > 0:
+            sizer.Add(self._create_project_upload(parent), 0, wx.ALL, border=5)
 
         return sizer
 
@@ -277,7 +277,7 @@ class QualityAgentView(Dialog):
 
 
     def _on_project(self, event):
-        self.include_project = event.Checked()
+        self.include_userdata = event.Checked()
         cb = event.GetEventObject()
 
         if event.Checked():
@@ -287,31 +287,24 @@ class QualityAgentView(Dialog):
         return
 
     def _on_send(self, event):
-        import smtplib
+        # Disable the Send button while we go through the possibly
+        # time-consuming email-sending process.
+        button = event.GetEventObject()
+        button.Enable(0)
 
         fromaddr, toaddrs, ccaddrs = self._create_email_addresses()
         message = self._create_email(fromaddr, toaddrs, ccaddrs)
-        button = event.GetEventObject()
-        button.Enable(0) # disabled the send button
 
-        try:
-            logger.debug("Connecting to: %s" % self.smtp_server)
-            server = smtplib.SMTP(host=self.smtp_server)
-            logger.debug("Connected: %s" % server)
-            #server.set_debuglevel(1)
-            server.sendmail(fromaddr, toaddrs + ccaddrs, message.as_string())
-            server.quit()
-        except:
-            logger.exception("Problem sending error report")
+        self.service.send_bug_report(self.smtp_server, fromaddr, toaddrs,
+            ccaddrs, message)
 
         # save the user's preferences
-        LoggerPlugin.instance.smtp_server = self.smtp_server
-        LoggerPlugin.instance.to_address = self.to_address
-        LoggerPlugin.instance.from_address = self.from_address
-        LoggerPlugin.instance.save_preferences()
+        self.service.preferences.smtp_server = self.smtp_server
+        self.service.preferences.to_address = self.to_address
+        self.service.preferences.from_address = self.from_address
 
         # finally we close the dialog
-        self._on_ok(event)
+        self._wx_on_ok(event)
 
         return
 
@@ -319,11 +312,13 @@ class QualityAgentView(Dialog):
 
     def _create_email_addresses(self):
         # utility function map addresses from ui into the standard format
+        # FIXME: We should use standard To: header parsing instead of this ad
+        # hoc whitespace-only approach.
         fromaddr = self.from_address
         if "" == fromaddr.strip():
             fromaddr = "anonymous"
-        toaddrs  = self.to_address.split()
-        ccaddrs  = self.cc_address.split()
+        toaddrs = self.to_address.split()
+        ccaddrs = self.cc_address.split()
 
         return fromaddr, toaddrs, ccaddrs
 
@@ -332,16 +327,26 @@ class QualityAgentView(Dialog):
         # determine size of email in MBytes
         fromaddr, toaddrs, ccaddrs = self._create_email_addresses()
         message = self._create_email(fromaddr, toaddrs, ccaddrs)
-        return len(message.as_string()) / 1000000.0
+        return len(message.as_string()) / (2.0**20)
 
 
     def _create_email(self, fromaddr, toaddrs, ccaddrs):
-        return create_email_message(fromaddr, toaddrs, ccaddrs,
-                                     self.subject,
-                                     self.priority,
-                                     self.include_project,
-                                     self.msg,
-                                     self.comments)
+        return self.service.create_email_message(
+            fromaddr, toaddrs, ccaddrs,
+            self.subject,
+            self.priority,
+            self.include_userdata,
+            self.msg,
+            self.comments,
+        )
 
+    def _to_address_default(self):
+        return self.service.preferences.to_address
+
+    def _from_address_default(self):
+        return self.service.preferences.from_address
+
+    def _smtp_server_default(self):
+        return self.service.preferences.smtp_server
 
 ####### EOF #############################################################

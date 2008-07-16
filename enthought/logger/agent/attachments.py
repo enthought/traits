@@ -1,43 +1,50 @@
+""" Attach relevant project files.
+
+FIXME: there are no public project plugins for Envisage 3, yet. In any case,
+this stuff should not be hard-coded, but extensible via extension points. The
+code remains here because we can reuse the zip utility code in that extensible
+rewrite.
+"""
+
 import logging
 import os.path
 from email import Encoders
 from email.MIMEBase import MIMEBase
 
-from enthought.envisage import get_application
-from enthought.envisage.core.application import Application
-from enthought.traits.api import Instance
+from enthought.traits.api import Any, HasTraits
 
 
-# Setup a logger for this module.
 logger = logging.getLogger(__name__)
 
 
-class Attachments:
+class Attachments(HasTraits):
 
-    app = Instance(Application)
-    message = None
+    application = Any()
+    message = Any()
 
-    def __init__(self, message):
-        self.app = get_application()
-        self.message = message
+    def __init__(self, message, **traits):
+        traits = traits.copy()
+        traits['message'] = message
+        super(Attachments, self).__init__(**traits)
 
+
+    # FIXME: all of the package_*() methods refer to deprecated project plugins.
 
     def package_workspace(self):
-        if self.app is None:
+        if self.application is None:
             pass
 
-        workspace = self.app.service_registry.get_service('enthought.envisage.project.IWorkspace')
+        workspace = self.application.get_service('enthought.envisage.project.IWorkspace')
         if workspace is not None:
             dir = workspace.path
             self._attach_directory(dir)
         return
 
-
     def package_single_project(self):
-        if self.app is None:
+        if self.application is None:
             pass
 
-        single_project = self.app.service_registry.get_service('enthought.envisage.single_project.ModelService')
+        single_project = self.application.get_service('enthought.envisage.single_project.ModelService')
         if single_project is not None:
             dir = single_project.location
             self._attach_directory(dir)

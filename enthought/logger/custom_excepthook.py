@@ -18,9 +18,6 @@ import logging
 from traceback import format_exception
 
 
-# Setup a logger for this module.
-logger = logging.getLogger(__name__)
-
 
 """
     To catch exceptions with our own code this code needs to be added
@@ -35,6 +32,10 @@ def custom_excepthook(type, value, traceback):
 
     msg = "".join(list)
 
+    # Try to find the module that the exception actually came from.
+    name = getattr(traceback.tb_frame, 'f_globals', {}).get('__name__',
+        __name__)
+    logger = logging.getLogger(name)
     logger.error(msg)
 
     return

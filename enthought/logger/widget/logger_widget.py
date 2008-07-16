@@ -13,16 +13,21 @@
 #------------------------------------------------------------------------------
 
 # Standard library imports.
+import datetime
 import os
 import wx
 
 # Enthought library imports.
-from enthought.logger.log_queue_handler import log_queue_handler
-from enthought.logger.plugin.logger_plugin import LoggerPlugin
 from enthought.util.resource import get_path
-from enthought.envisage import get_application
 from log_detail_view import LogDetailView, FullLogView
 from wx import TheClipboard, TextDataObject
+
+
+LEVEL_COLUMN = 0
+DATE_COLUMN = 1
+TIME_COLUMN = 2
+MESSAGE_COLUMN = 3
+
 
 class LoggerWidget(wx.Panel):
     """ A LoggerListWidget with a reset button. """
@@ -30,14 +35,16 @@ class LoggerWidget(wx.Panel):
     _listControl = None
     
 
-    def __init__(self, parent):
+    def __init__(self, parent, service):
         wx.Panel.__init__(self, parent, -1, style=wx.CLIP_CHILDREN)
         sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(sizer)
         self.SetAutoLayout(True)
 
+        self.service = service
+
         # create list widget
-        self._listControl = LoggerListWidget(self)
+        self._listControl = LoggerListWidget(self, self.service)
         sizer.Add(self._listControl, 1, wx.EXPAND)
 
         # Add a lower horizontal sizer
@@ -103,12 +110,8 @@ class LoggerWidget(wx.Panel):
     def format_record(self, log_record):
         """ Returns a string with the relevant info out of a log_record object.
         """
-        # FIXME: I don't think this should be in here, it should be
-        # somewhere in enthought.logger, probably factored out with the
-        # code writing to the log file (which I couldn't find)
-        return "%s|%s|%s" %(log_record.levelname, 
-                            log_record.asctime,
-                            log_record.message)
+        return self.service.handler.formatter.format(log_record)
+
 
 class LoggerListWidget(wx.ListCtrl):
     """A logger widget displaying entried from the logger in a list control."""
@@ -119,36 +122,49 @@ class LoggerListWidget(wx.ListCtrl):
            'WARNING' : logging.WARNING,
            'ERROR' : logging.ERROR,
            'CRITICAL' : logging.CRITICAL}
+    inverse_map = {
+        logging.DEBUG: 'DEBUG',
+        logging.INFO: 'INFO',
+        logging.WARNING: 'WARNING',
+        logging.ERROR: 'ERROR',
+        logging.CRITICAL: 'CRITICAL',
+    }
 
-    def __init__(self, parent):
+    def __init__(self, parent, service):
         
         wx.ListCtrl.__init__(self, parent, -1, style=wx.LC_REPORT |
                                                      wx.LC_VIRTUAL |
                                                      wx.LC_HRULES |
                                                      wx.LC_VRULES)
                             
+        self.service = service
+
         # by default do nothing when a user double clicks on a record ...
         self._selection_action = None
 
         self.levels = ['DEBUG','INFO','WARNING','ERROR','CRITICAL']
         self._make_icons()
         
-        self.InsertColumn(0, "Level")
-        self.InsertColumn(1, "Date")
-        self.InsertColumn(2, "Time")
-        self.InsertColumn(3, "Message")
-        self.SetColumnWidth(0, 100)
-        self.SetColumnWidth(1, 75)
-        self.SetColumnWidth(2, 100)
-        self.SetColumnWidth(3, 650)
+        self.InsertColumn(LEVEL_COLUMN, "Level")
+        self.InsertColumn(DATE_COLUMN, "Date")
+        self.InsertColumn(TIME_COLUMN, "Time")
+        self.InsertColumn(MESSAGE_COLUMN, "Message")
+        self.SetColumnWidth(LEVEL_COLUMN, 100)
+        self.SetColumnWidth(DATE_COLUMN, 90)
+        self.SetColumnWidth(TIME_COLUMN, 110)
+        self.SetColumnWidth(MESSAGE_COLUMN, 650)
 
-        self.SetItemCount(log_queue_handler.size)
+        self.SetItemCount(self.service.handler.size)
 
         # set event handlers
         wx.EVT_LIST_ITEM_ACTIVATED(self, self.GetId(), self.OnItemActivated)
 
         # set the view to update when something is logged.
-        log_queue_handler._view = self
+        self.service.handler._view = self
+
+        self.log_records = []
+
+        self.during_update = False
 
 
     def set_selection_action(self, action):
@@ -162,106 +178,121 @@ class LoggerListWidget(wx.ListCtrl):
         
     def OnReset(self, event):
         """ Removes all entries from the list. """
-        log_queue_handler.reset() 
+        self.service.handler.reset() 
         self.DeleteAllItems()
-        self.SetItemCount(log_queue_handler.size)
+        self.SetItemCount(self.service.handler.size)
         self.Refresh()
         return 
 
-        
+    def IsVirtual(self):
+        return True
+
+
     #### Callbacks for the list... ############################################
 
     def OnItemActivated(self, event):
         self.currentItem = event.m_itemIndex
         msg = self._complete_message(self.currentItem)
         if msg is not "" and self._selection_action is not None:
-            dlg = self._selection_action(parent=self, msg=msg)
+            dlg = self._selection_action(parent=self, msg=msg,
+                service=self.service)
             val = dlg.open()
         return
         
 
     def OnGetItemText(self, item, col):
-        try:
-            txt = self._parse_record(self.log_records[item])
-            result = txt[col]
-        except Exception, msg:
+        if item < len(self.log_records):
+            item = len(self.log_records) - item - 1
+            result = self._parse_record(self.log_records[item], col)
+        else:
             result = ''
-        
         return result    
             
 
     def OnGetItemImage(self, item):
-        # todo - hardcoded column number - bad
-        text = self.OnGetItemText(item, 0)
- 
-        try:
-            index = self.levels.index(text.strip())
-        except Exception, msg:
+        if item < len(self.log_records):
+            item = len(self.log_records) - item - 1
+            index = self.levels.index(self.log_records[item].levelname)
+        else:
             index = -1
-            
+
         return index
 
-            
+
     def update(self):
-        if log_queue_handler.has_new_records():
-            self.log_records = self._filter_records(log_queue_handler.get())
-            num_rec = len(self.log_records)
-            # this seems to cause a required repaint? 
-            self.SetItemCount(log_queue_handler.size)
-            self.EnsureVisible(num_rec)
-            self.Refresh()
-        return
-                
-    
+        """ Update the table if new records are available.
+        """
+        if self.service.handler.has_new_records() and not self.during_update:
+            self.really_update()
+
+
+    def really_update(self):
+        """ Update whether the handler has new records or not.
+
+        This allows for changes in the log level to trigger an update of the
+        table.
+        """
+        self.log_records = self._filter_records(self.service.handler.get())
+        num_rec = len(self.log_records)
+        # This seems to cause a required repaint? 
+        self.SetItemCount(self.service.handler.size)
+        # Focus on the last item.
+        self.EnsureVisible(0)
+        self.Refresh()
+
+
     ### Utility methods #######################################################    
 
     def _filter_records(self, records):
-        """Filters out records that are lower than our plugin log level."""
+        """Filters out records that are lower than our plugin log level.
+        """
         filtered_records = []
-        
+
         for rec in records:
-            log = self._parse_record(rec)
-            if self.map[log[0].strip()] >= LoggerPlugin.instance.level_:
+            if rec.levelno >= self.service.preferences.level_:
                 filtered_records.append(rec)
 
         return filtered_records
-        
-    
-    def _parse_record(self, rec):
-        # todo can we use a custom formatter to do this more configurably?
-        txt = log_queue_handler.format(rec)
-        level, ymdhms, msg = txt.split('|')
-        
-        # split the time into date and then time 
-        date, time = ymdhms.strip().split()
-        
-        # just display the first line of the stacktrace 
-        msgs = msg.strip().split('\n')
-            
-        if len(msgs) > 1:
-            suffix = '... [double click for details]'
+
+
+    def _parse_record(self, rec, column):
+        """ Parse a record into items for display on the table.
+        """
+        if column == LEVEL_COLUMN:       
+            # Add a space to the level name for display.
+            level = ' '+ rec.levelname
+            return level
+        elif column == MESSAGE_COLUMN:
+            msg = rec.getMessage()
+            # Just display the first line of multiline messages, like stacktraces.
+            msgs = msg.strip().split('\n')
+
+            if len(msgs) > 1:
+                suffix = '... [double click for details]'
+            else:
+                suffix = ''
+
+            abbrev_msg = msgs[0] + suffix
+            return abbrev_msg
         else:
-            suffix = ''
-            
-        abbrev_msg = msgs[0] + suffix
-        
-        # add a space ... 
-        level = ' ' + level
-        
-        # order the columns for display 
-        recs = [level, date, time, abbrev_msg]
-        
-        return recs
-        
-        
-    def _complete_message(self, rec):
-        try:
-            txt = log_queue_handler.format(self.log_records[rec])
-            level, ymdhms, msg = txt.split('|')
-        except:
+            dt = datetime.datetime.fromtimestamp(rec.created)
+            if column == DATE_COLUMN:
+                date = dt.date().isoformat()
+                return date
+            elif column == TIME_COLUMN:
+                time = dt.time().isoformat()
+                return time
+            else:
+                raise ValueError("Unexpected column %r" % column)
+
+
+    def _complete_message(self, irec):
+        if irec < len(self.log_records):
+            msg = self.log_records[irec].getMessage()
+        else:
             msg = ""
         return msg
-        
+
 
     def _make_icons(self):
         self.il = wx.ImageList(16, 16)

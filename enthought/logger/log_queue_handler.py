@@ -31,18 +31,17 @@ class LogQueueHandler(Handler):
     _view = None
     
 
-    def __init__(self):
+    def __init__(self, size=1000):
         Handler.__init__(self)
         # only buffer 1000 log records
-        self.size = 1000
+        self.size = size
         self.ring = RingBuffer(self.size)
         self.dirty = False
         return
 
-            
+
     def emit(self, record):
         """ Actually this is more like an enqueue than an emit()."""
-        #print record
         self.ring.append(record)
         if self._view is not None:
             try:
@@ -52,7 +51,7 @@ class LogQueueHandler(Handler):
         self.dirty = True
         return
 
-            
+
     def get(self):
         self.dirty = False
         
@@ -61,15 +60,15 @@ class LogQueueHandler(Handler):
         except Exception, msg:
             # we did our best and it won't cause too much damage 
             # to just return a bogus message 
-            result = None
+            result = []
              
         return result
 
-            
+
     def has_new_records(self):
         return self.dirty
 
-            
+
     def reset(self):
         # start over with a new empty buffer 
         self.ring = RingBuffer(self.size)
@@ -82,7 +81,4 @@ class LogQueueHandler(Handler):
         return
 
             
-# A singleton so we can all use the same queue - expedient 
-log_queue_handler = LogQueueHandler()
-
 ## EOF ##################################################################

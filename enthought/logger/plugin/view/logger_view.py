@@ -12,48 +12,50 @@
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
 
+import logging
+
 # Enthought library imports.
-from enthought.envisage import get_using_workbench
 from enthought.logger.agent.quality_agent_view import QualityAgentView
-from enthought.logger.plugin.logger_plugin import LoggerPlugin
 from enthought.logger.widget.logger_widget import LoggerWidget
+from enthought.traits.api import Any, Str
 
-# Are we using the old UI plugin, or the shiny new Workbench plugin?
-USING_WORKBENCH = get_using_workbench()
-
-# Conditional imports.
-if USING_WORKBENCH:
-    from enthought.envisage.workbench import View
-else:
-    from enthought.envisage.ui import View
+from enthought.pyface.workbench.api import View
 
 
 class LoggerView(View):
-    
-    widget = None
+    """ The Workbench View showing the list of log items.
+    """
+
+    id = Str('enthought.logger.plugin.view.logger_view.LoggerView')
+    name = Str('Logger')
+
+    # The LoggerService we are associated with.
+    service = Any()
+
+    widget = Any()
     
     ###########################################################################
     # 'View' interface.
     ###########################################################################
-    def _create_contents(self, parent):
+    def create_control(self, parent):
         """ Creates the toolkit-specific control that represents the view.
         'parent' is the toolkit-specific control that is the view's parent.
         """
+        logging.info('LoggerView.create_control()')
 
-        # register the view with the plugin
-        LoggerPlugin.instance.plugin_view = self
-        
         # create the widget
-        self.widget = LoggerWidget(parent)
+        self.widget = LoggerWidget(parent, self.service)
 
         # set the double click action
-        enable_agent = LoggerPlugin.instance.preferences.get('enable_agent')
-        if enable_agent == True:
+        if self.service.preferences.enable_agent:
             self.widget.set_selection_action(QualityAgentView)
 
-        return self.widget
+        # Do one initial refresh in order to display items that were logged
+        # before the widget started up.
+        self.service.refresh_view()
 
-    create_control = _create_contents
+        logging.info('  self.widget = %r', self.widget)
+        return self.widget
 
 ####EOF##################################################################
 
