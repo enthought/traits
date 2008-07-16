@@ -698,11 +698,25 @@ class MetaHasTraits ( type ):
 #  'MetaInterface' class:
 #-------------------------------------------------------------------------------
 
+from protocols.interfaces import AbstractBaseMeta
+
 class MetaInterface ( MetaHasTraits, InterfaceClass ):
     """ Meta class for interfaces.
 
         This combines trait and PyProtocols functionality.
     """
+
+    def __init__(self, __name__, __bases__, __dict__):
+
+        type.__init__(self, __name__, __bases__, __dict__)
+        Protocol.__init__(self)
+
+        for b in __bases__:
+            if isinstance(b, AbstractBaseMeta) and b.__bases__<>(object,):
+                if b is Interface:
+                    continue
+                #print 'b', b
+                self.addImpliedProtocol(b)
     
     def __call__( self, *args, **kw ):
         """ This method is copied over from the PyProtocols 'InterfaceClass'
@@ -717,7 +731,6 @@ class MetaInterface ( MetaHasTraits, InterfaceClass ):
             return Protocol.__call__( self, *args, **kw )
         
         return type.__call__( self, *args, **kw )
-
 
 
 #-------------------------------------------------------------------------------
