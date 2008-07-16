@@ -85,6 +85,9 @@ In this example, several of the variations described above are shown:
   - A dynamic range using an Item theme. This consists of three scrubbers: one
     to control the low end of the range, one to control the high end, and one 
     that uses the high and low values to determine its range.
+    
+For comparison purposes, the example also shows the same traits displayed using 
+their default editors.
 """
 
 #-- Imports --------------------------------------------------------------------
@@ -112,8 +115,8 @@ class ScrubberDemo ( HasTraits ):
     simple_integer       = Range( 0, 100 )
     rollover_float       = Range( -10.0, 10.0 )
     bordered_unbounded   = Float
-    themed_dynamic_low   = Range( high = -0.001, value = -10.0 )
-    themed_dynamic_high  = Range( low  =  0.001, value =  10.0 )
+    themed_dynamic_low   = Range( high = -0.01, value = -10.0 )
+    themed_dynamic_high  = Range( low  =  0.01, value =  10.0 )
     themed_dynamic_value = Range( 'themed_dynamic_low', 'themed_dynamic_high',
                                   0.0 )
     
@@ -133,6 +136,18 @@ class ScrubberDemo ( HasTraits ):
                 TItem( 'themed_dynamic_low' ),
                 TItem( 'themed_dynamic_high' ),
                 TItem( 'themed_dynamic_value' ),
+                show_border = True,
+                label       = 'Scrubber Editors'
+            ), 
+            VGroup(
+                Item( 'simple_integer' ), 
+                Item( 'rollover_float' ), 
+                Item( 'bordered_unbounded' ),
+                Item( 'themed_dynamic_low' ),
+                Item( 'themed_dynamic_high' ),
+                Item( 'themed_dynamic_value' ),
+                show_border = True,
+                label       = 'Default Editors'
             ), 
             spring 
         ),
