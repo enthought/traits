@@ -207,16 +207,16 @@ class VariableAdapter ( TabularAdapter ):
                   for i, var in enumerate( variables ) ])
                   
     def _get_index_text ( self ):
-        return self.row
+        return str( self.row )
         
     def _get_at_text ( self ):
-        return self.object.index_values[ self.row ]
+        return '%.3f' % self.object.index_values[ self.row ]
         
     #-- Private Methods --------------------------------------------------------
     
     def _get_variable_value ( self, name ):
         variables = getattr( self.object, self.name )
-        return variables[ int( name[2:-5] ) ].values[ self.row ]
+        return '%.3f' % variables[ int( name[2:-5] ) ].values[ self.row ]
 
 #-- Variable Traits View -------------------------------------------------------        
 
