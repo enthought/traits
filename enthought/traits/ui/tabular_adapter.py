@@ -65,7 +65,7 @@ class AnITabularAdapter ( HasPrivateTraits ):
     
     implements( ITabularAdapter )
     
-    #-- Implementation of the IListStrAdapter Interface ------------------------
+    #-- Implementation of the ITabularAdapter Interface ------------------------
     
     # The row index of the current item being adapted:
     row = Int

@@ -117,6 +117,9 @@ class TableColumn ( HasPrivateTraits ):
     # Context menu to display when this column is right-clicked:
     menu = Instance( Menu )
     
+    # The tooltip to display when the mouse is over the column:
+    tooltip = Str
+    
     # The width of the column (< 0.0: Default, 0.0..1.0: fraction of total table
     # width, > 1.0: absolute width in pixels):
     width = Float( -1.0 )
@@ -328,6 +331,17 @@ class TableColumn ( HasPrivateTraits ):
             the column for a specified object.
         """
         return self.menu
+        
+    #---------------------------------------------------------------------------
+    #  Returns the tooltip to display when the user mouses over the column for
+    #  a specified object:
+    #---------------------------------------------------------------------------
+                
+    def get_tooltip ( self, object ):
+        """ Returns the tooltip to display when the user mouses over the column 
+            for a specified object.
+        """
+        return self.tooltip
 
     #---------------------------------------------------------------------------
     #  Returns the view to display when clicking a non-editable cell:
