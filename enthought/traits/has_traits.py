@@ -60,7 +60,7 @@ from trait_handlers \
 
 from trait_base \
     import Missing, enumerate, SequenceTypes, Undefined, TraitsCache, \
-           add_article
+           add_article, is_none, not_false, not_event
 
 from trait_errors \
     import TraitError
@@ -139,25 +139,7 @@ extended_trait_pat = re.compile( r'.*[ :\+\-,\.\*\?\[\]]' )
 
 # Generic 'Any' trait:
 any_trait = Any().as_ctrait()
-
-#-------------------------------------------------------------------------------
-#  Filter for selecting traits whose metadata is not 'event':
-#-------------------------------------------------------------------------------
-
-def _is_not_event ( value ):
-    """ Filter for selecting traits whose metadata is not 'event'.
-    """
-    return value != 'event'
     
-#-------------------------------------------------------------------------------
-#  Filter for selecting traits whose metadata is 'None':
-#-------------------------------------------------------------------------------
-        
-def _is_none ( value ):
-    """ Filter for selecting traits whose metadata is 'None'.
-    """
-    return (value is None)
-
 #-------------------------------------------------------------------------------
 #  Creates a clone of a specified trait:
 #-------------------------------------------------------------------------------
@@ -383,7 +365,8 @@ def _mapped_trait_for ( trait ):
     except:
         pass
         
-    return Any( default_value, is_base = False, transient = True ).as_ctrait()
+    return Any( default_value, is_base  = False, transient = True, 
+                               editable = False ).as_ctrait()
 
 #-------------------------------------------------------------------------------
 #  Adds a list of handlers to a specified notifiers list:
@@ -1763,7 +1746,7 @@ class HasTraits ( CHasTraits ):
                 return state
         """
         # Save all traits which do not have any 'transient' metadata:
-        result = self.trait_get( transient = _is_none )
+        result = self.trait_get( transient = is_none )
         
         # Add all delegate traits that explicitly have 'transient = False' 
         # metadata:
@@ -2541,7 +2524,7 @@ class HasTraits ( CHasTraits ):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object.
         """
-        names = self.trait_names( type = _is_not_event )
+        names = self.trait_names( type = not_event, editable = not_false )
         names.sort()
         return names
 
@@ -2549,7 +2532,7 @@ class HasTraits ( CHasTraits ):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current class.
         """
-        names = cls.class_trait_names( type = _is_not_event )
+        names = cls.class_trait_names( type = not_event, editable = not_false )
         names.sort()
         return names
 
@@ -2572,7 +2555,7 @@ class HasTraits ( CHasTraits ):
         if len( metadata ) > 0:
             names = self.trait_names( **metadata )
         else:
-            names = self.trait_names( type = _is_not_event )
+            names = self.trait_names( type = not_event )
             
         if len( names ) == 0:
            print ''
