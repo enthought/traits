@@ -135,7 +135,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
             if os.path.exists(full_path):
                 return full_path
             else:
-                return
+                raise
         else:
             return resource_stream(requirement, resource_path)
             
