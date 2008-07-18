@@ -293,6 +293,7 @@ class UI ( HasPrivateTraits ):
         # Destroy the view control:        
         self.control._object = None
         toolkit().destroy_control( self.control )
+        self.control = None
 
         # Dispose of any KeyBindings object we reference:
         self.key_bindings.dispose()
