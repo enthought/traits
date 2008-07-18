@@ -104,6 +104,10 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Optional instance view to use
     view = AView
+    
+    # Extended name of the context object trait containing the view, or name of
+    # the view, to use
+    view_name = Str
 
     # The ID to use with the view
     id = Str
@@ -172,6 +176,9 @@ class CustomEditor ( Editor ):
 
     # List of InstanceChoiceItem objects used by the editor
     items = Property
+    
+    # The view to use for displaying the instance
+    view = AView
 
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
@@ -265,6 +272,12 @@ class CustomEditor ( Editor ):
             layout = QtGui.QBoxLayout(orientation, parent)
             layout.setMargin(0)
             self.create_editor(parent, layout)
+            
+        # Synchronize the 'view' to use:
+        # fixme: A normal assignment can cause a crash (for unknown reasons) in
+        # some cases, so we make sure that no notifications are generated:
+        self.trait_setq( view = factory.view )
+        self.sync_value( factory.view_name, 'view', 'from' )
 
     #---------------------------------------------------------------------------
     #  Creates the editor control:  
@@ -359,7 +372,7 @@ class CustomEditor ( Editor ):
             view = item.get_view()
 
         if view == '':
-            view = self.factory.view
+            view = self.view
 
         return self.ui.handler.trait_view_for( self.ui.info, view, object,
                                                self.object_name, self.name ) 
@@ -565,6 +578,11 @@ class CustomEditor ( Editor ):
                 return drag_result
 
         return wx.DragNone
+        
+    #-- Traits event handlers --------------------------------------------------
+    
+    def _view_changed ( self, view ):
+        self.resynch_editor()
 
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
