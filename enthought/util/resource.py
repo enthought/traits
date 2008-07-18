@@ -11,7 +11,21 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-""" Utility functions for managing resources (ie. images/files etc). """
+""" Utility functions for managing and finding resources (ie. images/files etc).
+
+    get_path :           Returns the absolute path of a class or instance
+    
+    create_unique_name : Creates a name with a given prefix that is not in a
+                         given list of existing names. The separator between the
+                         prefix and the rest of the name can also be specified
+                         (default is a '_')
+                         
+    find_resource:       Given a setuptools project specification string
+                         ('MyProject>=2.1') and a partial path leading from the
+                         projects base directory to the desired resource, will
+                         return either an opened file object or, if specified, a
+                         full path to the resource.
+"""
 
 
 # Standard library imports.
@@ -62,5 +76,81 @@ def create_unique_name(prefix, names, separator='_'):
         i += 1
             
     return name
+
+def find_resource(project, resource_path, alt_path=None, return_path=False):
+    """ Returns a file object or file path pointing to the desired resource.
+    
+    Parameters
+    ----------
+    project : string
+        The name of the project to look for the resource in. Can be the name or
+        a requirement string. Ex: 'MyProject', 'MyProject>1.0', 'MyProject==1.1'
+    resource_path : string
+        The path to the file from inside the package. If the file desired is
+        MyProject/data/image.jpg, resource_path would be 'data/image.jpg'.
+    alt_path : string
+        The path to the resource relative to the location of the application's
+        top-level script (the one with __main__). If this function is called in
+        code/scripts/myscript.py and the resource is code/data/image.jpg, the
+        alt_path would be '../data/image.jpg'. This path is only used if the
+        resource cannot be found using setuptools.
+    return_path : bool
+        Determines whether the function should return a file object or a full
+        path to the resource.
+        
+    Returns
+    -------
+    file : file object or file path
+        A file object containing the resource. If return_path is True, 'file'
+        will be the full path to the resource. If the file is not found or
+        cannot be opened, None is returned.
+        
+    Description
+    -----------
+    This function will find a desired resource file and return an opened file
+    object. The main method of finding the resource uses the pkg_resources
+    resource_stream method, which searches your working set for the installed
+    project specified and appends the resource_path given to the project
+    path, leading it to the file. If setuptools is not installed or it cannot
+    find/open the resource, find_resource will use the sys.path[0] to find the
+    resource if alt_path is defined.
+    """
+    
+    try:
+        # Get the image using the pkg_resources resource_stream module, which
+        # will find the file by getting the Chaco install path and appending the
+        # image path. This method works in all cases as long as setuptools is
+        # installed. If setuptools isn't installed, the backup sys.path[0]
+        # method is used.
+        from pkg_resources import resource_stream, working_set, Requirement
+            
+        # Get a requirement for the project
+        requirement = Requirement.parse(project)
+        
+        if return_path:
+            dist = working_set.find(requirement)
+            return os.path.join(dist.location, resource_path)
+        else:
+            return resource_stream(requirement, resource_path)
+            
+    except:
+        # Setuptools was either not installed, or it failed to find the image
+        # file. Get the image using sys.path[0], which is the directory that the
+        # example lives in. The path to the image is then constructed by
+        # navigating from the scripts location. This method only works if this
+        # example is called directly from the command line using
+        # 'python %SOMEPATH%/imshow.py'
+        
+        if alt_path is None:
+            return
+        
+        if return_path:
+            return os.path.join(sys.path[0], alt_path)
+
+        # Try to open the file, return None on exception
+        try:
+            return open(os.path.join(sys.path[0], alt_path), 'rb')
+        except:
+            return
 
 #### EOF ######################################################################
