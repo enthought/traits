@@ -1679,8 +1679,10 @@ getattr_trait ( trait_object      * trait,
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
                 
                 rc = 0;
-                
-                if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+                if ( trait->post_setattr != NULL )
+                    rc = trait->post_setattr( trait, obj, name, result );
+            
+                if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
                     tnotifiers = trait->notifiers;
                     onotifiers = obj->notifiers;
                     if ( has_notifiers( tnotifiers, onotifiers ) )
@@ -1716,7 +1718,7 @@ getattr_trait ( trait_object      * trait,
             if ( trait->post_setattr != NULL )
                 rc = trait->post_setattr( trait, obj, name, result );
             
-            if ( (rc == 0) && (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+            if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
                 tnotifiers = trait->notifiers;
                 onotifiers = obj->notifiers;
                 if ( has_notifiers( tnotifiers, onotifiers ) )
