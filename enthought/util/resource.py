@@ -129,7 +129,13 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         
         if return_path:
             dist = working_set.find(requirement)
-            return os.path.join(dist.location, resource_path)
+            full_path = os.path.join(dist.location, resource_path)
+            
+            # If the path exists, return it
+            if os.path.exists(full_path):
+                return full_path
+            else:
+                return
         else:
             return resource_stream(requirement, resource_path)
             
