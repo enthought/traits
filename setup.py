@@ -117,9 +117,9 @@ setup(
         'integrationtests.*',
     ] ),
     tests_require = [
-        'nose >= 0.9',
+        'nose >= 0.10.3',
     ],
-    test_suite = 'test_all',
+    test_suite = 'nose.collector',
     url        = 'http://code.enthought.com/traits',
     version    = '3.0.0b1',
     zip_safe   = False,
