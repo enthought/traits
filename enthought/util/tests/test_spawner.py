@@ -15,28 +15,35 @@
 #     In some cases this is necessary when things cannot be tested
 #     with nosetests itself.
 #------------------------------------------------------------------------------
-import os
+import sys
+import os.path
 import subprocess
 import unittest
+from test.test_support import TESTFN
 
-# NOTE:
-#   `refresh_run.py` can not be run by nosetests directly because of
-#   the function refresh() in enthought.util.refresh.
-#   Therefore the test in this file (which nosetests will execute) will
-#   spawn a python interpreter running `refresh_run.py`.
-#   This test checks the return code of the process and will fail if
-#   the return code is non-zero.
+from enthought.util.resource import store_resource
+
 
 class RefreshTestCase(unittest.TestCase):
     
-    def test_run(self):
-        """ Run `refresh_run.py` as a spawned process and test return value
+    def test_refresh(self):
         """
-        retcode = subprocess.call(['python', 'refresh_run.py'],
-                                  cwd=os.path.dirname(__file__))
+            Run 'refresh.py' as a spawned process and test return value,
+            The python source is stored into a temporary test file before
+            being executed in a subprocess.
+        """
+        store_resource('EnthoughtBase',
+                       os.path.join('enthought', 'util','tests', 'refresh.py'),
+                       TESTFN)
+        
+        retcode = subprocess.call([sys.executable, TESTFN])
         
         self.assertEqual(retcode, 0)
+
+
+    def tearDown(self):
+        os.unlink(TESTFN)  
         
 
-if __name__ == "__main__":          
+if __name__ == "__main__":
     unittest.main()
