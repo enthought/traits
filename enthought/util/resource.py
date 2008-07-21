@@ -159,4 +159,17 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         except:
             return
 
+
+def store_resource(project, resource_path, filename):
+    """
+        Store the resource into a file 'filename'.  The arguments
+        project and resource_path are the same as for find_resource.
+    """
+    fi = find_resource('EnthoughtBase', resource_path)
+    
+    fo = open(filename, 'wb')
+    fo.write(fi.read())
+    fo.close()
+    
+
 #### EOF ######################################################################
