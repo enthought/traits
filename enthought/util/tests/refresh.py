@@ -13,8 +13,8 @@
 #------------------------------------------------------------------------------
 
 # NOTE:
-# This file, `refresh_run.py`, can not be run by nosetests directly.
-# It is run through `refresh_test_case.py`, see notes in there.
+# This file, `refresh.py` can not be run by nosetests directly.
+# It is run through `test_spawner.py`, see notes in there.
 
 import unittest
 import gc
