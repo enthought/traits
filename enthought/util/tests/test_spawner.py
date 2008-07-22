@@ -19,12 +19,17 @@ import sys
 import os.path
 import subprocess
 import unittest
-from test.test_support import TESTFN
+import tempfile
 
-from enthought.util.resource import store_resource
+from enthought.util.resource import store_resource, get_path
 
 
-class RefreshTestCase(unittest.TestCase):
+class Tests(unittest.TestCase):
+
+    def setUp(self):
+        OS_handle, fname = tempfile.mkstemp()
+        self.tmpname = fname
+
     
     def test_refresh(self):
         """
@@ -34,15 +39,16 @@ class RefreshTestCase(unittest.TestCase):
         """
         store_resource('EnthoughtBase',
                        os.path.join('enthought', 'util','tests', 'refresh.py'),
-                       TESTFN)
+                       self.tmpname)
         
-        retcode = subprocess.call([sys.executable, TESTFN])
+        retcode = subprocess.call([sys.executable, self.tmpname],
+                                  cwd=os.path.dirname(self.tmpname))
         
         self.assertEqual(retcode, 0)
 
 
     def tearDown(self):
-        os.unlink(TESTFN)  
+        os.unlink(self.tmpname)
         
 
 if __name__ == "__main__":
