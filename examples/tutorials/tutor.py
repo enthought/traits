@@ -14,8 +14,6 @@
 #  Date:   03/30/2007
 #  
 #  fixme:
-#  - If starting path has no sections, prompt user for a valid directory, or
-#    display an error message.
 #  - Get custom tree view images.
 #  - Write a program to create a directory structure from a lesson plan file.
 #  
@@ -1773,7 +1771,16 @@ if __name__ == '__main__':
         path = os.getcwd()
       
     # Create a tutor and display the tutorial:
-    Tutor( home = os.path.dirname( sys.argv[0] ) ).set(
-           path = path
-    ).configure_traits()
+    tutor = Tutor( home = os.path.dirname( sys.argv[0] ) ).set(
+                   path = path )
+    if tutor.root is not None:
+        tutor.configure_traits()
+    else:
+        print """No traits tutorial found in %s.
+        
+Correct usage is: python tutor.py [tutorial_path]
+where: tutorial_path = Path to the root of the traits tutorial.
+
+If tutorial_path is omitted, the current directory is assumed to be the root of 
+the tutorial.""" % path
     
