@@ -1,7 +1,7 @@
 # interface_implementation.py - Example of implementing an interface
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, implements, Str
+from enthought.traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 
 #--[Code]-----------------------------------------------------------------------
