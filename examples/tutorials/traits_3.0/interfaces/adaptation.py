@@ -26,8 +26,7 @@ new adapter classes by:
 - Providing a standard constructor which normally does not need to be 
   overridden by subclasses.
   
-- Only requiring use of the **implements** function (described in the lesson on
-  interfaces) to define the adapter.
+- Only requiring use of the **adapts** function to define the adapter.
   
 The standard constructor for the **Adapter** class has the form::
     
@@ -44,13 +43,17 @@ which assigns the object being adapted to the *adaptee* trait.
 As an adapter writer, the only things you need to add to the subclass definition
 are:
     
-- An **implements** function call declaring which interfaces the adapter class
+- An **adapts** function call declaring which interfaces the adapter class
   implements on behalf of the object it is adapting.
+
+  The form of the **adapts** function is as follows::
+    
+    adapts( client_class, interface [, interface2, ..., interfacen] )
   
 - A declaration for the *adaptee* trait (usually as an **Instance** of a
   particular class).
   
-- The actual implementions of the interfaces declared in the **implements**
+- The actual implementions of the interfaces declared in the **adapts**
   call. Usually the implementation code will be written in terms of the
   adapter class's *adaptee* trait assigned by the class constructor.
   
@@ -61,7 +64,7 @@ The following shows the definition of a simple adapter class::
   class PersonINameAdapter ( Adapter ):
       
       # Declare what interfaces this adapter implements for its client:
-      implements( IName )
+      adapts( Person, IName )
       
       # Declare the type of client it supports:
       adaptee = Instance( Person )
@@ -79,18 +82,10 @@ not derive your adapter class from **Adapter**, then it is your responsibility
 to provide all of the same information and setup implicitly provided by
 **Adapter**.
 
-In particular, you must use the **adapts** function instead of **implements**
-within your adapter class definition. The **adapts** function:
-    
-- Defines the containing class as an adapter class.
-- Declares the set of interfaces the class implements for its client object.
-
-The form of the **adapts** function is as follows::
-    
-    adapts( client_class, interface [, interface2, ..., interfacen] )
-    
-As you can see, it is vary similar to **implements**, but adds the class it is
-an adapter for as its first argument.
+In particular, in addition to using the *adapts* function to declare the set of 
+interfaces the class implements for its client object, you must also define the
+constructor, or whatever means you define for binding the object to be adapted 
+to the adapter.
 
 Creating an adapter class from scratch, we can re-write the previous adapter
 example as follows::
@@ -115,7 +110,6 @@ example as follows::
     
 As you can see, the main difference between this example and the last is:
     
-- Use of **adapts** instead of **implements**.
 - Explicit implementation of the adapter constructor.
 
 Yet Another Way To Define Adapters
@@ -154,24 +148,27 @@ Now for the good part... how do you use adapters?
 And the answer is... you don't. At least not explicitly.
 
 In traits, adapters are created automatically whenever you assign an object to
-an *interface* **Instance** trait (i.e. an **Instance** trait whose declared
-type is an interface), and the object being assigned does not implement the
-required interface. In this case, if an adapter class exists that can adapt the
-specified object to the required interface, an instance of the adapter class 
-will be created for the object, and the resulting adapter object is what ends
-up being assigned to the **Instance** trait.
+an *interface* **AdaptsTo** or **AdaptedTo** trait and the object being assigned 
+does not implement the required interface. In this case, if an adapter class 
+exists that can adapt the specified object to the required interface, an 
+instance of the adapter class will be created for the object, and the resulting 
+adapter object is what ends up being assigned to the trait, along with the
+original object. When using the **AdaptedTo** trait, the adapter is assigned as
+the value of the trait, and the original object is assigned as its *mapped* 
+value. For the **AdaptsTo** trait, the original object is assigned as the trait
+value, and the adapter is assigned as its *mapped* value. In the case where the
+object does not require an adapter, the object and adapted value are the same.
 
 Note that it might happen that no adapter class exists that will adapt the
 object to the required interface, but a pair, or series, of adapter classes
 exist that will together adapt the object to the needed interface. In this case,
 the required set of adapters will automatically be created for the object and
 the final link in the chain adapter object (the one that actually implements
-the required interface for some object class) will be assigned as the trait 
-value.
+the required interface for some object class) will be used.
 
-Whenever a situation like this arises, the adapted object assigned to the trait
-will always contain the smallest set of available adapter objects needed to 
-adapt the original object.
+Whenever a situation like this arises, the adapted object used will always 
+contain the smallest set of available adapter objects needed to adapt the
+original object.
 
 The following code shows a simple example of using adaptation::
     
@@ -194,29 +191,30 @@ Refer to the **Output** tab for the actual result of running this example.
 Controlling Adaptation
 ----------------------
 
-As stated in the previous section, adaptation occurs automatically when values
-are assigned to an **Instance** trait. However, the **Instance** trait allows
-you to control how adaptation is performed by means of the *adapt* metadata,
-which can have one of the following values:
+The **AdaptedTo** and **AdaptsTo** traits are actually subclasses of the 
+**Instance** trait. Normally, adaptation occurs automatically when values are 
+assigned to an **AdaptedTo** or **AdaptsTo** trait. However, any of the
+**Instance**, **AdaptedTo** and **AdaptsTo** traits allow you to control how 
+adaptation is performed by means of the *adapt* metadata, which can have one of 
+the following values:
     
 no
-    Adaptation is not allowed.
+    Adaptation is not allowed (This is the default for the **Instance** trait).
     
 yes
-    Adaptation is allowed. If adaptation fails, an exception is raised.
+    Adaptation is allowed. If adaptation fails, an exception is raised (This is
+    the default for both the **AdaptedTo** and **AdaptsTo** traits).
     
 default
     Adapation is allowed. If adaptation fails, the default value for the trait
     is assigned instead.
-    
-The default value for the *adapt* metadata is *yes*.
 
-As an example of modifying the adaptation behavior of an **Instance** trait,
+As an example of modifying the adaptation behavior of an **AdaptedTo** trait,
 we could rewrite the example **Apartment** class as follows::
     
     class Apartment ( HasTraits ):
     
-        renter = Instance( IName, adapt = 'no' )
+        renter = AdaptedTo( IName, adapt = 'no' )
     
 Using this definition, any value assigned to *renter* must itself implement
 the **IName** interface, otherwise an exception is raised. Try modifying and
@@ -247,7 +245,7 @@ class Person ( HasTraits ):
 class PersonINameAdapter ( Adapter ):
     
     # Declare what interfaces this adapter implements for its client:
-    implements( IName )
+    adapts( Person, IName )
     
     # Declare the type of client it supports:
     adaptee = Instance( Person )
@@ -262,7 +260,7 @@ class PersonINameAdapter ( Adapter ):
 # Define a class using an object that implements the 'IName' interface:
 class Apartment ( HasTraits ):
     
-    renter = Instance( IName )
+    renter = AdaptedTo( IName )
     
 #--[Example*]--------------------------------------------------------------------
 
