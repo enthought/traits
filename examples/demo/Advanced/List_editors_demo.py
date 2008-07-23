@@ -12,7 +12,7 @@ changes made in one editor are automatically reflected in the others.
 
 # Imports:  
 from enthought.traits.api \
-    import HasStrictTraits, Str, Int, Regex, List
+    import HasStrictTraits, Str, Int, Regex, List, Instance
     
 from enthought.traits.ui.api \
     import View, Item, Tabbed, TableEditor, ListEditor
@@ -70,7 +70,7 @@ table_editor = TableEditor(
 class ListTraitTest ( HasStrictTraits ):
     
     # Trait definitions:  
-    people = List( Person )
+    people = List( Instance( Person, () ) )
     
     # Traits view definitions:  
     traits_view = View(
