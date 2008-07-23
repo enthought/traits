@@ -7,8 +7,9 @@ import enthought.traits.ui
 class Person(HasTraits):
     name = Str
     age = Int
+    
     person_view = View('name', Include('extra'), 'age',
-                       kind='modal')
+                       kind='livemodal')
     
 Person().configure_traits()
 
@@ -17,6 +18,7 @@ class LocatedPerson(Person):
     city = Str
     state = Str
     zip = Str
+    
     extra = Group('street', 'city', 'state', 'zip')
     
 LocatedPerson().configure_traits()
