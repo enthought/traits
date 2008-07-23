@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-""" Build and distribute the Envisage documentation in an automated fashion.
+""" Build and distribute the ETS documentation in an automated fashion.
 
 The application is based on a set of actions which each accept a list of
 options. At the time of this writing, the valid actions are:
@@ -46,6 +46,8 @@ from subprocess import Popen
 import sys
 import tempfile
 import zipfile
+
+from setup_data import INFO
 
 ACTIONS = {}
 
@@ -102,7 +104,7 @@ class Process(object):
 
         p.set_defaults(doc_source=os.path.join(
                 os.path.abspath(os.path.dirname(__file__)),
-                'docs', 'mayavi', 'user_guide', 'source'))
+                'docs', 'source'))
 
         return p
 
@@ -126,8 +128,9 @@ class Build(Process):
         if not output_dir:
             output_dir = os.path.join(self.target, format)
 
-        self.run_command('sphinx-build -b %s %s %s'
-                         % (format, self.options.doc_source, output_dir))
+        self.run_command('sphinx-build -D version=%s -D release=%s -b %s %s %s'
+                        % (INFO['version'], INFO['version'], format, \
+                           self.options.doc_source, output_dir))
 
     @has_started
     def remove_tmp_files(output_dir):
@@ -285,17 +288,16 @@ class LaTeXBuild(Build):
         # anything is checked into SVN.
         def post_run(self):
             for i in range(3):
-                self.run_command('pdflatex mayavi_user_guide.tex',
+                self.run_command('pdflatex *.tex',
                                  cwd=os.path.join(self.target, 'latex'))
 
-            for index in ('mayavi_user_guide.idx', 'modmayavi_user_guide.idx'):
-                self.run_command('makeindex -s %s %s' % (
-                    os.path.join(self.target, 'latex',  'python.ist'),
-                    os.path.join(self.target, 'latex', index)
-                ))
+            self.run_command('makeindex -s %s %s' % (
+                os.path.join(self.target, 'latex',  'python.ist'),
+                os.path.join(self.target, 'latex', '*.idx')
+            ))
 
             for i in range(3):
-                self.run_command('pdflatex mayavi_user_guide.tex',
+                self.run_command('pdflatex *.tex',
                                  cwd=os.path.join(self.target, 'latex'))
 
         self._run('latex', post_run)
@@ -306,7 +308,7 @@ class LaTeXBuild(Build):
             shutil.rmtree(os.path.join(self.temp_dir, 'latex', '.doctrees'))
             for entry in os.listdir(os.path.join(self.temp_dir, 'latex')):
                 f = os.path.join(self.temp_dir, 'latex', entry)
-                if os.path.isfile(f) and entry != 'mayavi_user_guide.pdf':
+                if os.path.isfile(f) and not entry.endswith('.pdf'):
                     os.remove(f)
 
     @property

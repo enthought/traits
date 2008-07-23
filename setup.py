@@ -6,6 +6,7 @@ from distutils.command.build import build as distbuild
 from distutils import log
 from pkg_resources import require, DistributionNotFound
 
+from setup_data import INFO
 from make_docs import HtmlBuild
 
 
@@ -164,7 +165,7 @@ setup(
         ],
     test_suite = 'nose.collector',
     url = 'http://code.enthought.com/ets',
-    version = '3.0.0b1',
+    version = INFO['version'],
     zip_safe = False,
     )
 
