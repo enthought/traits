@@ -2,7 +2,7 @@
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api import HasTraits, Range, Trait
+from enthought.traits.api import HasTraits, Range, Trait, TraitError
 
 #--[Code]-----------------------------------------------------------------------
 
@@ -26,16 +26,13 @@ die.value = 5
 die.value = 'five'
 
 # Now try out some invalid values:
-
 try:
     die.value = 0
-except:
-    import traceback
-    traceback.print_exc()
+except TraitError, excp:
+    print excp
 
 try:
     die.value = 'zero'
-except:
-    import traceback
-    traceback.print_exc()
+except TraitError, excp:
+    print excp
     
