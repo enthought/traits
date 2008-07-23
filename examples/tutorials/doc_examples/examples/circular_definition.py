@@ -16,6 +16,7 @@ try:
         # If we move this class to the top, then this line won't work, because
         # 'Chicken' won't be defined yet:
         created_by = Instance( Chicken )
+
 except NameError, excp:
     print excp
 
