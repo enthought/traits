@@ -57,9 +57,7 @@ class PopupSlider ( Item ):
     width = -40
     
     # Define the editor to use:
-    editor = PopupEditor( editor = ThemedSliderEditor,
-                          width  = -150,
-                          height = -15 )
+    editor = PopupEditor( editor = ThemedSliderEditor, width = -150 )
 
 #-- Create a simple demonstration model to edit --------------------------------
 
