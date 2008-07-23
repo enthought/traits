@@ -203,4 +203,4 @@ for i in range( 10 ):
 print craps.rolls
 
 # Try to assign an invalid dice roll:
-craps.rolls.append( ( 0, 0 ) )
+#craps.rolls.append( ( 0, 0 ) )
