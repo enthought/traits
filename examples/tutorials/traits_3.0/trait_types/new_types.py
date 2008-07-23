@@ -203,4 +203,7 @@ for i in range( 10 ):
 print craps.rolls
 
 # Try to assign an invalid dice roll:
-#craps.rolls.append( ( 0, 0 ) )
+try:
+    craps.rolls.append( ( 0, 0 ) )
+except TraitError:
+    print 'Assigning an invalid dice roll failed.'
