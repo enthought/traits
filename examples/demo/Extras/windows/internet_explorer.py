@@ -81,8 +81,8 @@ class InternetExplorerDemo ( HasTraits ):
     
 # Create the demo:    
 demo = InternetExplorerDemo(
-           pages = [ WebPage( url = 'http://code.enthought.com/traits/' ),
-                     WebPage( url = 'http://dmorrill.com' ) ] )
+           pages = [ WebPage(url='http://code.enthought.com/projects/traits/'),
+                     WebPage(url='http://dmorrill.com') ] )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
