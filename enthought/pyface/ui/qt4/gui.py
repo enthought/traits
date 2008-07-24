@@ -113,6 +113,8 @@ class GUI(MGUI, HasTraits):
         logger.debug("---------- starting GUI event loop ----------")
         QtGui.QApplication.exec_()
 
+        # This is a hack for TraitsUI.
+        QtGui.QApplication.instance()._in_event_loop = False
         self.started = False
 
     def stop_event_loop(self):
