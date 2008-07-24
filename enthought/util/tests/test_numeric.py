@@ -14,6 +14,7 @@
 import unittest
 
 from numpy import arange, array
+
 import enthought.util.numeric as N
 
 
@@ -24,7 +25,7 @@ class test_numeric(unittest.TestCase):
         b = array((2,2,2))
         indices = array((1,4,5))
         x = N.safe_take(a,indices)
-        self.assert_(all(x == b))
+        self.assert_((x == b).all())
     
         a = 2
         indices = array((0))
@@ -34,7 +35,7 @@ class test_numeric(unittest.TestCase):
     def test_safe_copy(self):
         a = arange(1,4,1)
         x = N.safe_copy(a)
-        self.assert_(all(x == a))
+        self.assert_((x == a).all())
         
         a = 4.1
         x = N.safe_copy(a)
