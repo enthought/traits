@@ -1586,6 +1586,9 @@ class BaseRange ( TraitType ):
             if isinstance( value, basestring ):
                 value = 'object.' + value
             self._value = compile( str( value ), '<string>', 'eval' )
+            
+            self.default_value_type = 8
+            self.default_value      = self._get_default_value
 
         exclude_mask = 0
         if exclude_low:
@@ -1665,6 +1668,11 @@ class BaseRange ( TraitType ):
 
         self.error( object, name, self.repr( value ) )
 
+    def _get_default_value ( self, object ):
+        """ Returns the default value of the range.
+        """
+        return eval( self._value )
+        
     def _get ( self, object, name, trait ):
         """ Returns the current value of a dynamic range trait.
         """
@@ -1681,7 +1689,7 @@ class BaseRange ( TraitType ):
             value = high
 
         return self._typed_value( value, low, high )
-
+        
     def _set ( self, object, name, value ):
         """ Sets the current value of a dynamic range trait.
         """
