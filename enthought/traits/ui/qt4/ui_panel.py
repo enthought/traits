@@ -618,7 +618,7 @@ class _GroupPanel(object):
                 if label != "":
                     # If we are building a multi-column layout with labels, 
                     # just add space in the next column:
-                    if cols > 1 and show_labels:
+                    if columns > 1 and show_labels:
                         col += 1
 
                     if item.style == 'simple':
