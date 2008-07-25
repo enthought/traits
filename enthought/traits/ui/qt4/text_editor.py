@@ -178,15 +178,6 @@ class SimpleEditor ( Editor ):
 
         control = wtype(self.str_value)
 
-        # Create the palettes.
-        self._error_palette = QtGui.QPalette(control.palette())
-        self._error_palette.setColor(QtGui.QPalette.Base, ErrorColor)
-
-        self._ok_palette = QtGui.QPalette(control.palette())
-        self._ok_palette.setColor(QtGui.QPalette.Base, self.ok_color)
-
-        control.setPalette(self._ok_palette)
-
         if factory.password:
             control.setEchoMode(QtGui.QLineEdit.Password)
 
@@ -209,14 +200,15 @@ class SimpleEditor ( Editor ):
     def update_object ( self ):
         """ Handles the user entering input data in the edit control.
         """
-        if not self._no_update and self.control is not None:
+        if (not self._no_update) and (self.control is not None):
             try:
                 self.value = self._get_user_value()
-                self.control.setPalette(self._ok_palette)
 
                 if self._error is not None:
                     self._error = None
                     self.ui.errors -= 1
+
+                self.set_error_state( False )
 
             except TraitError, excp:
                 pass
@@ -244,7 +236,7 @@ class SimpleEditor ( Editor ):
         if self._error is not None:
             self._error = None
             self.ui.errors -= 1
-            self.control.setPalette(self._ok_palette)
+            self.set_error_state( False )
 
     #---------------------------------------------------------------------------
     #  Gets the actual value corresponding to what the user typed:
@@ -280,11 +272,35 @@ class SimpleEditor ( Editor ):
     def error ( self, excp ):
         """ Handles an error that occurs while setting the object's trait value.
         """
-        self.control.setPalette(self._error_palette)
-
         if self._error is None:
             self._error = True
             self.ui.errors += 1
+
+        self.set_error_state( True )
+
+    #---------------------------------------------------------------------------
+    #  Sets the editors current visible error state: 
+    #---------------------------------------------------------------------------
+
+    def set_error_state ( self, state ): 
+        """ Sets the editors current visible error state. 
+        """ 
+        color = self.ok_color 
+        if state or self.invalid or self._error: 
+            color = ErrorColor 
+             
+        pal = QtGui.QPalette(self.control.palette())
+        pal.setColor(QtGui.QPalette.Base, color)
+        self.control.setPalette(pal)
+
+    #---------------------------------------------------------------------------
+    #  Handles the editor's invalid state changing: 
+    #---------------------------------------------------------------------------
+
+    def _invalid_changed ( self, state ): 
+        """ Handles the editor's invalid state changing. 
+        """ 
+        self.set_error_state( state ) 
 
 #-------------------------------------------------------------------------------
 #  'CustomEditor' class:

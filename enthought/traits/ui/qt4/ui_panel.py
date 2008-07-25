@@ -725,8 +725,14 @@ class _GroupPanel(object):
                 # factory:
                 if item.format_func is not None:
                     editor_factory.format_func = item.format_func
+
                 if item.format_str != '':
                     editor_factory.format_str = item.format_str
+
+                # If the item has an invalid state extended trait name, set it
+                # in the editor factory:
+                if item.invalid != '':
+                    editor_factory.invalid = item.invalid
 
             # Create the requested type of editor from the editor factory:
             factory_method = getattr( editor_factory, item.style + '_editor' )
