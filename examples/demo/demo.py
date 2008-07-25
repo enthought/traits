@@ -105,7 +105,7 @@ class DemoFileHandler ( Handler ):
         # Set up the 'print' logger:
         df         = info.object
         df.log     = ''
-        #sys.stdout = sys.stderr = self
+        sys.stdout = sys.stderr = self
         
         # Read in the demo source file:
         df.description, df.source = parse_source( df.path )
