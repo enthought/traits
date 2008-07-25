@@ -23,7 +23,7 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.wx.color_column \
     import ColorColumn
 
-from enthought.enable2.api \
+from enthought.enable.api \
     import ColorTrait     
                    
 class Thingy ( HasTraits ):

@@ -21,7 +21,7 @@ import wx
 from enthought.kiva.traits.kiva_font_trait \
     import KivaFont
     
-from enthought.enable2.traits.api \
+from enthought.enable.traits.api \
     import RGBAColor
 
 from enthought.traits.api \
