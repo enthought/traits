@@ -3063,7 +3063,8 @@ class Either ( TraitType ):
         """ Creates a trait whose value can be any of of a specified list of
             traits.
         """
-        self.trait_maker = _TraitMaker( None, *traits, **metadata )
+        self.trait_maker = _TraitMaker( metadata.pop( 'default', None ), 
+                                        *traits, **metadata )
 
     def as_ctrait ( self ):
         """ Returns a CTrait corresponding to the trait defined by this class.

@@ -74,10 +74,19 @@ class Popups ( HasTraits ):
         PopupSlider( 'fuel' ),
         show_border = True
     )
+    group1 = VGroup(
+        PopupSlider( 'speed' ),
+        PopupSlider( 'distance' ),
+        PopupSlider( 'fuel' ),
+        group_theme = '@std:GL5'
+    )
     
     # Define the demo view:
     traits_view = View(
+        VGroup(
+        HGroup( group1, group1, group1 ), 
         HGroup( group, group, group ) 
+        )
     )
 
 #-- Create and run the demo ----------------------------------------------------
