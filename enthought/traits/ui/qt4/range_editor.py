@@ -476,6 +476,15 @@ class SimpleSliderEditor ( Editor ):
         self.control.slider.blockSignals(blocked)
 
     #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return self.control.text
+
+    #---------------------------------------------------------------------------
     #  Handles the 'low'/'high' traits being changed:
     #---------------------------------------------------------------------------
 
@@ -769,6 +778,15 @@ class LargeRangeSliderEditor ( Editor ):
                                                   int( log10( high - low ) ) )
             else:
                 self._format = '%.3f'
+
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return self.control.text
 
     #---------------------------------------------------------------------------
     #  Handles the 'low'/'high' traits being changed:

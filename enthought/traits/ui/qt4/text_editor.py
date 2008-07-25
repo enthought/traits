@@ -279,28 +279,13 @@ class SimpleEditor ( Editor ):
         self.set_error_state( True )
 
     #---------------------------------------------------------------------------
-    #  Sets the editors current visible error state: 
+    #  Returns whether or not the editor is in an error state:
     #---------------------------------------------------------------------------
 
-    def set_error_state ( self, state ): 
-        """ Sets the editors current visible error state. 
+    def in_error_state ( self ): 
+        """ Returns whether or not the editor is in an error state.
         """ 
-        color = self.ok_color 
-        if state or self.invalid or self._error: 
-            color = ErrorColor 
-             
-        pal = QtGui.QPalette(self.control.palette())
-        pal.setColor(QtGui.QPalette.Base, color)
-        self.control.setPalette(pal)
-
-    #---------------------------------------------------------------------------
-    #  Handles the editor's invalid state changing: 
-    #---------------------------------------------------------------------------
-
-    def _invalid_changed ( self, state ): 
-        """ Handles the editor's invalid state changing. 
-        """ 
-        self.set_error_state( state ) 
+        return (self.invalid or self._error)
 
 #-------------------------------------------------------------------------------
 #  'CustomEditor' class:

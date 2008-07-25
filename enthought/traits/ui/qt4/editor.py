@@ -23,6 +23,9 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import Editor as UIEditor
 
+from constants \
+    import OKColor, ErrorColor
+
 #-------------------------------------------------------------------------------
 #  'Editor' class:
 #-------------------------------------------------------------------------------
@@ -167,6 +170,63 @@ class Editor ( UIEditor ):
                 itm = control.itemAt(i)
                 self._visible_changed_helper((itm.widget() or itm.layout()),
                         visible)
+
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return self.control
+
+    #---------------------------------------------------------------------------
+    #  Returns whether or not the editor is in an error state:
+    #---------------------------------------------------------------------------
+
+    def in_error_state ( self ):
+        """ Returns whether or not the editor is in an error state.
+        """
+        return False
+
+    #---------------------------------------------------------------------------
+    #  Sets the editor's current error state:
+    #---------------------------------------------------------------------------
+
+    def set_error_state ( self, state = None, control = None ):
+        """ Sets the editor's current error state.
+        """
+        if state is None:
+            state = self.invalid
+        state = state or self.in_error_state()
+
+        if control is None:
+            control = self.get_error_control()
+
+        if not isinstance( control, list ):
+            control = [ control ]
+
+        for item in control:
+            pal = QtGui.QPalette(item.palette())
+
+            if state:
+                color = ErrorColor
+                if getattr( item, '_ok_color', None ) is None:
+                    item._ok_color = QtGui.QColor(pal.color(QtGui.QPalette.Base))
+            else:
+                color = getattr( item, '_ok_color', OKColor )
+
+            pal.setColor(QtGui.QPalette.Base, color)
+            item.setPalette(pal)
+
+    #---------------------------------------------------------------------------
+    #  Handles the editor's invalid state changing:
+    #---------------------------------------------------------------------------
+
+    def _invalid_changed ( self, state ):
+        """ Handles the editor's invalid state changing.
+        """
+        self.set_error_state()
 
 #-------------------------------------------------------------------------------
 #  'EditorWithList' class:  

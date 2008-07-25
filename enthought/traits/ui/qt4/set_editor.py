@@ -338,6 +338,15 @@ class SimpleEditor ( Editor ):
         super( SimpleEditor, self ).dispose()
 
     #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return [ self._unused, self._used ]
+
+    #---------------------------------------------------------------------------
     #  Event handlers:  
     #---------------------------------------------------------------------------
                       

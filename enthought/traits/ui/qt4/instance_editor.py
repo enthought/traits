@@ -519,7 +519,16 @@ class CustomEditor ( Editor ):
         """
         pass
 
-#-- UI preference save/restore interface ---------------------------------------
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return (self._choice or self.control)
+
+    #-- UI preference save/restore interface -----------------------------------
 
     #---------------------------------------------------------------------------
     #  Restores any saved user preference information associated with the 

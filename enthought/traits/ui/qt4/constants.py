@@ -27,7 +27,6 @@ _palette = QtGui.QApplication.palette()
 # Default dialog title
 DefaultTitle = 'Edit properties'
 
-# FIXME: Check which of these colours are really needed.
 # Color of valid input
 OKColor = _palette.color(QtGui.QPalette.Base)
 

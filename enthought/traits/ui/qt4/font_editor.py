@@ -267,6 +267,15 @@ class CustomFontEditor ( Editor ):
         """
         return self.factory.str_font( font ) 
 
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return [ self._font, self._facename, self._point_size ]
+
     #-- Private Methods --------------------------------------------------------
 
     def _set_font ( self, font ):

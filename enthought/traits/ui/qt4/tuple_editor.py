@@ -86,8 +86,8 @@ class SimpleEditor ( Editor ):
             widget.
         """
         self._ts     = ts = TupleStructure( self )
-        ui           = ts.view.ui( ts, parent, kind = 'subpanel' ).set(
-                                   parent = self.ui )
+        self._ui     = ui = ts.view.ui( ts, parent, kind = 'subpanel' ).set(
+                                        parent = self.ui )
         self.control = ui.control
         self.set_tooltip()
         
@@ -102,7 +102,16 @@ class SimpleEditor ( Editor ):
         ts = self._ts
         for i, value in enumerate( self.value ):
             setattr( ts, 'f%d' % i, value ) 
-            
+
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return self._ui.get_error_controls()
+
 #-------------------------------------------------------------------------------
 #  'TupleStructure' class:
 #-------------------------------------------------------------------------------

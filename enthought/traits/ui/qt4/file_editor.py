@@ -198,6 +198,15 @@ class SimpleEditor ( SimpleTextEditor ):
                 self.value = file_name
                 self.update_editor()
 
+    #---------------------------------------------------------------------------
+    #  Returns the editor's control for indicating error status:
+    #---------------------------------------------------------------------------
+
+    def get_error_control ( self ):
+        """ Returns the editor's control for indicating error status.
+        """
+        return self._file_name
+
     #-- Private Methods --------------------------------------------------------
 
     def _create_file_dialog ( self ):
