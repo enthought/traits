@@ -30,10 +30,10 @@ from helper \
     import enum_values_changed
     
 from editor_factory \
-    import EditorFactory
+    import EditorWithListFactory
     
 from enthought.traits.api \
-    import Any, Range, Enum, Str, Trait, Event, Property, Bool
+    import Any, Range, Enum, Str, Trait, Property, Bool
            
 from enthought.traits.ui.ui_traits \
     import SequenceTypes
@@ -49,7 +49,7 @@ Mode = Enum( 'radio', 'list' )
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
 
-class ToolkitEditorFactory ( EditorFactory ):
+class ToolkitEditorFactory ( EditorWithListFactory ):
     """ PyQt editor factory for enumeration editors.
     """
     
@@ -57,13 +57,6 @@ class ToolkitEditorFactory ( EditorFactory ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
     
-    # Values to enumerate (can be a list, tuple, dict, or a CTrait or 
-    # TraitHandler that is "mapped"):
-    values = Any    
-                              
-    # Extended name of the trait on **object** containing the enumeration data:
-    name = Str
-                              
     # (Optional) Function used to evaluate text input:
     evaluate = Any 
 
@@ -75,22 +68,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     
     # Display modes supported for a custom style editor:
     mode = Mode           
-    
-    # Fired when the **values** trait has been updated:
-    values_modified = Event 
-    
-    #---------------------------------------------------------------------------
-    #  Recomputes the mappings whenever the 'values' trait is changed:
-    #---------------------------------------------------------------------------
-     
-    def _values_changed ( self ):
-        """ Recomputes the mappings whenever the **values** trait is changed.
-        """
-        self._names, self._mapping, self._inverse_mapping = \
-            enum_values_changed( self.values )
-            
-        self.values_modified = True
-    
+
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
