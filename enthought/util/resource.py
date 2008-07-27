@@ -161,9 +161,15 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
 
 def store_resource(project, resource_path, filename):
-    """
-        Store the resource into a file 'filename'.  The arguments
-        project and resource_path are the same as for find_resource.
+    """ Store the content of a resource, given by the name of the projet
+        and the path (relative to the root of the project), into a newly
+        created file.
+        
+        The first two arguments (project and resource_path) are the same
+        as for the function find_resource in this module.  The third
+        argument (filename) is the name of the file which will be created,
+        or overwritten if it already exists.
+        The return value in always None.
     """
     fi = find_resource(project, resource_path)
     
