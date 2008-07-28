@@ -177,5 +177,7 @@ def store_resource(project, resource_path, filename):
     fo.write(fi.read())
     fo.close()
     
+    fi.close()
+    
 
 #### EOF ######################################################################
