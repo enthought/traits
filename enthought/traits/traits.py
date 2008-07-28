@@ -924,6 +924,7 @@ class _TraitMaker ( object ):
             post_setattr = getattr( handler, 'post_setattr', None )
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
+                trait.is_mapped( handler.is_mapped )
 
         trait.rich_comparison( metadata.get( 'rich_compare', True  ) is True )
         trait.value_allowed(   metadata.get( 'trait_value',  False ) is True )

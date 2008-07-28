@@ -202,6 +202,9 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 /* Is this trait a special 'TraitValue' trait that uses a property? */
 #define TRAIT_VALUE_PROPERTY 0x00000040
 
+/* Does this trait have an associated 'mapped' trait? */
+#define TRAIT_IS_MAPPED 0x00000080
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -1679,7 +1682,8 @@ getattr_trait ( trait_object      * trait,
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
                 
                 rc = 0;
-                if ( trait->post_setattr != NULL )
+                if ( (trait->post_setattr != NULL) &&
+                     ((trait->flags & TRAIT_IS_MAPPED) == 0) )
                     rc = trait->post_setattr( trait, obj, name, result );
             
                 if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
@@ -1715,7 +1719,8 @@ getattr_trait ( trait_object      * trait,
         if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
             
             rc = 0;
-            if ( trait->post_setattr != NULL )
+            if ( (trait->post_setattr != NULL) &&
+                 ((trait->flags & TRAIT_IS_MAPPED) == 0) )
                 rc = trait->post_setattr( trait, obj, name, result );
             
             if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
@@ -4324,6 +4329,29 @@ _trait_post_setattr_original_value ( trait_object * trait, PyObject * args ) {
 }    
 
 /*-----------------------------------------------------------------------------
+|  Sets the value of the 'is_mapped' flag of a CTrait instance (used in the 
+|  processing of the default value of a trait with a 'post_settattr' handler):
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_is_mapped ( trait_object * trait, PyObject * args ) {
+ 
+    int is_mapped;
+    
+    if ( !PyArg_ParseTuple( args, "i", &is_mapped ) ) 
+        return NULL;
+        
+    if ( is_mapped != 0 ) {
+        trait->flags |= TRAIT_IS_MAPPED;
+    } else {
+        trait->flags &= (~TRAIT_IS_MAPPED);
+    }
+    
+    Py_INCREF( trait );
+    return (PyObject *) trait;
+}    
+
+/*-----------------------------------------------------------------------------
 |  Sets the 'property' value fields of a CTrait instance:
 +----------------------------------------------------------------------------*/
 
@@ -4682,6 +4710,8 @@ static PyMethodDef trait_methods[] = {
 	{ "post_setattr_original_value",  
         (PyCFunction) _trait_post_setattr_original_value,  METH_VARARGS,
 	 	PyDoc_STR( "post_setattr_original_value(original_value_boolean)" ) },
+	{ "is_mapped", (PyCFunction) _trait_is_mapped,  METH_VARARGS,
+	 	PyDoc_STR( "is_mapped(is_mapped_boolean)" ) },
 	{ "property",      (PyCFunction) _trait_property,      METH_VARARGS,
 	 	PyDoc_STR( "property([get,set,validate])" ) },
 	{ "clone",         (PyCFunction) _trait_clone,         METH_VARARGS,
