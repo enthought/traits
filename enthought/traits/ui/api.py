@@ -39,7 +39,7 @@ from ui_info \
     import UIInfo
 
 from ui_traits \
-    import Border, Margin, StatusItem
+    import Border, Margin, HasMargin, HasBorder, StatusItem, Image, ATheme
 
 from help \
     import on_help_call
