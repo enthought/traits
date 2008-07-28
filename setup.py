@@ -42,7 +42,7 @@ from setuptools import setup, Extension, find_packages
 from setuptools.command.develop import develop
 from distutils.command.build import build as distbuild
 from distutils import log
-from pkg_resources import require, DistributionNotFound
+from pkg_resources import DistributionNotFound, parse_version, require, VersionConflict 
 
 from setup_data import INFO
 from make_docs import HtmlBuild
@@ -102,44 +102,56 @@ TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 def generate_docs():
     """ If sphinx is installed, generate docs.
     """
-    doc_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)),'docs',
-        'source')
-    html_zip = os.path.join(os.path.abspath(os.path.dirname(__file__)),'docs',
-        'html.zip')
-    dest_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-        'docs')
-
+    doc_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'docs')
+    source_dir = os.path.join(doc_dir, 'source')
+    html_zip = os.path.join(doc_dir,  'html.zip')
+    dest_dir = doc_dir
+    
+    required_sphinx_version = "0.4.1"
+    sphinx_installed = False
     try:
-        require("Sphinx>=0.4.1")
-
-        log.info("Auto-generating documentation in %s/html" % dest_dir)
-        doc_src = doc_dir
+        require("Sphinx>=%s" % required_sphinx_version)
+        sphinx_installed = True
+    except (DistributionNotFound, VersionConflict):
+        log.warn('Sphinx install of version %s could not be verified.'
+                    ' Trying simple import...' % required_sphinx_version)
+        try:
+            import sphinx
+            if parse_version(sphinx.__version__) < parse_version(required_sphinx_version):
+                log.error("Sphinx version must be >=%s." % required_sphinx_version)
+            else:
+                sphinx_installed = True
+        except ImportError:
+            log.error("Sphnix install not found.")
+    
+    if sphinx_installed:             
+        log.info("Generating %s documentation..." % INFO['name'])
+        docsrc = source_dir
         target = dest_dir
+        
         try:
             build = HtmlBuild()
             build.start({
                 'commit_message': None,
-                'doc_source': doc_src,
+                'doc_source': docsrc,
                 'preserve_temp': True,
                 'subversion': False,
                 'target': target,
                 'verbose': True,
-                'versioned': False,
+                'versioned': False
                 }, [])
             del build
+            
         except:
-            log.error("The documentation generation failed."
-                " Installing from zip file.")
-
+            log.error("The documentation generation failed.  Falling back to "
+                      "the zip file.")
+            
             # Unzip the docs into the 'html' folder.
-            unzip_html_docs(html_zip, dest_dir)
-
-    except DistributionNotFound:
-        log.error("Sphinx is not installed, so the documentation could not be "
-            "generated.  Installing from zip file...")
-
+            unzip_html_docs(html_zip, doc_dir)
+    else:
         # Unzip the docs into the 'html' folder.
-        unzip_html_docs(html_zip, dest_dir)
+        log.info("Installing %s documentaion from zip file.\n" % INFO['name'])
+        unzip_html_docs(html_zip, doc_dir)
 
 def unzip_html_docs(src_path, dest_dir):
     """ Given a path to a zipfile, extract its contents to a given 'dest_dir'.
