@@ -43,7 +43,7 @@ TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 setup(
     author = 'Phil Thompson',
     author_email = 'phil@riverbankcomputing.co.uk',
-    classifiers = """\
+    classifiers = [c.strip() for c in """\
         Development Status :: 5 - Production/Stable
         Intended Audience :: Developers
         Intended Audience :: Science/Research
@@ -57,11 +57,11 @@ setup(
         Topic :: Scientific/Engineering
         Topic :: Software Development
         Topic :: Software Development :: Libraries
-        """.splitlines(),
+        """.splitlines()],
     dependency_links = [
          'http://code.enthought.com/enstaller/eggs/source',
          ],
-    description = DOCLINES[0],
+    description = DOCLINES[1],
     extras_require = {
 
         # Extra denoting that complete developer debug support for the ETS FBI
@@ -82,7 +82,7 @@ setup(
         TRAITSGUI,
         ],
     license = 'GPL',
-    long_description = '\n'.join(DOCLINES[2:]),
+    long_description = '\n'.join(DOCLINES[3:]),
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     name = 'TraitsBackendQt',
