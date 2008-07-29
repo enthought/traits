@@ -1,0 +1,75 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+    Eclipse: Eclipse Publishing License
+    Enthought: BSD 3-Clause
+    Nuvola: LGPL license as described in icon_Nuvola_LICENSE.txt
+
+Unless stated in this file, icons are the work of Enthought, and are released
+under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------
+enthought/traits/ui/images:
+                     array_node.png | Enthought
+                      bool_node.png | Enthought
+                     class_node.png | Eclipse
+                   complex_node.png | Enthought
+                 dialog_warning.png | Nuvola
+                      dict_node.png | Enthought
+                     float_node.png | Enthought
+                     folder-new.png | Nuvola
+                  function_node.png | Eclipse
+                       int_node.png | Enthought
+                      list_node.png | Enthought
+                    method_node.png | Eclipse
+                      none_node.png | Nuvola
+                    object_node.png | Eclipse
+                     other_node.png | Enthought
+                       set_node.png | Enthought
+            std_horizontal_drag.png | Enthought
+        std_horizontal_splitter.png | Enthought
+                 std_tab_active.png | Enthought
+             std_tab_background.png | Enthought
+                  std_tab_hover.png | Enthought
+               std_tab_inactive.png | Enthought
+                        std_tab.png | Enthought
+              std_vertical_drag.png | Enthought
+          std_vertical_splitter.png | Enthought
+                    string_node.png | Enthought
+                    traits_node.png | Eclipse
+                     tuple_node.png | Enthought
+examples/demo/:
+                 traits_ui_demo.jpg | Enthought
+examples/demo/Advanced/images:
+                       red_flag.png | Nuvola
+examples/demo/Applications/images:
+                      blue_ball.png | Nuvola
+                            GG5.png | Enthought
+                         header.png | Enthought
+                 notebook_close.png | Enthought
+                  notebook_open.png | Enthought
+                       red_ball.png | Enthought
+                            TFB.png | Enthought
+examples/demo/Extras/images:
+                           info.png | Enthought
+                     logo_32x32.gif | Enthought
+                     logo_48x48.gif | Enthought
+                     logo_64x64.gif | Enthought
+examples/demo/Standard Editors/images:
+             bottom_left_origin.gif | Enthought
+            bottom_right_origin.gif | Enthought
+                top_left_origin.gif | Enthought
+               top_right_origin.gif | Enthought
+examples/demo/Standard Editors/Popup_versions/images:
+             bottom_left_origin.gif | Enthought
+            bottom_right_origin.gif | Enthought
+                top_left_origin.gif | Enthought
+               top_right_origin.gif | Enthought
+examples/tutorials/images:
+			         next.png | Nuvola
+                         parent.png | Nuvola
+                       previous.png | Nuvola
+                         reload.png | Nuvola
+                            run.png | Nuvola
+
