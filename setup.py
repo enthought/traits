@@ -185,7 +185,7 @@ setup(
     author = 'David C. Morrill, et. al.',
     author_email = 'dmorrill@enthought.com',
     classifiers = """\
-        Development Status :: 4 - Production/Stable
+        Development Status :: 5 - Production/Stable
         Intended Audience :: Developers
         Intended Audience :: Science/Research
         License :: OSI Approved :: BSD License
