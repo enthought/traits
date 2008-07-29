@@ -5,9 +5,11 @@
 #
 
 """
-PyQt backend for Traits and Pyface.
+PyQt backend for Traits and TraitsGUI (Pyface).
 
-<description text needed>
+The TraitsBackendQt project contains an implementation of TraitsGUI using PyQt.
+It provides Qt-based support for visualization and editing of Traits-based
+objects.
 """
 
 
