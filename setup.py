@@ -44,7 +44,7 @@ setup(
     author = 'Phil Thompson',
     author_email = 'phil@riverbankcomputing.co.uk',
     classifiers = """\
-        Development Status :: 4 - Production/Stable
+        Development Status :: 5 - Production/Stable
         Intended Audience :: Developers
         Intended Audience :: Science/Research
         License :: OSI Approved :: GNU General Public License (GPL)
