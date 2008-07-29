@@ -1,4 +1,21 @@
+#!/usr/bin/env python
+#
+# Copyright (c) 2008 by Enthought, Inc.
+# All rights reserved.
+#
+
+"""
+PyQt backend for Traits and Pyface.
+
+<description text needed>
+"""
+
+
 from setuptools import setup, find_packages
+
+
+# Pull the description values for the setup keywords from our file docstring.
+DOCLINES = __doc__.split("\n")
 
 
 # Function to convert simple ETS project names and versions to a requirements
@@ -17,54 +34,73 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies:
-ENTHOUGHTBASE      = etsdep( 'EnthoughtBase',       '3.0.0b1' )
-DEVTOOLS_DEVELOPER = etsdep( 'DevTools[developer]', '3.0.0b1' )  
-TRAITS             = etsdep( 'Traits',              '3.0.0b1' )
-TRAITSGUI          = etsdep( 'TraitsGUI',           '3.0.0b1' )
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
+DEVTOOLS_DEVELOPER = etsdep('DevTools[developer]', '3.0.0b1')
+TRAITS = etsdep('Traits', '3.0.0b1')
+TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 
 
 setup(
-    author           = 'Phil Thompson',
-    author_email     = 'phil@riverbankcomputing.co.uk',
-    dependency_links = [ 'http://code.enthought.com/enstaller/eggs/source', ],
-    description      = 'PyQt backend for Traits and Pyface.',
-    
+    author = 'Phil Thompson',
+    author_email = 'phil@riverbankcomputing.co.uk',
+    classifiers = """\
+        Development Status :: 4 - Production/Stable
+        Intended Audience :: Developers
+        Intended Audience :: Science/Research
+        License :: OSI Approved :: GNU General Public License (GPL)
+        Operating System :: MacOS
+        Operating System :: Microsoft :: Windows
+        Operating System :: OS Independent
+        Operating System :: POSIX
+        Operating System :: Unix
+        Programming Language :: Python
+        Topic :: Scientific/Engineering
+        Topic :: Software Development
+        Topic :: Software Development :: Libraries
+        """.splitlines(),
+    dependency_links = [
+         'http://code.enthought.com/enstaller/eggs/source',
+         ],
+    description = DOCLINES[0],
     extras_require = {
-        
+
         # Extra denoting that complete developer debug support for the ETS FBI
         # debugger should be installed:
         'debug': [
             DEVTOOLS_DEVELOPER,
-        ],
+            ],
 
         # All non-ets dependencies should be in this extra to ensure users can
         # decide whether to require them or not.
         'nonets': [
-        ],
-    },
-    
+            ],
+        },
+    include_package_data = True,
     install_requires = [
         ENTHOUGHTBASE,
         TRAITS,
         TRAITSGUI,
-    ],
-    
-    include_package_data = True,
-    license              = 'GPL',
-    name                 = 'TraitsBackendQt',
+        ],
+    license = 'GPL',
+    long_description = '\n'.join(DOCLINES[2:]),
+    maintainer = 'ETS Developers',
+    maintainer_email = 'enthought-dev@enthought.com',
+    name = 'TraitsBackendQt',
     namespace_packages   = [
         "enthought",
         "enthought.pyface",
         "enthought.pyface.ui",
         "enthought.traits",
         "enthought.traits.ui",
-    ],
-    packages      = find_packages(),
+        ],
+    packages = find_packages(),
+    platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     tests_require = [
         'nose >= 0.10.3',
-    ],
+        ],
     # test_suite = 'nose.collector',
-    url        = 'http://code.enthought.com/ets',
-    version    = '3.0.0b1',
-    zip_safe   = False,
-)
+    url = 'http://code.enthought.com/ets',
+    version = '3.0.0b1',
+    zip_safe = False,
+    )
+
