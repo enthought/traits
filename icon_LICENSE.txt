@@ -1,0 +1,16 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+    Crystal Project Icons: LGPL license as described in icon_OOo_LICENSE.txt
+
+Unless stated in this file, icons are work of enthought, and are released
+under BSD-like license.
+
+Files and orginal authors:
+----------------------------------------------------------------
+enthought/logger/widget/images:
+about.png                 Crystal Project Icons
+bug_yellow.png            Crystal Project Icons
+crit_error.png            Crystal Project Icons
+error.png                 Crystal Project Icons
+warning.png               Crystal Project Icons
