@@ -5,31 +5,36 @@
 #
 
 """
-Explicitly typed Python attributes package.
+Explicitly typed attributes for Python.
 
-The Traits package is at the center of all ETS development and has changed the
-mental model we use for programming in the already extremely efficient Python
-programming language. We encourage everyone to join us in enjoying the
-productivity gains from using such a powerful approach.
+The Traits project is at the center of all Enthought Tool Suite development 
+and has changed the mental model used at Enthought for programming in the
+already extremely efficient Python programming language. We encourage everyone
+to join us in enjoying the productivity gains from using such a powerful
+approach.
 
-A trait is a type definition that can be used for normal Python object
-attributes, giving the attributes some additional characteristics:
-
-    * Initialization: A trait has a default value, which is automatically set
-      as the initial value of an attribute before its first use in a program.
-    * Validation: A trait attribute's type is explicitly declared . The type is
-      evident in the code, and only values that meet a programmer-specified set
-      of criteria (i.e., the trait definition) can be assigned to that
-      attribute. Note that the default value need not meet the criteria defined
-      for assignment of values.
-    * Delegation: The value of a trait attribute can be contained either in the
-      defining object or in another object delegated to by the trait.
-    * Notification: Setting the value of a trait attribute can notify other
-      parts of the program that the value has changed.
-    * Visualization: User interfaces that allow a user to interactively modify
-      the value of a trait attribute can be automatically constructed using the
-      trait's definition.
-
+The Traits project allows Python programmers to use a special kind of type 
+definition called a *trait*, which gives object attributes some additional 
+characteristics:
+    
+- **Initialization**: A trait has a *default value*, which is 
+  automatically set as the initial value of an attribute before its
+  first use in a program.
+- **Validation**: A trait attribute's type is *explicitly declared*. The
+  type is evident in the code, and only values that meet a  
+  programmer-specified set of criteria (i.e., the trait definition) can 
+  be assigned to that attribute. 
+- **Delegation**: The value of a trait attribute can be contained either
+  in the defining object or in another object *delegated* to by the
+  trait.
+- **Notification**: Setting the value of a trait attribute can *notify* 
+  other parts of the program that the value has changed.
+- **Visualization**: User interfaces that allow a user to *interactively 
+  modify* the value of a trait attribute can be automatically 
+  constructed using the trait's definition. (This feature requires that 
+  a supported GUI toolkit be installed. If this feature is not used, the
+  Traits project does not otherwise require GUI support.)
+  
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
 within the class. Trait attributes defined by a classs are automatically
