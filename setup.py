@@ -42,7 +42,7 @@ from setuptools import setup, Extension, find_packages
 from setuptools.command.develop import develop
 from distutils.command.build import build as distbuild
 from distutils import log
-from pkg_resources import DistributionNotFound, parse_version, require, VersionConflict 
+from pkg_resources import DistributionNotFound, parse_version, require, VersionConflict
 
 from setup_data import INFO
 from make_docs import HtmlBuild
@@ -106,7 +106,7 @@ def generate_docs():
     source_dir = os.path.join(doc_dir, 'source')
     html_zip = os.path.join(doc_dir,  'html.zip')
     dest_dir = doc_dir
-    
+
     required_sphinx_version = "0.4.1"
     sphinx_installed = False
     try:
@@ -123,12 +123,12 @@ def generate_docs():
                 sphinx_installed = True
         except ImportError:
             log.error("Sphnix install not found.")
-    
-    if sphinx_installed:             
+
+    if sphinx_installed:
         log.info("Generating %s documentation..." % INFO['name'])
         docsrc = source_dir
         target = dest_dir
-        
+
         try:
             build = HtmlBuild()
             build.start({
@@ -141,11 +141,11 @@ def generate_docs():
                 'versioned': False
                 }, [])
             del build
-            
+
         except:
             log.error("The documentation generation failed.  Falling back to "
                       "the zip file.")
-            
+
             # Unzip the docs into the 'html' folder.
             unzip_html_docs(html_zip, doc_dir)
     else:
@@ -204,6 +204,9 @@ setup(
         'develop': my_develop,
         'build': my_build
         },
+    dependency_links = [
+        'http://code.enthought.com/enstaller/eggs/source',
+        ],
     description = DOCLINES[0],
     extras_require = {
 
@@ -250,7 +253,7 @@ setup(
         ],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[2:]),
-    maintainer = 'Traits Developers',
+    maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     name = 'Traits',
     namespace_packages = [
@@ -272,5 +275,5 @@ setup(
     url = 'http://code.enthought.com/traits',
     version = INFO['version'],
     zip_safe = False,
-)
+    )
 
