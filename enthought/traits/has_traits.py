@@ -3628,11 +3628,14 @@ class HasTraits ( CHasTraits ):
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
         """
+        name_pattern    = self._trait_delegate_name( name, pattern )
+        target_name_len = len( name_pattern.split( ':' )[-1] )
+        
         def notify ( object, notify_name, old, new ):
-            self.trait_property_changed( notify_name, old, new )
+            self.trait_property_changed( name + notify_name[ target_name_len: ], 
+                                         old, new )
             
-        self.on_trait_change( notify, 
-                              self._trait_delegate_name( name, pattern ) )
+        self.on_trait_change( notify, name_pattern )
         self.__dict__.setdefault( ListenerTraits, {} )[ name ] = notify
         
     def _remove_trait_delegate_listener ( self, name, remove ):
@@ -3665,7 +3668,7 @@ class HasTraits ( CHasTraits ):
             delegate.
         """
         if pattern[-1] == '*':
-            pattern = '%s:%s%s' % ( pattern[:-1], self.__class__.__prefix__,
+            pattern = '%s%s%s' % ( pattern[:-1], self.__class__.__prefix__,
                                     name )
                                     
         return pattern 
