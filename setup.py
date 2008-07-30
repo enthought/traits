@@ -7,34 +7,34 @@
 """
 Explicitly typed attributes for Python.
 
-The Traits project is at the center of all Enthought Tool Suite development 
+The Traits project is at the center of all Enthought Tool Suite development
 and has changed the mental model used at Enthought for programming in the
 already extremely efficient Python programming language. We encourage everyone
 to join us in enjoying the productivity gains from using such a powerful
 approach.
 
-The Traits project allows Python programmers to use a special kind of type 
-definition called a *trait*, which gives object attributes some additional 
+The Traits project allows Python programmers to use a special kind of type
+definition called a *trait*, which gives object attributes some additional
 characteristics:
-    
-- **Initialization**: A trait has a *default value*, which is 
+
+- **Initialization**: A trait has a *default value*, which is
   automatically set as the initial value of an attribute before its
   first use in a program.
 - **Validation**: A trait attribute's type is *explicitly declared*. The
-  type is evident in the code, and only values that meet a  
-  programmer-specified set of criteria (i.e., the trait definition) can 
-  be assigned to that attribute. 
+  type is evident in the code, and only values that meet a
+  programmer-specified set of criteria (i.e., the trait definition) can
+  be assigned to that attribute.
 - **Delegation**: The value of a trait attribute can be contained either
   in the defining object or in another object *delegated* to by the
   trait.
-- **Notification**: Setting the value of a trait attribute can *notify* 
+- **Notification**: Setting the value of a trait attribute can *notify*
   other parts of the program that the value has changed.
-- **Visualization**: User interfaces that allow a user to *interactively 
-  modify* the value of a trait attribute can be automatically 
-  constructed using the trait's definition. (This feature requires that 
+- **Visualization**: User interfaces that allow a user to *interactively
+  modify* the value of a trait attribute can be automatically
+  constructed using the trait's definition. (This feature requires that
   a supported GUI toolkit be installed. If this feature is not used, the
   Traits project does not otherwise require GUI support.)
-  
+
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
 within the class. Trait attributes defined by a classs are automatically
@@ -69,38 +69,6 @@ speedups = Extension(
 
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
-
-
-# Function to convert simple ETS project names and versions to a requirements
-# spec that works for both development builds and stable builds.  Allows
-# a caller to specify a max version, which is intended to work along with
-# Enthought's standard versioning scheme -- see the following write up:
-#    https://svn.enthought.com/enthought/wiki/EnthoughtVersionNumbers
-def etsdep(p, min, max=None, literal=False):
-    require = '%s >=%s.dev' % (p, min)
-    if max is not None:
-        if literal is False:
-            require = '%s, <%s.a' % (require, max)
-        else:
-            require = '%s, <%s' % (require, max)
-    return require
-
-
-# Declare our ETS project dependencies:
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')
-TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.0b1')
-TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
-
-# Notes:
-# - enthought\traits\ui\handler.py and
-#   enthought\traits\ui\dockable_view_element.py depend upon files in
-#   TraitsGUI[dock]. But the dependencies are all due to calls made to those
-#   modules from TraitsGUI[dock] or by features used by TraitsBackendWX. Since
-#   TraitsBackendWX depends upon TraitsGUI[dock], and TraitsGUI[dock] depends
-#   upon Traits, we opt to omit the TraitsGUI[dock] dependency, since in
-#   practice it should not cause any  problems. Leaving the dependency in
-#   pulls the TraitsBackendWX egg in, even if it is not needed.
 
 
 # Methods to allow us to dynamically build html docs from RST sources.
@@ -213,49 +181,10 @@ setup(
         'http://code.enthought.com/enstaller/eggs/source',
         ],
     description = DOCLINES[1],
-    extras_require = {
-
-        # Extra denoting that the standard ETS configuration package should be
-        # used. If omitted, Traits will use its own package local configuration,
-        # which is a subset of ETS Config containing just the parts used by
-        # Traits.  Completely optional, not triggered by any imports.
-        'etsconfig': [
-            ENTHOUGHTBASE,
-            ],
-
-        # Extra denoting that the Traits UI backend for Qt 4.0 should be
-        # installed.  Completely optional, not triggered by any imports
-        'qt4': [
-            TRAITSBACKENDQT,
-            ],
-
-        # The Traits UI package is always installed as part of the Traits core
-        # egg. This is an extra denoting that the Traits UI should be functional
-        # after installation (meaning that all Traits UI modules should load
-        # without getting any import errors). Any actual UI's created will only
-        # work with the default 'null' backend. You must also install one of
-        # the 'real' backends (i.e. 'qt4' or 'wx') if you actually want to
-        # create real user interfaces.
-        'ui': [
-            TRAITSGUI,
-            ],
-
-        # Extra denoting that the Traits UI backend for wxPython should be
-        # installed.  Completely optional, not triggered by any imports.
-        'wx': [
-            TRAITSBACKENDWX,
-            ],
-
-        # All non-ETS dependencies should be in this extra to ensure users can
-        # decide whether to require them or not.
-        'nonets': [
-            'numpy >= 1.0.0',
-            ],
-        },
+    extras_require = INFO['extras_require'],
     ext_modules = [ctraits, speedups],
     include_package_data = True,
-    install_requires = [
-        ],
+    install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
     maintainer = 'ETS Developers',
