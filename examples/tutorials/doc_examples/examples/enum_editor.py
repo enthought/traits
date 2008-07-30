@@ -6,7 +6,7 @@ from enthought.traits.ui.api import EnumEditor
 
 #--[Code]-----------------------------------------------------------------------
 
-Class EnumExample(HasTraits):
+class EnumExample(HasTraits):
     priority = Enum('Medium', 'Highest', 
                               'High', 
                               'Medium', 

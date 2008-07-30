@@ -4,7 +4,7 @@
 from enthought.traits.api import HasTraits, Range
 
 #--[Code]-----------------------------------------------------------------------
-coefficient = Range(-1.0, 1.0, 0.0))
+coefficient = Range(-1.0, 1.0, 0.0)
 
 class quadratic(HasTraits):
     c2 = coefficient
