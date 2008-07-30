@@ -1,0 +1,21 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+Project                 License                   File
+----------------------------------------------------------------------------
+Enthought               BSD 3-Clause              LICENSE.txt
+Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
+
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------------------
+examples/demo/Applications/images:
+                      blue_ball.png | Nuvola
+                            GG5.png | Enthought
+                         header.png | Enthought
+                 notebook_close.png | Enthought
+                  notebook_open.png | Enthought
+                       red_ball.png | Enthought
+                            TFB.png | Enthought
