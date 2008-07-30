@@ -1,15 +1,17 @@
 The icons are mostly derived work from other icons. As such they are
 licensed accordingly to the original license:
 
-    Eclipse: Eclipse Publishing License
-    Enthought: BSD 3-Clause
-    Nuvola: LGPL license as described in icon_Nuvola_LICENSE.txt
+Project                 License                   File
+----------------------------------------------------------------------------
+Eclipse                 Eclipse Public License    icon_Eclipse_LICENSE.txt
+Enthought               BSD 3-Clause              LICENSE.txt
+Nuvola                  LGPL                      icon_Nuvola_LICENSE.txt
 
-Unless stated in this file, icons are the work of Enthought, and are released
-under a 3 clause BSD license.
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
 
 Files and orginal authors:
-----------------------------------------------------------------
+----------------------------------------------------------------------------
 enthought/traits/ui/images:
                      array_node.png | Enthought
                       bool_node.png | Enthought
@@ -72,4 +74,3 @@ examples/tutorials/images:
                        previous.png | Nuvola
                          reload.png | Nuvola
                             run.png | Nuvola
-
