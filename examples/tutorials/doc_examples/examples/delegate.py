@@ -2,6 +2,7 @@
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import DelegatesTo, HasTraits, Instance, Str
+from enthought.traits.api import TraitError
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):
@@ -30,8 +31,15 @@ print tony.last_name
 #Output: Cooper
 
 # Validation is still controlled by the father's 'last_name' trait
-sally.last_name = sally.mother # ERR: string expected
+print 'Attemping to assign a Parent object to a Str trait...\n'
+try:
+    sally.last_name = sally.mother # ERR: string expected
+except TraitError, c:
+    print 'TraitError: ', c
+    
 """
+The exception printed will look similar to the following:
+
 Traceback (most recent call last):
   File "<stdin>", line 1, in ?
   File "c:\src\trunk\enthought\traits\trait_handlers.py", line 163, in error
