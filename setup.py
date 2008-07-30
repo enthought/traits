@@ -38,37 +38,6 @@ import zipfile
 DOCLINES = __doc__.split("\n")
 
 
-# NOTE: EnthoughtBase should *never* depend on another ETS project!  We need
-# to fix the below ASAP!
-
-# Function to convert simple ETS project names and versions to a requirements
-# spec that works for both development builds and stable builds.  Allows
-# a caller to specify a max version, which is intended to work along with
-# Enthought's standard versioning scheme -- see the following write up:
-#    https://svn.enthought.com/enthought/wiki/EnthoughtVersionNumbers
-def etsdep(p, min, max=None, literal=False):
-    require = '%s >=%s.dev' % (p, min)
-    if max is not None:
-        if literal is False:
-            require = '%s, <%s.a' % (require, max)
-        else:
-            require = '%s, <%s' % (require, max)
-    return require
-
-
-# Declare our ETS project dependencies.
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- all from logger.(plugin|agent|widget)
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- all from logger.plugin
-TRAITS = etsdep('Traits', '3.0.0b1')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- only from e.util.traits.editor.parameter_choice_editor.py
-TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')  # -- from logger.(agent|plugin|widget)
-TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
-
-# The following "soft dependencies" are wrapped in try..except blocks
-#APPTOOLS -- util/wx/drag_and_drop
-#SCIMATH -- util/wx/spreadsheet/unit_renderer.py
-
-
 # Functions to build docs from source when building this project.
 def generate_docs():
     """ If sphinx is installed, generate docs.
@@ -180,42 +149,13 @@ setup(
         'http://code.enthought.com/enstaller/eggs/source',
         ],
     description = DOCLINES[1],
-    extras_require = {
-        'agent': [
-            ENVISAGECORE,
-            TRAITS,
-            TRAITSGUI,
-            ],
-        'distribution': [
-            TRAITS_UI,
-            ],
-        'envisage': [
-            ENVISAGECORE,
-            ENVISAGEPLUGINS,
-            TRAITSGUI,
-            TRAITS_UI,
-            ],
-        'traits': [
-            TRAITS,
-            TRAITSBACKENDWX,
-            ],
-        'ui': [    # -- this includes util.ui.* and util.wx.* (see extras.map)
-            TRAITSGUI,
-            TRAITS_UI,
-            ],
-
-        # All non-ets dependencies should be in this extra to ensure users can
-        # decide whether to require them or not.
-        'nonets': [
-            ],
-        },
+    extras_require = INFO['extras_require'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     include_package_data = True,
-    install_requires = [
-        ],
+    install_requires = INFO['install_requires'],
     name = 'EnthoughtBase',
     namespace_packages = [
         "enthought",
