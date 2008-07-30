@@ -687,24 +687,22 @@ class MetaInterface ( MetaHasTraits, InterfaceClass ):
         This combines trait and PyProtocols functionality.
     """
 
-    def __init__(self, __name__, __bases__, __dict__):
+    def __init__ ( self, __name__, __bases__, __dict__ ):
         """ This method is copied over from PyProtocols 'AbstractBaseMets'.
 
-        It is needed here to make sure that we don't add any implied protocols
-        for *our* 'Interface' class (since PyProtocols doesn't know about it.
-
+            It is needed here to make sure that we don't add any implied 
+            protocols for *our* 'Interface' class (since PyProtocols doesn't 
+            know about it.
         """
 
-        type.__init__(self, __name__, __bases__, __dict__)
-        Protocol.__init__(self)
+        type.__init__( self, __name__, __bases__, __dict__ )
+        Protocol.__init__( self )
 
         for base in __bases__:
-            if isinstance(base, InterfaceClass) and base is not Interface:
-                self.addImpliedProtocol(base)
-
-        return
+            if isinstance( base, InterfaceClass ) and (base is not Interface):
+                self.addImpliedProtocol( base )
     
-    def __call__( self, *args, **kw ):
+    def __call__ ( self, *args, **kw ):
         """ This method is copied over from the PyProtocols 'InterfaceClass'
             (and cleaned up a little). It is needed here because:
 
@@ -718,17 +716,12 @@ class MetaInterface ( MetaHasTraits, InterfaceClass ):
         
         return type.__call__( self, *args, **kw )
 
-    def getBases(self):
+    def getBases ( self ):
         """ Overridden to make sure we don't return our 'Interface' class. """
 
-        bases = [
-            base for base in self.__bases__
-
-            if isinstance(base, InterfaceClass) and base is not Interface
-        ]
-
-        return bases
-
+        return [ base for base in self.__bases__
+                 if isinstance( base, InterfaceClass ) and
+                    (base is not Interface) ]
 
 #-------------------------------------------------------------------------------
 #  'MetaHasTraitsObject' class:
@@ -3636,7 +3629,7 @@ class HasTraits ( CHasTraits ):
         """ Sets up the listener for a delegate trait.
         """
         def notify ( object, notify_name, old, new ):
-            self.trait_property_changed( name, old, new )
+            self.trait_property_changed( notify_name, old, new )
             
         self.on_trait_change( notify, 
                               self._trait_delegate_name( name, pattern ) )

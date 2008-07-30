@@ -2549,8 +2549,11 @@ class TraitListObject ( list ):
                     value = validate( object, self.name, value )
                 list.append( self, value )
                 if self.name_items is not None:
-                    setattr( object, self.name_items,
-                            TraitListEvent( len( self ) - 1, None, [ value ] ) )
+                    object.trait_items_event( self.name_items,
+                        TraitListEvent( len( self ) - 1, None, [ value ] ),
+                        trait.items_event() )
+                    #setattr( object, self.name_items,
+                    #        TraitListEvent( len( self ) - 1, None, [ value ] ) )
                 return
                 
             except TraitError, excp:

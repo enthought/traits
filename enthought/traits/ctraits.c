@@ -264,6 +264,18 @@ static int trait_property_changed ( has_traits_object * obj,
                                     PyObject          * old_value, 
                                     PyObject          * new_value );
 
+static int setattr_event ( trait_object      * traito, 
+                           trait_object      * traitd, 
+                           has_traits_object * obj, 
+                           PyObject          * name,
+                           PyObject          * value );
+
+static int setattr_disallow ( trait_object      * traito, 
+                              trait_object      * traitd, 
+                              has_traits_object * obj, 
+                              PyObject          * name,
+                              PyObject          * value );
+
 /*-----------------------------------------------------------------------------
 |  Raise a TraitError:
 +----------------------------------------------------------------------------*/
@@ -286,6 +298,7 @@ static int
 fatal_trait_error ( void ) {
     
     PyErr_SetString( TraitError, "Non-trait found in trait dictionary" );
+    
     return -1;
 }
 
@@ -311,6 +324,18 @@ bad_trait_error ( void ) {
     PyErr_SetString( TraitError, "Invalid argument to trait constructor." );
     
     return -1;
+}
+
+/*-----------------------------------------------------------------------------
+|  Raise an "cant set items error" error:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+cant_set_items_error ( void ) {
+    
+    PyErr_SetString( TraitError, "Can not set a collection's '_items' trait." );
+    
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1311,6 +1336,63 @@ _has_traits_property_changed ( has_traits_object * obj, PyObject * args ) {
 }
 
 /*-----------------------------------------------------------------------------
+|  Handles firing a traits 'xxx_items' event:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_has_traits_items_event ( has_traits_object * obj, PyObject * args ) {
+    
+    PyObject * name;
+    PyObject * event_object;
+    PyObject * event_trait;
+    PyObject * result;
+    trait_object * trait;
+    int can_retry = 1;
+    
+	if ( !PyArg_ParseTuple( args, "OOO", &name, &event_object, &event_trait ) ) 
+        return NULL;
+    
+    if ( !PyTrait_CheckExact( event_trait ) ) { 
+        bad_trait_value_error();
+        return NULL;
+    }
+    
+    if ( !PyString_Check( name ) ) { 
+        invalid_attribute_error();
+        return NULL;
+    }
+retry:    
+    if ( ((obj->itrait_dict == NULL) || 
+          ((trait = (trait_object *) dict_getitem( obj->itrait_dict, name )) ==
+            NULL)) &&
+          ((trait = (trait_object *) dict_getitem( obj->ctrait_dict, name )) ==
+            NULL) ) {
+add_trait:    
+        if ( !can_retry ) 
+            return cant_set_items_error();
+            
+        result = PyObject_CallMethod( (PyObject *) obj, "add_trait", 
+                                      "(OO)", name, event_trait );
+        if ( result == NULL )
+            return NULL;
+            
+        Py_DECREF( result );
+        can_retry = 0;
+        goto retry;
+    }
+    
+    if ( trait->setattr == setattr_disallow )
+        goto add_trait;
+    
+    if ( trait->setattr( trait, trait, obj, name, event_object ) < 0 )
+        return NULL;
+    
+    Py_INCREF( Py_None );
+    
+    return Py_None;
+}             
+
+/*-----------------------------------------------------------------------------
 |  Enables/Disables trait change notification for the object:
 +----------------------------------------------------------------------------*/
 
@@ -1479,6 +1561,8 @@ static PyMethodDef has_traits_methods[] = {
 	{ "trait_property_changed", (PyCFunction) _has_traits_property_changed,
       METH_VARARGS,
       PyDoc_STR( "trait_property_changed(name,old_value[,new_value])" ) },
+	{ "trait_items_event", (PyCFunction) _has_traits_items_event, METH_VARARGS,
+      PyDoc_STR( "trait_items_event(event_trait,name,items_event)" ) },
 	{ "_trait_change_notify", (PyCFunction) _has_traits_change_notify,
       METH_VARARGS,
       PyDoc_STR( "_trait_change_notify(boolean)" ) },
