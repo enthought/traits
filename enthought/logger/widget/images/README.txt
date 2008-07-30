@@ -8,7 +8,6 @@ under BSD-like license.
 
 Files and orginal authors:
 ----------------------------------------------------------------
-enthought/logger/widget/images:
 about.png                 Crystal Project
 bug_yellow.png            Crystal Project
 crit_error.png            Crystal Project
