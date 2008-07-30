@@ -1,0 +1,15 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+Project                 License                   File
+----------------------------------------------------------------------------
+Enthought               BSD 3-Clause              LICENSE.txt
+
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------------------
+enthought/pyface/ui/qt4/images:
+                    application.png | Enthought
+                heading_level_1.png | Enthought
