@@ -102,7 +102,7 @@ setup(
         ],
     # test_suite = 'nose.collector',
     url = 'http://code.enthought.com/ets',
-    version = '3.0.0b1',
+    version = '3.0.0',
     zip_safe = False,
     )
 
