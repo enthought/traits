@@ -1,0 +1,17 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+Project                 License                   File
+----------------------------------------------------------------------------
+Enthought               BSD 3-Clause              LICENSE.txt
+
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------------------
+examples/demo/Standard Editors/Popup_versions/images:
+             bottom_left_origin.gif | Enthought
+            bottom_right_origin.gif | Enthought
+                top_left_origin.gif | Enthought
+               top_right_origin.gif | Enthought

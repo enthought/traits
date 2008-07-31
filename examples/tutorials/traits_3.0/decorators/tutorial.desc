@@ -1,0 +1,4 @@
+New Method Decorators
+
+on_trait_change: on_trait_change Decorator
+cached_property: cached_property Decorator

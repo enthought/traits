@@ -1,0 +1,18 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+Project                 License                   File
+----------------------------------------------------------------------------
+Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
+
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------------------
+examples/tutorials/images:
+			         next.png | Nuvola
+                         parent.png | Nuvola
+                       previous.png | Nuvola
+                         reload.png | Nuvola
+                            run.png | Nuvola

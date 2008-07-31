@@ -1,4 +1,18 @@
-[debug]
+[etsconfig]
+# Completely optional, not triggered by imports.
 
 
+[qt4]
+# Completely optional, not triggered by imports.
+
+
+[test]
+enthought.traits.tests = *
+
+
+[ui]
+
+
+[wx]
+# Completely optional, not triggered by imports.
 
