@@ -18,7 +18,7 @@ other projects in the Enthought Tool Suite:
   paths on some systems).
 - **enthought.logger**: Provides convenience functions for creating logging
   handlers.
-- ****enthought.util: Provides miscellaneous utility functions.
+- **enthought.util**: Provides miscellaneous utility functions.
 """
 
 
