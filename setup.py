@@ -206,7 +206,7 @@ setup(
         'nose >= 0.10.3',
         ],
     test_suite = 'nose.collector',
-    url = 'http://code.enthought.com/traits',
+    url = 'http://code.enthought.com/projects/traits',
     version = INFO['version'],
     zip_safe = False,
     )
