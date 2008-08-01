@@ -1,8 +1,7 @@
 """
-FROM MATPLOTLIB
+A collection of utility functions and classes FROM MATPLOTLIB.
 
-A collection of utility functions and classes.  Many (but not all)
-from the Python Cookbook -- hence the name cbook
+Many (but not all) from the Python Cookbook -- hence the name cbook.
 """
 from __future__ import generators
 import re, os, errno, sys, StringIO, traceback

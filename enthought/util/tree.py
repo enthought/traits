@@ -1,4 +1,4 @@
-'Functions on trees, i.e. nested sequences'
+'Functions on trees, that is, nested sequences.'
 
 from enthought.util.functional import partial
 from enthought.util.sequence import all, any, concat, is_sequence
@@ -8,7 +8,7 @@ def is_fork(x, leaves=()):
     return is_sequence(x) and not isinstance(x, leaves)
 
 def flatten(tree, leaves=()):
-    ''' Flatten a tree, i.e. recursively concatenate nested sequences.
+    ''' Flatten a tree, that is, recursively concatenate nested sequences.
 
         >>> flatten([1, [[2, 3], 4, 5], [[[[6]]]]])
         [1, 2, 3, 4, 5, 6]

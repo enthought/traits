@@ -12,9 +12,7 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-===========================
 Utility Functions 
-=========================== 
 
 :Copyright: 2003 Enthought, Inc.
 

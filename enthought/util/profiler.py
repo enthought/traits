@@ -11,7 +11,7 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-""" Modifications to the standard profile.py API
+""" Modifications to the standard profile.py API.
 
     The standard profile.run() method in the Python library does not provide 
     access to variables available to the code snippet during a run.  For 

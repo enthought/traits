@@ -14,10 +14,10 @@
 #
 #-----------------------------------------------------------------------------
 
-""" Graph algorithms
+""" Graph algorithms.
 
 A graph is represented by a dictionary which represents the adjacency relation,
-where node ``a`` has an arc to node ``b`` if and only if 'b in d[a]'.
+where node ``a`` has an arc to node ``b`` if and only if ``b in d[a]``.
 """
 
 import __builtin__

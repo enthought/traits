@@ -11,11 +11,11 @@
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
-""" Live updating of objects in system from module reloads
+""" Live updating of objects in system from module reloads.
 
-    The main function exposed by this module is:
+    The main function exposed by this module is::
     
-    refresh(logger=None) 
+      refresh(logger=None) 
     
     Check for edited python files for modules that are live in the 
     system.  If one or more are found, reload the module in such 
@@ -65,11 +65,11 @@
     
     Any objects instantiated from the classes have a obj.__class__ 
     attribute the points to the class they are based upon.  When 
-    you call a method on the object in your code like so: 
+    you call a method on the object in your code like so:: 
         
         obj.method()
         
-    python actually calls the method othe __class__ object like so:
+    python actually calls the method othe __class__ object like so::
         
         obj.__class__.method(obj)
     
@@ -121,9 +121,9 @@
        
       fix me: I think we should to prevent refactor errors.
 
-    Copyright: Enthought, 2005
-    Author:    Eric Jones    
-    License:   BSD
+    :copyright: 2005, Enthought, Inc.
+    :author:    Eric Jones    
+    :license:   BSD
 
 """
 

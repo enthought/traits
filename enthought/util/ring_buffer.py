@@ -12,7 +12,7 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-Copied from Python Cookbook .... 
+Copied from Python Cookbook.
 
 """
 
