@@ -49,9 +49,14 @@ from distutils.command.build import build as distbuild
 from distutils import log
 from pkg_resources import DistributionNotFound, parse_version, require, VersionConflict
 
-from setup_data import INFO
 from make_docs import HtmlBuild
 
+# FIXME: This works around a setuptools bug which gets setup_data.py metadata
+# from incorrect packages. Ticket #1592
+#from setup_data import INFO
+setup_data = dict(__name__='', __file__='setup_data.py')
+execfile('setup_data.py', setup_data)
+INFO = setup_data['INFO']
 
 ctraits = Extension(
     'enthought.traits.ctraits',
