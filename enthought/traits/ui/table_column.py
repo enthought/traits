@@ -83,6 +83,9 @@ class TableColumn ( HasPrivateTraits ):
     # Cell background color for non-editable columns:
     read_only_cell_color = Color( 0xF4F3EE )
     
+    # Cell graph color:
+    graph_color = Color( 0xDDD9CC )
+    
     # Horizontal alignment of text in the column:
     horizontal_alignment = Enum( 'left', [ 'left', 'center', 'right' ] )
     
@@ -135,6 +138,9 @@ class TableColumn ( HasPrivateTraits ):
     
     # The view (if any) to display when clicking a non-editable cell:
     view = AView
+    
+    # Optional maximum value a numeric cell value can have:
+    maximum = Float( trait_value = True )
     
     #-- Private Traits ---------------------------------------------------------
     
@@ -227,6 +233,17 @@ class TableColumn ( HasPrivateTraits ):
         return self.read_only_cell_color_
         
     #---------------------------------------------------------------------------
+    #  Returns the cell background graph color for the column for a specified
+    #  object:  
+    #---------------------------------------------------------------------------
+    
+    def get_graph_color ( self, object ):
+        """ Returns the cell background graph color for the column for a 
+            specified object.
+        """
+        return self.graph_color_
+        
+    #---------------------------------------------------------------------------
     #  Returns the horizontal alignment for the column for a specified object:  
     #---------------------------------------------------------------------------
     
@@ -285,7 +302,8 @@ class TableColumn ( HasPrivateTraits ):
             return result
             
         if ((self.get_cell_theme( object ) is not None) or
-            (self.get_image(      object ) is not None)):
+            (self.get_image(      object ) is not None) or
+            (self.get_maximum(    object ) != 0.0)):
             return self.themed_cell_renderer
             
         return None
@@ -351,6 +369,15 @@ class TableColumn ( HasPrivateTraits ):
         """ Returns the view to display when clicking a non-editable cell.
         """
         return self.view
+
+    #---------------------------------------------------------------------------
+    #  Returns the maximum value a numeric column can have:
+    #---------------------------------------------------------------------------
+    
+    def get_maximum ( self, object ):
+        """ Returns the maximum value a numeric column can have.
+        """
+        return self.maximum
         
     #---------------------------------------------------------------------------
     #  Called when the user clicks on the column:
