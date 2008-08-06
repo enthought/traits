@@ -123,7 +123,7 @@ class Any ( TraitType ):
 
 class Generic ( Any ):
     """ Defines a trait whose value can be anything and whose definition can
-        be redefined via assinment using a TraitValue object.
+        be redefined via assignment using a TraitValue object.
     """
 
     # The standard metadata for the trait:
@@ -3213,10 +3213,15 @@ class WeakRef ( Instance ):
         return None
 
     def set ( self, object, name, value ):
-        if value is not None:
-            value = HandleWeakRef( object, name, value )
-
-        object.__dict__[ name + '_' ] = value
+        old = self.get( object, name )
+        
+        if value is None:
+            object.__dict__[ name + '_' ] = None
+        else:
+            object.__dict__[ name + '_' ] = HandleWeakRef( object, name, value )
+        
+        if value is not old:
+            object.trait_property_changed( name, old, value ) 
 
     def resolve_class ( self, object, name, value ):
         # fixme: We have to override this method to prevent the 'fast validate'
