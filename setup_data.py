@@ -73,5 +73,5 @@ INFO = {
     'install_requires' : [
         ],
     'name': 'Traits',
-    'version': '3.0.1b1',
+    'version': '3.0.1',
     }
