@@ -40,9 +40,15 @@ or can opt to allow the use of only a fixed or open set of trait attributes
 within the class. Trait attributes defined by a classs are automatically
 inherited by any subclass derived from the class.
 
-None ETS requirements:
 
-- Traits requires numpy version 1.1.0 or higher.
+Third-Party (Non-ETS) Requirements
+----------------------------------
+
+- Traits includes a trait type for arrays that requires the NumPy project.
+  NumPy version 1.0.4 or greater is sufficient to enable the core code to
+  work, but version 1.1.0 or greater is required to get the tests to work
+  when run via a "python setup.py test" command.
+
 """
 
 
