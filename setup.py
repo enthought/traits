@@ -19,6 +19,12 @@ other projects in the Enthought Tool Suite:
 - **enthought.logger**: Provides convenience functions for creating logging
   handlers.
 - **enthought.util**: Provides miscellaneous utility functions.
+
+Prerequisites
+-------------
+If you want to build EnthoughtBase from source, you must first install 
+`setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_.
+
 """
 
 
