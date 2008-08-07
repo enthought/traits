@@ -17,12 +17,12 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- all from logger.(plugin|agent|widget)
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- all from logger.plugin
-TRAITS = etsdep('Traits', '3.0.0b1')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- only from e.util.traits.editor.parameter_choice_editor.py
-TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')  # -- from logger.(agent|plugin|widget)
-TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
+ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b2')  # -- all from logger.(plugin|agent|widget)
+ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b2')  # -- all from logger.plugin
+TRAITS = etsdep('Traits', '3.0.1b1')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.1b1')  # -- only from e.util.traits.editor.parameter_choice_editor.py
+TRAITSGUI = etsdep('TraitsGUI', '3.0.1b1')  # -- from logger.(agent|plugin|widget)
+TRAITS_UI = etsdep('Traits[ui]', '3.0.1b1')
 
 # The following "soft dependencies" are wrapped in try..except blocks
 #APPTOOLS -- util/wx/drag_and_drop
