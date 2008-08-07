@@ -14,10 +14,10 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')
-TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.0b1')
-TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b2')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.1b1')
+TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.1b1')
+TRAITSGUI = etsdep('TraitsGUI', '3.0.1b1')
 
 # Notes:
 # - enthought\traits\ui\handler.py and
@@ -73,5 +73,5 @@ INFO = {
     'install_requires' : [
         ],
     'name': 'Traits',
-    'version': '3.0.1',
+    'version': '3.0.1b1',
     }
