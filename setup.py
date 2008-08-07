@@ -39,6 +39,10 @@ A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
 within the class. Trait attributes defined by a classs are automatically
 inherited by any subclass derived from the class.
+
+None ETS requirements:
+
+- Traits requires numpy version 1.1.0 or higher.
 """
 
 
