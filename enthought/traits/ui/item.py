@@ -30,7 +30,7 @@ from string \
 
 from enthought.traits.api \
     import Instance, Str, Float, Range, Constant, Bool, Callable, Property, \
-           Delegate, cached_property
+           Delegate, Undefined, cached_property
 
 from enthought.traits.trait_base \
     import user_name_for
@@ -130,8 +130,11 @@ class Item ( ViewSubElement ):
     # Should the item use extra space? If set to True, the widget expands to
     # fill any extra space that is available in the display. If set to True
     # for more than one item in the same View, any extra space is divided
-    # between them.
-    resizable = Bool( False )
+    # between them. If set to False, the widget uses only whatever space it
+    # is explicitly (or implicitly) assigned. The default value of Undefined
+    # means that the use (or non-use) of extra space will be determined by the
+    # editor associated with the item.
+    resizable = Bool( Undefined )
 
     # Should the item use extra space along its Group's layout orientation?
     springy = Bool( False )
