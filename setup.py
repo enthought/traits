@@ -103,7 +103,7 @@ def generate_docs():
             unzip_html_docs(html_zip, doc_dir)
     else:
         # Unzip the docs into the 'html' folder.
-        log.info("Installing %s documentaion from zip file.\n" % INFO['name'])
+        log.info("Installing %s documentation from zip file.\n" % INFO['name'])
         unzip_html_docs(html_zip, doc_dir)
 
 def unzip_html_docs(src_path, dest_dir):
