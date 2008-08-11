@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2003, Enthought, Inc.
 # All rights reserved.
 # 
 # This software is provided without warranty under the terms of the BSD
@@ -12,7 +12,7 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-Utility Functions 
+Utility functions, part of the EnthoughtBase project.
 
 :Copyright: 2003 Enthought, Inc.
 
