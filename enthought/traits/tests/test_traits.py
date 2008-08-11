@@ -15,8 +15,10 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-
+import sys
 import unittest
+
+import nose
 
 from enthought.traits.api import *
 
@@ -48,6 +50,18 @@ class BaseTest(object):
             if i < len(self._mapped_values):
                 self.assertEqual(obj.value_, self._mapped_values[i])
 
+        if 'coverage' in sys.modules:
+            # FIXME:
+            #   There is some intercation between nosetests and coverage
+            #   which causes problems with raising exceptions in Traits.
+            #   This problem does not occur in Python 2.4, only in 2.5.
+            #   The problem is documented in:
+            #
+            #     https://svn.enthought.com/enthought/ticket/1620
+            #
+            #   Therefore, we skip this test when coverage is used.
+            raise nose.SkipTest("Skipped because coverage module is loaded")
+        
         # Validate correct behavior for illegal values
         for value in self._bad_values:
             self.assertRaises(TraitError, self.assign, value)
