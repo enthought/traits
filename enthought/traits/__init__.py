@@ -17,6 +17,7 @@
 
 """ Defines a 'traits' package that allows other classes to easily define
     'type-checked' and/or 'delegated' traits for their instances.
+    Part of the Traits project of the Enthought Tool Suite.
 
     Note: A 'trait' is similar to a 'property', but is used instead of the 
     word 'property' to differentiate it from the Python language 'property' 
