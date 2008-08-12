@@ -37,6 +37,7 @@ class ETSConfig(object):
         self._company          = None
         self._toolkit          = None
         self._user_data        = None
+        self._enable_toolkit   = None
 
         return
 
@@ -191,6 +192,40 @@ class ETSConfig(object):
 
     toolkit = property(_get_toolkit, _set_toolkit)
 
+    def _get_enable_toolkit(self):
+        """
+        Property getter for the Enable backend.  The value returned is, in order
+        of preference: the value set by the application; the value passed on
+        the command line using the '-toolkit' option; the value specified by
+        the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
+
+        """
+
+        if self._enable_toolkit is None:
+            self._enable_toolkit = self._initialize_enable_toolkit()
+
+        return self._enable_toolkit
+
+
+    def _set_enable_toolkit(self, toolkit):
+        """
+        Property setter for the Enable toolkit.  The toolkit can be set more than
+        once, but only if it is the same one each time.  An application that is
+        written for a particular toolkit can explicitly set it before any other
+        module that gets the value is imported.
+
+        """
+
+        if self._enable_toolkit and self._enable_toolkit != toolkit:
+            raise ValueError, "cannot set toolkit to %s because it has already been set to %s" % (toolkit, self._enable_toolkit)
+
+        self._enable_toolkit = toolkit
+
+        return
+
+
+    enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
+
 
     def _get_user_data(self):
         """
@@ -308,7 +343,6 @@ class ETSConfig(object):
         Initializes the toolkit.
 
         """
-
         # We handle the command line option even though it doesn't have the
         # highest precedence because we always want to remove it from the
         # command line.
@@ -334,6 +368,36 @@ class ETSConfig(object):
 
         return toolkit
 
+    def _initialize_enable_toolkit(self):
+        """
+        Initializes the enable backend.
+
+        """
+
+        # We handle the command line option even though it doesn't have the
+        # highest precedence because we always want to remove it from the
+        # command line.
+        if '-enable_toolkit' in sys.argv:
+            opt_idx = sys.argv.index('-enable_toolkit')
+
+            try:
+                opt_toolkit = sys.argv[opt_idx + 1]
+            except IndexError:
+                raise ValueError, "the -enable_toolkit command line argument must be followed by a backend name"
+
+            # Remove the option.
+            del sys.argv[opt_idx:opt_idx + 1]
+        else:
+            opt_toolkit = None
+
+        if self._enable_toolkit is not None:
+            backend = self._enable_toolkit
+        elif opt_toolkit is not None:
+            backend = opt_backend
+        else:
+            backend = os.environ.get('ENABLE_TOOLKIT', '')
+
+        return backend
 
     def _initialize_user_data(self):
         """
