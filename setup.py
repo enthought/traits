@@ -75,7 +75,7 @@ def generate_docs():
             else:
                 sphinx_installed = True
         except ImportError:
-            log.error("Sphnix install not found.")
+            log.error("Sphinx install not found.")
 
     if sphinx_installed:
         log.info("Generating %s documentation..." % INFO['name'])
