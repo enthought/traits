@@ -49,18 +49,17 @@ class BaseTest(object):
             # If there's a defined 
             if i < len(self._mapped_values):
                 self.assertEqual(obj.value_, self._mapped_values[i])
-
-        if 'coverage' in sys.modules:
-            # FIXME:
-            #   There is some intercation between nosetests and coverage
-            #   which causes problems with raising exceptions in Traits.
-            #   This problem does not occur in Python 2.4, only in 2.5.
-            #   The problem is documented in:
-            #
-            #     https://svn.enthought.com/enthought/ticket/1620
-            #
-            #   Therefore, we skip this test when coverage is used.
-            raise nose.SkipTest("Skipped because coverage module is loaded")
+        
+        # NOTE:
+        #     There is/was some intercation between nosetests and coverage
+        #     which causes problems with raising exceptions in Traits
+        #     with Python 2.4.  However, I am no longer able to reproduce
+        #     the behavior, see:
+        #
+        #         https://svn.enthought.com/enthought/ticket/1620
+        #
+        #if 'coverage' in sys.modules:
+        #    raise nose.SkipTest("Skipped because coverage module is loaded")
         
         # Validate correct behavior for illegal values
         for value in self._bad_values:
