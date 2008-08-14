@@ -1,0 +1,68 @@
+How to Use Pydoh to Generate HTML from Word for the Traits User Manual
+======================================================================
+
+1.  In MS Word, choose File > Save As.
+
+2.  In the file dialog, select "Web Page, Filtered" as the file 
+    type, and save the file. 
+       
+3.  Run Pydoh with the generated HTML file as the input file. Use the following 
+    options:
+    
+    --css  Traits3_UM_add.css    
+    -h     3
+       
+4.  Do the following additional clean-up steps:
+
+    a.  Replace non-ASCII characters with HTML entities or ASCII characters:
+    
+        =========   ========
+        Non-ASCII   Entity
+        =========   ========
+        ©           &copy;
+        ·           &middot;
+        “           &ldquo;
+        ”           &rdquo;
+        ‘           &lsquo;
+        ’           &rsquo;
+        …           &hellip;
+        –           ``-``
+        =========   ========
+
+    b. In Traits3_UM.css, comment out **margin-top** for h1, h2, and h3.
+    
+    c. Find the styles that correspond to code examples; then comment out
+       **margin-left** for those styles.
+
+    d. In all HTML files, replace::
+    
+           <link rel="STYLESHEET" href=".\Traits3_UM.css">
+           
+       with::
+       
+           <link rel="STYLESHEET" href="Traits3_UM.css">
+
+    e. In Traits3_UM_1.html, delete the Word-generated table of contents, which
+       includes everything between::
+    
+           <div class=s11>
+           <p class=s4>Table of Contents</p>
+       
+       and::
+       
+           <p class=s14> Index.......................................... 77</p>
+           </div>
+
+    f. In the last HTML file (currently Traits3_UM_75.html), delete the 
+       Word-generated index, which means everything between::
+       
+           <p class=s111><a name=Index></a>Index</p>
+
+       and::
+       
+           <p class=s115>@on_trait_change decorator, 29</p>
+
+       (in other words, the end of the index)
+
+
+

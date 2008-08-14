@@ -1,0 +1,25 @@
+
+.C-Emphasis {
+    font-style: italic;
+}
+
+.C-Strong {
+    font-weight: bold;
+}
+
+.C-Literal {
+    font-family: "Courier New";
+}
+
+.C-DefinedElement {
+    font-weight: bold;
+}
+
+.C-Variable {
+    font-style: italic;
+}
+
+.CodeOne-liner {
+    font-family: "Courier New";
+}
+
