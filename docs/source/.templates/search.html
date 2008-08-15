@@ -1,0 +1,31 @@
+{% extends "!search.html" %}
+{% block body %}
+  <h1 id="search-documentation">Search</h1>
+  <p>
+    Enter your search words into the box below and click 
+    <strong>search</strong>. Note that the search function automatically
+    searches for  <em>all</em> of the words. Pages containing some but not all
+    of them  won't appear in the result list.
+  </p>
+  <form action="" method="get">
+    <input type="text" name="q" value="" />
+    <input type="submit" value="search" />
+  </form>
+  {% if search_performed %}
+    <h2>Search Results</h2>
+    {% if not search_results %}
+      <p>Your search did not match any results.</p>
+    {% endif %}
+  {% endif %}
+  <div id="search-results">
+  {% if search_results %}
+    <ul>
+    {% for href, caption, context in search_results %}
+      <li><a href="{{ pathto(item.href) }}">{{ caption }}</a>
+        <div class="context">{{ context|e }}</div>
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+Traits 3 User Manual
+===================================
+
+.. toctree::
+    :maxdepth: 3
+
+    front.rst
+    intro.rst
+    defining.rst
+    notification.rst
+    deferring.rst
+    custom.rst
+    advanced.rst
+    
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

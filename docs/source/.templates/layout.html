@@ -1,0 +1,9 @@
+{# Filename: .templates/layout.html #}
+{% extends '!layout.html' %}
+
+
+{% block relbaritems %}
+  {% if current_page_name != 'index' %}
+    <li><a href="{{ pathto(current_page_name) }}">{{ title }}</a></li>
+  {% endif %}
+{% endblock %}

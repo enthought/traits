@@ -42,9 +42,9 @@ copyright = '2008, Enthought'
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '3.0.0b1'
+version = '3.0'
 # The full version, including alpha/beta/rc tags.
-release = '3.0.0b1'
+release = '3.0.0'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -87,19 +87,19 @@ html_style = 'default.css'
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-#html_title = None
+html_title = "Traits 3 User Manual"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
 
 # The name of an image file (within the static path) to place at the top of
 # the sidebar.
-#html_logo = None
+html_logo = "e-logo-rev.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = None
+html_favicon = "et.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -112,7 +112,7 @@ html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
@@ -122,10 +122,10 @@ html_last_updated_fmt = '%b %d, %Y'
 #html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_use_modindex = True
+html_use_modindex = False
 
 # If false, no index is generated.
-#html_use_index = True
+#html_use_index = False
 
 # If true, the index is split into individual pages for each letter.
 #html_split_index = False
@@ -157,12 +157,12 @@ htmlhelp_basename = 'Traitsdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, document class [howto/manual]).
 latex_documents = [
-  ('index', 'Traits.tex', 'Traits Documentation', 'Enthought', 'manual'),
+  ('index', 'Traits.tex', 'Traits 3 User Manual', 'Enthought, Inc.', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = None
+latex_logo = "enthought_logo.jpg"
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
