@@ -23,6 +23,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from trait_base \
+    import Undefined
+    
 from traits \
     import CTrait
 
@@ -83,12 +86,16 @@ class BaseTraitValue ( HasPrivateTraits ):
                      '_trait_value': self }
             
         getter, setter, validate = value_trait.property()
-        if getter is not _read_only:
+        read_only = (getter is _read_only)
+        if not read_only:
             getter = self._getter
             metadata[ 'transient' ] =  True
             
         if setter is not _write_only:
-            setter = self._setter
+            if read_only:
+                setter = self._read_only_setter
+            else:
+                setter = self._setter
             metadata[ 'transient' ] =  True
             
         return self._property_trait( getter, setter, validate, metadata )
@@ -115,7 +122,15 @@ class BaseTraitValue ( HasPrivateTraits ):
         return self.value
         
     def _setter ( self, object, name, value ):
+        old_value  = self.value
         self.value = value
+        new_value  = self.value
+        if new_value != old_value:
+            object.trait_property_changed( name, old_value, new_value )
+        
+    def _read_only_setter ( self, object, name, value ):
+        self.value = value
+        object.trait_property_changed( name, Undefined, value )
 
 #-------------------------------------------------------------------------------
 #  'TraitValue' class:
@@ -206,6 +221,17 @@ class TraitValue ( BaseTraitValue ):
     
     def _delegate_modified ( self ):
         self.value = True
+        
+#-- Helper Function Definitions ------------------------------------------------
+
+def SyncValue ( delegate, name ):
+    return TraitValue( delegate = delegate, name = name )
+    
+def TypeValue ( type ):
+    return TraitValue( type = type )
+
+def DefaultValue ( default, args = (), kw = {} ):
+    return TraitValue( default = default, args = args, kw = kw )
 
 #-------------------------------------------------------------------------------
 #  Tell the C-based traits module about the 'BaseTraitValue' class:

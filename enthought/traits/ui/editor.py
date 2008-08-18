@@ -28,6 +28,9 @@ from enthought.traits.api \
            Undefined, Bool, TraitError, Str, Instance, cached_property, \
            TraitListEvent
            
+from enthought.traits.trait_base \
+    import not_none
+           
 from editor_factory \
     import EditorFactory
     
@@ -143,9 +146,12 @@ class Editor ( HasPrivateTraits ):
     def prepare ( self, parent ):
         """ Finishes setting up the editor.
         """
-        self.context_object.on_trait_change( self._update_editor,
-                                self.extended_name, dispatch = 'ui' )
+        name = self.extended_name
+        if name != 'None':
+            self.context_object.on_trait_change( self._update_editor, name,
+                                                 dispatch = 'ui' )
         self.init( parent )
+        self._sync_values()
         self.update_editor()
         
     #---------------------------------------------------------------------------
@@ -169,8 +175,10 @@ class Editor ( HasPrivateTraits ):
         if self.ui is None:
             return
             
-        self.context_object.on_trait_change( self._update_editor, 
-                                self.extended_name, remove = True )
+        name = self.extended_name
+        if name != 'None':
+            self.context_object.on_trait_change( self._update_editor, name, 
+                                                 remove = True )
                         
         if self._user_from is not None:
             for name, handler in self._user_from:
@@ -227,10 +235,11 @@ class Editor ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
     
     def _get_value ( self ):
-        return getattr( self.object, self.name )
+        return getattr( self.object, self.name, Undefined )
         
     def _set_value ( self, value ):
-        self.ui.do_undoable( self.__set_value, value )
+        if self.name != 'None':
+            self.ui.do_undoable( self.__set_value, value )
     
     def __set_value ( self, value ):
         self._no_update = True
@@ -282,7 +291,7 @@ class Editor ( HasPrivateTraits ):
     def _get_str_value ( self ):
         """ Returns the text representation of the object trait.
         """
-        return self.string_value( getattr( self.object, self.name ) )
+        return self.string_value( getattr( self.object, self.name, Undefined ) )
   
     #---------------------------------------------------------------------------
     #  Returns the text representation of a specified value:
@@ -412,6 +421,26 @@ class Editor ( HasPrivateTraits ):
             object, name = self.ui.context[ name[ : col ] ], name[ col + 1: ]
             
         return ( object, name, eval( "lambda obj=object: obj." + name ) )
+        
+    #---------------------------------------------------------------------------
+    #  Initializes and synchronizes (as needed) editor traits with the value of
+    #  corresponding factory traits:
+    #---------------------------------------------------------------------------
+    
+    def _sync_values ( self ):
+        """ Initializes and synchronizes (as needed) editor traits with the 
+            value of corresponding factory traits.
+        """
+        factory = self.factory
+        for name, trait in factory.traits( sync_value = not_none ):
+            value = getattr( factory, name )
+            if isinstance( value, ContextValue ):
+                self_trait = self.trait( name )
+                self.sync_value( value.name, name,
+                                 self_trait.sync_value or trait.sync_value, 
+                                 self_trait.is_list is True )
+            elif value is not Undefined:
+                setattr( self, name, value )
                          
     #---------------------------------------------------------------------------
     #  Sets/Unsets synchronization between an editor trait and a user object 

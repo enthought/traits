@@ -56,6 +56,9 @@ from editor_factory \
 from basic_editor_factory \
     import BasicEditorFactory
 
+from context_value \
+    import ContextValue, CV, CVInt, CVFloat, CVStr, CVType
+    
 from editor \
     import Editor
 

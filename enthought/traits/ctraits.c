@@ -791,7 +791,7 @@ setattr_value ( trait_object      * trait,
         goto success;
     }
     
-    if ( (dict == NULL) && (trait_new != Py_None) ) {
+    if ( dict == NULL ) {
         obj->itrait_dict = dict = (PyDictObject *) PyDict_New();
         if ( dict == NULL ) 
             goto error1;

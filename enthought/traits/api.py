@@ -81,7 +81,7 @@ from trait_handlers \
            TraitDictObject, TraitDictEvent, TraitTuple
            
 from trait_value \
-    import BaseTraitValue, TraitValue
+    import BaseTraitValue, TraitValue, SyncValue, TypeValue, DefaultValue
 
 from adapter \
     import Adapter, adapts
