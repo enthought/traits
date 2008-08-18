@@ -1,0 +1,21 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+Project                 License                   File
+----------------------------------------------------------------------------
+Enthought               BSD 3-Clause              LICENSE.txt
+
+Unless stated in this file, icons are the work of Enthought, and are
+released under a 3 clause BSD license.
+
+Files and orginal authors:
+----------------------------------------------------------------------------
+docs/source/tutorials/images:
+                   application1.png | Enthought
+                   application2.png | Enthought
+                   application3.png | Enthought
+                    code_block1.png | Enthought
+                      container.png | Enthought
+                    interactive.png | Enthought
+              mpl_figure_editor.png | Enthought
+                  traits_thread.png | Enthought

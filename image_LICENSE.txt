@@ -12,6 +12,15 @@ released under a 3 clause BSD license.
 
 Files and orginal authors:
 ----------------------------------------------------------------------------
+docs/source/tutorials/images:
+                   application1.png | Enthought
+                   application2.png | Enthought
+                   application3.png | Enthought
+                    code_block1.png | Enthought
+                      container.png | Enthought
+                    interactive.png | Enthought
+              mpl_figure_editor.png | Enthought
+                  traits_thread.png | Enthought
 enthought/traits/ui/images:
                      array_node.png | Enthought
                       bool_node.png | Enthought
