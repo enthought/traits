@@ -6,6 +6,6 @@ Traits Documentation
     :glob:
       
     traits_user_manual/index
-    tutorials/*
+    tutorials/index
       
 * :ref:`search`
