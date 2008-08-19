@@ -3,9 +3,9 @@
  */
 
 body {
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+    font-family: sans-serif;
     font-size: 100%;
-    background-color: #333333;
+    background-color: #11303d;
     color: #000;
     margin: 0;
     padding: 0;
@@ -31,19 +31,15 @@ div.body {
     padding: 0 20px 30px 20px;
 }
 
-div.sidebarwrapper {
+div.sphinxsidebarwrapper {
     padding: 10px 5px 0 10px;
 }
 
-div.sidebar {
+div.sphinxsidebar {
     float: left;
     width: 230px;
     margin-left: -100%;
     font-size: 90%;
-}
-
-p.logo {
-	text-align: center;
 }
 
 div.clearer {
@@ -64,7 +60,7 @@ div.footer a {
 }
 
 div.related {
-    background-color: #24326e;
+    background-color: #133f52;
     color: #fff;
     width: 100%;
     height: 30px;
@@ -96,8 +92,8 @@ div.related a {
 }
 
 /* ::: TOC :::: */
-div.sidebar h3 {
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+div.sphinxsidebar h3 {
+    font-family: 'Trebuchet MS', sans-serif;
     color: white;
     font-size: 1.4em;
     font-weight: normal;
@@ -105,8 +101,8 @@ div.sidebar h3 {
     padding: 0;
 }
 
-div.sidebar h4 {
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+div.sphinxsidebar h4 {
+    font-family: 'Trebuchet MS', sans-serif;
     color: white;
     font-size: 1.3em;
     font-weight: normal;
@@ -114,43 +110,43 @@ div.sidebar h4 {
     padding: 0;
 }
 
-div.sidebar p {
+div.sphinxsidebar p {
     color: white;
 }
 
-div.sidebar p.topless {
+div.sphinxsidebar p.topless {
     margin: 5px 10px 10px 10px;
 }
 
-div.sidebar ul {
+div.sphinxsidebar ul {
     margin: 10px;
     padding: 0;
     list-style: none;
     color: white;
 }
 
-div.sidebar ul ul,
-div.sidebar ul.want-points {
+div.sphinxsidebar ul ul,
+div.sphinxsidebar ul.want-points {
     margin-left: 20px;
     list-style: square;
 }
 
-div.sidebar ul ul {
+div.sphinxsidebar ul ul {
     margin-top: 0;
     margin-bottom: 0;
 }
 
-div.sidebar a {
-    color: #9bbde2;
+div.sphinxsidebar a {
+    color: #98dbcc;
 }
 
-div.sidebar form {
+div.sphinxsidebar form {
     margin-top: 10px;
 }
 
-div.sidebar input {
-    border: 1px solid #9bbde2;
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+div.sphinxsidebar input {
+    border: 1px solid #98dbcc;
+    font-family: sans-serif;
     font-size: 1em;
 }
 
@@ -159,8 +155,8 @@ div.modulecloud {
     margin: -5px 10px 5px 10px;
     padding: 10px;
     line-height: 160%;
-    border: 1px solid #666666;
-    background-color: #dddddd;
+    border: 1px solid #cbe7e5;
+    background-color: #f2fbfd;
 }
 
 div.modulecloud a {
@@ -185,7 +181,7 @@ ul.search li a {
 }
 
 ul.search li div.context {
-    color: #666666;
+    color: #888;
     margin: 2px 0 0 30px;
     text-align: left;
 }
@@ -198,9 +194,9 @@ ul.keywordmatches li.goodmatch a {
 
 div.actions {
     padding: 5px 10px 5px 10px;
-    border-top: 1px solid #598ec0;
-    border-bottom: 1px solid #598ec0;
-    background-color: #9bbde2;
+    border-top: 1px solid #cbe7e5;
+    border-bottom: 1px solid #cbe7e5;
+    background-color: #e0f6f4;
 }
 
 form dl {
@@ -222,7 +218,7 @@ input#homepage {
 div.error {
     margin: 5px 20px 0 0;
     padding: 5px;
-    border: 1px solid #db7d46;
+    border: 1px solid #d00;
     font-weight: bold;
 }
 
@@ -259,7 +255,7 @@ div.inlinecomments a.emptybubble {
 div.inlinecomments a.bubble:hover {
     background-image: url(style/hovercomment.png);
     text-decoration: none;
-    color: #598ec0;
+    color: #3ca0a4;
 }
 
 div.inlinecomments div.comments {
@@ -267,13 +263,13 @@ div.inlinecomments div.comments {
     margin: 25px 5px 0 0;
     max-width: 50em;
     min-width: 30em;
-    border: 1px solid #598ec0;
-    background-color: #9bbde2;
+    border: 1px solid #2eabb0;
+    background-color: #f2fbfd;
     z-index: 150;
 }
 
 div#comments {
-    border: 1px solid #598ec0;
+    border: 1px solid #2eabb0;
     margin-top: 20px;
 }
 
@@ -286,7 +282,7 @@ div.inlinecomments div.comments h3,
 div#comments h3 {
     margin: 0;
     padding: 0;
-    background-color: #598ec0;
+    background-color: #2eabb0;
     color: white;
     border: none;
     padding: 3px;
@@ -300,14 +296,14 @@ div.inlinecomments div.comments div.actions {
 
 div#comments div.comment {
     margin: 10px;
-    border: 1px solid #598ec0;
+    border: 1px solid #2eabb0;
 }
 
 div.inlinecomments div.comment h4,
 div.commentwindow div.comment h4,
 div#comments div.comment h4 {
     margin: 10px 0 0 0;
-    background-color: #598ec0;
+    background-color: #2eabb0;
     color: white;
     border: none;
     padding: 1px 4px 1px 4px;
@@ -318,7 +314,7 @@ div#comments div.comment h4 {
 }
 
 div#comments div.comment h4 a {
-    color: #9bbde2;
+    color: #d5f4f4;
 }
 
 div.inlinecomments div.comment div.text,
@@ -334,23 +330,23 @@ div#comments div.comment div.meta {
     text-align: right;
     padding: 2px 10px 2px 0;
     font-size: 95%;
-    color: #598ec0;
-    border-top: 1px solid #598ec0;
-    background-color: #9bbde2;
+    color: #538893;
+    border-top: 1px solid #cbe7e5;
+    background-color: #e0f6f4;
 }
 
 div.commentwindow {
     position: absolute;
     width: 500px;
-    border: 1px solid #598ec0;
-    background-color: #9bbde2;
+    border: 1px solid #cbe7e5;
+    background-color: #f2fbfd;
     display: none;
     z-index: 130;
 }
 
 div.commentwindow h3 {
     margin: 0;
-    background-color: #598ec0;
+    background-color: #2eabb0;
     color: white;
     border: none;
     padding: 5px;
@@ -361,13 +357,13 @@ div.commentwindow h3 {
 div.commentwindow div.actions {
     margin: 10px -10px 0 -10px;
     padding: 4px 10px 4px 10px;
-    color: #598ec0;
+    color: #538893;
 }
 
 div.commentwindow div.actions input {
-    border: 1px solid #598ec0;
+    border: 1px solid #2eabb0;
     background-color: white;
-    color: #073d61;
+    color: #135355;
     cursor: pointer;
 }
 
@@ -377,14 +373,14 @@ div.commentwindow div.form {
 
 div.commentwindow div.form input,
 div.commentwindow div.form textarea {
-    border: 1px solid #598ec0;
+    border: 1px solid #3c9ea2;
     background-color: white;
     color: black;
 }
 
 div.commentwindow div.error {
     margin: 10px 5px 10px 5px;
-    background-color: #fff2b0;
+    background-color: #fbe5dc;
     display: none;
 }
 
@@ -394,7 +390,7 @@ div.commentwindow div.form textarea {
 
 div.commentwindow div.preview {
     margin: 10px 0 10px 0;
-    background-color: #9bbde2;
+    background-color: #70d0d4;
     padding: 0 1px 1px 25px;
 }
 
@@ -406,7 +402,7 @@ div.commentwindow div.preview h4 {
 }
 
 div.commentwindow div.preview div.comment {
-    background-color: #9bbde2;
+    background-color: #f2fbfd;
 }
 
 div.commentwindow div.preview div.comment h4 {
@@ -417,7 +413,7 @@ div.commentwindow div.preview div.comment h4 {
 
 /* :::: SUGGEST CHANGES :::: */
 div#suggest-changes-box input, div#suggest-changes-box textarea {
-    border: 1px solid #666;
+    border: 1px solid #ccc;
     background-color: white;
     color: black;
 }
@@ -429,7 +425,7 @@ div#suggest-changes-box textarea {
 
 
 /* :::: PREVIEW :::: */
-div.preview { 
+div.preview {
     background-image: url(style/preview.png);
     padding: 0 20px 20px 20px;
     margin-bottom: 30px;
@@ -474,7 +470,7 @@ table.indextable tr.pcap {
 
 table.indextable tr.cap {
     margin-top: 10px;
-    background-color: #dddddd;
+    background-color: #f2f2f2;
 }
 
 img.toggler {
@@ -490,10 +486,10 @@ form.pfform {
 /* :::: GLOBAL STYLES :::: */
 
 .docwarning {
-    background-color: #fff2b0;
+    background-color: #ffe4e4;
     padding: 10px;
     margin: 0 -20px 0 -20px;
-    border-bottom: 1px solid #db7d46;
+    border-bottom: 1px solid #f66;
 }
 
 p.subhead {
@@ -502,7 +498,7 @@ p.subhead {
 }
 
 a {
-    color: #24326e;
+    color: #355f7c;
     text-decoration: none;
 }
 
@@ -516,11 +512,11 @@ div.body h3,
 div.body h4,
 div.body h5,
 div.body h6 {
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
-    background-color: #dddddd;
+    font-family: 'Trebuchet MS', sans-serif;
+    background-color: #f2f2f2;
     font-weight: normal;
-    color: #073d61;
-    border-bottom: 1px solid #666;
+    color: #20435c;
+    border-bottom: 1px solid #ccc;
     margin: 20px -20px 10px -20px;
     padding: 3px 0 3px 10px;
 }
@@ -533,7 +529,7 @@ div.body h5 { font-size: 110%; }
 div.body h6 { font-size: 100%; }
 
 a.headerlink {
-    color: #edaa1e;
+    color: #c60f0f;
     font-size: 0.8em;
     padding: 0 4px 0 4px;
     text-decoration: none;
@@ -551,13 +547,17 @@ dt:hover > a.headerlink {
 }
 
 a.headerlink:hover {
-    background-color: #edaa1e;
+    background-color: #c60f0f;
     color: white;
 }
 
 div.body p, div.body dd, div.body li {
     text-align: justify;
     line-height: 130%;
+}
+
+div.body p.caption {
+    text-align: inherit;
 }
 
 div.body td {
@@ -570,6 +570,14 @@ ul.fakelist {
     padding: 0;
 }
 
+.field-list ul {
+    padding-left: 1em;
+}
+
+.first {
+    margin-top: 0 !important;
+}
+
 /* "Footnotes" heading */
 p.rubric {
     margin-top: 30px;
@@ -579,8 +587,8 @@ p.rubric {
 /* "Topics" */
 
 div.topic {
-    background-color: #ddd;
-    border: 1px solid #666;
+    background-color: #eee;
+    border: 1px solid #ccc;
     padding: 0 7px 0 7px;
     margin: 10px 0 10px 0;
 }
@@ -612,18 +620,18 @@ div.admonition p {
 }
 
 div.seealso {
-    background-color: #fff2b0;
-    border: 1px solid #edaa1e;
+    background-color: #ffc;
+    border: 1px solid #ff6;
 }
 
 div.warning {
-    background-color: #fff2b0;
-    border: 1px solid #db7d46;
+    background-color: #ffe4e4;
+    border: 1px solid #f66;
 }
 
 div.note {
-    background-color: #ddd;
-    border: 1px solid #666;
+    background-color: #eee;
+    border: 1px solid #ccc;
 }
 
 p.admonition-title {
@@ -650,7 +658,7 @@ table.docutils td, table.docutils th {
     border-top: 0;
     border-left: 0;
     border-right: 0;
-    border-bottom: 1px solid #a9a6a2;
+    border-bottom: 1px solid #aaa;
 }
 
 table.field-list td, table.field-list th {
@@ -659,6 +667,15 @@ table.field-list td, table.field-list th {
 
 table.footnote td, table.footnote th {
     border: 0 !important;
+}
+
+.field-list ul {
+    margin: 0;
+    padding-left: 1em;
+}
+
+.field-list p {
+    margin: 0;
 }
 
 dl {
@@ -681,12 +698,12 @@ dd {
 }
 
 .refcount {
-    color: #24326e;
+    color: #060;
 }
 
 dt:target,
 .highlight {
-    background-color: #edaa1e1;
+    background-color: #fbe54e;
 }
 
 dl.glossary dt {
@@ -701,18 +718,19 @@ th {
 
 pre {
     padding: 5px;
-    background-color: #e6f3ff;
+    background-color: #efc;
     color: #333;
-    border: 1px solid #24326e;
+    border: 1px solid #ac9;
     border-left: none;
     border-right: none;
+    overflow: auto;
 }
 
 td.linenos pre {
-    padding: 0;
+    padding: 5px 0px;
     border: 0;
     background-color: transparent;
-    color: #a9a6a2;
+    color: #aaa;
 }
 
 table.highlighttable {
@@ -724,7 +742,7 @@ table.highlighttable td {
 }
 
 tt {
-    background-color: #eee;
+    background-color: #ecf0f3;
     padding: 0 1px 0 1px;
     font-size: 0.95em;
 }
@@ -744,7 +762,7 @@ tt.xref, a tt {
     font-weight: bold;
 }
 
-.footnote:target  { background-color: #fff2b0 }
+.footnote:target  { background-color: #ffa }
 
 h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
     background-color: transparent;
@@ -761,11 +779,11 @@ h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
 form.comment {
     margin: 0;
     padding: 10px 30px 10px 30px;
-    background-color: #ddd;
+    background-color: #eee;
 }
 
 form.comment h3 {
-    background-color: #598ec0;
+    background-color: #326591;
     color: white;
     margin: -10px -30px 10px -30px;
     padding: 5px;
@@ -774,9 +792,9 @@ form.comment h3 {
 
 form.comment input,
 form.comment textarea {
-    border: 1px solid #666;
+    border: 1px solid #ccc;
     padding: 2px;
-    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+    font-family: sans-serif;
     font-size: 100%;
 }
 
@@ -791,21 +809,21 @@ form.comment textarea {
 }
 
 .system-message {
-    background-color: #edaa1e;
+    background-color: #fda;
     padding: 5px;
     border: 3px solid red;
 }
 
 /* :::: PRINT :::: */
 @media print {
-    div.document, 
-    div.documentwrapper, 
+    div.document,
+    div.documentwrapper,
     div.bodywrapper {
         margin: 0;
         width : 100%;
     }
 
-    div.sidebar,
+    div.sphinxsidebar,
     div.related,
     div.footer,
     div#comments div.new-comment-box,
