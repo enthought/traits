@@ -128,9 +128,10 @@ class Build(Process):
         if not output_dir:
             output_dir = os.path.join(self.target, format)
 
-        self.run_command('sphinx-build -D version=%s -D release=%s -b %s %s %s'
-                        % (INFO['version'], INFO['version'], format, \
-                           self.options.doc_source, output_dir))
+        self.run_command('sphinx-build' \
+                         ' -D version=%s -D release=%s -b %s "%s" "%s"'
+                         % (INFO['version'], INFO['version'], format, \
+                         self.options.doc_source, output_dir))
 
     @has_started
     def remove_tmp_files(output_dir):
