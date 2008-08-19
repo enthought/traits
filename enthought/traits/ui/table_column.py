@@ -297,16 +297,7 @@ class TableColumn ( HasPrivateTraits ):
     def get_renderer ( self, object ):
         """ Returns the renderer for the column of a specified object.
         """
-        result = self.renderer
-        if result is not None:
-            return result
-            
-        if ((self.get_cell_theme( object ) is not None) or
-            (self.get_image(      object ) is not None) or
-            (self.get_maximum(    object ) != 0.0)):
-            return self.themed_cell_renderer
-            
-        return None
+        return self.renderer or self.themed_cell_renderer
         
     #---------------------------------------------------------------------------
     #  Returns whether the column is editable for a specified object:  
@@ -410,15 +401,6 @@ class TableColumn ( HasPrivateTraits ):
     
     def _themed_cell_renderer_default ( self ):
         return toolkit().themed_cell_renderer( self )
-        
-    #-- Private Methods --------------------------------------------------------
-    
-    def _get_renderer ( self, object, use_themes ):
-        result = self.get_renderer( object )
-        if (result is None) and use_themes:
-            result = self.themed_cell_renderer
-        
-        return result
 
 #-------------------------------------------------------------------------------
 #  'ObjectColumn' class:
