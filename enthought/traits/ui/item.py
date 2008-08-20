@@ -426,10 +426,11 @@ class Label ( Item ):
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, label, item_theme = None ):
+    def __init__ ( self, label, item_theme = None, **traits ):
         super( Label, self ).__init__( 
             label      = label, 
-            item_theme = convert_theme( item_theme )
+            item_theme = convert_theme( item_theme ),
+            **traits
         )
 
 #-------------------------------------------------------------------------------
