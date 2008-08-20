@@ -7,5 +7,6 @@ Traits Documentation
       
     traits_user_manual/index
     tutorials/index
+    TUIUG/index
       
 * :ref:`search`
