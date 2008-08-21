@@ -51,13 +51,15 @@ class TreeNode ( HasPrivateTraits ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
     
-    # Name of trait containing children ('' = Leaf)
+    # Name of trait containing children (if '', the node is a leaf).
     children = Str
     
-    # Name of trait containing label ('=label' = constant)
+    # Either the name of a trait containing a label, or a constant label, if
+    # the string starts with '='.
     label = Str
 
-    # Name of trait containing tooltip ('=tooltip' = constant)
+    # Either the name of a trait containing a tooltip, or constant tooltip, if
+    # the string starts with '='.
     tooltip = Str
     
     # Name to use for a new instance
@@ -120,7 +122,8 @@ class TreeNode ( HasPrivateTraits ):
     # View to use for editing the object
     view = Instance( View )
     
-    # Right-click context menu. The value can either be:
+    # Right-click context menu. The value can be one of:
+    #
     # - Instance( Menu ): Use this menu as the context menu
     # - None: Use the default context menu
     # - False: Do not display a context menu
