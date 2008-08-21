@@ -84,15 +84,25 @@ class UStr ( TraitType ):
                 return value
 
             available = self.available.get( value )
-            if available is not None:
+            while True:
+                if available is None:
+                    new_value = None
+                    break
+                    
                 index = available.pop()
                 if len( available ) == 0:
                     del self.available[ value ]
-            else:
+                    available = None
+                    
+                new_value = '%s_%d' % ( value, index )
+                if new_value not in names:
+                    break
+                    
+            if new_value is None:
                 self.roots[ value ] = index = \
                     self.roots.setdefault( value, 1 ) + 1
-                    
-            new_value          = '%s_%d' % ( value, index )
+                new_value = '%s_%d' % ( value, index )
+                
             names[ new_value ] = object
             return new_value
             
