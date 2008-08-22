@@ -22,6 +22,8 @@ validation features of the Traits package.
 * Trait attribute definition strategies
 * Type-checked methods
 
+.. index:: initialization; dynamic
+
 .. _dynamic-initialization:
 
 Dynamic Initialization
@@ -47,13 +49,14 @@ It is also possible to define a dynamic method for the default value in a trait
 type subclass (get_default_value()). However, however, using a 
 _\ *name*\ _default()  method avoids the overhead of subclassing a trait.
 
+.. index:: default value; overriding in a subclass
+.. index::
+   pair: examples; overriding default values
+
 .. _overriding-default-values-in-a-subclass:
 
 Overriding Default Values in a Subclass
 ```````````````````````````````````````
-.. index:: default value; overriding in a subclass
-.. index::
-   pair: examples; overriding default values
 
 Often, a subclass must override a trait attribute in a parent class by providing
 a different default value. You can specify a new default value without
@@ -74,11 +77,12 @@ In this example, the **salary_grade** of the Employee class is a range from 1 to
 10, with a default value of 1. In the Manager subclass, the default value of
 **salary_grade** is 5, but it is still a range as defined in the Employee class.
 
+.. index:: trait; definitions; reusing
+
 .. _reusing-trait-definitions:
 
 Reusing Trait Definitions 
 ````````````````````````` 
-.. index:: trait; definitions; reusing
 
 As mentioned in :ref:`defining-traits-initialization-and-validation`, in most
 cases, traits are defined in-line in attribute definitions, but they can also be
@@ -103,11 +107,12 @@ trait attributes **c2**, **c1**, and **c0**. Each of these attributes has a
 unique value, but they all use the same trait definition to determine whether a
 value assigned to them is valid.
 
+.. index:: explicit trait attribute definition
+
 .. _trait-attribute-definition-strategies:
 
 Trait Attribute Definition Strategies
 `````````````````````````````````````
-.. index:: explicit trait attribute definition
 
 In the preceding examples in this guide, all trait attribute definitions have
 bound a single object attribute to a specified trait definition. This is known
@@ -118,12 +123,13 @@ wildcard. You can also dynamically create trait attributes that are specific to
 an instance, using the add_trait() method, rather than defined on a class. These
 strategies are described in the following sections.
 
+.. index:: wildcard; trait attribute names
+   pair: wildcard; examples
+
 .. _trait-attribute-name-wildcard:
 
 Trait Attribute Name Wildcard
 :::::::::::::::::::::::::::::
-.. index:: wildcard; trait attribute names
-   pair: wildcard; examples
 
 The Traits package enables you to define a category of trait attributes
 associated with a particular trait definition, by including an underscore ('_')
@@ -179,11 +185,12 @@ specifying only the wildcard character for the attribute name::
 In this case, all Person instance attributes can be created on the fly and are
 defined by the Any trait.
 
+.. index:: wildard; rules
+
 .. _wildcard-rules:
 
 Wildcard Rules
 ''''''''''''''
-.. index: wildard; rules
 
 When using wildcard characters in trait attribute names, the following rules are
 used to determine what trait definition governs an attribute:
@@ -215,11 +222,12 @@ assigned. All other object attributes behave like normal Python attributes
 (i.e., they allow any value to be assigned, but they must have a value assigned
 to them before their first reference).
 
+.. index:: Disallow; object, examples; Disallow object
+
 .. _disallow-object:
 
 Disallow Object 
 '''''''''''''''
-.. index:: Disallow; object, examples; Disallow object
 
 The singleton object Disallow can be used with wildcards to disallow all
 attributes that are not explicitly defined. For example::
@@ -244,11 +252,12 @@ All other object attributes are explicitly disallowed. That is, any attempt to
 read or set any object attribute other than **name**, **age**, or **weight**
 causes an exception.
 
+.. index:: HasTraits class; predefined subclasses
+
 .. _hastraits-subclasses:
 
 HasTraits Subclasses
 ''''''''''''''''''''
-.. index:: HasTraits class; predefined subclasses
 
 Because the HasTraits class implicitly contains the attribute definition
 ``_ = Python``, subclasses of HasTraits by default have very standard Python
@@ -258,11 +267,12 @@ to create subclasses of HasTraits with very non-standard attribute behavior. Two
 such subclasses are predefined in the Traits package: HasStrictTraits and
 HasPrivateTraits.
 
+.. index:: HasStrictTraits class
+
 .. _hasstricttraits:
 
 HasStrictTraits
 ~~~~~~~~~~~~~~~
-.. index:: HasStrictTraits class
 
 This class guarantees that accessing any object attribute that does not have an
 explicit or wildcard trait definition results in an exception. This can be
@@ -291,11 +301,12 @@ exception, as does attempting to set an attribute that is not one of the three
 defined attributes. In essence, TreeNode behaves like a type-checked data
 structure.
 
+.. index:: HasPrivateTraits class
+
 .. _hasprivatetraits:
 
 HasPrivateTraits
 ~~~~~~~~~~~~~~~~
-.. index:: HasPrivateTraits class
 
 This class is similar to HasStrictTraits, but allows attributes beginning with
 '_' to have an initial value of None, and to not be type-checked. This is useful
@@ -312,6 +323,8 @@ following::
 These subclasses of HasTraits are provided as a convenience, and their use is
 completely optional. However, they do illustrate how easy it is to create
 subclasses with customized default attribute behavior if desired.
+
+.. index:: trait attributes; per-object
 
 .. _per-object-trait-attributes:
 
@@ -365,11 +378,12 @@ attribute (either a trait attribute or a regular attribute) simply by assigning
 to it, as is normally the case in Python. In this case, add_trait() is the only
 way to create a new attribute for the class outside of the class definition.
 
+.. index:: methods; type-checking, type-checking methods
+
 .. _type-checked-methods:
 
 Type-Checked Methods
 ````````````````````
-.. index:: methods; type-checking, type-checking methods
 
 In addition type-checked attributes, the Traits package provides the ability to
 create type-checked methods.
@@ -419,11 +433,12 @@ used, it must directly precede the definition of the method whose type signature
 it defines. (However, white space is allowed.) If it does not, a TraitError is
 raised.
 
+.. index:: interfaces
+
 .. _interfaces:
 
 Interfaces
 ----------
-.. index:: interfaces
 
 Starting in version 3.0, the Traits package supports declaring and implementing
 *interfaces*. An interface is an abstract data type that defines a set of
@@ -439,11 +454,12 @@ Python programmers routinely use implicit, informal interfaces (what's known as
 interfaces, so that programmers reading the code can more easily understand what
 kinds of objects are actually *intended* to be used in a given situation.
 
+.. index:: interfaces; defining, examples; interface definition
+
 .. _defining-an-interface:
 
 Defining an Interface
 `````````````````````
-.. index:: interfaces; defining, examples; interface definition
 
 To define an interface, create a subclass of Interface::
     
@@ -464,15 +480,17 @@ interfaces do not contain implementations.
 
 By convention, interface names have a capital 'I' at the beginning of the name.
 
+.. index:: interfaces; implementing
+
 .. _implementing-an-interface:
 
 Implementing an Interface
 `````````````````````````
-.. index:: interfaces; implementing
 
 A class declares that it implements one or more interfaces using the
 implements() function, which has the signature:
 
+.. currentmodule:: enthought.traits.has_traits
 .. function:: implements( interface[, interface2 , ... , interfaceN] )
 
 .. index:: examples; interface implementation, interfaces; implementation; example
@@ -513,11 +531,12 @@ enthought.traits.has_traits module::
     import enthought.traits.has_traits
     enthought.traits.has_traits.CHECK_INTERFACES = 1
 
+.. index:: interfaces; using, examples; interface usage
+
 .. _using-interfaces:
 
 Using Interfaces
 ````````````````
-.. index:: interfaces; using, examples; interface usage
 
 You can use an interface at any place where you would normally use a class name.
 The most common way to use interfaces is with the Instance trait::
@@ -538,11 +557,12 @@ assigned object does not implement the interface, the Traits package may
 automatically substitute an adapter object that implements the specified
 interface. See :ref:`adaptation` for more information.)
 
+.. index:: adaptation
+
 .. _adaptation:
 
 Adaptation
 ----------
-.. index:: adaptation
 
 Adaptation is the process of transforming an object that does not implement a
 specific interface (or set of interfaces) into an object that does. In Traits,
@@ -556,11 +576,12 @@ instantiated (if such an adapter class exists), and the adapter object is
 assigned to the trait. If necessary, a "chain" of adapter objects might be
 created, in order to perform the required adaptation.
 
+.. index:: adapters; defining
+
 .. _defining-adapters:
 
 Defining Adapters
 `````````````````
-.. index:: adapters; defining
 
 The Traits package provides several mechanisms for defining adapter classes:
 
@@ -568,11 +589,12 @@ The Traits package provides several mechanisms for defining adapter classes:
 * Defining an adapter class without subclassing Adapter
 * Declaring a class to be an adapter externally to the class
 
+.. index:: Adapter class
+
 .. _subclassing-adapter:
 
 Subclassing Adapter
 :::::::::::::::::::
-.. index:: Adapter class
 
 The Traits package provides an Adapter class as convenience. This class
 streamlines the process of creating a new adapter class. It has a standard
@@ -616,11 +638,12 @@ The following code example shows a definition of a simple adapter class::
             return ('%s %s' % ( self.adaptee.first_name, 
                                 self.adaptee.last_name ))
                                 
+.. index:: adapters; creating from scratch
+
 .. _creating-an-adapter-from-scratch:
 
 Creating an Adapter from Scratch
 ::::::::::::::::::::::::::::::::
-.. index:: adapters; creating from scratch
 
 You can create an adapter class without subclassing Adapter. If so, you must
 provide the same information and setup that are implicitly provided by Adapter.
@@ -632,6 +655,7 @@ adapter class, and declares the set of interfaces that the class implements.
 
 The signature  of the adapts() function is:
 
+.. currentmodule:: enthought.traits.adapter
 .. function:: adapts( adaptee_class, interface[, interface2, ... , interfaceN])
 
 This signature is very similar to that of implements(), but adds the class being
@@ -669,11 +693,12 @@ subclassing Adapter::
             return ('%s %s' % ( self.client.first_name, 
                                 self.client.last_name ))
                                 
+.. index:: adapters; declaring externally
+
 .. _declaring-a-class-as-an-adapter-externally:
 
 Declaring a Class as an Adapter Externally
 ::::::::::::::::::::::::::::::::::::::::::
-.. index:: adapters; declaring externally
 
 You can declare a class to be an adapter by calling the adapts() function
 externally to the class definition. The class must provide the same information
@@ -712,11 +737,12 @@ The following code shows this use of the adapts() function::
     
     adapts( AnotherPersonAdapter, Person, IName )
     
+.. index:: adapters; using
+
 .. _using-adapters:
 
 Using Adapters
 ``````````````
-.. index:: adapters; using
 
 You define adapter classes as described in the preceding sections, but you do
 not explicitly create instances of these classes. The Traits package
@@ -734,11 +760,12 @@ required interface, is assigned as the trait value. When a situation like this
 arises, the adapted object assigned to the trait always contains the smallest
 set of adapter objects needed to adapt the original object.
 
+.. index:: adapters; controlling
+
 .. _controlling-adaptation:
 
 Controlling Adaptation
 ``````````````````````
-.. index:: adapters; controlling
 
 Adaptation normally happens automatically when needed, and when appropriate
 adapter classes are available. However, the Instance trait lets you control how
@@ -770,11 +797,12 @@ uses adapt metadata::
 Using this definition, any value assigned to renter must implement the IName
 interface. Otherwise, an exception is raised.
 
+.. index:: property traits
+
 .. _property-traits:
 
 Property Traits
 ---------------
-.. index:: property traits
 
 The predefined Property() trait factory function defines a Traits-based version
 of a Python property, with "getter" and "setter" methods. This type of trait
@@ -790,6 +818,7 @@ Property Factory Function
 
 The Property() function has the following signature:
 
+.. currentmodule:: enthought.traits.traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
 All parameters are optional, including the *fget* "getter" and *fset* "setter"
@@ -817,11 +846,12 @@ situations:
   to ignore functions on the class) and one of the access functions was not 
   specified in the arguments.
 
+.. index:: property traits; caching value
+
 .. _caching-a-property-value:
 
 Caching a Property Value
 ````````````````````````
-.. index:: property traits; caching value
 
 In some cases, the cost of computing the value of a property trait attribute may
 be very high. In such cases, it is a good idea to cache the most recently
@@ -867,21 +897,23 @@ the same syntax as the on_trait_change() method's name parameter, described in
 attributes on referenced objects, multiple attributes, or attributes that are
 selected based on their metadata attributes.
 
+.. index:: persistence, __getstate__(), __setstate__()
+
 .. _persistence:
 
 Persistence
 -----------
-.. index:: persistence, __getstate__(), __setstate__()
 
 In version 3.0, the Traits package provides __getstate__() and __setstate__()
 methods on HasTraits, to implement traits-aware policies for serialization and
 deserialization (i.e., pickling and unpickling).
 
+.. index:: HasTraits class; pickling, pickling HasTraits objects
+
 .. _pickling-hastraits-objects:
 
 Pickling HasTraits Objects
 ``````````````````````````
-.. index:: HasTraits class; pickling, pickling HasTraits objects
 
 Often, you may wish to control for a HasTraits subclass which parts of an
 instance's state are saved, and which are discarded. A typical approach is to
@@ -923,11 +955,12 @@ saved as part of the object's persistent state. Normally, the file handle would
 be re-opened by application code after the object has been restored from its
 persisted state.
 
+.. index:: transient; predefined traits
+
 .. _predefined-transient-traits:
 
 Predefined Transient Traits
 ```````````````````````````
-.. index:: transient; predefined traits
 
 A number of the predefined traits in the Traits package are defined with
 **transient** set to True, so you do not need to explicitly mark them. The
@@ -943,11 +976,12 @@ automatically transient traits are:
   serialized. (See :ref:`delegatesto`) You can mark a Delegate trait as 
   transient if you do not want its value to ever be serialized.
   
+.. index:: __getstate__(); overriding
+
 .. _overriding_getstate:
 
 Overriding __getstate__()
 `````````````````````````
-.. index:: __getstate__(); overriding
 
 In general, try to avoid overriding __getstate__() in subclasses of HasTraits.
 Instead, mark traits that should not be pickled with ``transient = True``
@@ -965,11 +999,12 @@ to override __getstate__() to remove items that should not be persisted::
     
         return state
         
+.. index:: unpickling HasTraits objects, HasTraits class; unpickling
+
 .. _unpicking-hastraits-objects:
 
 Unpickling HasTraits Objects
 ````````````````````````````
-.. index:: unpickling HasTraits objects, HasTraits class; unpickling
 
 The __setstate__() method of HasTraits differs from the default Python behavior
 in one important respect: it explicitly sets the value of each attribute using
@@ -979,11 +1014,12 @@ strategy has the advantage of generating trait change notifications for each
 attribute. These notifications are important for classes that rely on them to
 ensure that their internal object state remains consistent and up to date.
 
+.. index:: __setstate__(); overriding
+
 .. _overriding-setstate:
 
 Overriding __setstate__()
 `````````````````````````
-.. index:: __setstate__(); overriding
 
 You may wish to override the HasTraits __setstate__() method, for example for
 classes that do not need to receive trait change notifications, and where the
@@ -998,31 +1034,34 @@ up so that later change notifications are handled. You can do this in two ways:
 * Call the HasTraits class's private _init_trait_listeners() method; this 
   method has no parameters and does not return a result.
 
+.. index:: HasTraits class; methods
+
 .. _useful-methods-on-hastraits:
 
 Useful Methods on HasTraits
 ---------------------------
-.. index:: HasTraits class; methods
 
 The HasTraits class defines a number of methods, which are available to any
 class derived from it, i.e., any class that uses trait attributes. This section
 provides examples of a sampling of these methods. Refer to the *Traits API
 Reference* for a complete list of HasTraits methods.
 
+.. index:: add_trait()
+
 .. _add-trait:
 
 add_trait()
 ```````````
-.. index:: add_trait()
 
 This method adds a trait attribute to an object dynamically, after the object
 has been created. For more information, see :ref:`per-object-trait-attributes`.
+
+.. index:: clone_traits()
 
 .. _clone-traits:
 
 clone_traits()
 ``````````````
-.. index:: clone_traits()
 
 This method copies trait attributes from one object to another. It can copy
 specified attributes, all explicitly defined trait attributes, or all explicitly
@@ -1034,11 +1073,12 @@ case, you might clone an object and its trait attributes; allow the user to
 modify the clone; and then re-clone only the trait attributes back to the
 original object when the user commits changes.
 
+.. index:: set()
+
 .. _set:
 
 set()
 `````
-.. index:: set()
 
 This method takes a list of keyword-value pairs, and sets the trait attribute
 corresponding to each keyword to the matching value. This shorthand is useful
@@ -1051,12 +1091,13 @@ The statement above is equivalent to the following::
     
     person.name = 'Bill'
     person.age = 27
+
+.. index:: add_class_trait()
     
 .. _add-class-trait:
 
 add_class_trait()
 `````````````````
-.. index:: add_class_trait()
 
 The add_class_trait() method is a class method, while the preceding HasTraits
 methods are instance methods. This method is very similar to the add_trait()
@@ -1116,11 +1157,12 @@ following code::
     
     Chicken.add_class_trait('hatched_from', Egg)
     
+.. index:: performance of Traits
+
 .. _performance-considerations-of-traits:
 
 Performance Considerations of Traits 
 ------------------------------------
-.. index:: performance of Traits
 
 Using traits can potentially impose a performance penalty on attribute access
 over and above that of normal Python attributes. For the most part, this

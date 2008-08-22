@@ -63,7 +63,7 @@ inherited by any subclass derived from the class.
 The following example [1]_ illustrates each of the features of the Traits 
 package. These features are elaborated in the rest of this guide.
 
-.. index:: examples; features
+.. index:: examples; Traits features
 
 ::
 

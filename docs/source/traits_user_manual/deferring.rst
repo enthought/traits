@@ -1,8 +1,9 @@
+.. index:: deferral
+
 .. _deferring-traits:
 
 Deferring Trait Definitions
 ===========================
-.. index:: deferral
 
 One of the advanced capabilities of the Traits package is its support for trait
 attributes to defer their definition and value to another object than the one
@@ -124,11 +125,12 @@ Keyword Parameters
 The *prefix* and *listenable* parameters of the DelegatesTo and PrototypedFrom
 initializer functions behave similarly for both classes.
 
+.. index:: prefix parameter to initializer methods
+
 .. _prefix-keyword:
 
 Prefix Keyword
 ``````````````
-.. index:: prefix parameter to initializer methods
 
 When the *prefix* parameter is a non-empty string, the rule for performing trait
 attribute look-up in the deferred-to object is modified, with the modification
@@ -188,11 +190,12 @@ attributes:
 * **allowance**, which prototypes from the **child_allowance** attribute of its
   **father** object.
   
+.. index:: listenable parameter to initializer methods
+
 .. _listenable-keyword:
 
 Listenable Keyword
 ``````````````````
-.. index:: listenable parameter to initializer methods
 
 By default, you can attach listeners to deferred trait attributes, just as you
 can attach listeners to most other trait attributes, as described in the
@@ -203,13 +206,14 @@ case of deferring is to have a large number of deferred attributes for static
 object hierarchies, this feature can be turned off by setting 
 ``listenable=False`` in order to speed up instantiation.
 
+.. index:: 
+   single: deferral; notification with
+   pair: examples; deferral
+
 .. _notification-with-deferring:
 
 Notification with Deferring
 ---------------------------
-.. index:: 
-   single: deferral; notification with
-   pair: examples; deferral
 
 While two trait attributes are linked by a deferring relationship (either
 delegation, or prototyping before the link is broken), notifications for changes

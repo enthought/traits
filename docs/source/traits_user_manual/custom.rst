@@ -1,8 +1,10 @@
+.. index:: custom traits
+
+.. _custom-traits:
 
 ============= 
 Custom Traits 
 ============= 
-.. index:: custom traits
 
 The predefined traits such as those described in :ref:`predefined-traits` are
 handy shortcuts for commonly used types. However, the Traits package also
@@ -12,11 +14,12 @@ provides facilities for defining complex or customized traits:
 * The Trait() factory function
 * Predefined or custom trait handlers
 
+.. index:: subclassing traits, TraitType class
+
 .. _trait-subclassing:
 
 Trait Subclassing
 -----------------
-.. index:: subclassing traits, TraitType class
 
 Starting with Traits version 3.0, most predefined traits are defined as
 subclasses of enthought.traits.trait_handlers.TraitType. As a result, you can
@@ -64,6 +67,8 @@ property, depending on the specific methods and class constants that you define.
 A trait type uses a validate() method, while a trait property uses get() and
 set() methods.
 
+.. index: trait type; defining
+
 .. _defining-a-trait-type:
 
 Defining a Trait Type
@@ -71,7 +76,7 @@ Defining a Trait Type
 
 The members that are specific to a trait type subclass are:
 
-.. index:: default_value attribute, get_default_value() method
+.. index:: default_value attribute, get_default_value()
 
 * validate() method
 * post_setattr() method 
@@ -108,6 +113,8 @@ value. To use a constant, set the class-level **default_value attribute**. To
 compute the default value, override the TraitType class's get_default_value()
 method.
 
+.. index:: trait property; defining
+
 .. _defining-a-trait-property:
 
 Defining a Trait Property
@@ -135,6 +142,8 @@ The get() method returns the value of the *name* property for the specified
 object. The set() method does not return a value, but will raise a TraitError if
 the specified *value* is not valid, and cannot be coerced or adapted to a valid
 value.
+
+.. index:: TraitType class; members
 
 .. _other-traittype-members:
 
@@ -168,11 +177,12 @@ returns the default trait editor to use for any instances of the type.
 For complete details on the members that can be overridden, refer to the *Traits
 API Reference* sections on the TraitType and BaseTraitHandler classes.
 
+.. index:: Trait()
+
 .. _the-trait-factory-function:
 
 The Trait() Factory Function
 ----------------------------
-.. index:: Trait() function
 
 The Trait() function is a generic factory for trait definitions. It has many
 forms, many of which are redundant with the predefined shortcut traits. For
@@ -183,6 +193,7 @@ Reference*.
 
 The most general form of the Trait() function is:
 
+.. currentmodule:: enthought.traits.traits
 .. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
                         
 .. index:: compound traits
@@ -214,6 +225,8 @@ any of the following values:
 * An integer in the range of 1 to 6
 * One of the following strings: 'one', 'two', 'three', 'four', 'five', 'six'
 
+.. index:: Trait(); parameters
+
 .. _trait-parameters:
 
 Trait () Parameters
@@ -239,12 +252,13 @@ further explanation.
 * *trait_handler*: See :ref:`trait-handlers`.
 * *trait*: Another trait object can be passed as a parameter; any value that is
   valid for the specified trait is also valid for the trait referencing it.
+
+.. index:: type; parameter to Trait()
   
 .. _type:
 
 Type
 ::::
-.. index:: type; parameter to Trait()
 
 A *type* parameter to the Trait() function can be any of the following standard
 Python types:
@@ -269,11 +283,12 @@ Python types:
 Specifying one of these types means that the trait value must be of the
 corresponding Python type.
 
+.. index:: constant_value parameter to Trait()
+
 .. _constant-value:
 
 Constant Value
 ::::::::::::::
-.. index:: constant_value parameter to Trait()
 
 A *constant_value* parameter to the Trait() function can be any constant
 belonging to one of the following standard Python types:
@@ -291,11 +306,12 @@ Specifying a constant means that the trait can have the constant as a valid
 value. Passing a list of constants to the Trait() function is equivalent to
 using the Enum predefined trait.
 
+.. index:: mapped traits
+
 .. _mapped-traits:
 
 Mapped Traits
 `````````````
-.. index:: mapped traits
 
 If the Trait() function is called with parameters that include one or more
 dictionaries, then the resulting trait is called a "mapped" trait. In practice,
@@ -379,11 +395,12 @@ Any trait that has a shadow value is a mapped trait. For example, for the
 Expression trait, the assigned value must be a valid Python expression, and the
 shadow value is the compiled form of the expression.
 
+.. index:: trait handler; classes
+
 .. _trait-handlers:
 
 Trait Handlers
 --------------
-.. index:: trait handler; classes
 
 In some cases, you may want to define a customized trait that is unrelated to
 any predefined trait behavior, or that is related to a predefined trait that
@@ -408,11 +425,12 @@ the Trait() factory function. For a complete list and descriptions of predefined
 TraitHandler subclasses, refer to the *Traits API Reference*, in the section on
 the enthought.traits.trait_handlers module.
 
+.. index:: TraitPrefixList class
+
 .. _traitprefixlist:
 
 TraitPrefixList
 ```````````````
-.. index:: TraitPrefixList class
 
 The TraitPrefixList handler accepts not only a specified set of strings as
 values, but also any unique prefix substring of those values. The value assigned
@@ -444,11 +462,12 @@ For example::
         raise TraitError, ( object, name, self.info(), value )
     enthought.traits.trait_errors.TraitError: The 'heads' trait of an Alien instance must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't' was specified.
 
+.. index:: TraitPrefixMap class
+
 .. _traitprefixmap:
 
 TraitPrefixMap
 ``````````````
-.. index:: TraitPrefixMap class
 
 The TraitPrefixMap handler combines the TraitPrefixList with mapped traits. Its
 constructor takes a parameter that is a dictionary whose keys are strings. A
@@ -471,11 +490,12 @@ any prefix of 'true', 'yes', 'false', or 'no', and maps them to 1 or 0.
                                   'false': 0,
                                   'no':   0 } ) )
 
+.. index:: handler classes; custom
+
 .. _custom-trait-handlers:
 
 Custom Trait Handlers
 ---------------------
-.. index:: handler classes; custom
 
 If you need a trait that cannot be defined using a predefined trait handler
 class, you can create your own subclass of TraitHandler. The constructor 
@@ -486,12 +506,13 @@ constructor does not need to call the TraitHandler base class's constructor.
 The only method that a custom trait handler must implement is validate(). Refer
 to the *Traits API Reference* for details about this function.
 
+.. index:: 
+   pair: custom trait handler; examples
+
 .. _example-custom-trait-handler:
 
 Example Custom Trait Handler 
 ````````````````````````````
-.. index:: 
-   pair: custom trait handler; examples
    
 The following example defines the OddInt trait (also implemented as a trait type
 in :ref:`defining-a-trait-type`) using a TraitHandler subclass.

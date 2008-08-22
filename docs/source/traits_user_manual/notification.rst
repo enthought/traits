@@ -19,12 +19,13 @@ ways:
   decorator to indicate that they handle notification for specified attributes.
 * Statically, by using a special naming convention for methods on the class to
   indicate that they handle notifications for specific trait attributes. 
+
+.. index:: notification; dynamic
   
 .. _dynamic-notification:
 
 Dynamic Notification 
 --------------------
-.. index:: notification; dynamic
 
 Dynamic notification is useful in cases where a notification handler cannot be
 defined on the class (or a subclass) whose trait attribute changes are to be
@@ -39,7 +40,7 @@ same object. The handler registration methods have the following signatures:
 
 .. method:: on_trait_change(handler[, name=None, remove=False, dispatch='same'])
   
-.. index:: on_trait_event; method
+.. index:: on_trait_event(); method
 
 .. method:: on_trait_event(handler[, name=None, remove=False, dispatch='same'])
 
@@ -57,12 +58,13 @@ In these signatures:
 * *dispatch*: String indicating the thread on which notifications must be run.
   In most cases, it can be omitted. See the *Traits API Reference* for details
   on non-default values. 
+
+.. index:: examples; dynamic notification
   
 .. _example-of-a-dynamic-notification-handler:
 
 Example of a Dynamic Notification Handler 
 `````````````````````````````````````````
-.. index:: examples; dynamic notification
 
 Setting up a dynamic trait attribute change notification handler is illustrated
 in the following example::
@@ -99,11 +101,12 @@ change notification so that its update_cost() method is called whenever the
 **cost** attribute of either its **part1** or **part2** attribute is modified. 
 This method then updates the cost attribute of the widget object.
 
+.. index:: name parameter; on_trait_change()
+
 .. _the-name-parameter:
 
 The *name* Parameter
 ````````````````````
-.. index:: name parameter; on_trait_change()
 
 The *name* parameter of on_trait_change() and on_trait_event() provides 
 significant flexibility in specifying the name or names of one or more trait
@@ -119,13 +122,14 @@ The *name* parameter can take any of the following values:
   object with the specified names.
 * An "extended" name or list of extended names: The handler applies to each
   trait attribute that matches the specified extended names.
+
+.. index:: 
+   pair: extended trait names; syntax
   
 .. _syntax:
 
 Syntax
 ::::::
-.. index:: 
-   pair: extended trait names; syntax
 
 Extended names use the following syntax:
 
@@ -136,12 +140,13 @@ Extended names use the following syntax:
 
 A *name* is any valid Python attribute name.
 
+.. index:: 
+   pair: extended trait names; semantics
+
 .. _semantics:
 
 Semantics
 :::::::::
-.. index:: 
-   pair: extended trait names; semantics
 
 .. _semantics-of-extended-name-notation-table:
 
@@ -202,11 +207,11 @@ Semantics
 |                              |structures like trees or linked lists.        |
 +------------------------------+----------------------------------------------+
 
+.. index:: extended trait names; examples
+
 .. _examples-of-extended-name-notation-table:
 
 .. rubric:: Examples of extended name notation
-
-.. index:: extended trait names; examples
 
 +--------------------------+--------------------------------------------------+
 |Example                   | Meaning                                          |
@@ -255,20 +260,23 @@ The handler routine is also invoked when items are added or removed from a list
 or dictionary, because this is treated as an implied change to the item's trait
 being monitored.
 
+.. index:: notification; dynamic
+
 .. _notification-handler-signatures:
 
 Notification Handler Signatures
 ```````````````````````````````
-.. index:: notification; dynamic
 
 The handler passed to on_trait_change() or on_trait_event() can have any one of
 the following signatures:
 
-.. function:: handler()
-.. function:: handler(new) 
-.. function:: handler(name, new)
-.. function:: handler(object, name, new)
-.. function:: handler(object, name, old, new)
+.. index:: handler; signatures, trait change handler; signatures
+
+- handler()
+- handler(*new*) 
+- handler(*name*, *new*)
+- handler(*object*, *name*, *new*)
+- handler(*object*, *name*, *old*, *new*)
 
 These signatures use the following parameters:
 
@@ -298,11 +306,12 @@ These signatures use the following parameters:
 If the handler is a bound method, it also implicitly has *self* as a first 
 argument. 
 
+.. index:: notification; special cases
+
 .. _dynamic-handler-special-cases:
 
 Dynamic Handler Special Cases
 `````````````````````````````
-.. index:: notification; special cases
 
 In the one- and two-parameter signatures, the handler does not receive enough
 information to distinguish between a change to the final trait attribute being
@@ -372,11 +381,12 @@ some aspect of the extended trait name syntax in the name specifier.
     print "Replacing list"
     dept.employees = [donna]      # Calls A and C
     
+.. index:: notification; static
+
 .. _static-notification:
 
 Static Notification 
 -------------------
-.. index:: notification; static
 
 The static approach is the most convenient option, but it is not always 
 possible. Writing a static change notification handler requires that, for a
@@ -408,12 +418,13 @@ handlers, because it supports the very powerful extended trait name syntax
 multiple attributes at once, on trait attributes of linked objects, and on
 attributes that are selected based on trait metadata.
 
+.. index:: 
+   pair: on_trait_change; syntax
+
 .. _decorator-syntax:
 
 Decorator Syntax
 ::::::::::::::::
-.. index:: 
-   pair: on_trait_change; syntax
    
 The syntax for the decorator is::
 
@@ -430,13 +441,14 @@ those for dynamic notification handlers, as described in
 parameter, because they can handle notifications for trait attributes that do
 not belong to the same object.
 
+.. index:: 
+   pair: on_trait_change; semantics
+
 .. _decorator-semantics:
 
 Decorator Semantics
 :::::::::::::::::::
     
-.. index:: 
-   pair: on_trait_change; semantics
    
 The functionality provided by the @on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
@@ -450,11 +462,12 @@ causes any default initializers for the traits it references to be executed at
 instance construction time. In the case of specially-named handlers, any 
 default initializers are executed lazily. 
 
+.. index:: notification; specially-named handlers
+
 .. _specially-named-notification-handlers:
 
 Specially-named Notification Handlers
 `````````````````````````````````````
-.. index:: notification; specially-named handlers
 
 There are two kinds of special method names that can be used for static trait
 attribute change notifications. One is attribute-specific, and the other 
@@ -472,7 +485,7 @@ To notify about changes to any trait attribute on a class, define a method
 named _anytrait_changed(). 
 
 .. index::
-   single: examples: _any_trait_changed()
+   pair: examples; _any_trait_changed()
    pair: static notification; examples
 
 Both of these types of static trait attribute notification methods are 
@@ -641,11 +654,12 @@ names are simply synonyms for programmer convenience.
 Similarly, a function named on_trait_event() can be used as a synonym for
 on_trait_change() for dynamic notification.
 
+.. index:: Undefined object
+
 .. _undefined-object:
 
 Undefined Object 
 ````````````````
-.. index:: Undefined object
 
 Python defines a special, singleton object called None. The Traits package
 introduces an additional special, singleton object called Undefined.

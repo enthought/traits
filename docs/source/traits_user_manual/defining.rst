@@ -1,9 +1,10 @@
+.. index:: validation, using traits
+
 .. _defining-traits-initialization-and-validation:
 
 ==============================================
 Defining Traits: Initialization and Validation
 ==============================================
-.. index:: validation, using traits
 
 Using the Traits package in a Python program involves the following steps:
 
@@ -244,11 +245,11 @@ default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of 
 the table.
 
+.. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
+
 .. _predefined-traits-beyond-simple-types-table:
 
 .. rubric:: Predefined traits beyond simple types
-
-.. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
 
 +------------------+----------------------------------------------------------+
 | Name             | Callable Signature                                       |
@@ -338,7 +339,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+
-| Password         | Password( [*value* = '', *minlen* = 0, *maxlen& =        |
+| Password         | Password( [*value* = '', *minlen* = 0, *maxlen* =        |
 |                  | sys.maxint, *regex* = '', \*\*\ *metadata*] )            |
 +------------------+----------------------------------------------------------+
 | Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
@@ -361,6 +362,8 @@ the table.
 +------------------+----------------------------------------------------------+
 | RGBColor         | RGBColor( [\*\ *args*, \*\*\ *metadata*] )               |
 +------------------+----------------------------------------------------------+
+| self             | n/a                                                      |
++------------------+----------------------------------------------------------+
 | Set              | Set( [*trait* = None, *value* = None, *items* = True,    |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
@@ -382,11 +385,16 @@ the table.
 +------------------+----------------------------------------------------------+
 | undefined        | n/a                                                      |
 +------------------+----------------------------------------------------------+
+| UStr             | UStr( [*owner*, *list_name*, *str_name*, *default_value =|
+|                  | NoDefaultSpecified, \*\*\ *metadata*])                   |
++------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
 | WeakRef          | WeakRef( [*klass* = 'enthought.traits.HasTraits',        |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
+
+.. index:: This trait, self trait
 
 .. _this-and-self:
 
@@ -397,6 +405,9 @@ A couple of predefined traits that merit special explanation are This and
 class (or a subclass) as the enclosing class. The default value of This is 
 None; the default value of **self** is the object containing the attribute.
 
+.. index:: 
+   pair: This trait; examples
+   
 The following is an example of using This::
     
     # this.py --- Example of This predefined trait
@@ -446,6 +457,8 @@ on the class of the instance being referenced. For example::
     Executive instance must be an instance of the same type as the receiver,
     but a value of <__main__.Employee object at 0x00994330> was specified.
     
+.. index:: multiple values, defining trait with
+
 .. _list-of-possibl-values:
 
 List of Possible Values
@@ -457,6 +470,8 @@ and floats, but they do not have to be all of the same type. This list of
 values can be a typical parameter list, an explicit (bracketed) list, or a 
 variable whose type is list. The first item in the list is used as the default
 value.
+
+.. index:: examples; list of values
 
 A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
@@ -494,6 +509,8 @@ attribute has an initial value of None, and can be assigned the values None, 0,
 1, 2, 3, and 'many'. The example then creates an instance of the InventoryItem
 class named **hats**, and assigns values to its attributes. 
 
+.. index:: metadata attributes; on traits
+
 .. _trait-metadata:
 
 Trait Metadata
@@ -510,12 +527,20 @@ passing them as keyword arguments to callable traits. The value of each
 keyword argument becomes bound to the resulting trait object as the value 
 of an attribute having the same name as the keyword. 
 
+.. index:: metadata attributes; internal
+
 .. _internal-metadata-attributes:
 
 Internal Metadata Attributes
 ````````````````````````````
 The following metadata attributes are used internally by the Traits package,
 and can be queried: 
+
+.. index:: array metadata attribute, default metadata attribute
+.. index:: default_kind metadata attribute, delegate; metadata attribute
+.. index:: inner_traits metadata attribute, parent metadata attribute
+.. index:: prefix metadata attribute, trait_type metadata attribute
+.. index:: type metadata attribute
 
 * **array**: Indicates whether the trait is an array.
 * **default**: Returns the default value for the trait, if known; otherwise it
@@ -552,12 +577,17 @@ and can be queried:
   * ``property``
   * ``trait``
   
+.. index:: recognized metadata attributes, metadata attributes; recognized
+
 .. _recognized-metadata-attributes:
 
 Recognized Metadata Attributes
 ``````````````````````````````
 The following metadata attributes are not predefined, but are recognized by 
 HasTraits objects:
+.. index:: desc metadata attribute, editor metadata attribute, TraitValue class
+.. index:: label; metadata attribute, rich_compare metadata attribute
+.. index:: trait_value metadata attribute, transient metadata attribute
 
 * **desc**: A string describing the intended meaning of the trait. It is used 
   in exception messages and fly-over help in user interface trait editors.
@@ -587,10 +617,15 @@ HasTraits objects:
   
 Other metadata attributes may be recognized by specific predefined traits.
 
+.. index:: metadata attributes; accessing
+
 .. _accessing-metadata-attributes:
 
 Accessing Metadata Attributes
 `````````````````````````````
+.. index:: 
+   pair: examples; metadata attributes
+   
 Here is an example of setting trait metadata using keyword arguments::
     
     # keywords.py --- Example of trait keywords
