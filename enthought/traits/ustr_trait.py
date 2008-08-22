@@ -111,7 +111,7 @@ class UStr ( TraitType ):
     def _remove ( self, name ):
         """ Removes a specified name.
         """
-        self.names.pop( name )
+        self.names.pop( name, None )
         col = name.rfind( '_' )
         if col >= 0:
             try:
@@ -174,4 +174,9 @@ class HasUniqueStrings ( HasTraits ):
         for name, trait in self.traits( unique_string = is_str ).items():
             for str_name in trait.unique_string.split( ',' ):
                 self._ustr_traits.append( UStr( self, name, str_name.strip() ) )
-           
+                
+            items = getattr( self, name )
+            if len( items ) > 0:
+                setattr( self, name, [] )
+                setattr( self, name, items )
+                    
