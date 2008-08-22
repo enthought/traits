@@ -12,6 +12,10 @@ may wish to refer to the *Traits User Manual* for an introduction. This guide
 discusses many but not all features of Traits UI. For complete details of the
 Traits UI API, refer to the *Traits API Reference*.
 
+.. index:: MVC design pattern, Model-View-Controller, model, view (in MVC), controller
+
+.. _the-model-view-controller-mvc-design-pattern:
+
 The Model-View-Controller (MVC) Design Pattern
 ----------------------------------------------
 
@@ -36,6 +40,10 @@ Traits and Traits UI packages.
 
 The remainder of this section gives an overview of these relationships.
 
+.. index:: HasTraits class; as MVC model
+
+.. _the-model-hastraits-subclasses-and-objects:
+
 The Model: HasTraits Subclasses and Objects
 ```````````````````````````````````````````
 
@@ -44,6 +52,10 @@ or :term:`instance`\ s of the HasTraits class, whose :term:`trait attribute`\ s
 (typed attributes as defined in Traits) represent the model data. The specifics
 of building such a model are outside the scope of this manual; please see the
 *Traits User Manual* for further information.
+
+.. index:: View; as MVC view
+
+.. _the-view-view-objects:
 
 The View: View Objects
 ``````````````````````
@@ -60,6 +72,10 @@ Note that the terms :term:`view` and :term:`View` are distinct for the purposes
 of this document. The former refers to the component of the MVC design pattern;
 the latter is a Traits UI construct.
 
+.. index:: Handler class; as MVC controller
+
+.. _the-controller-handler-subclasses-and-objects:
+
 The Controller: Handler Subclasses and Objects
 ``````````````````````````````````````````````
 
@@ -74,6 +90,10 @@ window closing. Thus, a programmer new to Traits UI need not be concerned with
 Handlers at all. Nonetheless, custom handlers can be a powerful tool for
 building sophisticated application interfaces, as discussed in
 :ref:`controlling-the-interface-the-handler`.
+
+.. index:: toolkit; selection
+
+.. _toolkit-selection:
 
 Toolkit Selection
 -----------------
@@ -91,8 +111,12 @@ application. The enthought.etsconfig package contains a singleton object,
 **ETSConfig**, which has a string attribute, **toolkit**, that signifies the GUI
 toolkit.
 
+.. index:: ETSConfig.toolkit
+
 The values of **ETSConfig.toolkit** that are supported by Traits UI version 3
 are:
+
+.. index:: wxPython toolkit, Qt toolkit, null toolkit
 
 * 'wx': `wxPython <http://www.wxpython.org>`_, which provides Python bindings 
   for the `wxWidgets <http://wxwidgets.org>`_ toolkit.
@@ -106,11 +130,17 @@ packages in the order listed, and uses the first one it finds. The programmer or
 the user can override this behavior in any of several ways, in the following
 order of precedence:
 
+.. index:: ETS_TOOLKIT, environment variable; ETS_TOOLKIT, toolkit; flag
+.. index:: toolkit; environment variable
+
 #. The program can explicitly set **ETSConfig.toolkit**. It must do this before
    importing from any other Enthought Tool Suite component, including
    enthought.traits.
 #. The user can specify a -toolkit flag on the command line of the program. 
 #. The user can define a value for the ETS_TOOLKIT environment variable.
+
+
+.. _structure-of-this-guide:
 
 Structure of this Guide
 -----------------------

@@ -959,7 +959,7 @@ parameter, which can have the following values:
 - 'auto': The default widget, as described in Table 8
 - 'slider': Simple slider with text field
 - 'xslider': Large-range slider with text field
-- 'spinner': Spin box
+- 'spinner': Spin box with increment/decrement buttons
 - 'enum': Radio buttons
 - 'text': Text field
 

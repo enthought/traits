@@ -12,6 +12,9 @@ For example, the following sample code [4]_ defines the SimpleEmployee class,
 creates an object of that class, and constructs and displays a GUI for the
 object:
 
+.. index::
+   pair: examples; configure_traits()
+   
 .. _example-1-using-configure-traits:
 
 .. rubric:: Example 1: Using configure_traits()
@@ -43,11 +46,14 @@ wanted:
    
    Figure 1: User interface for Example 1
 
+.. index:: 
+   object: View
+
 .. _the-view-object:
 
 The View Object
 ---------------
- 
+
 In order to control the layout of the interface, it is necessary to define a
 View object. A View object is a template for a GUI window or panel. In other
 words, a View specifies the content and appearance of a Traits UI window or
@@ -59,6 +65,9 @@ and the employee number should not be edited). Furthermore, you would like to
 specify the order in which those fields appear. You can do this by defining a
 View object and passing it to the configure_traits() method:
 
+.. index:: configure_traits(); view parameter, examples; View object
+   
+   
 .. _example-2-using-configure-traits-with-a-view-object:
 
 .. rubric:: Example 2: Using configure_traits() with a View object
@@ -93,6 +102,9 @@ The resulting window has the desired appearance:
    
    Figure 2: User interface for Example 2
 
+A View object can have a variety of attribute, which are set in the View
+definition, following any Group or Item objects.
+
 The sections on :ref:`contents-of-a-view` through :ref:`advanced-view-concepts`
 explore the contents and capabilities of Views. Refer to
 the *Traits API Reference* for details of the View class.
@@ -101,11 +113,14 @@ Except as noted, all example code uses the configure_traits() method; a detailed
 description of this and other techniques for creating GUI displays from Views
 can be found in :ref:`displaying-a-view`.
 
+.. index:: View; contents
+   object: View
+
 .. _contents-of-a-view:
 
 Contents of a View
 ------------------
- 
+
 The contents of a View are specified primarily in terms of two basic building
 blocks: Item objects (which, as suggested by Example 2, correspond roughly to
 individual trait attributes), and Group objects. A given View definition can
@@ -115,11 +130,14 @@ arguments to the View constructor, as in the case of the three Items in Example
 
 The remainder of this chapter describes the Item and Group classes. 
 
+.. index:: widget, control
+   object: Item
+
 .. _the-item-object:
 
 The Item Object
 ```````````````
- 
+
 The simplest building block of a View is the :term:`Item` object. An Item
 specifies a single interface :term:`widget`, usually the display for a single
 trait attribute of a HasTraits object. The content, appearance, and behavior of
@@ -138,6 +156,18 @@ The following table lists the attributes of the Item class, organized by
 functional categories. Refer to the *Traits API Reference* for details on the
 Item class.
 
+.. index:: attributes; Item, Item; attributes
+.. index:: name attribute, dock attribute; Item, emphasized attribute
+.. index:: export attribute; Item, height attribute; Item, image attribute; Item
+.. index:: item_theme attribute; Item, label attribute; Item
+.. index:: label_theme attribute; Item, padding attribute; Item
+.. index:: resizable attribute, show_label attribute, springy attribute; Item
+.. index:: width attribute; Item, format_str attribute, format_func attribute
+.. index:: editor attribute, style attribute; Item, enabled_when attribute; Item
+.. index:: visible_when attribute; Item, defined_when attribute; Item
+.. index:: has_focus attribute, tooltip attribute, help attribute; Item
+.. index:: help_id attribute; Item, id attribute; Item
+   
 .. _attributes-of-item-by-category-table:
 
 .. rubric:: Attributes of Item, by category
@@ -151,21 +181,19 @@ Item class.
 |          |                     |single trait, its **name** attribute is      |
 |          |                     |nearly always specified.                     |
 +----------+---------------------+---------------------------------------------+
-|Display   |* **label**          |In addition to specifying which trait        |
-|format    |* **resizable**      |attributes are to be displayed, you might    |
-|          |* **emphasized**     |need to adjust the format of one or more of  |
-|          |* **padding**        |the resulting widgets.                       |
-|          |* **height**         |                                             |
-|          |* **width**          |If an Item's **label** attribute is specified|
-|          |* **dock**           |but not its name, the value of  **label** is |
-|          |* **image**          |displayed as a simple, non-editable string.  | 
-|          |* **item_theme**     |(This feature can be useful for displaying   |
-|          |* **label_theme**    |comments or instructions in a Traits UI      |
-|          |* **export**         |window.)                                     |
-|          |* **show_label**     |                                             |
-|          |* **resizable**      |                                             |
+|Display   |* **dock**           |In addition to specifying which trait        |
+|format    |* **emphasized**     |attributes are to be displayed, you might    |
+|          |* **export**         |need to adjust the format of one or more of  |
+|          |* **height**         |the resulting widgets.                       |
+|          |* **image**          |                                             |
+|          |* **item_theme**     |If an Item's **label** attribute is specified|
+|          |* **label**          |but not its name, the value of  **label** is |
+|          |* **label_theme**    |displayed as a simple, non-editable string.  | 
+|          |* **padding**        |(This feature can be useful for displaying   |
+|          |* **resizable**      |comments or instructions in a Traits UI      |
+|          |* **show_label**     |window.)                                     |
 |          |* **springy**        |                                             |
-|          |* **emphasized**     |                                             |
+|          |* **width**          |                                             |
 +----------+---------------------+---------------------------------------------+
 |Content   |* **format_str**     |In some cases it can be desirable to apply   |
 |format    |* **format_func**    |special formatting to a widget's contents    |
@@ -205,11 +233,14 @@ Item class.
 |          |                     |**name** attribute is used.                  |
 +----------+---------------------+---------------------------------------------+
 
+.. index:: Label class, Heading class, Spring class
+   pair: Item; subclasses
+
 .. _subclasses-of-item:
 
 Subclasses of Item
 ``````````````````
- 
+   
 The Traits UI package defines the following subclasses of Item:
 
 * Label
@@ -220,11 +251,14 @@ These classes are intended to help with the layout of a Traits UI View, and need
 not have a trait attribute associated with them. See the *Traits API Reference*
 for details.
 
+.. index:
+   object: Group
+
 .. _the-group-object:
 
 The Group Object
 ````````````````
- 
+   
 The preceding sections have shown how to construct windows that display a simple
 vertical sequence of widgets using instances of the View and Item classes. For
 more sophisticated interfaces, though, it is often desirable to treat a group of
@@ -235,6 +269,9 @@ Traits UI, such grouping is accomplished by means of the :term:`Group` object.
 
 Consider the following enhancement to Example 2:
 
+   pair: configure_traits(); examples
+   triple: View; Group; examples
+   
 .. _example-3-using-configure-traits-with-a-view-and-a-group-object:
 
 .. rubric:: Example 3: Using configure_traits() with a View and a Group object
@@ -272,16 +309,22 @@ in a visible border with a text label:
    
    Figure 3: User interface for Example 3
 
+.. indexx: 
+   pair: contents; Group
+
 .. _content-of-a-group:
 
 Content of a Group
 ::::::::::::::::::
- 
+   
 The content of a Group object is specified exactly like that of a View object.
 In other words, one or more Item or Group objects are given as arguments to the
 Group constructor, e.g., the three Items in Example 3. [5]_ The objects
 contained in a Group are called the *elements* of that Group. Groups can be
 nested to any level.
+
+.. index:: 
+   pair: attributes; Group
 
 .. _group-attributes:
 
@@ -295,6 +338,16 @@ acceptable displays and behavior.
 
 See the *Traits API Reference* for details of the Group class.
 
+.. index:: object attribute; Group, content attribute; Group
+.. index:: label attribute; Group, show_border attribute, show_labels attribute
+.. index:: show_left attribute, padding attribute; Group, layout attribute
+.. index:: selected attribute, orientation attribute, style attribute; Group
+.. index:: columns attribute, dock attribute; Group, dock_theme attribute
+.. index:: group_theme attribute, item_theme attribute; Group
+.. index:: label_theme attribute; Group, image attribute; Group
+.. index:: export attribute; Group, springy attribute; Group
+   
+   
 .. _attributes-of-group-by-category-table:
 
 .. rubric:: Attributes of Group, by category
@@ -309,24 +362,24 @@ See the *Traits API Reference* for details of the Group class.
 |          |                     |current context. The **content** attribute is|
 |          |                     |a list of elements in the group.             |
 +----------+---------------------+---------------------------------------------+
-|Display   |* **label**          |These attributes define display options for  |
-|format    |* **show_border**    |the group as a whole.                        |       
+|Display   |* **columns**        |These attributes define display options for  |
+|format    |* **dock**           |the group as a whole.                        |       
+|          |* **dock_theme**     |                                             |
+|          |* **export**         |                                             |
+|          |* **group_theme**    |.. index:: enabled_when attribute; Group     |
+|          |* **image**          |.. index:: visible_when attribute; Group     |
+|          |* **item_theme**     |.. index:: defined_when attribute; Group     |
+|          |* **label**          |.. index:: help attribute; Group             |
+|          |* **label_theme**    |.. index:: help_id attribute; Group          |
+|          |* **layout**         |.. index:: id attribute; Group               |
+|          |* **orientation**    |                                             |
+|          |* **padding**        |                                             |
+|          |* **selected**       |                                             |
+|          |* **show_border**    |                                             |
 |          |* **show_labels**    |                                             |
 |          |* **show_left**      |                                             |
-|          |* **padding**        |                                             |
-|          |* **layout**         |                                             |
-|          |* **selected**       |                                             |
-|          |* **orientation**    |                                             |
-|          |* **style**          |                                             |
-|          |* **columns**        |                                             |
-|          |* **dock**           |                                             |
-|          |* **dock_theme**     |                                             |
-|          |* **group_theme**    |                                             |
-|          |* **item_theme**     |                                             |
-|          |* **label_theme**    |                                             |
-|          |* **image**          |                                             |
-|          |* **export**         |                                             |
 |          |* **springy**        |                                             |
+|          |* **style**          |                                             |
 +----------+---------------------+---------------------------------------------+
 |Visibility|* **enabled_when**   |These attributes work similarly to the       |
 |and status|* **visible_when**   |attributes of the same names on the Item     |
@@ -366,14 +419,19 @@ See the *Traits API Reference* for details of the Group class.
 |          |                     |and used as the group identifier.            |
 +----------+---------------------+---------------------------------------------+
 
+.. index::
+   pair: subclasses; Group
+
 .. _subclasses-of-group:
 
 Subclasses of Group
 ```````````````````
- 
+   
 The Traits UI package defines the following subclasses of Group, which are
 helpful shorthands for defining certain types of groups. Refer to the *Traits
 API Reference* for details.
+
+.. index:: HGroup, HFlow, HSplit, Tabbed, VGroup, VFlow, VGrid, VFold, VSplit
 
 .. _subclasses-of-group_table:
 
@@ -424,9 +482,9 @@ API Reference* for details.
    discussed in more detail in Section 4.3.
    
 .. [4] All code examples in this guide that include a file name are also
-   available as examples in the :file:`tutorials/doc_examples/examples` subdirectory
-   of the Traits docs directory. You can run them individually, or view them in
-   a tutorial program by running: 
+   available as examples in the :file:`tutorials/doc_examples/examples` 
+   subdirectory of the Traits docs directory. You can run them individually,
+   or view them in a tutorial program by running: 
    :program:`python` :file:`{Traits_dir}/tutorials/tutor.py` :file:`{Traits_dir}/docs/tutorials/doc_examples`
    
 .. [5] As with Views, it is possible for a Group to contain objects of more than

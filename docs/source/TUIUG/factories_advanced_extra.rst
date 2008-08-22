@@ -25,10 +25,10 @@ Use CustomEditor() to create an "editor" that is a non-Traits-based custom
 control. The *factory* parameter must be a function that generates the custom
 control. The function must have the following signature:
 
-.. function:: factory_function(window_parent, editor, \*args, \*\*kwargs)
+factory_function(*window_parent*, *editor*[, \*\ *args*, \*\*\ *kwargs*])
 
-  :param window_parent: The parent window for the control
-  :param editor: The editor object created by CustomEditor()
+- *window_parent*: The parent window for the control
+- *editor*: The editor object created by CustomEditor()
 
 Additional arguments, if any, can be passed as a tuple in the *args* parameter
 of CustomEditor().

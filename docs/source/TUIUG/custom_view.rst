@@ -1,3 +1,5 @@
+.. index:: View; customizing
+
 .. _customizing-a-view:
 
 ==================
@@ -13,6 +15,8 @@ of a window that is created using a View, including the type of window that a
 View appears in, the :term:`command button`\ s that appear in the window, and
 the physical properties of the window.
 
+.. index:: kind attribute
+
 .. _specifying-window-type-the-kind-attribute:
 
 Specifying Window Type: the **kind** Attribute
@@ -25,16 +29,22 @@ can interact with live data or with a buffered copy. In Traits UI, a single View
 can be used to implement any of these options simply by modifying its **kind**
 attribute. There are seven possible values of **kind**:
 
-*  'modal '
-*  'live '
-*  'livemodal '
-*  'nonmodal '
-*  'wizard '
-*  'panel '
-*  'subpanel '
+.. index:: modal; window kind, live; window  kind, livemodal window kind
+.. index:: nonmodal window kind, wizard; window kind, panel; window kind
+.. index:: subpanel; window kind
+
+*  'modal'
+*  'live'
+*  'livemodal'
+*  'nonmodal'
+*  'wizard'
+*  'panel'
+*  'subpanel'
 
 These alternatives are described below. If the **kind** attribute of a View
-object is not specified, the default value is 'modal '.
+object is not specified, the default value is 'modal'.
+
+.. index:: windows; stand-alone, modal; definition, live; definition
 
 .. _stand-alone-windows:
 
@@ -73,6 +83,8 @@ buttons is called a :term:`dialog box`.
 
 .. TODO: Add diagrams and/or examples to clarify.
 
+.. index:: wizard, windows; wizard
+
 .. _wizards:
 
 Wizards
@@ -92,6 +104,8 @@ Traits UI Wizards are always modal and live. They always display a standard
 wizard button set; i.e., they ignore the **buttons** View attribute. In short,
 wizards are considerably less flexible than windows, and are primarily suitable
 for highly controlled user interactions such as software installation.
+
+.. index:: panel, subpanel, windows; panel, windows; subpanel
 
 .. _panels-and-subpanels:
 
@@ -116,6 +130,8 @@ them.
 .. Do subpanels support menus and toolbars? If not, add this to the 
    documentation. (If so, why do they?)
 
+.. index:: buttons; attribute
+
 .. _command-buttons-the-buttons-attribute:
 
 Command Buttons: the **buttons** Attribute
@@ -131,6 +147,9 @@ In Traits UI, these command buttons are specified by means of the View object's
 **buttons** attribute, whose value is a list of buttons to display. [6]_
 Consider the following variation on Example 3:
 
+.. index:: 
+   pair: examples; buttons
+   
 .. _example-4-using-a-view-object-with-buttons:
 
 .. rubric:: Example 4: Using a View object with buttons
@@ -172,6 +191,9 @@ There are six standard buttons defined by Traits UI. Each of the standard
 buttons has matching a string alias. You can either import and use the button
 names, or simply use their aliases:
 
+.. index:: buttons; standard, UndoButton, ApplyButton, RevertButton, OKButton
+.. index:: CancelButton
+
 .. _command-button-aliases-table:
 
 .. rubric:: Command button aliases
@@ -193,6 +215,8 @@ names, or simply use their aliases:
 Alternatively, there are several pre-defined button lists that can be imported
 from enthought.traits.ui.menu and assigned to the buttons attribute:
 
+.. index:: OKCancelsButtons, ModalButtons, LiveButtons
+
 * OKCancelButtons = ``[OKButton, CancelButton ]``
 * ModalButtons = ``[ ApplyButton, RevertButton, OKButton, CancelButton, HelpButton ]``
 * LiveButtons = ``[ UndoButton, RevertButton, OKButton, CancelButton, HelpButton ]``
@@ -204,6 +228,8 @@ effect would be exactly the same::
     
                  buttons = OKCancelButtons
 
+.. index:: NoButtons
+
 The special constant NoButtons can be used to create a window or panel
 without command buttons. While this is the default behavior, NoButtons can
 be useful for overriding an explicit value for **buttons**. You can also specify
@@ -213,10 +239,18 @@ to an empty list has the same effect as not defining it at all.
 It is also possible to define custom buttons and add them to the **buttons**
 list; see :ref:`custom-command-buttons` for details.
 
+.. index:: View; attributes, attributes; View
+
 .. _other-view-attributes:
 
 Other View Attributes
 ---------------------
+
+.. index:: dock attribute; View, height attribute; View, icon attribute
+.. index:: image attribute; View, item_theme attribute; View
+.. index:: label_theme attribute; View, resizable attribute; View
+.. index:: scrollable attribute, statusbar attribute, style attribute; View
+.. index:: title attribute, width attribute; View, x attribute, y attribute
 
 .. _attributes-of-view-by-category-table:
 
@@ -225,35 +259,41 @@ Other View Attributes
 +----------+---------------------+---------------------------------------------+
 |Category  |Attributes           |Description                                  |
 +==========+=====================+=============================================+
-|Window    |* **x**              |These attributes control the visual          |
-|display   |* **y**              |properties of the window itself, regardless  |
-|          |* **width**          |of its content.                              |
-|          |* **height**         |                                             |
-|          |* **title**          |                                             |
-|          |* **resizable**      |                                             |
-|          |* **scrollable**     |                                             |
-|          |* **style**          |                                             |
-|          |* **dock**           |                                             |
-|          |* **icon**           |                                             |
+|Window    |* **dock**           |These attributes control the visual          |
+|display   |* **height**         |properties of the window itself, regardless  |
+|          |* **icon**           |of its content.                              |
 |          |* **image**          |                                             |
-|          |* **export**         |                                             |
-|          |* **item_theme**     |                                             |
-|          |* **label_theme**	 |                                             |
+|          |* **item_theme**     |.. index:: close_result attribute            |
+|          |* **label_theme**	 |.. index:: handler attribute                 |
+|          |* **resizable**      |.. index:: key_bindings attribute            |
+|          |* **scrollable**     |.. index:: menubar attribute                 |
+|          |* **statusbar**      |.. index:: model_view attribute              |
+|          |* **style**          |.. index:: on_apply attribute                |
+|          |* **title**          |.. index:: toolbar attribute                 |
+|          |* **width**          |.. index:: updated attribute                 |
+|          |* **x**              |.. index:: content attribute; View           |
+|          |* **y**              |.. index:: drop_class attribute              |
 +----------+---------------------+---------------------------------------------+
-|Command   |* **handler**        |Traits UI menus and toolbars are generally   |
-|          |* **menubar**        |implemented in conjunction with custom       |
-|          |* **toolbar**        |:term:`Handler`\ s; see                      |
-|          |* **key_bindings**   |:ref:`menus-and-menu-bars` for details. The  |
-|          |* **on_apply**       |**key_bindings** attribute references the set|
-|          |* **updated**        |of global key bindings for the view.         |
-|          |* **close_result**	 |                                             |
+|Command   |* **close_result**	 |Traits UI menus and toolbars are generally   |
+|          |* **handler**        |implemented in conjunction with custom       |
+|          |* **key_bindings**   |:term:`Handler`\ s; see                      |
+|          |* **menubar**        |:ref:`menus-and-menu-bars` for details. The  |
+|          |* **model_view**     |**key_bindings** attribute references the set|
+|          |* **on_apply**       |of global key bindings for the view.         |
+|          |* **toolbar**        |                                             |
+|          |* **updated**        |.. index:: export attribute; View            |
+|          |                     |.. index:: imports attribute                 |
+|          |                     |.. index:: object attribute; View            |
 +----------+---------------------+---------------------------------------------+
 |Content   |* **content**        |The **content** attribute is the top-level   |
-|          |* **object**         |Group object for the view. The **object**    |
-|          |* **imports**        |attribute is the  object being edited. The   |
-|          |* **drop_class**	 |**imports** and **drop_class** attributes    |
-|          |                     |control what objects can be dragged and      |
+|          |* **drop_class**	 |Group object for the view. The **object**    |
+|          |* **export**         |attribute is the  object being edited. The   |
+|          |* **imports**        |**imports** and **drop_class** attributes    |
+|          |* **object**         |control what objects can be dragged and      |
 |          |                     |dropped on the view.                         |
+|          |                     |                                             |
+|          |                     |.. index:: help attribute; View              |
+|          |                     |.. index:: help_id attribute; View           |
 +----------+---------------------+---------------------------------------------+
 |User help |* **help**           |The **help** attribute is a deprecated way to|
 |          |* **help_id**        |specify that the View has a Help button. Use |
@@ -262,6 +302,8 @@ Other View Attributes
 |          |                     |for details). The **help_id** attribute is   |
 |          |                     |not used by Traits, but can be used by a     |
 |          |                     |custom help handler.                         |
+|          |                     |                                             |
+|          |                     |.. index:: id attribute; View                |
 +----------+---------------------+---------------------------------------------+
 |Unique    |* **id**             |The **id** attribute is used as a key to save|
 |identifier|                     |user preferences about a view, such as       |

@@ -1,3 +1,6 @@
+.. index:: View; internal, View; external, View; ways of displaying
+   pair: View; context
+   
 .. _advanced-view-concepts:
 
 ======================
@@ -9,12 +12,12 @@ class to quickly construct a simple window for a single HasTraits object. This
 chapter explores a number of more complex techniques that significantly increase
 the power and versatility of the View object.
 
-* *Internal views:* Views can be defined as attributes of a HasTraits class; 
+* *Internal Views:* Views can be defined as attributes of a HasTraits class; 
   one class can have multiple views. View attributes can be inherited by 
   subclasses.
-* *External views:* A view can be defined as a module variable, inline as a
+* *External Views:* A view can be defined as a module variable, inline as a
   function or method argument, or as an attribute of a :term:`Handler`.
-* *Ways of displaying views:* You can display a View by calling 
+* *Ways of displaying Views:* You can display a View by calling 
   configure_traits() or edit_traits() on a HasTraits object, or by calling the
   ui() method on the View object.
 * *View context:* You can pass a context to any of the methods for displaying
@@ -23,6 +26,8 @@ the power and versatility of the View object.
   define contexts that contain multiple objects.
 * *Include objects:* You can use an Include object as a placeholder for view
   items defined elsewhere.
+
+.. index: View; internal
   
 .. _internal-views:
 
@@ -45,14 +50,18 @@ phenomenon called *visual inheritance*.
 
 Defining a Default View
 ```````````````````````
+index:: default view, View; default
 
 It is easy to define a default view for a HasTraits class: simply create a View
 attribute called **traits_view** for that class. Consider the following
 variation on Example 3:
 
+.. index:: configure_traits(); default view example,  default view; example
+.. index:: examples; default view
+   
 .. _example-5-using-configure-traits-with-a-default-view-object:
 
-.. rubric:: Using configure_traits() with a default View object
+.. rubric:: Example 5: Using configure_traits() with a default View object
 
 ::
 
@@ -95,6 +104,8 @@ treated as the default display template for the class. However, if there are
 multiple View attributes for the class (as discussed in the next section), if
 one is named 'traits_view', it is always used as the default.
 
+.. index:: View; multiple, multiple Views
+
 .. _defining-multiple-views-within-the-model:
 
 Defining Multiple Views Within the Model
@@ -105,6 +116,9 @@ In the case of the SimpleEmployee class, one might want to have both a "public
 information" view like the one above and an "all information" view. One can do
 this by simply adding a second View attribute:
 
+.. index::
+   pair: examples; multiple Views
+   
 .. _example-6-defining-multiple-view-objects-in-a-hastraits-class:
 
 .. rubric:: Example 6: Defining multiple View objects in a HasTraits class
@@ -144,6 +158,8 @@ this by simply adding a second View attribute:
     sam.configure_traits()
     sam.configure_traits(view='all_view')
 
+.. index:: traits_view attribute, configure_traits(); view parameter
+
 As before, a simple call to configure_traits() for an object of this class
 produces a window based on the default View (**traits_view**). In order to use
 the alternate View, use the same syntax as for an external view, except that the
@@ -160,6 +176,8 @@ default View, resulting in a simple alphabetized display as described in
 preferable to name a model's default View traits_view even if there are no other
 Views; otherwise, simply defining additional Views, even if they are never
 used, can unexpectedly change the behavior of the GUI.
+
+.. index:: View; external
 
 .. _separating-model-and-view-external-views:
 
@@ -197,6 +215,8 @@ A powerful alternative is to define a View within the :term:`controller`
 (Handler) class that controls the window for that View. [8]_ This technique is
 described in :ref:`controlling-the-interface-the-handler`.
 
+.. index:: View; methods for displaying
+
 .. _displaying-a-view:
 
 Displaying a View
@@ -207,6 +227,8 @@ object. The first two, configure_traits() and edit_traits(), are defined on the
 HasTraits class, which is a superclass of all Traits-based model classes, as
 well as of Handler and its subclasses. The third method, ui(), is defined on the
 View class itself.
+
+.. index:: configure_traits(); method
 
 .. _configure-traits:
 
@@ -222,6 +244,8 @@ The configure_traits() method also provides options for saving
 :term:`trait attribute` values to and restoring them from a file. Refer to the
 *Traits API Reference* for details.
 
+.. index:: edit_traits()
+
 .. _edit-traits:
 
 edit_traits()
@@ -232,6 +256,8 @@ exceptions. First, it is designed to run from within a larger application whose
 GUI is already defined. Second, it does not provide options for saving data to
 and restoring data from a file, as it is assumed that these operations are
 handled elsewhere in the application.
+
+.. index:: ui()
 
 .. _ui:
 
@@ -263,6 +289,8 @@ client code. It contains a dictionary of the named :term:`ViewElement` objects
 defined for the object whose configure_traits() (or edit_traits()) method was
 called..
 
+.. index:: context
+
 .. _the-view-context:
 
 The View Context
@@ -286,7 +314,9 @@ that the ui() method receives references to the objects whose trait attributes
 you want to modify.
 
 So, if configure_traits() figures out the relevant context for you, why call
-ui() at all? One answer lies in *multi-object views*.
+ui() at all? One answer lies in *multi-object Views*.
+
+.. index:: multi-object Views, View; multi-object
 
 .. _multi-object-views:
 
@@ -300,6 +330,9 @@ display a window that shows two properties side by side for a comparison of
 price and features. This is straightforward in Traits UI, as the following
 example shows:
 
+.. index:: examples; context, context; examples, examples; multi-object Views
+.. index:: multi-object Views; examples
+   
 .. _example-7-using-a-multi-object-view-with-a-context:
 
 .. rubric:: Example 7: Using a multi-object view with a context
@@ -368,9 +401,11 @@ For the purposes of this particular example, it makes sense to create a separate
 Group for each model object, and to use two model objects of the same class.
 Note, however, that neither is a requirement.
 
+.. index:: extended trait names; Item name attribute
+
 Notice that the Item definitions in Example 7 use the same type of extended
 trait attribute syntax as is supported for the on_trait_change() dynamic trait
-change notification method. In fact, Item name attributes can reference any
+change notification method. In fact, Item **name** attributes can reference any
 trait attribute that is reachable from an object in the context. This is true
 regardless of whether the context contains a single object or multiple objects.
 For example::
@@ -386,11 +421,14 @@ reference from None.
 Refer to the *Traits User Manual*, in the chapter on trait notification, for
 details of the extended trait name syntax.
 
+.. index:: 
+   object: Include
+
 .. _include-objects:
 
 Include Objects
 ---------------
-
+   
 In addition to the Item and Group class, a third building block class for Views
 exists in Traits UI: the Include class. For the sake of completeness, this
 section gives a brief description of Include objects and their purpose and
@@ -401,6 +439,9 @@ In essence, an Include object is a placeholder for a named Group or Item object
 that is specified outside the Group or View in which it appears. For example,
 the following two definitions, taken together, are equivalent to the third:
 
+.. index:: 
+   pair: examples; Include
+   
 .. _example-8-using-an-include-object:
 
 .. rubric:: Example 8: Using an Include object
