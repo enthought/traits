@@ -38,21 +38,15 @@ def gen_editor_definitions(target_filename = 'editors.py'):
            mod = sys.modules[import_path]
            for name in dir(mod):
                if '_definition' in name:
-                   (file_name, class_name) = getattr(mod, name).split(':')
-                   new_editors.append((file_name, class_name))
-    
+                   new_editors.append(getattr(mod, name))
     target_file = open(target_filename, 'a')
     for editor_name in new_editors:
-            function = "def %s( *args, **traits ):\n" % class_name
+            function = "\ndef %s( *args, **traits ):\n" % editor_name.split(':')[1]
             target_file.write(function)
-            func_code =  ' '*4 + 'import sys\n'
+            func_code =  ' '*4 + 'from toolkit import toolkit_object\n'
             func_code += ' '*4 + \
-                         'name = toolkit().__module__.rstrip(".toolkit")' + \
-                         ' + ".%s"\n' % file_name 
-            func_code += ' '*4 + "__import__(name)\n"
-            func_code += ' '*4 + \
-                         'return sys.modules[name].%s( *args, **traits )' \
-                         % class_name
+                         'return toolkit_object("%s")( *args, **traits )' \
+                         % editor_name
             target_file.write(func_code) 
-            target_file.write('\n\n')  
-    target_file.close()   
+            target_file.write('\n\n')
+    target_file.close()

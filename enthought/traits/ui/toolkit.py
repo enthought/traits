@@ -22,6 +22,7 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+import sys
 
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, TraitError
@@ -55,11 +56,44 @@ def _import_toolkit(name):
     module   = __import__( package )
     return getattr( module.traits.ui, name ).toolkit
 
+
+def toolkit_object(name):
+    """ Return the toolkit specific object with the given name.  The name
+    consists of the relative module path and the object name separated by a
+    colon.
+    """
+
+    mname, oname = name.split(':')
+    
+    class Unimplemented(object):
+        """ This is returned if an object isn't implemented by the selected
+        toolkit.  It raises an exception if it is ever instantiated.
+        """
+
+        def __init__(self, *args, **kwargs):
+            raise NotImplementedError("the %s traits backend doesn't implement %s" % (ETSConfig.toolkit, oname))
+
+    be_obj = Unimplemented
+    be_mname = toolkit().__module__.rstrip('.toolkit') + '.' + mname
+
+    try:
+        __import__(be_mname)
+        try:
+            be_obj = getattr(sys.modules[be_mname], oname)
+        except AttributeError:
+            pass
+    except ImportError:
+        pass
+
+    return be_obj
+
+
 def toolkit ( *toolkits ):
     """ Selects and returns a low-level GUI toolkit.
 
     Use this function to get a reference to the current toolkit.
     """
+
     global _toolkit
     # If _toolkit has already been set, simply return it.
     if _toolkit is not None:
