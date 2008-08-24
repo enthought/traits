@@ -156,16 +156,29 @@ def unzip_html_docs(src_path, dest_dir):
                 os.mkdir(cur_name)
     file.close()
 
+def gen_editors():
+    from enthought.traits.ui import editors_gen
+    output_dir = os.path.dirname(os.path.abspath(editors_gen.__file__))
+    print '-'*70
+    print "Building Editor Definitions...",
+    cwd = os.getcwd()
+    os.chdir(output_dir)
+    editors_gen.gen_editor_definitions()
+    os.chdir(cwd)
+    print "Done."
+    print '-'*70
+
 class my_develop(develop):
     def run(self):
+        gen_editors()
         develop.run(self)
         generate_docs()
 
 class my_build(distbuild):
     def run(self):
+        gen_editors()
         distbuild.run(self)
         generate_docs()
-
 
 # Call the setup function.
 setup(
