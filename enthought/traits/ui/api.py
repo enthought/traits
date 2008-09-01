@@ -82,7 +82,8 @@ from theme \
     import Theme, default_theme
     
 from tree_node \
-    import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode
+    import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode, \
+           ITreeNode, ITreeNodeAdapter
 
 from editors \
     import ArrayEditor, BooleanEditor, ButtonEditor, CheckListEditor, \

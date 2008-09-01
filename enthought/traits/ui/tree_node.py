@@ -23,14 +23,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import copy
-
-from inspect \
-    import stack
-
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Str, List, Callable, Instance, Any, \
-           Bool, Property, Interface, cached_property
+           Bool, Property, Interface, Adapter, AdaptedTo, cached_property
            
 from enthought.traits.trait_base \
     import SequenceTypes, get_resource_path, xgetattr, xsetattr
@@ -194,6 +189,15 @@ class TreeNode ( HasPrivateTraits ):
         """ Gets the object's children.
         """
         return getattr( object, self.children )
+        
+    #---------------------------------------------------------------------------
+    #  Gets the object's children identifier:  
+    #---------------------------------------------------------------------------
+
+    def get_children_id ( self, object ):
+        """ Gets the object's children identifier.
+        """
+        return self.children
         
     #---------------------------------------------------------------------------
     #  Appends a child to the object's children:  
@@ -591,42 +595,568 @@ class TreeNode ( HasPrivateTraits ):
             return object
             
         return object.__class__
-    
-#----- Private methods: --------------------------------------------------------
         
-    #---------------------------------------------------------------------------
-    #  Returns whether an object has any children:    
-    #---------------------------------------------------------------------------
-                        
-    def _has_children ( self, object ):
-        """ Returns whether an object has any children.
-        """
-        return (self.allows_children( object ) and self.has_children( object )) 
+#-------------------------------------------------------------------------------
+#  'ITreeNode' class  
+#-------------------------------------------------------------------------------
                 
-    #---------------------------------------------------------------------------
-    #  Returns whether a given object is droppable on the node:    
-    #---------------------------------------------------------------------------
+class ITreeNode ( Interface ):
+
+    def allows_children ( self ):
+        """ Returns whether this object can have children.
+        """
+
+    def has_children ( self ):
+        """ Returns whether the object has children.
+        """
+
+    def get_children ( self ):
+        """ Gets the object's children.
+        """
+
+    def get_children_id ( self ):
+        """ Gets the object's children identifier.
+        """
+                
+    def append_child ( self, child ):
+        """ Appends a child to the object's children.
+        """
+                
+    def insert_child ( self, index, child ):
+        """ Inserts a child into the object's children.
+        """
+                
+    def confirm_delete ( self ):
+        """ Checks whether a specified object can be deleted.
+        
+        Returns
+        -------
+        * **True** if the object should be deleted with no further prompting.
+        * **False** if the object should not be deleted.
+        * Anything else: Caller should take its default action (which might
+          include prompting the user to confirm deletion).
+        """
+                
+    def delete_child ( self, index ):
+        """ Deletes a child at a specified index from the object's children.
+        """
+
+    def when_children_replaced ( self, listener, remove ):
+        """ Sets up or removes a listener for children being replaced on a 
+            specified object.
+        """
+                
+    def when_children_changed ( self, listener, remove ):
+        """ Sets up or removes a listener for children being changed on a 
+            specified object.
+        """
+        
+    def get_label ( self ):
+        """ Gets the label to display for a specified object.
+        """
+                
+    def set_label ( self, label ):        
+        """ Sets the label for a specified object.
+        """
+                
+    def when_label_changed ( self, listener, remove ):
+        """ Sets up or removes a listener for the label being changed on a 
+            specified object.
+        """
+        
+    def get_tooltip ( self ):
+        """ Gets the tooltip to display for a specified object.
+        """
+                
+    def get_icon ( self, is_expanded ):
+        """ Returns the icon for a specified object.
+        """
+                
+    def get_icon_path ( self ):
+        """ Returns the path used to locate an object's icon.
+        """
+                
+    def get_name ( self ):
+        """ Returns the name to use when adding a new object instance
+            (displayed in the "New" submenu).
+        """
+                
+    def get_view ( self ):
+        """ Gets the view to use when editing an object.
+        """
+                
+    def get_menu ( self ):
+        """ Returns the right-click context menu for an object.
+        """
+                
+    def can_rename ( self ):
+        """ Returns whether the object's children can be renamed.
+        """
+    
+    def can_rename_me ( self ):
+        """ Returns whether the object can be renamed.
+        """
+    
+    def can_copy ( self ):
+        """ Returns whether the object's children can be copied.
+        """
+    
+    def can_delete ( self ):
+        """ Returns whether the object's children can be deleted.
+        """
+    
+    def can_delete_me ( self ):
+        """ Returns whether the object can be deleted.
+        """
+    
+    def can_insert ( self ):
+        """ Returns whether the object's children can be inserted (vs. 
+            appended).
+        """
+
+    def can_auto_open ( self ):
+        """ Returns whether the object's children should be automatically 
+            opened.
+        """
+
+    def can_auto_close ( self ):
+        """ Returns whether the object's children should be automatically 
+            closed.
+        """
                                 
-    def _is_droppable ( self, object, add_object, for_insert ):
+    def can_add ( self, add_object ):
         """ Returns whether a given object is droppable on the node.
         """
-        if for_insert and (not self.can_insert( object )):
-            return False
-            
-        return self.can_add( object, add_object )
-                           
-    #---------------------------------------------------------------------------
-    #  Returns a droppable version of a specified object:    
-    #---------------------------------------------------------------------------
+    
+    def get_add ( self ):
+        """ Returns the list of classes that can be added to the object.
+        """
+                
+    def get_drag_object ( self ):
+        """ Returns a draggable version of a specified object.
+        """
                                                       
-    def _drop_object ( self, object, dropped_object, make_copy = True ):
+    def drop_object ( self, dropped_object ):
         """ Returns a droppable version of a specified object.
         """
-        new_object = self.drop_object( object, dropped_object )
-        if (new_object is not dropped_object) or (not make_copy):
-            return new_object
-            
-        return copy.deepcopy( new_object )
+                
+    def select ( self ):
+        """ Handles an object being selected.
+        """
+       
+    def click ( self ):
+        """ Handles an object being clicked.
+        """
+       
+    def dclick ( self ):
+        """ Handles an object being double-clicked.
+        """
+        
+#-------------------------------------------------------------------------------
+#  'ITreeNodeAdapter' class  
+#-------------------------------------------------------------------------------
+                
+class ITreeNodeAdapter ( Adapter ):
+    """ Abstract base class for an adapter that implements the ITreeNode
+        interface.
+        
+        Usage:
+        - Create a subclass of ITreeNodeAdapter.
+        - Add an 'adapts( xxx_class, ITreeNode )' declaration (usually placed
+          right after the 'class' statement) to define what class (or classes)
+          this is an ITreeNode adapter for.
+        - Override any of the following methods as necessary, using the
+          'self.adaptee' trait to access the adapted object if needed.
+          
+       Note: This base class implements all of the ITreeNode interface methods,
+       but does not necessarily provide useful implementations for all of the
+       methods. It allows you to get a new adapter class up and running quickly,
+       but you should carefully review your final adapter implementation class
+       to make sure it behaves correctly in your application.
+    """
+
+    def allows_children ( self ):
+        """ Returns whether this object can have children.
+        """
+        return False
+
+    def has_children ( self ):
+        """ Returns whether the object has children.
+        """
+        return False
+
+    def get_children ( self ):
+        """ Gets the object's children.
+        """
+        return []
+
+    def get_children_id ( self ):
+        """ Gets the object's children identifier.
+        """
+        return ''
+                
+    def append_child ( self, child ):
+        """ Appends a child to the object's children.
+        """
+        pass
+                
+    def insert_child ( self, index, child ):
+        """ Inserts a child into the object's children.
+        """
+        pass
+                
+    def confirm_delete ( self ):
+        """ Checks whether a specified object can be deleted.
+        
+        Returns
+        -------
+        * **True** if the object should be deleted with no further prompting.
+        * **False** if the object should not be deleted.
+        * Anything else: Caller should take its default action (which might
+          include prompting the user to confirm deletion).
+        """
+        return False
+                
+    def delete_child ( self, index ):
+        """ Deletes a child at a specified index from the object's children.
+        """
+        pass
+
+    def when_children_replaced ( self, listener, remove ):
+        """ Sets up or removes a listener for children being replaced on a 
+            specified object.
+        """
+        pass
+                
+    def when_children_changed ( self, listener, remove ):
+        """ Sets up or removes a listener for children being changed on a 
+            specified object.
+        """
+        pass
+        
+    def get_label ( self ):
+        """ Gets the label to display for a specified object.
+        """
+        return 'No label specified'
+                
+    def set_label ( self, label ):        
+        """ Sets the label for a specified object.
+        """
+        pass
+                
+    def when_label_changed ( self, listener, remove ):
+        """ Sets up or removes a listener for the label being changed on a 
+            specified object.
+        """
+        pass
+        
+    def get_tooltip ( self ):
+        """ Gets the tooltip to display for a specified object.
+        """
+        return ''
+                
+    def get_icon ( self, is_expanded ):
+        """ Returns the icon for a specified object.
+        """
+        return '<item>'
+                
+    def get_icon_path ( self ):
+        """ Returns the path used to locate an object's icon.
+        """
+        return ''
+                
+    def get_name ( self ):
+        """ Returns the name to use when adding a new object instance
+            (displayed in the "New" submenu).
+        """
+        return ''
+                
+    def get_view ( self ):
+        """ Gets the view to use when editing an object.
+        """
+        return None
+                
+    def get_menu ( self ):
+        """ Returns the right-click context menu for an object.
+        """
+        return None
+                
+    def can_rename ( self ):
+        """ Returns whether the object's children can be renamed.
+        """
+        return False
+    
+    def can_rename_me ( self ):
+        """ Returns whether the object can be renamed.
+        """
+        return False
+    
+    def can_copy ( self ):
+        """ Returns whether the object's children can be copied.
+        """
+        return False
+    
+    def can_delete ( self ):
+        """ Returns whether the object's children can be deleted.
+        """
+        return False
+    
+    def can_delete_me ( self ):
+        """ Returns whether the object can be deleted.
+        """
+        return False
+    
+    def can_insert ( self ):
+        """ Returns whether the object's children can be inserted (vs. 
+            appended).
+        """
+        return False
+
+    def can_auto_open ( self ):
+        """ Returns whether the object's children should be automatically 
+            opened.
+        """
+        return False
+
+    def can_auto_close ( self ):
+        """ Returns whether the object's children should be automatically 
+            closed.
+        """
+        return False
+                                
+    def can_add ( self, add_object ):
+        """ Returns whether a given object is droppable on the node.
+        """
+        return False
+    
+    def get_add ( self ):
+        """ Returns the list of classes that can be added to the object.
+        """
+        return []
+                
+    def get_drag_object ( self ):
+        """ Returns a draggable version of a specified object.
+        """
+        return self.adaptee
+                                                      
+    def drop_object ( self, dropped_object ):
+        """ Returns a droppable version of a specified object.
+        """
+        return dropped_object
+                
+    def select ( self ):
+        """ Handles an object being selected.
+        """
+        pass
+       
+    def click ( self ):
+        """ Handles an object being clicked.
+        """
+        pass
+       
+    def dclick ( self ):
+        """ Handles an object being double-clicked.
+        """
+        pass
+        
+#-------------------------------------------------------------------------------
+#  'ITreeNodeAdapterBridge' class  
+#-------------------------------------------------------------------------------
+                
+class ITreeNodeAdapterBridge ( HasPrivateTraits ):
+    """ Private class for use by a toolkit-specific implementation of the
+        TreeEditor to allow bridging the TreeNode interface used by the editor
+        to the ITreeNode interface used by object adapters.
+    """
+    
+    # The ITreeNode adapter being bridged:
+    adapter = AdaptedTo( ITreeNode )
+
+    #-- TreeNode implementation ------------------------------------------------
+    
+    def allows_children ( self, object ):
+        """ Returns whether this object can have children.
+        """
+        return self.adapter.allows_children()
+
+    def has_children ( self, object ):
+        """ Returns whether the object has children.
+        """
+        return self.adapter.has_children()
+
+    def get_children ( self, object ):
+        """ Gets the object's children.
+        """
+        return self.adapter.get_children()
+
+    def get_children_id ( self, object ):
+        """ Gets the object's children identifier.
+        """
+        return self.adapter.get_children_id()
+                
+    def append_child ( self, object, child ):
+        """ Appends a child to the object's children.
+        """
+        return self.adapter.append_child( child )
+                
+    def insert_child ( self, object, index, child ):
+        """ Inserts a child into the object's children.
+        """
+        return self.adapter.insert_child( index, child )
+                
+    def confirm_delete ( self, object ):
+        """ Checks whether a specified object can be deleted.
+        
+        Returns
+        -------
+        * **True** if the object should be deleted with no further prompting.
+        * **False** if the object should not be deleted.
+        * Anything else: Caller should take its default action (which might
+          include prompting the user to confirm deletion).
+        """
+        return self.adapter.confirm_delete()
+                
+    def delete_child ( self, object, index ):
+        """ Deletes a child at a specified index from the object's children.
+        """
+        return self.adapter.delete_child( index )
+
+    def when_children_replaced ( self, object, listener, remove ):
+        """ Sets up or removes a listener for children being replaced on a 
+            specified object.
+        """
+        return self.adapter.when_children_replaced( listener, remove )
+                
+    def when_children_changed ( self, object, listener, remove ):
+        """ Sets up or removes a listener for children being changed on a 
+            specified object.
+        """
+        return self.adapter.when_children_changed( listener, remove )
+        
+    def get_label ( self, object ):
+        """ Gets the label to display for a specified object.
+        """
+        return self.adapter.get_label()
+                
+    def set_label ( self, object, label ):        
+        """ Sets the label for a specified object.
+        """
+        return self.adapter.set_label( label )
+                
+    def when_label_changed ( self, object, listener, remove ):
+        """ Sets up or removes a listener for the label being changed on a 
+            specified object.
+        """
+        return self.adapter.when_label_changed( listener, remove )
+        
+    def get_tooltip ( self, object ):
+        """ Gets the tooltip to display for a specified object.
+        """
+        return self.adapter.get_tooltip()
+                
+    def get_icon ( self, object, is_expanded ):
+        """ Returns the icon for a specified object.
+        """
+        return self.adapter.get_icon( is_expanded )
+                
+    def get_icon_path ( self, object ):
+        """ Returns the path used to locate an object's icon.
+        """
+        return self.adapter.get_icon_path()
+                
+    def get_name ( self, object ):
+        """ Returns the name to use when adding a new object instance
+            (displayed in the "New" submenu).
+        """
+        return self.adapter.get_name()
+                
+    def get_view ( self, object ):
+        """ Gets the view to use when editing an object.
+        """
+        return self.adapter.get_view()
+                
+    def get_menu ( self, object ):
+        """ Returns the right-click context menu for an object.
+        """
+        return self.adapter.get_menu()
+                
+    def can_rename ( self, object ):
+        """ Returns whether the object's children can be renamed.
+        """
+        return self.adapter.can_rename()
+    
+    def can_rename_me ( self, object ):
+        """ Returns whether the object can be renamed.
+        """
+        return self.adapter.can_rename_me()
+    
+    def can_copy ( self, object ):
+        """ Returns whether the object's children can be copied.
+        """
+        return self.adapter.can_copy()
+    
+    def can_delete ( self, object ):
+        """ Returns whether the object's children can be deleted.
+        """
+        return self.adapter.can_delete()
+    
+    def can_delete_me ( self, object ):
+        """ Returns whether the object can be deleted.
+        """
+        return self.adapter.can_delete_me()
+    
+    def can_insert ( self, object ):
+        """ Returns whether the object's children can be inserted (vs. 
+            appended).
+        """
+        return self.adapter.can_insert()
+
+    def can_auto_open ( self, object ):
+        """ Returns whether the object's children should be automatically 
+            opened.
+        """
+        return self.adapter.can_auto_open()
+
+    def can_auto_close ( self, object ):
+        """ Returns whether the object's children should be automatically 
+            closed.
+        """
+        return self.adapter.can_auto_close()
+                                
+    def can_add ( self, object, add_object ):
+        """ Returns whether a given object is droppable on the node.
+        """
+        return self.adapter.can_add( add_object )
+    
+    def get_add ( self, object ):
+        """ Returns the list of classes that can be added to the object.
+        """
+        return self.adapter.get_add()
+                
+    def get_drag_object ( self, object ):
+        """ Returns a draggable version of a specified object.
+        """
+        return self.adapter.get_drag_object()
+                                                      
+    def drop_object ( self, object, dropped_object ):
+        """ Returns a droppable version of a specified object.
+        """
+        return self.adapter.drop_object( dropped_object )
+                
+    def select ( self, object ):
+        """ Handles an object being selected.
+        """
+        return self.adapter.select()
+       
+    def click ( self, object ):
+        """ Handles an object being clicked.
+        """
+        return self.adapter.click()
+       
+    def dclick ( self, object ):
+        """ Handles an object being double-clicked.
+        """
+        return self.adapter.dclick()
         
 #-------------------------------------------------------------------------------
 #  'ObjectTreeNode' class  
@@ -660,6 +1190,15 @@ class ObjectTreeNode ( TreeNode ):
         """ Gets the object's children.
         """
         return object.tno_get_children( self )
+        
+    #---------------------------------------------------------------------------
+    #  Gets the object's children identifier:  
+    #---------------------------------------------------------------------------
+
+    def get_children_id ( self, object ):
+        """ Gets the object's children identifier.
+        """
+        return object.tno_get_children_id( self )
         
     #---------------------------------------------------------------------------
     #  Appends a child to the object's children:  
@@ -714,7 +1253,7 @@ class ObjectTreeNode ( TreeNode ):
 
     def when_children_replaced ( self, object, listener, remove ):
         """ Sets up or removes a listener for children being replaced on a 
-        specified object.
+            specified object.
         """
         return object.tno_when_children_replaced( self, listener, remove )
         
@@ -725,7 +1264,7 @@ class ObjectTreeNode ( TreeNode ):
                 
     def when_children_changed ( self, object, listener, remove ):
         """ Sets up or removes a listener for children being changed on a 
-        specified object.
+            specified object.
         """
         return object.tno_when_children_changed( self, listener, remove )
         
@@ -753,7 +1292,7 @@ class ObjectTreeNode ( TreeNode ):
                 
     def when_label_changed ( self, object, listener, remove ):
         """ Sets up or removes a listener for the label being changed on a 
-        specified object.
+            specified object.
         """
         return object.tno_when_label_changed( self, listener, remove )
 
@@ -875,7 +1414,7 @@ class ObjectTreeNode ( TreeNode ):
 
     def can_auto_open ( self, object ):
         """ Returns whether the object's children should be automatically 
-        opened.
+            opened.
         """
         return object.tno_can_auto_open( self )
 
@@ -885,7 +1424,7 @@ class ObjectTreeNode ( TreeNode ):
 
     def can_auto_close ( self, object ):
         """ Returns whether the object's children should be automatically 
-        closed.
+            closed.
         """
         return object.tno_can_auto_close( self )
         
@@ -1000,6 +1539,15 @@ class TreeNodeObject ( HasPrivateTraits ):
         """ Gets the object's children.
         """
         return getattr( self, node.children )
+        
+    #---------------------------------------------------------------------------
+    #  Gets the object's children identifier:  
+    #---------------------------------------------------------------------------
+
+    def tno_get_children_id ( self, node ):
+        """ Gets the object's children identifier.
+        """
+        return node.children
         
     #---------------------------------------------------------------------------
     #  Appends a child to the object's children:  
@@ -1383,7 +1931,7 @@ class MultiTreeNode ( TreeNode ):
     root_node = Instance( TreeNode )
     
     # List of TreeNodes (one for each sub-item list)
-    nodes     = List( TreeNode ) 
+    nodes = List( TreeNode ) 
     
     #---------------------------------------------------------------------------
     #  Returns whether chidren of this object are allowed or not:  
@@ -1412,6 +1960,15 @@ class MultiTreeNode ( TreeNode ):
         """ Gets the object's children.
         """
         return [ ( object, node ) for node in self.nodes ]
+        
+    #---------------------------------------------------------------------------
+    #  Gets the object's children identifier:  
+    #---------------------------------------------------------------------------
+
+    def get_children_id ( self, object ):
+        """ Gets the object's children identifier.
+        """
+        return ''
         
     #---------------------------------------------------------------------------
     #  Sets up/Tears down a listener for 'children replaced' on a specified  
