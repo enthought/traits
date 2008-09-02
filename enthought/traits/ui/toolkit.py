@@ -52,13 +52,14 @@ _toolkit = None
 #  Low-level GUI toolkit selection function:
 #-------------------------------------------------------------------------------
 
-def _import_toolkit(name):
+def _import_toolkit ( name ):
     package  = 'enthought.traits.ui.' + name
     module   = __import__( package )
+    
     return getattr( module.traits.ui, name ).toolkit
 
 
-def toolkit_object(name):
+def toolkit_object ( name ):
     """ Return the toolkit specific object with the given name.  The name
     consists of the relative module path and the object name separated by a
     colon.
@@ -66,23 +67,25 @@ def toolkit_object(name):
 
     mname, oname = name.split(':')
     
-    class Unimplemented(object):
+    class Unimplemented ( object ):
         """ This is returned if an object isn't implemented by the selected
         toolkit.  It raises an exception if it is ever instantiated.
         """
 
-        def __init__(self, *args, **kwargs):
-            raise NotImplementedError("the %s traits backend doesn't implement %s" % (ETSConfig.toolkit, oname))
+        def __init__( self, *args, **kwargs ):
+            raise NotImplementedError( "The %s traits backend doesn't "
+                "implement %s" % ( ETSConfig.toolkit, oname ) )
 
-    be_obj = Unimplemented
-    be_mname = toolkit().__module__.rstrip('.toolkit') + '.' + mname
+    be_obj   = Unimplemented
+    be_mname = toolkit().__module__.rstrip( '.toolkit' ) + '.' + mname
 
     try:
-        __import__(be_mname)
+        __import__( be_mname )
         try:
-            be_obj = getattr(sys.modules[be_mname], oname)
+            be_obj = getattr( sys.modules[ be_mname ], oname )
         except AttributeError:
             pass
+        
     except ImportError:
         pass
 
@@ -100,16 +103,16 @@ def toolkit ( *toolkits ):
     if _toolkit is not None:
         return _toolkit
 
-    # If a toolkit has already been set for ETSConfig, then check we can use 
+    # If a toolkit has already been set for ETSConfig, then check if we can use 
     # it:
     if ETSConfig.toolkit:
         toolkits = ( ETSConfig.toolkit, )
-    elif len(toolkits) == 0:
+    elif len( toolkits ) == 0:
         toolkits = TraitUIToolkits
 
     for toolkit_name in toolkits:
         try:
-            _toolkit = _import_toolkit(toolkit_name)
+            _toolkit = _import_toolkit( toolkit_name )
 
             # In case we have just decided on a toolkit, tell everybody else:
             ETSConfig.toolkit = toolkit_name
@@ -121,13 +124,15 @@ def toolkit ( *toolkits ):
     else:
         # Try using the null toolkit and printing a warning
         try:
-            _toolkit = _import_toolkit("null")
+            _toolkit = _import_toolkit( 'null' )
             import warnings
-            warnings.warn("Unable to import the '%s' backend for traits UI; using the 'null' toolkit instead." % toolkit_name)
+            warnings.warn( "Unable to import the '%s' backend for traits UI; "
+                           "using the 'null' toolkit instead." % toolkit_name )
             return _toolkit
+            
         except ImportError:
-            raise TraitError, ("Could not find any UI toolkit called '%s'" %
-                               toolkit_name)
+            raise TraitError( "Could not find any UI toolkit called '%s'" %
+                              toolkit_name )
 
 #-------------------------------------------------------------------------------
 #  'Toolkit' class (abstract base class):
