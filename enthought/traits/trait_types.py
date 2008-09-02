@@ -1926,14 +1926,14 @@ class BaseTuple ( TraitType ):
     """ Defines a trait whose value must be a tuple of specified trait types.
     """
 
-    def __init__ ( self, *traits, **metadata ):
+    def __init__ ( self, *types, **metadata ):
         """ Returns a Tuple trait.
 
         Parameters
         ----------
-        traits : zero or more arguments
+        types : zero or more arguments
             Definition of the default and allowed tuples. If the first item of
-            *traits* is a tuple, it is used as the default value.
+            *types* is a tuple, it is used as the default value.
             The remaining argument list is used to form a tuple that constrains
             the  values assigned to the returned trait. The trait's value must
             be a tuple of the same length as the remaining argument list, whose
@@ -1966,7 +1966,7 @@ class BaseTuple ( TraitType ):
         elements are strings, and whose third element is an integer. The
         default value is ('','',0).
         """
-        if len( traits ) == 0:
+        if len( types ) == 0:
             self.init_fast_validator( 11, tuple, None, list )
 
             super( BaseTuple, self ).__init__( (), **metadata )
@@ -1975,17 +1975,17 @@ class BaseTuple ( TraitType ):
 
         default_value = None
 
-        if isinstance( traits[0], tuple ):
-            default_value, traits = traits[0], traits[1:]
-            if len( traits ) == 0:
-                traits = [ Trait( element ) for element in default_value ]
+        if isinstance( types[0], tuple ):
+            default_value, types = types[0], types[1:]
+            if len( types ) == 0:
+                types = [ Trait( element ) for element in default_value ]
 
-        self.traits = tuple( [ trait_from( trait ) for trait in traits ] )
-        self.init_fast_validator( 9, self.traits )
+        self.types = tuple( [ trait_from( type ) for type in types ] )
+        self.init_fast_validator( 9, self.types )
 
         if default_value is None:
-            default_value = tuple( [ trait.default_value()[1]
-                                     for trait in self.traits ] )
+            default_value = tuple( [ type.default_value()[1]
+                                     for type in self.types ] )
 
         super( BaseTuple, self ).__init__( default_value, **metadata )
 
@@ -2011,12 +2011,11 @@ class BaseTuple ( TraitType ):
                 value = tuple( value )
 
             if isinstance( value, tuple ):
-                traits = self.traits
-                if len( value ) == len( traits ):
+                types = self.types
+                if len( value ) == len( types ):
                     values = []
-                    for i, trait in enumerate( traits ):
-                        values.append( trait.validate( object, name,
-                                                       value[i] ) )
+                    for i, type in enumerate( types ):
+                        values.append( type.validate( object, name, value[i] ) )
 
                     return tuple( values )
         except:
@@ -2031,15 +2030,15 @@ class BaseTuple ( TraitType ):
             return 'a tuple'
 
         return 'a tuple of the form: (%s)' % (', '.join(
-            [ trait.full_info( object, name, value )
-              for trait in self.traits ] ))
+            [ type.full_info( object, name, value )
+              for type in self.types ] ))
 
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         from enthought.traits.ui.api import TupleEditor
 
-        return TupleEditor( traits = self.traits,
+        return TupleEditor( types  = self.types,
                             labels = self.labels or [],
                             cols   = self.cols or 1 )
 
