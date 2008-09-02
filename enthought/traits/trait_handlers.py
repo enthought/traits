@@ -1289,10 +1289,10 @@ class TraitCastType ( TraitCoerceType ):
 
 class ThisClass ( TraitHandler ):
     """Ensures that the trait attribute values belong to the same class (or
-    a subclass) as the object containing the trait attribute.
-
-    ThisClass is the underlying handler for the predefined traits **This** and
-    **self**, and the elements of ListThis.
+       a subclass) as the object containing the trait attribute.
+    
+       ThisClass is the underlying handler for the predefined traits **This**
+       and **self**, and the elements of ListThis.
     """
     def __init__ ( self, allow_none = False ):
         """Creates a ThisClass handler.
@@ -1304,8 +1304,8 @@ class ThisClass ( TraitHandler ):
             (True or non-zero) or not (False or 0)
         """
         if allow_none:
-            # fixme: This code seems wrong...where is 'allow_none' implemented?
-            self.allow_none()
+            self.validate      = self.validate_none
+            self.info          = self.info_none
             self.fast_validate = ( 2, None )
         else:
             self.fast_validate = ( 2, )
@@ -1313,11 +1313,13 @@ class ThisClass ( TraitHandler ):
     def validate ( self, object, name, value ):
         if isinstance( value, object.__class__ ):
             return value
+            
         self.validate_failed( object, name, value )
 
     def validate_none ( self, object, name, value ):
         if isinstance( value, object.__class__ ) or (value is None):
             return value
+            
         self.validate_failed( object, name, value )
 
     def info ( self ):
@@ -1332,6 +1334,7 @@ class ThisClass ( TraitHandler ):
             msg = 'class %s' % value.__class__.__name__
         else:
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
+            
         self.error( object, name, msg )
 
     def get_editor ( self, trait ):

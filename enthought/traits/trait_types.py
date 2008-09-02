@@ -896,9 +896,6 @@ class BaseType ( TraitType ):
     """ Defines a trait whose value must be an instance of a simple Python type.
     """
 
-    # The default value for the trait:
-    default_value = None
-
     def validate ( self, object, name, value ):
         """ Validates that the value is a Python callable.
         """
@@ -912,12 +909,54 @@ class This ( BaseType ):
     """ Defines a trait whose value must be an instance of the defining class.
     """
 
+    # The C-level fast validator to use:
+    fast_validate = ( 2, )
+
+    # A description of the type of value this trait accepts:
+    info_text = 'an instance of the same type as the receiver'
+    
+    def __init__ ( self, value = None, allow_none = True, **metadata ):
+        super( This, self ).__init__( value, **metadata )
+        
+        if allow_none:
+            self.fast_validate = ( 2, None )
+            self.validate      = self.validate_none
+            self.info          = self.info_none
+
+    def validate ( self, object, name, value ):
+        if isinstance( value, object.__class__ ):
+            return value
+            
+        self.validate_failed( object, name, value )
+
+    def validate_none ( self, object, name, value ):
+        if isinstance( value, object.__class__ ) or (value is None):
+            return value
+            
+        self.validate_failed( object, name, value )
+
+    def info ( self ):
+        return 'an instance of the same type as the receiver'
+
+    def info_none ( self ):
+        return 'an instance of the same type as the receiver or None'
+
+    def validate_failed ( self, object, name, value ):
+        kind = type( value )
+        if kind is InstanceType:
+            msg = 'class %s' % value.__class__.__name__
+        else:
+            msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
+            
+        self.error( object, name, msg )
+        
 
 class self ( This ):
     """ Defines a trait whose value must be an instance of the defining class
         and whose default value is the object containing the trait.
     """
 
+    # The default value type to use (i.e. 'self'):
     default_value_type = 2
 
 
