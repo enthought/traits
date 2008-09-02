@@ -233,11 +233,11 @@ class AbstractArray ( TraitType ):
         from enthought.traits.ui.api import TupleEditor
         
         if self.dtype is None:
-            traits = Any
+            types = Any
         else:
-            traits = dtype2trait( self.dtype )
+            types = dtype2trait( self.dtype )
             
-        return TupleEditor( traits = traits,
+        return TupleEditor( types  = types,
                             labels = self.labels or [],
                             cols   = self.cols or 1  )
 

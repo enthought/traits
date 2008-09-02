@@ -2190,18 +2190,18 @@ class TraitTuple ( TraitHandler ):
         *args*, and whose *i*\ th element is of the type specified by
         *trait*\ :sub:`i`.
         """
-        self.traits = tuple( [ trait_from( arg ) for arg in args ] )
-        self.fast_validate = ( 9, self.traits )
+        self.types = tuple( [ trait_from( arg ) for arg in args ] )
+        self.fast_validate = ( 9, self.types )
 
     def validate ( self, object, name, value ):
         try:
             if isinstance( value, tuple ):
-                traits = self.traits
-                if len( value ) == len( traits ):
+                types = self.types
+                if len( value ) == len( types ):
                     values = []
-                    for i, trait in enumerate( traits ):
-                        values.append( trait.handler.validate( object, name,
-                                                               value[i] ) )
+                    for i, type in enumerate( types ):
+                        values.append( type.handler.validate( object, name,
+                                                              value[i] ) )
                     return tuple( values )
         except:
             pass
@@ -2210,11 +2210,11 @@ class TraitTuple ( TraitHandler ):
 
     def full_info ( self, object, name, value ):
         return 'a tuple of the form: (%s)' % (', '.join(
-               [ self._trait_info( trait, object, name, value ) 
-                 for trait in self.traits ] ))
+               [ self._trait_info( type, object, name, value ) 
+                 for type in self.types ] ))
 
-    def _trait_info ( self, trait, object, name, value ):
-        handler = trait.handler
+    def _trait_info ( self, type, object, name, value ):
+        handler = type.handler
         if handler is None:
             return 'any value'
             
@@ -2223,7 +2223,7 @@ class TraitTuple ( TraitHandler ):
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import TupleEditor
         
-        return TupleEditor( traits = self.traits,
+        return TupleEditor( types  = self.traits,
                             labels = trait.labels or [],
                             cols   = trait.cols   or 1  )
 
