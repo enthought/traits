@@ -100,3 +100,6 @@ from editors \
 
 import view_elements
 
+_constants  = toolkit().constants()
+WindowColor = _constants.get( 'WindowColor', 0xFFFFFF )
+

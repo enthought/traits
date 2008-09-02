@@ -22,6 +22,7 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+
 import sys
 
 from enthought.traits.api \
@@ -346,6 +347,19 @@ class Toolkit ( HasPrivateTraits ):
     def image_size ( self, image ):
         """ Returns a ( width, height ) tuple containing the size of a 
             specified toolkit image.
+        """
+        raise NotImplementedError
+        
+    #---------------------------------------------------------------------------
+    #  Returns a dictionary of useful constants:
+    #---------------------------------------------------------------------------
+    
+    def constants ( self ):
+        """ Returns a dictionary of useful constants.
+        
+            Currently, the dictionary should have the following key/value pairs:
+            - WindowColor': the standard window background color in the toolkit
+              specific color format.
         """
         raise NotImplementedError
         
