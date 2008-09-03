@@ -2186,27 +2186,9 @@ class List ( TraitType ):
             from enthought.traits.api import HasTraits
 
             if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from enthought.traits.ui.table_column import ObjectColumn
-                    from enthought.traits.ui.table_filter import \
-                         EvalFilterTemplate, RuleFilterTemplate, \
-                         MenuFilterTemplate, EvalTableFilter
-                    from enthought.traits.ui.api import TableEditor
+                from enthought.traits.ui.api import TableEditor
 
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
+                return TableEditor()
 
         from enthought.traits.ui.api import ListEditor
 
