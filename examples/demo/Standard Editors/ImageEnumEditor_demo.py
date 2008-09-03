@@ -22,16 +22,17 @@ class Dummy ( HasTraits ):
     
     view = View()
 
-class ImageEnumEditorDemo (  HasTraits ): 
+class ImageEnumEditorDemo ( HasTraits ): 
     """ Defines the ImageEnumEditor demo class.
     """
 
     # Define a trait to view:
-    image_from_list  = Trait( editor = ImageEnumEditor( values = image_list, 
-                                                        suffix = '_origin', 
-                                                        cols   = 4, 
-                                                        klass  = Dummy ), 
-                              *image_list ) 
+    image_from_list = Trait( editor = ImageEnumEditor( values = image_list, 
+                                                       prefix = '@icons:',
+                                                       suffix = '_origin', 
+                                                       cols   = 4, 
+                                                       klass  = Dummy ), 
+                             *image_list ) 
 
     # Items are used to define the demo display, one Item per editor style:
     img_group = Group(

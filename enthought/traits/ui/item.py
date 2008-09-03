@@ -39,7 +39,7 @@ from view_element \
     import ViewSubElement
 
 from ui_traits \
-    import convert_theme, ContainerDelegate
+    import convert_theme, ContainerDelegate, EditorStyle
 
 from editor_factory \
     import EditorFactory
@@ -127,17 +127,25 @@ class Item ( ViewSubElement ):
     # Editor to use for the item:
     editor = ItemEditor
 
-    # Should the item use extra space? If set to True, the widget expands to
-    # fill any extra space that is available in the display. If set to True
-    # for more than one item in the same View, any extra space is divided
-    # between them. If set to False, the widget uses only whatever space it
-    # is explicitly (or implicitly) assigned. The default value of Undefined
-    # means that the use (or non-use) of extra space will be determined by the
-    # editor associated with the item.
+    # Should the item use extra space along its Group's layout axis? If set to
+    # True, the widget expands to fill any extra space that is available in the 
+    # display. If set to True for more than one item in the same View, any extra 
+    # space is divided between them. If set to False, the widget uses only
+    # whatever space it is explicitly (or implicitly) assigned. The default 
+    # value of Undefined means that the use (or non-use) of extra space will be 
+    # determined by the editor associated with the item.
     resizable = Bool( Undefined )
 
-    # Should the item use extra space along its Group's layout orientation?
+    # Should the item use extra space along its Group's layout axis? For 
+    # example, it a vertical group, should an item expand vertically to use
+    # any extra space available in the group?
     springy = Bool( False )
+    
+    # Should the item use any extra space along its Group's non-layout
+    # orientation? For example, in a vertical group, should an item expand
+    # horizontally to the full width of the group? If left to the default value
+    # of Undefined, the decision will be left up to the associated item editor.
+    full_size = Bool( Undefined )
 
     # Should the item's label use emphasized text? If the label is not shown,
     # this attribute is ignored.
@@ -406,14 +414,65 @@ class Item ( ViewSubElement ):
     def __repr__ ( self ):
         """ Returns a "pretty print" version of the Item.
         """
-        return '"%s%s%s%s%s"' % ( self._repr_value( self.id, '', ':' ),
-                                  self._repr_value( self.object, '', '.',
-                                                    'object' ),
-                                  self._repr_value( self.name ),
-                                  self._repr_value( self.label,'=' ),
-                                  self._repr_value( self.style, ';', '',
-                                                    'simple' ) )
 
+        options = self._repr_options( 'id', 'object', 'label', 'style',
+                                      'show_label', 'width', 'height' ) 
+        if options is None:
+            return "Item( '%s' )" % self.name
+            
+        return "Item( '%s'\n%s\n)" % ( 
+               self.name, self._indent( options, '      ' ) )
+
+#-------------------------------------------------------------------------------
+#  'UItem' class:
+#-------------------------------------------------------------------------------
+
+class UItem ( Item ):
+    """ An Item that has no label.
+    """
+    
+    show_label = Bool( False )
+    
+#-------------------------------------------------------------------------------
+#  'Custom' class:
+#-------------------------------------------------------------------------------    
+    
+class Custom ( Item ):
+    """ An Item using a 'custom' style.
+    """
+    
+    style = EditorStyle( 'custom' )
+    
+#-------------------------------------------------------------------------------
+#  'UCustom' class:
+#-------------------------------------------------------------------------------    
+    
+class UCustom ( Custom ):
+    """ An Item using a 'custom' style with no label.
+    """
+    
+    show_label = Bool( False )
+    
+#-------------------------------------------------------------------------------
+#  'Readonly' class:
+#-------------------------------------------------------------------------------
+
+class Readonly ( Item ):
+    """ An Item using a 'readonly' style.
+    """
+    
+    style = EditorStyle( 'readonly' )
+    
+#-------------------------------------------------------------------------------
+#  'UReadonly' class:
+#-------------------------------------------------------------------------------
+
+class UReadonly ( Item ):
+    """ An Item using a 'readonly' style with no label.
+    """
+    
+    show_label = Bool( False )
+    
 #-------------------------------------------------------------------------------
 #  'Label' class:
 #-------------------------------------------------------------------------------

@@ -24,23 +24,8 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import View, Item, TabularEditor
     
-from enthought.traits.ui.menu \
-    import NoButtons
-    
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
-
-from enthought.pyface.image_resource \
-    import ImageResource
-    
-#-- Constants ------------------------------------------------------------------
-
-# Necessary because of the dynamic way in which the demos are loaded:
-import enthought.traits.ui.api
-
-search_path = [ join( dirname( enthought.traits.api.__file__ ),
-                      '..', '..', 'examples', 'demo', 'Advanced' ) ]
-print "search_path:", search_path
 
 #-- Tabular Adapter Definition -------------------------------------------------
 
@@ -60,15 +45,9 @@ class ArrayAdapter ( TabularAdapter ):
     def _get_index_image ( self ):
         x, y, z = self.item
         if sqrt( (x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2 ) <= 0.25:
-            return 'red_flag'
+            return '@icons:red_ball'
+            
         return None
-
-#-- Tabular Editor Definition --------------------------------------------------
-
-tabular_editor = TabularEditor(
-    adapter = ArrayAdapter(),
-    images  = [ ImageResource( 'red_flag', search_path = search_path ) ]
-)
 
 #-- ShowArray Class Definition -------------------------------------------------
 
@@ -77,12 +56,15 @@ class ShowArray ( HasTraits ):
     data = Array
     
     view = View(
-        Item( 'data', editor = tabular_editor, show_label = False, style = 'readonly' ),
+        Item( 'data', 
+              show_label = False, 
+              style      = 'readonly',
+              editor     = TabularEditor( adapter = ArrayAdapter() )
+        ),
         title     = 'Array Viewer',
         width     = 0.3,
         height    = 0.8,
-        resizable = True,
-        buttons   = NoButtons
+        resizable = True
     )
     
 # Create the demo:

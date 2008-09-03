@@ -127,7 +127,7 @@ class SingleValueTreeNodeObject ( TreeNodeObject ):
     def tno_get_icon ( self, node, is_expanded ):
         """ Returns the icon for a specified object.
         """
-        return self.__class__.__name__[ : -4 ].lower() + '_node'
+        return ('@icons:%s_node' % self.__class__.__name__[ : -4 ].lower())
         
     #---------------------------------------------------------------------------
     #  Sets the label for a specified node:  

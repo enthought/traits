@@ -857,16 +857,19 @@ class UI ( HasPrivateTraits ):
         Includes. (Implements the **_groups** property.)
         """
         if self._groups_cache is None:
-            shadow_group       = self.view.content.get_shadow( self )
-            self._groups_cache = shadow_group.get_content()
-            for item in self._groups_cache:
-                if isinstance( item, Item ):
-                    self._groups_cache = [ 
-                        ShadowGroup( shadow  = Group( *self._groups_cache ),
-                                     content = self._groups_cache,
-                                     groups  = 1 )
-                    ]
-                    break
+            self._groups_cache = [ self.view.content.get_shadow( self ) ]
+                    
+            ###shadow_group       = self.view.content.get_shadow( self )
+            ###self._groups_cache = shadow_group.get_content()
+            ###for item in self._groups_cache:
+            ###    if isinstance( item, Item ):
+            ###        self._groups_cache = [ 
+            ###            ShadowGroup( shadow  = Group( *self._groups_cache ),
+            ###                         content = self._groups_cache,
+            ###                         groups  = 1 )
+            ###        ]
+            ###        break
+                    
         return self._groups_cache
 
 #-- Event handlers -------------------------------------------------------------

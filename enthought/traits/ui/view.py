@@ -34,8 +34,8 @@ from ui \
     import UI
     
 from ui_traits \
-    import SequenceTypes, ATheme, object_trait, EditorStyle, DockStyle, \
-           image_trait, export_trait, HelpId, buttons_trait, ViewStatus
+    import SequenceTypes, ATheme, AnObject, EditorStyle, DockStyle, Image, \
+           ExportType, HelpId, Buttons, ViewStatus
     
 from handler \
     import Handler, default_handler
@@ -54,30 +54,21 @@ from include \
 #-------------------------------------------------------------------------------
 
 # Name of the view trait:
-id_trait = Str( desc = 'the name of the view' )
+AnId = Str( desc = 'the name of the view' )
 
 # Contents of the view trait (i.e., a single Group object):
-content_trait = Instance( Group,
-                          desc = 'the content of the view' )
-
-# The menu bar for the view
-#menubar_trait = Instance( 'enthought.pyface.action.MenuBarManager',
-#                          desc = 'the menu bar for the view' )
-
-# The tool bar for the view
-#toolbar_trait = Instance( 'enthought.pyface.action.ToolBarManager',
-#                          desc = 'the tool bar for the view' )
+Content = Instance( Group, desc = 'the content of the view' )
 
 # An optional model/view factory for converting the model into a viewable
 # 'model_view' object
-model_view_trait = Callable( desc = 'the factory function for converting a' 
-                                    'model into a model/view object' )
+AModelView = Callable( desc = 'the factory function for converting a model '
+                              'into a model/view object' )
                     
 # Reference to a Handler object trait:
-handler_trait = Any( desc = 'the handler for the view' )
+AHandler = Any( desc = 'the handler for the view' )
 
 # Dialog window title trait:
-title_trait = Str( desc = 'the window title for the view' )
+ATitle = Str( desc = 'the window title for the view' )
 
 # Dialog window icon trait
 #icon_trait = Instance( 'enthought.pyface.image_resource.ImageResource',
@@ -104,67 +95,41 @@ title_trait = Str( desc = 'the window title for the view' )
 #   pages, which can be accessed by clicking **Next** and **Back** buttons. 
 #   Changes to attribute values are applied only when the user clicks the
 #   **Finish** button on the last page.
-kind_trait = Trait( 'live', TraitPrefixList( 
-                               'panel', 'subpanel', 'modal', 'nonmodal',
-                               'livemodal', 'live', 'popup', 'popover', 'info',
-                               'wizard' ), 
-                    desc = 'the kind of view window to create',
-                    cols = 4 )
+AKind = Trait( 'live', TraitPrefixList( 
+                   'panel', 'subpanel', 'modal', 'nonmodal', 'livemodal', 
+                   'live', 'popup', 'popover', 'info', 'wizard' ), 
+               desc = 'the kind of view window to create',
+               cols = 4 )
            
-# Traits for optional window buttons:
-
-apply_trait  = Bool( False,
-                     desc = "whether to add an 'Apply' button to the view" )
-                    
-revert_trait = Bool( False,
-                     desc = "whether to add a 'Revert' button to the view" )
-                    
-undo_trait   = Bool( False,
-                 desc = "whether to add 'Undo' and 'Redo' buttons to the view" )
-          
-ok_trait     = Bool( False,
-                     desc = "whether to add an 'OK' button to the view" )
-          
-cancel_trait = Bool( False,
-                     desc = "whether to add a 'Cancel' button to the view" )
-          
-help_trait   = Bool( False,
-                     desc = "whether to add a 'Help' button to the view" )
+# Apply changes handler:
+OnApply = Callable( desc = 'the routine to call when modal changes are applied '
+                           'or reverted' )
                      
-on_apply_trait = Callable( desc = 'the routine to call when modal changes are '
-                                  'applied or reverted' )
-                     
-# Is the dialog window is resizable?
-resizable_trait = Bool( False,
-                        desc = 'whether dialog can be resized or not' )
+# Is the dialog window resizable?
+IsResizable = Bool( False, desc = 'whether dialog can be resized or not' )
                      
 # Is the view scrollable?
-scrollable_trait = Bool( False,
-                         desc = 'whether view should be scrollable or not' )
+IsScrollable = Bool( False, desc = 'whether view should be scrollable or not' )
 
 # The valid categories of imported elements that can be dragged into the view:
-imports_trait = List( Str, desc = 'the categories of elements that can be '
-                                  'dragged into the view' )
+ImportTypes = List( Str, desc = 'the categories of elements that can be '
+                                'dragged into the view' )
 
 # The view position and size traits:                    
-width_trait  = Float( -1E6,
-                      desc = 'the width of the view window' )
-height_trait = Float( -1E6,
-                      desc = 'the height of the view window' )
-x_trait      = Float( -1E6,
-                      desc = 'the x coordinate of the view window' )
-y_trait      = Float( -1E6,
-                      desc = 'the y coordinate of the view window' )
+Width       = Float( -1E6, desc = 'the width of the view window' )
+Height      = Float( -1E6, desc = 'the height of the view window' )
+XCoordinate = Float( -1E6, desc = 'the x coordinate of the view window' )
+YCoordinate = Float( -1E6, desc = 'the y coordinate of the view window' )
                       
 # The result that should be returned if the user clicks the window or dialog 
 # close button or icon
-close_result_trait = Enum( None, True, False,
-                         desc = 'the result to return when the user clicks the '
-                                'window or dialog close button or icon' )
+CloseResult = Enum( None, True, False,
+                    desc = 'the result to return when the user clicks the '
+                           'window or dialog close button or icon' )
                                 
 # The KeyBindings trait:
-key_bindings_trait = Instance( 'enthought.traits.ui.key_bindings.KeyBindings',
-                               desc = 'the global key bindings for the view' )
+AKeyBindings = Instance( 'enthought.traits.ui.key_bindings.KeyBindings',
+                         desc = 'the global key bindings for the view' )
                     
 #-------------------------------------------------------------------------------
 #  'View' class:
@@ -173,10 +138,10 @@ key_bindings_trait = Instance( 'enthought.traits.ui.key_bindings.KeyBindings',
 class View ( ViewElement ):
     """ A Traits-based user interface for one or more objects.
     
-    The attributes of the View object determine the contents and layout of
-    an attribute-editing window. A View object contains a set of Group, 
-    Item, and Include objects. A View object can be an attribute of an
-    object derived from HasTraits, or it can be a standalone object.
+        The attributes of the View object determine the contents and layout of
+        an attribute-editing window. A View object contains a set of Group, 
+        Item, and Include objects. A View object can be an attribute of an
+        object derived from HasTraits, or it can be a standalone object.
     """
     
     #---------------------------------------------------------------------------
@@ -184,16 +149,16 @@ class View ( ViewElement ):
     #---------------------------------------------------------------------------
 
     # A unique identifier for the view:
-    id = id_trait
+    id = AnId
     
     # The top-level Group object for the view:
-    content = content_trait
+    content = Content
     
     # The menu bar for the view. Usually requires a custom **handler**:
-    menubar = Any
+    menubar = Any # Instance( enthought.pyface.action.MenuBarManager )
     
     # The toolbar for the view. Usually requires a custom **handler**:
-    toolbar = Any
+    toolbar = Any # Instance( enthought.pyface.action.ToolBarManager )
     
     # Status bar items to add to the view's status bar. The value can be:
     #
@@ -214,7 +179,7 @@ class View ( ViewElement ):
     # view contains a default set of buttons (equivalent to **LiveButtons**:
     # Undo/Redo, Revert, OK, Cancel, Help). To suppress buttons in the view,
     # use the **NoButtons** variable, defined in **enthought.traits.ui.menu**.
-    buttons = buttons_trait
+    buttons = Buttons
     
     # The set of global key bindings for the view. Each time a key is pressed
     # while the view has keyboard focus, the key is checked to see if it is one
@@ -228,35 +193,29 @@ class View ( ViewElement ):
     # found, the key is processed normally. If the view has a non-empty *id*
     # trait, the contents of the **KeyBindings** object will be saved as part
     # of the view's persistent data:
-    key_bindings = key_bindings_trait
-    
-    # The menu bar for the view:
-#   menubar = menubar_trait
-
-    # The tool bar for the view:
-#   toolbar = toolbar_trait
+    key_bindings = AKeyBindings
 
     # The Handler object that provides GUI logic for handling events in the 
     # window. Set this attribute only if you are using a custom Handler. If
     # not set, the default Traits UI Handler is used.
-    handler = handler_trait 
+    handler = AHandler 
     
     # The factory function for converting a model into a model/view object:
-    model_view = model_view_trait
+    model_view = AModelView
     
     # Title for the view, displayed in the title bar when the view appears as a
     # secondary window (i.e., dialog or wizard). If not specified, "Edit
     # properties" is used as the title.
-    title = title_trait
+    title = ATitle
     
     # The name of the icon to display in the dialog window title bar:
     icon = Any
     
     # The kind of user interface to create:
-    kind = kind_trait
+    kind = AKind
     
     # The default object being edited:
-    object = object_trait
+    object = AnObject
     
     # The default editor style of elements in the view:
     style = EditorStyle
@@ -275,43 +234,25 @@ class View ( ViewElement ):
     dock = DockStyle
     
     # The image to display on notebook tabs:
-    image = image_trait
+    image = Image
     
     # Called when modal changes are applied or reverted:
-    on_apply = on_apply_trait
-    
-    # Should an Apply button be added?  (deprecated):
-    apply = apply_trait
-    
-    # Should a Revert button be added?  (deprecated):
-    revert = revert_trait
-    
-    # Should Undo/Redo buttons be added?  (deprecated):
-    undo = undo_trait
-    
-    # Should an OK button be added?  (deprecated):
-    ok = ok_trait
-    
-    # Should a Cancel button be added?  (deprecated):
-    cancel = cancel_trait
+    on_apply = OnApply
     
     # Can the user resize the window?
-    resizable = resizable_trait
+    resizable = IsResizable
     
     # Can the user scroll the view? If set to True, window-level scroll bars
     # appear whenever the window is too small to show all of its contents at
     # one time. If set to False, the window does not scroll, but individual
     # widgets might still contain scroll bars.
-    scrollable = scrollable_trait
+    scrollable = IsScrollable
     
     # The category of exported elements:
-    export = export_trait
+    export = ExportType
     
     # The valid categories of imported elements:
-    imports = imports_trait
-    
-    # Should a Help button be added? (deprecated):
-    help = help_trait
+    imports = ImportTypes
     
     # External help context identifier, which can be used by a custom help
     # handler. This attribute is ignored by the default help handler.
@@ -330,21 +271,21 @@ class View ( ViewElement ):
     # * A floating point value between -1 and 0: indicates the fraction of the
     #   total screen width between the right edge of the screen and the right
     #   edge of the window.
-    x = x_trait
+    x = XCoordinate
     
     # Requested y-coordinate (vertical position) for the view window. This
     # attribute behaves exactly like the **x** attribute, except that its value
     # indicates the position of the top or bottom of the view window relative
     # to the top or bottom of the screen.
-    y = y_trait
+    y = YCoordinate
     
     # Requested width for the view window, as an (integer) number of pixels, or
     # as a (floating point) fraction of the screen width.
-    width = width_trait
+    width = Width
     
     # Requested height for the view window, as an (integer) number of pixels, or
     # as a (floating point) fraction of the screen height.
-    height = height_trait
+    height = Height
     
     # Class of dropped objects that can be added:
     drop_class = Any
@@ -354,7 +295,7 @@ class View ( ViewElement ):
     
     # What result should be returned if the user clicks the window or dialog 
     # close button or icon?
-    close_result = close_result_trait
+    close_result = CloseResult
 
     # The default theme to use for a contained item:
     item_theme = ATheme
@@ -363,6 +304,16 @@ class View ( ViewElement ):
     label_theme = ATheme
     
     # Note: Group objects delegate their 'object' and 'style' traits to the View
+    
+    #-- Deprecated Traits (DO NOT USE) -----------------------------------------
+    
+    ok     = Bool( False )
+    cancel = Bool( False )
+    undo   = Bool( False )
+    redo   = Bool( False )
+    apply  = Bool( False )
+    revert = Bool( False )
+    help   = Bool( False )
         
     #---------------------------------------------------------------------------
     #  Initializes the object:
@@ -425,9 +376,9 @@ class View ( ViewElement ):
         parent : window component 
             The window parent of the View object's window
         kind : string
-            The kind of window to create. See the **kind_trait** trait for 
-            details. If *kind* is unspecified or None, the **kind** attribute
-            of the View object is used.
+            The kind of window to create. See the **AKind** trait for details. 
+            If *kind* is unspecified or None, the **kind** attribute of the 
+            View object is used.
         view_elements : ViewElements object 
             The set of Group, Item, and Include objects contained in the view.
             Do not use this parameter when calling this method directly.

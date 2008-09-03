@@ -53,22 +53,8 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import View, Group, Item, TabularEditor
     
-from enthought.traits.ui.menu \
-    import NoButtons
-    
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
-
-from enthought.pyface.image_resource \
-    import ImageResource
-    
-#-- Constants ------------------------------------------------------------------
-
-# Necessary because of the dynamic way in which the demos are loaded:
-import enthought.traits.ui.api
-
-search_path = [ join( dirname( enthought.traits.api.__file__ ),
-                      '..', '..', 'examples', 'demo', 'Advanced' ) ]
 
 #-- Person Class Definition ----------------------------------------------------
 
@@ -102,7 +88,8 @@ class ReportAdapter ( TabularAdapter ):
     
     def _get_MarriedPerson_age_image ( self ):
         if self.item.age < 18:
-            return 'red_flag'
+            return '@icons:red_ball'
+            
         return None
         
     def _get_MarriedPerson_spouse_text ( self ):
@@ -113,7 +100,6 @@ class ReportAdapter ( TabularAdapter ):
 tabular_editor = TabularEditor(
     adapter    = ReportAdapter(),
     operations = [ 'move' ],
-    images     = [ ImageResource( 'red_flag', search_path = search_path ) ]
 )
 
 #-- Report Class Definition ----------------------------------------------------
@@ -131,8 +117,7 @@ class Report ( HasTraits ):
         id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
         width     = 0.60,
         height    = 0.75,
-        resizable = True,
-        buttons   = NoButtons
+        resizable = True
     )
 
 #-- Generate 10,000 random single and married people ---------------------------

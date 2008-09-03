@@ -34,7 +34,8 @@ class ImageEnumEditorDemo( HasTraits ):
     """
 
     # To demonstrate any given Trait editor, an appropriate Trait is required. 
-    image_from_list  = Trait( editor = ImageEnumEditor( values = image_list, 
+    image_from_list  = Trait( editor = ImageEnumEditor( values = image_list,
+                                                        prefix = '@icons:',
                                                         suffix = '_origin', 
                                                         cols   = 4, 
                                                         klass  = Dummy ), 
