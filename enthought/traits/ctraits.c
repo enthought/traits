@@ -3188,7 +3188,8 @@ _trait_default_value_for ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "OO", &object, &name ) ) 
         return NULL;
 
-    if ( has_value_for( (has_traits_object *) object, name ) ) 
+    if ( ((trait->flags & TRAIT_PROPERTY) != 0) || 
+         has_value_for( (has_traits_object *) object, name ) ) 
         return default_value_for( trait, (has_traits_object *) object, name );
         
     return trait->getattr( trait, (has_traits_object *) object, name );
