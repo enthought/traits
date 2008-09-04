@@ -1001,6 +1001,63 @@ has_traits_traverse ( has_traits_object * obj, visitproc visit, void * arg ) {
 }
 
 /*-----------------------------------------------------------------------------
+|  Returns whether an object's '__dict__' value is defined or not:
++----------------------------------------------------------------------------*/
+
+static int
+has_value_for ( has_traits_object * obj, PyObject * name ) {
+    
+    PyObject * uname;
+    long hash;
+    int  rc;
+    
+    PyDictObject * dict = (PyDictObject *) obj->obj_dict;
+    
+	if ( dict == NULL ) 
+        return 0;
+    
+    assert( PyDict_Check( dict ) );
+    
+    if ( PyString_CheckExact( name ) ) {
+         if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 ) 
+             hash = PyObject_Hash( name );
+	     return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL);
+    }
+    
+    if ( PyString_Check( name ) ) {
+        hash = PyObject_Hash( name );
+        if ( hash == -1 ) {
+            PyErr_Clear();
+            return 0;
+        }
+        return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL );
+    } 
+#ifdef Py_USING_UNICODE
+    if ( !PyUnicode_Check( name ) ) 
+        return 0;
+    
+    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
+    if ( uname == NULL ) {
+        PyErr_Clear();
+	    return 0;
+    }
+    
+	hash = PyObject_Hash( uname );
+	if ( hash == -1 ) {
+        Py_DECREF( uname );
+        PyErr_Clear();
+        return 0;
+    }
+    
+    rc = ((dict->ma_lookup)( dict, uname, hash )->me_value != NULL);
+    Py_DECREF( uname );
+    return rc;
+#else  
+    return 0;
+#endif 
+}
+
+/*-----------------------------------------------------------------------------
 |  Handles the 'getattr' operation on a 'CHasTraits' instance:
 +----------------------------------------------------------------------------*/
 
@@ -3130,8 +3187,12 @@ _trait_default_value_for ( trait_object * trait, PyObject * args ) {
     
     if ( !PyArg_ParseTuple( args, "OO", &object, &name ) ) 
         return NULL;
-    
-    return default_value_for( trait, (has_traits_object *) object, name );
+
+    if ( ((trait->flags & TRAIT_PROPERTY) != 0) || 
+         has_value_for( (has_traits_object *) object, name ) ) 
+        return default_value_for( trait, (has_traits_object *) object, name );
+        
+    return trait->getattr( trait, (has_traits_object *) object, name );
 } 
 
 /*-----------------------------------------------------------------------------
