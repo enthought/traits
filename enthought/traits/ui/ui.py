@@ -31,7 +31,8 @@ from types \
 
 from enthought.traits.api \
     import Trait, HasPrivateTraits, DictStrAny, Any, List, Int, Instance, \
-           TraitError, Property, Bool, Event, Callable, Str
+           TraitError, Property, Bool, Event, Callable, Str, on_trait_change, \
+           property_depends_on
 
 from enthought.traits.trait_base \
     import traits_home, is_str
@@ -107,7 +108,7 @@ class UI ( HasPrivateTraits ):
     history = Any
     
     # The KeyBindings object (if any) for this UI:
-    key_bindings = Instance( 'enthought.traits.ui.key_bindings.KeyBindings' )
+    key_bindings = Property # Instance( KeyBindings )
 
     # The unique ID for this UI for persistence
     id = Str
@@ -203,27 +204,14 @@ class UI ( HasPrivateTraits ):
     ]
     
     #---------------------------------------------------------------------------
-    #  Initializes the object:
+    #  Initializes the traits object:
     #---------------------------------------------------------------------------
 
-    def __init__ ( self, **traits ):
-        """ Initializes the object.
+    def traits_init ( self ):
+        """ Initializes the traits object.
         """
-        super( UI, self ).__init__( **traits )
-        
         self.info = UIInfo( ui = self )
         self.handler.init_info( self.info )
-
-        if self.view is not None:
-            # Get the KeyBindings object to use:
-            values       = self.context.values()
-            key_bindings = self.view.key_bindings
-            if key_bindings is None:
-                from enthought.traits.ui.key_bindings import KeyBindings
-                
-                self.key_bindings = KeyBindings( controllers = values)
-            else:
-                self.key_bindings = key_bindings.clone( controllers = values )
 
     #---------------------------------------------------------------------------
     #  Creates a user interface from the associated View template object:
@@ -859,20 +847,27 @@ class UI ( HasPrivateTraits ):
         if self._groups_cache is None:
             self._groups_cache = [ self.view.content.get_shadow( self ) ]
                     
-            ###shadow_group       = self.view.content.get_shadow( self )
-            ###self._groups_cache = shadow_group.get_content()
-            ###for item in self._groups_cache:
-            ###    if isinstance( item, Item ):
-            ###        self._groups_cache = [ 
-            ###            ShadowGroup( shadow  = Group( *self._groups_cache ),
-            ###                         content = self._groups_cache,
-            ###                         groups  = 1 )
-            ###        ]
-            ###        break
-                    
         return self._groups_cache
 
-#-- Event handlers -------------------------------------------------------------
+    #-- Property Implementations -----------------------------------------------
+    
+    @property_depends_on( 'view, context' )
+    def _get_key_bindings ( self ):
+        view, context = self.view, self.context
+        if (view is None) or (context is None):
+            return None
+            
+        # Get the KeyBindings object to use:
+        values       = context.values()
+        key_bindings = view.key_bindings
+        if key_bindings is None:
+            from enthought.traits.ui.key_bindings import KeyBindings
+            
+            return KeyBindings( controllers = values)
+            
+        return key_bindings.clone( controllers = values )
+        
+    #-- Traits Event Handlers --------------------------------------------------
 
     def _updated_changed ( self ):
         if self.rebuild is not None:
@@ -885,16 +880,18 @@ class UI ( HasPrivateTraits ):
     def _icon_changed ( self ):
         if self.control is not None:
             toolkit().set_icon( self )
-            
-    def _parent_changed ( self, parent ):
-        if parent is not None:
+          
+    @on_trait_change( 'parent, view, context' )
+    def _pvc_changed ( self ):
+        parent = self.parent
+        if (parent is not None) and (self.key_bindings is not None): 
             # If we don't have our own history, use our parent's:
             if self.history is None:
                 self.history = parent.history
                 
             # Link our KeyBindings object as a child of our parent's 
             # KeyBindings object (if any):
-            if parent.key_bindings is not None:
+            if parent.key_bindings is not None: 
                 parent.key_bindings.children.append( self.key_bindings )
 
 #-------------------------------------------------------------------------------
