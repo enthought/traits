@@ -30,7 +30,7 @@ class TextView(Dialog):
     # The associated LoggerService. This is unused in this class, but we include
     # it to match the interface of the QualityAgent.
     service = Any()
-    size = Tuple((400, 200))
+    size = Tuple((640, 480))
     title = Str('Text') 
     style = 'modal'
 
@@ -71,12 +71,8 @@ class TextView(Dialog):
         style = (wx.TE_MULTILINE |
                  wx.TE_READONLY |
                  wx.VSCROLL |
-                 wx.TE_RICH2)
-        if sys.platform == 'darwin':
-            # Workaround for platform's buggy wx.
-            style |= wx.TE_LINEWRAP
-        else:
-            style |= wx.HSCROLL
+                 wx.TE_RICH2 |
+                 wx.TE_WORDWRAP)
         details = wx.TextCtrl(panel, -1, self.msg, style=style)
         # Set the font to not be proportional 
         font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
