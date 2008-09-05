@@ -287,8 +287,9 @@ class LoggerListWidget(wx.ListCtrl):
 
 
     def _complete_message(self, irec):
-        if irec < len(self.log_records):
-            msg = self.log_records[irec].getMessage()
+        length = len(self.log_records)
+        if irec < length:
+            msg = self.log_records[length - 1 - irec].getMessage()
         else:
             msg = ""
         return msg
