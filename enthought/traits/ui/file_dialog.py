@@ -348,8 +348,9 @@ class CreateDirHandler ( Handler ):
                 Item( 'handler.message',
                       show_label = False,
                       style      = 'readonly', 
-                      springy    = True 
-                )
+                      springy    = True
+                ),
+                show_border = True
             )
         ),
         kind = 'popup'
