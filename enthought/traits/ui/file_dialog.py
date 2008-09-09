@@ -486,7 +486,7 @@ class OpenFileDialog ( Handler ):
     # The OK, Cancel and create directory buttons:
     ok      = Button( 'OK' )
     cancel  = Button( 'Cancel' )
-    create  = Button( image = ImageResource( 'folder-new' ), 
+    create  = Button( image = '@icons:folder-new', 
                       style = 'toolbar' )
     
     #-- Handler Class Method Overrides -----------------------------------------
@@ -653,7 +653,7 @@ class OpenFileDialog ( Handler ):
         """ Handles prompting the user when the selected file already exists,
             and the dialog is a 'save file' dialog.
         """
-        FileExistsHandler( message = ("The file '%s' already exists.\nDo "
+        ui = FileExistsHandler( message = ("The file '%s' already exists.\nDo "
                                       "you wish to overwrite it?") % 
                                       basename( self.file_name )
             ).edit_traits( context = self, 
