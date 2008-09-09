@@ -32,8 +32,7 @@ from enthought.traits.api \
     import HasPrivateTraits, Trait, Instance, Any, Bool
     
 from ui_traits \
-    import Image, ATheme, object_trait, EditorStyle, DockStyle, image_trait, \
-           export_trait, HelpId
+    import Image, ATheme, AnObject, EditorStyle, DockStyle, ExportType, HelpId
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -92,7 +91,7 @@ class DefaultViewElement ( ViewElement ):
     #---------------------------------------------------------------------------
     
     # The default context object to edit:
-    object = object_trait
+    object = AnObject
     
     # The default editor style to use:
     style = EditorStyle   
@@ -101,10 +100,10 @@ class DefaultViewElement ( ViewElement ):
     dock = DockStyle
     
     # The default notebook tab image to use:                        
-    image = image_trait
+    image = Image
     
     # The category of elements dragged out of the view:
-    export = export_trait
+    export = ExportType
     
     # Should labels be added to items in a group?
     show_labels = Bool( True )
@@ -120,7 +119,7 @@ class DefaultViewElement ( ViewElement ):
 #-------------------------------------------------------------------------------
 
 # The container trait used by ViewSubElements:
-container_trait = Trait( DefaultViewElement(), ViewElement )
+Container = Trait( DefaultViewElement(), ViewElement )
     
 #-------------------------------------------------------------------------------
 #  'ViewSubElement' class (abstract):
@@ -135,7 +134,7 @@ class ViewSubElement ( ViewElement ):
     #---------------------------------------------------------------------------
     
     # The object this ViewSubElement is contained in; must be a ViewElement.
-    container = container_trait 
+    container = Container
     
     # External help context identifier:
     help_id = HelpId   
@@ -229,14 +228,31 @@ class ViewSubElement ( ViewElement ):
         return '%s%s%s' % ( prefix, value, suffix )
 
     #---------------------------------------------------------------------------
-    #  Returns a 'pretty print' version of a single trait:
+    #  Returns a 'pretty print' version of a list of traits:
     #---------------------------------------------------------------------------
                      
-    def _repr_option ( self, value, match, result ):
-        """ Returns a "pretty print" version of a single trait.
+    def _repr_options ( self, *names ):
+        """ Returns a 'pretty print' version of a list of traits.
         """
-        if value == match:
-            return result
+        result = []
+        for name in names:
+            value = getattr( self, name )
+            if value != self.trait( name ).default_value_for( self, name ):
+                result.append( ( name, repr( value ) ) )
+         
+        if len( result ) > 0:
+            n = max( [ len( name ) for name, value in result ] )
+            return ',\n'.join( [ '%s = %s' % ( name.ljust( n ), value )
+                                 for name, value in result ] )
             
-        return ''
+        return None
+        
+    #---------------------------------------------------------------------------
+    #  Indents each line in a specified string by a specified number of spaces:
+    #---------------------------------------------------------------------------
+    
+    def _indent ( self, string, indent = '    ' ):
+        """ Indents each line in a specified string by 4 spaces.
+        """
+        return '\n'.join( [ indent + s for s in string.split( '\n' ) ] )
         

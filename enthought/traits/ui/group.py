@@ -393,31 +393,23 @@ class Group ( ViewSubElement ):
     def __repr__ ( self ):
         """ Returns a "pretty print" version of the Group.
         """
-        return "[ %s, %s ]" % (
-                   ', '.join( [ item.__repr__() for item in self.content ] ),
-                   self._repr_group() )
-
-    #---------------------------------------------------------------------------
-    #  Returns a 'pretty print' version of the Group traits:
-    #---------------------------------------------------------------------------
-
-    def _repr_group ( self ):
-        """ Returns a "pretty print" version of the Group's traits.
-        """
-        return '"%s%s%s%s%s%s%s%s%s%s%s"' % (
-                   self._repr_option( self.orientation, 'horizontal', '-' ),
-                   self._repr_option( self.orientation, 'vertical',   '|' ),
-                   self._repr_option( self.show_border,     True,     '[]' ),
-                   self._repr_option( self.show_labels and
-                                      self.show_left,       True,     '<' ),
-                   self._repr_option( self.show_labels and
-                                      (not self.show_left), True,     '>' ),
-                   self._repr_option( self.show_labels,     False,    '<>' ),
-                   self._repr_option( self.selected,        True,     '!' ),
-                   self._repr_value( self.id, '', ':' ),
-                   self._repr_value( self.object, '', '', 'object' ),
-                   self._repr_value( self.label,'=' ),
-                   self._repr_value( self.style, ';', '', 'simple' ) )
+        result  = []
+        items   = ',\n'.join( [ item.__repr__() for item in self.content ] )
+        if len( items ) > 0:
+            result.append( items )
+            
+        options = self._repr_options( 'orientation', 'show_border',
+                      'show_labels', 'show_left', 'selected', 'id', 'object', 
+                      'label', 'style', 'layout' )
+        if options is not None:
+            result.append( options )
+            
+        content = ',\n'.join( result )
+        if len( content ) == 0:
+            return self.__class__.__name__ + '()'
+            
+        return '%s(\n%s\n)' % ( 
+               self.__class__.__name__, self._indent( content ) )
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
@@ -735,3 +727,11 @@ class ShadowGroup ( Group ):
                                          orientation = self.orientation ) )
             del items[:]
 
+    #---------------------------------------------------------------------------
+    #  Returns a 'pretty print' version of the Group:
+    #---------------------------------------------------------------------------
+
+    def __repr__ ( self ):
+        """ Returns a "pretty print" version of the Group.
+        """
+        return repr( self.shadow )

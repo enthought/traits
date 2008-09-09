@@ -48,7 +48,8 @@ from include \
     import Include
 
 from item \
-    import Item, Label, Heading, Spring, spring
+    import Item, UItem, Custom, UCustom, Readonly, UReadonly, Label, Heading, \
+           Spring, spring
 
 from editor_factory \
     import EditorFactory

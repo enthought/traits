@@ -40,7 +40,6 @@ def RGBColorTrait ( *args, **traits ):
 def FontTrait ( *args, **traits ):
     return toolkit().font_trait( *args, **traits )
 
-
 #-------------------------------------------------------------------------------
 #  Define 'factory' functions for all of the standard EditorFactory subclasses:
 #-------------------------------------------------------------------------------
@@ -239,5 +238,4 @@ def TupleEditor ( *args, **traits ):
 
 def ValueEditor ( *args, **traits ):
     return toolkit().value_editor( *args, **traits )
-    
 

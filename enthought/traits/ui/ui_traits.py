@@ -50,18 +50,14 @@ Layout = Trait( 'normal',
                 TraitPrefixList( 'normal', 'split', 'tabbed', 'flow', 'fold' ) )
                      
 # Trait for the default object being edited:                     
-object_trait = Expression( 'object' )                     
+AnObject = Expression( 'object' )                     
 
 # The default dock style to use:
 DockStyle = dock_style_trait = Enum( 'fixed', 'horizontal', 'vertical', 'tab',
                                      desc = "the default docking style to use" )
-                         
-# The default notebook tab image to use:                      
-image_trait = Instance( 'enthought.pyface.image_resource.ImageResource',
-                        desc = 'the image to be displayed on notebook tabs' )
                      
 # The category of elements dragged out of the view:
-export_trait = Str( desc = 'the category of elements dragged out of the view' )
+ExportType = Str( desc = 'the category of elements dragged out of the view' )
 
 # Delegate a trait value to the object's **container** trait:                  
 ContainerDelegate = container_delegate = Delegate( 'container', 
@@ -71,12 +67,11 @@ ContainerDelegate = container_delegate = Delegate( 'container',
 HelpId = help_id_trait = Str( desc = "the external help context identifier" )                     
 
 # A button to add to a view:
-a_button = Trait( '', Str, Instance( 'enthought.traits.ui.menu.Action' ) )
+AButton = Trait( '', Str, Instance( 'enthought.traits.ui.menu.Action' ) )
 
 # The set of buttons to add to the view:
-buttons_trait = List( a_button,
-                      desc = 'the action buttons to add to the bottom of '
-                             'the view' )
+Buttons = List( AButton,
+                desc = 'the action buttons to add to the bottom of the view' )
 
 # View trait specified by name or instance:
 AView = Any

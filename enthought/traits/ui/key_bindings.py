@@ -145,8 +145,7 @@ class KeyBindings ( HasPrivateTraits ):
                         kind      = 'livemodal',
                         resizable = True,
                         width     = 0.4,
-                        height    = 0.4,
-                        help      = False )
+                        height    = 0.4 )
                         
     #---------------------------------------------------------------------------
     #  Initializes the object:  

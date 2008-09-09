@@ -69,7 +69,6 @@ from protocols.api \
     import InterfaceClass, Protocol, addClassAdvisor, declareAdapter, \
            declareImplementation
 
-
 #-------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
 #
