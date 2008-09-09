@@ -654,7 +654,7 @@ class OpenFileDialog ( Handler ):
         """ Handles prompting the user when the selected file already exists,
             and the dialog is a 'save file' dialog.
         """
-        ui = FileExistsHandler( message = ("The file '%s' already exists.\nDo "
+        FileExistsHandler( message = ("The file '%s' already exists.\nDo "
                                       "you wish to overwrite it?") % 
                                       basename( self.file_name )
             ).edit_traits( context = self, 
