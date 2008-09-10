@@ -21,7 +21,7 @@
 #-- Imports --------------------------------------------------------------------
 
 from enthought.traits.api \
-    import HasTraits, Instance, Property, List, Str, Bool
+    import HasTraits, Instance, Property, List, Str, Bool, Font
     
 from enthought.traits.ui.api \
     import View, Item, TabularEditor, BasicEditorFactory
@@ -42,7 +42,6 @@ class ArrayViewAdapter ( TabularAdapter ):
     # Should array rows and columns be transposed:
     transpose  = Bool( False )
     
-    font       = 'Courier 10'
     alignment  = 'right'
     index_text = Property
     
@@ -148,7 +147,8 @@ class _ArrayViewEditor ( UIEditor ):
         self.adapter = ArrayViewAdapter( is_2d     = is_2d,
                                          columns   = columns,
                                          transpose = factory.transpose,
-                                         format    = factory.format )
+                                         format    = factory.format,
+                                         font      = factory.font )
             
         return self.edit_traits( view   = '_array_view', 
                                  parent = parent, 
@@ -172,3 +172,5 @@ class ArrayViewEditor ( BasicEditorFactory ):
     # The format used to display each array element:
     format = Str( '%s' )
 
+    # The font to use for displaying each array element:
+    font = Font( 'Courier 10' )
