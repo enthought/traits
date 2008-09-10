@@ -174,3 +174,4 @@ class ArrayViewEditor ( BasicEditorFactory ):
 
     # The font to use for displaying each array element:
     font = Font( 'Courier 10' )
+    
