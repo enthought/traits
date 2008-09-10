@@ -62,6 +62,10 @@ class GUIToolkit ( Toolkit ):
         import font_trait as ft
         return ft.NullFont( *args, **traits )
 
+    def constants ( self, *args, **traits ):
+        constants = {'WindowColor': ( 236 / 255.0, 233 / 255.0, 216 / 255.0, 1.0 )}
+        return constants
+
     #---------------------------------------------------------------------------
     #  'EditorFactory' factory methods:
     #---------------------------------------------------------------------------
