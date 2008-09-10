@@ -205,6 +205,10 @@ static int call_notifiers ( PyListObject *, PyListObject *,
 /* Does this trait have an associated 'mapped' trait? */
 #define TRAIT_IS_MAPPED 0x00000080
 
+/* Should any old/new value test be performed before generating 
+   notifications? */
+#define TRAIT_NO_VALUE_TEST 0x00000100
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -2389,7 +2393,7 @@ setattr_trait ( trait_object      * traito,
                 PyObject          * value ) {
             
     int rc;
-    int changed = 0;
+    int changed;
     int do_notifiers;
     trait_post_setattr post_setattr;
     PyListObject * tnotifiers = NULL;
@@ -2399,6 +2403,8 @@ setattr_trait ( trait_object      * traito,
     PyObject     * new_value;
     
     PyObject * dict = obj->obj_dict;
+    
+    changed = (traitd->flags & TRAIT_NO_VALUE_TEST);
     
     if ( value == NULL ) {
         if ( dict == NULL ) 
@@ -2428,15 +2434,19 @@ notify:
                         Py_DECREF( name );
                         return -1; 
                     } 
-                    changed = (old_value != value );
-                    if ( changed &&
-                         ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
-                        changed = PyObject_RichCompareBool( old_value, 
-                                                            value, Py_NE );
-                        if ( changed == -1 ) {
-                            PyErr_Clear();
+                    
+                    if ( !changed ) {
+                        changed = (old_value != value );
+                        if ( changed &&
+                             ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                            changed = PyObject_RichCompareBool( old_value, 
+                                                                value, Py_NE );
+                            if ( changed == -1 ) {
+                                PyErr_Clear();
+                            }
                         }
                     }
+                    
                     if ( changed ) {
                         if ( traitd->post_setattr != NULL ) 
                             rc = traitd->post_setattr( traitd, obj, name, 
@@ -2446,6 +2456,7 @@ notify:
                             rc = call_notifiers( tnotifiers, onotifiers, 
                                                  obj, name, old_value, value );
                     }
+                    
                     Py_DECREF( value );
                 }
             }
@@ -2468,12 +2479,14 @@ notify:
             Py_DECREF( name );
             return 0;
         }
+        
         Py_INCREF( old_value );
         if ( PyDict_DelItem( dict, name ) < 0 ) {
             Py_DECREF( old_value );
             Py_DECREF( name );
             return -1;
         }
+        
         goto notify;
 #else   
         return invalid_attribute_error();
@@ -2546,12 +2559,15 @@ notify:
         } else {
             Py_INCREF( old_value );
         }
-        changed = (old_value != value);
-        if ( changed &&
-             ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
-            changed = PyObject_RichCompareBool( old_value, value, Py_NE );
-            if ( changed == -1 ) {
-                PyErr_Clear();
+        
+        if ( !changed ) {
+            changed = (old_value != value);
+            if ( changed &&
+                 ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                changed = PyObject_RichCompareBool( old_value, value, Py_NE );
+                if ( changed == -1 ) {
+                    PyErr_Clear();
+                }
             }
         }
     }
@@ -2578,6 +2594,7 @@ notify:
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
                                  old_value, new_value );
     }
+    
     Py_XDECREF( old_value );
     Py_DECREF( name );
     Py_DECREF( value );
@@ -4374,10 +4391,32 @@ _trait_rich_comparison ( trait_object * trait, PyObject * args ) {
     if ( !PyArg_ParseTuple( args, "i", &compare_type ) ) 
         return NULL;
         
-    if ( compare_type == 0 ) {
+    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    if ( compare_type == 0 ) 
         trait->flags |= TRAIT_OBJECT_IDENTITY;
-    } else {
-        trait->flags &= (~TRAIT_OBJECT_IDENTITY);
+    
+    Py_INCREF( Py_None );
+    return Py_None;
+}    
+
+/*-----------------------------------------------------------------------------
+|  Sets the appropriate value comparison mode flags of a CTrait instance:
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_trait_comparison_mode ( trait_object * trait, PyObject * args ) {
+ 
+    int comparison_mode;
+    
+    if ( !PyArg_ParseTuple( args, "i", &comparison_mode ) ) 
+        return NULL;
+    
+    trait->flags &= (~(TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY));
+    switch ( comparison_mode ) {
+        case 0:  trait->flags |= TRAIT_NO_VALUE_TEST;
+                 break;
+        case 1:  trait->flags |= TRAIT_OBJECT_IDENTITY;
+        default: break;
     }
     
     Py_INCREF( Py_None );
@@ -4845,6 +4884,8 @@ static PyMethodDef trait_methods[] = {
 	 	PyDoc_STR( "delegate(delegate_name,prefix,prefix_type,modify_delegate)" ) },
 	{ "rich_comparison",  (PyCFunction) _trait_rich_comparison,  METH_VARARGS,
 	 	PyDoc_STR( "rich_comparison(rich_comparison_boolean)" ) },
+	{ "comparison_mode",  (PyCFunction) _trait_comparison_mode,  METH_VARARGS,
+	 	PyDoc_STR( "comparison_mode(comparison_mode_enum)" ) },
 	{ "value_allowed",  (PyCFunction) _trait_value_allowed,  METH_VARARGS,
 	 	PyDoc_STR( "value_allowed(value_allowed_boolean)" ) },
 	{ "value_property",  (PyCFunction) _trait_value_property, METH_VARARGS,

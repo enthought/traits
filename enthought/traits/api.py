@@ -78,7 +78,8 @@ from trait_handlers \
            TraitClass, TraitFunction, TraitEnum, TraitPrefixList, TraitMap, \
            TraitPrefixMap, TraitCompound, TraitList, TraitListObject, \
            TraitListEvent, TraitSetObject, TraitSetEvent, TraitDict, \
-           TraitDictObject, TraitDictEvent, TraitTuple
+           TraitDictObject, TraitDictEvent, TraitTuple, NO_COMPARE, \
+           OBJECT_IDENTITY_COMPARE, RICH_COMPARE           
            
 from trait_value \
     import BaseTraitValue, TraitValue, SyncValue, TypeValue, DefaultValue

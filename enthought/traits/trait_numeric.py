@@ -31,7 +31,7 @@ from trait_errors \
     import TraitError
     
 from trait_handlers \
-    import TraitType
+    import TraitType, OBJECT_IDENTITY_COMPARE
     
 from trait_types \
     import Str, Any, Int as TInt, Float as TFloat
@@ -91,7 +91,7 @@ class AbstractArray ( TraitType ):
         metadata[ 'array' ] = True
         
         # Normally use object identity to detect array values changing:
-        metadata.setdefault( 'rich_compare', False )
+        metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
     
         if typecode is not None:
             warnings.warn( 'typecode is a deprecated argument; use dtype '

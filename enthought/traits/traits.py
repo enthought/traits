@@ -676,7 +676,17 @@ def Trait ( *value_type, **metadata ):
     editor : instance of a subclass of enthought.traits.api.Editor
         Object to use when creating a user interface editor for the trait. See
         the "Traits UI User Guide" for more information on trait editors.
-    rich_compare : Boolean
+    comparison_mode : integer
+        Indicates when trait change notifications should be generated based upon
+        the result of comparing the old and new values of a trait assignment:
+            0 (NO_COMPARE): The values are not compared and a trait change
+                notification is generated on each assignment.
+            1 (OBJECT_IDENTITY_COMPARE): A trait change notification is 
+                generated if the old and new values are not the same object.
+            2 (RICH_COMPARE): A trait change notification is generated if the
+                old and new values are not equal using Python's
+                'rich comparison' operator. This is the default.
+    rich_compare : Boolean (DEPRECATED: Use comparison_mode instead)
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple
         object identity (False). This attribute can be useful in cases
@@ -926,8 +936,17 @@ class _TraitMaker ( object ):
                 trait.post_setattr = post_setattr
                 trait.is_mapped( handler.is_mapped )
 
-        trait.rich_comparison( metadata.get( 'rich_compare', True  ) is True )
-        trait.value_allowed(   metadata.get( 'trait_value',  False ) is True )
+        # Note: The use of 'rich_compare' metadata is deprecated; use
+        # 'comparison_mode' metadata instead:
+        rich_compare = metadata.get( 'rich_compare' )
+        if rich_compare is not None:
+            trait.rich_comparison( rich_compare is True )
+            
+        comparison_mode = metadata.get( 'comparison_mode' )
+        if comparison_mode is not None:
+            trait.comparison_mode( comparison_mode )
+        
+        trait.value_allowed( metadata.get( 'trait_value', False ) is True )
 
         if len( metadata ) > 0:
             if trait.__dict__ is None:

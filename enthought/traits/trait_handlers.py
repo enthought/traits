@@ -65,6 +65,11 @@ logger = logging.getLogger( __name__ )
 #  Constants:
 #-------------------------------------------------------------------------------
 
+# Trait 'comparison_mode' enum values:
+NO_COMPARE              = 0
+OBJECT_IDENTITY_COMPARE = 1
+RICH_COMPARE            = 2
+
 RangeTypes    = ( int, long, float )
 
 CallableTypes = ( FunctionType, MethodType, CTraitMethod )
@@ -728,7 +733,16 @@ class TraitType ( BaseTraitHandler ):
                 trait.post_setattr = post_setattr
                 trait.is_mapped( self.is_mapped )
                 
-            trait.rich_comparison( metadata.get( 'rich_compare', True ) is True)
+            # Note: The use of 'rich_compare' metadata is deprecated; use
+            # 'comparison_mode' metadata instead:
+            rich_compare = metadata.get( 'rich_compare' )
+            if rich_compare is not None:
+                trait.rich_comparison( rich_compare is True )
+                
+            comparison_mode = metadata.get( 'comparison_mode' )
+            if comparison_mode is not None:
+                trait.comparison_mode( comparison_mode )
+                
             metadata.setdefault( 'type', 'trait' )
             
         trait.default_value( *self.get_default_value() )
