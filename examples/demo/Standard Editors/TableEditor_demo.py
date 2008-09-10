@@ -57,6 +57,7 @@ table_editor = TableEditor(
                   ),
     filters     = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ],
     search      = EvalTableFilter(),
+    show_toolbar = True,
     row_factory = Employee )
 
 # The class to be edited with the TableEditor:
