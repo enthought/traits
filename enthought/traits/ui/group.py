@@ -423,6 +423,8 @@ class HGroup ( Group ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it horizontal group
+    # behavior:
     orientation = 'horizontal'
 
 #-------------------------------------------------------------------------------
@@ -437,6 +439,7 @@ class VGroup ( Group ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it vertical group behavior:
     orientation = 'vertical'
 
 #-------------------------------------------------------------------------------
@@ -451,6 +454,7 @@ class VGrid ( VGroup ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it grid behavior:
     columns = 2
 
 #-------------------------------------------------------------------------------
@@ -466,6 +470,8 @@ class HFlow ( HGroup ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it horizontal flow 
+    # behavior:
     layout      = 'flow'
     show_labels = False
 
@@ -482,6 +488,7 @@ class VFlow ( VGroup ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it vertical flow behavior:
     layout      = 'flow'
     show_labels = False
     
@@ -498,6 +505,8 @@ class VFold ( VGroup ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it vertical folding group
+    # behavior:
     layout      = 'fold'
     show_labels = False
 
@@ -513,6 +522,8 @@ class HSplit ( Group ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it horizontal splitter
+    # behavior:
     layout      = 'split'
     orientation = 'horizontal'
 
@@ -528,6 +539,8 @@ class VSplit ( Group ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
+    # Override standard Group trait defaults to give it vertical splitter
+    # behavior:
     layout      = 'split'
     orientation = 'vertical'
 
@@ -536,14 +549,17 @@ class VSplit ( Group ):
 #-------------------------------------------------------------------------------
 
 class Tabbed ( Group ):
-    """ A group that is shown as a tab in a notebook.
+    """ A group that is shown as a tabbed notebook.
     """
     
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
-    layout = 'tabbed'
+    # Override standard Group trait defaults to give it tabbed notebook
+    # behavior:
+    layout  = 'tabbed'
+    springy = True
 
 #-------------------------------------------------------------------------------
 #  'ShadowGroup' class:
