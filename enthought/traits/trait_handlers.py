@@ -2240,7 +2240,7 @@ class TraitTuple ( TraitHandler ):
     def get_editor ( self, trait ):
         from enthought.traits.ui.api import TupleEditor
         
-        return TupleEditor( types  = self.traits,
+        return TupleEditor( types  = self.types,
                             labels = trait.labels or [],
                             cols   = trait.cols   or 1  )
 
