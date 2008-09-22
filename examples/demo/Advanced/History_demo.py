@@ -24,10 +24,7 @@ from enthought.traits.api \
     import HasTraits, Str, File, Directory
     
 from enthought.traits.ui.api \
-    import View, Item, FileEditor, DirectoryEditor
-    
-from enthought.traits.ui.wx.history_editor \
-    import HistoryEditor
+    import View, Item, FileEditor, DirectoryEditor, HistoryEditor
 
 #-- HistoryDemo Class ----------------------------------------------------------
 

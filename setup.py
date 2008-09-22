@@ -53,8 +53,6 @@ Traits:
 
 import os, zipfile
 from setuptools import setup, Extension, find_packages
-from setuptools.command.develop import develop
-from distutils.command.build import build as distbuild
 from distutils import log
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
@@ -80,33 +78,6 @@ speedups = Extension(
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
 
-def gen_editors():
-    from enthought.traits.ui import editors_gen
-    output_dir = os.path.dirname(os.path.abspath(editors_gen.__file__))
-    print '-'*70
-    print "Building Editor Definitions...",
-    cwd = os.getcwd()
-    os.chdir(output_dir)
-    editors_gen.gen_editor_definitions()
-    os.chdir(cwd)
-    print "Done."
-    print '-'*70
-
-
-class MyDevelop(develop):
-    def run(self):
-        gen_editors()
-        develop.run(self)
-        self.run_command('build_docs')
-
-
-class MyBuild(distbuild):
-    def run(self):
-        gen_editors()
-        distbuild.run(self)
-        self.run_command('build_docs')
-
-
 # Call the setup function.
 setup(
     author = 'David C. Morrill, et. al.',
@@ -127,10 +98,6 @@ setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
-    cmdclass = {
-        'develop': MyDevelop,
-        'build': MyBuild
-        },
     dependency_links = [
         'http://code.enthought.com/enstaller/eggs/source',
         ],

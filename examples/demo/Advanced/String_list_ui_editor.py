@@ -22,7 +22,7 @@ from enthought.traits.ui.tabular_adapter \
 from enthought.traits.ui.wx.ui_editor \
     import UIEditor
     
-from enthought.traits.ui.wx.basic_editor_factory \
+from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
     
 #-- Define the reusable StringListEditor class and its helper classes --------    
