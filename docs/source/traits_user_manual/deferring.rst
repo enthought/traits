@@ -94,7 +94,7 @@ DelegatesTo object. Consider the following example::
     
 A Child object delegates its **last_name** attribute value to its **father**
 object's **last_name** attribute. Because the *prefix* parameter was not
-specified in the Delegate initializer, the attribute name on the delegatee is
+specified in the DelegatesTo initializer, the attribute name on the delegatee is
 the same as the original attribute name. Thus, the **last_name** of a Child is
 the same as the **last_name** of its **father**. When either the **last_name**
 of the Child or the **last_name** of the father is changed, both attributes

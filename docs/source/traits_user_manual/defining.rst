@@ -107,7 +107,7 @@ pass it as an argument to the trait::
     
     account_balance = Float(10.0)
     
-Most predefined traits are callable,[2]_ and can accept a default value and 
+Most predefined traits are callable, [2]_ and can accept a default value and 
 possibly other arguments; all that are callable can also accept metadata as 
 keyword arguments. (See :ref:`other-predefined-traits` for information on trait
 signatures, and see :ref:`trait-metadata` for information on metadata 
@@ -554,9 +554,9 @@ and can be queried:
   * ``self``: The default value is the object the trait is bound to; the 
     **default** attribute returns Undefined.
   * ``factory``: The default value is created by calling a factory; the 
-     **default** attribute returns Undefined.
+    **default** attribute returns Undefined.
   * ``method``: The default value is created by calling a method on the object
-     the trait is bound to; the **default** attribute returns Undefined.
+    the trait is bound to; the **default** attribute returns Undefined.
      
 * **delegate**: The name of the attribute on this object that references the
   object that this object delegates to.
