@@ -86,18 +86,11 @@ from tree_node \
     import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode, \
            ITreeNode, ITreeNodeAdapter
 
-from editors \
-    import ArrayEditor, BooleanEditor, ButtonEditor, CheckListEditor, \
-           CodeEditor, ColorEditor, RGBColorEditor, \
-           CompoundEditor, DirectoryEditor, EnumEditor, FileEditor, \
-           FontEditor, ImageEditor, ImageEnumEditor, InstanceEditor, \
-           ListEditor, ListStrEditor, RangeEditor, ScrubberEditor, TextEditor, \
-           TreeEditor, TableEditor, TabularEditor, TupleEditor, DropEditor
+from toolkit_traits \
+    import ColorTrait, RGBColorTrait, FontTrait
 
-from editors \
-    import DNDEditor, CustomEditor, ColorTrait, RGBColorTrait, FontTrait, \
-           SetEditor, HistoryEditor, HTMLEditor, KeyBindingEditor, \
-           ShellEditor, TitleEditor, ValueEditor, PopupEditor, NullEditor
+from editors.api \
+    import *
 
 import view_elements
 

@@ -22,10 +22,16 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+import sys, os
 
 from enthought.traits.api \
-    import HasPrivateTraits, Callable, Str, Bool
+    import HasPrivateTraits, Callable, Str, Bool, Event, Any, Property
+    
+from helper \
+    import enum_values_changed
 
+from toolkit \
+    import toolkit_object
 #-------------------------------------------------------------------------------
 #  'EditorFactory' abstract base class:
 #-------------------------------------------------------------------------------
@@ -55,6 +61,18 @@ class EditorFactory ( HasPrivateTraits ):
     # status:
     invalid = Str
 
+    # The editor class to use for 'simple' style views. 
+    simple_editor_class = Property
+    
+    # The editor class to use for 'custom' style views. 
+    custom_editor_class = Property
+    
+    # The editor class to use for 'text' style views. 
+    text_editor_class   = Property
+    
+    # The editor class to use for 'readonly' style views. 
+    readonly_editor_class = Property
+        
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
@@ -103,26 +121,166 @@ class EditorFactory ( HasPrivateTraits ):
         return value
     
     #---------------------------------------------------------------------------
+    #  Property getters:
+    #---------------------------------------------------------------------------
+    def _get_simple_editor_class(self):
+        """ Returns the editor class to use for "simple" style views.
+        The default implementation tries to import the SimpleEditor class in the 
+        editor file in the backend package, and if such a class is not to found
+        it returns the SimpleEditor class defined in editor_factory module in
+        the backend package.
+        
+        """
+        try:
+            editor_file_name = \
+                os.path.basename(sys.modules[self.__class__.__module__].
+                                 __file__)
+            SimpleEditor = toolkit_object(
+                              editor_file_name.split('.')[0] + ':SimpleEditor',
+                              True)
+        except:
+            SimpleEditor = toolkit_object('editor_factory:SimpleEditor')
+        return SimpleEditor
+    
+    
+    def _get_custom_editor_class(self):
+        """ Returns the editor class to use for "custom" style views.
+        The default implementation tries to import the CustomEditor class in the 
+        editor file in the backend package, and if such a class is not to found
+        it returns the value of simple_editor_class.
+        
+        """
+        try:
+            editor_file_name = \
+                os.path.basename(sys.modules[self.__class__.__module__].
+                                 __file__)
+            CustomEditor = toolkit_object(
+                              editor_file_name.split('.')[0] + ':CustomEditor',
+                              True)
+        except:
+            CustomEditor = self.simple_editor_class
+        return CustomEditor
+    
+        
+    def _get_text_editor_class(self):
+        """ Returns the editor class to use for "text" style views.
+        The default implementation tries to import the TextEditor class in the 
+        editor file in the backend package, and if such a class is not found
+        it returns the TextEditor class declared in the editor_factory module in
+        the backend package.
+        
+        """
+        try:
+            editor_file_name = \
+                os.path.basename(sys.modules[self.__class__.__module__].
+                                 __file__)
+            TextEditor = toolkit_object(
+                            editor_file_name.split('.')[0] + ':TextEditor',
+                            True)
+        except:
+            TextEditor = toolkit_object('editor_factory:TextEditor')
+        return TextEditor
+    
+    
+    def _get_readonly_editor_class(self):
+        """ Returns the editor class to use for "readonly" style views.
+        The default implementation tries to import the ReadonlyEditor class in 
+        the editor file in the backend package, and if such a class is not found
+        it returns the ReadonlyEditor class declared in the editor_factory 
+        module in the backend package. 
+        
+        """
+        try:
+            editor_file_name = \
+                os.path.basename(sys.modules[self.__class__.__module__].
+                                 __file__)
+            ReadonlyEditor = toolkit_object(
+                                editor_file_name.split('.')[0] + \
+                                ':ReadonlyEditor', 
+                                True)
+        except:
+            ReadonlyEditor = toolkit_object('editor_factory:ReadonlyEditor')
+        return ReadonlyEditor
+    
+    #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
-    
-    def simple_editor ( self, ui, object, trait_name, description, parent ):
+
+    def simple_editor ( self, ui, object, name, description, parent ):
         """ Generates an editor using the "simple" style.
         """
-        raise NotImplementedError
+        return self.simple_editor_class( parent,
+                                         factory     = self, 
+                                         ui          = ui, 
+                                         object      = object, 
+                                         name        = name, 
+                                         description = description ) 
     
-    def custom_editor ( self, ui, object, trait_name, description, parent ):
+    def custom_editor ( self, ui, object, name, description, parent ):
         """ Generates an editor using the "custom" style.
         """
-        raise NotImplementedError
+        return self.custom_editor_class( parent,
+                                         factory     = self, 
+                                         ui          = ui, 
+                                         object      = object, 
+                                         name        = name, 
+                                         description = description ) 
     
-    def text_editor ( self, ui, object, trait_name, description, parent ):
+    def text_editor ( self, ui, object, name, description, parent ):
         """ Generates an editor using the "text" style.
         """
-        raise NotImplementedError
+        return self.text_editor_class( parent,
+                                       factory     = self, 
+                                       ui          = ui, 
+                                       object      = object, 
+                                       name        = name, 
+                                       description = description ) 
     
-    def readonly_editor ( self, ui, object, trait_name, description, parent ):
+    def readonly_editor ( self, ui, object, name, description, parent ):
         """ Generates an "editor" that is read-only.
         """
-        raise NotImplementedError
+        return self.readonly_editor_class( parent,
+                                           factory     = self, 
+                                           ui          = ui, 
+                                           object      = object, 
+                                           name        = name, 
+                                           description = description )
 
+#-------------------------------------------------------------------------------
+#  'EditorWithListFactory' abstract base class:
+#-------------------------------------------------------------------------------
+
+class EditorWithListFactory ( EditorFactory ):
+    """ Base class for factories of editors for objects that contain lists.
+    """
+    
+    #---------------------------------------------------------------------------
+    #  Trait definitions:
+    #---------------------------------------------------------------------------
+        
+    # Values to enumerate (can be a list, tuple, dict, or a CTrait or 
+    # TraitHandler that is "mapped"):
+    values = Any    
+    
+    # Extended name of the trait on **object** containing the enumeration data:
+    object = Str( 'object' )
+    
+    # Name of the trait on 'object' containing the enumeration data
+    name = Str  
+
+    # Fired when the **values** trait has been updated:
+    values_modified = Event 
+    
+    #---------------------------------------------------------------------------
+    #  Recomputes the mappings whenever the 'values' trait is changed:
+    #---------------------------------------------------------------------------
+     
+    def _values_changed ( self ):
+        """ Recomputes the mappings whenever the **values** trait is changed.
+        """
+        self._names, self._mapping, self._inverse_mapping = \
+            enum_values_changed( self.values )
+            
+        self.values_modified = True
+
+## EOF ########################################################################

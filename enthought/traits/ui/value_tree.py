@@ -30,8 +30,11 @@ from types import \
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Instance, List, Any, Str, Bool
     
-from enthought.traits.ui.api \
-    import View, Item, TreeEditor, TreeNode, TreeNodeObject, ObjectTreeNode
+from enthought.traits.ui.tree_node \
+    import TreeNode, TreeNodeObject, ObjectTreeNode
+    
+from enthought.traits.ui.editors.tree_editor \
+    import TreeEditor
     
 #-------------------------------------------------------------------------------
 #  'SingleValueTreeNodeObject' class:  

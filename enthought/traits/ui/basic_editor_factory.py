@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------
 #
-#  Copyright (c) 2005, Enthought, Inc.
+#  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
 # 
 #  This software is provided without warranty under the terms of the BSD
@@ -46,45 +46,43 @@ class BasicEditorFactory ( EditorFactory ):
     klass = Any
     
     #---------------------------------------------------------------------------
-    #  'Editor' factory methods:
+    #  Property getters.
     #---------------------------------------------------------------------------
     
-    def simple_editor ( self, ui, object, name, description, parent ):
-        return self.klass( parent,
-                           factory     = self, 
-                           ui          = ui, 
-                           object      = object, 
-                           name        = name, 
-                           description = description ) 
+    def _get_simple_editor_class ( self ):
+        """ Returns the editor class to use for "simple" style views.
+        Overridden to return the value of the 'klass' trait.
+        
+        """
+        return self.klass 
     
-    def custom_editor ( self, ui, object, name, description, parent ):
-        return self.klass( parent,
-                           factory     = self, 
-                           ui          = ui, 
-                           object      = object, 
-                           name        = name, 
-                           description = description ) 
+    def _get_custom_editor_class ( self ):
+        """ Returns the editor class to use for "custom" style views.
+        Overridden to return the value of the 'klass' trait.
+        
+        """
+        return self.klass
     
-    def text_editor ( self, ui, object, name, description, parent ):
-        return self.klass( parent,
-                           factory     = self, 
-                           ui          = ui, 
-                           object      = object, 
-                           name        = name, 
-                           description = description ) 
+    def _get_text_editor_class ( self ):
+        """ Returns the editor class to use for "text" style views.
+        Overridden to return the value of the 'klass' trait.
+        
+        """
+        return self.klass
     
-    def readonly_editor ( self, ui, object, name, description, parent ):
-        return self.klass( parent,
-                           factory     = self, 
-                           ui          = ui, 
-                           object      = object, 
-                           name        = name, 
-                           description = description ) 
-                           
+    def _get_readonly_editor_class ( self ):
+        """ Returns the editor class to use for "readonly" style views.
+        Overridden to return the value of the 'klass' trait.
+        
+        """
+        return self.klass
+    
     #---------------------------------------------------------------------------
     #  Allow an instance to be called:  
     #---------------------------------------------------------------------------
                                       
     def __call__ ( self, *args, **traits ):
         return self.set( **traits )
+
+## EOF ########################################################################
         

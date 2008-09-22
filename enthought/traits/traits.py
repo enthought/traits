@@ -1145,7 +1145,7 @@ def Color ( *args, **metadata ):
     -------------
     For wxPython, 0x000000 (that is, white)
     """
-    from enthought.traits.ui.api import ColorTrait
+    from enthought.traits.ui.toolkit_traits import ColorTrait
     
     return ColorTrait( *args, **metadata )
 
@@ -1169,7 +1169,7 @@ def RGBColor ( *args, **metadata ):
     -------------
     For wxPython, (0.0, 0.0, 0.0) (that is, white)
     """
-    from enthought.traits.ui.api import RGBColorTrait
+    from enthought.traits.ui.toolkit_traits import RGBColorTrait
     
     return RGBColorTrait( *args, **metadata )
 
@@ -1191,7 +1191,7 @@ def Font ( *args, **metadata ):
     -------------
     For wxPython, 'Arial 10'
     """
-    from enthought.traits.ui.api import FontTrait
+    from enthought.traits.ui.toolkit_traits import FontTrait
     
     return FontTrait( *args, **metadata )
 

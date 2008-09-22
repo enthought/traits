@@ -30,7 +30,7 @@ from enthought.traits.api \
 from enthought.traits.trait_base \
     import SequenceTypes
     
-from enthought.traits.ui.api \
+from enthought.traits.ui.editors.rgb_color_editor \
     import RGBColorEditor
 
 #-------------------------------------------------------------------------------

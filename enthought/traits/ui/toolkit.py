@@ -59,7 +59,7 @@ def _import_toolkit ( name ):
     return getattr( module.traits.ui, name ).toolkit
 
 
-def toolkit_object ( name ):
+def toolkit_object(name, raise_exceptions=False):
     """ Return the toolkit specific object with the given name.  The name
     consists of the relative module path and the object name separated by a
     colon.
@@ -78,16 +78,14 @@ def toolkit_object ( name ):
 
     be_obj   = Unimplemented
     be_mname = toolkit().__module__.rstrip( '.toolkit' ) + '.' + mname
-
     try:
         __import__( be_mname )
         try:
-            be_obj = getattr( sys.modules[ be_mname ], oname )
-        except AttributeError:
-            pass
-        
-    except ImportError:
-        pass
+            be_obj = getattr(sys.modules[be_mname], oname)
+        except AttributeError, e:
+            if raise_exceptions: raise e
+    except ImportError, e:
+        if raise_exceptions: raise e
 
     return be_obj
 

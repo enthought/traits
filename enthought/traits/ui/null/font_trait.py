@@ -23,7 +23,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api    import Trait, TraitHandler, TraitError
-from enthought.traits.ui.api import FontEditor
+from enthought.traits.ui.editors.font_editor import FontEditor
 
 #-------------------------------------------------------------------------------
 #  Convert a string into a valid 'wxFont' object (if possible):

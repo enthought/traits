@@ -23,7 +23,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api    import Trait, TraitError
-from enthought.traits.ui.api import ColorEditor
+from enthought.traits.ui.editors.color_editor import ColorEditor
 
 #-------------------------------------------------------------------------------
 #  Convert a number into a wxColour object:
