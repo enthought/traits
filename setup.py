@@ -53,6 +53,8 @@ Traits:
 
 import os, zipfile
 from setuptools import setup, Extension, find_packages
+from setuptools.command.develop import develop
+from distutils.command.build import build as distbuild
 from distutils import log
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
@@ -78,6 +80,16 @@ speedups = Extension(
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
 
+class MyDevelop(develop):
+    def run(self):
+        develop.run(self)
+        self.run_command('build_docs')
+
+class MyBuild(distbuild):
+    def run(self):
+        distbuild.run(self)
+        self.run_command('build_docs')
+
 # Call the setup function.
 setup(
     author = 'David C. Morrill, et. al.',
@@ -98,6 +110,10 @@ setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
+    cmdclass = {
+        'develop': MyDevelop,
+        'build': MyBuild
+        },
     dependency_links = [
         'http://code.enthought.com/enstaller/eggs/source',
         ],
