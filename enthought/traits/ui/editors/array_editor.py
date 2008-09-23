@@ -36,8 +36,7 @@ from enthought.traits.ui.editor_factory \
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well. 
-
-from enthought.traits.ui.api \
+from enthought.traits.ui.view \
     import View
 
 from enthought.traits.ui.group \
