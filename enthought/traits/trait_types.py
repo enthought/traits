@@ -1380,7 +1380,14 @@ class BaseFile ( BaseStr ):
         -------------
         *value* or ''
         """
-        from enthought.traits.ui.editors import FileEditor
+        # NOTE: 'editors.py' has been removed and 'editors' is now a 
+        # directory in traits ui. We are importing from the source instead
+        # of from ui.api or ui.editors.api just for safety sake (otherwise, 
+        # if there is any class that is part of ui.api which has a File
+        # trait defined, and we try to import that class from the source 
+        # (instead of from the api), then we land up with a circular import 
+        # problem). 
+        from enthought.traits.ui.editors.file_editor import FileEditor
 
         metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
                                                    auto_set = auto_set,
@@ -1466,8 +1473,15 @@ class BaseDirectory ( BaseStr ):
         -------------
         *value* or ''
         """
-        from enthought.traits.ui.editors import DirectoryEditor
-
+        # NOTE: 'editors.py' has been removed and 'editors' is now a 
+        # directory in traits ui. We are importing from the source instead
+        # of from ui.api or ui.editors.api just for safety sake (otherwise, 
+        # if there is any class that is part of ui.api which has a File
+        # trait defined, and we try to import that class from the source 
+        # (instead of from the api), then we land up with a circular import 
+        # problem). 
+        from enthought.traits.ui.editors.directory_editor \
+                                            import DirectoryEditor
         metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set,
                                                         entries  = entries ) )
         self.exists = exists
