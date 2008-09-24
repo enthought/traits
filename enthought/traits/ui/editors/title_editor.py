@@ -29,7 +29,7 @@ from enthought.traits.ui.toolkit \
 
 # Callable which returns the editor to use in the ui.
 def title_editor(*args, **traits):
-    return toolkit_object('title_editor:TitleEditor')(*args, **traits)
+    return toolkit_object('title_editor:_TitleEditor')(*args, **traits)
     
 #-------------------------------------------------------------------------------
 #  Create the editor factory object:

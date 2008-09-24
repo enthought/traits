@@ -23,17 +23,13 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Callable, Tuple
+    import Callable, Tuple, Property
 
 from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
                                       
 from enthought.traits.ui.toolkit \
-    import toolkit_object
-
-# Callable which returns the editor to use in the ui.
-def custom_editor(*args, **traits):
-    return toolkit_object('custom_editor:CustomEditor')(*args, **traits)     
+    import toolkit_object   
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -42,7 +38,9 @@ def custom_editor(*args, **traits):
 class ToolkitEditorFactory ( BasicEditorFactory ):
     """ Editor factory for custom editors.
     """
-
+    # Editor class to be instantiated.
+    klass = Property
+    
     # Factory function used to create the custom control
     factory = Callable
     
@@ -58,9 +56,16 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
             self.factory = args[0]
             self.args    = args[1:]
         super( ToolkitEditorFactory, self ).__init__( **traits )  
-
+    
+    #---------------------------------------------------------------------------
+    #  Property getters
+    #---------------------------------------------------------------------------
+    def _get_klass(self):
+        """ Returns the editor class to be created.
+        """
+        return toolkit_object('custom_editor:CustomEditor')
 
 # Define the CustomEditor class.    
-CustomEditor = ToolkitEditorFactory(klass = custom_editor)
+CustomEditor = ToolkitEditorFactory
 
 ### EOF #######################################################################

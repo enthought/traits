@@ -119,91 +119,8 @@ class EditorFactory ( HasPrivateTraits ):
             value = getattr( value, name )
             
         return value
-    
     #---------------------------------------------------------------------------
-    #  Property getters:
-    #---------------------------------------------------------------------------
-    def _get_simple_editor_class(self):
-        """ Returns the editor class to use for "simple" style views.
-        The default implementation tries to import the SimpleEditor class in the 
-        editor file in the backend package, and if such a class is not to found
-        it returns the SimpleEditor class defined in editor_factory module in
-        the backend package.
-        
-        """
-        try:
-            editor_file_name = \
-                os.path.basename(sys.modules[self.__class__.__module__].
-                                 __file__)
-            SimpleEditor = toolkit_object(
-                              editor_file_name.split('.')[0] + ':SimpleEditor',
-                              True)
-        except:
-            SimpleEditor = toolkit_object('editor_factory:SimpleEditor')
-        return SimpleEditor
-    
-    
-    def _get_custom_editor_class(self):
-        """ Returns the editor class to use for "custom" style views.
-        The default implementation tries to import the CustomEditor class in the 
-        editor file in the backend package, and if such a class is not to found
-        it returns the value of simple_editor_class.
-        
-        """
-        try:
-            editor_file_name = \
-                os.path.basename(sys.modules[self.__class__.__module__].
-                                 __file__)
-            CustomEditor = toolkit_object(
-                              editor_file_name.split('.')[0] + ':CustomEditor',
-                              True)
-        except:
-            CustomEditor = self.simple_editor_class
-        return CustomEditor
-    
-        
-    def _get_text_editor_class(self):
-        """ Returns the editor class to use for "text" style views.
-        The default implementation tries to import the TextEditor class in the 
-        editor file in the backend package, and if such a class is not found
-        it returns the TextEditor class declared in the editor_factory module in
-        the backend package.
-        
-        """
-        try:
-            editor_file_name = \
-                os.path.basename(sys.modules[self.__class__.__module__].
-                                 __file__)
-            TextEditor = toolkit_object(
-                            editor_file_name.split('.')[0] + ':TextEditor',
-                            True)
-        except:
-            TextEditor = toolkit_object('editor_factory:TextEditor')
-        return TextEditor
-    
-    
-    def _get_readonly_editor_class(self):
-        """ Returns the editor class to use for "readonly" style views.
-        The default implementation tries to import the ReadonlyEditor class in 
-        the editor file in the backend package, and if such a class is not found
-        it returns the ReadonlyEditor class declared in the editor_factory 
-        module in the backend package. 
-        
-        """
-        try:
-            editor_file_name = \
-                os.path.basename(sys.modules[self.__class__.__module__].
-                                 __file__)
-            ReadonlyEditor = toolkit_object(
-                                editor_file_name.split('.')[0] + \
-                                ':ReadonlyEditor', 
-                                True)
-        except:
-            ReadonlyEditor = toolkit_object('editor_factory:ReadonlyEditor')
-        return ReadonlyEditor
-    
-    #---------------------------------------------------------------------------
-    #  'Editor' factory methods:
+    #  Methods that generate backend toolkit-specific editors.
     #---------------------------------------------------------------------------
 
     def simple_editor ( self, ui, object, name, description, parent ):
@@ -245,6 +162,85 @@ class EditorFactory ( HasPrivateTraits ):
                                            object      = object, 
                                            name        = name, 
                                            description = description )
+    
+    #---------------------------------------------------------------------------
+    #  Private methods
+    #---------------------------------------------------------------------------
+    
+    def _get_toolkit_object(self, class_name):
+        """
+        Returns the class by name class_name in the backend package.
+        """
+        try:
+            editor_file_name = os.path.basename(
+                                sys.modules[self.__class__.__module__].__file__)
+            return toolkit_object(':'.join([editor_file_name.split('.')[0], 
+                                             class_name]), True)
+        except Exception, e:
+            raise e    
+    
+    #---------------------------------------------------------------------------
+    #  Property getters
+    #---------------------------------------------------------------------------
+             
+    def _get_simple_editor_class(self):
+        """ Returns the editor class to use for "simple" style views.
+        The default implementation tries to import the SimpleEditor class in the 
+        editor file in the backend package, and if such a class is not to found
+        it returns the SimpleEditor class defined in editor_factory module in
+        the backend package.
+        
+        """
+        try:
+            SimpleEditor = self._get_toolkit_object('SimpleEditor')
+        except:
+            SimpleEditor = toolkit_object('editor_factory:SimpleEditor')
+        return SimpleEditor
+    
+    
+    def _get_custom_editor_class(self):
+        """ Returns the editor class to use for "custom" style views.
+        The default implementation tries to import the CustomEditor class in the 
+        editor file in the backend package, and if such a class is not to found
+        it returns the value of simple_editor_class.
+        
+        """
+        try:
+            CustomEditor = self._get_toolkit_object('CustomEditor')
+        except:
+            CustomEditor = self.simple_editor_class
+        return CustomEditor
+    
+        
+    def _get_text_editor_class(self):
+        """ Returns the editor class to use for "text" style views.
+        The default implementation tries to import the TextEditor class in the 
+        editor file in the backend package, and if such a class is not found
+        it returns the TextEditor class declared in the editor_factory module in
+        the backend package.
+        
+        """
+        try:
+            TextEditor = self._get_toolkit_object('TextEditor')
+        except:
+            TextEditor = toolkit_object('editor_factory:TextEditor')
+        return TextEditor
+    
+    
+    def _get_readonly_editor_class(self):
+        """ Returns the editor class to use for "readonly" style views.
+        The default implementation tries to import the ReadonlyEditor class in 
+        the editor file in the backend package, and if such a class is not found
+        it returns the ReadonlyEditor class declared in the editor_factory 
+        module in the backend package. 
+        
+        """
+        try:
+            ReadonlyEditor = self._get_toolkit_object('ReadonlyEditor')
+        except:
+            ReadonlyEditor = toolkit_object('editor_factory:ReadonlyEditor')
+        return ReadonlyEditor
+
 
 #-------------------------------------------------------------------------------
 #  'EditorWithListFactory' abstract base class:
