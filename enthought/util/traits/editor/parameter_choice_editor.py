@@ -32,7 +32,7 @@
 import wx
 
 from enthought.traits.ui.wx.editor import Editor
-from enthought.traits.ui.editor_factory import EditorFactory
+from enthought.traits.ui.wx.editor_factory import EditorFactory as WxEditorFactory
 from enthought.traits.api import Any, HasTraits, Int
 
 class ChoiceEditorModel(HasTraits):
@@ -49,7 +49,7 @@ class ChoiceEditorModel(HasTraits):
     def index_of(self, obj):
         return 0
 
-class ParameterChoiceEditorFactory (EditorFactory):
+class ParameterChoiceEditorFactory (WxEditorFactory):
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ class ParameterChoiceEditorFactory (EditorFactory):
     def __init__(self, *args, **kwargs):
         #self.model_class = kwargs['model_class']
         # print self.model_class
-        EditorFactory.__init__(self, *args, **kwargs)
+        WxEditorFactory.__init__(self, *args, **kwargs)
         
     #---------------------------------------------------------------------------
     #  Performs any initialization needed after all constructor traits have 
