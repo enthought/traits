@@ -166,18 +166,24 @@ class EditorFactory ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
     #  Private methods
     #---------------------------------------------------------------------------
-    
-    def _get_toolkit_object(self, class_name):
+    @classmethod
+    def _get_toolkit_editor(cls, class_name):
         """
-        Returns the class by name class_name in the backend package.
-        """
-        try:
-            editor_file_name = os.path.basename(
-                                sys.modules[self.__class__.__module__].__file__)
-            return toolkit_object(':'.join([editor_file_name.split('.')[0], 
+        Returns the editor by name class_name in the backend package.
+        """       
+        editor_factory_classes = [factory_class for factory_class in cls.mro() 
+                                  if issubclass(factory_class, EditorFactory)]
+        for index in range(len( editor_factory_classes )):
+            try:
+                factory_class = editor_factory_classes[index]
+                editor_file_name = os.path.basename(
+                                sys.modules[factory_class.__module__].__file__)
+                return toolkit_object(':'.join([editor_file_name.split('.')[0], 
                                              class_name]), True)
-        except Exception, e:
-            raise e    
+            except Exception, e:
+                if index == len(editor_factory_classes)-1: 
+                    raise e
+        return None
     
     #---------------------------------------------------------------------------
     #  Property getters
@@ -192,7 +198,7 @@ class EditorFactory ( HasPrivateTraits ):
         
         """
         try:
-            SimpleEditor = self._get_toolkit_object('SimpleEditor')
+            SimpleEditor = self._get_toolkit_editor('SimpleEditor')
         except:
             SimpleEditor = toolkit_object('editor_factory:SimpleEditor')
         return SimpleEditor
@@ -202,11 +208,11 @@ class EditorFactory ( HasPrivateTraits ):
         """ Returns the editor class to use for "custom" style views.
         The default implementation tries to import the CustomEditor class in the 
         editor file in the backend package, and if such a class is not to found
-        it returns the value of simple_editor_class.
+        it returns simple_editor_class.
         
         """
         try:
-            CustomEditor = self._get_toolkit_object('CustomEditor')
+            CustomEditor = self._get_toolkit_editor('CustomEditor')
         except:
             CustomEditor = self.simple_editor_class
         return CustomEditor
@@ -221,7 +227,7 @@ class EditorFactory ( HasPrivateTraits ):
         
         """
         try:
-            TextEditor = self._get_toolkit_object('TextEditor')
+            TextEditor = self._get_toolkit_editor('TextEditor')
         except:
             TextEditor = toolkit_object('editor_factory:TextEditor')
         return TextEditor
@@ -236,7 +242,7 @@ class EditorFactory ( HasPrivateTraits ):
         
         """
         try:
-            ReadonlyEditor = self._get_toolkit_object('ReadonlyEditor')
+            ReadonlyEditor = self._get_toolkit_editor('ReadonlyEditor')
         except:
             ReadonlyEditor = toolkit_object('editor_factory:ReadonlyEditor')
         return ReadonlyEditor
