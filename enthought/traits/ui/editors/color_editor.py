@@ -25,6 +25,9 @@
 from enthought.traits.api \
     import Bool
 
+from enthought.traits.ui.toolkit \
+    import toolkit_object
+
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well.     
@@ -57,6 +60,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     
     
 # Define the ColorEditor class
-ColorEditor = ToolkitEditorFactory
+try:
+    ColorEditor = toolkit_object('color_editor:ToolkitEditorFactory')
+except:
+    ColorEditor = ToolkitEditorFactory
 
 ## EOF #######################################################################

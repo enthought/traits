@@ -30,6 +30,9 @@ from color_editor \
 from enthought.traits.trait_base \
     import SequenceTypes
 
+from enthought.traits.ui.toolkit \
+    import toolkit_object
+
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
@@ -38,5 +41,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     """ Factory for editors for RGB colors.
     """
     pass
-
-RGBColorEditor = ToolkitEditorFactory
+    
+# Define the ColorEditor class
+try:
+    RGBColorEditor = toolkit_object('rgb_color_editor:ToolkitEditorFactory')
+except:
+    RGBColorEditor = ToolkitEditorFactory
