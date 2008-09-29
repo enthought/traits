@@ -26,9 +26,6 @@
 
 from color_editor \
     import ToolkitEditorFactory as EditorFactory
-    
-from enthought.traits.trait_base \
-    import SequenceTypes
 
 from enthought.traits.ui.toolkit \
     import toolkit_object
@@ -42,8 +39,24 @@ class ToolkitEditorFactory ( EditorFactory ):
     """
     pass
     
-# Define the ColorEditor class
-try:
-    RGBColorEditor = toolkit_object('rgb_color_editor:ToolkitEditorFactory')
-except:
-    RGBColorEditor = ToolkitEditorFactory
+# Define the RGBColorEditor class
+# The function will try to return the toolkit-specific editor factory (located 
+# in enthought.traits.ui.<toolkit>.rgb_color_editor, and if none is found, the
+# ToolkitEditorFactory declared here is returned.
+def RGBColorEditor(*args, **traits):
+    """ Returns an instance of the toolkit-specific editor factory declared in 
+    enthought.traits.ui.<toolkit>.rgb_color_editor. If such an editor factory 
+    cannot be located, an instance of the abstract ToolkitEditorFactory 
+    declared in enthought.traits.ui.editors.rgb_color_editor is returned.
+
+    Inputs (Optional) 
+    -----------------
+    *args, **traits: arguments and keywords to be passed on to the editor 
+    factory's constructor. 
+    """
+    
+    try: 
+       return toolkit_object('rgb_color_editor:ToolkitEditorFactory', True)(
+                                                            *args, **traits)
+    except:
+       return ToolkitEditorFactory(*args, **traits)
