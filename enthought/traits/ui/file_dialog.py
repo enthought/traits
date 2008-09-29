@@ -603,7 +603,8 @@ class OpenFileDialog ( Handler ):
                           style      = 'custom',
                           width      = 0.5,
                           height     = 0.5,
-                          dock       = 'horizontal',
+                          dock       = 'horizontal', 
+                          resizable  = True,
                           editor     = InstanceEditor( view = view, id = name )
                     ) )
                 
@@ -611,7 +612,6 @@ class OpenFileDialog ( Handler ):
             item = klass( item, 
                           VSplit( id = 'splitter2', springy = True, *items ), 
                           id = 'splitter' )
-            
         # Return the resulting view:
         return View(
             VGroup(
