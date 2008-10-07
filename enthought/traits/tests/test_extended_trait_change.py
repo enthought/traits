@@ -443,11 +443,9 @@ class OnTraitChangeTest ( unittest.TestCase ):
             self.assertEqual( l1.refs[i].value, 3 )
         
     def test_list2 ( self ):
-        raise SkipTest()
         self.check_list( List2( tc = self ) )
         
     def test_list3 ( self ):
-        raise SkipTest()
         self.check_list( List3( tc = self ) )
         
     def test_dict1 ( self ):
@@ -654,7 +652,7 @@ class OnTraitChangeTest ( unittest.TestCase ):
     def check_list ( self, l ):
         for i in range( 3 ):
             ac = ArgCheckBase()
-            self.assertRaises( TraitError, l.refs.append, ac )
+            self.assertRaises( TraitError, l.refs.append, ac)
         self.assertEqual( l.calls, 0 )
         for i in range( 3 ):
             self.assertEqual( l.refs[i].value, 0 )

@@ -489,7 +489,6 @@ class ListenerItem ( ListenerBase ):
             notification is for the final destination trait.
         """
         self.next.unregister( old )
-        
         object, name = self.next.register( new )
         if old is not Uninitialized:
             if object is None:
@@ -566,12 +565,13 @@ class ListenerItem ( ListenerBase ):
     #  applied to the final destination object.trait: 
     #---------------------------------------------------------------------------
     
-    def handle_error ( self ):
+    def handle_error ( self, obj, name, old, new ):
         """ Handles an invalid intermediate trait change to a handler that must 
             be applied to the final destination object.trait.
         """
-        raise TraitError( "on_trait_change handler signature is "
-                  "incompatible with a change to an intermediate trait" )
+        if old not in InvalidObjects:
+            raise TraitError( "on_trait_change handler signature is "
+                              "incompatible with a change to an intermediate trait" )
                 
     #-- Event Handlers ---------------------------------------------------------
     
@@ -851,8 +851,8 @@ class ListenerItem ( ListenerBase ):
             type    = SIMPLE_LISTENER
             handler = trait.handler
             if handler is not None:
-                type = type_map.get( handler.default_value_type,
-                                     SIMPLE_LISTENER )
+                type = type_map.get( handler.default_value_,
+                                 SIMPLE_LISTENER )
                                      
             # Add the name and type to the list of traits being registered:
             self.active[ object ].append( ( new_trait, type ) )
@@ -992,7 +992,7 @@ class ListenerGroup ( ListenerBase ):
 #-------------------------------------------------------------------------------
                         
 class ListenerParser ( HasPrivateTraits ):
-    
+
     #-------------------------------------------------------------------------------
     #  Trait definitions:
     #-------------------------------------------------------------------------------
