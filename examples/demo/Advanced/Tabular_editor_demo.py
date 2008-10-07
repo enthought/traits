@@ -41,9 +41,6 @@ Additional notes:
 
 #-- Imports --------------------------------------------------------------------
 
-from os.path \
-    import join, dirname
-    
 from random \
     import randint, choice, shuffle
 
