@@ -24,6 +24,7 @@
 
 import sys
 import re
+import datetime
 import trait_handlers
 
 from weakref \
@@ -46,14 +47,15 @@ from trait_handlers \
 
 from traits \
     import Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor, \
-           html_editor, password_editor, shell_editor
+           html_editor, password_editor, shell_editor, date_editor, \
+           time_editor
 
 from trait_errors \
     import TraitError
 
 from types \
     import FunctionType, MethodType, ClassType, InstanceType, ModuleType
-
+    
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
@@ -3281,6 +3283,15 @@ class HandleWeakRef ( object ):
         object = self.object()
         if object is not None:
             object.trait_property_changed( self.name, Undefined, None )
+
+
+#-- Date Trait definition ---------------------------------------------------- 
+Date = BaseInstance(datetime.date, editor=date_editor)
+
+
+#-- Time Trait definition ---------------------------------------------------- 
+Time = BaseInstance(datetime.time, editor=time_editor)
+
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:

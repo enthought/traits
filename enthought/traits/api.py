@@ -47,7 +47,8 @@ from trait_types \
            Constant, Delegate, DelegatesTo, PrototypedFrom, Expression, \
            PythonValue, File, Directory, Range, Enum, Tuple, List, CList, \
            Set, CSet, Dict, Instance, AdaptedTo, AdaptsTo, Event, Button, \
-           ToolbarButton, Either, Type, Symbol, WeakRef, false, true, undefined
+           ToolbarButton, Either, Type, Symbol, WeakRef, Date, Time, \
+           false, true, undefined
                
 from trait_types \
     import ListInt, ListFloat, ListStr, ListUnicode, ListComplex, ListBool, \

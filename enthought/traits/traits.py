@@ -99,6 +99,8 @@ MultilineTextEditor = None
 SourceCodeEditor    = None
 HTMLTextEditor      = None
 PythonShellEditor   = None
+DateEditor          = None
+TimeEditor          = None
 
 def password_editor ( ):
     """ Factory function that returns an editor for passwords.
@@ -156,6 +158,28 @@ def shell_editor ( ):
         PythonShellEditor = ShellEditor()
 
     return PythonShellEditor
+
+def time_editor ( ):
+    """ Factory function that returns a Time editor for editing Time values.
+    """
+    global TimeEditor
+
+    if TimeEditor is None:
+        from enthought.traits.ui.api import TimeEditor
+        TimeEditor = TimeEditor()
+
+    return TimeEditor
+
+def date_editor ( ):
+    """ Factory function that returns a Date editor for editing Date values.
+    """
+    global DateEditor
+
+    if DateEditor is None:
+        from enthought.traits.ui.api import DateEditor
+        DateEditor = DateEditor()
+
+    return DateEditor
 
 #-------------------------------------------------------------------------------
 #  'CTrait' class (extends the underlying cTrait c-based type):
@@ -1117,6 +1141,16 @@ SpecialNames = {
 ###   'tuple':   trait_factory( Tuple ),
 ###   'dict':    trait_factory( Dict )
 }
+
+
+#-- Date Trait definition ---------------------------------------------------- 
+#Date = Instance(datetime.date, metadata = { 'editor': date_editor })
+
+
+#-- Time Trait definition ---------------------------------------------------- 
+#Time = Instance(datetime.time, metadata = { 'editor': time_editor })
+
+
 
 #-------------------------------------------------------------------------------
 #  Create predefined, reusable trait instances:

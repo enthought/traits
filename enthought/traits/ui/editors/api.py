@@ -8,6 +8,7 @@ from code_editor import CodeEditor
 from color_editor import ColorEditor
 from compound_editor import CompoundEditor
 from custom_editor import CustomEditor
+from date_editor import DateEditor
 from directory_editor import DirectoryEditor
 from dnd_editor import DNDEditor
 from drop_editor import DropEditor
@@ -26,6 +27,7 @@ from rgb_color_editor import RGBColorEditor
 from set_editor import SetEditor
 from text_editor import TextEditor
 from table_editor import TableEditor
+from time_editor import TimeEditor
 from title_editor import TitleEditor
 from tree_editor import TreeEditor
 from tuple_editor import TupleEditor
