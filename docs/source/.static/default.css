@@ -748,7 +748,7 @@ table.highlighttable td {
 tt {
     background-color: #ddd;
     padding: 0 1px 0 1px;
-    font-size: 0.95em;
+    font-size: 1.2em;
 }
 
 tt.descname {
