@@ -2494,7 +2494,9 @@ notify:
     }
     
     original_value = value;
-    if ( traitd->validate != NULL ) {
+    // If the object's value is Undefined, then do not call the validate
+    // method (as the object's value has not yet been set).
+    if ( traitd->validate != NULL && PyObject_Repr( value ) != PyObject_Repr( Undefined )) {
         value = traitd->validate( traitd, obj, name, value );
         if ( value == NULL ) {
             return -1;
