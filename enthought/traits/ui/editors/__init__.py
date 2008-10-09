@@ -14,3 +14,6 @@
 #  Date:   10/07/2004
 #
 #------------------------------------------------------------------------------
+# Adding this statement for backwards compatibility (since editors.py was a 
+# file prior to version 3.0.3). 
+from api import *
