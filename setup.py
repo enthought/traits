@@ -139,7 +139,7 @@ setup(
         'integrationtests.*',
         ]),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    setup_requires = 'setupdocs',
+    setup_requires = 'setupdocs>=1.0',
     tests_require = [
         'nose >= 0.10.3',
         ],
