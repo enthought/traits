@@ -178,6 +178,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     cell_color = Color( 'black' )
 
     # Color to use for cell backgrounds
+    # The default is the "WindowColor" constant declared in ui.api: 
+    # we shall set the value in a trait initializer method, in order to avoid 
+    # circular imports.
     cell_bg_color = Color
 
     # Color to use for read-only cell backgrounds
@@ -339,6 +342,15 @@ class ToolkitEditorFactory ( EditorFactory ):
         self.editable = False
         return super(ToolkitEditorFactory, self).readonly_editor(
                   ui, object, name, description, parent)
+
+    def _cell_bg_color_default(self):
+        """ Returns the default value of the cell background color.
+        """
+        # NOTE: We are initializing the 'cell_bg_color' trait in this method
+        # instead of in the trait definition so as to delay importing from 
+        # ui.api until needed (will lead to circular imports otherwise).
+        from enthought.traits.ui.api import WindowColor
+        return WindowColor
     
 # Define the TableEditor class
 TableEditor = ToolkitEditorFactory
