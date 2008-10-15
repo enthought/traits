@@ -61,7 +61,7 @@ rows_trait = Range( 1, 50, 5,
                     desc = 'the number of list rows to display' )
 
 # The visible number of columns displayed
-columns_trait = Range( 1, 10, 5,
+columns_trait = Range( 1, 10, 1,
                     desc = 'the number of list columns to display' )
 
 editor_trait = Instance( EditorFactory )
