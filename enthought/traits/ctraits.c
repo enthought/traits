@@ -1831,7 +1831,7 @@ getattr_trait ( trait_object      * trait,
                      ((trait->flags & TRAIT_IS_MAPPED) == 0) )
                     rc = trait->post_setattr( trait, obj, name, result );
             
-                if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
+                if (rc == 0) {
                     tnotifiers = trait->notifiers;
                     onotifiers = obj->notifiers;
                     if ( has_notifiers( tnotifiers, onotifiers ) )
@@ -1868,7 +1868,7 @@ getattr_trait ( trait_object      * trait,
                  ((trait->flags & TRAIT_IS_MAPPED) == 0) )
                 rc = trait->post_setattr( trait, obj, name, result );
             
-            if ( (rc == 0) && ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) ) {
+            if (rc == 0) {
                 tnotifiers = trait->notifiers;
                 onotifiers = obj->notifiers;
                 if ( has_notifiers( tnotifiers, onotifiers ) )
@@ -2239,7 +2239,12 @@ call_notifiers ( PyListObject      * tnotifiers,
     Py_INCREF( name );
     Py_INCREF( old_value );
     Py_INCREF( new_value );
-    
+  
+    // Do nothing if the user has explicitly requested no traits notifications
+    // to be sent.
+    if ( (obj->flags & HASTRAITS_NO_NOTIFY) != 0 )
+       goto exit2;
+       
     if ( _trait_notification_handler != NULL ) {
         user_args = PyTuple_New( 2 );
         if ( user_args == NULL ) {
@@ -2370,8 +2375,7 @@ setattr_event ( trait_object      * traito,
         tnotifiers = traito->notifiers;
         onotifiers = obj->notifiers;
         
-        if ( ((obj->flags & HASTRAITS_NO_NOTIFY) == 0) &&
-             has_notifiers( tnotifiers, onotifiers ) ) 
+        if ( has_notifiers( tnotifiers, onotifiers ) ) 
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
                                  Undefined, value );
             
@@ -2405,7 +2409,7 @@ setattr_trait ( trait_object      * traito,
     PyObject * dict = obj->obj_dict;
     
     changed = (traitd->flags & TRAIT_NO_VALUE_TEST);
-    
+
     if ( value == NULL ) {
         if ( dict == NULL ) 
             return 0;
@@ -2536,12 +2540,10 @@ notify:
     new_value    = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)? 
                    original_value: value;
     old_value    = NULL;
-    do_notifiers = ((obj->flags & HASTRAITS_NO_NOTIFY) == 0);
-    if ( do_notifiers ) {
-        tnotifiers    = traito->notifiers;
-        onotifiers    = obj->notifiers;
-        do_notifiers &= has_notifiers( tnotifiers, onotifiers );
-    }
+
+    tnotifiers    = traito->notifiers;
+    onotifiers    = obj->notifiers;
+    do_notifiers  = has_notifiers( tnotifiers, onotifiers );
         
     post_setattr = traitd->post_setattr;
     if ( (post_setattr != NULL) || do_notifiers ) { 
@@ -2592,7 +2594,7 @@ notify:
                     (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
                     original_value: value );
         
-        if ( (rc == 0) && do_notifiers )
+        if ( (rc == 0) && do_notifiers ) 
             rc = call_notifiers( tnotifiers, onotifiers, obj, name, 
                                  old_value, new_value );
     }
