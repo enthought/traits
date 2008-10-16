@@ -102,32 +102,36 @@ PythonShellEditor   = None
 DateEditor          = None
 TimeEditor          = None
 
-def password_editor ( ):
+def password_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns an editor for passwords.
     """
     global PasswordEditor
 
     if PasswordEditor is None:
         from enthought.traits.ui.api import TextEditor
-        PasswordEditor = TextEditor( password = True )
+        PasswordEditor = TextEditor( password = True , 
+                                     auto_set   = auto_set,
+                                     enter_set  = enter_set )
 
     return PasswordEditor
 
-def multi_line_text_editor ( ):
+def multi_line_text_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns a text editor for multi-line strings.
     """
     global MultilineTextEditor
 
     if MultilineTextEditor is None:
         from enthought.traits.ui.api import TextEditor
-        MultilineTextEditor = TextEditor( multi_line = True )
+        MultilineTextEditor = TextEditor( multi_line = True, 
+                                          auto_set   = auto_set,
+                                          enter_set  = enter_set )
 
     return MultilineTextEditor
 
 def code_editor ( ):
     """ Factory function that returns an editor that treats a multi-line string
     as source code.
-    """
+    """ 
     global SourceCodeEditor
 
     if SourceCodeEditor is None:

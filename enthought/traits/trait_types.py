@@ -331,8 +331,12 @@ class BaseStr ( TraitType ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from traits import multi_line_text_editor
+        auto_set = self.auto_set
+        if auto_set is None:
+            auto_set = True
+        enter_set = self.enter_set or False
 
-        return multi_line_text_editor()
+        return multi_line_text_editor(auto_set, enter_set)
 
 
 class Str ( BaseStr ):
@@ -387,8 +391,12 @@ class BaseUnicode ( TraitType ):
         """ Returns the default traits UI editor for this type of trait.
         """
         from traits import multi_line_text_editor
+        auto_set = self.auto_set
+        if auto_set is None:
+            auto_set = True
+        enter_set = trait.enter_set or False
 
-        return multi_line_text_editor()
+        return multi_line_text_editor(auto_set, enter_set)
 
 
 class Unicode ( BaseUnicode ):
