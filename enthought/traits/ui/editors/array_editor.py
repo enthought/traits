@@ -25,7 +25,7 @@
 import numpy    
 
 from enthought.traits.api \
-    import HasTraits, Int, Float, Instance, false, TraitError
+    import Bool, HasTraits, Int, Float, Instance, false, TraitError
     
 from enthought.traits.ui.editor \
     import Editor
@@ -59,7 +59,13 @@ class ToolkitEditorFactory ( EditorFactory ):
         
     # Width of the individual fields
     width = Int( -80 )
-
+    
+    # Is user input set on every keystroke?
+    auto_set = Bool( True )
+    
+    # Is user input set when the Enter key is pressed?
+    enter_set = Bool( False )
+                     
 #-------------------------------------------------------------------------------
 #  'ArrayStructure' class:
 #-------------------------------------------------------------------------------
@@ -122,7 +128,12 @@ class ArrayStructure ( HasTraits ):
         format_str  = self.editor.factory.format_str 
         for i in range( shape[0] ):
             name = 'f%d' % i
-            self.add_trait( name, trait( object[i], event = 'field' ) )
+            self.add_trait( name, 
+                            trait( object[i], 
+                                   event = 'field', 
+                                   auto_set = self.editor.factory.auto_set, 
+                                   enter_set = self.editor.factory.enter_set )
+                          )
             items.append( Item( name        = name,  
  	                        style       = style, 
  	                        width       = width, 
@@ -150,7 +161,12 @@ class ArrayStructure ( HasTraits ):
             items = []
             for j in range( shape[1] ):
                 name = 'f%d_%d' % ( i, j )
-                self.add_trait( name, trait( object[i,j], event = 'field' ) )
+                self.add_trait( name, 
+                                trait( object[i, j], 
+                                   event = 'field', 
+                                   auto_set = self.editor.factory.auto_set, 
+                                   enter_set = self.editor.factory.enter_set )
+                               )
                 items.append( Item( name        = name,  
                                     style       = style, 
                                     width       = width, 

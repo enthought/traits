@@ -2101,9 +2101,16 @@ class BaseTuple ( TraitType ):
         """
         from enthought.traits.ui.api import TupleEditor
 
-        return TupleEditor( types  = self.types,
-                            labels = self.labels or [],
-                            cols   = self.cols or 1 )
+        auto_set = self.auto_set
+        if auto_set is None:
+            auto_set = True
+        enter_set = self.enter_set or False
+
+        return TupleEditor( types     = self.types,
+                            labels    = self.labels or [],
+                            cols      = self.cols or 1,
+                            auto_set  = auto_set,
+                            enter_set = enter_set )
 
 class Tuple ( BaseTuple ):
     """ Defines a trait whose value must be a tuple of specified trait types

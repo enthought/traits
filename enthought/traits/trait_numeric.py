@@ -52,7 +52,7 @@ def dtype2trait ( dtype ):
     """
 
     import numpy
-
+    
     if dtype.char in numpy.typecodes['Float']:
         return TFloat
         
@@ -125,11 +125,6 @@ class AbstractArray ( TraitType ):
                     raise TraitError, "shape should be a list or tuple"
             else:
                 raise TraitError, "shape should be a list or tuple"
-    
-            if (len( shape ) == 2) and (metadata.get( 'editor' ) is None):
-                from enthought.traits.ui.api import ArrayEditor
-                
-                metadata.setdefault( 'editor', ArrayEditor )
     
         if value is None:
             if dtype is None:
@@ -230,17 +225,30 @@ class AbstractArray ( TraitType ):
     def get_editor ( self, trait = None ):
         """ Returns the default UI editor for the trait.
         """
-        from enthought.traits.ui.api import TupleEditor
-        
-        if self.dtype is None:
-            types = Any
-        else:
-            types = dtype2trait( self.dtype )
-            
-        return TupleEditor( types  = types,
-                            labels = self.labels or [],
-                            cols   = self.cols or 1  )
+        editor = None
 
+        auto_set = False
+        if self.auto_set is None:
+            auto_set = True
+        enter_set = self.enter_set or False 
+
+        if self.shape is not None and len( self.shape ) == 2:
+            from enthought.traits.ui.api import ArrayEditor    
+            editor = ArrayEditor( auto_set=auto_set, enter_set=enter_set )
+        else:
+            from enthought.traits.ui.api import TupleEditor
+        
+            if self.dtype is None:
+                types = Any
+            else:
+                types = dtype2trait( self.dtype )
+            editor = TupleEditor( types     = types,
+                                  labels    = self.labels or [],
+                                  cols      = self.cols or 1,
+                                  auto_set  = auto_set,
+                                  enter_set = enter_set  )
+        return editor
+   
     #-- Private Methods --------------------------------------------------------
         
     def get_default_value ( self ):

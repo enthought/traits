@@ -24,7 +24,7 @@ from enthought.traits.trait_base \
     import SequenceTypes, enumerate
     
 from enthought.traits.api \
-    import HasTraits, List, Tuple, Unicode, Int, Any
+    import Bool, HasTraits, List, Tuple, Unicode, Int, Any, TraitType
     
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
@@ -66,6 +66,16 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Number of tuple fields or rows
     cols   = Int( 1 )    
+    
+    # Is user input set on every keystroke? This is applied to every field
+    # of the tuple, provided the field does not already have an 'auto_set'
+    # metadata or an editor defined.
+    auto_set = Bool( True )
+    
+    # Is user input set when the Enter key is pressed? This is applied to 
+    # every field of the tuple, provided the field does not already have an 
+    # 'enter_set' metadata or an editor defined.
+    enter_set = Bool( False )
                                       
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
@@ -174,18 +184,29 @@ class TupleStructure ( HasTraits ):
             
         for i, value in enumerate( object ):
             type = types[ i % len_types ]
+ 
+            auto_set = enter_set = None
+            if isinstance(type, TraitType):
+                auto_set = type.auto_set
+                enter_set = type.enter_set
+            if auto_set is None:
+                auto_set = editor.factory.auto_set
+            if enter_set is None:
+                enter_set = editor.factory.enter_set
 
             label = ''
             if i < len_labels:
                 label = labels[i]
 
-            editor = None
+            field_editor = None
             if i < len_editors:
-                editor = editors[i]
+                field_editor = editors[i]
 
             name = 'f%d' % i
-            self.add_trait( name, type( value, event = 'field' ) )
-            item = Item( name = name, label = label, editor = editor )
+            self.add_trait( name, type( value, event = 'field', 
+                                               auto_set = auto_set,
+                                               enter_set = enter_set ) )
+            item = Item( name = name, label = label, editor = field_editor )
             if cols <= 1:
                 content.append( item )
             else:
