@@ -91,20 +91,25 @@ from adapter \
 from trait_numeric \
     import Array, CArray
 
-import ui.view_elements
+try:
+    import has_traits as has_traits
+    #---------------------------------------------------------------------------
+    #  Patch the main traits module with the correct definition for the 
+    #  ViewElements class:
+    #  NOTE: We do this in a try..except block because traits.ui depends on
+    #  the pyface module (part of the TraitsGUI package) which may not
+    #  necessarily be installed. Not having TraitsGUI means that the 'ui' 
+    #  features of traits will not work.
+    #---------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#  Patch the main traits module with the correct definition for the ViewElements
-#  class:
-#-------------------------------------------------------------------------------
+    import ui.view_elements
+    has_traits.ViewElements = ui.view_elements.ViewElements
 
-import has_traits as has_traits
-has_traits.ViewElements = ui.view_elements.ViewElements
+    #-------------------------------------------------------------------------------
+    #  Patch the main traits module with the correct definition for the 
+    #  ViewElement and ViewSubElement class:
+    #-------------------------------------------------------------------------------
 
-#-------------------------------------------------------------------------------
-#  Patch the main traits module with the correct definition for the ViewElement
-#  and ViewSubElement class:
-#-------------------------------------------------------------------------------
-
-has_traits.ViewElement = ui.view_element.ViewElement
-
+    has_traits.ViewElement = ui.view_element.ViewElement
+except ImportError:
+    pass
