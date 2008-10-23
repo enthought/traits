@@ -146,9 +146,7 @@ def convert_image ( value, level = 3 ):
     """ Converts a specified value to an ImageResource if possible.
     """
     global image_resource_cache
-    
-    from enthought.pyface.image_resource import ImageResource
-    
+
     if not isinstance( value, basestring ):
         return value
         
@@ -168,6 +166,7 @@ def convert_image ( value, level = 3 ):
             except:
                 result = None
         else:
+            from enthought.pyface.image_resource import ImageResource
             result = ImageResource( value, search_path = [ search_path ] )
             
         image_resource_cache[ key ] = result
