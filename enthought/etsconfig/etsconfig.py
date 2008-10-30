@@ -309,10 +309,13 @@ class ETSConfig(object):
 
         # Lookup the environment variable.
         parent_directory = os.environ.get(environment_variable, None)
-        if parent_directory is None:
+        if parent_directory is None or parent_directory == '/root':
             import tempfile
             from warnings import warn
             parent_directory = tempfile.gettempdir()
+            user = os.environ.get('USER', None)
+            if user is not None:
+                directory_name += "_%s" % user
             warn('Environment variable "%s" not set, setting home directory to %s' % \
                 (environment_variable, parent_directory))
 
