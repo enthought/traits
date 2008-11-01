@@ -1701,7 +1701,7 @@ class BaseRange ( TraitType ):
         """ Validate that the value is an int value in the specified range.
         """
         try:
-            if (isinstance( value, int ) and
+            if (isinstance( value, int_fast_validate[1:]) and
                 ((self._low is None) or
                  (self._exclude_low and (self._low < value)) or
                  ((not self._exclude_low) and (self._low <= value))) and
@@ -1718,7 +1718,9 @@ class BaseRange ( TraitType ):
         """ Validate that the value is a long value in the specified range.
         """
         try:
-            if (isinstance( value, long ) and
+            valid_types = list(long_fast_validate[1:])
+            valid_types.remove(None)
+            if (isinstance( value, tuple(valid_types) ) and
                 ((self._low is None) or
                  (self._exclude_low and (self._low < value)) or
                  ((not self._exclude_low) and (self._low <= value))) and
