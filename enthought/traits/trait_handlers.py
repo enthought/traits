@@ -51,8 +51,7 @@ from trait_base \
     import strx, SequenceTypes, Undefined, TypeTypes, ClassTypes, \
            CoercableTypes, TraitsCache, class_of, enumerate, Missing
 
-from trait_errors \
-    import TraitError
+from trait_errors import TraitError, repr_type
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -162,7 +161,7 @@ class BaseTraitHandler ( object ):
             The object whose attribute is being assigned
         name : string
             The name of the attribute being assigned
-        value
+        value : object
             The proposed new value for the attribute
 
         Description
@@ -189,7 +188,7 @@ class BaseTraitHandler ( object ):
             The object whose method was called
         name : string
             The name of the parameter corresponding to the incorrect argument
-        value
+        value : object
             The value passed to the argument
 
         Description
@@ -198,9 +197,10 @@ class BaseTraitHandler ( object ):
         """
         raise TraitError, ("The '%s' parameter (argument %d) of the %s method "
                            "of %s instance must be %s, but a value of %s was "
-                           "specified." % ( name, arg_num, method.tm_name,
-                           class_of( object ), 
-                           self.full_info( object, name, value ), value ) )
+                           "specified." % (name, arg_num, method.tm_name,
+                           class_of(object), 
+                           self.full_info(object, name, value), 
+                           repr_type(value)))
 
     def keyword_error ( self, method, object, name, value ):
         """ Raises a TraitError exception to notify the user that a method on
@@ -223,9 +223,9 @@ class BaseTraitHandler ( object ):
         """
         raise TraitError, ("The '%s' keyword argument of the %s method of "
                            "%s instance must be %s, but a value of %s was "
-                           "specified." % ( name, method.tm_name,
-                           class_of( object ), self.info( object, name, value ), 
-                           value ) )
+                           "specified." % (name, method.tm_name,
+                           class_of(object), self.info(object, name, value), 
+                           repr_type(value)))
 
     def missing_arg_error ( self, method, arg_num, object, name ):
         """ Raises a TraitError exception to notify the user that a method on
@@ -296,8 +296,8 @@ class BaseTraitHandler ( object ):
         """
         raise TraitError, ("The result of the %s method of %s instance must "
                            "be %s, but a value of %s was returned." % (
-                           method.tm_name, class_of( object ), self.info(),
-                           value ) )
+                           method.tm_name, class_of(object), self.info(),
+                           repr_type(value)))
 
     def full_info ( self, object, name, value ):
         """Returns a string describing the type of value accepted by the
@@ -355,22 +355,21 @@ class BaseTraitHandler ( object ):
         return self.info_text
 
     def repr ( self, value ):
-        """ Returns a printable representation of a value.
+        """ Returns a printable representation of a value along with its type.
+
+        DEPRECATED: This functionality was only used to provide readable error
+        messages. This functionality has been incorporated into TraitError
+        itself.
 
         Parameters
         ----------
-        value
-            The value to be printed
-
-        Description
-        -----------
-        If *value* is an instance, the method returns the printable
-        representation of the instance's class.
+        value : object
+            The value to be printed.
         """
-        if type( value ) is InstanceType:
-            return 'class '  + value.__class__.__name__
-            
-        return repr( value )
+        import warnings
+        warnings.warn("this functionality has been merged into TraitError; "
+            "just pass the raw value", DeprecationWarning)
+        return repr_type(value)
 
     def get_editor ( self, trait = None ):
         """ Returns a trait editor that allows the user to modify the *trait*
@@ -924,7 +923,7 @@ class TraitRange ( TraitHandler ):
                return float( value )
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def int_validate ( self, object, name, value ):
         try:
@@ -938,7 +937,7 @@ class TraitRange ( TraitHandler ):
                return value
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def long_validate ( self, object, name, value ):
         try:
@@ -952,7 +951,7 @@ class TraitRange ( TraitHandler ):
                return value
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         if self._low is None:
@@ -1046,14 +1045,14 @@ class TraitString ( TraitHandler ):
                 return value
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_str ( self, object, name, value ):
         try:
             return strx( value )
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_len ( self, object, name, value ):
         try:
@@ -1062,7 +1061,7 @@ class TraitString ( TraitHandler ):
                 return value
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_regex ( self, object, name, value ):
         try:
@@ -1071,7 +1070,7 @@ class TraitString ( TraitHandler ):
                 return value
         except:
             pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         msg = ''
@@ -1184,11 +1183,7 @@ class TraitCoerceType ( TraitHandler ):
                 return fv[1]( value )
 
         # Otherwise, raise an exception:
-        if tv is InstanceType:
-            kind = class_of( value )
-        else:
-            kind = repr( value )
-        self.error( object, name, '%s (i.e. %s)' % ( str( tv )[1:-1], kind ) )
+        self.error( object, name, value )
 
     def info ( self ):
         return 'a value of %s' % str( self.aType )[1:-1]
@@ -1288,14 +1283,7 @@ class TraitCastType ( TraitCoerceType ):
         try:
             return self.aType( value )
         except:
-            # Otherwise, raise an exception:
-            tv = type( value )
-            if tv is InstanceType:
-                kind = class_of( value )
-            else:
-                kind = repr( value )
-            self.error( object, name, '%s (i.e. %s)' % (
-                                      str( tv )[1:-1], kind ) )
+            self.error( object, name, value )
 
 #-------------------------------------------------------------------------------
 #  'ThisClass' class:
@@ -1343,13 +1331,7 @@ class ThisClass ( TraitHandler ):
         return 'an instance of the same type as the receiver or None'
 
     def validate_failed ( self, object, name, value ):
-        kind = type( value )
-        if kind is InstanceType:
-            msg = 'class %s' % value.__class__.__name__
-        else:
-            msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
-            
-        self.error( object, name, msg )
+        self.error( object, name, value )
 
     def get_editor ( self, trait ):
         if self.editor is None:
@@ -1630,7 +1612,7 @@ class TraitClass ( TraitHandler ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         return 'a subclass of ' + self.aClass.__name__
@@ -1673,7 +1655,7 @@ class TraitFunction ( TraitHandler ):
         try:
             return self.aFunc( object, name, value )
         except TraitError:
-            self.error( object, name, self.repr( value ) )
+            self.error( object, name, value )
 
     def info ( self ):
         try:
@@ -1734,7 +1716,7 @@ class TraitEnum ( TraitHandler ):
     def validate ( self, object, name, value ):
         if value in self.values:
             return value
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         return ' or '.join( [ repr( x ) for x in self.values ] )
@@ -1813,11 +1795,11 @@ class TraitPrefixList ( TraitHandler ):
                            break
                         match = key
                 if match is None:
-                    self.error( object, name, self.repr( value ) )
+                    self.error( object, name, value )
                 self.values_[ value ] = match
             return self.values_[ value ]
         except:
-            self.error( object, name, self.repr( value ) )
+            self.error( object, name, value )
 
     def info ( self ):
         return (' or '.join( [ repr( x ) for x in self.values ] ) +
@@ -1891,7 +1873,7 @@ class TraitMap ( TraitHandler ):
         except:
             pass
             
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def mapped_value ( self, value ):
         return self.map[ value ]
@@ -1971,11 +1953,11 @@ class TraitPrefixMap ( TraitMap ):
                            break
                         match = key
                 if match is None:
-                    self.error( object, name, self.repr( value ) )
+                    self.error( object, name, value )
                 self._map[ value ] = match
             return self._map[ value ]
         except:
-            self.error( object, name, self.repr( value ) )
+            self.error( object, name, value )
 
     def info ( self ):
         return super( TraitPrefixMap, self ).info() + ' (or any unique prefix)'
@@ -1997,7 +1979,7 @@ class TraitExpression ( TraitHandler ):
             compile( value, '<string>', 'eval' )
             return value
         except:
-            self.error( object, name, self.repr( value ) )
+            self.error( object, name, value )
 
     def post_setattr ( self, object, name, value ):
         object.__dict__[ name + '_' ] = self.mapped_value( value )
@@ -2122,7 +2104,7 @@ class TraitCompound ( TraitHandler ):
                return validate( object, name, value )
             except TraitError:
                pass
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         return ' or '.join( [ x.full_info( object, name, value )
@@ -2223,7 +2205,7 @@ class TraitTuple ( TraitHandler ):
         except:
             pass
         
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         return 'a tuple of the form: (%s)' % (', '.join(
@@ -2255,7 +2237,7 @@ class TraitCallable ( TraitHandler ):
     def validate ( self, object, name, value ):
         if (value is None) or callable( value ):
             return value
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         return 'a callable value'
@@ -2346,7 +2328,7 @@ class TraitList ( TraitHandler ):
            (self.minlen <= len( value ) <= self.maxlen)):
             return TraitListObject( self, object, name, value )
             
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         if self.minlen == 0:
@@ -3017,7 +2999,7 @@ class TraitDict ( TraitHandler ):
     def validate ( self, object, name, value ):
         if isinstance( value, dict ):
             return TraitDictObject( self, object, name, value )
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         extra   = ''

@@ -731,7 +731,7 @@ class String ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_str ( self, object, name, value ):
         """ Validates that the value is a valid string.
@@ -741,7 +741,7 @@ class String ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_len ( self, object, name, value ):
         """ Validates that the value is a valid string in the specified length
@@ -754,7 +754,7 @@ class String ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def validate_regex ( self, object, name, value ):
         """ Validates that the value is a valid string which matches the
@@ -767,7 +767,7 @@ class String ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def info ( self ):
         """ Returns a description of the trait.
@@ -896,7 +896,7 @@ class Callable ( TraitType ):
         if (value is None) or callable( value ):
             return value
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
 #-------------------------------------------------------------------------------
 #  'BaseType' base class:
@@ -912,7 +912,7 @@ class BaseType ( TraitType ):
         if isinstance( value, self.fast_validate[1:] ):
             return value
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
 
 class This ( BaseType ):
@@ -1695,7 +1695,7 @@ class BaseRange ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def int_validate ( self, object, name, value ):
         """ Validate that the value is an int value in the specified range.
@@ -1712,7 +1712,7 @@ class BaseRange ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def long_validate ( self, object, name, value ):
         """ Validate that the value is a long value in the specified range.
@@ -1731,7 +1731,7 @@ class BaseRange ( TraitType ):
         except:
             pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def _get_default_value ( self, object ):
         """ Returns the default value of the range.
@@ -1779,7 +1779,7 @@ class BaseRange ( TraitType ):
             except:
                 pass
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def _typed_value ( self, value, low, high ):
         """ Returns the specified value with the correct type for the current
@@ -1926,7 +1926,7 @@ class BaseEnum ( TraitType ):
         if value in self.values:
             return value
 
-        self.error( object, name, self.repr( value ) )
+        self.error( object, name, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
@@ -1971,7 +1971,7 @@ class BaseEnum ( TraitType ):
         if value in eval( self.values ):
             self.set_value( object, name, value )
         else:    
-            self.error( object, name, self.repr( value ) )
+            self.error( object, name, value )
 
 class Enum ( BaseEnum ):
     """ Defines a trait whose value must be one of a specified set of values

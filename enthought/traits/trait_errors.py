@@ -24,8 +24,25 @@
 
 import exceptions
 
-from trait_base \
-    import class_of
+from types import InstanceType
+
+from trait_base import class_of
+
+
+#-------------------------------------------------------------------------------
+#  Utilities
+#-------------------------------------------------------------------------------
+
+def repr_type(obj):
+    """ Return a string representation of a value and its type for readable
+    error messages.
+    """
+    the_type = type(obj)
+    if the_type is InstanceType:
+        # Old-style class.
+        the_type = obj.__class__
+    msg = '%r %r' % (obj, the_type)
+    return msg
 
 #-------------------------------------------------------------------------------
 #  'TraitError' class:
@@ -72,15 +89,18 @@ class TraitError ( exceptions.Exception ):
 
         # Note: self.args must be a tuple so be sure to leave the trailing
         # commas.
+        the_type = type(self.value)
+        if the_type is InstanceType:
+            the_type = self.value.__class__
         if obj is not None:
-            self.args = ( "%s '%s' trait of %s instance%s must be %s, "
-                          "but a value of %s was specified." % (
-                          self.prefix, self.name, class_of( obj ), extra,
-                          self.info, self.value ) ),
+            self.args = ("%s '%s' trait of %s instance%s must be %s, "
+                         "but a value of %s was specified." % (
+                         self.prefix, self.name, class_of(obj), extra,
+                         self.info, repr_type(self.value))),
         else:
-            self.args = ( "%s '%s' trait%s must be %s, but a value of %s was "
-                          "specified." % ( self.prefix, self.name, extra, 
-                                           self.info, self.value ) ),
+            self.args = ("%s '%s' trait%s must be %s, but a value of %r %r was "
+                         "specified." % (self.prefix, self.name, extra, 
+                                         self.info, repr_type(self.value))),
    
 #-------------------------------------------------------------------------------
 #  'TraitNotificationError' class:
