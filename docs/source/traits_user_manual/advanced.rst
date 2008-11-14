@@ -179,7 +179,8 @@ specifying only the wildcard character for the attribute name::
         bill.age = 'middle age'
       File "c:\wrk\src\lib\enthought\traits\\trait_handlers.py", line 163, in error
         raise TraitError, ( object, name, self.info(), value )
-      TraitError: The 'age' trait of a Person instance must be an integer, but a value of middle age was specified.
+    TraitError: The 'age' trait of a Person instance must be an integer, but a value
+     of 'middle age' <type 'str'> was specified.    
     """
 
 In this case, all Person instance attributes can be created on the fly and are
@@ -522,8 +523,10 @@ This is determined by the CHECK_INTERFACES variable, which can take one of three
 values:
 
 * 0 (default): Does not check whether classes implement their declared interfaces.
-* 1: Verifies that classes implement the interfaces they say they do, and logs a warning if they don't.
-* 2: Verifies that classes implement the interfaces they say they do, and raises an InterfaceError if they don't.
+* 1: Verifies that classes implement the interfaces they say they do, and logs 
+  a warning if they don't.
+* 2: Verifies that classes implement the interfaces they say they do, and raises
+  an InterfaceError if they don't.
 
 The CHECK_INTERFACES variable must be imported directly from the
 enthought.traits.has_traits module::

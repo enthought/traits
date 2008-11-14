@@ -67,12 +67,12 @@ For example::
     >>> joe.weight = 162       # OK to assign an int
     >>> joe.weight = 'average' # Error to assign a string 
     Traceback (most recent call last):
-      File "<stdin>", line 1, in ?
-      File "c:\ src\traits\enthought\traits\trait_handlers.py", line 163, in error
-        raise TraitError, ( object, name, self.info(), 
-    value ) enthought.traits.trait_errors.TraitError: The 'weight' trait of a
-    Person instance must be a value of type 'float', but a value of average 
-    was specified.
+      File "<stdin>", line 1, in <module>
+      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+    in error value )
+    enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person 
+    instance must be a float, but a value of 'average' <type 'str'> was 
+    specified.
 
 In this example, **joe** is an instance of the Person class defined in the 
 previous example. The **joe** object has an instance attribute **weight**, 
@@ -222,11 +222,11 @@ casting traits::
     >>> bill.cweight = 180    # OK, cast to float(180)
     >>> bill.weight  = '180'  # Error, invalid coercion
     Traceback (most recent call last):
-      File "<stdin>", line 1, in ?
-      File "c:\src\traits\enthought\traits\trait_handlers.py", 
-    line 163, in error
-        raise TraitError, ( object, name, self.info(), value )
-    enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person instance must be a value of type 'float', but a value of 180 was specified.
+      File "<stdin>", line 1, in <module>
+      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+    in error value )
+    enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person 
+    instance must be a float, but a value of '180' <type 'str'> was specified.
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print bill.cweight
     180.0
@@ -433,7 +433,7 @@ main reason for providing the This trait.
 
 Note that if a trait attribute is defined using This on one class and is 
 referenced on an instance of a subclass, the This trait verifies values based
-on the class of the instance being referenced. For example::
+on the class on which it was defined. For example::
     
     >>> from enthought.traits.api import HasTraits, This
     >>> class Employee(HasTraits):
@@ -447,15 +447,8 @@ on the class of the instance being referenced. For example::
     >>> # The following is OK, because fred's manager can be an 
     >>> # instance of Employee or any subclass.
     >>> fred.manager = mary 
+    >>> # This is also OK, because mary's manager can be an Employee
     >>> mary.manager = fred 
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in ?
-      File "c:\src\trait\enthought\traits\trait_handlers.py", line 
-    163, in error
-        raise TraitError, ( object, name, self.info(), value ) 
-    enthought.traits.trait_errors.TraitError: The 'manager' trait of an
-    Executive instance must be an instance of the same type as the receiver,
-    but a value of <__main__.Employee object at 0x00994330> was specified.
     
 .. index:: multiple values, defining trait with
 
@@ -496,12 +489,12 @@ it is also a valid value for assignment.
     >>> hats.stock = 4      # Error, value is not in \
     >>>                     # permitted list 
     Traceback (most recent call last):
-      File "<stdin>", line 1, in ?
-      File "c:\src\traits\enthought\traits\trait_handlers.py", line 163, in error
-        raise TraitError, ( object, name, self.info(), value )
-    enthought.traits.trait_errors.TraitError: The 'stock' trait of an 
-    InventoryItem instance must be None or 0 or 1 or 2 or 3 or 'many', 
-    but a value of 4 was specified.
+      File "<stdin>", line 1, in <module>
+      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
+    in error value )
+    enthought.traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type 
+    'int'> was specified.
     
 This example defines an InventoryItem class, with two trait attributes,
 **name**, and **stock**. The name attribute is simply a string. The **stock**
