@@ -273,7 +273,7 @@ HasPrivateTraits.
 .. _hasstricttraits:
 
 HasStrictTraits
-~~~~~~~~~~~~~~~
+'''''''''''''''
 
 This class guarantees that accessing any object attribute that does not have an
 explicit or wildcard trait definition results in an exception. This can be
@@ -307,7 +307,7 @@ structure.
 .. _hasprivatetraits:
 
 HasPrivateTraits
-~~~~~~~~~~~~~~~~
+''''''''''''''''
 
 This class is similar to HasStrictTraits, but allows attributes beginning with
 '_' to have an initial value of None, and to not be type-checked. This is useful
