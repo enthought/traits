@@ -209,6 +209,9 @@ class ToolkitEditorFactory ( EditorFactory ):
         if (low is None) or (high is None):
             return toolkit_object('range_editor:RangeTextEditor')
 
+        if (not is_float) and (abs(high - low) > 1000000000L):
+            return toolkit_object('range_editor:RangeTextEditor')
+
         if self.mode != 'auto':
             return toolkit_object('range_editor:SimpleEditorMap')[ self.mode ]
             
