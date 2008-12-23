@@ -361,6 +361,7 @@ class Toolkit ( HasPrivateTraits ):
         """ Returns a dictionary of useful constants.
         
             Currently, the dictionary should have the following key/value pairs:
+                
             - WindowColor': the standard window background color in the toolkit
               specific color format.
         """

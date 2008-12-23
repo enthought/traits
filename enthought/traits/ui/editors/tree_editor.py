@@ -128,8 +128,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     # * 'appearance': Show lines only when they look good.
     # * 'on': Always show lines.
     # * 'off': Don't show lines.
+    lines_mode = Enum ( 'appearance', 'on', 'off' ) 
     # FIXME: Document as unimplemented or wx specific.
-    lines_mode = Enum ( 'appearance', 'on', 'off' )
+
 
 # Define the TreeEditor class.
 TreeEditor = ToolkitEditorFactory

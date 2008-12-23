@@ -19,14 +19,15 @@ def gen_editor_definitions(target_filename = 'editors.py'):
        various backends.
 
     The idea is that if a new editor has been declared in any of the backends,
-    the author needs to create a file called '***_definition' in the Traits
-    package (in enthought.traits.ui). This function will be run each time the
-    user runs the setup.py file, and the new editor's definition will be 
+    the author needs to create a file called '<myeditor>_definition' in the 
+    Traits package (in enthought.traits.ui). This function will be run each time
+    the user runs the setup.py file, and the new editor's definition will be 
     appended to the editors.py file.
  
-    The structure of the ***_definition file should be as follows:
-    ***_definition = '<file name in the backend package>:
-                     <name of the Editor or the EditorFactory class'
+    The structure of the <myeditor>_definition file should be as follows::
+        
+        myeditor_definition = '<file name in the backend package>:
+                         <name of the Editor or the EditorFactory class'
     """
 
     base_import_path = 'enthought.traits.ui.'

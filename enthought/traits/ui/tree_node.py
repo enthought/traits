@@ -761,12 +761,13 @@ class ITreeNodeAdapter ( Adapter ):
         interface.
         
         Usage:
-        - Create a subclass of ITreeNodeAdapter.
-        - Add an 'adapts( xxx_class, ITreeNode )' declaration (usually placed
-          right after the 'class' statement) to define what class (or classes)
-          this is an ITreeNode adapter for.
-        - Override any of the following methods as necessary, using the
-          'self.adaptee' trait to access the adapted object if needed.
+            
+        1. Create a subclass of ITreeNodeAdapter.
+        2. Add an 'adapts( xxx_class, ITreeNode )' declaration (usually placed
+           right after the 'class' statement) to define what class (or classes)
+           this is an ITreeNode adapter for.
+        3. Override any of the following methods as necessary, using the
+           'self.adaptee' trait to access the adapted object if needed.
           
        Note: This base class implements all of the ITreeNode interface methods,
        but does not necessarily provide useful implementations for all of the

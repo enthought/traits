@@ -149,12 +149,15 @@ class HasUniqueStrings ( HasTraits ):
         
         List traits within the class that contain items which have string traits
         which must be unique should indicate this by attaching metadata of the 
-        form:
+        form::
+            
             unique_string = 'trait1, trait2, ..., traitn'
+            
         where each 'traiti' value is the name of a trait within each list item
         that must contain unique string data.
         
-        For example:
+        For example::
+            
             usa = List( State, unique_string = 'name, abbreviation' )
     """
     

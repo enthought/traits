@@ -707,13 +707,15 @@ def Trait ( *value_type, **metadata ):
     comparison_mode : integer
         Indicates when trait change notifications should be generated based upon
         the result of comparing the old and new values of a trait assignment:
-            0 (NO_COMPARE): The values are not compared and a trait change
-                notification is generated on each assignment.
-            1 (OBJECT_IDENTITY_COMPARE): A trait change notification is 
-                generated if the old and new values are not the same object.
-            2 (RICH_COMPARE): A trait change notification is generated if the
-                old and new values are not equal using Python's
-                'rich comparison' operator. This is the default.
+            
+        * 0 (NO_COMPARE): The values are not compared and a trait change
+          notification is generated on each assignment.
+        * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is 
+          generated if the old and new values are not the same object.
+        * 2 (RICH_COMPARE): A trait change notification is generated if the
+          old and new values are not equal using Python's
+          'rich comparison' operator. This is the default.
+          
     rich_compare : Boolean (DEPRECATED: Use comparison_mode instead)
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple

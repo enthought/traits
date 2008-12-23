@@ -69,10 +69,11 @@ def ColorEditor(*args, **traits):
     cannot be located, an instance of the abstract ToolkitEditorFactory 
     declared in enthought.traits.ui.editors.color_editor is returned.
 
-    Inputs (Optional) 
-    -----------------
-    *args, **traits: arguments and keywords to be passed on to the editor 
-    factory's constructor. 
+    Parameters 
+    ----------
+    \*args, \*\*traits
+        arguments and keywords to be passed on to the editor 
+        factory's constructor. 
     """
     
     try: 
