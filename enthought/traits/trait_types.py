@@ -394,7 +394,7 @@ class BaseUnicode ( TraitType ):
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
-        enter_set = trait.enter_set or False
+        enter_set = self.enter_set or False
 
         return multi_line_text_editor(auto_set, enter_set)
 
