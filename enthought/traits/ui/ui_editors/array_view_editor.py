@@ -26,11 +26,14 @@ from enthought.traits.api \
 from enthought.traits.ui.api \
     import View, Item, TabularEditor, BasicEditorFactory
     
-from enthought.traits.ui.ui_editor \
-    import UIEditor
-    
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
+
+from enthought.traits.ui.toolkit \
+    import toolkit_object
+    
+from enthought.traits.ui.ui_editor \
+    import UIEditor
     
 #-- Tabular Adapter Definition -------------------------------------------------
 
@@ -74,7 +77,8 @@ class ArrayViewAdapter ( TabularAdapter ):
             
         return super( ArrayViewAdapter, self ).len( object, trait )
 
-# Define the actual Traits UI array view editor:        
+# Define the actual abstract Traits UI array view editor (each backend should
+# implement its own editor that inherits from this class.      
 class _ArrayViewEditor ( UIEditor ):
     
     # Indicate that the editor is scrollable/resizable:
@@ -158,7 +162,7 @@ class _ArrayViewEditor ( UIEditor ):
 class ArrayViewEditor ( BasicEditorFactory ):
 
     # The editor implementation class:
-    klass = _ArrayViewEditor
+    klass = Property
     
     # Should an index column be displayed:
     show_index = Bool( True )
@@ -174,4 +178,10 @@ class ArrayViewEditor ( BasicEditorFactory ):
 
     # The font to use for displaying each array element:
     font = Font( 'Courier 10' )
-    
+
+    def _get_klass( self ):
+        """ The class used to construct editor objects.
+        """
+        return toolkit_object('array_view_editor:_ArrayViewEditor')
+
+#--EOF--------------------------------------------------------------------------
