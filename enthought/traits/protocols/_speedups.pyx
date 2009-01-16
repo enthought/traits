@@ -58,7 +58,7 @@ cdef extern from "Python.h":
     object __Pyx_GetExcValue()
 
 cdef object _marker, __conform, __adapt, __mro, __ECType
-from sys import exc_info
+from sys import exc_info, exc_clear
 from adapters import AdaptationFailure
 
 try:
@@ -126,7 +126,7 @@ cdef object _adapt(obj, protocol, default, factory):
     # We use nested 'if' blocks here because using 'and' causes Pyrex to
     # convert the return values to Python ints, and then back to booleans!
 
-    cdef void *tmp
+    cdef object tmp
 
 ### This code is superfluous and actually prevents certain old style code (like
 ### the Python VTK bindings) from working correctly...
@@ -142,35 +142,23 @@ cdef object _adapt(obj, protocol, default, factory):
     if PyObject_IsInstance(obj,protocol):
         return obj
 
-    tmp = PyObject_GetAttr(obj, __conform)
-    if tmp:
-        meth = <object> tmp
-        Py_DECREF(<PyObject *>tmp)
+    try:
+        meth = getattr(obj, __conform)
         try:
             result = meth(protocol)
             if result is not None:
                 return result
-        except TypeError:
+        except TypeError, e:
             if exc_info()[2].tb_next is not None:
                 raise
-    elif PyErr_ExceptionMatches(PyExc_AttributeError):
-        PyErr_Clear()
-    else:
-        err = __Pyx_GetExcValue()
-        raise
+    except AttributeError, e:
+        # Call exc_clear() instead of PyErr_Clear to make sure that the
+        # sys.exc_* objects are also removed. This has caused some frames to
+        # live too long.
+        exc_clear()
 
-
-
-
-
-
-
-
-
-    tmp = PyObject_GetAttr(protocol, __adapt)
-    if tmp:
-        meth = <object> tmp
-        Py_DECREF(<PyObject *>tmp)
+    try:
+        meth = getattr(protocol, __adapt)
         try:
             result = meth(obj)
             if result is not None:
@@ -178,11 +166,8 @@ cdef object _adapt(obj, protocol, default, factory):
         except TypeError:
             if exc_info()[2].tb_next is not None:
                 raise
-    elif PyErr_ExceptionMatches(PyExc_AttributeError):
-        PyErr_Clear()
-    else:
-        err = __Pyx_GetExcValue()
-        raise
+    except AttributeError, e:
+        exc_clear()
 
     if default is _marker:
         if factory is not _marker:
@@ -299,69 +284,38 @@ def Protocol__adapt__(self, obj):
         cls = <object> ((<PyInstanceObject *>obj).in_class)
     else:
         # We use __class__ instead of type to support proxies
-        tmp = PyObject_GetAttr(obj, __class)
-
-        if tmp:
-            cls = <object> tmp
-            Py_DECREF(<PyObject *>tmp)
-
-        elif PyErr_ExceptionMatches(PyExc_AttributeError):
+        try:
+            cls = getattr(obj, __class)
+        except AttributeError:
             # Some object have no __class__; use their type
-            PyErr_Clear()
             cls = <object> (<PyObject *>obj).ob_type
 
-        else:
-            # Some other error, pass it on up the line
-            err = __Pyx_GetExcValue()
-            raise
-
-    tmp = <void *>0
-
+    mro = None
     if PyType_Check(cls):
         # It's a type, we can use its mro directly
-        tmp = <void *> ((<PyTypeObject *>cls).tp_mro)
+        tmp = <void*>((<PyTypeObject *>cls).tp_mro)
+        if tmp != NULL:
+            mro = <object>tmp
 
+    if mro is None:
+        if PyClass_Check(cls):
+            # It's a classic class, build up its MRO
+            mro = []
+            buildClassicMRO(<PyClassObject *>cls, <PyListObject *>mro)
+            PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
+            PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)
 
-
-
-
-
-
-
-
-
-
-    if tmp:
-        mro = <object> tmp
-
-    elif PyClass_Check(cls):
-        # It's a classic class, build up its MRO
-        mro = []
-        buildClassicMRO(<PyClassObject *>cls, <PyListObject *>mro)
-        PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
-        PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)
-
-    else:
-        # Fallback to getting __mro__ (for e.g. security proxies/ExtensionClass)
-        tmp = PyObject_GetAttr(cls, __mro)
-        if tmp:
-            mro = <object> tmp
-            Py_DECREF(<PyObject *>tmp)
-
-        # No __mro__?  Is it an ExtensionClass?
-        elif PyObject_TypeCheck(cls,__ECType):
-            # Yep, toss out the error and compute a reasonable MRO
-            PyErr_Clear()
-            mro = extClassMRO(cls, 1)
-
-        # Okay, we give up...  reraise the error so somebody smarter than us
-        # can figure it out.  :(
         else:
-            err = __Pyx_GetExcValue()
-            raise
-
-
-
+            # Fallback to getting __mro__ (for e.g. security proxies/ExtensionClass)
+            try:
+                mro = getattr(cls, __mro)
+            except Exception:
+                # No __mro__?  Is it an ExtensionClass?
+                if PyObject_TypeCheck(cls,__ECType):
+                    # Yep, toss out the error and compute a reasonable MRO
+                    mro = extClassMRO(cls, 1)
+                else:
+                    raise
 
 
 
