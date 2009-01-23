@@ -30,6 +30,9 @@ from enthought.traits.ui.ui_traits \
     
 from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
+
+from enthought.traits.ui.toolkit \
+    import toolkit_object
                      
 #-------------------------------------------------------------------------------
 #  Create the editor factory object:
