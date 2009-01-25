@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Demonstrates using a TabularEditor with the 'auto_update' feature enabled, which
 allows the tabular editor to automatically update itself when the content of

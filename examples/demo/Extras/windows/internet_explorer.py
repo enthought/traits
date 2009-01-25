@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ Demo showing how to use the Windows specific Internet Explorer editor.
 """
 

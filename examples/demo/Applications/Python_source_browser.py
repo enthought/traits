@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This demo shows a combination of the <b>DirectoryEditor</b>, the 
 <b>TabularEditor</b> and the <b>CodeEditor</b> used to create a simple Python 

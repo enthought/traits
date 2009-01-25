@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This program demonstrates adding and using a statusbar in a Traits UI window.
 

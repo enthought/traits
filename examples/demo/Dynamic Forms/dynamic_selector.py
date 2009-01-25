@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Demo to redefine legal values of one attribute based on another via GUI.
 

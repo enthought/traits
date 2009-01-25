@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 #--(Creating New Trait Types)---------------------------------------------------
 """
 Creating New Trait Types

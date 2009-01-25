@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This demo shows the proper way to create a <b>Property</b> whose value is a 
 list, especially when the value of the <b>Property</b> will be used in a user

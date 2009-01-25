@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # array_editor.py -- Example of using array editors
 
 #--[Imports]--------------------------------------------------------------------

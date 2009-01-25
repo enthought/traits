@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 The example demonstrates how to create a 'settable cached' property. The example
 itself is nonsensical, and is provided mainly to show how to set up such a 

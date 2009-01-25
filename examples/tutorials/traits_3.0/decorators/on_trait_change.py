@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 #--(on_trait_change Decorator)--------------------------------------------------
 """
 on_trait_change Decorator

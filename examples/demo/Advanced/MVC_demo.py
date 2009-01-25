@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ 
 Demonstrates one possible approach to writing Model/View/Controller
 (i.e. MVC) based applications using Traits.

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # trait_subclass.py -- Example of subclassing a trait class
 
 #--[Imports]--------------------------------------------------------------------

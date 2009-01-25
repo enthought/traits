@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Implementation of a TupleEditor demo plugin for Traits UI demo program.
 

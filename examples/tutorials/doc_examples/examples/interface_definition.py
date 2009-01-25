@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # interface_definition.py - Example of defining an interface
 
 #--[Imports]--------------------------------------------------------------------

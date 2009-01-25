@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This demo shows you how to use animated GIF files in a traits user interface.
 """

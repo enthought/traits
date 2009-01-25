@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Simple demonstration of the ListStrEditor, which can be used for editing and
 displaying lists of strings, or other data that can be logically mapped to a 

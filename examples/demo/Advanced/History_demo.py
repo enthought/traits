@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This program demonstrates the use of editors that support <i>history</i>. A 
 history is a persistent record of the last 'n' values the user has entered or 

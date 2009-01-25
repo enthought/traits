@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # handler_override.py -- Example of a Handler that overrides setattr(), and
 #                        that has a user interface notification method
 

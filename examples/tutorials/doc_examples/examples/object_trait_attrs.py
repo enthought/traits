@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # object_trait_attrs.py --- Example of per-object trait attributes
 
 #--[Imports]--------------------------------------------------------------------

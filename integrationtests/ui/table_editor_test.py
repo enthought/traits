@@ -7,6 +7,8 @@
 #  Date: 07/05/2005
 #    
 #  (c) Copyright 2005 by Enthought, Inc.  
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
 #    
 #-------------------------------------------------------------------------------
 

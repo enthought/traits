@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 A mock application that demonstrates several advanced Traits UI techniques.
 

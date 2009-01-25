@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 #--(on_trait_change Method Enhancements)----------------------------------------
 """
 on_trait_change Method Enhancements

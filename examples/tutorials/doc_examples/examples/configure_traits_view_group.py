@@ -1,3 +1,7 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
+
 # configure_traits_view_group.py -- Sample code to demonstrate configure_traits()
 
 #--[Imports]--------------------------------------------------------------------

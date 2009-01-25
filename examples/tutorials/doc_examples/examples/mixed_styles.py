@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # mixed_styles.py -- Example of using editor styles at various levels
 
 #--[Imports]--------------------------------------------------------------------

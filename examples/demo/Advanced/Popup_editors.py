@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This example demonstrates how to create a user interface with fields that when
 you click on them pop up an editor that allows you to modify the associated

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ 
 Demo of dynamic enabling and disabling of trait editors in an interface.
 

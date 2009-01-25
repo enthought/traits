@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # trait_reuse.py --- Example of reusing trait definitions
 
 #--[Imports]--------------------------------------------------------------------

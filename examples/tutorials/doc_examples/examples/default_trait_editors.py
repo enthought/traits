@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # default_trait_editors.py -- Example of using default trait editors
 
 #--[Imports]--------------------------------------------------------------------

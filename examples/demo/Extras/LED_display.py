@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This demo illustrates use of the LEDEditor for displaying numeric values 
 using a simulated LED display control.

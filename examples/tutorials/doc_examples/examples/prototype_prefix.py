@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
 #--[Imports]--------------------------------------------------------------------

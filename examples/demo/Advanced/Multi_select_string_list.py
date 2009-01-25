@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 A demo showing how to use a TabularEditor to create a multi-select list box.
 """

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 #--(Extended Property depends_on References)------------------------------------
 """
 Extended Property *depends_on* References

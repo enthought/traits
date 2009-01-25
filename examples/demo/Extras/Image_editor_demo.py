@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ 
 A simple demonstration of how to use the ImageEditor to add a graphic element
 to a Traits UI View.

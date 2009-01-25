@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This example demonstrates several different variations on using the 
 ScrubberEditor. A 'scrubber' is a type of widget often seen in certain types

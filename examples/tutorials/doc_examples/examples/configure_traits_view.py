@@ -1,4 +1,9 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
+
 # configure_traits_view.py -- Sample code to demonstrate configure_traits()
+
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Str, Int

@@ -1,3 +1,5 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
 
 
 from enthought.traits.api import HasTraits, Str, List

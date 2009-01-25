@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # multiple_views.py -- Sample code to demonstrate the use of multiple views
 
 #--[Imports]--------------------------------------------------------------------

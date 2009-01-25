@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # metadata.py --- Example of accessing trait metadata attributes
 
 #--[Imports]--------------------------------------------------------------------

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # bad_self_ref.py -- Non-working example with self-referencing class definition
 
 #--[Imports]--------------------------------------------------------------------

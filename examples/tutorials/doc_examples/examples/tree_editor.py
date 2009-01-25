@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # tree_editor.py -- Example of a tree editor
 
 #--[Imports]--------------------------------------------------------------------

@@ -1,3 +1,6 @@
+#  Copyright (c) 2008, Enthought, Inc.
+#  License: BSD Style.
+
 # Function to convert simple ETS project names and versions to a requirements
 # spec that works for both development builds and stable builds.  Allows
 # a caller to specify a max version, which is intended to work along with

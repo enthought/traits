@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Sometimes the inputs to a model are not correlated. That is, any valid model
 input produces a corresponding valid model state. However, in other cases, some

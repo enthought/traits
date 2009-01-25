@@ -1,3 +1,7 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
+
 # adapt_metadata.py - Example of using 'adapt' metadata
 
 #--[Imports]--------------------------------------------------------------------

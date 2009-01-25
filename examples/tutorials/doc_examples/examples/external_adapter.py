@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # external_adapter.py - Example of declaring a class as an adapter 
 #                       externally to the class
 

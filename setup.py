@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
 # Copyright (c) 2008 by Enthought, Inc.
+#  License: BSD Style.
 # All rights reserved.
 #
 
@@ -51,11 +52,9 @@ Traits:
 * `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_"""
 
 
-import os, zipfile
 from setuptools import setup, Extension, find_packages
 from setuptools.command.develop import develop
 from distutils.command.build import build as distbuild
-from distutils import log
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
 # from incorrect packages. Ticket #1592

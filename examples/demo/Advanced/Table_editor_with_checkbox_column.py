@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This shows a table editor which has a checkbox column in addition to normal
 data columns.

@@ -1,3 +1,7 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
+
 # wildcard_all.py --- Example of using a wildcard with all trait
 #                     attribute names
 from enthought.traits.api import HasTraits, Any

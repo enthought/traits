@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # default_traits_view.py -- Sample code to demonstrate the use of 'traits_view'
 
 #--[Imports]--------------------------------------------------------------------

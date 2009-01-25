@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This shows how the currently active notebook tab of a ListEditor can be
 controlled using the ListEditor's 'selected' trait.

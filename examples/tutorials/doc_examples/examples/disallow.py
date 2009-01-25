@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # disallow.py --- Example of using Disallow with wildcards
 
 #--[Imports]--------------------------------------------------------------------

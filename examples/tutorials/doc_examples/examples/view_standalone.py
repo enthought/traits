@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # view_standalone.py --- Example of a view as a 
 #                        standalone object
 import wx

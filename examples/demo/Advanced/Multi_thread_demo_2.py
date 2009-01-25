@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This demo shows a simple user interface being updated by a dynamic number of
 threads.

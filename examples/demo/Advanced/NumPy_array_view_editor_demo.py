@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 A demonstration of how the ArrayViewEditor can be used to display (large) NumPy
 arrays, in this case 100,000 random 3D points from a unit cube.

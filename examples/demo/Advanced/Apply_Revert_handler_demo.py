@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This program demonstrates hows how to add an event handler which performs an
 action when the 'Apply' or 'Revert' buttons are pressed.

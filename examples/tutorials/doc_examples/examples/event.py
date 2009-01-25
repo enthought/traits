@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # event.py --- Example of a trait event
 
 #--<Imports>--------------------------------------------------------------------
@@ -15,8 +18,8 @@ class Line2D(HasTraits):
     def redraw():
         pass # Not implemented for this example
 
-    def _points_changed():
+    def _points_changed(self):
         self.updated = True
 
-    def _updated_fired():
+    def _updated_fired(self):
         self.redraw()

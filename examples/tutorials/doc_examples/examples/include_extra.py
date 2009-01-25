@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # include_extra.py --- Example of Include object
 #                      provided for subclasses
 from enthought.traits.api import HasTraits, Int, Str, Trait

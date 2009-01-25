@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 #--(Extended Traits UI Item and Editor References)------------------------------
 """
 Extended Traits UI Item and Editor References

@@ -1,8 +1,11 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # enum_editor.py -- Example of using an enumeration editor
 
 #--[Imports]--------------------------------------------------------------------
 from enthought.traits.api import HasTraits, Enum
-from enthought.traits.ui.api import EnumEditor
+from enthought.traits.ui.api import EnumEditor, View, Item
 
 #--[Code]-----------------------------------------------------------------------
 

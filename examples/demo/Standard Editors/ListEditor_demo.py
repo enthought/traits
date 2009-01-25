@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Implemention of a ListEditor demo plugin for Traits UI demo program
 

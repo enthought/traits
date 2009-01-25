@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # instance_editor_selection.py -- Example of an instance editor with 
 #                                 instance selection
 

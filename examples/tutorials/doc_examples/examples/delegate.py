@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # delegate.py --- Example of trait delegation
 
 #--[Imports]--------------------------------------------------------------------

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Demonstrates how to set up a range-based trait whose high and low range end
 values can be modified at run-time.

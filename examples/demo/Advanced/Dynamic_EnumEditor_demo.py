@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ 
 Demonstrates how to set up an EnumEditor that is updated dynamically.
 

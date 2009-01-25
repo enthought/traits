@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # multi_object_view.py -- Sample code to show multi-object view with context
 
 #--[Imports]--------------------------------------------------------------------

@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 from enthought.traits.api import HasTraits, Float, List
 from enthought.traits.ui.api import View, Item, RangeEditor
 

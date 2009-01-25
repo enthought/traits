@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 This example demonstrates how to implement 'live search' using a TableEditor,
 as well as how to embed more sophisticated editors, such as a CodeEditor, within

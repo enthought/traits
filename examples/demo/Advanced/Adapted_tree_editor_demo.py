@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """ 
 Demonstrates an alternative method of defining a <b>TreeEditor</b> by creating
 <b>ITreeNodeAdapter</b> subclasses.

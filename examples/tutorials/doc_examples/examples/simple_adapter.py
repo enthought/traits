@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # simple_adapter.py - Example of adaptation using Adapter
 
 #--[Imports]--------------------------------------------------------------------

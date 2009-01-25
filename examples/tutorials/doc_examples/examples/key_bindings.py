@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # key_bindings.py -- Example of a code editor with a key bindings editor
 
 #--[Imports]--------------------------------------------------------------------

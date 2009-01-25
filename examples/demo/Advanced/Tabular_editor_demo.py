@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 A tabular editor demo based on the Person/Married Person example in the main
 Traits UI Tabular Editor tutorial.

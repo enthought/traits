@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # view_multi_object.py --- Example of a view for 
 #                          editing multiple objects
 import wx

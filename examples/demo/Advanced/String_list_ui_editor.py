@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Another demo showing how to use a TabularEditor to create a multi-select list 
 box. This demo creates a reusable StringListEditor class and uses that instead 

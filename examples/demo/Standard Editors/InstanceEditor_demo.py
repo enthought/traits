@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 """
 Implementation of an InstanceEditor demo plugin for the Traits UI demo program.
 

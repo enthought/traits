@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # traitprefixmap.py --- Example of using the TraitPrefixMap handler
 
 #--[Imports]--------------------------------------------------------------------

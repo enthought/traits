@@ -1,3 +1,6 @@
+#  Copyright (c) 2007, Enthought, Inc.
+#  License: BSD Style.
+
 # transient_metadata.py - Example of using 'transient' metadata
 
 #--[Imports]--------------------------------------------------------------------
