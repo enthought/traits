@@ -33,7 +33,7 @@ def convert_to_color ( object, name, value ):
     """ Converts a number into a wxColour object.
     """
     if type( value ) is int:
-        return num & 0xFFFFFF
+        return value & 0xFFFFFF
     raise TraitError
 
 convert_to_color.info = ('an integer which in hex is of the form 0xRRGGBB, '
