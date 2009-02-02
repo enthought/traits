@@ -68,13 +68,20 @@ def parse_source ( file_name ):
         fh.close()
     
         # Extract out the module comment as the description:
+        # FIXME: This isn't ideal: it will retrieve the first docstring found
+        # which might not be for the module as a whole. This needs to be
+        # improved later. For now, we want to make sure we catch docstrings
+        # even if there are comments etc. prior to them.
         comment = ''
-        quotes  = source[:3]
-        if (quotes == '"""') or (quotes == "'''"):
-            col = source.find( quotes, 3 )
-            if col >= 0:
-                comment = source[ 3: col ]
-                source  = source[ col + 3: ].strip()
+        quotes_styles = ["'''", '"""']
+        for quotes in quotes_styles:
+            start_index = source.find(quotes)
+            if start_index >= 0:
+                col = source.find( quotes, start_index + 3 )
+                if col >= 0:
+                    comment = source[ start_index + 3: col ]
+                    source  = source[: start_index].strip() + source[ col + 3: ].strip()
+                break 
                 
         return ( comment, source )
         
@@ -109,11 +116,17 @@ class DemoFileHandler ( Handler ):
         
         # Read in the demo source file:
         df.description, df.source = parse_source( df.path )
-        
         # Try to run the demo source file:
+
+        # Append the path for the demo source file to sys.path, so as to
+        # resolve any local (relative) imports in the demo source file.
+        sys.path.append(dirname(df.path))
+
         locals = df.parent.init_dic
         locals[ '__name__' ] = '___main___'
+        locals['__file__'] = df.path
         sys.modules[ '__main__' ].__file__ = df.path
+
         try:
             execfile( df.path, locals, locals )
             demo = self._get_object( 'modal_popup', locals )
@@ -127,7 +140,10 @@ class DemoFileHandler ( Handler ):
                     demo = self._get_object( 'demo', locals )
         except Exception, excp:
             demo = DemoError( msg = str( excp ) )
-            
+
+        # Clean up sys.path
+        sys.path.remove(dirname(df.path))
+        
         df.demo = demo
   
     #---------------------------------------------------------------------------
@@ -454,7 +470,6 @@ class DemoPath ( DemoTreeNodeObject ):
         init_dic = {}
         description, source = parse_source( join( self.path, '__init__.py' ) )
         exec (exec_str + source) in init_dic
-        
         return init_dic
         
         # fixme: The following code should work, but doesn't, so we use the
@@ -664,9 +679,9 @@ class Demo ( HasPrivateTraits ):
 #  Function to run the demo:
 #-------------------------------------------------------------------------------
         
-def demo ( ):
+def demo ( use_files=False ):
     path, name = split( dirname( abspath( sys.argv[0] ) ) )
     Demo( path = path, 
-          root = DemoPath( name = name, use_files = False )
+          root = DemoPath( name = name, use_files = use_files )
     ).configure_traits() 
     
