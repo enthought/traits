@@ -63,7 +63,7 @@ The following code generates the editors shown in Figure 21.
 
     # array_editor.py -- Example of using array editors
     
-    from enthought.util.numerix import Int, Float
+    import numpy as np
     from enthought.traits.api import HasPrivateTraits, Array
     from enthought.traits.ui.api \
         import View, ArrayEditor, Item
@@ -71,8 +71,8 @@ The following code generates the editors shown in Figure 21.
         
     class ArrayEditorTest ( HasPrivateTraits ):
             
-        three = Array(Int, (3,3))
-        four  = Array(Float, 
+        three = Array(np.int, (3,3))
+        four  = Array(np.float, 
                       (4,4), 
                       editor = ArrayEditor(width = -50))
             

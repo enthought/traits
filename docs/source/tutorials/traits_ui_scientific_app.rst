@@ -145,6 +145,7 @@ This code creates a *Point* class. Points objects can be created as
 
     .. code-block:: python
 
+            >>> from numpy import pi
             >>> p = Point()
             >>> p.x = 1
             >>> p.rotate_z(pi)
@@ -438,7 +439,7 @@ duplicated to output.
         EchoBox().configure_traits()
 
 
-Event that do not correspond to a modification of an attribute can be
+Events that do not correspond to a modification of an attribute can be
 generated with a *Button* traits. The callback is then called
 *_foo_fired()*.
 Here is an example of an interactive `traitsUI` application using a
