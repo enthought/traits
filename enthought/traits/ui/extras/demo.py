@@ -23,10 +23,12 @@
 #-------------------------------------------------------------------------------
 
 import sys
+import glob
+from configobj import ConfigObj
 
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Str, Instance, Property, Any, \
-           Code, HTML, true, false
+           Code, HTML, true, false, cached_property, Dict
            
 from enthought.traits.ui.api \
     import TreeEditor, ObjectTreeNode, TreeNodeObject, View, Item, VSplit, \
@@ -37,7 +39,7 @@ from os \
     import listdir
     
 from os.path \
-    import join, isdir, split, splitext, dirname, abspath
+    import join, isdir, split, splitext, dirname, basename, abspath, exists
     
 #-------------------------------------------------------------------------------
 #  Global data:  
@@ -368,6 +370,7 @@ class DemoFile ( DemoTreeNodeObject ):
     # Log of all print messages displayed:
     log = Code
     
+    _nice_name = Str
     #---------------------------------------------------------------------------
     #  Implementation of the 'path' property:  
     #---------------------------------------------------------------------------
@@ -378,10 +381,17 @@ class DemoFile ( DemoTreeNodeObject ):
     #---------------------------------------------------------------------------
     #  Implementation of the 'nice_name' property:  
     #---------------------------------------------------------------------------
-                
+    
     def _get_nice_name ( self ):
-        return user_name_for( self.name )
-        
+        if not self._nice_name:
+            self._nice_name = user_name_for( self.name )
+        return self._nice_name
+    
+    def _set_nice_name(self, value):
+        old = self.nice_name
+        self._nice_name = value
+        self.trait_property_changed('nice_name', old, value)
+    
     #---------------------------------------------------------------------------
     #  Returns whether or not the object has children:  
     #---------------------------------------------------------------------------
@@ -428,6 +438,16 @@ class DemoPath ( DemoTreeNodeObject ):
     # Paths do allow children:
     allows_children = true
     
+    # Configuration dictionary for this node
+    # This trait is set when a config file exists for the parent of this path.
+    config_dict = Dict
+    
+    # Configuration file for this node.
+    config_filename = Str
+    
+    # Cached value of the nice_name property.
+    _nice_name = Str
+    
     #---------------------------------------------------------------------------
     #  Implementation of the 'path' property:  
     #---------------------------------------------------------------------------
@@ -438,9 +458,20 @@ class DemoPath ( DemoTreeNodeObject ):
     #---------------------------------------------------------------------------
     #  Implementation of the 'nice_name' property:  
     #---------------------------------------------------------------------------
-                
+    
     def _get_nice_name ( self ):
-        return user_name_for( self.name )
+        if not self._nice_name:
+            self._nice_name = user_name_for( self.name )
+        return self._nice_name
+        
+    #---------------------------------------------------------------------------
+    #  Setter for the 'nice_name' property:  
+    #---------------------------------------------------------------------------
+    
+    def _set_nice_name(self, value):
+        old = self.nice_name
+        self._nice_name = value
+        self.trait_property_changed('nice_name', old, value)
         
     #---------------------------------------------------------------------------
     #  Implementation of the 'description' property:  
@@ -525,6 +556,19 @@ class DemoPath ( DemoTreeNodeObject ):
     def get_children ( self ):
         """ Gets the object's children.
         """
+        if self.config_dict or self.config_filename:
+            children = self.get_children_from_config()
+        else:
+            children = self.get_children_from_datastructure()
+        return children
+    
+    #---------------------------------------------------------------------------
+    #  Gets the object's children based on the filesystem structure.
+    #---------------------------------------------------------------------------
+    def get_children_from_datastructure( self ):
+        """ Gets the object's children based on the filesystem structure.
+        """    
+        
         dirs  = []
         files = []
         path  = self.path
@@ -542,6 +586,64 @@ class DemoPath ( DemoTreeNodeObject ):
         dirs.sort(  lambda l, r: cmp( l.name, r.name ) )
         files.sort( lambda l, r: cmp( l.name, r.name ) )
         
+        return (dirs + files)
+        
+    #---------------------------------------------------------------------------
+    # Gets the object's children as specified in its configuration file or 
+    # dictionary.  
+    #---------------------------------------------------------------------------
+
+    def get_children_from_config( self ):
+        """
+        Gets the object's children as specified in its configuration file or 
+        dictionary.
+        """
+        
+        if not self.config_dict:
+            if exists(self.config_filename):
+                try:
+                    self.config_dict = ConfigObj(self.config_filename)
+                except:
+                    pass
+        if not self.config_dict:
+            return self.get_children_from_datastructure()
+        
+        dirs = []
+        files = []
+        for keyword, value in self.config_dict.items():
+            if not value.get('no_demo'):
+                sourcedir = value.pop('sourcedir', None)
+                if sourcedir is not None:
+                    # This is a demo directory.
+                    demoobj = DemoPath( parent = self, name = sourcedir )
+                    demoobj.nice_name = keyword
+                    demoobj.config_dict = value
+                    dirs.append(demoobj)
+                else:
+                    names = []
+                    filenames = value.pop('files', [])
+                    if not isinstance(filenames, list):
+                        filenames = [filenames]
+                    for filename in filenames:
+                        filename = join(self.path, filename)
+                        for name in glob.iglob(filename):
+                            pathname, ext = splitext(name)
+                            if (ext == '.py') and \
+                                (basename(pathname) != '__init__'):
+                                names.append(pathname)
+                    if len(names) > 1:
+                        config_dict = {}
+                        for name in names:
+                            config_dict[basename(name)] = {'files': 
+                                                           name + '.py'}
+                        demoobj = DemoPath( parent = self, name = '')
+                        demoobj.nice_name = keyword
+                        demoobj.config_dict = config_dict
+                        dirs.append(demoobj)
+                    elif len(names) == 1:
+                        file = DemoFile(parent=self, name=names[0])
+                        file.nice_name = keyword
+                        files.append(file)
         return (dirs + files)
         
     #---------------------------------------------------------------------------
@@ -679,9 +781,11 @@ class Demo ( HasPrivateTraits ):
 #  Function to run the demo:
 #-------------------------------------------------------------------------------
         
-def demo ( use_files=False ):
+def demo ( use_files=False, config_filename = '' ):
     path, name = split( dirname( abspath( sys.argv[0] ) ) )
     Demo( path = path, 
-          root = DemoPath( name = name, use_files = use_files )
+          root = DemoPath( name = name, 
+                           use_files = use_files,
+                           config_filename = config_filename )
     ).configure_traits() 
     
