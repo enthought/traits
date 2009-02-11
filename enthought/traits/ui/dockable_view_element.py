@@ -140,11 +140,20 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
             # If not, tell the DockWindow not to close it:
             return False
     
+        # FIXME:  'Undock' feature tries to rebuild the new UI, but 
+        # the DockControl has already deleted the old UI.  By not 
+        # deleting the UI, the failed rebuild is skipped.  But is 
+        # likely creating side effects for other features when the 
+        # old UI is being left around.
+        # 
+        # We need to fix it so that the old UI can still be deleted, 
+        # and a new UI rebuilt.
+        
         # Otherwise, clean up and close the traits UI:
-        ui.dispose( abort = abort )
+        # ui.dispose( abort = abort )
         
         # Break our linkage to the UI and ViewElement object:
-        self.ui = self.element = None
+        # self.ui = self.element = None
 
         # And tell the DockWindow to remove the DockControl:
         return True
