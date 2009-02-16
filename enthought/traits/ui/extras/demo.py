@@ -39,7 +39,7 @@ from os \
     import listdir
     
 from os.path \
-    import join, isdir, split, splitext, dirname, basename, abspath, exists
+    import join, isdir, split, splitext, dirname, basename, abspath, exists, isabs
     
 #-------------------------------------------------------------------------------
 #  Global data:  
@@ -248,8 +248,8 @@ class DemoButton ( HasPrivateTraits ):
             )
         ),
         resizable = True
-    ) 
-                        
+    )
+                   
 #-------------------------------------------------------------------------------
 #  'ModalDemoButton' class:  
 #-------------------------------------------------------------------------------
@@ -644,6 +644,10 @@ class DemoPath ( DemoTreeNodeObject ):
                         file = DemoFile(parent=self, name=names[0])
                         file.nice_name = keyword
                         files.append(file)
+                    
+        dirs.sort( lambda l, r: cmp( l.nice_name, r.nice_name ) )
+        files.sort( lambda l, r: cmp( l.nice_name, r.nice_name ) )
+        
         return (dirs + files)
         
     #---------------------------------------------------------------------------
@@ -783,6 +787,8 @@ class Demo ( HasPrivateTraits ):
         
 def demo ( use_files=False, config_filename = '' ):
     path, name = split( dirname( abspath( sys.argv[0] ) ) )
+    if len(config_filename) > 0 and not isabs(config_filename):
+        config_filename = join(path, name, config_filename)
     Demo( path = path, 
           root = DemoPath( name = name, 
                            use_files = use_files,
