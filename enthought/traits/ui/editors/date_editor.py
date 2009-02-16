@@ -20,26 +20,21 @@ A Traits UI editor that wraps a WX calendar panel.
 import datetime
 
 from enthought.traits.traits import Property
-from enthought.traits.ui.basic_editor_factory import BasicEditorFactory
+from enthought.traits.ui.editor_factory import EditorFactory
 from enthought.traits.ui.toolkit import toolkit_object   
 
 
 #-- DateEditor definition ----------------------------------------------------- 
-class DateEditor ( BasicEditorFactory ):
+class DateEditor ( EditorFactory ):
     """
-    Editor factory for date/time editors.  Generates _DateEditor()s.
+    Editor factory for date/time editors. 
     """
 
-    # The editor class to be created:
-    klass = Property
-    
     #---------------------------------------------------------------------------
-    #  Property getters
+    #  Trait definitions:  
     #---------------------------------------------------------------------------
-    def _get_klass(self):
-        """ Returns the editor class to be created.
-        """
-        return toolkit_object('date_editor:_DateEditor')
+    # TODO: Placeholder for date-editor-specific traits.
+    pass
 #-- end DateEditor definition ------------------------------------------------- 
 
 
