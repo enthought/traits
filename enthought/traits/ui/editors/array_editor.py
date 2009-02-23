@@ -188,22 +188,25 @@ class ArrayStructure ( HasTraits ):
     def _field_changed ( self ):
         """ Updates the underlying array when any field changes value.
         """
-        # Get the array we are mirroring:
-        object = self.editor.value
-        shape  = object.shape
-        value  = numpy.zeros( shape, object.dtype )
         
-        # 1D
-        if len( shape ) == 1:
-            for i in range( shape[0] ):
-                value[i] = getattr( self, 'f%d' % i )
-        # 2D
-        elif len( shape ) == 2:
-            for i in range( shape[0] ):
-                for j in range( shape[1] ):
-                    value[i,j] = getattr( self, 'f%d_%d' % ( i, j ) )
-                     
-        self.editor.update_array( value )
+        if not self.editor._busy:
+            # Get the array we are mirroring:
+            object = self.editor.value
+            shape  = object.shape
+            value  = numpy.zeros( shape, object.dtype )
+            
+            # 1D
+            if len( shape ) == 1:
+                for i in range( shape[0] ):
+                    value[i] = getattr( self, 'f%d' % i )
+            # 2D
+            elif len( shape ) == 2:
+                for i in range( shape[0] ):
+                    for j in range( shape[1] ):
+                        value[i,j] = getattr( self, 'f%d_%d' % ( i, j ) )
+            
+            self.editor.update_array( value )
+            
         
 
 #-------------------------------------------------------------------------------
@@ -243,7 +246,9 @@ class SimpleEditor ( Editor ):
         """ Updates the editor when the object trait changes externally to the 
             editor.
         """
+        
         if not self._busy:
+            self._busy = True
             object = self.value
             shape  = object.shape
             _as    = self._as
@@ -257,6 +262,8 @@ class SimpleEditor ( Editor ):
                 for i in range( shape[0] ):
                     for j in range( shape[1] ):
                         setattr( _as, 'f%d_%d' % ( i, j ), object[i,j] )
+                        
+            self._busy=False
                 
     #---------------------------------------------------------------------------
     #  Updates the array value associated with the editor:  
