@@ -8,6 +8,8 @@ class Point(object):
 
     def rotate_z(self, theta):
         """ rotate the point around the Z axis """
-        self.x =  cos(theta) * self.x + sin(theta) * self.y
-        self.y = -sin(theta) * self.x + cos(theta) * self.y
+        xtemp =  cos(theta) * self.x + sin(theta) * self.y
+        ytemp = -sin(theta) * self.x + cos(theta) * self.y
+        self.x = xtemp
+        self.y = ytemp
         
