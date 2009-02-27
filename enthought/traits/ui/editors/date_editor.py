@@ -36,6 +36,7 @@ class DateEditor ( EditorFactory ):
     #---------------------------------------------------------------------------
     
     # Custom date editors can operate on a list of Dates, or just one.
+    # FIXME: This value doesn't get connected with the CustomEditor.
     multi_select = Bool(True)
 #-- end DateEditor definition ------------------------------------------------- 
 
