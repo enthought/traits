@@ -32,6 +32,8 @@ class DateEditor ( EditorFactory ):
     #---------------------------------------------------------------------------
     
     # Is multiselect enabled for a CustomEditor?
+    # If True, then the edited object must be a Date.  If False, then it's
+    # a List of Dates.
     multi_select = Bool(False)
     
     # Should users be able to pick future dates when using the CustomEditor?
