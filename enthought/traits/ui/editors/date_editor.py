@@ -34,6 +34,9 @@ class DateEditor ( EditorFactory ):
     # Is multiselect enabled for a CustomEditor?
     multi_select = Bool(False)
     
+    # Should users be able to pick future dates when using the CustomEditor?
+    allow_future = Bool(True)
+    
 #-- end DateEditor definition ------------------------------------------------- 
 
 
