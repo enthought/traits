@@ -83,7 +83,21 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
         group      = Group().set( content = [ element ] )
         self._view = View().set( **self.ui.view.get() ).set( content = group,
                                                              title   = '' )
-                                                        
+        
+        # FIXME: The following private traits are being set here to facilitate
+        # rebuilding the ui (which will require the context and the handler). 
+        # When a current dock control is closed (close_dock_control method), the
+        # contents of self.ui have been disposed of and self.ui is now None.
+        # Now if a new UI needs to be created by calling dockable_get_control 
+        # (e.g., when doing an 'undock' action on a dock window), we need to 
+        # pass on the context and handler to the UI. Therefore, we are setting
+        # these private traits here so dockable_get_control can access them.
+        # In future, we need to investigate if there is a better way to do this.
+        
+        self._context = self.ui.context.copy()
+        # Make copy since context will be emptied when calling self.ui.dispose()              
+        self._handler = self.ui.handler
+        
         return (self.should_close or (self.element is None))
 
     #---------------------------------------------------------------------------
@@ -94,9 +108,9 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
         """ Gets a control that can be docked into a DockWindow.
         """
         # Create the new UI:  
-        ui = self._view.ui( self.ui.context, parent  = parent,
-                                             kind    = 'subpanel', 
-                                             handler = self.ui.handler )
+        ui = self._view.ui( self._context, parent  = parent,
+                                           kind    = 'subpanel', 
+                                           handler = self._handler )
                                              
         # Discard the reference to the view created previously:                                             
         self._view = None
@@ -134,26 +148,17 @@ class DockableViewElement ( HasPrivateTraits, IDockable ):
         """ Handles the closing of a DockControl containing a Traits UI.
         """
         ui = self.ui
-    
+        
         # Ask the traits UI handler if it is OK to close the window:
         if (not abort) and (not ui.handler.close( ui.info, True )):
             # If not, tell the DockWindow not to close it:
             return False
     
-        # FIXME:  'Undock' feature tries to rebuild the new UI, but 
-        # the DockControl has already deleted the old UI.  By not 
-        # deleting the UI, the failed rebuild is skipped.  But is 
-        # likely creating side effects for other features when the 
-        # old UI is being left around.
-        # 
-        # We need to fix it so that the old UI can still be deleted, 
-        # and a new UI rebuilt.
-        
         # Otherwise, clean up and close the traits UI:
-        # ui.dispose( abort = abort )
+        ui.dispose( abort = abort )
         
         # Break our linkage to the UI and ViewElement object:
-        # self.ui = self.element = None
+        self.ui = self.element = None
 
         # And tell the DockWindow to remove the DockControl:
         return True
