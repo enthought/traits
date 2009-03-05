@@ -31,7 +31,8 @@ class DateEditor ( EditorFactory ):
     #  Trait definitions:  
     #---------------------------------------------------------------------------
     
-    # Is multiselect enabled for a CustomEditor?
+    #-- CustomEditor traits ---------------------------------------------------- 
+    
     # True: Must be a List of Dates.  False: A Date instance.
     multi_select = Bool(False)
     
@@ -40,6 +41,9 @@ class DateEditor ( EditorFactory ):
       
     # How many months to show at a time.
     months = Int(3)
+
+    # How much space to put between the individual months.
+    padding = Int(5)
 
 #-- end DateEditor definition ------------------------------------------------- 
 
