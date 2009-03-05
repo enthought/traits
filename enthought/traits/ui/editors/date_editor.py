@@ -17,7 +17,7 @@
 """
 A Traits UI editor that wraps a WX calendar panel.
 """
-from enthought.traits.trait_types import Bool, Any
+from enthought.traits.trait_types import Bool, Int
 from enthought.traits.ui.editor_factory import EditorFactory
 
 
@@ -32,13 +32,15 @@ class DateEditor ( EditorFactory ):
     #---------------------------------------------------------------------------
     
     # Is multiselect enabled for a CustomEditor?
-    # If True, then the edited object must be a Date.  If False, then it's
-    # a List of Dates.
+    # True: Must be a List of Dates.  False: A Date instance.
     multi_select = Bool(False)
     
     # Should users be able to pick future dates when using the CustomEditor?
     allow_future = Bool(True)
-    
+      
+    # How many months to show at a time.
+    months = Int(3)
+
 #-- end DateEditor definition ------------------------------------------------- 
 
 
