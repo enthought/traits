@@ -17,7 +17,7 @@
 """
 A Traits UI editor that wraps a WX calendar panel.
 """
-from enthought.traits.trait_types import Bool, Int
+from enthought.traits.trait_types import Bool, Int, Enum
 from enthought.traits.ui.editor_factory import EditorFactory
 
 
@@ -38,6 +38,21 @@ class DateEditor ( EditorFactory ):
     
     # Should users be able to pick future dates when using the CustomEditor?
     allow_future = Bool(True)
+    
+    # When a user multi-selects entries and some of those entries are already
+    # selected and some are not, what should be the behavior for the seletion?  
+    # Options::
+    #
+    #     'toggle'     -- Toggle each day to the opposite of the current state. 
+    #     'on'         -- Always turn them on.
+    #     'off'        -- Always turn them off.
+    #     'max_change' -- Change all to same state, with most days changing.
+    #                     For example 1 selected and 9 not, then they would 
+    #                     all get selected.
+    #     'min_change' -- Change all to same state, with min days changing.
+    #                     For example 1 selected and 9 not, then they would 
+    #                     all get unselected.
+    on_mixed_select = Enum('toggle', 'on', 'off', 'max_change', 'min_change')
       
     # How many months to show at a time.
     months = Int(3)
