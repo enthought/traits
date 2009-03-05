@@ -33,7 +33,7 @@ class DateEditor ( EditorFactory ):
     
     #-- CustomEditor traits ---------------------------------------------------- 
     
-    # True: Must be a List of Dates.  False: A Date instance.
+    # True: Must be a List of Dates.  False: Must be a Date instance.
     multi_select = Bool(False)
     
     # Should users be able to pick future dates when using the CustomEditor?
@@ -44,6 +44,9 @@ class DateEditor ( EditorFactory ):
 
     # How much space to put between the individual months.
     padding = Int(5)
+    
+    # Does the user have to hold down Shift for the left-click multiselect?
+    shift_to_select = Bool(False)
 
 #-- end DateEditor definition ------------------------------------------------- 
 
