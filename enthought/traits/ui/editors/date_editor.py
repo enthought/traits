@@ -33,11 +33,14 @@ class DateEditor ( EditorFactory ):
     
     #-- CustomEditor traits ---------------------------------------------------- 
     
-    # True: Must be a List of Dates.  False: Must be a Date instance.
-    multi_select = Bool(False)
-    
     # Should users be able to pick future dates when using the CustomEditor?
     allow_future = Bool(True)
+    
+    # How many months to show at a time.
+    months = Int(3)
+
+    # True: Must be a List of Dates.  False: Must be a Date instance.
+    multi_select = Bool(False)
     
     # When a user multi-selects entries and some of those entries are already
     # selected and some are not, what should be the behavior for the seletion?  
@@ -54,9 +57,6 @@ class DateEditor ( EditorFactory ):
     #                     all get unselected.
     on_mixed_select = Enum('toggle', 'on', 'off', 'max_change', 'min_change')
       
-    # How many months to show at a time.
-    months = Int(3)
-
     # How much space to put between the individual months.
     padding = Int(5)
     
