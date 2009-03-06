@@ -17,7 +17,8 @@
 """
 A Traits UI editor that wraps a WX calendar panel.
 """
-from enthought.traits.trait_types import Bool, Int, Enum
+from enthought.traits.trait_types import Bool, Int, Enum, Str
+from enthought.traits.ui.ui_traits import AView
 from enthought.traits.ui.editor_factory import EditorFactory
 
 
@@ -30,6 +31,18 @@ class DateEditor ( EditorFactory ):
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
+    
+    #-- ReadonlyEditor traits -------------------------------------------------- 
+    
+    # Message to show when Date is None.
+    message = Str('Undefined')
+    
+    # The string representation of the date to show.  Uses time.strftime format.
+    strftime = Str('%B %d %Y (%a)')
+    
+    # An optional view to display when a read-only text editor is clicked:
+    view = AView
+    
     
     #-- CustomEditor traits ---------------------------------------------------- 
     
