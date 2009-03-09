@@ -11,8 +11,7 @@ from enthought.traits.ui.api import View, Item, DateEditor, Group
 
 class DateEditorDemo(HasTraits):
     """ Demo class to show Date editors. """
-    simple_date = Date
-    single_date = Date()
+    single_date = Date
     multi_date = List(Date)
     info_string = Str('The editors for Traits Date objects.  Showing both '\
                       'the defaults, and one with alternate options.')
@@ -28,14 +27,14 @@ class DateEditorDemo(HasTraits):
                      show_label=False,
                      style='readonly'),
                 
-                Group(Item('simple_date', 
+                Group(Item('single_date', 
                            label='Simple date editor'),
                       Item('single_date', 
                            style='custom',
                            label='Default custom editor'),
                       Item('single_date',
                            style='readonly',
-                           editor=DateEditor(strftime='You picked %B %d %Y',
+                           editor=DateEditor(#strftime='You picked %B %d %Y',
                                              message='Click a date above.'),
                            label='ReadOnly editor'),
                       label='Default settings for editors'),
@@ -51,7 +50,7 @@ class DateEditorDemo(HasTraits):
                 resizable=True)
 
 
-    def _multi_date_items_changed(self):
+    def _multi_date_changed(self):
         """ Print each time the date value is changed in the editor. """
         print self.multi_date
         
