@@ -34,7 +34,7 @@ class DateEditorDemo(HasTraits):
                            label='Default custom editor'),
                       Item('single_date',
                            style='readonly',
-                           editor=DateEditor(#strftime='You picked %B %d %Y',
+                           editor=DateEditor(strftime='You picked %B %d %Y',
                                              message='Click a date above.'),
                            label='ReadOnly editor'),
                       label='Default settings for editors'),
