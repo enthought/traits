@@ -17,29 +17,32 @@
 """
 A Traits UI editor that wraps a WX timer control.
 """
-import datetime
-
-from enthought.traits.api import Property
-from enthought.traits.ui.basic_editor_factory import BasicEditorFactory
-from enthought.traits.ui.toolkit import toolkit_object   
+from enthought.traits.api import Str
+from enthought.traits.ui.editor_factory import EditorFactory
+from enthought.traits.ui.ui_traits import AView
 
 
 #-- TimeEditor definition ----------------------------------------------------- 
-class TimeEditor ( BasicEditorFactory ):
+class TimeEditor ( EditorFactory ):
     """
     Editor factory for time editors.  Generates _TimeEditor()s.
     """
 
-    # The editor class to be created:
-    klass = Property
+    #---------------------------------------------------------------------------
+    #  Trait definitions:  
+    #---------------------------------------------------------------------------
     
-    #---------------------------------------------------------------------------
-    #  Property getters
-    #---------------------------------------------------------------------------
-    def _get_klass(self):
-        """ Returns the editor class to be created.
-        """
-        return toolkit_object('time_editor:_TimeEditor')
+    #-- ReadonlyEditor traits -------------------------------------------------- 
+    
+    # Message to show when Time is None.
+    message = Str('Undefined')
+    
+    # The string representation of the time to show.  Uses time.strftime format.
+    strftime = Str('%I:%M:%S %p')
+    
+    # An optional view to display when a read-only text editor is clicked:
+    view = AView
+    
 #-- end TimeEditor definition ------------------------------------------------- 
 
 
