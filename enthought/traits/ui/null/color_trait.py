@@ -23,7 +23,6 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api    import Trait, TraitError
-from enthought.traits.ui.editors.color_editor import ColorEditor
 
 #-------------------------------------------------------------------------------
 #  Convert a number into a wxColour object:
@@ -119,7 +118,17 @@ standard_colors = {
 #  Define 'null' specific color traits:
 #-------------------------------------------------------------------------------
     
+### Note: Declare the editor to be a function which returns the ColorEditor 
+# class from traits ui to avoid circular import issues. For backwards 
+# compatibility with previous Traits versions, the 'editors' folder in Traits 
+# project declares 'from api import *' in its __init__.py. The 'api' in turn 
+# can contain classes that have a Color trait which lead to this file getting 
+# imported. This leads to a circular import when declaring a Color trait.
+def get_color_editor(*args, **traits):
+    from enthought.traits.ui.api import ColorEditor
+    return ColorEditor(*args, **traits)
+
 # Color traits
 NullColor = Trait( 'white', convert_to_color, standard_colors, 
-                   editor = ColorEditor )
+                   editor = get_color_editor )
        
