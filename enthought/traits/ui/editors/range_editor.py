@@ -86,7 +86,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     high = Property
 
     # Display mode to use
-    mode = Enum( 'auto', 'slider', 'xslider', 'spinner', 'enum', 'text' )
+    mode = Enum( 'auto', 'slider', 'xslider', 'spinner', 'enum', 'text', 'logslider' )
 
     #---------------------------------------------------------------------------
     #  Traits view definition:
@@ -237,7 +237,6 @@ class ToolkitEditorFactory ( EditorFactory ):
 
         """
         low, high, is_float = self._low_value, self._high_value, self.is_float
-
         if (low is None) or (high is None):
             return toolkit_object('range_editor:RangeTextEditor')
 
