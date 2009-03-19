@@ -303,11 +303,11 @@ class TabularAdapter ( HasPrivateTraits ):
         """
         return self._result_for( 'get_content', object, trait, row, column )
      
-    def set_text ( self, object, trait, row, text ):
+    def set_text ( self, object, trait, row, column, text ):
         """ Sets the text for a specified *object.trait[row].column* item to
             *text*.
         """
-        self._result_for( 'set_text', object, trait, row, 0, text )
+        self._result_for( 'set_text', object, trait, row, column, text )
         
     def get_tooltip ( self, object, trait, row, column ):
         """ Returns the tooltip for a specified row.
@@ -372,7 +372,7 @@ class TabularAdapter ( HasPrivateTraits ):
             self.object, self.name, self.row, self.column ) % self.get_content( 
             self.object, self.name, self.row, self.column )
      
-    def _set_text ( self ):
+    def _set_text ( self, value ):
         if isinstance( self.column_id, int ):
             self.item[ self.column_id ] = self.value
         else:    
@@ -419,7 +419,7 @@ class TabularAdapter ( HasPrivateTraits ):
                     label = label[0]
                     
                 indices.append( labels.index( label ) )
-                
+            map.append(indices)    
         return map
                 
     @cached_property
@@ -500,7 +500,7 @@ class TabularAdapter ( HasPrivateTraits ):
             if handler is None: 
                 handler = (self._get_handler_for( '%s_%s' % ( column_id, 
                               trait_name ), prefix ) or 
-                           self._get_handler_for( trait_name, 'get_' ))
+                           self._get_handler_for( trait_name, prefix ))
                            
         self.cache[ key ] = handler
         return handler()
