@@ -375,8 +375,14 @@ class TabularAdapter ( HasPrivateTraits ):
     def _set_text ( self, value ):
         if isinstance( self.column_id, int ):
             self.item[ self.column_id ] = self.value
-        else:    
-            setattr( self.item, self.column_id, self.value )
+        else:
+            # Convert value to the correct trait type.
+            try:
+                trait_handler = self.item.trait(self.column_id).handler
+                setattr( self.item, self.column_id, 
+                                    trait_handler.evaluate(self.value))
+            except:
+                setattr( self.item, self.column_id, value )
         
     def _get_content ( self ):
         if isinstance( self.column_id, int ):
