@@ -17,12 +17,12 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.2')  # -- all from logger.(plugin|agent|widget)
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.2')  # -- all from logger.plugin
-TRAITS = etsdep('Traits', '3.0.4')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.4')  # -- only from e.util.traits.editor.parameter_choice_editor.py
+ENVISAGECORE = etsdep('EnvisageCore', '3.1.0')  # -- all from logger.(plugin|agent|widget)
+ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.1.0')  # -- all from logger.plugin
+TRAITS = etsdep('Traits', '3.1.0')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.1.0')  # -- only from e.util.traits.editor.parameter_choice_editor.py
 TRAITSGUI = etsdep('TraitsGUI', '3.0.4')  # -- from logger.(agent|plugin|widget)
-TRAITS_UI = etsdep('Traits[ui]', '3.0.4')
+TRAITS_UI = etsdep('Traits[ui]', '3.1.0')
 
 # The following "soft dependencies" are wrapped in try..except blocks
 #APPTOOLS -- util/wx/drag_and_drop
@@ -65,3 +65,4 @@ INFO = {
     'name': 'EnthoughtBase',
     'version': '3.0.2',
     }
+
