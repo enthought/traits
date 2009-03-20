@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2008 by Enthought, Inc.
-#  License: BSD Style.
+# Copyright (c) 2008-2009 by Enthought, Inc.
 # All rights reserved.
-#
+
 
 """
 Explicitly typed attributes for Python.
@@ -56,6 +55,7 @@ from setuptools import setup, Extension, find_packages
 from setuptools.command.develop import develop
 from distutils.command.build import build as distbuild
 
+
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
 # from incorrect packages. Ticket #1592
 #from setup_data import INFO
@@ -63,11 +63,14 @@ setup_data = dict(__name__='', __file__='setup_data.py')
 execfile('setup_data.py', setup_data)
 INFO = setup_data['INFO']
 
+
 ctraits = Extension(
     'enthought.traits.ctraits',
     sources = ['enthought/traits/ctraits.c'],
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
     )
+
+
 speedups = Extension(
     'enthought.traits.protocols._speedups',
     # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can play
@@ -76,20 +79,23 @@ speedups = Extension(
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
     )
 
+
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
+
 
 class MyDevelop(develop):
     def run(self):
         develop.run(self)
         self.run_command('build_docs')
 
+
 class MyBuild(distbuild):
     def run(self):
         distbuild.run(self)
         self.run_command('build_docs')
 
-# Call the setup function.
+
 setup(
     author = 'David C. Morrill, et. al.',
     author_email = 'dmorrill@enthought.com',
@@ -113,9 +119,6 @@ setup(
         'develop': MyDevelop,
         'build': MyBuild
         },
-    dependency_links = [
-        'http://code.enthought.com/enstaller/eggs/source',
-        ],
     description = DOCLINES[1],
     extras_require = INFO['extras_require'],
     ext_modules = [ctraits, speedups],
