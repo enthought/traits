@@ -1,5 +1,8 @@
-#  Copyright (c) 2008, Enthought, Inc.
-#  License: BSD Style.
+# Copyright (c) 2008-2009 by Enthought, Inc.
+# All rights reserved.
+#
+# License: BSD Style.
+
 
 # Function to convert simple ETS project names and versions to a requirements
 # spec that works for both development builds and stable builds.  Allows
@@ -21,7 +24,6 @@ ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.2')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.4')
 TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.4')
 TRAITSGUI = etsdep('TraitsGUI', '3.0.4')
-
 # Notes:
 # - enthought\traits\ui\handler.py and
 #   enthought\traits\ui\dockable_view_element.py depend upon files in
@@ -34,8 +36,7 @@ TRAITSGUI = etsdep('TraitsGUI', '3.0.4')
 
 
 INFO = {
-    'extras_require' : {
-
+    'extras_require': {
         # Extra denoting that the standard ETS configuration package should be
         # used. If omitted, Traits will use its own package local configuration,
         # which is a subset of ETS Config containing just the parts used by
@@ -73,8 +74,9 @@ INFO = {
             'numpy >= 1.1.0',
             ],
         },
-    'install_requires' : [
+    'install_requires': [
         ],
     'name': 'Traits',
-    'version': '3.0.4',
+    'version': '3.1.0',
     }
+
