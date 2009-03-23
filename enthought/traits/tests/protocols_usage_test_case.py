@@ -133,9 +133,9 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         self.assertEqual(None, IInputStream(g, None))
 
         # Make sure we can use the stream (this reads this module and makes
-        # sure that it starts with the right doc string).
+        # sure that it contains the right doc string).
         stream = IInputStream(f).get_input_stream()
-        self.assert_(stream.read().startswith('"""' + __doc__))
+        self.assert_('"""' + __doc__ in stream.read())
 
         return
 
@@ -178,9 +178,9 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         self.assertEqual(None, IInputStream(g, None))
 
         # Make sure we can use the stream (this reads this module and makes
-        # sure that it starts with the right doc string).
+        # sure that it contains the right doc string).
         stream = IInputStream(f).get_input_stream()
-        self.assert_(stream.read().startswith('"""' + __doc__))
+        self.assert_('"""' + __doc__ in stream.read())
 
         return
 
