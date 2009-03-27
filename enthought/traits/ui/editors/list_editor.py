@@ -80,6 +80,9 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # The editor to use for each list item:
     editor = editor_trait
+    
+    # Can the list be reorganized, or have items added and deleted.
+    mutable = Bool(True)
 
     # The style of editor to use for each item:
     style = style_trait
