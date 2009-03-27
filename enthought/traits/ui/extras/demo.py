@@ -754,24 +754,32 @@ class Demo ( HasPrivateTraits ):
     # Root path object for locating demo files:
     root = Instance( DemoPath )
         
+    # Title for the demo
+    title = Str
+
     #---------------------------------------------------------------------------
     #  Traits view definitions:  
     #---------------------------------------------------------------------------
         
-    traits_view = View( 
-        Item( name       = 'root',
-              id         = 'root',
-              show_label = False,
-              editor     = demo_tree_editor
-        ),
-        title     = 'Traits UI Demo',
-        id        = 'enthought.traits.ui.demos.demo.Demo',
-        dock      = 'horizontal',
-        resizable = True,
-        width     = 950,
-        height    = 600
-    )
                         
+    def default_traits_view(self):
+        """ Constructs the default traits view."""
+        
+        traits_view = View( 
+            Item( name       = 'root',
+                  id         = 'root',
+                  show_label = False,
+                  editor     = demo_tree_editor
+            ),
+            title     = self.title,
+            id        = 'enthought.traits.ui.demos.demo.Demo',
+            dock      = 'horizontal',
+            resizable = True,
+            width     = 950,
+            height    = 600
+        )
+        return traits_view
+    
     #---------------------------------------------------------------------------
     #  Handles the 'root' trait being changed:  
     #---------------------------------------------------------------------------
@@ -785,11 +793,12 @@ class Demo ( HasPrivateTraits ):
 #  Function to run the demo:
 #-------------------------------------------------------------------------------
         
-def demo ( use_files=False, config_filename = '' ):
+def demo ( use_files=False, config_filename = '', title = 'Traits UI Demos' ):
     path, name = split( dirname( abspath( sys.argv[0] ) ) )
     if len(config_filename) > 0 and not isabs(config_filename):
         config_filename = join(path, name, config_filename)
     Demo( path = path, 
+          title = title,
           root = DemoPath( name = name, 
                            use_files = use_files,
                            config_filename = config_filename )
