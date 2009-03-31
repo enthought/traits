@@ -25,6 +25,8 @@
 import sys
 import glob
 from configobj import ConfigObj
+                
+from enthought.pyface.timer.api import do_later
 
 from enthought.traits.api \
     import HasTraits, HasPrivateTraits, Str, Instance, Property, Any, \
@@ -128,7 +130,6 @@ class DemoFileHandler ( Handler ):
         locals[ '__name__' ] = '___main___'
         locals['__file__'] = df.path
         sys.modules[ '__main__' ].__file__ = df.path
-
         try:
             execfile( df.path, locals, locals )
             demo = self._get_object( 'modal_popup', locals )
@@ -140,14 +141,25 @@ class DemoFileHandler ( Handler ):
                     demo = DemoButton( demo = demo )
                 else:    
                     demo = self._get_object( 'demo', locals )
+            # FIXME: If a 'demo' object could not be found, then try to execute
+            # the file setting __name__ to __main__. A lot of test scripts have
+            # the actual test running when __name__==__main__ and so we can at
+            # least run all test examples this way. Use a do_later loop so as to
+            # finish building the current UI before running the test.
+            if demo is None:
+                locals['__name__'] = '__main__'
+                #do_later(self.execute_test, df, locals)
         except Exception, excp:
             demo = DemoError( msg = str( excp ) )
 
         # Clean up sys.path
-        sys.path.remove(dirname(df.path))
-        
+        #sys.path.remove(dirname(df.path))
         df.demo = demo
-  
+    
+    def execute_test(self, df, locals):
+        """ Executes the file in df.path in the namespace of locals."""
+        execfile(df.path, locals, locals)
+        
     #---------------------------------------------------------------------------
     #  Closes the view:
     #---------------------------------------------------------------------------
@@ -708,7 +720,11 @@ demo_view = View(
                    label      = 'Demo',
                    show_label = False,
                    style      = 'custom',
-                   resizable  = True
+                   resizable  = True,
+                   # FIXME:
+                   # visible_when doesn't work correctly yet (for wx atleast) 
+                   # for tabbed items. Needs more investigation.
+                   visible_when = 'demo',
              ),
              export = 'DockWindowShell'
          ),
@@ -793,8 +809,11 @@ class Demo ( HasPrivateTraits ):
 #  Function to run the demo:
 #-------------------------------------------------------------------------------
         
-def demo ( use_files=False, config_filename = '', title = 'Traits UI Demos' ):
-    path, name = split( dirname( abspath( sys.argv[0] ) ) )
+def demo ( use_files=False, dir_name = None, config_filename = '', 
+           title = 'Traits UI Demos' ):
+    if dir_name is None:
+        dir_name = dirname(abspath( sys.argv[0] ))
+    path, name = split( dir_name )
     if len(config_filename) > 0 and not isabs(config_filename):
         config_filename = join(path, name, config_filename)
     Demo( path = path, 
