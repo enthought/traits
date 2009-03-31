@@ -153,7 +153,7 @@ class DemoFileHandler ( Handler ):
             demo = DemoError( msg = str( excp ) )
 
         # Clean up sys.path
-        #sys.path.remove(dirname(df.path))
+        sys.path.remove(dirname(df.path))
         df.demo = demo
     
     def execute_test(self, df, locals):
