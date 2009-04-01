@@ -1,0 +1,4 @@
+Traits 3.1.1
+---------------
+ * Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)
+
