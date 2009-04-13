@@ -77,9 +77,9 @@ def ColorEditor(*args, **traits):
     """
     
     try: 
-       return toolkit_object('color_editor:ToolkitEditorFactory', True)(*args,
+        return toolkit_object('color_editor:ToolkitEditorFactory', True)(*args,
                                                                     **traits)
     except:
-       return ToolkitEditorFactory(*args, **traits)
+        return ToolkitEditorFactory(*args, **traits)
 
 ## EOF #######################################################################
