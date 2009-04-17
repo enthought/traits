@@ -488,7 +488,7 @@ expand or collapse directory structures, and click an icon to select a file.
 
 You can specify a list of filters to apply to the file names displayed, using
 the *filter* keyword parameter of the factory function. In Figure 31, the
-"Custom with Filter" editor uses a *filter* value of ['*.py'] to display only
+"Custom with Filter" editor uses a *filter* value of ``['*.py']`` to display only
 Python source files. You can also specify this parameter for the simple style,
 and it will be used in the file selection dialog box or pop-up file system
 browser panel. Alternatively, you can specify *filter_name*, whose value is an
