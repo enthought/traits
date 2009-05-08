@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
@@ -26,8 +26,8 @@ from enthought.traits.api \
             Enum, Trait, Bool, Callable, Range
 
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well.     
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
 from enthought.traits.ui.view \
     import View
 
@@ -71,7 +71,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     columns = List( Instance('enthought.traits.ui.table_column.TableColumn') )
 
     # List of other table column descriptors (not initially displayed)
-    other_columns = List( 
+    other_columns = List(
                      Instance('enthought.traits.ui.table_column.TableColumn') )
 
     # The object trait containing the list of column descriptors
@@ -82,7 +82,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # The optional extended name of the trait used to specify an external filter
     # for the table data. The value of the trait must either be an instance of
-    # TableEditor, a callable that accepts one argument (a table row) and 
+    # TableEditor, a callable that accepts one argument (a table row) and
     # returns True or False to indicate whether the specified object passes the
     # filter or not, or **None** to indicate that no filter is to be applied:
     filter_name = Str
@@ -91,7 +91,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     filter = Instance( 'enthought.traits.ui.table_filter.TableFilter' )
 
     # List of available filters that can be applied to the table
-    filters = List( Instance( 
+    filters = List( Instance(
                      'enthought.traits.ui.table_filter.TableFilter' ) )
 
     # Filter object used to allow a user to search the table.
@@ -158,7 +158,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Should the toolbar be displayed? (Note that False will override settings
     # such as 'configurable', etc., and is a quick way to prevent the toolbar
-    # from being displayed; but True will not cause a toolbar to appear if one 
+    # from being displayed; but True will not cause a toolbar to appear if one
     # would not otherwise have been displayed)
     show_toolbar = Bool( False )
 
@@ -178,8 +178,8 @@ class ToolkitEditorFactory ( EditorFactory ):
     cell_color = Color( 'black' )
 
     # Color to use for cell backgrounds
-    # The default is the "WindowColor" constant declared in ui.api: 
-    # we shall set the value in a trait initializer method, in order to avoid 
+    # The default is the "WindowColor" constant declared in ui.api:
+    # we shall set the value in a trait initializer method, in order to avoid
     # circular imports.
     cell_bg_color = Color
 
@@ -193,10 +193,13 @@ class ToolkitEditorFactory ( EditorFactory ):
     label_color = Color( 'black' )
 
     # Color to use for label backgrounds
-    label_bg_color = Color( 0xD7D2BF )
+    # The default is the "WindowColor" constant declared in ui.api:
+    # we shall set the value in a trait initializer method, in order to avoid
+    # circular imports.
+    label_bg_color = Color
 
     # Background color of selected item
-    selection_bg_color = Color( 0x0D22DF, allow_none = True )
+    selection_bg_color = Color( 'light blue', allow_none = True )
 
     # The theme to use for normal cells:
     cell_theme = Any
@@ -208,7 +211,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     selected_theme = Any
 
     # Color of selected text
-    selection_color = Color( 'white' )
+    selection_color = Color( 'black' )
 
     # Height (in pixels) of column labels
     column_label_height = Int( 25 )
@@ -219,7 +222,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     # The initial height of each row (<= 0 means use default value):
     row_height = Int( 0 )
 
-    # The optional extended name of the trait that the indices of the items 
+    # The optional extended name of the trait that the indices of the items
     # currently passing the table filter are synced with:
     filtered_indices = Str
 
@@ -241,7 +244,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     #   Single cells are selected. Only one cell can be selected at once.
     # cells
     #   Single cells are selected. More than one cell can be selected at once.
-    selection_mode = Enum( 'row', 'rows', 'column', 'columns', 'cell', 'cells' )
+    selection_mode = Enum( 'cells', 'row', 'rows', 'column', 'columns', 'cell', 'cells' )
 
     # The optional extended name of the trait that the current selection is
     # synced with:
@@ -253,13 +256,13 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # The optional extended trait name of the trait that should be assigned
     # an ( object, column ) tuple when a table cell is clicked on (Note: If you
-    # want to receive repeated clicks on the same cell, make sure the trait is 
+    # want to receive repeated clicks on the same cell, make sure the trait is
     # defined as an Event):
     click = Str
 
     # The optional extended trait name of the trait that should be assigned
     # an ( object, column ) tuple when a table cell is double-clicked on
-    # (Note: if you want to receive repeated double-clicks on the same cell, 
+    # (Note: if you want to receive repeated double-clicks on the same cell,
     # make sure the trait is defined as an Event):
     dclick = Str
 
@@ -332,12 +335,12 @@ class ToolkitEditorFactory ( EditorFactory ):
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
-    
+
     def readonly_editor ( self, ui, object, name, description, parent ):
         """ Generates an "editor" that is read-only.
-        Overridden to set the value of the editable trait to False before 
+        Overridden to set the value of the editable trait to False before
         generating the editor.
-        
+
         """
         self.editable = False
         return super(ToolkitEditorFactory, self).readonly_editor(
@@ -347,11 +350,20 @@ class ToolkitEditorFactory ( EditorFactory ):
         """ Returns the default value of the cell background color.
         """
         # NOTE: We are initializing the 'cell_bg_color' trait in this method
-        # instead of in the trait definition so as to delay importing from 
+        # instead of in the trait definition so as to delay importing from
         # ui.api until needed (will lead to circular imports otherwise).
         from enthought.traits.ui.api import WindowColor
         return WindowColor
-    
+
+    def _label_bg_color_default(self):
+        """ Returns the default value of the cell background color.
+        """
+        # NOTE: We are initializing the 'cell_bg_color' trait in this method
+        # instead of in the trait definition so as to delay importing from
+        # ui.api until needed (will lead to circular imports otherwise).
+        from enthought.traits.ui.api import WindowColor
+        return WindowColor
+
 # Define the TableEditor class
 TableEditor = ToolkitEditorFactory
 
