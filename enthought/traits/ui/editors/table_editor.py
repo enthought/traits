@@ -244,7 +244,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     #   Single cells are selected. Only one cell can be selected at once.
     # cells
     #   Single cells are selected. More than one cell can be selected at once.
-    selection_mode = Enum( 'cells', 'row', 'rows', 'column', 'columns', 'cell', 'cells' )
+    selection_mode = Enum( 'row', 'rows', 'column', 'columns', 'cell', 'cells' )
 
     # The optional extended name of the trait that the current selection is
     # synced with:
