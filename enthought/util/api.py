@@ -1,3 +1,17 @@
+import sys
+_py_version = sys.version[:3]
+if _py_version > '2.4':
+    Set = set
+elif sys.version[:3] > '2.2':
+    from sets import Set
+else:  # backward compatibility for Python < 2.3
+    from UserDict import UserDict
+    class Set(UserDict):
+        def add(self, item):
+            self.data[item] = item
+        def remove(self, item):
+            del self._dict[item]
+
 from deprecated import deprecated
 from synchronized import synchronized
 

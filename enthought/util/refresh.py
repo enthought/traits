@@ -133,9 +133,10 @@ import sys
 import gc
 import logging
 import compiler
-from sets import Set
 from types import UnboundMethodType, FunctionType, ClassType
 import linecache
+
+from api import Set
 
 #############################################################################
 # Public functions
