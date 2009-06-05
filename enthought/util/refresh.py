@@ -136,7 +136,6 @@ import compiler
 from types import UnboundMethodType, FunctionType, ClassType
 import linecache
 
-from api import Set
 
 #############################################################################
 # Public functions
@@ -267,8 +266,8 @@ class Refresher(object):
                     #        to identify dynamically attached methods that 
                     #        might need to remain attached.  
 
-                    new_attrs = Set(new_class.__dict__.keys())
-                    old_attrs = Set(old_class.__dict__.keys())
+                    new_attrs = set(new_class.__dict__.keys())
+                    old_attrs = set(old_class.__dict__.keys())
                     
                     # attributes in old_class that aren't in new class.
                     # and get rid of them.
