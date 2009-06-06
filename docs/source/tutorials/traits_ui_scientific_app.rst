@@ -332,7 +332,7 @@ If you want to create an application that has a very linear flow, popping
 up dialogs when user input is required, like a "setup wizard" often used
 to install programs, you already have all the tools to do it. You can use
 object oriented programming to write your program, and call the objects
-*configure_traits* method each time you need user input. This might an
+*configure_traits* method each time you need user input. This might be an
 easy way to modify an existing script to make it more user friendly.
 
 ____
@@ -709,7 +709,7 @@ powerful tool for plotting we have to get our hands a bit dirty and
 create our own traits editor.
 
 This involves some `wxPython` coding, as we need to translate a
-`wxPython` object in a  by traits editor providing the corresponding API 
+`wxPython` object in a traits editor by providing the corresponding API 
 (i.e. the standard way of building a `traits` editor, so that the `traits` 
 framework can do it automatically.
 
