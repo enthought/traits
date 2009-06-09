@@ -99,7 +99,7 @@ class Group ( ViewSubElement ):
     # The theme to use for the group itself:
     group_theme = ATheme
     
-    # The theme to use for item's contained in the group:
+    # The theme to use for items contained in the group:
     item_theme = ContainerDelegate
     
     # The theme to use for the labels of items contained in the group:
