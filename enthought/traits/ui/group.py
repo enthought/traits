@@ -167,7 +167,7 @@ class Group ( ViewSubElement ):
     # nested groups and multiple top-level groups
     help = Str
 
-    # Pre-condition for including the groupin the display. If the expression
+    # Pre-condition for including the group in the display. If the expression
     # evaluates to False, the group is not defined in the display. Conditions
     # for **defined_when** are evaluated only once, when the display is first
     # constructed. Use this attribute for conditions based on attributes that
