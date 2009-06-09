@@ -213,7 +213,7 @@ TableEditor()
     See *Traits API Reference*, 
     enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.
     
-TableEditor() generates a editor that displays instances in a list as rows in a
+TableEditor() generates an editor that displays instances in a list as rows in a
 table, with attributes of the instances as values in columns. You must specify
 the columns in the table. Optionally, you can provide filters for filtering the
 set of displayed items, and you can specify a wide variety of options for
