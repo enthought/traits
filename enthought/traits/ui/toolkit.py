@@ -324,6 +324,16 @@ class Toolkit ( HasPrivateTraits ):
         raise NotImplementedError
 
     #---------------------------------------------------------------------------
+    #  Indicates that an event should continue to be processed by the toolkit
+    #---------------------------------------------------------------------------
+
+    def skip_event ( self, event ):
+        """ Indicates that an event should continue to be processed by the 
+            toolkit.
+        """
+        raise NotImplementedError
+
+    #---------------------------------------------------------------------------
     #  Destroys a specified GUI toolkit control:  
     #---------------------------------------------------------------------------
     

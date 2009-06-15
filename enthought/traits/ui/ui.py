@@ -731,7 +731,7 @@ class UI ( HasPrivateTraits ):
             handled = self.parent.key_handler( event, False )
 
         if (not handled) and skip:
-            event.Skip()
+            toolkit().skip_event(event)
 
         return handled
 
