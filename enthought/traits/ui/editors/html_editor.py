@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Str, true
+    import Str, true, false
     
 from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
@@ -68,6 +68,9 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
 
     # The object trait containing the base URL
     base_url_name = Str
+
+    # Should links be opened in an external browser?
+    open_externally = false
 
     #---------------------------------------------------------------------------
     #  Parses the contents of a formatted text string into the corresponding 
