@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import true
+    import Str, true
     
 from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
@@ -35,6 +35,19 @@ from enthought.traits.ui.toolkit \
 # Callable that returns the editor to use in the UI.
 def html_editor(*args, **traits):
     return toolkit_object('html_editor:SimpleEditor')(*args, **traits)
+
+#-------------------------------------------------------------------------------
+#  Constants:
+#-------------------------------------------------------------------------------
+
+# Template used to create code blocks embedded in the module comment
+block_template = """<center><table width="95%%"><tr><td bgcolor="#ECECEC"><tt>
+%s</tt></td></tr></table></center>"""
+
+# Template used to create lists embedded in the module comment
+list_template = """<%s>
+%s
+</%s>"""
 
 #------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -49,6 +62,12 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
     
     # Should implicit text formatting be converted to HTML?
     format_text = true
+
+    # External objects referenced in the HTML are relative to this url
+    base_url = Str
+
+    # The object trait containing the base URL
+    base_url_name = Str
 
     #---------------------------------------------------------------------------
     #  Parses the contents of a formatted text string into the corresponding 
