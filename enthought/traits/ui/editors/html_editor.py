@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-    import Str, true, false
+    import Str, false
     
 from enthought.traits.ui.basic_editor_factory \
     import BasicEditorFactory
@@ -61,7 +61,7 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
     #--------------------------------------------------------------------------
     
     # Should implicit text formatting be converted to HTML?
-    format_text = true
+    format_text = false
 
     # External objects referenced in the HTML are relative to this url
     base_url = Str

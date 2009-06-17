@@ -15,7 +15,8 @@ class HTMLEditorDemo ( HasTraits ):
     """ Defines the main BooleanEditor demo class. """
 
     # Define a HTML trait to view
-    html_trait = HTML("A HTMLEditor displaying\n\ntwo paragraphs of text.")
+    html_trait = HTML("""<html><body><p>A HTMLEditor displaying</p>
+<p>two paragraphs of text.</p></body></html>""")
 
     # Demo view
     view = View(Group(Item('html_trait', 
