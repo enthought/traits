@@ -178,7 +178,8 @@ class SaveHandler(Handler):
             the object. Returns whether the save actually occurred.
         """
         fileDialog = FileDialog(action='save as', title='Save As',
-                                wildcard=self.wildcard)
+                                wildcard=self.wildcard,
+                                parent=info.ui.control)
         fileDialog.open()
         if fileDialog.path == '' or fileDialog.return_code == CANCEL:
             return False
@@ -194,8 +195,8 @@ class SaveHandler(Handler):
             the user canceled the action that invoked this prompt.
         """
         if self.saveObject.dirty:
-            code = confirm(None, self.savePromptMessage, title="Save now?",
-                           cancel=cancel)
+            code = confirm(info.ui.control, self.savePromptMessage, 
+                           title="Save now?", cancel=cancel)
             if code == CANCEL:
                 return False
             elif code == YES:
