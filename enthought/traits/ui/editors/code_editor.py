@@ -85,6 +85,23 @@ class ToolkitEditorFactory ( EditorFactory ):
     
     # Calltip clicked event
     calltip_clicked = Str
+
+    # The lexer to use. Default is 'python'; 'null' indicates no lexing.
+    lexer = Str('python')
+
+    # Object trait containing the list of line numbers to dim (optional)
+    dim_lines = Str
+
+    # Object trait to dim lines to. Can be of form #rrggbb or a color spec. If
+    # not specified, dark grey is used.
+    dim_color = Str
+
+    # Object trait containing the list of line numbers to put squiggles under
+    # (optional)
+    squiggle_lines = Str
+
+    # Object trait for the color of squiggles. If not specified, red is used.
+    squiggle_color = Str
         
 
 # Define the Code Editor class.
