@@ -204,7 +204,7 @@ class TabularAdapter ( HasPrivateTraits ):
     # *columns* trait):
     column_map = Property( depends_on = 'columns' )
     
-    # The mapping from column indices to column labels (defined by the *columns* 
+    # The mapping from column indices to column labels (defined by the *columns*
     # trait):
     label_map = Property( depends_on = 'columns' )
     
@@ -497,7 +497,7 @@ class TabularAdapter ( HasPrivateTraits ):
             if item is not None:
                 for klass in item_class.__mro__:
                     handler = (self._get_handler_for( '%s_%s_%s' % 
-                          ( klass.__name__, column_id, trait_name ), prefix ) or 
+                          ( klass.__name__, column_id, trait_name ), prefix ) or
                         self._get_handler_for( '%s_%s' % 
                           ( klass.__name__, trait_name ), prefix ))
                     if handler is not None:

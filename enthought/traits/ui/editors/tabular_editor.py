@@ -130,6 +130,6 @@ class TabularEditor ( BasicEditorFactory ):
     def _get_klass(self):
         """ Returns the toolkit-specific editor class to be instantiated.
         """
-        return toolkit_object('tabular_editor:_TabularEditor')
+        return toolkit_object('tabular_editor:TabularEditor')
 
 ### EOF #######################################################################
