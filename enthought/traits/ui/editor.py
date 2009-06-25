@@ -270,7 +270,7 @@ class Editor ( HasPrivateTraits ):
             this method calls that function to do the formatting.  If the 
             **format_str** attribute is set on the editor factory, then this
             method uses that string for formatting. If neither attribute is 
-            set, then this method just calls the built-in str() function.
+            set, then this method just calls the built-in unicode() function.
         """
         factory = self.factory
         if factory.format_func is not None:
@@ -282,7 +282,7 @@ class Editor ( HasPrivateTraits ):
         if format_func is not None:
             return format_func( value )
             
-        return str( value )
+        return unicode( value )
         
     #---------------------------------------------------------------------------
     #  Returns the text representation of the object trait:
@@ -300,7 +300,8 @@ class Editor ( HasPrivateTraits ):
     def _str ( self, value ):
         """ Returns the text representation of a specified value.
         """
-        return str( value )
+        # In Unicode!
+        return unicode( value )
         
     #---------------------------------------------------------------------------
     #  Handles an error that occurs while setting the object's trait value:

@@ -90,7 +90,7 @@ def enum_values_changed ( values ):
     """
     
     if isinstance( values, dict ):
-        data = [ ( str( v ), n ) for n, v in values.items() ]
+        data = [ ( unicode( v ), n ) for n, v in values.items() ]
         if len( data ) > 0:
             data.sort( lambda x, y: cmp( x[0], y[0] ) )
             col = data[0][0].find( ':' ) + 1
@@ -103,12 +103,12 @@ def enum_values_changed ( values ):
         if not isinstance( handler, BaseTraitHandler ):
             raise TraitError, "Invalid value for 'values' specified"
         if handler.is_mapped:
-            data = [ ( str( n ), n ) for n in handler.map.keys() ]
+            data = [ ( unicode( n ), n ) for n in handler.map.keys() ]
             data.sort( lambda x, y: cmp( x[0], y[0] ) )
         else:
-            data = [ ( str( v ), v ) for v in handler.values ]
+            data = [ ( unicode( v ), v ) for v in handler.values ]
     else:
-        data = [ ( str( v ), v ) for v in values ]
+        data = [ ( unicode( v ), v ) for v in values ]
     
     names           = [ x[0] for x in data ]
     mapping         = {}

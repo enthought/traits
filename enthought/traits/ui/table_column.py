@@ -868,7 +868,7 @@ class ListColumn ( TableColumn ):
     def get_value ( self, object ):
         """ Gets the value of the column for a specified object.
         """
-        return str( object[ self.index ] )
+        return unicode( object[ self.index ] )
         
     #---------------------------------------------------------------------------
     #  Sets the value of the column for a specified object:  

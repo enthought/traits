@@ -158,12 +158,12 @@ class ToolkitEditorFactory ( EditorFactory ):
             self.high_label = unicode(high)
 
     def _cast ( self, value ):
-        if type( value ) is not str:
+        if not isinstance( value, basestring ):
             return value
 
         try:
             return int( value )
-        except:
+        except ValueError:
             return float( value )
 
     #-- Private Methods --------------------------------------------------------
