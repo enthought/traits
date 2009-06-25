@@ -39,3 +39,4 @@ from shell_editor import ShellEditor
 from scrubber_editor import ScrubberEditor
 from tabular_editor import TabularEditor
 from progress_editor import ProgressEditor
+from search_editor import SearchEditor
