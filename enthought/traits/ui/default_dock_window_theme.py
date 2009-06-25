@@ -43,7 +43,7 @@ default_dock_window_theme = DockWindowTheme(
                                  label = ( 0, -2 ), content = ( 5, 0 ) ),
     tab_background      = Theme( '@std:tab_background' ),
     tab                 = Theme( '@std:tab', 
-                                 content = 0, label = ( -4, 0 ) ),
+                                 content = 0, label = ( -7, 0 ) ),
     vertical_splitter   = Theme( '@std:vertical_splitter', 
                                  content = 0, label  = ( 0, -25 ) ), 
     horizontal_splitter = Theme( '@std:horizontal_splitter', 
