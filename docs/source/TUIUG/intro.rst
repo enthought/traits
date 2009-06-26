@@ -101,7 +101,7 @@ Toolkit Selection
 The Traits UI package is designed to be toolkit-independent. Programs that use
 Traits UI do not need to explicitly import or call any particular GUI toolkit
 code unless they need some capability of the toolkit that is not provided by
-Traits UI. However, *some* particular toolkit be installed on the system in
+Traits UI. However, *some* particular toolkit must be installed on the system in
 order to actually display GUI windows.
 
 Traits UI uses a separate package, enthought.etsconfig, to determine which GUI
