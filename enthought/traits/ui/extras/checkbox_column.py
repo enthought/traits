@@ -22,7 +22,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.pyface.grid.checkbox_renderer \
+from enthought.pyface.ui.wx.grid.checkbox_renderer \
     import CheckboxRenderer
 
 from enthought.traits.ui.table_column \
@@ -47,7 +47,7 @@ class CheckboxColumn ( ObjectColumn ):
         self.renderer = CheckboxRenderer()
 
     #---------------------------------------------------------------------------
-    #  Returns the cell background color for the column for a specified object:  
+    #  Returns the cell background color for the column for a specified object:
     #---------------------------------------------------------------------------
     
     def get_cell_color ( self, object ):

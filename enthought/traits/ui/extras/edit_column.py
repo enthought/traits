@@ -26,7 +26,7 @@
 from enthought.traits.ui.table_column \
     import ObjectColumn
     
-from enthought.pyface.grid.edit_renderer \
+from enthought.pyface.ui.wx.grid.edit_renderer \
     import EditRenderer
     
 #-------------------------------------------------------------------------------
