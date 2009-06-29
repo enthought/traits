@@ -14,4 +14,5 @@ import logging
 logging.warn('DEPRECATED: enthought.util.wx.clipboard, '
              'use enthought.pyface.api instead.')
 
-from enthought.pyface.api import clipboard, Clipboard
+from enthought.pyface.ui.wx.clipboard import Clipboard
+clipboard = Clipboard()
