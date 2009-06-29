@@ -22,11 +22,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.pyface.ui.wx.grid.checkbox_renderer \
-    import CheckboxRenderer
+from enthought.etsconfig.api import ETSConfig
 
-from enthought.traits.ui.table_column \
-    import ObjectColumn
+from enthought.traits.ui.table_column import ObjectColumn
+
+if ETSConfig.toolkit == 'wx':
+    from enthought.pyface.ui.wx.grid.checkbox_renderer import CheckboxRenderer
+elif ETSConfig.toolkit == 'qt4':
+    from enthought.traits.ui.qt4.extra.checkbox_renderer import CheckboxRenderer
+else:
+    raise NotImplementedError, "No checkbox renderer for backend"
 
 #-------------------------------------------------------------------------------
 #  'CheckboxColumn' class:
