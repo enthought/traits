@@ -22,8 +22,8 @@
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
-     import CTrait, Property, Range, Enum, Str, Int, \
-            Unicode, Bool, Undefined
+     import CTrait, Property, Range, Enum, Str, Int, Any, Unicode, Bool, \
+            Undefined
             
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
@@ -78,6 +78,12 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Is the range for floating pointer numbers (vs. integers)?
     is_float = Bool( Undefined )
+
+    # Function to evaluate textual user input
+    evaluate = Any( eval )
+    
+    # The object trait containing the function used to evaluate user input
+    evaluate_name = Str
 
     # Low end of range
     low = Property
