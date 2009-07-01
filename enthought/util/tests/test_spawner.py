@@ -28,6 +28,7 @@ class Tests(unittest.TestCase):
 
     def setUp(self):
         OS_handle, fname = tempfile.mkstemp()
+        os.close(OS_handle)
         self.tmpname = fname
 
     
