@@ -48,25 +48,35 @@ class ETSConfig(object):
 
     #### properties ###########################################################
 
-    def _get_application_data(self):
-        """
-        Property getter.
+    def get_application_data(self, create=False):
+        """ Return the application data directory path.
+        
+            **Parameters**
 
-        This is a directory that applications and packages can safely write
-        non-user accessible data to i.e. configuration information, preferences
-        etc.
+            create: create the corresponding directory or not
 
-        Do not put anything in here that the user might want to navigate to
-        e.g. projects, user data files etc.
+            **Notes**
 
-        The actual location differs between operating systems.
+            This is a directory that applications and packages can safely
+            write non-user accessible data to i.e. configuration
+            information, preferences etc.
 
-        """
+            Do not put anything in here that the user might want to navigate to
+            e.g. projects, user data files etc.
 
+            The actual location differs between operating systems.
+       """
         if self._application_data is None:
-            self._application_data = self._initialize_application_data()
+            self._application_data = \
+                    self._initialize_application_data(create=create)
 
         return self._application_data
+        
+
+    def _get_application_data(self):
+        """ Property getter, see get_application_data's docstring.
+        """
+        return self.get_application_data(create=True)
 
 
     def _set_application_data(self, application_data):
@@ -79,43 +89,56 @@ class ETSConfig(object):
 
         return
 
+    def get_application_home(self, create=False):
+        """ Return the application home directory path.
+        
+            **Parameters**
 
+            create: create the corresponding directory or not
+
+            **Notes**
+
+            This is a directory named after the current, running
+            application that imported this module that applications and
+            packages can safely write non-user accessible data to i.e.
+            configuration information, preferences etc.  It is a
+            sub-directory of self.application_data, named after the
+            directory that contains the "main" python script that started
+            the process.  For example, if application foo is started with
+            a script named "run.py" in a directory named "foo", then the
+            application home would be: <ETSConfig.application_data>/foo,
+            regardless of if it was launched with "python
+            <path_to_foo>/run.py" or "cd <path_to_foo>; python run.py"
+
+            This is useful for library modules used in apps that need to
+            store state, preferences, etc. for the specific app only, and
+            not for all apps which use that library module.  If the
+            library module uses ETSConfig.application_home, they can
+            store prefs for the app all in one place and do not need to
+            know the details of where each app might reside.
+
+            Do not put anything in here that the user might want to
+            navigate to e.g. projects, user home files etc.
+
+            The actual location differs between operating systems.
+
+       """
+        if self._application_home is None:
+            self._application_home = path.join(
+                                self.get_application_data(create=create),
+                                self._get_application_dirname())
+
+        return self._application_home
+
+
+ 
     application_data = property(_get_application_data, _set_application_data)
 
 
     def _get_application_home(self):
+        """ Property getter, see get_application_home's docstring.
         """
-        Property getter.
-
-        This is a directory named after the current, running application that
-        imported this module that applications and packages can safely write
-        non-user accessible data to i.e. configuration information, preferences
-        etc.  It is a sub-directory of self.application_data, named after the
-        directory that contains the "main" python script that started the
-        process.  For example, if application foo is started with a script named
-        "run.py" in a directory named "foo", then the application home would be:
-        <ETSConfig.application_data>/foo, regardless of if it was launched
-        with "python <path_to_foo>/run.py" or "cd <path_to_foo>; python run.py"
-
-        This is useful for library modules used in apps that need to store
-        state, preferences, etc. for the specific app only, and not for all apps
-        which use that library module.  If the library module uses
-        ETSConfig.application_home, they can store prefs for the app all in
-        one place and do not need to know the details of where each app might
-        reside.
-
-        Do not put anything in here that the user might want to navigate to
-        e.g. projects, user home files etc.
-
-        The actual location differs between operating systems.
-
-        """
-
-        if self._application_home is None:
-            self._application_home = path.join(self.application_data,
-                                               self._get_application_dirname())
-
-        return self._application_home
+        return self.get_application_home(create=True)
 
 
     def _set_application_home(self, application_home):
@@ -293,7 +316,7 @@ class ETSConfig(object):
         return dirname
 
 
-    def _initialize_application_data(self):
+    def _initialize_application_data(self, create=True):
         """
         Initializes the (default) application data directory.
 
@@ -321,15 +344,17 @@ class ETSConfig(object):
 
         application_data = os.path.join(parent_directory, directory_name)
 
-        # If a file already exists with this name then make sure that it is
-        # a directory!
-        if os.path.exists(application_data):
-            if not os.path.isdir(application_data):
-                raise ValueError('File "%s" already exists' % application_data)
+        if create:
+            # If a file already exists with this name then make sure that it is
+            # a directory!
+            if os.path.exists(application_data):
+                if not os.path.isdir(application_data):
+                    raise ValueError('File "%s" already exists' 
+                                                    % application_data)
 
-        # Otherwise, create the directory.
-        else:
-            os.makedirs(application_data)
+            # Otherwise, create the directory.
+            else:
+                os.makedirs(application_data)
 
         return application_data
 
