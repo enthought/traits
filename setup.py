@@ -48,13 +48,16 @@ Traits:
 * `Numpy <http://pypi.python.org/pypi/numpy/1.1.1>`_ to support the trait types
   for arrays. Version 1.1.0 or later is preferred. Version 1.0.4 will work, but
   some tests may fail.
-* `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_"""
+* `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
+*-`setupdocs  <http://pypi.python.org/pypi/SetupDocs>`_"""
 
+import traceback
+import sys
 
 from setuptools import setup, Extension, find_packages
 from setuptools.command.develop import develop
 from distutils.command.build import build as distbuild
-
+from distutils import log
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
 # from incorrect packages. Ticket #1592
@@ -87,13 +90,21 @@ DOCLINES = __doc__.split("\n")
 class MyDevelop(develop):
     def run(self):
         develop.run(self)
-        self.run_command('build_docs')
+        try:
+            self.run_command('build_docs')
+        except:
+            log.warn("Couldn't build documentation:\n%s" %
+                     traceback.format_exception(*sys.exc_info()))
 
 
 class MyBuild(distbuild):
     def run(self):
         distbuild.run(self)
-        self.run_command('build_docs')
+        try:
+            self.run_command('build_docs')
+        except:
+            log.warn("Couldn't build documentation:\n%s" %
+                     traceback.format_exception(*sys.exc_info()))
 
 
 setup(
