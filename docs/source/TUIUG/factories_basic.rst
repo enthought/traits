@@ -334,6 +334,26 @@ being edited should be updated with every keystroke (True) or only when the
 editor loses focus, i.e., when the user tabs away from it or closes the window
 (False). The default value of this parameter is True.
 
+
+DefaultOverride()
+`````````````````
+
+:Suitable for:
+    (any)
+:Default for:
+    (none)
+
+The DefaultOverride() is a factory that takes the trait's default editor and
+customizes it with the specified parameters. This is useful when a trait defines
+a default editor using some of its data, e.g. Range or Enum, and you want to
+tweak some of the other parameters without having recreate that data.
+
+For example, the default editor for Range(low=0, high=1500) has
+'1500' as the upper label.  To change it to 'Max' instead, use::
+
+    View(Item('my_range', editor=DefaultOverride(high_label='Max'))
+
+
 DirectoryEditor()
 `````````````````
 

@@ -9,6 +9,7 @@ from color_editor import ColorEditor
 from compound_editor import CompoundEditor
 from custom_editor import CustomEditor
 from date_editor import DateEditor
+from default_override import DefaultOverride
 from directory_editor import DirectoryEditor
 from dnd_editor import DNDEditor
 from drop_editor import DropEditor
