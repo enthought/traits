@@ -159,9 +159,11 @@ class SaveHandler(Handler):
     #-----------------------------------------------------------------
 
     def exit(self, info):
+        """ Closes the UI unless a save prompt is cancelled. Provided for 
+            convenience to be used with a Menu action.
+        """
         if self.close(info, True):
             info.ui.dispose()
-            sys.exit(0)
 
     def save(self, info):
         """ Saves the object to its current filepath. If this is not specified,
