@@ -90,15 +90,15 @@ setup(
     cmdclass = {
         'develop': MyDevelop,
         'build': MyBuild
-    },
+        },
     description = DOCLINES[1],
     extras_require = INFO['extras_require'],
+    include_package_data = True,
+    install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
-    include_package_data = True,
-    install_requires = INFO['install_requires'],
     name = 'EnthoughtBase',
     namespace_packages = [
         "enthought",
