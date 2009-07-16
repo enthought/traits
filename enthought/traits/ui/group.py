@@ -27,8 +27,8 @@ from string \
     import find
 
 from enthought.traits.api \
-    import TraitError, ReadOnly, Delegate, List, Str, \
-           Range, Instance, Bool
+    import TraitError, ReadOnly, Delegate, List, Str, Float, Range, Bool, \
+           Instance, Property, cached_property
 
 from enthought.traits.trait_base \
     import enumerate
@@ -196,6 +196,12 @@ class Group ( ViewSubElement ):
     # individual widget is the sum of the padding for its Group, the padding 
     # for its Item, and the default spacing determined by the toolkit. 
     padding = Padding
+
+    # Requested width of the group (calculated from widths of contents)
+    width = Property( Float, depends_on='content' )
+
+    # Requested height of the group (calculated from heights of contents)
+    height = Property( Float, depends_on='content' )
 
     #---------------------------------------------------------------------------
     #  Initializes the object:
@@ -410,6 +416,44 @@ class Group ( ViewSubElement ):
             
         return '%s(\n%s\n)' % ( 
                self.__class__.__name__, self._indent( content ) )
+
+    #---------------------------------------------------------------------------
+    #  Property getters/setters for width/height attributes
+    #---------------------------------------------------------------------------
+
+    @cached_property
+    def _get_width ( self ):
+        """ Returns the requested width of the Group.
+        """
+        width = 0.0
+        for item in self.content:
+            if item.width >= 1:
+                if self.orientation == 'horizontal':
+                    width += item.width
+                elif self.orientation == 'vertical':
+                    width = max( width, item.width )
+
+        if width == 0:
+            width = -1.0
+
+        return width
+
+    @cached_property
+    def _get_height ( self ):
+        """ Returns the requested height of the Group.
+        """
+        height = 0.0
+        for item in self.content:
+            if item.height >= 1:
+                if self.orientation == 'horizontal':
+                    height = max( height, item.height )
+                elif self.orientation == 'vertical':
+                    height += item.height
+
+        if height == 0:
+            height = -1.0
+
+        return height
 
 #-------------------------------------------------------------------------------
 #  'HGroup' class:
