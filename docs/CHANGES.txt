@@ -1,18 +1,41 @@
+Traits 3.2.1 (not yet released)
+===============================
+
+Enhancements
+------------
+
+
+Fixes
+-----
+
+
 Traits 3.2.0 (July 15, 2009)
 ============================
 
  * Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)
- * Saving/restoring window positions works with multiple displays of different sizes
- * New ProgressEditor
- * Changed default colors for TableEditor
- * Added support for HTMLEditor for QT backend using QtWebKit
- * Improved support for opening links in external browser from HTMLEditor
- * Added support for TabularEditor for QT backend
- * Added support for marking up the CodeEditor, including adding squiggles and dimming lines
- * Added SearchEditor
- * Improved unicode support
- * Changed behavior of RangeEditor text box to not auto-set
- * Added support in RangeEditor for specifying the method to evaluate new values. 
- * Add DefaultOverride editor factory courtesy Stéfan van der Walt
- * Removed sys.exit() call from SaveHandler.exit()
 
+ * Saving/restoring window positions works with multiple displays of different sizes
+
+ * New ProgressEditor
+
+ * Changed default colors for TableEditor
+
+ * Added support for HTMLEditor for QT backend using QtWebKit
+
+ * Improved support for opening links in external browser from HTMLEditor
+
+ * Added support for TabularEditor for QT backend
+
+ * Added support for marking up the CodeEditor, including adding squiggles and dimming lines
+
+ * Added SearchEditor
+
+ * Improved unicode support
+
+ * Changed behavior of RangeEditor text box to not auto-set
+
+ * Added support in RangeEditor for specifying the method to evaluate new values. 
+
+ * Add DefaultOverride editor factory courtesy Stéfan van der Walt
+
+ * Removed sys.exit() call from SaveHandler.exit()
