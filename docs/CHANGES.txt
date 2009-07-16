@@ -9,8 +9,12 @@ Fixes
 -----
 
 
+
 Traits 3.2.0 (July 15, 2009)
 ============================
+
+Enhancements
+------------
 
  * Implemented editable_labels attribute in the TabularEditor for enabling editing of the labels (i.e. the first column)
 
@@ -39,3 +43,8 @@ Traits 3.2.0 (July 15, 2009)
  * Add DefaultOverride editor factory courtesy Stéfan van der Walt
 
  * Removed sys.exit() call from SaveHandler.exit()
+
+
+Fixes
+-----
+
