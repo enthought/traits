@@ -79,10 +79,10 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Is the range for floating pointer numbers (vs. integers)?
     is_float = Bool( Undefined )
 
-    # Function to evaluate textual user input
-    evaluate = Any( eval )
+    # Function to evaluate floats/ints when they are assigned to an object trait
+    evaluate = Any
     
-    # The object trait containing the function used to evaluate user input
+    # The object trait containing the function used to evaluate floats/ints
     evaluate_name = Str
 
     # Low end of range
