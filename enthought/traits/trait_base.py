@@ -262,10 +262,10 @@ class _Undefined ( object ):
         return '<undefined>'
 
     def __eq__( self, other ):
-        return type(self) == type(other)
+        return type(self) is type(other)
 
     def __ne__( self, other ):
-        return type(self) != type(other)
+        return type(self) is not type(other)
 
 # Singleton object that indicates that a trait attribute has not yet had a
 # value set (i.e., its value is undefined). This object is used instead of
