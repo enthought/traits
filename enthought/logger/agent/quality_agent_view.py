@@ -14,7 +14,6 @@
 
 # Standard library imports.
 import logging
-import wx
 
 # Enthought library imports.
 from enthought.pyface.api import Dialog
@@ -56,6 +55,7 @@ class QualityAgentView(Dialog):
 
     def _create_dialog_area(self, parent):
         """ Creates the main content of the dialog. """
+        import wx
 
         parent.SetSizeHints(minW=300, minH=575)
 
@@ -89,6 +89,7 @@ class QualityAgentView(Dialog):
 
     def _create_buttons(self, parent):
         """ Creates the buttons. """
+        import wx
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -123,6 +124,7 @@ class QualityAgentView(Dialog):
     ### Utility methods #######################################################
 
     def _create_error_panel(self, parent):
+        import wx
 
         box = wx.StaticBox(parent, -1, "Message:")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
@@ -149,6 +151,7 @@ class QualityAgentView(Dialog):
 
 
     def _create_report_panel(self, parent):
+        import wx
 
         box = wx.StaticBox(parent, -1, "Report Information:")
         sizer = wx.StaticBoxSizer(box, wx.VERTICAL)
@@ -181,6 +184,7 @@ class QualityAgentView(Dialog):
 
 
     def _create_email_info(self, parent):
+        import wx
 
         # Layout setup ..
         sizer = wx.FlexGridSizer(5,2,10,10)
@@ -220,6 +224,7 @@ class QualityAgentView(Dialog):
 
 
     def _create_priority_combo(self, parent):
+        import wx
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
@@ -237,6 +242,7 @@ class QualityAgentView(Dialog):
 
 
     def _create_project_upload(self, parent):
+        import wx
 
         id = wx.NewId()
         cb = wx.CheckBox(parent, id, "Include Workspace Files (will increase email size)        ",
@@ -287,6 +293,7 @@ class QualityAgentView(Dialog):
         return
 
     def _on_send(self, event):
+        import wx
         # Disable the Send button while we go through the possibly
         # time-consuming email-sending process.
         button = event.GetEventObject()
