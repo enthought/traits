@@ -140,16 +140,23 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
             return resource_stream(requirement, resource_path)
             
     except:
-        # Setuptools was either not installed, or it failed to find the image
-        # file. Get the image using sys.path[0], which is the directory that the
-        # example lives in. The path to the image is then constructed by
-        # navigating from the scripts location. This method only works if this
-        # example is called directly from the command line using
-        # 'python %SOMEPATH%/imshow.py'
+        # Setuptools was either not installed, or it failed to find the file.
+        # First check to see if the package was installed using egginst by
+        # looking for the file at: site-packages\\resouce_path
+        full_path = os.path.join(get_python_lib(), resource_path)
+        if os.path.exists(full_path):
+            if return_path:
+                return full_path
+            else:
+                return open(full_path, 'rb')
         
+        # Get the image using sys.path[0], which is the directory that the
+        # running script lives in. The path to the file is then constructed by
+        # navigating from the script's location. This method only works if this
+        # script is called directly from the command line using
+        # 'python %SOMEPATH%/<script>'
         if alt_path is None:
             return
-        
         if return_path:
             return os.path.join(sys.path[0], alt_path)
 
@@ -172,7 +179,10 @@ def store_resource(project, resource_path, filename):
         The return value in always None.
     """
     fi = find_resource(project, resource_path)
-    
+    if fi is None:
+        raise RuntimeError('Resource not found for project "%s": %s' %
+                           (project, resource_path))
+        
     fo = open(filename, 'wb')
     fo.write(fi.read())
     fo.close()
