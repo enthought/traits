@@ -30,6 +30,7 @@
 
 # Standard library imports.
 import inspect, os, sys
+from distutils.sysconfig import get_python_lib
 
 
 def get_path(path):
