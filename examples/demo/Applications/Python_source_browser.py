@@ -22,8 +22,6 @@ As an extra <i>feature</i>, the <b>TabularEditor</b> also displays a:
 import enthought.traits
 import enthought.traits.ui
 
-import wx
-
 from time \
     import localtime, strftime
     
@@ -90,7 +88,7 @@ class FileInfoAdapter ( TabularAdapter ):
                 ( 'Time',      'time' ),
                 ( 'Date',      'date' ) ]
                 
-    even_bg_color  = wx.Colour( 201, 223, 241 )
+    even_bg_color  = ( 201, 223, 241 )
     font           = 'Courier 10'
     size_alignment = Str( 'right' )
     time_alignment = Str( 'right' )
