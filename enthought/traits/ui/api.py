@@ -22,27 +22,33 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from handler \
-    import Handler, Controller, ModelView, ViewHandler, default_handler
+from basic_editor_factory \
+    import BasicEditorFactory
 
-from view \
-    import View
+from context_value \
+    import ContextValue, CV, CVInt, CVFloat, CVStr, CVType
+
+from editor \
+    import Editor
+
+from editor_factory \
+    import EditorFactory
+
+from editors.api \
+    import *
 
 from group \
     import Group, HGroup, VGroup, VGrid, HFlow, VFlow, VFold, HSplit, VSplit, \
            Tabbed
 
-from ui \
-    import UI
-
-from ui_info \
-    import UIInfo
-
-from ui_traits \
-    import Border, Margin, HasMargin, HasBorder, StatusItem, Image, ATheme
+from handler \
+    import Handler, Controller, ModelView, ViewHandler, default_handler
 
 from help \
     import on_help_call
+
+from help_template \
+    import help_template
 
 from include \
     import Include
@@ -51,46 +57,54 @@ from item \
     import Item, UItem, Custom, UCustom, Readonly, UReadonly, Label, Heading, \
            Spring, spring
 
-from editor_factory \
-    import EditorFactory
+from menu \
+    import Action, ActionGroup, Menu, MenuBar, PyFaceAction, ToolBar, \
+           Separator, CloseAction, UndoAction, RedoAction, RevertAction, \
+           HelpAction, StandardMenuBar, NoButton, UndoButton, RevertButton, \
+           ApplyButton, OKButton, CancelButton, HelpButton, OKCancelButtons, \
+           ModalButtons, LiveButtons, NoButtons
 
-from basic_editor_factory \
-    import BasicEditorFactory
+from message \
+    import message, error, auto_close_message
 
-from context_value \
-    import ContextValue, CV, CVInt, CVFloat, CVStr, CVType
+from table_column \
+    import TableColumn, ObjectColumn, ExpressionColumn, NumericColumn, \
+           ListColumn
+
+from table_filter \
+    import TableFilter, EvalTableFilter, RuleTableFilter, MenuTableFilter
     
-from editor \
-    import Editor
+from theme \
+    import Theme, default_theme
 
 from toolkit \
     import toolkit
 
-from undo \
-    import UndoHistory, AbstractUndoItem, UndoItem, ListUndoItem, \
-           UndoHistoryUndoItem
+from toolkit_traits \
+    import ColorTrait, RGBColorTrait, FontTrait
 
-from view_element \
-    import ViewElement, ViewSubElement
-
-from help_template \
-    import help_template
-
-from message \
-    import message, error, auto_close_message
-    
-from theme \
-    import Theme, default_theme
-    
 from tree_node \
     import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode, \
            ITreeNode, ITreeNodeAdapter
 
-from toolkit_traits \
-    import ColorTrait, RGBColorTrait, FontTrait
+from ui \
+    import UI
 
-from editors.api \
-    import *
+from ui_info \
+    import UIInfo
+    
+from ui_traits \
+    import Border, Margin, HasMargin, HasBorder, StatusItem, Image, ATheme
+    
+from undo \
+    import UndoHistory, AbstractUndoItem, UndoItem, ListUndoItem, \
+           UndoHistoryUndoItem
+
+from view \
+    import View
+
+from view_element \
+    import ViewElement, ViewSubElement
 
 import view_elements
 

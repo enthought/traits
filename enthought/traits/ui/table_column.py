@@ -30,17 +30,13 @@ from enthought.traits.api \
 from enthought.traits.trait_base \
     import user_name_for, xgetattr
     
-from enthought.traits.ui.api \
-    import View, Group, EditorFactory, TextEditor
-    
-from menu \
-    import Menu
-    
-from ui_traits \
-    import ATheme, Image, AView, EditorStyle
-
-from toolkit \
-    import toolkit
+from editor_factory import EditorFactory
+from editors.api import TextEditor
+from group import Group
+from menu import Menu
+from toolkit import toolkit
+from ui_traits import ATheme, Image, AView, EditorStyle
+from view import View
     
 # Set up a logger:    
 import logging

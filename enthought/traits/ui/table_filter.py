@@ -26,14 +26,15 @@ from enthought.traits.api \
     import HasPrivateTraits, Str, Any, Instance, Trait, List, Property, Event, \
            Expression, Enum, Callable, Bool
 
-from enthought.traits.ui.api \
-    import View, Group, Item, Include, Handler, EnumEditor, EditorFactory
-
-from enthought.traits.ui.menu \
-    import Action
-
-from enthought.traits.ui.table_column \
-    import ObjectColumn
+from editor_factory import EditorFactory
+from editors.api import EnumEditor
+from group import Group
+from handler import Handler
+from include import Include
+from item import Item
+from menu import Action
+from table_column import ObjectColumn
+from view import View
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
