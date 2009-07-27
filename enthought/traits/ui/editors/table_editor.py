@@ -23,30 +23,38 @@
 
 from enthought.traits.api \
     import Int, Float, List, Instance, Str, Color, Font, Any, Tuple, Dict, \
-            Enum, Trait, Bool, Callable, Range
-
-# CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of
-# traits.ui.api as well.
-from enthought.traits.ui.view \
-    import View
-
-from enthought.traits.ui.item \
-    import Item
-
-from enthought.traits.ui.handler \
-    import Handler
-
-from enthought.traits.ui.ui_traits \
-    import AView
+            Enum, Trait, Bool, Callable, Range, on_trait_change
 
 from enthought.traits.ui.editor_factory \
     import EditorFactory
 
+from enthought.traits.ui.handler \
+    import Handler
+
 from enthought.traits.ui.helper \
     import Orientation
 
+from enthought.traits.ui.item \
+    import Item
+
+from enthought.traits.ui.table_filter \
+    import TableFilter
+
+from enthought.traits.ui.ui_traits \
+    import AView
+
+from enthought.traits.ui.view \
+    import View
+
 from enum_editor import EnumEditor
+
+#-------------------------------------------------------------------------------
+#  Constants:
+#-------------------------------------------------------------------------------
+
+# The filter used to indicate that the user wants to customize the current
+# filter
+customize_filter = TableFilter( name = 'Customize...' )
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -364,7 +372,86 @@ class ToolkitEditorFactory ( EditorFactory ):
         from enthought.traits.ui.api import WindowColor
         return WindowColor
 
+    #---------------------------------------------------------------------------
+    #  Event handlers:
+    #---------------------------------------------------------------------------
+
+    @on_trait_change('filters[]')
+    def _update_filter_editor ( self, object, name, old, new ):
+        """ Handles the set of filters associated with the editor's factory 
+            being changed.
+        """
+        values = { None: '000:No filter' }
+        i      = 0
+        for filter in self.filters:
+            if not filter.template:
+                i += 1
+                values[ filter ] = '%03d:%s' % ( i, filter.name )
+        values[ customize_filter ] = '%03d:%s' % ( (i + 1),
+                                                   customize_filter.name )
+        if self._filter_editor is None:
+            self._filter_editor = EnumEditor( values = values )
+        else:
+            self._filter_editor.values = values
+
+
 # Define the TableEditor class
 TableEditor = ToolkitEditorFactory
 
-### EOF ---------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#  Helper class for toolkit-specific editors to implement 'reversed' option:
+#-------------------------------------------------------------------------------
+
+class ReversedList ( object ):
+    """ A list whose order is the reverse of its input.
+    """
+
+    def __init__ ( self, list ):
+        self.list = list
+
+    def insert ( self, index, value ):
+        """ Inserts a value at a specified index in the list.
+        """
+        return self.list.insert( self._index( index - 1 ), value )
+
+    def index ( self, value ):
+        """ Returns the index of the first occurence of the specified value in
+            the list.
+        """
+        list = self.list[:]
+        list.reverse()
+        
+        return list.index( value )
+
+    def __len__ ( self ):
+        """ Returns the length of the list.
+        """
+        return len( self.list )
+
+    def __getitem__ ( self, index ):
+        """ Returns the value at a specified index in the list.
+        """
+        return self.list[ self._index( index ) ]
+
+    def __setslice__ ( self, i, j, values ):
+        """ Sets a slice of a list to the contents of a specified sequence.
+        """
+        return self.list.__setslice__( self._index( i ), self._index( j ),
+                                       values )
+
+    def __delitem__ ( self, index ):
+        """ Deletes the item at a specified index.
+        """
+        return self.list.__delitem__( self._index( index ) )
+
+    def _index ( self, index ):
+        """ Returns the "reversed" value for a specified index.
+        """
+        if index < 0:
+            return (-1 - index)
+            
+        result = (len( self.list ) - index - 1)
+        if result >= 0:
+            return result
+            
+        return index
