@@ -25,7 +25,6 @@
 
 from string \
     import uppercase, lowercase
-
     
 from enthought.traits.api \
     import HasPrivateTraits, Enum, Trait, CTrait, Instance, Str, Any, Int, \
@@ -34,7 +33,6 @@ from enthought.traits.api \
 from enthought.traits.ui.ui_traits \
     import convert_image, SequenceTypes
 
-    
 #-------------------------------------------------------------------------------
 #  Trait definitions:  
 #-------------------------------------------------------------------------------
@@ -79,8 +77,6 @@ def commatize ( value ):
         
     return '-' + result
 
-
-    
 #-------------------------------------------------------------------------------
 #  Recomputes the mappings for a new set of enumeration values:
 #-------------------------------------------------------------------------------
