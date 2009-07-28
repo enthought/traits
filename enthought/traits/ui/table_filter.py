@@ -152,13 +152,19 @@ class TableFilter ( HasPrivateTraits ):
 
     def edit ( self, object ):
         """ Edits the contents of the filter.
+        """
+        return self.edit_traits( view = self.edit_view( object ),
+                                 kind = 'livemodal' )
 
+    def edit_view ( self, object ):
+        """ Return a view to use for editing the filter.
+        
         The ''object'' parameter is a sample object for the table that the 
         filter will be applied to. It is supplied in case the filter needs to
         extract data or metadata from the object. If the table is empty, the 
         ''object'' argument is None.
         """
-        return self.edit_traits( kind = 'livemodal' )
+        return None
 
     #---------------------------------------------------------------------------
     #  'object' interface:
@@ -560,8 +566,8 @@ class RuleTableFilter ( TableFilter ):
     #  Edits the contents of the filter:
     #---------------------------------------------------------------------------
 
-    def edit ( self, object ):
-        """ Edits the contents of the filter.
+    def edit_view ( self, object ):
+        """ Return a view to use for editing the filter.
 
         The ''object'' parameter is a sample object for the table that the 
         filter will be applied to. It is supplied in case the filter needs to
@@ -574,19 +580,19 @@ class RuleTableFilter ( TableFilter ):
             
         names              = object.editable_traits()
         self._trait_values = object.get( names )
-        return self.edit_traits( view = View( [
-                        [ 'name{Filter name}', '_' ],
-                        [ Item( 'rules',
-                                id     = 'rules_table',
-                                editor = self._get_table_editor( names ) ),
-                          '|<>' ] ],
-                        id        = self.view_id,
-                        title     = 'Edit Filter',
-                        kind      = 'livemodal',
-                        resizable = True,
-                        buttons   = [ 'OK', 'Cancel' ],
-                        width     = 0.4,
-                        height    = 0.3 ) )
+        return View(
+            [ [ 'name{Filter name}', '_' ],
+              [ Item( 'rules',
+                      id     = 'rules_table',
+                      editor = self._get_table_editor( names ) ),
+                '|<>' ] ],
+            id        = self.view_id,
+            title     = 'Edit Filter',
+            kind      = 'livemodal',
+            resizable = True,
+            buttons   = [ 'OK', 'Cancel' ],
+            width     = 0.4,
+            height    = 0.3 )
 
     #---------------------------------------------------------------------------
     #  Returns a table editor to use for editing the filter:
