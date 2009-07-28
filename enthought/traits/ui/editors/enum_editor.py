@@ -43,7 +43,7 @@ Mode = Enum( 'radio', 'list' )
 #-------------------------------------------------------------------------------
 
 class ToolkitEditorFactory ( EditorWithListFactory ):
-    """ PyQt editor factory for enumeration editors.
+    """ Editor factory for enumeration editors.
     """
     
     #---------------------------------------------------------------------------
