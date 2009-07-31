@@ -399,6 +399,112 @@ class ToolkitEditorFactory ( EditorFactory ):
 TableEditor = ToolkitEditorFactory
 
 #-------------------------------------------------------------------------------
+#  Base class for toolkit-specific editors
+#-------------------------------------------------------------------------------
+
+class BaseTableEditor(object):
+    """ Base class for toolkit-specific editors.
+    """
+
+    #---------------------------------------------------------------------------
+    #  Interface for toolkit-specific editors:
+    #---------------------------------------------------------------------------
+
+    def set_menu_context ( self, selection, object, column ):
+        """Call before creating a context menu for a cell, then set self as the
+           controller for the menu.
+        """
+        self._menu_context = { 'selection': selection,
+                               'object':    object,
+                               'column':    column,
+                               'editor':    self,
+                               'info':      self.ui.info,
+                               'handler':   self.ui.handler }
+
+    #---------------------------------------------------------------------------
+    #  pyface.action 'controller' interface implementation:
+    #---------------------------------------------------------------------------
+
+    def add_to_menu ( self, menu_item ):
+        """ Adds a menu item to the menu bar being constructed.
+        """
+        action = menu_item.item.action
+        self.eval_when( action.enabled_when, menu_item, 'enabled' )
+        self.eval_when( action.checked_when, menu_item, 'checked' )
+
+    def add_to_toolbar ( self, toolbar_item ):
+        """ Adds a toolbar item to the toolbar being constructed.
+        """
+        self.add_to_menu( toolbar_item )
+
+    def can_add_to_menu ( self, action ):
+        """ Returns whether the action should be defined in the user interface.
+        """
+        if action.defined_when != '':
+            if not eval( action.defined_when, globals(), 
+                         self._menu_context ):
+                return False
+
+        if action.visible_when != '':
+            if not eval( action.visible_when, globals(), 
+                         self._menu_context ):
+                return False
+
+        return True
+
+    def can_add_to_toolbar ( self, action ):
+        """ Returns whether the toolbar action should be defined in the user
+            interface.
+        """
+        return self.can_add_to_menu( action )
+
+    def perform ( self, action, action_event = None ):
+        """ Performs the action described by a specified Action object.
+        """
+        self.ui.do_undoable( self._perform, action )
+
+    def _perform ( self, action ):
+        method_name        = action.action
+        info               = self.ui.info
+        handler            = self.ui.handler
+        context            = self._menu_context
+        self._menu_context  = None
+        selection          = context[ 'selection' ]
+
+        if method_name.find( '.' ) >= 0:
+            if method_name.find( '(' ) < 0:
+                method_name += '()'
+            try:
+                eval( method_name, globals(), context )
+            except:
+                # fixme: Should the exception be logged somewhere?
+                pass
+            return
+
+        method = getattr( handler, method_name, None )
+        if method is not None:
+            method( info, selection )
+            return
+
+        if action.on_perform is not None:
+            action.on_perform( selection )
+            return
+
+        action.perform( selection )
+
+    #---------------------------------------------------------------------------
+    #  Menu support methods:
+    #---------------------------------------------------------------------------
+
+    def eval_when ( self, condition, object, trait ):
+        """ Evaluates a condition within a defined context and sets a specified
+        object trait based on the result, which is assumed to be a Boolean.
+        """
+        if condition != '':
+            value = bool( eval( condition, globals(), self._menu_context ) )
+            setattr( object, trait, value )
+
+#-------------------------------------------------------------------------------
 #  Helper class for toolkit-specific editors to implement 'reversed' option:
 #-------------------------------------------------------------------------------
 
