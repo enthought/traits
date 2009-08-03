@@ -14,25 +14,24 @@
 #  Date:   10/7/2008
 #
 #------------------------------------------------------------------------------
+
+""" A Traits UI editor that wraps a WX calendar panel.
 """
-A Traits UI editor that wraps a WX calendar panel.
-"""
+
 from enthought.traits.trait_types import Bool, Int, Enum, Str
 from enthought.traits.ui.ui_traits import AView
 from enthought.traits.ui.editor_factory import EditorFactory
 
 
-#-- DateEditor definition ----------------------------------------------------- 
-class DateEditor ( EditorFactory ):
-    """
-    Editor factory for date/time editors. 
+class DateEditor(EditorFactory):
+    """ Editor factory for date/time editors. 
     """
 
     #---------------------------------------------------------------------------
     #  Trait definitions:  
     #---------------------------------------------------------------------------
     
-    #-- ReadonlyEditor traits -------------------------------------------------- 
+    #-- ReadonlyEditor traits --------------------------------------------------
     
     # Message to show when Date is None.
     message = Str('Undefined')
@@ -43,8 +42,7 @@ class DateEditor ( EditorFactory ):
     # An optional view to display when a read-only text editor is clicked:
     view = AView
     
-    
-    #-- CustomEditor traits ---------------------------------------------------- 
+    #-- CustomEditor traits ----------------------------------------------------
     
     # Should users be able to pick future dates when using the CustomEditor?
     allow_future = Bool(True)
@@ -75,8 +73,3 @@ class DateEditor ( EditorFactory ):
     
     # Does the user have to hold down Shift for the left-click multiselect?
     shift_to_select = Bool(False)
-
-#-- end DateEditor definition ------------------------------------------------- 
-
-
-#-- eof ----------------------------------------------------------------------- 
