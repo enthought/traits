@@ -62,6 +62,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Are the individual nodes editable?
     editable = Bool(True)
 
+    # Selection mode.
+    selection_mode = Enum('single', 'extended')
+
     # Is the editor shared across trees?
     shared_editor = Bool(False)
 
