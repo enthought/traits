@@ -494,7 +494,7 @@ class TabularAdapter ( HasPrivateTraits ):
                             
                         return handler()
         else:
-            if item is not None:
+            if item is not None and hasattr(item_class, '__mro__'):
                 for klass in item_class.__mro__:
                     handler = (self._get_handler_for( '%s_%s_%s' % 
                           ( klass.__name__, column_id, trait_name ), prefix ) or
