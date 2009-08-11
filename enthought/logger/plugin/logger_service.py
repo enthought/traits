@@ -1,14 +1,17 @@
+# Standard library imports
 from cStringIO import StringIO
 import logging
 import os
 import zipfile
 
-from enthought.traits.api import Any, Callable, HasTraits, List, Property, \
-    Undefined, on_trait_change
-
+# Enthought library imports
+from enthought.pyface.workbench.api import View as WorkbenchView
+from enthought.traits.api import Any, Callable, HasTraits, Instance, List, \
+    Property, Undefined, on_trait_change
 
 root_logger = logging.getLogger()
 logger = logging.getLogger(__name__)
+
 
 class LoggerService(HasTraits):
     """ The persistent service exposing the Logger plugin's API.
@@ -24,36 +27,28 @@ class LoggerService(HasTraits):
     preferences = Any()
 
     # The view we use.
-    plugin_view = Any()
+    plugin_view = Instance(WorkbenchView)
 
     # Contributions from other plugins.
     mail_files = Property(List(Callable))
-
 
     def save_preferences(self):
         """ Save the preferences.
         """
         self.preferences.preferences.save()
 
-    def refresh_view(self):
-        """ Update the view if the logger items to display have changed.
-        """
-        view = getattr(self.handler, '_view', None)
-        if view is not None:
-            view.really_update()
-
     def whole_log_text(self):
         """ Return all of the logged data as formatted text.
         """
-        lines = [self.handler.format(rec) for rec in self.handler.get()]
+        lines = [ self.handler.format(rec) for rec in self.handler.get() ]
         # Ensure that we end with a newline.
         lines.append('')
         text = '\n'.join(lines)
         return text
 
-    def create_email_message(self, fromaddr, toaddrs, ccaddrs, subject,
-        priority, include_userdata=False, stack_trace="", comments="",
-        include_environment=True):
+    def create_email_message(self, fromaddr, toaddrs, ccaddrs, subject, 
+                             priority, include_userdata=False, stack_trace="", 
+                             comments="", include_environment=True):
         """ Format a bug report email from the log files.
         """
         from email.mime.application import MIMEApplication
@@ -65,7 +60,8 @@ class LoggerService(HasTraits):
         message['To'] = ', '.join(toaddrs)
         message['Cc'] = ', '.join(ccaddrs)
         message['From'] = fromaddr
-        message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
+        message.preamble = 'You will not see this in a MIME-aware mail ' \
+            'reader.\n'
         message.epilogue = ' ' # To guarantee the message ends with a newline
 
         # First section is simple ASCII data ...
@@ -139,26 +135,15 @@ class LoggerService(HasTraits):
         except Exception, e:
             logger.exception("Problem sending error report")
 
-
     #### Traits stuff #########################################################
 
     def _get_mail_files(self):
-        return self.application.get_extensions('enthought.logger.plugin.mail_files')
+        return self.application.get_extensions(
+            'enthought.logger.plugin.mail_files')
 
     @on_trait_change('preferences.level_')
     def _level_changed(self, new):
-        if (new is not None and new is not Undefined and self.handler is not None):
+        if (new is not None and new is not Undefined and 
+            self.handler is not None):
             root_logger.setLevel(self.preferences.level_)
             self.handler.setLevel(self.preferences.level_)
-            self.refresh_view()
-
-    @on_trait_change('preferences.enable_agent')
-    def _enable_agent_changed(self, new):
-        if new:
-            if self.plugin_view is not None and self.plugin_view.widget is not None:
-                from enthought.logger.agent.quality_agent_view import QualityAgentView
-                self.plugin_view.widget.set_selection_action(QualityAgentView)
-        else:
-            if self.plugin_view is not None and self.plugin_view.widget is not None:
-                from enthought.logger.widget.log_detail_view import LogDetailView
-                self.plugin_view.widget.set_selection_action(LogDetailView)

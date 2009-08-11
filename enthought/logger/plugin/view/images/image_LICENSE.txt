@@ -9,7 +9,7 @@ under BSD-like license.
 Files and orginal authors:
 ----------------------------------------------------------------
 about.png                 Crystal Project
-bug_yellow.png            Crystal Project
 crit_error.png            Crystal Project
+debug.png                 Crystal Project
 error.png                 Crystal Project
 warning.png               Crystal Project
