@@ -272,6 +272,11 @@ class UI ( HasPrivateTraits ):
         # Reset the contents of the user interface:
         self.reset( destroy = False )
 
+        # Make sure that 'visible', 'enabled', and 'checked' handlers are not
+        # called after the editor has been disposed:
+        for object in self.context.values():
+            object.on_trait_change( self._evaluate_when, remove = True )
+
         # Notify the handler that the view has been closed:
         self.handler.closed( self.info, self.result )
 
