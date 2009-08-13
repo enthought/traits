@@ -726,7 +726,8 @@ demo_view = View(
                    # for tabbed items. Needs more investigation.
                    visible_when = 'demo',
              ),
-             export = 'DockWindowShell'
+             export = 'DockWindowShell',
+             id     = 'tabbed',
          ),
          VGroup(
              Item( 'log',
