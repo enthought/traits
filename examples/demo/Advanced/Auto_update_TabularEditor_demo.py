@@ -30,6 +30,9 @@ from enthought.traits.ui.tabular_adapter \
 class EmployeeAdapter ( TabularAdapter ):
     
     columns = [ ( 'Name', 'name' ), ( 'Salary', 'salary' ) ]
+
+    def get_default_value( self, object, trait ):
+        return Employee( salary = 30000 )
     
 #-- Employee Class -------------------------------------------------------------
 
