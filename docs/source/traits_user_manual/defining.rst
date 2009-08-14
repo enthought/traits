@@ -578,6 +578,7 @@ Recognized Metadata Attributes
 ``````````````````````````````
 The following metadata attributes are not predefined, but are recognized by 
 HasTraits objects:
+
 .. index:: desc metadata attribute, editor metadata attribute, TraitValue class
 .. index:: label; metadata attribute, rich_compare metadata attribute
 .. index:: trait_value metadata attribute, transient metadata attribute
