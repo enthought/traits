@@ -382,7 +382,7 @@ overridden setattr() method and user interface notification method.
 Implementing Custom Window Commands
 ```````````````````````````````````
 
-Another purpose that you can use a Handler for is to define custom window
+Another use of a Handler is to define custom window
 actions, which can be presented as buttons, menu items, or toolbar buttons.
 
 .. _actions:
