@@ -59,6 +59,15 @@ def _import_toolkit ( name ):
     return getattr( module.traits.ui, name ).toolkit
 
 
+def assert_toolkit_import(name):
+    """ Raise an error if a toolkit with the given name should not be allowed
+    to be imported.
+    """
+    if ETSConfig.toolkit and ETSConfig.toolkit != name:
+        raise RuntimeError, "Importing from %s backend after selecting %s " \
+                "backend!" % (name, ETSConfig.toolkit)
+        
+
 def toolkit_object(name, raise_exceptions=False):
     """ Return the toolkit specific object with the given name.  The name
     consists of the relative module path and the object name separated by a
