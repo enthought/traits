@@ -5501,14 +5501,21 @@ trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
 		char instbuf[256];
 		int  ok;
         
-		/* Unbound methods must be called with an instance of the class 
+        /* Unbound methods must be called with an instance of the class 
            (or a derived class) as first argument: */
         from = 1;
         class = trait_method_GET_CLASS( meth );
-		if ( nargs >= 1 ) {
-			self = PyTuple_GET_ITEM( arg, 0 );
+	if (class == NULL) {
+            PyErr_Format(PyExc_TypeError,
+	                 "unable to determine the class for the method %s",
+			 PyString_AS_STRING(trait_method_GET_NAME(meth)));
+	    return NULL;
+	}
+        if ( nargs >= 1 ) {
+            self = PyTuple_GET_ITEM( arg, 0 );
             assert( self != NULL );
-			ok = PyObject_IsInstance( self, class );
+
+            ok = PyObject_IsInstance( self, class );
             if ( ok > 0 ) {
                 to_args = nargs;
                 goto build_args;
