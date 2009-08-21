@@ -64,7 +64,7 @@ ContainerDelegate = container_delegate = Delegate( 'container',
                                                    listenable = False )
 
 # An identifier for the external help context:
-HelpId = help_id_trait = Str( desc = "the external help context identifier" )                     
+HelpId = help_id_trait = Str( desc = "the external help context identifier" )
 
 # A button to add to a view:
 AButton = Trait( '', Str, Instance( 'enthought.traits.ui.menu.Action' ) )
@@ -89,9 +89,17 @@ class StatusItem ( HasStrictTraits ):
     # The width of the status field. The possible values are:
     #
     #   - abs( width )  > 1.0: Width of the field in pixels = abs( width )
-    #   - abs( width ) <= 1.0: Relative width of the field when compared to other
-    #     relative width fields.
+    #   - abs( width ) <= 1.0: Relative width of the field when compared to 
+    #                          the other relative width fields.
     width = Float( 0.5 )
+
+    def __init__ ( self, value = None, **traits ):
+        """ Initializes the item object.
+        """
+        super( StatusItem, self ).__init__( **traits )
+        
+        if value is not None:
+            self.name = value
     
 #-------------------------------------------------------------------------------
 #  'ViewStatus' trait:
