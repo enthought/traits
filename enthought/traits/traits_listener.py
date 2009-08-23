@@ -37,7 +37,7 @@ from types \
     import MethodType
 
 from has_traits \
-    import HasTraits, HasPrivateTraits
+    import HasPrivateTraits
     
 from trait_base \
     import Undefined, Uninitialized
@@ -94,9 +94,6 @@ ListenerType = {
 
 # Invalid destination ( object, name ) reference marker (i.e. ambiguous):
 INVALID_DESTINATION = ( None, None )
-
-# Invalid objects for unregistering:
-InvalidObjects = ( None, Uninitialized )
 
 # Regular expressions used by the parser:
 simple_pat = re.compile( r'^([a-zA-Z_]\w*)(\.|:)([a-zA-Z_]\w*)$' )
@@ -462,7 +459,7 @@ class ListenerItem ( ListenerBase ):
     def unregister ( self, old ):
         """ Unregisters any existing listeners.
         """
-        if old not in InvalidObjects:
+        if old is not None and old is not Uninitialized:
             try:
                 active = self.active.pop( old, None )
                 if active is not None:
@@ -505,7 +502,7 @@ class ListenerItem ( ListenerBase ):
     def handle_list ( self, object, name, old, new ):
         """ Handles a trait change for a list (or set) trait.
         """
-        if old not in InvalidObjects:
+        if old is not None and old is not Uninitialized:
             unregister = self.next.unregister
             for obj in old:
                 unregister( obj )
@@ -556,6 +553,8 @@ class ListenerItem ( ListenerBase ):
                 
         if len( new.changed ) > 0:
             dict = getattr( object, name )
+            unregister = self.next.unregister
+            register = self.next.register
             for key, obj in new.changed.items():
                 unregister( obj )
                 register( dict[ key ] )
@@ -569,7 +568,7 @@ class ListenerItem ( ListenerBase ):
         """ Handles an invalid intermediate trait change to a handler that must 
             be applied to the final destination object.trait.
         """
-        if old not in InvalidObjects:
+        if old is not None and old is not Uninitialized:
             raise TraitError( "on_trait_change handler signature is "
                               "incompatible with a change to an intermediate trait" )
                 
