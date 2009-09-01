@@ -23,5 +23,4 @@
 #-------------------------------------------------------------------------------
 
 from checkbox_column import CheckboxColumn
-from edit_column import EditColumn
 from saving import CanSaveMixin, SaveHandler
