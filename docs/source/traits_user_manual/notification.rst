@@ -250,7 +250,7 @@ Semantics
 +--------------------------+--------------------------------------------------+
 
 For a pattern that references multiple objects, any of the intermediate 
-(non-final) links can traits of type Instance, List, or Dict. In the case of 
+(non-final) links can be traits of type Instance, List, or Dict. In the case of 
 List or Dict traits, the subsequent portion of the pattern is applied to each 
 item in the list or value in the dictionary. For example, if **self.children**
 is a list, a handler set for ``'children.name'`` listens for changes to the 
@@ -288,7 +288,7 @@ These signatures use the following parameters:
 
 * *name*: The attribute that changed. If one of the objects in a sequence is a
   List or Dict, and its membership changes, then this is the name of the trait
-  that reference it, with '_items appended. For example, if the handler is
+  that references it, with '_items appended. For example, if the handler is
   monitoring ``'foo.bar.baz'``, where **bar** is a List, and an item is added 
   to **bar**, then the value of the *name* parameter is 'bar_items'.
 
