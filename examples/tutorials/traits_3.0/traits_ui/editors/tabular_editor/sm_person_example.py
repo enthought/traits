@@ -128,9 +128,6 @@ class Report ( HasTraits ):
         Group(
             Item( 'people', id = 'table', editor = tabular_editor ), 
             show_labels        = False,
-            #item_theme         = '@BF5',
-            #item_theme_margins = Margin( left = -3, right = -3 ),
-            #group_theme        = '@XG2' 
         ),
         title     = 'Tabular Editor Demo',
         id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
