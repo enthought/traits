@@ -184,7 +184,7 @@ more work on the part of the programmer.
 .. [1] All code examples in this guide that include a file name are also 
        available as examples in the tutorials/doc_examples/examples 
        subdirectory of the Traits docs directory.  You can run them 
-       individually, or view them in a tutorial program by running::
+       individually, or view them in a tutorial program by running:
            
-           python <Traits dir>/enthought/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples 
+       python <Traits dir>/enthought/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples 
 
