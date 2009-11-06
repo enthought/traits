@@ -454,7 +454,7 @@ The functionality provided by the @on_trait_change() decorator is identical to
 that of specially-named handlers, in that both result in a call to
 on_trait_change() to register the method as a notification handler. However, 
 the two approaches differ in when the call is made. Specially-named handlers 
-are registered at class construction time; decorated handers are registered at
+are registered at class construction time; decorated handlers are registered at
 instance creation time, prior to setting any object state.
 
 A consequence of this difference is that the @on_trait_change() decorator 
