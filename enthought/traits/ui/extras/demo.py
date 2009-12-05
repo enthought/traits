@@ -84,7 +84,7 @@ def parse_source ( file_name ):
                 col = source.find( quotes, start_index + 3 )
                 if col >= 0:
                     comment = source[ start_index + 3: col ]
-                    source  = source[: start_index].strip() + source[ col + 3: ].strip()
+                    source  = source[: start_index].strip() + '\n' + source[ col + 3: ].strip()
                 break 
                 
         return ( comment, source )
