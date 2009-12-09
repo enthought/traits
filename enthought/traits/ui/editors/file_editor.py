@@ -84,6 +84,10 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Optional extended trait name used to notify when the user double-clicks
     # an entry in the file tree view:
     dclick_name = Str
+    
+    # The style of file dialog to use when the 'Browse...' button is clicked
+    # Should be one of 'open' or 'save'
+    dialog_style = Str('open')
 
     #---------------------------------------------------------------------------
     #  Traits view definition:  
