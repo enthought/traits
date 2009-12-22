@@ -361,6 +361,8 @@ DirectoryEditor()
     Directory
 :Default for:
     Directory
+:Optional parameters:
+    *entries*, *filter*, *filter_name*, *reload_name*, *truncate_ext*, *dclick_name*
 
 A directory editor enables the user to display a Directory trait or set it to
 some directory in the local system hierarchy. The four styles of this editor are
@@ -390,6 +392,8 @@ directory.
 The text style of editor is simply a text box into which the user can type a
 directory path. The 'readonly' style is identical to the text style, except that
 the text box is not editable.
+
+The optional parameters are the same as the FileEditor.
 
 No validation is performed on Directory traits; the user must ensure that a
 typed-in value is in fact an actual directory on the system.
@@ -480,7 +484,7 @@ FileEditor()
 :Default for:
     File
 :Optional parameters:
-    *entries*, *filter*, *filter_name*, *reload_name*, *truncate_ext*
+    *entries*, *filter*, *filter_name*, *reload_name*, *truncate_ext*, *dclick_name*
 
 A file editor enables the user to display a File trait or set it to some file in
 the local system hierarchy. The styles of this editor are shown in Figure 31.
@@ -521,6 +525,10 @@ reloaded.
 The *truncate_ext* parameter is a Boolean that indicates whether the file
 extension is removed from the returned filename. It is False by default, meaning
 that the filename is not modified before it is returned.
+
+The *dclick_name* parameter is an extended trait name of a trait event which is
+fired when the user double-clicks on a file name when using the custom style.
+
 
 FontEditor()
 ````````````
