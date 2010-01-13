@@ -92,8 +92,8 @@ class InfoFile(object):
         xml_elements = []
         for attr in ['name', 'version', 'checksum', 'description']:
             value = getattr(self, attr)
-            str = "<{attr}>{value}<{attr}>"
-            xml_elements.append(str.format(attr=attr, value=value))
+            str = "{spaces}<{attr}>{value}</{attr}>"
+            xml_elements.append(str.format(spaces=" "*4,attr=attr, value=value))
         return xml_elements
 
 _xmlheader = """<?xml version="1.0" encoding="ISO-8859-1"?>
@@ -115,7 +115,7 @@ def files2xml(filenames):
     """
     xmlparts = [_xmlheader]
     for file in filenames:
-        info_file_name = "{0].info".format(file)
+        info_file_name = "{0}.info".format(file)
         if not os.path.exists(info_file_name):
             print "Warning: {0} was not found.".format(info_file_name)
             continue
