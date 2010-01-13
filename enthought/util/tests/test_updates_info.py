@@ -11,9 +11,7 @@
 # Author: Travis Oliphant, Enthought, Inc.
 #
 # Description:
-#     Unittest of Info to run another (unittest) script directly.
-#     In some cases this is necessary when things cannot be tested
-#     with nosetests itself.
+#     Unittest of InfoFile and files2xml
 #------------------------------------------------------------------------------
 import sys
 import os.path
