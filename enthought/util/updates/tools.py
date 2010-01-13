@@ -123,7 +123,7 @@ def files2xml(filenames):
             info = InfoFile.from_info_file(info_file_name)
             xml_list = info.get_xml()
         except:
-            print "Warning: Failure in extracting XML for {0}".format(info_file_name)
+            print "Warning: Failure in creating XML for {0}".format(info_file_name)
             continue
         xmlparts.append('<update_file>') 
         xmlparts.extend(xml_list)
