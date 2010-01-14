@@ -12,7 +12,7 @@ from enthought.traits.ui.api import Item, Group, View
 
 # Define the demo class:
 class HTMLEditorDemo ( HasTraits ): 
-    """ Defines the main BooleanEditor demo class. """
+    """ Defines the main HTMLEditor demo class. """
 
     # Define a HTML trait to view
     html_trait = HTML("""<html><body><p>A HTMLEditor displaying</p>
