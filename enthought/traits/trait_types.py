@@ -1934,7 +1934,7 @@ class BaseEnum ( TraitType ):
         if self.name == '':
             values = self.values
         else:
-            value = eval( self.values )
+            values = eval( self.values )
             
         return ' or '.join( [ repr( x ) for x in values ] )
 
