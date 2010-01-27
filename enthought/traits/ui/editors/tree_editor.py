@@ -100,6 +100,9 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Called when a node is double-clicked
     on_dclick = Any
+    
+    # Call when the mouse hovers over a node
+    on_hover = Any
 
     # The optional extended trait name of the trait to synchronize with the
     # editor's current selection:
