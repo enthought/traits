@@ -2550,8 +2550,8 @@ class HasTraits ( CHasTraits ):
             names = self.trait_names( type = not_event )
             
         if len( names ) == 0:
-           print ''
-           return
+            print ''
+            return
 
         result = []
         pad    = max( [ len( x ) for x in names ] ) + 1
