@@ -10,7 +10,7 @@ Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
 Unless stated in this file, icons are the work of Enthought, and are
 released under a 3 clause BSD license.
 
-Files and orginal authors:
+Files and original authors:
 ----------------------------------------------------------------------------
 docs/source/tutorials/images:
                    application1.png | Enthought
@@ -78,7 +78,7 @@ examples/demo/Standard Editors/Popup_versions/images:
                 top_left_origin.gif | Enthought
                top_right_origin.gif | Enthought
 examples/tutorials/images:
-			         next.png | Nuvola
+                           next.png | Nuvola
                          parent.png | Nuvola
                        previous.png | Nuvola
                          reload.png | Nuvola

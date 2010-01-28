@@ -44,7 +44,7 @@ Prerequisites
 -------------
 You must have the following libraries installed before building or installing
 Traits:
-    
+
 * `Numpy <http://pypi.python.org/pypi/numpy/1.1.1>`_ to support the trait types
   for arrays. Version 1.1.0 or later is preferred. Version 1.0.4 will work, but
   some tests may fail.
