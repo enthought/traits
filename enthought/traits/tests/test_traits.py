@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill Date: 03/20/2003 Description: Unit Test Case for the
 # Traits Package
 # ------------------------------------------------------------------------------
@@ -15,12 +15,14 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-import sys
+
+from __future__ import absolute_import
+
 import unittest
 
-import nose
-
-from enthought.traits.api import *
+from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits, Int,
+    Long, Trait, TraitError, TraitList, TraitPrefixList, TraitPrefixMap, 
+    TraitRange)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -46,10 +48,10 @@ class BaseTest(object):
             obj.value = value
             self.assertEqual(obj.value, self.coerce(value))
 
-            # If there's a defined 
+            # If there's a defined
             if i < len(self._mapped_values):
                 self.assertEqual(obj.value_, self._mapped_values[i])
-        
+
         # NOTE:
         #     There is/was some intercation between nosetests and coverage
         #     which causes problems with raising exceptions in Traits
@@ -60,7 +62,7 @@ class BaseTest(object):
         #
         #if 'coverage' in sys.modules:
         #    raise nose.SkipTest("Skipped because coverage module is loaded")
-        
+
         # Validate correct behavior for illegal values
         for value in self._bad_values:
             self.assertRaises(TraitError, self.assign, value)
@@ -76,7 +78,7 @@ class test_base2(unittest.TestCase):
     # This avoids using a method name that contains 'test' so that this is not
     # called by the tester directly, as nose looks for all tests, regardless of
     # the handler at the bottom of this file.
-    def check_values(self, name, default_value, good_values, bad_values, 
+    def check_values(self, name, default_value, good_values, bad_values,
                    actual_values = None, mapped_values = None):
         obj = self.obj
         try:
@@ -84,7 +86,7 @@ class test_base2(unittest.TestCase):
             msg   = 'default value'
             value = default_value
             self.assertEqual(getattr(obj, name), value)
-            
+
             # Iterate over all legal values being tested:
             if actual_values is None:
                 actual_values = good_values
@@ -97,7 +99,7 @@ class test_base2(unittest.TestCase):
                     self.assertEqual(getattr(obj, name + '_'),
                                       mapped_values[i])
                 i += 1
-                  
+
             # Iterate over all illegal values being tested:
             msg = 'illegal values'
             for value in bad_values:
@@ -106,7 +108,7 @@ class test_base2(unittest.TestCase):
             print 'Failed while testing %s for value: %s(%s) in %s' % (
                 msg, value, value.__class__.__name__, self.__class__.__name__)
             raise
- 
+
 #-------------------------------------------------------------------------------
 #  Trait that can have any value:
 #-------------------------------------------------------------------------------
@@ -126,9 +128,9 @@ class AnyTraitTest(BaseTest, unittest.TestCase):
     _bad_values    = []
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'int' values: 
+#  Trait that can only have 'int' values:
 #-------------------------------------------------------------------------------
-   
+
 class CoercibleIntTrait(HasTraits):
 
     # Trait definitions:
@@ -158,7 +160,7 @@ class CoercibleIntTest(AnyTraitTest):
                 return int(float(value))
             except:
                 return int(long(value))
-   
+
 class IntTest(AnyTraitTest):
 
     obj = IntTrait()
@@ -179,7 +181,7 @@ class IntTest(AnyTraitTest):
                 return int(long(value))
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'long' values: 
+#  Trait that can only have 'long' values:
 #-------------------------------------------------------------------------------
 
 class CoercibleLongTrait(HasTraits):
@@ -218,18 +220,18 @@ class LongTest(AnyTraitTest):
                       None, 1j, 10.1, -10.1, '10', '-10', '10L', '-10L', '10.1',
                       '-10.1', u'10', u'-10', u'10L', u'-10L', u'10.1',
                       u'-10.1']
- 
+
     def coerce(self, value):
         try:
             return long(value)
         except:
             return long(float(value))
 
-   
+
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'float' values: 
+#  Trait that can only have 'float' values:
 #-------------------------------------------------------------------------------
-   
+
 class CoercibleFloatTrait(HasTraits):
 
     # Trait definitions:
@@ -255,7 +257,7 @@ class CoercibleFloatTest(AnyTraitTest):
             return float(value)
         except:
             return float(long(value))
-   
+
 class FloatTest(AnyTraitTest):
 
     obj = FloatTrait()
@@ -273,7 +275,7 @@ class FloatTest(AnyTraitTest):
             return float(long(value))
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'complex'(i.e. imaginary) values: 
+#  Trait that can only have 'complex'(i.e. imaginary) values:
 #-------------------------------------------------------------------------------
 
 class ImaginaryValueTrait(HasTraits):
@@ -298,7 +300,7 @@ class ImaginaryValueTest(AnyTraitTest):
             return complex(long(value))
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'string' values: 
+#  Trait that can only have 'string' values:
 #-------------------------------------------------------------------------------
 
 class StringTrait(HasTraits):
@@ -318,11 +320,11 @@ class StringTest(AnyTraitTest):
 
     def coerce(self, value):
         return str(value)
-   
+
 #-------------------------------------------------------------------------------
-#  Trait that can only have 'unicode' values: 
+#  Trait that can only have 'unicode' values:
 #-------------------------------------------------------------------------------
-   
+
 class UnicodeTrait(HasTraits):
 
     # Trait definitions:
@@ -342,9 +344,9 @@ class UnicodeTest(StringTest):
         return str(value)
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have an 'enumerated list' values: 
+#  Trait that can only have an 'enumerated list' values:
 #-------------------------------------------------------------------------------
-   
+
 class EnumTrait(HasTraits):
 
     # Trait definitions:
@@ -359,7 +361,7 @@ class EnumTest(AnyTraitTest):
     _bad_values    = [0, 'zero', 4, None]
 
 #-------------------------------------------------------------------------------
-#  Trait that can only have a 'mapped' values: 
+#  Trait that can only have a 'mapped' values:
 #-------------------------------------------------------------------------------
 
 class MappedTrait(HasTraits):
@@ -377,7 +379,7 @@ class MappedTest(AnyTraitTest):
     _bad_values    = ['four', 1, 2, 3, [1],(1,), {1: 1}, None]
 
 #-------------------------------------------------------------------------------
-#  Trait that must be a unique prefix of an enumerated list of values: 
+#  Trait that must be a unique prefix of an enumerated list of values:
 #-------------------------------------------------------------------------------
 
 class PrefixListTrait(HasTraits):
@@ -398,7 +400,7 @@ class PrefixListTest(AnyTraitTest):
         return {'o': 'one', 'on': 'one', 'tw': 'two', 'th': 'three'}[value[:2]]
 
 #-------------------------------------------------------------------------------
-#  Trait that must be a unique prefix of a mapped set of values: 
+#  Trait that must be a unique prefix of a mapped set of values:
 #-------------------------------------------------------------------------------
 
 class PrefixMapTrait(HasTraits):
@@ -459,7 +461,7 @@ class FloatRangeTest(AnyTraitTest):
     obj = FloatRangeTrait()
 
     _default_value = 3.0
-    _good_values   = [2.0, 3.0, 4.0, 5.0, 2.001, 4.999] 
+    _good_values   = [2.0, 3.0, 4.0, 5.0, 2.001, 4.999]
     _bad_values    = [0, 1, 6, 0L, 1L, 6L, 1.999, 6.01, 'two', '0.999', '6.01',
                       None]
 
@@ -480,7 +482,7 @@ class OTraitTest3(OTraitTest2): pass
 class OBadTraitTest:              pass
 
 otrait_test1 = OTraitTest1()
-   
+
 class OldInstanceTrait(HasTraits):
 
     # Trait definitions:
@@ -545,8 +547,8 @@ class OddIntegerTest(AnyTraitTest):
     obj = OddIntegerTrait()
 
     _default_value = 99
-    _good_values   = [  1,   3,   5,   7,   9,  999999999, 
-                        1L,  3L,  5L,  7L,  9L,  999999999L, 
+    _good_values   = [  1,   3,   5,   7,   9,  999999999,
+                        1L,  3L,  5L,  7L,  9L,  999999999L,
                         1.0, 3.0, 5.0, 7.0, 9.0, 999999999.0,
                        -1,  -3,  -5,  -7,  -9, -999999999,
                        -1L, -3L, -5L, -7L, -9L, -999999999L,
@@ -738,51 +740,51 @@ class DelegateTests(unittest.TestCase):
 #-------------------------------------------------------------------------------
 #  Complex(i.e. 'composite') Traits tests:
 #-------------------------------------------------------------------------------
-   
+
 class complex_value(HasTraits):
-    
-    # Trait definitions:    
+
+    # Trait definitions:
     num1 = Trait(1, TraitRange(1, 5), TraitRange(-5, -1))
     num2 = Trait(1, TraitRange(1, 5),
                      TraitPrefixList('one', 'two', 'three', 'four', 'five'))
-    num3 = Trait(1, TraitRange(1, 5), 
-                     TraitPrefixMap({ 'one':   1, 'two':  2, 'three': 3, 
-                                       'four': 4, 'five': 5 })) 
-   
+    num3 = Trait(1, TraitRange(1, 5),
+                     TraitPrefixMap({ 'one':   1, 'two':  2, 'three': 3,
+                                       'four': 4, 'five': 5 }))
+
 class test_complex_value(test_base2):
-    
-    # Trait definitions:   
+
+    # Trait definitions:
     obj = complex_value()
-        
+
     def test_num1(self):
         self.check_values('num1', 1,
             [ 1, 2, 3, 4, 5, -1, -2, -3, -4, -5 ],
             [ 0, 6, -6, '0', '6', '-6', 0.0, 6.0, -6.0, [ 1 ],(1,),
               { 1: 1 }, None ],
             [ 1, 2, 3, 4, 5, -1, -2, -3, -4, -5 ])
-              
+
 ##     def check_num2(self):
 ##         self.check_values('num2', 1,
 ##             [ 1, 2, 3, 4, 5,
-##               'one', 'two', 'three', 'four', 'five', 'o', 'on', 'tw', 
+##               'one', 'two', 'three', 'four', 'five', 'o', 'on', 'tw',
 ##               'th', 'thr', 'thre', 'fo', 'fou', 'fi', 'fiv' ],
 ##             [ 0, 6, '0', '6', 0.0, 6.0, 't', 'f', 'six', [ 1 ],(1,),
 ##               { 1: 1 }, None ],
-##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 'one', 'two', 
+##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 'one', 'two',
 ##               'three', 'four', 'five', 'one', 'one', 'two', 'three', 'three',
 ##               'three', 'four', 'four', 'five', 'five' ])
-              
+
 ##     def check_num3(self):
 ##         self.check_values('num3', 1,
-##             [ 1, 2, 3, 4, 5,  
-##               'one', 'two', 'three', 'four', 'five', 'o', 'on', 'tw', 
+##             [ 1, 2, 3, 4, 5,
+##               'one', 'two', 'three', 'four', 'five', 'o', 'on', 'tw',
 ##               'th', 'thr', 'thre', 'fo', 'fou', 'fi', 'fiv' ],
 ##             [ 0, 6, '0', '6', 0.0, 6.0, 't', 'f', 'six', [ 1 ],(1,),
 ##               { 1: 1 }, None ],
-##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 'one', 'two', 
+##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 'one', 'two',
 ##               'three', 'four', 'five', 'one', 'one', 'two', 'three', 'three',
 ##               'three', 'four', 'four', 'five', 'five' ],
-##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 
+##             [ 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5,
 ##               1, 1, 2, 3, 3, 3, 4, 4, 5, 5 ])
 
 #-------------------------------------------------------------------------------
@@ -790,20 +792,20 @@ class test_complex_value(test_base2):
 #-------------------------------------------------------------------------------
 
 class list_value(HasTraits):
-    
-    # Trait definitions:    
-    list1 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]), 
+
+    # Trait definitions:
+    list1 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]),
                           maxlen = 4))
-    list2 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]), 
+    list2 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]),
                           minlen = 1, maxlen = 4))
 
 class test_list_value(test_base2):
-    
+
     obj = list_value()
-           
+
     def del_range(self, list, index1, index2):
         del list[ index1: index2 ]
-    
+
     def check_list(self, list):
         self.assertEqual(list, [ 2 ])
         self.assertEqual(len(list), 1)
@@ -827,16 +829,16 @@ class test_list_value(test_base2):
         self.assertEqual(list, [ 3, 4 ])
         list[:0] = [ 1, 2 ]
         self.assertEqual(list, [ 1 ,2, 3, 4 ])
-        self.assertRaises(TraitError, 
+        self.assertRaises(TraitError,
                    self.indexed_range_assign, list, 0, 0, [ 1 ])
         del list[0:3]
-        self.assertEqual(list, [ 4 ])                          
-        self.assertRaises(TraitError, 
+        self.assertEqual(list, [ 4 ])
+        self.assertRaises(TraitError,
                    self.indexed_range_assign, list, 0, 0, [ 4, 5 ])
-     
+
     def test_list1(self):
         self.check_list(self.obj.list1)
-    
+
     def test_list2(self):
         self.check_list(self.obj.list2)
         self.assertRaises(TraitError, self.del_range, self.obj.list2, 0, 1)
