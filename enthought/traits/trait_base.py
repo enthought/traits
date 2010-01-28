@@ -28,9 +28,9 @@ from __future__ import absolute_import
 
 import os
 import sys
-from os import getcwd, makedirs
-from os.path import isdir, dirname, exists, join
-from string import lowercase, uppercase, capwords
+from os import getcwd
+from os.path import dirname, exists, join
+from string import lowercase, uppercase
 from types import (ListType, TupleType, DictType, StringType, UnicodeType, 
     IntType, LongType, FloatType, ComplexType, ClassType, TypeType)
 
