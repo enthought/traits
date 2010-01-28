@@ -25,11 +25,12 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import unittest
 
-from enthought.traits.api \
-    import HasTraits, Interface, Adapter, Instance, Int, List, TraitError, \
-           AdaptedTo, adapts, implements
+from ..api import (HasTraits, Interface, Adapter, Instance, Int, List,
+        TraitError, AdaptedTo, adapts, implements)
 
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:

@@ -12,10 +12,12 @@
 # 
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 from cPickle import dumps, loads
 import unittest
 
-from enthought.traits.api import Dict, HasTraits, Int, List
+from ..api import Dict, HasTraits, Int, List
 
 class C(HasTraits):
 
