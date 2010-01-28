@@ -2,7 +2,7 @@
 #
 #  Copyright (c) 2006, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
@@ -14,51 +14,51 @@
 #
 #-----------------------------------------------------------------------------
 
-""" 
-Provides a framework that assembles Traits UI Views at run time, 
+"""
+Provides a framework that assembles Traits UI Views at run time,
 when the view is requested, rather than at the time a class is written.
 
-This capability is particularly useful when the object being 'viewed' with a 
-Traits UI is part of a plug-in application -- such as Envisage.  In general, 
+This capability is particularly useful when the object being 'viewed' with a
+Traits UI is part of a plug-in application -- such as Envisage.  In general,
 this capability allows:
-    
+
 *  The GUI for an object can be extendable by contributions
    other than from the original code writer.
 *  The view can be dynamic in that the elements it is composed
    of can change each time it is requested.
 *  Registration of a handler can be associated with the view contributions.
-    
-Either the original object writer, or a contributor, can use this framework to 
-declare one or more dynamic views that are composed of sub-elements that only 
-need to exist at the time the view is requested.  
 
-Users of this framework create a dynamic view by registering a DynamicView 
-declaration.  That declaration includes a name that forms the basis for the 
-metadata attributes that are used to identify and order the desired view 
-sub-elements into the view's composition.  In addition, the declaration 
-includes any data to be passed into the constructor of the dynamic view and 
+Either the original object writer, or a contributor, can use this framework to
+declare one or more dynamic views that are composed of sub-elements that only
+need to exist at the time the view is requested.
+
+Users of this framework create a dynamic view by registering a DynamicView
+declaration.  That declaration includes a name that forms the basis for the
+metadata attributes that are used to identify and order the desired view
+sub-elements into the view's composition.  In addition, the declaration
+includes any data to be passed into the constructor of the dynamic view and
 the id that should be used to persist the user's customization of the view.
 
-Additionally, this framework allows sub-elements themselves to also be 
-dynamically composed of further sub-elements.  
+Additionally, this framework allows sub-elements themselves to also be
+dynamically composed of further sub-elements.
 
 For example, a dynamic view could be composed of two sub-elements:
-    
-1. The first is a dynamically composed HFlow, which represents a toolbar 
+
+1. The first is a dynamically composed HFlow, which represents a toolbar
    that can be extended through contributions of toolbar buttons.
-2. The second could be a dynamic tabset where each page is also a 
+2. The second could be a dynamic tabset where each page is also a
    contribution.
 
-Programmers include dynamic sub-elements within their dynamic views by 
+Programmers include dynamic sub-elements within their dynamic views by
 contributing a DynamicViewSubElement into that view.  When the framework comes
-across this contribution while building the view, it replaces that 
-DynamicViewSubElement with a fully initialized Traits ViewSubElement composed 
+across this contribution while building the view, it replaces that
+DynamicViewSubElement with a fully initialized Traits ViewSubElement composed
 in a manner similar to how the elements of the View itself were composed.
 
-Each contribution to a dynamic view or sub-element must be an instance of a 
-Traits ViewSubElement and must have associated metadata like the following for 
+Each contribution to a dynamic view or sub-element must be an instance of a
+Traits ViewSubElement and must have associated metadata like the following for
 each dynamic view or sub-element it will display in:
-    
+
 _<dynamic name>_order : A float value.
     The framework uses only ViewSubElements with this metadata
     instantiated when building the dynamic view or sub-element with
@@ -69,35 +69,31 @@ _<dynamic name>_priority : A float value.
     picking the first element encountered that has the highest
     priority value. The other elements with the same view order are
     not displayed at all.
-        
-In addition, dynamic view contributions can also provide a 'handler', which 
+
+In addition, dynamic view contributions can also provide a 'handler', which
 behaves like a normal Traits Handler.  That is, it can contain methods that
-are called when model values change and can access  the Traits UIInfo 
+are called when model values change and can access  the Traits UIInfo
 object representing the actual UI instances.  To provide a handler, append the
 following metadata to your view sub-element:
-    
+
 _<dynamic_name>_handler : A HasTraits instance.
     The framework will connect listeners to call the handler methods as
     part of the handler for the dynamic view.
-        
-        
+
+
 """
 
+from __future__ import absolute_import
+
 # Enthought library imports:
-from enthought.traits.ui.delegating_handler \
-    import DelegatingHandler
+from .ui.delegating_handler import DelegatingHandler
 
 # Local imports:
-from has_traits \
-    import HasTraits
-    
-from trait_types \
-    import Any, Bool, Dict, Instance, Str
-    
-from ui.api \
-    import View, ViewSubElement, ViewElement
-    
-# Set up a logger:    
+from .has_traits import HasTraits
+from .trait_types import Any, Bool, Dict, Instance, Str
+from .ui.api import View, ViewSubElement, ViewElement
+
+# Set up a logger:
 import logging
 logger = logging.getLogger( __name__ )
 
@@ -106,7 +102,7 @@ logger = logging.getLogger( __name__ )
 #-------------------------------------------------------------------------------
 
 class DynamicViewSubElement ( ViewSubElement ):
-    """ 
+    """
     Declares a dynamic sub-element of a dynamic view.
     """
 
@@ -122,7 +118,7 @@ class DynamicViewSubElement ( ViewSubElement ):
 
     # The class of the actual ViewSubElement we are dynamically creating.
     # FIXME: Should be the 'Class' trait but I couldn't get that to work.
-    klass = Any 
+    klass = Any
 
     # The name of this dynamic sub-element.  This controls the metadata
     # names identifying the sub-elements that compose this element.
@@ -133,7 +129,7 @@ class DynamicViewSubElement ( ViewSubElement ):
 #-------------------------------------------------------------------------------
 
 class DynamicView ( HasTraits ):
-    """ 
+    """
     Declares a dynamic view.
     """
 
@@ -163,9 +159,9 @@ class DynamicView ( HasTraits ):
 #-------------------------------------------------------------------------------
 #  'HasDynamicViews' class:
 #-------------------------------------------------------------------------------
-        
+
 class HasDynamicViews ( HasTraits ):
-    """ 
+    """
     Provides of a framework that builds Traits UI Views at run time,
     when the view is requested, rather than at the time a class is written.
     """
@@ -191,7 +187,7 @@ class HasDynamicViews ( HasTraits ):
 
             Extended here to build dynamic views and sub-elements.
         """
-        
+
         result = None
 
         # If a view element was passed instead of a name or None, do not handle
@@ -209,7 +205,7 @@ class HasDynamicViews ( HasTraits ):
                         break
 
             # Otherwise, handle if this is a request for a dynamic view:
-            elif ((view_element is None) and 
+            elif ((view_element is None) and
                   (name in self._dynamic_view_registry)):
                 result = self._compose_dynamic_view(name)
 
@@ -228,7 +224,7 @@ class HasDynamicViews ( HasTraits ):
     #-- Public Interface -------------------------------------------------------
 
     def declare_dynamic_view ( self, declaration ):
-        """ A convenience method to add a new dynamic view declaration to this 
+        """ A convenience method to add a new dynamic view declaration to this
             instance.
         """
         self._dynamic_view_registry[ declaration.name ] = declaration
@@ -236,8 +232,8 @@ class HasDynamicViews ( HasTraits ):
     #-- Protected Interface ----------------------------------------------------
 
     def _build_dynamic_sub_element ( self, definition, sub_elements ):
-        """ Returns the fully composed ViewSubElement from the sub-element 
-            contributions to the dynamic sub-element identified by the 
+        """ Returns the fully composed ViewSubElement from the sub-element
+            contributions to the dynamic sub-element identified by the
             definition.
         """
         logger.debug( '\tBuilding dynamic sub-element [%s] with elements [%s]',
@@ -261,7 +257,7 @@ class HasDynamicViews ( HasTraits ):
             # to be persisted when the view is closed and then that persisted
             # configuration to be applied when the view is next shown:
             id = declaration.id,
-            
+
             # Include the specified handler:
             handler = handler,
 
@@ -286,7 +282,7 @@ class HasDynamicViews ( HasTraits ):
         return self._build_dynamic_sub_element( definition, elements )
 
     def _compose_dynamic_view ( self, name ):
-        """ Returns a dynamic view composed from its contributed parts. 
+        """ Returns a dynamic view composed from its contributed parts.
         """
         logger.debug( 'Composing dynamic view [%s] for [%s]', name, self )
 
@@ -310,7 +306,7 @@ class HasDynamicViews ( HasTraits ):
         """ Returns a list of the current elements meant to go into the
             composition of a dynamic view or sublement with the specified name.
         """
-        
+
         # Determine the metadata names used to find the sub-elements included
         # within this dynamic element:
         name                = name.replace(' ', '_')
@@ -321,8 +317,8 @@ class HasDynamicViews ( HasTraits ):
         # composing our element:
         all_elements = [ self.trait_view( g )
                          for g in self.trait_views( klass = ViewSubElement ) ]
-        elements = [ e for e in all_elements 
-                     if hasattr( e, order_trait_name ) and 
+        elements = [ e for e in all_elements
+                     if hasattr( e, order_trait_name ) and
                         (getattr( e, order_trait_name ) is not None) ]
 
         # Filter out any overridden elements.  This means taking out the
@@ -359,15 +355,15 @@ class HasDynamicViews ( HasTraits ):
         """ Return a list of the handlers associated with the current elements
             meant to go into the dynamic view of the specified name.
         """
-        
+
         # Determine the metadata name used to declare a handler:
         name         = name.replace(' ', '_')
         handler_name = '_%s_handler' % name
-        
-        handlers = [ getattr(e, handler_name) for e in elements 
-                     if hasattr( e, handler_name ) and 
+
+        handlers = [ getattr(e, handler_name) for e in elements
+                     if hasattr( e, handler_name ) and
                         (getattr( e, handler_name ) is not None) ]
         logger.debug( '\tFound sub-handlers: %s', handlers )
-        
+
         return handlers
-    
+
