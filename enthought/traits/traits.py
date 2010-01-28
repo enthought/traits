@@ -48,17 +48,15 @@ feature.
 
 from __future__ import absolute_import
 
-import sys
 from types import (NoneType, IntType, LongType, FloatType, ComplexType, 
     StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
     ClassType, MethodType, InstanceType, TypeType)
 
 from . import trait_handlers
-from .ctraits import cTrait, CTraitMethod
+from .ctraits import cTrait 
 from .trait_errors import TraitError
-
 from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
-    class_of, add_article, enumerate, BooleanType)
+    add_article, enumerate, BooleanType)
 
 from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction, 
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
@@ -229,8 +227,9 @@ class CTrait ( cTrait ):
         handler = self.handler
         if handler is not None:
             return handler
-
-        return Any
+        else:
+            from .trait_types import Any
+            return Any
 
     trait_type = property( __get_trait_type )
 
