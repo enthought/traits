@@ -24,28 +24,23 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import os
 import sys
+from os import getcwd, makedirs
+from os.path import isdir, dirname, exists, join
+from string import lowercase, uppercase, capwords
+from types import (ListType, TupleType, DictType, StringType, UnicodeType, 
+    IntType, LongType, FloatType, ComplexType, ClassType, TypeType)
 
-from os \
-    import getcwd, makedirs
 
-from os.path \
-    import isdir, dirname, exists, join
-
-from string \
-    import lowercase, uppercase, capwords
-
-from types \
-    import ListType, TupleType, DictType, StringType, UnicodeType, IntType, \
-           LongType, FloatType, ComplexType, ClassType, TypeType
-
-# Set the Python version being used:           
+# Set the Python version being used:
 vi = sys.version_info
 python_version = vi[0] + (float( vi[1] ) / 10.0)
 
 try:
-    from enthought.etsconfig.api import ETSConfig
+    from .api import ETSConfig
 except:
     # If the ETSConfig package is not available, fake it:
     class ETSConfig ( object ):
@@ -53,115 +48,115 @@ except:
         #-----------------------------------------------------------------------
         #  'object' interface:
         #-----------------------------------------------------------------------
-    
+
         def __init__ ( self ):
             """ Constructor.
-    
+
                 Note that this constructor can only ever be called from within
                 this module, since we don't expose the class.
             """
             # Shadow attributes for properties:
             self._application_data = None
             self._toolkit          = None
-    
+
             return
 
         #-----------------------------------------------------------------------
         #  'ETSConfig' interface:
         #-----------------------------------------------------------------------
-    
+
         #-- Property Implementations -------------------------------------------
-    
+
         def _get_application_data ( self ):
             """ Property getter.
-    
-                This is a directory that applications and packages can safely 
-                write non-user accessible data to i.e. configuration 
+
+                This is a directory that applications and packages can safely
+                write non-user accessible data to i.e. configuration
                 information, preferences etc.
-    
-                Do not put anything in here that the user might want to navigate 
+
+                Do not put anything in here that the user might want to navigate
                 to (e.g. projects, user data files, etc).
-    
+
                 The actual location differs between operating systems.
             """
             if self._application_data is None:
                 self._application_data = self._initialize_application_data()
-    
+
             return self._application_data
-    
+
         def _set_application_data ( self, application_data ):
             """ Property setter.
             """
             self._application_data = application_data
-    
-        application_data = property( _get_application_data, 
+
+        application_data = property( _get_application_data,
                                      _set_application_data )
 
         def _get_toolkit ( self ):
             """
-            Property getter for the GUI toolkit.  The value returned is, in 
-            order of preference: the value set by the application; the value 
-            passed on the command line using the '-toolkit' option; the value 
-            specified by the 'ETS_TOOLKIT' environment variable; otherwise the 
+            Property getter for the GUI toolkit.  The value returned is, in
+            order of preference: the value set by the application; the value
+            passed on the command line using the '-toolkit' option; the value
+            specified by the 'ETS_TOOLKIT' environment variable; otherwise the
             empty string.
             """
             if self._toolkit is None:
                 self._toolkit = self._initialize_toolkit()
-    
+
             return self._toolkit
-    
+
         def _set_toolkit ( self, toolkit ):
             """
-            Property setter for the GUI toolkit.  The toolkit can be set more 
-            than once, but only if it is the same one each time.  An application 
-            that is written for a particular toolkit can explicitly set it 
+            Property setter for the GUI toolkit.  The toolkit can be set more
+            than once, but only if it is the same one each time.  An application
+            that is written for a particular toolkit can explicitly set it
             before any other module that gets the value is imported.
-    
+
             """
             if self._toolkit and (self._toolkit != toolkit):
                 raise ValueError( 'Cannot set toolkit to %s because it has '
                          'already been set to %s' % ( toolkit, self._toolkit ) )
-    
+
             self._toolkit = toolkit
-    
+
             return
-    
+
         toolkit = property( _get_toolkit, _set_toolkit )
-        
+
         #-- Private Methods ----------------------------------------------------
-        
+
         def _initialize_application_data ( self ):
             """ Initializes the (default) application data directory.
             """
             if sys.platform == 'win32':
                 environment_variable = 'APPDATA'
                 directory_name       = 'Enthought'
-    
+
             else:
                 environment_variable = 'HOME'
                 directory_name       = '.enthought'
-    
+
             # Lookup the environment variable:
             parent_directory = os.environ.get( environment_variable, None )
             if parent_directory is None:
-                raise ValueError( 'Environment variable "%s" not set' % 
+                raise ValueError( 'Environment variable "%s" not set' %
                                   environment_variable )
-    
+
             application_data = os.path.join( parent_directory, directory_name )
-    
+
             # If a file already exists with this name then make sure that it is
             # a directory!
             if os.path.exists( application_data ):
                 if not os.path.isdir( application_data ):
-                    raise ValueError( 'File "%s" already exists' % 
+                    raise ValueError( 'File "%s" already exists' %
                                       application_data )
-    
+
             # Otherwise, create the directory:
             else:
                 os.makedirs( application_data )
-    
+
             return application_data
-            
+
         def _initialize_toolkit ( self ):
             """ Initializes the toolkit.
             """
@@ -170,25 +165,25 @@ except:
             # command line:
             if '-toolkit' in sys.argv:
                 opt_idx = sys.argv.index( '-toolkit' )
-    
+
                 try:
                     opt_toolkit = sys.argv[ opt_idx + 1 ]
                 except IndexError:
                     raise ValueError( 'The -toolkit command line argument must '
                                       'be followed by a toolkit name' )
-    
+
                 # Remove the option:
                 del sys.argv[ opt_idx: opt_idx + 1 ]
             else:
                 opt_toolkit = None
-    
+
             if self._toolkit is not None:
                 toolkit = self._toolkit
             elif opt_toolkit is not None:
                 toolkit = opt_toolkit
             else:
                 toolkit = os.environ.get( 'ETS_TOOLKIT', '' )
-    
+
             return toolkit
 
     ETSConfig = ETSConfig()
@@ -244,10 +239,10 @@ class Uninitialized ( object ):
         return '<uninitialized>'
 
 # When the first reference to a trait is a 'get' reference, the default value of
-# the trait is implicitly assigned and returned as the value of the trait. 
+# the trait is implicitly assigned and returned as the value of the trait.
 # Because of this implicit assignment, a trait change notification is
-# generated with the Uninitialized object as the 'old' value of the trait, and 
-# the default trait value as the 'new' value. This allows other parts of the 
+# generated with the Uninitialized object as the 'old' value of the trait, and
+# the default trait value as the 'new' value. This allows other parts of the
 # traits package to recognize the assignment as the implicit default value
 # assignment, and treat it specially.
 Uninitialized = Uninitialized()
@@ -269,14 +264,14 @@ class _Undefined ( object ):
 
 # Singleton object that indicates that a trait attribute has not yet had a
 # value set (i.e., its value is undefined). This object is used instead of
-# None, because None often has other meanings, such as that a value is not 
+# None, because None often has other meanings, such as that a value is not
 # used. When a trait attribute is first assigned a value, and its associated
-# trait notification handlers are called, Undefined is passed as the *old* 
+# trait notification handlers are called, Undefined is passed as the *old*
 # parameter, to indicate that the attribute previously had no value.
 Undefined = _Undefined()
 
 # Tell the C-base code about singleton 'Undefined' and 'Uninitialized' objects:
-import ctraits
+from . import ctraits
 ctraits._undefined( Undefined, Uninitialized )
 
 #-------------------------------------------------------------------------------
@@ -453,12 +448,12 @@ def get_resource_path ( level = 2 ):
     return path
 
 #-------------------------------------------------------------------------------
-#  Returns the value of an extended object attribute name of the form: 
+#  Returns the value of an extended object attribute name of the form:
 #  name[.name2[.name3...]]:
 #-------------------------------------------------------------------------------
 
 def xgetattr( object, xname, default = Undefined ):
-    """ Returns the value of an extended object attribute name of the form: 
+    """ Returns the value of an extended object attribute name of the form:
         name[.name2[.name3...]].
     """
     names = xname.split( '.' )
@@ -469,43 +464,43 @@ def xgetattr( object, xname, default = Undefined ):
             object = getattr( object, name, None )
             if object is None:
                 return default
-                
+
     if default is Undefined:
         return getattr( object, names[-1] )
-        
+
     return getattr( object, names[-1], default )
 
 #-------------------------------------------------------------------------------
-#  Sets the value of an extended object attribute name of the form: 
+#  Sets the value of an extended object attribute name of the form:
 #  name[.name2[.name3...]]:
 #-------------------------------------------------------------------------------
 
 def xsetattr( object, xname, value ):
-    """ Sets the value of an extended object attribute name of the form: 
+    """ Sets the value of an extended object attribute name of the form:
         name[.name2[.name3...]].
     """
     names = xname.split( '.' )
     for name in names[:-1]:
         object = getattr( object, name )
-                
+
     setattr( object, names[-1], value )
-        
+
 #-------------------------------------------------------------------------------
 #  Traits metadata selection functions:
 #-------------------------------------------------------------------------------
 
 def is_none ( value ):
     return (value is None)
-    
+
 def not_none ( value ):
     return (value is not None)
-    
+
 def not_false ( value ):
-    return (value is not False)    
+    return (value is not False)
 
 def not_event ( value ):
     return (value != 'event')
 
 def is_str ( value ):
     return isinstance( value, basestring )
-    
+
