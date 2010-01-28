@@ -18,8 +18,10 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-from file_editor \
-    import ToolkitEditorFactory as EditorFactory
+
+from __future__ import absolute_import
+
+from .file_editor import ToolkitEditorFactory as EditorFactory
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

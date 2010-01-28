@@ -22,14 +22,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Callable, Tuple, Property
+from __future__ import absolute_import
 
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from ...api import Callable, Tuple, Property
+
+from ..basic_editor_factory import BasicEditorFactory
                                       
-from enthought.traits.ui.toolkit \
-    import toolkit_object   
+from ..toolkit import toolkit_object   
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

@@ -24,12 +24,12 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-   
-from enthought.traits.ui.ui_traits \
-    import Image
+
+from __future__ import absolute_import
+
+from ..ui_traits import Image
     
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..editor_factory import EditorFactory
     
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

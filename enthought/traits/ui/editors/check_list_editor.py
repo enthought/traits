@@ -21,11 +21,11 @@ backends.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Range
+from __future__ import absolute_import
 
-from enthought.traits.ui.editor_factory \
-    import EditorWithListFactory
+from ...api import Range
+
+from ..editor_factory import EditorWithListFactory
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -45,5 +45,3 @@ class ToolkitEditorFactory ( EditorWithListFactory ):
 # Define the CheckListEditor class
 CheckListEditor = ToolkitEditorFactory
 
-### EOF ########################################################################
-    
