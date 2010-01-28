@@ -2,35 +2,35 @@
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #-------------------------------------------------------------------------------
 
 """ Tests to help find out if we can do type-safe casting. """
 
+from __future__ import absolute_import
 
 # Standard library imports.
 import unittest
 
 # Enthought library imports.
-from enthought.traits.api import Adapter, HasTraits, Instance, Int, Interface
-from enthought.traits.api import adapts, implements
+from ..api import Adapter, HasTraits, Instance, Int, Interface, adapts, implements
 
 # Local imports.
-from enthought.traits.interface_checker import InterfaceError, check_implements
+from ..interface_checker import InterfaceError, check_implements
 
 # Make sure implicit interface checking is turned off, so that we can make the
 # checks explicitly:
-import enthought.traits.has_traits
-enthought.traits.has_traits.CHECK_INTERFACES = 0
+from .. import has_traits
+has_traits.CHECK_INTERFACES = 0
 
-    
+
 class InterfaceCheckerTestCase(unittest.TestCase):
     """ Tests to help find out if we can do type-safe casting. """
 
@@ -45,9 +45,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
         return
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -62,7 +62,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that *does* implement the interface.
         class Foo(object):
             implements(IFoo)
-            
+
             def foo(self):
                 pass
 
@@ -71,7 +71,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         check_implements(Foo, IFoo, 2)
 
         return
-    
+
     def test_single_interface(self):
         """ single interface """
 
@@ -81,7 +81,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that *does* implement the interface.
         class Foo(HasTraits):
             implements(IFoo)
-            
+
             x = Int
 
         # The checker will raise an exception if the class does not implement
@@ -155,11 +155,11 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that *does* implement the interface.
         class Foo(HasTraits):
             implements(IFoo, IBar, IBaz)
-            
+
             x = Int
             y = Int
             z = Int
-            
+
         # The checker will raise an exception if the class does not implement
         # the interface.
         check_implements(Foo, [IFoo, IBar, IBaz], 2)
@@ -272,11 +272,11 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         # A class that *does* implement the interface.
         class Foo(HasTraits):
             implements(IBaz)
-            
+
             x = Int
             y = Int
             z = Int
-            
+
         # The checker will raise an exception if the class does not implement
         # the interface.
         check_implements(Foo, IBaz, 2)
@@ -381,7 +381,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         class Bar(HasTraits):
             foo = Instance(IFoo)
-            
+
         b = Bar(foo=Foo())
 
         return
@@ -416,14 +416,14 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         # Make sure adaptation works.
         i_foo = IFoo(f)
-        
+
         self.assertNotEqual(None, i_foo)
         self.assertEqual(FooToIFooAdapter, type(i_foo))
-        
+
         return
-    
+
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
     unittest.main()
-    
+
