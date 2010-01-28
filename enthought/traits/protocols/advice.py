@@ -1,12 +1,9 @@
-from __future__ \
-    import generators
-    
-from new \
-    import instancemethod
-    
-from types \
-    import ClassType, FunctionType, InstanceType
-    
+from __future__ import absolute_import
+
+from new import instancemethod
+
+from types import ClassType, FunctionType, InstanceType
+
 import sys
 
 __all__ = [
@@ -55,11 +52,11 @@ def getMRO(ob, extendedClassic=False):
     return ob,
 
 try:
-    from _speedups import metamethod, getMRO, classicMRO
+    from ._speedups import metamethod, getMRO, classicMRO
 except ImportError:
     pass
 
-    
+
 # property-safe 'super()' for Python 2.2; 2.3 can use super() instead
 
 def supermeta(typ,ob):

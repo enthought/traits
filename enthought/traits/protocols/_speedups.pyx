@@ -59,7 +59,10 @@ cdef extern from "Python.h":
 
 cdef object _marker, __conform, __adapt, __mro, __ECType
 from sys import exc_info, exc_clear
-from adapters import AdaptationFailure
+# since we can't do "from future import absolute_import":
+AdaptationFailure = __import__(
+    'protocols', globals=globals(), fromlist=['AdaptationFailure'], level=1
+).AdaptationFailure
 
 try:
     from ExtensionClass import ExtensionClass

@@ -1,24 +1,18 @@
 """Declaration support for Python built-in types"""
 
+from __future__ import absolute_import
+
 __all__ = ['ProviderMixin']
 
-from types \
-    import FunctionType, ModuleType, InstanceType, ClassType
+from types import FunctionType, ModuleType, InstanceType, ClassType
 
-from adapters \
-    import *
-    
-from api \
-    import declareImplementation, advise, declareAdapterForObject, adapt
-    
-from interfaces \
-    import *
-    
-from new \
-    import instancemethod
-    
-from advice \
-    import getMRO, metamethod, mkRef
+from .protocols import (IImplicationListener, IOpenProvider, 
+    NO_ADAPTER_NEEDED, advise, updateWithSimplestAdapter, composeAdapters,
+    declareAdapterForObject)
+
+from new import instancemethod
+
+from .advice import getMRO, metamethod, mkRef
 
 
 class ProviderMixin:
