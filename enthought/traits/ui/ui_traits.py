@@ -188,11 +188,11 @@ def convert_bitmap ( image_resource ):
     
     bitmap = image_bitmap_cache.get( image_resource )
     if (bitmap is None) and (image_resource is not None):
-        try:
+        #try:
             image_bitmap_cache[ image_resource ] = bitmap = \
                 image_resource.create_bitmap()
-        except:
-            pass
+        #except:
+        #    pass
             
     return bitmap
     
@@ -231,6 +231,13 @@ class Image ( TraitType ):
             return new_value
             
         self.error( object, name, value )
+
+    def create_editor ( self ):
+        """ Returns the default UI editor for the trait.
+        """
+        from enthought.traits.ui.api import ImageEditor
+
+        return ImageEditor()
         
 #-------------------------------------------------------------------------------
 #  'ATheme' trait:
