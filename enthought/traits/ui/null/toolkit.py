@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   02/14/2005
 #
@@ -23,11 +23,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.ui.toolkit \
-    import Toolkit
-    
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from __future__ import absolute_import
+
+from ..toolkit import Toolkit
+
+from ..editor_factory import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -47,19 +47,19 @@ class GUIToolkit ( Toolkit ):
     #---------------------------------------------------------------------------
 
     def color_trait ( self, *args, **traits ):
-        import color_trait as ct
+        from . import color_trait as ct
         return ct.NullColor( *args, **traits )
 
     def rgb_color_trait ( self, *args, **traits ):
-        import rgb_color_trait as rgbct
+        from . import rgb_color_trait as rgbct
         return rgbct.RGBColor( *args, **traits )
 
     def font_trait ( self, *args, **traits ):
-        import font_trait as ft
+        from . import font_trait as ft
         return ft.NullFont( *args, **traits )
 
     def kiva_font_trait ( self, *args, **traits ):
-        import font_trait as ft
+        from . import font_trait as ft
         return ft.NullFont( *args, **traits )
 
     def constants ( self, *args, **traits ):

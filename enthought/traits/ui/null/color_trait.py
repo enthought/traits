@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   02/14/2005
 #
@@ -22,7 +22,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api    import Trait, TraitError
+from __future__ import absolute_import
+
+from ...api import Trait, TraitError
 
 #-------------------------------------------------------------------------------
 #  Convert a number into a wxColour object:
@@ -37,7 +39,7 @@ def convert_to_color ( object, name, value ):
 
 convert_to_color.info = ('an integer which in hex is of the form 0xRRGGBB, '
                          'where RR is red, GG is green, and BB is blue')
-             
+
 #-------------------------------------------------------------------------------
 #  Standard colors:
 #-------------------------------------------------------------------------------
@@ -117,18 +119,18 @@ standard_colors = {
 #-------------------------------------------------------------------------------
 #  Define 'null' specific color traits:
 #-------------------------------------------------------------------------------
-    
-### Note: Declare the editor to be a function which returns the ColorEditor 
-# class from traits ui to avoid circular import issues. For backwards 
-# compatibility with previous Traits versions, the 'editors' folder in Traits 
-# project declares 'from api import *' in its __init__.py. The 'api' in turn 
-# can contain classes that have a Color trait which lead to this file getting 
+
+### Note: Declare the editor to be a function which returns the ColorEditor
+# class from traits ui to avoid circular import issues. For backwards
+# compatibility with previous Traits versions, the 'editors' folder in Traits
+# project declares 'from api import *' in its __init__.py. The 'api' in turn
+# can contain classes that have a Color trait which lead to this file getting
 # imported. This leads to a circular import when declaring a Color trait.
 def get_color_editor(*args, **traits):
-    from enthought.traits.ui.api import ColorEditor
+    from ..api import ColorEditor
     return ColorEditor(*args, **traits)
 
 # Color traits
-NullColor = Trait( 'white', convert_to_color, standard_colors, 
+NullColor = Trait( 'white', convert_to_color, standard_colors,
                    editor = get_color_editor )
-       
+
