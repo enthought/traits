@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
@@ -21,21 +21,19 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-     import CTrait, Property, Range, Enum, Str, Int, Any, Unicode, Bool, \
-            Undefined
-            
-# CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well.     
-from enthought.traits.ui.view \
-    import View
+from __future__ import absolute_import
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
-    
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ...api import (CTrait, Property, Range, Enum, Str, Int, Any, Unicode, 
+        Bool, Undefined)
+
+# CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
+from ..view import View
+
+from ..editor_factory import EditorFactory
+
+from ..toolkit import toolkit_object
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
@@ -81,7 +79,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Function to evaluate floats/ints when they are assigned to an object trait
     evaluate = Any
-    
+
     # The object trait containing the function used to evaluate floats/ints
     evaluate_name = Str
 
@@ -191,7 +189,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
         if self.is_float is Undefined:
             self.is_float = True
-            
+
         return ( low, high, self.is_float )
 
     #---------------------------------------------------------------------------
@@ -220,7 +218,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
         if self.mode != 'auto':
             return toolkit_object('range_editor:SimpleEditorMap')[ self.mode ]
-            
+
         if is_float and (abs(high - low) > 100):
             return toolkit_object('range_editor:LargeRangeSliderEditor')
 
@@ -248,7 +246,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
         if self.mode != 'auto':
             return toolkit_object('range_editor:CustomEditorMap')[ self.mode ]
-            
+
         if is_float or (abs(high - low) > 15):
            return self.simple_editor_class
 
@@ -258,30 +256,30 @@ class ToolkitEditorFactory ( EditorFactory ):
         """Returns the editor class to use for a text style.
         """
         return toolkit_object('range_editor:RangeTextEditor')
-    
+
     #---------------------------------------------------------------------------
     #  'Editor' factory methods:
     #---------------------------------------------------------------------------
-    
+
     def simple_editor ( self, ui, object, name, description, parent ):
         """ Generates an editor using the "simple" style.
-        Overridden to set the values of the _low_value, _high_value and 
+        Overridden to set the values of the _low_value, _high_value and
         is_float traits.
-        
+
         """
         self._low_value, self._high_value, self.is_float = self._get_low_high(ui)
         return super(RangeEditor, self).simple_editor(ui, object, name, description, parent)
-        
+
     def custom_editor ( self, ui, object, name, description, parent ):
         """ Generates an editor using the "custom" style.
-        Overridden to set the values of the _low_value, _high_value and 
+        Overridden to set the values of the _low_value, _high_value and
         is_float traits.
-        
+
         """
         self._low_value, self._high_value, self.is_float = self._get_low_high(ui)
         return super(RangeEditor, self).custom_editor(ui, object, name, description, parent)
 
-    
+
 # Define the RangeEditor class
 RangeEditor = ToolkitEditorFactory
 

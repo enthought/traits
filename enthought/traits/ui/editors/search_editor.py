@@ -19,10 +19,11 @@
     search widgets.
 """
 
-# ETS imports
-from enthought.traits.api import Bool, Property, Str
-from enthought.traits.ui.toolkit import toolkit_object
-from enthought.traits.ui.basic_editor_factory import BasicEditorFactory
+from __future__ import absolute_import
+
+from ...api import Bool, Property, Str
+from ..toolkit import toolkit_object
+from ..basic_editor_factory import BasicEditorFactory
 
 
 class SearchEditor(BasicEditorFactory):
