@@ -19,11 +19,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, Int, Bool, Str
+from __future__ import absolute_import
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ...api import Str, Int, Bool, Str
+
+from ..editor_factory import EditorFactory
 
 class ToolkitEditorFactory ( EditorFactory ):
     """ Editor factory for code editors.

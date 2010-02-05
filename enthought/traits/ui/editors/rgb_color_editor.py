@@ -24,11 +24,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from color_editor \
-    import ToolkitEditorFactory as EditorFactory
+from __future__ import absolute_import
 
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from .color_editor import ToolkitEditorFactory as EditorFactory
+
+from ..toolkit import toolkit_object
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

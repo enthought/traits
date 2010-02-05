@@ -21,32 +21,31 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
-from enthought.traits.api \
-    import Property
-    
-from enthought.traits.ui.ui_traits \
-    import Image
 
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
-    
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from __future__ import absolute_import
+
+from ...api import Property
+
+from ..ui_traits import Image
+
+from ..basic_editor_factory import BasicEditorFactory
+
+from ..toolkit import toolkit_object
 
 #-------------------------------------------------------------------------------
 #  'ImageEditor' editor factory class:
 #-------------------------------------------------------------------------------
 
 class ImageEditor ( BasicEditorFactory ):
-    
+
     # The editor class to be created:
     klass = Property
-    
+
     # The optional image resource to be displayed by the editor (if not
     # specified, the editor's object value is used as the ImageResource to
     # display):
     image = Image
-    
+
     def _get_klass(self):
         """ Returns the editor class to be instantiated.
         """

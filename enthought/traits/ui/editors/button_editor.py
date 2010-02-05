@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
@@ -22,22 +22,20 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, Range, Enum, Property
+from __future__ import absolute_import
+
+from ...api import Str, Range, Enum, Property
 
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well. 
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
 
-from enthought.traits.ui.view \
-    import View
+from ..view import View
 
-from enthought.traits.ui.ui_traits \
-    import AView, Image
+from ..ui_traits import AView, Image
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
-    
+from ..editor_factory import EditorFactory
+
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
 #-------------------------------------------------------------------------------
@@ -45,7 +43,7 @@ from enthought.traits.ui.editor_factory \
 class ToolkitEditorFactory ( EditorFactory ):
     """ Editor factory for buttons.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -73,7 +71,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Orientation of the text relative to the image
     orientation = Enum( 'vertical', 'horizontal' )
-    
+
     # The optional view to display when the button is clicked:
     view = AView
 
@@ -109,7 +107,7 @@ class ToolkitEditorFactory ( EditorFactory ):
         self._value = 0
         super( ToolkitEditorFactory, self ).__init__( **traits )
 
-    
+
 # Define the ButtonEditor class
 ButtonEditor = ToolkitEditorFactory
 
