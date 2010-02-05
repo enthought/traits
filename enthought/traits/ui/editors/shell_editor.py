@@ -22,19 +22,17 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Bool, Str, Event, Property
-    
-from enthought.traits.ui.editor \
-    import Editor
-    
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from __future__ import absolute_import
 
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ...api import Bool, Str, Event, Property
+    
+from ..editor import Editor
+    
+from ..basic_editor_factory import BasicEditorFactory
 
-                                      
+from ..toolkit import toolkit_object
+
+
 #-------------------------------------------------------------------------------
 #  'ShellEditor' class:
 #-------------------------------------------------------------------------------
@@ -65,7 +63,7 @@ class _ShellEditor ( Editor ):
         # Moving the import here, since PythonShell is implemented in the
         # Pyface backend packages, and we want to delay loading this toolkit
         # specific class until this editor is actually used.    
-        from enthought.pyface.python_shell import PythonShell
+        from ....pyface.python_shell import PythonShell
 
         locals = None
         value  = self.value

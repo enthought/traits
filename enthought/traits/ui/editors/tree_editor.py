@@ -20,20 +20,17 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Any, Dict, Bool, Tuple, Int, List, Instance, Str, Enum
+from __future__ import absolute_import
 
-from enthought.traits.ui.tree_node \
-    import TreeNode
+from ...api import Any, Dict, Bool, Tuple, Int, List, Instance, Str, Enum
+
+from ..tree_node import TreeNode
     
-from enthought.traits.ui.dock_window_theme \
-    import DockWindowTheme
+from ..dock_window_theme import DockWindowTheme
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..editor_factory import EditorFactory
 
-from enthought.traits.ui.helper \
-    import Orientation
+from ..helper import Orientation
     
 #-------------------------------------------------------------------------------
 #  Trait definitions:

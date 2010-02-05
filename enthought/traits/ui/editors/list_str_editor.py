@@ -22,17 +22,15 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, Enum, List, Bool, Instance, Property
+from __future__ import absolute_import
+
+from ...api import Str, Enum, List, Bool, Instance, Property
     
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from ..basic_editor_factory import BasicEditorFactory
 
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..toolkit import toolkit_object
 
-from enthought.pyface.image_resource \
-    import ImageResource
+from ....pyface.image_resource import ImageResource
 
 #-------------------------------------------------------------------------------
 #  'ListStrEditor' editor factory class:

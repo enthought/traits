@@ -22,15 +22,14 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+
+from __future__ import absolute_import
+
+from ...api import Int, Bool
     
-from enthought.traits.api \
-    import Int, Bool
+from ..basic_editor_factory import BasicEditorFactory
     
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
-    
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..toolkit import toolkit_object
 
 # Define callable which returns the 'klass' value (i.e. the editor to use in 
 # the EditorFactory.

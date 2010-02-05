@@ -21,22 +21,20 @@
 #-------------------------------------------------------------------------------
 #  Imports:
 #-------------------------------------------------------------------------------
+
+from __future__ import absolute_import
+
+from ...api import Instance, Int, false
     
-from enthought.traits.api \
-    import Instance, Int, false
+from .tree_editor import TreeEditor
+from ..view import View
+from ..item import Item
     
-from tree_editor import TreeEditor
-from enthought.traits.ui.view import View
-from enthought.traits.ui.item import Item
+from ..value_tree import RootNode, value_tree_nodes
     
-from enthought.traits.ui.value_tree \
-    import RootNode, value_tree_nodes
+from ..editor_factory import EditorFactory
     
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
-    
-from enthought.traits.ui.editor \
-    import Editor
+from ..editor import Editor
                                       
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:

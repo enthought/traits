@@ -19,20 +19,18 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import List, Str, Bool, Int, Unicode
+from __future__ import absolute_import
+
+from ...api import List, Str, Bool, Int, Unicode
     
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well.     
-from enthought.traits.ui.view \
-    import View
+from ..view import View
 
-from enthought.traits.ui.group \
-    import Group
+from ..group import Group
 
-from text_editor \
-    import ToolkitEditorFactory as EditorFactory
+from .text_editor import ToolkitEditorFactory as EditorFactory
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:

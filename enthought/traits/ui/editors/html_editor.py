@@ -23,14 +23,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, false
+from __future__ import absolute_import
+
+from ...api import Str, false
     
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from ..basic_editor_factory import BasicEditorFactory
     
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..toolkit import toolkit_object
                     
 # Callable that returns the editor to use in the UI.
 def html_editor(*args, **traits):

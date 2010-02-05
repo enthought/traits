@@ -23,20 +23,17 @@ toolkits.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, List, Enum, Unicode, Type, Bool
+from __future__ import absolute_import
 
-from enthought.traits.ui.view \
-    import View, AKind
+from ...api import Str, List, Enum, Unicode, Type, Bool
 
-from enthought.traits.ui.ui_traits \
-    import AView
+from ..view import View, AKind
 
-from enthought.traits.ui.instance_choice \
-    import InstanceChoice, InstanceChoiceItem
+from ..ui_traits import AView
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..instance_choice import InstanceChoice, InstanceChoiceItem
+
+from ..editor_factory import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:
