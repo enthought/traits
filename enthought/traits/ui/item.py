@@ -467,7 +467,7 @@ class Readonly ( Item ):
 #  'UReadonly' class:
 #-------------------------------------------------------------------------------
 
-class UReadonly ( Item ):
+class UReadonly ( Readonly ):
     """ An Item using a 'readonly' style with no label.
     """
     
