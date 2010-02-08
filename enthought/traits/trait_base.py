@@ -252,6 +252,9 @@ class _Uninitialized(object):
     def __repr__(self):
         return '<uninitialized>'
 
+    def __reduce_ex__(self, protocol):
+        return (_Uninitialized, ())
+
 # When the first reference to a trait is a 'get' reference, the default value of
 # the trait is implicitly assigned and returned as the value of the trait. 
 # Because of this implicit assignment, a trait change notification is
@@ -278,6 +281,9 @@ class _Undefined(object):
 
     def __repr__(self):
         return '<undefined>'
+
+    def __reduce_ex__(self, protocol):
+        return (_Undefined, ())
 
     def __eq__(self, other):
         return type(self) is type(other)
