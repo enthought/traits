@@ -71,6 +71,7 @@ class InfoFile(object):
 
     @classmethod
     def from_info_file(cls, filename):
+        # TODO: Change this at some point to parse using elementtree
         str = open(filename).read()        
         obj = cls()
         for attr in ['name', 'version', 'checksum']:
@@ -92,10 +93,14 @@ class InfoFile(object):
         xml_elements = []
         for attr in ['name', 'version', 'checksum', 'description']:
             value = getattr(self, attr)
-            str = "{spaces}<{attr}>{value}</{attr}>"
-            xml_elements.append(str.format(spaces=" "*4,attr=attr, value=value))
+            #str = "{spaces}<{attr}>{value}</{attr}>"
+            #xml_elements.append(str.format(spaces=" "*4,attr=attr, value=value))
+            str = "%(spaces)s<%(attr)s>%(value)s</%(attr)s>"
+            xml_elements.append(str % dict(spaces=" "*4,attr=attr, value=value))
         return xml_elements
 
+# TODO: Change this at some point to use elementtree or something to 
+# generate real, validated XML.
 _xmlheader = """<?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- DO NOT EDIT MANUALLY -->
 <!-- Automatically generated file using enthought.util.updates -->
@@ -115,15 +120,18 @@ def files2xml(filenames):
     """
     xmlparts = [_xmlheader]
     for file in filenames:
-        info_file_name = "{0}.info".format(file)
+        #info_file_name = "{0}.info".format(file)
+        info_file_name = "%s.info" % (file,)
         if not os.path.exists(info_file_name):
-            print "Warning: {0} was not found.".format(info_file_name)
+            #print "Warning: {0} was not found.".format(info_file_name)
+            print "Warning: %s was not found." % (info_file_name,)
             continue
         try:
             info = InfoFile.from_info_file(info_file_name)
             xml_list = info.get_xml()
         except:
-            print "Warning: Failure in creating XML for {0}".format(info_file_name)
+            #print "Warning: Failure in creating XML for {0}".format(info_file_name)
+            print "Warning: Failure in creating XML for %s" % (info_file_name,)
             continue
         xmlparts.append('<update_file>') 
         xmlparts.extend(xml_list)
