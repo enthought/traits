@@ -2,34 +2,31 @@
 #
 #  Copyright (c) 2009, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: Evan Patterson
 #  Date:   06/18/2009
 #
 #------------------------------------------------------------------------------
 
 """ Provides a lightweight framework that removes some of the drudge work
-    involved with implementing user-friendly saving behavior in a Traits 
+    involved with implementing user-friendly saving behavior in a Traits
     UI application.
 """
 
-# Standard library imports
-import os, sys
-from platform import system
+from __future__ import absolute_import
 
 # ETS imports
-from enthought.pyface.api import FileDialog, confirm, error, YES, CANCEL
-from enthought.pyface.timer.api import Timer
-from enthought.traits.api import HasTraits, Str, Bool, Any, Int, Instance, \
-    on_trait_change
-from enthought.traits.ui.api import Handler
+from ....pyface.api import FileDialog, confirm, error, YES, CANCEL
+from ....pyface.timer.api import Timer
+from ...api import HasTraits, Str, Bool, Any, Int, Instance, on_trait_change
+from ..api import Handler
 
 
 class CanSaveMixin(HasTraits):
@@ -66,7 +63,7 @@ class CanSaveMixin(HasTraits):
             validate.
 
             By default, an object always validates.
-        """    
+        """
         return (True, '')
 
     def save(self):
@@ -74,7 +71,7 @@ class CanSaveMixin(HasTraits):
             method should also reset the dirty flag on this object.
         """
         raise NotImplementedError
-    
+
 
 class SaveHandler(Handler):
     """ A Handler that facilates adding saving to a Traits UI application.
@@ -105,7 +102,7 @@ class SaveHandler(Handler):
     # Whether to automatically save after a certain amount of time has passed
     # since the last save
     autosave = Bool(False)
-    
+
     # Number of seconds between each autosave. Default is 5 minutes.
     autosaveInterval = Int(300)
 
@@ -134,7 +131,7 @@ class SaveHandler(Handler):
         keybindings = info.ui.key_bindings
         if keybindings is not None:
             keybindings.controllers.remove(info.object)
-        
+
         self.saveObject = info.object
         return True
 
@@ -159,7 +156,7 @@ class SaveHandler(Handler):
     #-----------------------------------------------------------------
 
     def exit(self, info):
-        """ Closes the UI unless a save prompt is cancelled. Provided for 
+        """ Closes the UI unless a save prompt is cancelled. Provided for
             convenience to be used with a Menu action.
         """
         if self.close(info, True):
@@ -188,7 +185,7 @@ class SaveHandler(Handler):
         else:
             extLen = len(self.extension)
             if extLen and fileDialog.path[-extLen-1:] != '.' + self.extension:
-                fileDialog.path += '.' + self.extension               
+                fileDialog.path += '.' + self.extension
             self.saveObject.filepath = fileDialog.path
             return self._validateAndSave()
 
@@ -197,7 +194,7 @@ class SaveHandler(Handler):
             the user canceled the action that invoked this prompt.
         """
         if self.saveObject.dirty:
-            code = confirm(info.ui.control, self.savePromptMessage, 
+            code = confirm(info.ui.control, self.savePromptMessage,
                            title="Save now?", cancel=cancel)
             if code == CANCEL:
                 return False
@@ -211,10 +208,10 @@ class SaveHandler(Handler):
         """
         if self.saveObject.dirty and self.saveObject.filepath != '':
             success, message = self.saveObject.validate()
-            if success or (self.allowValidationBypass and 
+            if success or (self.allowValidationBypass and
                            self.autosaveValidationBypass):
                 self.saveObject.save()
-            
+
     @on_trait_change('autosave, autosaveInterval, saveObject')
     def _configure_timer(self):
         """ Creates, replaces, or destroys the autosave timer.
