@@ -22,91 +22,78 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from basic_editor_factory \
-    import BasicEditorFactory
+from __future__ import absolute_import
 
-from context_value \
-    import ContextValue, CV, CVInt, CVFloat, CVStr, CVType
+from .basic_editor_factory import BasicEditorFactory
 
-from editor \
-    import Editor
+from .context_value import CV, CVFloat, CVInt, CVStr, CVType, ContextValue
 
-from editor_factory \
-    import EditorFactory
+from .editor import Editor
 
-from editors.api \
-    import *
+from .editor_factory import EditorFactory
 
-from group \
-    import Group, HGroup, VGroup, VGrid, HFlow, VFlow, VFold, HSplit, VSplit, \
-           Tabbed
+from .editors.api import (ArrayEditor, BooleanEditor, ButtonEditor,
+    CheckListEditor, CodeEditor, ColorEditor, CompoundEditor, CustomEditor,
+    DNDEditor, DateEditor, DefaultOverride, DirectoryEditor, DropEditor,
+    EnumEditor, FileEditor, FontEditor, HTMLEditor, HistoryEditor, ImageEditor,
+    ImageEnumEditor, InstanceEditor, KeyBindingEditor, ListEditor,
+    ListStrEditor, NullEditor, PopupEditor, ProgressEditor, RGBColorEditor,
+    RangeEditor, ScrubberEditor, SearchEditor, SetEditor, ShellEditor,
+    TableEditor, TabularEditor, TextEditor, TimeEditor, TitleEditor, TreeEditor,
+    TupleEditor, ValueEditor)
 
-from handler \
-    import Handler, Controller, ModelView, ViewHandler, default_handler
+from .group import (Group, HFlow, HGroup, HSplit, Tabbed, VFlow, VFold, VGrid,
+    VGroup, VSplit)
 
-from help \
-    import on_help_call
+from .handler import Controller, Handler, ModelView, ViewHandler, default_handler
 
-from help_template \
-    import help_template
+from .help import on_help_call
 
-from include \
-    import Include
+from .help_template import help_template
 
-from item \
-    import Item, UItem, Custom, UCustom, Readonly, UReadonly, Label, Heading, \
-           Spring, spring
+from .include import Include
 
-from menu \
-    import Action, ActionGroup, Menu, MenuBar, PyFaceAction, ToolBar, \
-           Separator, CloseAction, UndoAction, RedoAction, RevertAction, \
-           HelpAction, StandardMenuBar, NoButton, UndoButton, RevertButton, \
-           ApplyButton, OKButton, CancelButton, HelpButton, OKCancelButtons, \
-           ModalButtons, LiveButtons, NoButtons
+from .item import (Custom, Heading, Item, Label, Readonly, Spring, UCustom,
+    UItem, UReadonly, spring)
 
-from message \
-    import message, error, auto_close_message
+from .menu import (Action, ActionGroup, ApplyButton, CancelButton, CloseAction,
+    HelpAction, HelpButton, LiveButtons, Menu, MenuBar, ModalButtons, NoButton,
+    NoButtons, OKButton, OKCancelButtons, PyFaceAction, RedoAction,
+    RevertAction, RevertButton, Separator, StandardMenuBar, ToolBar, UndoAction,
+    UndoButton)
 
-from table_column \
-    import TableColumn, ObjectColumn, ExpressionColumn, NumericColumn, \
-           ListColumn
+from .message import auto_close_message, error, message
 
-from table_filter \
-    import TableFilter, EvalTableFilter, RuleTableFilter, MenuTableFilter
-    
-from theme \
-    import Theme, default_theme
+from .table_column import (ExpressionColumn, ListColumn, NumericColumn,
+    ObjectColumn, TableColumn)
 
-from toolkit \
-    import toolkit
+from .table_filter import (EvalTableFilter, MenuTableFilter, RuleTableFilter,
+    TableFilter)
 
-from toolkit_traits \
-    import ColorTrait, RGBColorTrait, FontTrait
+from .theme import Theme, default_theme
 
-from tree_node \
-    import TreeNode, ObjectTreeNode, TreeNodeObject, MultiTreeNode, \
-           ITreeNode, ITreeNodeAdapter
+from .toolkit import toolkit
 
-from ui \
-    import UI
+from .toolkit_traits import ColorTrait, FontTrait, RGBColorTrait
 
-from ui_info \
-    import UIInfo
-    
-from ui_traits \
-    import Border, Margin, HasMargin, HasBorder, StatusItem, Image, ATheme
-    
-from undo \
-    import UndoHistory, AbstractUndoItem, UndoItem, ListUndoItem, \
-           UndoHistoryUndoItem
+from .tree_node import (ITreeNode, ITreeNodeAdapter, MultiTreeNode,
+    ObjectTreeNode, TreeNode, TreeNodeObject)
 
-from view \
-    import View
+from .ui import UI
 
-from view_element \
-    import ViewElement, ViewSubElement
+from .ui_info import UIInfo
 
-import view_elements
+from .ui_traits import (ATheme, Border, HasBorder, HasMargin, Image, Margin,
+    StatusItem)
+
+from .undo import (AbstractUndoItem, ListUndoItem, UndoHistory,
+    UndoHistoryUndoItem, UndoItem)
+
+from .view import View
+
+from .view_element import ViewElement, ViewSubElement
+
+from . import view_elements
 
 _constants  = toolkit().constants()
 WindowColor = _constants.get( 'WindowColor', 0xFFFFFF )

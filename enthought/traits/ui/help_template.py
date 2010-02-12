@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/25/2004
 #
@@ -22,7 +22,9 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api import HasStrictTraits, Str
+from __future__ import absolute_import
+
+from ..api import HasStrictTraits, Str
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -94,18 +96,18 @@ class HelpTemplate ( HasStrictTraits ):
     item_help     = Str( ItemHelp )  # Single group item HTML
     group_help    = Str( GroupHelp ) # Group level help HTML
     no_group_help = Str( '' )        # Missing group level help HTML
-    
+
 #-------------------------------------------------------------------------------
-#  Gets/Sets the current HelpTemplate in use:  
+#  Gets/Sets the current HelpTemplate in use:
 #-------------------------------------------------------------------------------
- 
+
 _help_template = HelpTemplate()
 
 def help_template ( template = None ):
     """ Gets or sets the current HelpTemplate in use.
     """
     global _help_template
-    
+
     if template is not None:
         _help_template = template
     return _help_template

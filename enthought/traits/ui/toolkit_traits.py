@@ -1,5 +1,7 @@
-from enthought.traits.ui.toolkit \
-    import toolkit
+
+from __future__ import absolute_import
+
+from .toolkit import toolkit
 
 def ColorTrait ( *args, **traits ):
     return toolkit().color_trait( *args, **traits )

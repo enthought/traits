@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   08/25/2005
 #
@@ -23,14 +23,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import HasPrivateTraits, Str, Any, Dict, Tuple, Callable, Bool
+from __future__ import absolute_import
 
-from ui_traits \
-    import AView
+from ..api import HasPrivateTraits, Str, Any, Dict, Tuple, Callable, Bool
 
-from helper \
-    import user_name_for
+from .ui_traits import AView
+
+from .helper import user_name_for
 
 #-------------------------------------------------------------------------------
 #  'InstanceChoiceItem' class:
@@ -117,7 +116,7 @@ class InstanceChoice ( InstanceChoiceItem ):
 
     # Object associated with the item
     object = Any
-    
+
     # The name of the object trait containing its user interface name:
     name_trait = Str( 'name' )
 
@@ -258,7 +257,7 @@ class InstanceDropChoice ( InstanceFactoryChoice ):
     # dropped rather than created . This value overrides the default.
     droppable = True
 
-    # Indicates whether the item can be selected by the user. This value 
+    # Indicates whether the item can be selected by the user. This value
     # overrides the default.
     selectable = False
 
