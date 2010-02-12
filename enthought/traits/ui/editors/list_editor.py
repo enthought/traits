@@ -26,8 +26,6 @@ from __future__ import absolute_import
 from ...api import (HasTraits, BaseTraitHandler, Range, Str, Any, Int, Instance,
         Property, Bool, Callable, Enum, PrototypedFrom)
            
-from ...trait_base import enumerate
-
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well.     

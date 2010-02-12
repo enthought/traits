@@ -26,7 +26,7 @@
 from __future__ import absolute_import
 
 from ..api import (AdaptedTo, Adapter, Any, Bool, Callable, HasPrivateTraits,
-    HasTraits, Instance, Interface, List, Property, Str, cached_property)
+    Instance, Interface, List, Property, Str, cached_property)
 
 from ..trait_base import SequenceTypes, get_resource_path, xgetattr, xsetattr
 

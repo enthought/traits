@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from new import instancemethod
-
 from types import ClassType, FunctionType, InstanceType
 
 import sys

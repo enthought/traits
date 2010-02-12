@@ -32,44 +32,31 @@ import copy as copy_module
 import weakref
 import re
 
-from cPickle \
-    import dumps
+from types import FunctionType, MethodType
 
-from types \
-    import FunctionType, MethodType
+from .version import __version__ as TraitsVersion
 
-from .version \
-    import __version__ as TraitsVersion
+from .ctraits import CHasTraits, CTraitMethod, _HasTraits_monitors
 
-from .ctraits \
-    import CHasTraits, CTraitMethod, _HasTraits_monitors
+from .traits import (CTrait, ForwardProperty, Property, SpecialNames, Trait,
+    TraitFactory, __newobj__, generic_trait, trait_factory)
 
-from .traits \
-    import Trait, CTrait, TraitFactory, trait_factory, \
-           Property, ForwardProperty, generic_trait, __newobj__, SpecialNames
+from .trait_types import Any, Bool, Disallow, Enum, Event, Python, This
 
-from .trait_types \
-    import Any, Enum, Instance, Event, Bool, Python, Disallow, This
+from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
+    FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper,
+    StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
+    TraitChangeNotifyWrapper)
 
-from .trait_notifiers \
-    import StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper, \
-           TraitChangeNotifyWrapper, ExtendedTraitChangeNotifyWrapper, \
-           FastUITraitChangeNotifyWrapper, UITraitChangeNotifyWrapper, \
-           NewTraitChangeNotifyWrapper
+from .trait_handlers import TraitType
 
-from .trait_handlers \
-    import TraitType
+from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
+    add_article, enumerate, is_none, not_event, not_false)
 
-from .trait_base \
-    import Missing, enumerate, SequenceTypes, Undefined, TraitsCache, \
-           add_article, is_none, not_false, not_event
+from .trait_errors import TraitError
 
-from .trait_errors \
-    import TraitError
-
-from .protocols.api \
-    import InterfaceClass, Protocol, addClassAdvisor, declareAdapter, \
-           declareImplementation
+from .protocols.api import (InterfaceClass, Protocol, addClassAdvisor,
+    declareImplementation)
 
 #-------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:

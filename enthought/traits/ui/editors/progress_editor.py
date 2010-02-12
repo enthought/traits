@@ -21,7 +21,7 @@
 
 from __future__ import absolute_import
 
-from ...api import Str, Int, Bool, Str
+from ...api import Int, Bool, Str
 
 from ..editor_factory import EditorFactory
 

@@ -30,7 +30,7 @@
 
 from __future__ import absolute_import
 
-from ..api import Trait, HasStrictTraits, List, Dict, Str, Int, Any, TraitError
+from ..api import HasStrictTraits, List, Dict, Str, Int, Any, TraitError
 
 from ..trait_base import enumerate
 
