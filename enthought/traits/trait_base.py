@@ -227,16 +227,27 @@ TraitsCache = '_traits_cache_'
 #-------------------------------------------------------------------------------
 #  Singleton 'Uninitialized' object:
 #-------------------------------------------------------------------------------
+Uninitialized = None
 
-class Uninitialized ( object ):
+class _Uninitialized(object):
     """ The singleton value of this class represents the uninitialized state
         of a trait and is specified as the 'old' value in the trait change
         notification that occurs when the value of a trait is read before being
         set.
     """
 
-    def __repr__ ( self ):
+    def __new__(cls):
+        if Uninitialized is not None:
+            return Uninitialized
+        else:
+            self = object.__new__(cls)
+            return self
+
+    def __repr__(self):
         return '<uninitialized>'
+
+    def __reduce_ex__(self, protocol):
+        return (_Uninitialized, ())
 
 # When the first reference to a trait is a 'get' reference, the default value of
 # the trait is implicitly assigned and returned as the value of the trait.
@@ -245,21 +256,33 @@ class Uninitialized ( object ):
 # the default trait value as the 'new' value. This allows other parts of the
 # traits package to recognize the assignment as the implicit default value
 # assignment, and treat it specially.
-Uninitialized = Uninitialized()
+Uninitialized = _Uninitialized()
 
 #-------------------------------------------------------------------------------
 #  Singleton 'Undefined' object (used as undefined trait name and/or value):
 #-------------------------------------------------------------------------------
 
-class _Undefined ( object ):
+Undefined = None
 
-    def __repr__ ( self ):
+class _Undefined(object):
+
+    def __new__(cls):
+        if Undefined is not None:
+            return Undefined
+        else:
+            self = object.__new__(cls)
+            return self
+
+    def __repr__(self):
         return '<undefined>'
 
-    def __eq__( self, other ):
+    def __reduce_ex__(self, protocol):
+        return (_Undefined, ())
+
+    def __eq__(self, other):
         return type(self) is type(other)
 
-    def __ne__( self, other ):
+    def __ne__(self, other):
         return type(self) is not type(other)
 
 # Singleton object that indicates that a trait attribute has not yet had a
