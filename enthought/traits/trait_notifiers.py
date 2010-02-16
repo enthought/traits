@@ -374,10 +374,13 @@ class StaticTraitChangeNotifyWrapper:
 
 class TraitChangeNotifyWrapper:
 
-    def __init__ ( self, handler, owner ):
-        self.init( handler, owner )
+    def __init__ ( self, handler, owner, target=None ):
+        self.init( handler, owner, target )
         
-    def init ( self, handler, owner ):
+    def init ( self, handler, owner, target=None ):
+        # If target is not None and handler is a function
+        # then the handler will be removed when target
+        # is deleted.
         func = handler
         if type( handler ) is MethodType:
             func   = handler.im_func
@@ -397,6 +400,11 @@ class TraitChangeNotifyWrapper:
                 self.__call__ = getattr( self, 'rebind_call_%d' % arg_count )
                 
                 return arg_count
+        elif target is not None:
+            # Set up so the handler will be removed when the target
+            # is deleted
+            self.object = weakref.ref( target, self.listener_deleted )
+            self.owner = owner
                 
         arg_count = handler.func_code.co_argcount
         if arg_count > 4:
@@ -599,8 +607,8 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
 class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
-    def __init__ ( self, handler, owner ):
-        self.init( handler, owner )
+    def __init__ ( self, handler, owner, target ):
+        self.init( handler, owner, target )
         self.deferred = None
         
     def call_0 ( self, object, trait_name, old, new ):
