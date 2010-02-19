@@ -12,10 +12,17 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-A placeholder for numeric functions that are not yet implemented in SciPy.
+This module was a placeholder for numeric functions that are not yet
+implemented in SciPy, and to wrap modules some functions to handle
+empty arrays properly.
+
+This module is deprecated and should no longer be used.  It will be removed
+from ETS around the 3.5 release.
 """
 
 import warnings
+warnings.warn("The enthought.util.numeric module is deprecated and will " \
+        "be removed from ETS in a future release.", DeprecationWarning)
 
 import numpy
 from scipy import stats
