@@ -26,11 +26,18 @@ an aribtrary file
 """
 test_file_info = """
 html:
+<center><p>Test File Info</p></center>
+<p>
 This is the multiline
 test file that
 is the only thing we actually
 need in an info
 file
+</p>
+<p>It has multilevel levels of <em>embedded</em>&nbsp;HTML
+markup and this markup should be preserved
+accurately in the XML transcription process.
+</p>
 """
 
 class Tests(unittest.TestCase):
