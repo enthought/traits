@@ -1,13 +1,35 @@
-Traits 3.2.1 (not yet released)
-===============================
+Traits 3.3.0 (Feb 24, 2010)
+===========================
 
 Enhancements
 ------------
+
+The major enhancement this release is that the entire Traits package has been
+changed to use relative imports so that it can be installed as a sub-package
+inside another larger library or package.  This was not previously possible,
+since the various modules inside Traits would import each other directly
+through "enthought.traits.[module]".  Many thanks to Darren Dale for the
+patch.
 
 
 Fixes
 -----
 
+There have been numerous minor bugfixes since the last release.  The most notable
+ones are:
+
+ * Many fixes involve making Traits UI more robust if wxPython is not installed
+   on a system.  In the past, we have been able to use Qt if it was also
+   installed, but removing Wx would lead to a variety of little bugs in various
+   places.  We've squashed a number of these.  We've also added better checks
+   to make sure we're selecting the right toolkit at import and at runtime.
+
+ * A nasty cyclic reference was discovered and eliminated in DelegatesTo traits.
+
+ * The Undefined and Uninitialized Traits were made into true singletons.
+
+ * Much of the inconsistent formatting across the entire Traits source has 
+   been eliminated and normalized (tabs/spaces, line endings).
 
 
 Traits 3.2.0 (July 15, 2009)
