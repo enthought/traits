@@ -13,8 +13,10 @@ View(Item('my_range', editor=DefaultOverride(high_label='Max'))
 
 """
 
-from enthought.traits.api import Dict
-from enthought.traits.ui.editor_factory import EditorFactory
+from __future__ import absolute_import
+
+from ...api import Dict
+from ..editor_factory import EditorFactory
 
 class DefaultOverride(EditorFactory):
     """Editor factory for selectively overriding certain parameters

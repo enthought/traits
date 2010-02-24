@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: Martin Chilvers
 #  Date:   07/18/2007
 #
@@ -22,64 +22,64 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 # Standard library imports:
-import inspect, weakref
+import weakref
 
 # Traits imports:
-from enthought.traits.api import \
-    HasTraits, Any, Bool, Expression
+from .api import HasTraits, Any, Bool, Expression
 
 # PyProtocols imports:
-from enthought.traits.protocols.api \
-    import addClassAdvisor, declareAdapter, declareImplementation, Protocol
+from .protocols.api import addClassAdvisor, declareAdapter, declareImplementation, Protocol
 
 #-------------------------------------------------------------------------------
 #  'Adapter' class:
 #-------------------------------------------------------------------------------
-        
+
 class Adapter ( HasTraits ):
-    """ The base class for all traits adapters. 
-    
+    """ The base class for all traits adapters.
+
     In Traits, an *adapter* is a special type of class whose role is to
-    transform some type of object which does not implement a specific interface, 
+    transform some type of object which does not implement a specific interface,
     or set of interfaces, into one that does.
 
     This class is provided as a convenience. If you subclass this class, the
     only things you need to add to the subclass definition are:
-        
+
         * An implements() function call declaring which interfaces the adapter
           class implements on behalf of the object is is adapting.
         * A declaration for the **adaptee** trait, usually as an Instance of
           a particular class.
-        * The actual implementations of the interfaces declared in the 
-          implements() call. Usually the implementation code is written in 
+        * The actual implementations of the interfaces declared in the
+          implements() call. Usually the implementation code is written in
           terms of the **adaptee** trait.
-        
+
     """
 
     #-- Trait Definitions ------------------------------------------------------
-    
+
     # The object that is being adapted.
     adaptee = Any
 
     #-- Constructor ------------------------------------------------------------
-    
+
     def __init__ ( self, adaptee ):
         """ Constructor.
 
-            We have to declare an explicit constructor because adapters are 
+            We have to declare an explicit constructor because adapters are
             created by PyProtocols itself, which knows nothing about traits.
         """
         super( Adapter, self ).__init__()
 
         self.adaptee = adaptee
-        
+
 #-------------------------------------------------------------------------------
 #  'DefaultAdapterFactory' class:
 #-------------------------------------------------------------------------------
 
 class DefaultAdapterFactory ( HasTraits ):
-    """ An adapter factory for producing cached or categorized adapters. 
+    """ An adapter factory for producing cached or categorized adapters.
     """
 
     #-- 'DefaultAdapterFactory' Interface --------------------------------------
@@ -91,12 +91,12 @@ class DefaultAdapterFactory ( HasTraits ):
     # If an adapter is cached then the factory will produce at most one
     # adapter per instance.
     cached = Bool( False )
-    
+
     # An expression that is used to select which instances of a particular
     # type can be adapted by this factory.
     #
     # The expression is evaluated in a namespace that contains a single name
-    # 'adaptee', which is bound to the object that this factory is attempting 
+    # 'adaptee', which is bound to the object that this factory is attempting
     # to adapt (e.g. 'adaptee.is_folder').
     when = Expression
 
@@ -113,7 +113,7 @@ class DefaultAdapterFactory ( HasTraits ):
     def __call__ ( self, object ):
         """ Creates an adapter for the specified object.
 
-            Returns **None** if the factory cannot perform the required 
+            Returns **None** if the factory cannot perform the required
             adaptation.
         """
         namespace = { 'adaptee': object }
@@ -122,11 +122,11 @@ class DefaultAdapterFactory ( HasTraits ):
                 adapter = self._adapters.get( object )
                 if adapter is None:
                     self._adapters[ object ] = adapter = self.klass( object )
-                    
+
                 return adapter
 
             return self.klass( object )
-            
+
         return None
 
     #---------------------------------------------------------------------------
@@ -134,7 +134,7 @@ class DefaultAdapterFactory ( HasTraits ):
     #---------------------------------------------------------------------------
 
     def __adapters_default ( self ):
-        """ Trait initializer. 
+        """ Trait initializer.
         """
         return weakref.WeakKeyDictionary()
 
@@ -142,14 +142,14 @@ class DefaultAdapterFactory ( HasTraits ):
 #  'adapts' function:
 #-------------------------------------------------------------------------------
 
-def adapts ( from_, to, extra = None, factory = None, cached = False, 
+def adapts ( from_, to, extra = None, factory = None, cached = False,
                         when  = '' ):
     """ A class advisor for declaring adapters.
-    
+
     Parameters
     ----------
     ``from_`` : type or interface
-        What the adapter adapts *from*, or a list of such types or interfaces 
+        What the adapter adapts *from*, or a list of such types or interfaces
         (the '_' suffix is used because 'from' is a Python keyword).
     to : type or interface
         What the adapter adapts *to*, or a list of such types or interfaces.
@@ -160,14 +160,14 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
         perform the adaptation and **None** if it cannot.
 
     The following arguments are ignored if *factory* is specified:
-    
+
     cached : Boolean
         Should the adapters be cached? If an adapter is cached, then the
         factory will produce at most one adapter per instance.
-    when : A Python expression 
-        Selects which instances of a particular type can be adapted by this 
-        factory. The expression is evaluated in a namespace that contains a 
-        single name *adaptee*, which is bound to the object to be adapted 
+    when : A Python expression
+        Selects which instances of a particular type can be adapted by this
+        factory. The expression is evaluated in a namespace that contains a
+        single name *adaptee*, which is bound to the object to be adapted
         (e.g., 'adaptee.is_folder').
     """
     if extra is not None:
@@ -208,14 +208,14 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
         # If a factory was specified then use it:
         if factory is not None:
             f = factory
-            
+
         # If the adapter is cached or has a 'when' expression then create a
         # default factory:
-        elif cached or (when != ''): 
-            f = DefaultAdapterFactory( klass  = klass, 
+        elif cached or (when != ''):
+            f = DefaultAdapterFactory( klass  = klass,
                                        cached = cached,
                                        when   = when or 'True' )
-        
+
         # Otherwise, just use the adapter class itself:
         else:
             f = klass
@@ -223,9 +223,9 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
         # Tell PyProtocols about the factory:
         declareAdapter( f, provides, forProtocols = for_protocols,
                                      forTypes     = for_types )
-        
+
         return klass
-        
+
     if adapter is not None:
         callback( adapter )
     else:

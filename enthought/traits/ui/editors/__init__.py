@@ -16,4 +16,16 @@
 #------------------------------------------------------------------------------
 # Adding this statement for backwards compatibility (since editors.py was a 
 # file prior to version 3.0.3). 
-from api import *
+
+from __future__ import absolute_import
+
+from .api import (toolkit, ArrayEditor, BooleanEditor, ButtonEditor, 
+    CheckListEditor, CodeEditor, ColorEditor, CompoundEditor, CustomEditor,
+    DateEditor, DefaultOverride, DirectoryEditor, DNDEditor, DropEditor,
+    EnumEditor, FileEditor, FontEditor, KeyBindingEditor, ImageEditor,
+    ImageEnumEditor, InstanceEditor, ListEditor, ListStrEditor, NullEditor,
+    RangeEditor, RGBColorEditor, SetEditor, TextEditor, TableEditor,
+    TimeEditor, TitleEditor, TreeEditor, TupleEditor, HistoryEditor,
+    HTMLEditor, PopupEditor, ValueEditor, ShellEditor, ScrubberEditor,
+    TabularEditor, ProgressEditor, SearchEditor)
+

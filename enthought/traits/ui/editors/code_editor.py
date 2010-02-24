@@ -23,11 +23,11 @@ useful for tools such as debuggers.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Instance, Str, Color, Enum, Bool
+from __future__ import absolute_import
+
+from ...api import Instance, Str, Color, Enum, Bool
     
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..editor_factory import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

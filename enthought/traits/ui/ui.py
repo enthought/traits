@@ -23,40 +23,30 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import shelve
 import os
 
-from types \
-    import FunctionType
+from ..api import (Any, Bool, Callable, DictStrAny, Event, HasPrivateTraits,
+    Instance, Int, List, Property, Str, TraitError, on_trait_change,
+    property_depends_on)
 
-from enthought.traits.api \
-    import Trait, HasPrivateTraits, DictStrAny, Any, List, Int, Instance, \
-           TraitError, Property, Bool, Event, Callable, Str, on_trait_change, \
-           property_depends_on
+from ..trait_base import traits_home, is_str
 
-from enthought.traits.trait_base \
-    import traits_home, is_str
+from .editor import Editor
 
-from editor \
-    import Editor
+from .view_elements import ViewElements
 
-from view_elements \
-    import ViewElements
+from .handler import Handler, ViewHandler
 
-from handler \
-    import Handler, ViewHandler
+from .toolkit import toolkit
 
-from toolkit \
-    import toolkit
+from .ui_info import UIInfo
 
-from ui_info \
-    import UIInfo
+from .item import Item
 
-from item \
-    import Item
-
-from group \
-    import Group, ShadowGroup
+from .group import Group, ShadowGroup
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -874,7 +864,7 @@ class UI ( HasPrivateTraits ):
         values       = context.values()
         key_bindings = view.key_bindings
         if key_bindings is None:
-            from enthought.traits.ui.key_bindings import KeyBindings
+            from .key_bindings import KeyBindings
 
             return KeyBindings( controllers = values)
 

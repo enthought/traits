@@ -23,12 +23,12 @@ key binding editor).
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 # FIXME: Import from the api.py file when it has been added.
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from ..basic_editor_factory import BasicEditorFactory
                                       
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..toolkit import toolkit_object
 
 # Callable which returns the editor to use in the ui.
 def key_binding_editor(*args, **traits):

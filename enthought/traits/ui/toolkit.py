@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   10/07/2004
 #
@@ -23,16 +23,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import sys
+from __future__ import absolute_import
 
-from enthought.traits.api \
-    import HasTraits, HasPrivateTraits, TraitError
-    
-from enthought.traits.trait_base \
-    import ETSConfig
+from ..api import HasPrivateTraits, TraitError
 
-from ui_traits \
-    import SequenceTypes
+from ..trait_base import ETSConfig
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -53,10 +48,7 @@ _toolkit = None
 #-------------------------------------------------------------------------------
 
 def _import_toolkit ( name ):
-    package  = 'enthought.traits.ui.' + name
-    module   = __import__( package )
-    
-    return getattr( module.traits.ui, name ).toolkit
+    return __import__( name, globals=globals(), level=1 ).toolkit
 
 
 def assert_toolkit_import(name):
@@ -66,7 +58,7 @@ def assert_toolkit_import(name):
     if ETSConfig.toolkit and ETSConfig.toolkit != name:
         raise RuntimeError, "Importing from %s backend after selecting %s " \
                 "backend!" % (name, ETSConfig.toolkit)
-        
+
 
 def toolkit_object(name, raise_exceptions=False):
     """ Return the toolkit specific object with the given name.  The name
@@ -75,7 +67,7 @@ def toolkit_object(name, raise_exceptions=False):
     """
 
     mname, oname = name.split(':')
-    
+
     class Unimplemented ( object ):
         """ This is returned if an object isn't implemented by the selected
         toolkit.  It raises an exception if it is ever instantiated.
@@ -86,11 +78,13 @@ def toolkit_object(name, raise_exceptions=False):
                 "implement %s" % ( ETSConfig.toolkit, oname ) )
 
     be_obj   = Unimplemented
-    be_mname = toolkit().__module__.rstrip( '.toolkit' ) + '.' + mname
+    be_mname = toolkit().__module__.split('.')[-2] + '.' + mname
     try:
-        __import__( be_mname )
+        module = __import__(
+            be_mname, globals=globals(), fromlist=[oname], level=1
+        )
         try:
-            be_obj = getattr(sys.modules[be_mname], oname)
+            be_obj = getattr(module, oname)
         except AttributeError, e:
             if raise_exceptions: raise e
     except ImportError, e:
@@ -110,7 +104,7 @@ def toolkit ( *toolkits ):
     if _toolkit is not None:
         return _toolkit
 
-    # If a toolkit has already been set for ETSConfig, then check if we can use 
+    # If a toolkit has already been set for ETSConfig, then check if we can use
     # it:
     if ETSConfig.toolkit:
         toolkits = ( ETSConfig.toolkit, )
@@ -126,7 +120,7 @@ def toolkit ( *toolkits ):
 
             return _toolkit
 
-        except ImportError:
+        except (AttributeError, ImportError):
             pass
     else:
         # Try using the null toolkit and printing a warning
@@ -136,7 +130,7 @@ def toolkit ( *toolkits ):
             warnings.warn( "Unable to import the '%s' backend for traits UI; "
                            "using the 'null' toolkit instead." % toolkit_name )
             return _toolkit
-            
+
         except ImportError:
             raise TraitError( "Could not find any UI toolkit called '%s'" %
                               toolkit_name )
@@ -148,7 +142,7 @@ def toolkit ( *toolkits ):
 class Toolkit ( HasPrivateTraits ):
     """ Abstract base class for GUI toolkits.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Create GUI toolkit specific user interfaces using information from the
     #  specified UI object:
@@ -203,7 +197,7 @@ class Toolkit ( HasPrivateTraits ):
         raise NotImplementedError
 
     def ui_info ( self, ui, parent ):
-        """ Creates a GUI-toolkit-specific temporary "live update" popup dialog 
+        """ Creates a GUI-toolkit-specific temporary "live update" popup dialog
             user interface using information from the specified UI object.
         """
         raise NotImplementedError
@@ -337,66 +331,66 @@ class Toolkit ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
 
     def skip_event ( self, event ):
-        """ Indicates that an event should continue to be processed by the 
+        """ Indicates that an event should continue to be processed by the
             toolkit.
         """
         raise NotImplementedError
 
     #---------------------------------------------------------------------------
-    #  Destroys a specified GUI toolkit control:  
+    #  Destroys a specified GUI toolkit control:
     #---------------------------------------------------------------------------
-    
+
     def destroy_control ( self, control ):
         """ Destroys a specified GUI toolkit control.
         """
         raise NotImplementedError
 
     #---------------------------------------------------------------------------
-    #  Destroys all of the child controls of a specified GUI toolkit control:  
+    #  Destroys all of the child controls of a specified GUI toolkit control:
     #---------------------------------------------------------------------------
-    
+
     def destroy_children ( self, control ):
-        """ Destroys all of the child controls of a specified GUI toolkit 
+        """ Destroys all of the child controls of a specified GUI toolkit
             control.
         """
         raise NotImplementedError
-        
+
     #---------------------------------------------------------------------------
     #  Returns a ( width, height ) tuple containing the size of a specified
     #  toolkit image:
     #---------------------------------------------------------------------------
-    
+
     def image_size ( self, image ):
-        """ Returns a ( width, height ) tuple containing the size of a 
+        """ Returns a ( width, height ) tuple containing the size of a
             specified toolkit image.
         """
         raise NotImplementedError
-        
+
     #---------------------------------------------------------------------------
     #  Returns a dictionary of useful constants:
     #---------------------------------------------------------------------------
-    
+
     def constants ( self ):
         """ Returns a dictionary of useful constants.
-        
+
             Currently, the dictionary should have the following key/value pairs:
-                
+
             - WindowColor': the standard window background color in the toolkit
               specific color format.
         """
         raise NotImplementedError
-        
+
     #---------------------------------------------------------------------------
-    #  Returns a renderer used to render 'themed' table cells for a specified 
+    #  Returns a renderer used to render 'themed' table cells for a specified
     #  TableColumn object:
     #---------------------------------------------------------------------------
-    
+
     def themed_cell_renderer ( self, column ):
-        """ Returns a renderer used to render 'themed' table cells for a 
+        """ Returns a renderer used to render 'themed' table cells for a
             specified TableColum object.
         """
         raise NotImplementedError
-                
+
     #---------------------------------------------------------------------------
     #  GUI toolkit dependent trait definitions:
     #---------------------------------------------------------------------------
@@ -415,11 +409,11 @@ class Toolkit ( HasPrivateTraits ):
 
     def kiva_font_trait ( self, *args, **traits ):
         raise NotImplementedError
-        
+
     #---------------------------------------------------------------------------
     #  'Editor' class methods:
     #---------------------------------------------------------------------------
-    
+
     def ui_editor ( self ):
         raise NotImplementedError
 

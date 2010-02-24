@@ -22,39 +22,31 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import sys
 import re
 import datetime
-import trait_handlers
+from weakref import ref
+from os.path import isfile, isdir
+from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
-from weakref \
-    import ref
+from . import trait_handlers
 
-from os.path \
-    import isfile, isdir
+from .protocols.api import adapt
 
-from enthought.traits.protocols.api \
-    import adapt
+from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
+        ClassTypes, Undefined, Missing, TraitsCache, python_version)
 
-from trait_base \
-    import strx, get_module_name, class_of, SequenceTypes, TypeTypes, \
-           ClassTypes, Undefined, Missing, TraitsCache, python_version
+from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
+        TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
+        ThisClass, items_event, RangeTypes)
 
-from trait_handlers \
-    import TraitType, TraitInstance, TraitListObject, TraitSetObject, \
-           TraitSetEvent, TraitDictObject, TraitDictEvent, ThisClass, \
-           items_event, RangeTypes
+from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
+        html_editor, password_editor, shell_editor, date_editor, time_editor)
 
-from traits \
-    import Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor, \
-           html_editor, password_editor, shell_editor, date_editor, \
-           time_editor
+from .trait_errors import TraitError
 
-from trait_errors \
-    import TraitError
-
-from types \
-    import FunctionType, MethodType, ClassType, InstanceType, ModuleType
     
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -96,7 +88,7 @@ def default_text_editor ( trait, type = None ):
 
     enter_set = trait.enter_set or False
 
-    from enthought.traits.ui.api import TextEditor
+    from .ui.api import TextEditor
 
     if type is None:
         return TextEditor( auto_set = auto_set, enter_set = enter_set )
@@ -330,7 +322,7 @@ class BaseStr ( TraitType ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from traits import multi_line_text_editor
+        from .traits import multi_line_text_editor
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
@@ -356,7 +348,7 @@ class Title ( Str ):
     def create_editor ( self ):
         """ Returns the default traits UI editor to use for a trait.
         """
-        from enthought.traits.ui.api import TitleEditor
+        from .ui.api import TitleEditor
 
         return TitleEditor()
 
@@ -390,7 +382,7 @@ class BaseUnicode ( TraitType ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from traits import multi_line_text_editor
+        from .traits import multi_line_text_editor
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
@@ -437,7 +429,7 @@ class BaseBool ( TraitType ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from enthought.traits.ui.api import BooleanEditor
+        from .ui.api import BooleanEditor
 
         return BooleanEditor()
 
@@ -1397,7 +1389,7 @@ class BaseFile ( BaseStr ):
         # trait defined, and we try to import that class from the source 
         # (instead of from the api), then we land up with a circular import 
         # problem). 
-        from enthought.traits.ui.editors.file_editor import FileEditor
+        from .ui.editors.file_editor import FileEditor
 
         metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
                                                    auto_set = auto_set,
@@ -1490,8 +1482,7 @@ class BaseDirectory ( BaseStr ):
         # trait defined, and we try to import that class from the source 
         # (instead of from the api), then we land up with a circular import 
         # problem). 
-        from enthought.traits.ui.editors.directory_editor \
-                                            import DirectoryEditor
+        from .ui.editors.directory_editor import DirectoryEditor
         metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set,
                                                         entries  = entries ) )
         self.exists = exists
@@ -1843,7 +1834,7 @@ class BaseRange ( TraitType ):
         if auto_set is None:
             auto_set = True
 
-        from enthought.traits.ui.api import RangeEditor
+        from .ui.api import RangeEditor
 
         return RangeEditor( self,
                             mode       = self.mode or 'auto',
@@ -1941,7 +1932,7 @@ class BaseEnum ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from enthought.traits.ui.api import EnumEditor
+        from .ui.api import EnumEditor
 
         values = self
         if self.name != '':
@@ -2101,7 +2092,7 @@ class BaseTuple ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from enthought.traits.ui.api import TupleEditor
+        from .ui.api import TupleEditor
 
         auto_set = self.auto_set
         if auto_set is None:
@@ -2216,14 +2207,14 @@ class List ( TraitType ):
         """
         handler = self.item_trait.handler
         if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from enthought.traits.api import HasTraits
+            from .api import HasTraits
 
             if issubclass( handler.aClass, HasTraits ):
-                from enthought.traits.ui.api import TableEditor
+                from .ui.api import TableEditor
 
                 return TableEditor()
 
-        from enthought.traits.ui.api import ListEditor
+        from .ui.api import ListEditor
 
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
@@ -2333,16 +2324,15 @@ class Set ( TraitType ):
         # fixme: Needs to be customized for sets.
         handler = self.item_trait.handler
         if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from enthought.traits.api import HasTraits
+            from .api import HasTraits
 
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
-                    from enthought.traits.ui.table_column import ObjectColumn
-                    from enthought.traits.ui.table_filter import \
-                         EvalFilterTemplate, RuleFilterTemplate, \
-                         MenuFilterTemplate, EvalTableFilter
-                    from enthought.traits.ui.api import TableEditor
+                    from .ui.table_column import ObjectColumn
+                    from .ui.table_filter import (EvalFilterTemplate,
+                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
+                    from .ui.api import TableEditor
 
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
@@ -2358,7 +2348,7 @@ class Set ( TraitType ):
                 except:
                     pass
 
-        from enthought.traits.ui.api import ListEditor
+        from .ui.api import ListEditor
 
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
@@ -2482,7 +2472,7 @@ class Dict ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from enthought.traits.ui.api import TextEditor
+        from .ui.api import TextEditor
 
         return TextEditor( evaluate = eval )
 
@@ -2569,9 +2559,9 @@ def validate_implements ( value, klass, unused = None ):
     """ Checks to see if a specified value implements the instance class
         interface (if it is an interface).
     """
-    from has_traits        import Interface
-    from interface_checker import check_implements
-    from protocols.api     import declareImplementation
+    from .has_traits        import Interface
+    from .interface_checker import check_implements
+    from .protocols.api     import declareImplementation
 
     rc = (issubclass( klass, Interface) and
           check_implements( value.__class__, klass ))
@@ -2582,7 +2572,7 @@ def validate_implements ( value, klass, unused = None ):
 
 # Tell the C-base code about the 'validate_implements' function (used by the
 # 'fast_validate' code for Instance types):
-import ctraits
+from . import ctraits
 ctraits._validate_implements( validate_implements )
 
 class BaseInstance ( BaseClass ):
@@ -2771,7 +2761,7 @@ class BaseInstance ( BaseClass ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from enthought.traits.ui.api import InstanceEditor
+        from .ui.api import InstanceEditor
 
         return InstanceEditor( label = self.label or '',
                                view  = self.view  or '',
@@ -2835,7 +2825,7 @@ class Instance ( BaseInstance ):
     def init_fast_validate ( self ):
         """ Sets up the C-level fast validator.
         """
-        from has_traits import Interface
+        from .has_traits import Interface
 
         if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
             fast_validate = [ 1, self.klass ]
@@ -3052,7 +3042,7 @@ class Button ( Event ):
             -------------
             No default value because events do not store values.
         """
-        from enthought.traits.ui.api import ButtonEditor
+        from .ui.api import ButtonEditor
 
         self.editor = ButtonEditor( label          = label,
                                     image          = image,

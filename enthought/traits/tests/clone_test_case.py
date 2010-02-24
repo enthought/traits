@@ -1,21 +1,22 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in /LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill
 # Description: <Traits component>
 #------------------------------------------------------------------------------
+
+from __future__ import absolute_import
+
 import unittest
 
-from nose import SkipTest
-
-from enthought.traits.api import HasTraits, Instance, Str, Any, Property
+from ..api import HasTraits, Instance, Str, Any, Property
 
 class Foo(HasTraits):
     s = Str
@@ -120,7 +121,7 @@ class CloneTestCase( unittest.TestCase ) :
         """ This test demonstrates a problem with Traits objects with class
         attributes.  A change to the value of a class attribute via one
         instance causes the attribute to be removed from other instances.
-        
+
         AttributeError: 'ClassWithClassAttribute' object has no attribute 'name'
         """
 
@@ -138,7 +139,7 @@ class CloneTestCase( unittest.TestCase ) :
         c2.name = s2
         self.assertEqual( s2, c2.name )
 
-        # this is failing with 
+        # this is failing with
         # AttributeError: 'ClassWithClassAttribute' object has no attribute 'name'
         self.assertEqual( s, c.name )
 
@@ -216,13 +217,13 @@ class CloneTestCase( unittest.TestCase ) :
 
         # Check references to objects that where cloned, they should reference
         # the new clones not the original objects, except when copy is set
-        # to 'ref' (as in the case of the 'other' trait). 
-        # When copy is set to ref, the trait does not get cloned. Therefore, 
+        # to 'ref' (as in the case of the 'other' trait).
+        # When copy is set to ref, the trait does not get cloned. Therefore,
         # baz_copy.other.other is baz (and not baz_copy).
         self.failIf( bar_copy.other is baz_copy )
         self.failUnless( bar_copy.other is baz )
 
-        # 'shared' does not have copy set to 'ref', and so bar_copy.shared 
+        # 'shared' does not have copy set to 'ref', and so bar_copy.shared
         # should reference the new clone.
         # should reference the new clones
         self.failIf( bar_copy.shared is baz.shared )
@@ -264,8 +265,8 @@ class CloneTestCase( unittest.TestCase ) :
         # Chedk the Bar owned object
         self.failIf( bar_copy.unique is bar.unique )
 
-        # Since the two original 'ref' links were to a shared object, 
-        # the cloned links should be to a shared object. Also, the shared 
+        # Since the two original 'ref' links were to a shared object,
+        # the cloned links should be to a shared object. Also, the shared
         # object should be the original 'ref' object, since copy was set to
         # 'ref'.
         self.failUnless( baz_copy.ref is bar_copy.ref )
@@ -279,7 +280,7 @@ class CloneTestCase( unittest.TestCase ) :
         self.failIf( bar_copy.other is baz_copy )
         self.failUnless( bar_copy.other is baz )
 
-        # 'shared' does not have copy set to 'ref', and so bar_copy.shared 
+        # 'shared' does not have copy set to 'ref', and so bar_copy.shared
         # should reference the new clone.
         self.failIf( bar_copy.shared is baz.shared )
         self.failUnless( bar_copy.shared is baz_copy.shared )

@@ -46,32 +46,23 @@ feature.
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import sys
+from __future__ import absolute_import
 
-import trait_handlers
+from types import (NoneType, IntType, LongType, FloatType, ComplexType, 
+    StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
+    ClassType, MethodType, InstanceType, TypeType)
 
-import enthought.traits.protocols.interfaces as interfaces
+from . import trait_handlers
+from .ctraits import cTrait 
+from .trait_errors import TraitError
+from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
+    add_article, enumerate, BooleanType)
 
-from ctraits \
-    import cTrait, CTraitMethod
+from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction, 
+    TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
+    TraitString, ThisClass, TraitType, _arg_count, _read_only, _write_only,
+    _undefined_get, _undefined_set)
 
-from trait_base \
-    import SequenceTypes, Self, Undefined, Missing, TypeTypes, class_of, \
-           add_article, enumerate, BooleanType
-
-from trait_errors \
-    import TraitError
-
-from trait_handlers \
-    import TraitHandler, TraitInstance, TraitFunction, TraitCoerceType, \
-           TraitCastType, TraitEnum, TraitCompound, TraitMap, TraitString, \
-           ThisClass, TraitType, _arg_count, _read_only, _write_only, \
-           _undefined_get, _undefined_set
-
-from types \
-    import NoneType, IntType, LongType, FloatType, ComplexType, StringType, \
-           UnicodeType, ListType, TupleType, DictType, FunctionType, \
-           ClassType, MethodType, InstanceType, TypeType
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -108,8 +99,8 @@ def password_editor ( auto_set=True, enter_set=False ):
     global PasswordEditor
 
     if PasswordEditor is None:
-        from enthought.traits.ui.api import TextEditor
-        PasswordEditor = TextEditor( password = True , 
+        from .ui.api import TextEditor
+        PasswordEditor = TextEditor( password = True ,
                                      auto_set   = auto_set,
                                      enter_set  = enter_set )
 
@@ -121,8 +112,8 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
     global MultilineTextEditor
 
     if MultilineTextEditor is None:
-        from enthought.traits.ui.api import TextEditor
-        MultilineTextEditor = TextEditor( multi_line = True, 
+        from .ui.api import TextEditor
+        MultilineTextEditor = TextEditor( multi_line = True,
                                           auto_set   = auto_set,
                                           enter_set  = enter_set )
 
@@ -131,11 +122,11 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
 def code_editor ( ):
     """ Factory function that returns an editor that treats a multi-line string
     as source code.
-    """ 
+    """
     global SourceCodeEditor
 
     if SourceCodeEditor is None:
-        from enthought.traits.ui.api import CodeEditor
+        from .ui.api import CodeEditor
         SourceCodeEditor = CodeEditor()
 
     return SourceCodeEditor
@@ -147,7 +138,7 @@ def html_editor ( ):
     global HTMLTextEditor
 
     if HTMLTextEditor is None:
-        from enthought.traits.ui.api import HTMLEditor
+        from .ui.api import HTMLEditor
         HTMLTextEditor = HTMLEditor()
 
     return HTMLTextEditor
@@ -158,7 +149,7 @@ def shell_editor ( ):
     global PythonShellEditor
 
     if PythonShellEditor is None:
-        from enthought.traits.ui.api import ShellEditor
+        from .ui.api import ShellEditor
         PythonShellEditor = ShellEditor()
 
     return PythonShellEditor
@@ -169,7 +160,7 @@ def time_editor ( ):
     global TimeEditor
 
     if TimeEditor is None:
-        from enthought.traits.ui.api import TimeEditor
+        from .ui.api import TimeEditor
         TimeEditor = TimeEditor()
 
     return TimeEditor
@@ -180,7 +171,7 @@ def date_editor ( ):
     global DateEditor
 
     if DateEditor is None:
-        from enthought.traits.ui.api import DateEditor
+        from .ui.api import DateEditor
         DateEditor = DateEditor()
 
     return DateEditor
@@ -207,53 +198,54 @@ class CTrait ( cTrait ):
 
         metadata.setdefault( 'parent', self )
         return Trait( *(args + ( self, )), **metadata )
-        
+
     #---------------------------------------------------------------------------
     #  (Python) property definitions:
     #---------------------------------------------------------------------------
-    
+
     def __get_default ( self ):
         kind, value = self.default_value()
         if kind in ( 2, 7, 8 ):
             return Undefined
-         
+
         if kind in ( 4, 6 ):
             return value.copy()
-         
+
         if kind in ( 3, 5 ):
             return value[:]
-            
+
         return value
-        
+
     default = property( __get_default )
-    
+
     def __get_default_kind ( self ):
         return KindMap[ self.default_value()[0] ]
-        
+
     default_kind = property( __get_default_kind )
-    
+
     def __get_trait_type ( self ):
         handler = self.handler
         if handler is not None:
             return handler
-            
-        return Any
-        
+        else:
+            from .trait_types import Any
+            return Any
+
     trait_type = property( __get_trait_type )
-    
+
     def __get_inner_traits ( self ):
         handler = self.handler
         if handler is not None:
             return handler.inner_traits()
-            
+
         return ()
-        
+
     inner_traits = property( __get_inner_traits )
-    
+
     #---------------------------------------------------------------------------
     #  Returns whether or not this trait is of a specified trait type:
     #---------------------------------------------------------------------------
-    
+
     def is_trait_type ( self, trait_type ):
         """ Returns whether or not this trait is of a specified trait type.
         """
@@ -266,7 +258,7 @@ class CTrait ( cTrait ):
     def get_editor ( self ):
         """ Returns the user interface editor associated with the trait.
         """
-        from enthought.traits.ui.api import EditorFactory
+        from .ui.api import EditorFactory
 
         # See if we have an editor:
         editor = self.editor
@@ -279,7 +271,7 @@ class CTrait ( cTrait ):
 
             # If not, give up and use a default text editor:
             if editor is None:
-                from enthought.traits.ui.api import TextEditor
+                from .ui.api import TextEditor
                 editor = TextEditor
 
         # If the result is not an EditoryFactory:
@@ -305,7 +297,7 @@ class CTrait ( cTrait ):
 
         # Return the resulting EditorFactory object:
         return editor
-        
+
     #---------------------------------------------------------------------------
     #  Returns the help text for a trait:
     #---------------------------------------------------------------------------
@@ -329,17 +321,17 @@ class CTrait ( cTrait ):
             help = self.help
             if help is not None:
                 return help
-                
+
         handler = self.handler
         if handler is not None:
             info = 'must be %s.' % handler.info()
         else:
             info = 'may be any value.'
-            
+
         desc = self.desc
         if self.desc is None:
             return info.capitalize()
-            
+
         return 'Specifies %s and %s' % ( desc, info )
 
     #---------------------------------------------------------------------------
@@ -374,34 +366,34 @@ class CTrait ( cTrait ):
 
     def __reduce_ex__ ( self, protocol ):
         return ( __newobj__, ( self.__class__, 0 ), self.__getstate__() )
-        
+
     #---------------------------------------------------------------------------
-    #  Registers listeners on an assigned 'TraitValue' object's 'value' 
+    #  Registers listeners on an assigned 'TraitValue' object's 'value'
     #  property:
     #---------------------------------------------------------------------------
-    
+
     def _register ( self, object, name ):
-        """ Registers listeners on an assigned 'TraitValue' object's 'value' 
+        """ Registers listeners on an assigned 'TraitValue' object's 'value'
             property.
         """
         def handler ( ):
             object.trait_property_changed( name, None )
-            
+
         tv       = self._trait_value
         handlers = tv._handlers
         if handlers is None:
             tv._handlers = handlers = {}
         handlers[ ( id( object ), name ) ] = handler
-            
+
         tv.on_trait_change( handler, 'value' )
-        
+
     #---------------------------------------------------------------------------
-    #  Unregisters listeners on an assigned 'TraitValue' object's 'value' 
+    #  Unregisters listeners on an assigned 'TraitValue' object's 'value'
     #  property:
     #---------------------------------------------------------------------------
-    
+
     def _unregister ( self, object, name ):
-        """ Unregisters listeners on an assigned 'TraitValue' object's 'value' 
+        """ Unregisters listeners on an assigned 'TraitValue' object's 'value'
             property.
         """
         tv       = self._trait_value
@@ -414,7 +406,7 @@ class CTrait ( cTrait ):
 
 # Make sure the Python-level version of the trait class is known to all
 # interested parties:
-import ctraits
+from . import ctraits
 ctraits._ctrait( CTrait )
 
 #-------------------------------------------------------------------------------
@@ -524,7 +516,7 @@ def trait_factory ( trait ):
     tid = id( trait )
     if tid not in _trait_factory_instances:
         _trait_factory_instances[ tid ] = trait()
-        
+
     return _trait_factory_instances[ tid ]
 
 #-------------------------------------------------------------------------------
@@ -567,7 +559,7 @@ def try_trait_cast ( something ):
 def trait_from ( something ):
     """ Returns a trait derived from its input.
     """
-    from trait_types import Any
+    from .trait_types import Any
 
     if isinstance( something, CTrait ):
         return something
@@ -707,15 +699,15 @@ def Trait ( *value_type, **metadata ):
     comparison_mode : integer
         Indicates when trait change notifications should be generated based upon
         the result of comparing the old and new values of a trait assignment:
-            
+
         * 0 (NO_COMPARE): The values are not compared and a trait change
           notification is generated on each assignment.
-        * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is 
+        * 1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
           generated if the old and new values are not the same object.
         * 2 (RICH_COMPARE): A trait change notification is generated if the
           old and new values are not equal using Python's
           'rich comparison' operator. This is the default.
-          
+
     rich_compare : Boolean (DEPRECATED: Use comparison_mode instead)
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple
@@ -757,38 +749,38 @@ class _TraitMaker ( object ):
     def define ( self, *value_type, **metadata ):
         default_value_type = -1
         default_value      = handler = clone = None
-        
+
         if len( value_type ) > 0:
             default_value = value_type[0]
             value_type    = value_type[1:]
-            
+
             if ((len( value_type ) == 0) and
                 (type( default_value ) in SequenceTypes)):
                 default_value, value_type = default_value[0], default_value
-                
+
             if len( value_type ) == 0:
                 default_value = try_trait_cast( default_value )
-                
+
                 if default_value in PythonTypes:
                     handler       = TraitCoerceType( default_value )
                     default_value = DefaultValues.get( default_value )
-                    
+
                 elif isinstance( default_value, CTrait ):
                     clone = default_value
                     default_value_type, default_value = clone.default_value()
                     metadata[ 'type' ] = clone.type
-                    
+
                 elif isinstance( default_value, TraitHandler ):
                     handler       = default_value
                     default_value = None
-                    
+
                 elif default_value is ThisClass:
                     handler       = ThisClass()
                     default_value = None
-                    
+
                 else:
                     typeValue = type( default_value )
-                    
+
                     if isinstance(default_value, basestring):
                         string_options = self.extract( metadata, 'min_len',
                                                        'max_len', 'regex' )
@@ -796,10 +788,10 @@ class _TraitMaker ( object ):
                             handler = TraitCastType( typeValue )
                         else:
                             handler = TraitString( **string_options )
-                            
+
                     elif typeValue in TypeTypes:
                         handler = TraitCastType( typeValue )
-                        
+
                     else:
                         metadata.setdefault( 'instance_handler',
                                              '_instance_changed_handler' )
@@ -811,7 +803,7 @@ class _TraitMaker ( object ):
                 other = []
                 map   = {}
                 self.do_list( value_type, enum, map, other )
-                
+
                 if (((len( enum )  == 1) and (enum[0] is None)) and
                     ((len( other ) == 1) and
                      isinstance( other[0], TraitInstance ))):
@@ -823,37 +815,37 @@ class _TraitMaker ( object ):
                     if (((len( map ) + len( other )) == 0) and
                         (default_value not in enum)):
                         enum.insert( 0, default_value )
-                        
+
                     other.append( TraitEnum( enum ) )
-                    
+
                 if len( map ) > 0:
                     other.append( TraitMap( map ) )
-                    
+
                 if len( other ) == 0:
                     handler = TraitHandler()
-                    
+
                 elif len( other ) == 1:
                     handler = other[0]
                     if isinstance( handler, CTrait ):
                         clone, handler = handler, None
                         metadata[ 'type' ] = clone.type
-                        
+
                     elif isinstance( handler, TraitInstance ):
                         metadata.setdefault( 'instance_handler',
                                              '_instance_changed_handler' )
-                        
+
                         if default_value is None:
                             handler.allow_none()
-                            
+
                         elif isinstance( default_value, _InstanceArgs ):
                             default_value_type = 7
                             default_value = ( handler.create_default_value,
                                 default_value.args, default_value.kw )
-                            
+
                         elif (len( enum ) == 0) and (len( map ) == 0):
                             aClass    = handler.aClass
                             typeValue = type( default_value )
-                            
+
                             if typeValue is dict:
                                 default_value_type = 7
                                 default_value = ( aClass, (), default_value )
@@ -879,7 +871,7 @@ class _TraitMaker ( object ):
         # Save the results:
         self.handler = handler
         self.clone   = clone
-        
+
         if default_value_type < 0:
             if isinstance( default_value, Default ):
                 default_value_type = 7
@@ -887,7 +879,7 @@ class _TraitMaker ( object ):
             else:
                 if (handler is None) and (clone is not None):
                     handler = clone.handler
-                    
+
                 if handler is not None:
                     default_value_type = handler.default_value_type
                     if default_value_type < 0:
@@ -896,10 +888,10 @@ class _TraitMaker ( object ):
                                                               default_value )
                         except:
                             pass
-                        
+
                 if default_value_type < 0:
                     default_value_type = _default_value_type( default_value )
-                    
+
         self.default_value_type = default_value_type
         self.default_value      = default_value
         self.metadata           = metadata.copy()
@@ -915,25 +907,25 @@ class _TraitMaker ( object ):
             else:
                 item     = try_trait_cast( item )
                 typeItem = type( item )
-                
+
                 if typeItem in ConstantTypes:
                     enum.append( item )
-                    
+
                 elif typeItem in SequenceTypes:
                     self.do_list( item, enum, map, other )
-                    
+
                 elif typeItem is DictType:
                     map.update( item )
-                    
+
                 elif typeItem in CallableTypes:
                     other.append( TraitFunction( item ) )
-                    
+
                 elif item is ThisClass:
                     other.append( ThisClass() )
-                    
+
                 elif isinstance( item, TraitTypes ):
                     other.append( item )
-                    
+
                 else:
                     other.append( TraitInstance( item ) )
 
@@ -958,9 +950,9 @@ class _TraitMaker ( object ):
             validate      = getattr( handler, 'fast_validate', None )
             if validate is None:
                 validate = handler.validate
-                
+
             trait.set_validate( validate )
-            
+
             post_setattr = getattr( handler, 'post_setattr', None )
             if post_setattr is not None:
                 trait.post_setattr = post_setattr
@@ -971,11 +963,11 @@ class _TraitMaker ( object ):
         rich_compare = metadata.get( 'rich_compare' )
         if rich_compare is not None:
             trait.rich_comparison( rich_compare is True )
-            
+
         comparison_mode = metadata.get( 'comparison_mode' )
         if comparison_mode is not None:
             trait.comparison_mode( comparison_mode )
-        
+
         trait.value_allowed( metadata.get( 'trait_value', False ) is True )
 
         if len( metadata ) > 0:
@@ -1039,16 +1031,16 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
             def _get_foo(self):
                 return self._foo
 
-    You can use the **depends_on** metadata attribute to indicate that the 
+    You can use the **depends_on** metadata attribute to indicate that the
     property depends on the value of another trait. The value of **depends_on**
     is an extended name specifier for traits that the property depends on. The
     property will a trait change notification if any of the traits specified
     by **depends_on** change. For example::
-        
+
         class Wheel ( Part ):
             axle     = Instanced( Axle )
             position = Property( depends_on = 'axle.chassis.position' )
-            
+
     For details of the extended trait name syntax, refer to the on_trait_change()
     method of the HasTraits class.
     """
@@ -1149,11 +1141,11 @@ SpecialNames = {
 }
 
 
-#-- Date Trait definition ---------------------------------------------------- 
+#-- Date Trait definition ----------------------------------------------------
 #Date = Instance(datetime.date, metadata = { 'editor': date_editor })
 
 
-#-- Time Trait definition ---------------------------------------------------- 
+#-- Time Trait definition ----------------------------------------------------
 #Time = Instance(datetime.time, metadata = { 'editor': time_editor })
 
 
@@ -1185,14 +1177,14 @@ def Color ( *args, **metadata ):
     -------------
     For wxPython, 0x000000 (that is, white)
     """
-    from enthought.traits.ui.toolkit_traits import ColorTrait
-    
+    from .ui.toolkit_traits import ColorTrait
+
     return ColorTrait( *args, **metadata )
 
 Color = TraitFactory( Color )
 
 def RGBColor ( *args, **metadata ):
-    """ Returns a trait whose value must be a GUI toolkit-specific RGB-based 
+    """ Returns a trait whose value must be a GUI toolkit-specific RGB-based
         color.
 
     Description
@@ -1209,8 +1201,8 @@ def RGBColor ( *args, **metadata ):
     -------------
     For wxPython, (0.0, 0.0, 0.0) (that is, white)
     """
-    from enthought.traits.ui.toolkit_traits import RGBColorTrait
-    
+    from .ui.toolkit_traits import RGBColorTrait
+
     return RGBColorTrait( *args, **metadata )
 
 RGBColor = TraitFactory( RGBColor )
@@ -1231,8 +1223,8 @@ def Font ( *args, **metadata ):
     -------------
     For wxPython, 'Arial 10'
     """
-    from enthought.traits.ui.toolkit_traits import FontTrait
-    
+    from .ui.toolkit_traits import FontTrait
+
     return FontTrait( *args, **metadata )
 
 Font = TraitFactory( Font )

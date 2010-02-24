@@ -22,11 +22,11 @@ This is typically used as the handler for dynamic views.  See the
 """
 
 # Enthought library imports
-from enthought.traits.api import HasTraits, List
-from enthought.traits.ui.ui import Dispatcher
+from ..api import HasTraits, List
+from .ui import Dispatcher
 
 # Local imports.
-from handler import Handler
+from .handler import Handler
     
 # Set up a logger:    
 import logging

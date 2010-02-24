@@ -2,29 +2,30 @@
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #-------------------------------------------------------------------------------
 
 """ Tests for protocols usage. """
 
+from __future__ import absolute_import
+
 
 # Standard library imports.
-import pickle, unittest, weakref, os
+import pickle, unittest, os
 
 # Enthought library imports.
-from enthought.traits.api \
-    import Any, Bool, HasTraits, Instance, Int, Interface, Str, implements, \
-           Adapter, adapts, Property
+from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
+        Property)
 
 # NOTE: There is a File class in enthought.io module, but since we want to
-# eliminate dependencies of Traits on other modules, we create another 
+# eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
 
 # Test class
@@ -35,7 +36,7 @@ class File(HasTraits):
 
     # Is this an existing file?
     is_file = Property(Bool)
-    
+
     # Is this an existing folder?
     is_folder = Property(Bool)
 
@@ -94,7 +95,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         def factory(obj):
             """ A factory for File to IInputStream adapters. """
-            
+
             if not obj.is_folder:
                 adapter = FileToIInputStreamAdapter(adaptee=obj)
 
@@ -232,7 +233,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
             def _set_dirty(self):
                 """ Sets the dirty flag to True. """
-                
+
                 self.dirty = True
 
                 return
@@ -286,7 +287,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
             adapts(HasTraits, to=IBar, cached=True)
 
         return
-    
+
     def test_multiple_factories_for_interface(self):
         """ multiple factories for interfaces """
 
@@ -295,7 +296,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # still works for interfaces too!
         class IBaz(Interface):
             pass
-        
+
         class IFoo(Interface):
             pass
 

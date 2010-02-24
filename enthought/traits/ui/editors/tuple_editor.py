@@ -20,29 +20,24 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.trait_base \
-    import SequenceTypes, enumerate
+from __future__ import absolute_import
+
+from ...trait_base import SequenceTypes, enumerate
     
-from enthought.traits.api \
-    import Bool, HasTraits, List, Tuple, Unicode, Int, Any, TraitType
+from ...api import Bool, HasTraits, List, Tuple, Unicode, Int, Any, TraitType
     
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well.     
-from enthought.traits.ui.view \
-    import View
+from ..view import View
     
-from enthought.traits.ui.group \
-    import Group
+from ..group import Group
     
-from enthought.traits.ui.item \
-    import Item
+from ..item import Item
     
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..editor_factory import EditorFactory
     
-from enthought.traits.ui.editor \
-    import Editor
+from ..editor import Editor
 
 #-------------------------------------------------------------------------------
 #  'ToolkitEditorFactory' class:

@@ -17,31 +17,31 @@
 backends.
 """
 
-import os, glob, sys
+from __future__ import absolute_import
+
+import glob
 
 def gen_editor_definitions(target_filename = 'editors.py'):
-    """ Generates a file containing definitions for editors defined in the 
+    """ Generates a file containing definitions for editors defined in the
        various backends.
 
     The idea is that if a new editor has been declared in any of the backends,
-    the author needs to create a file called '<myeditor>_definition' in the 
+    the author needs to create a file called '<myeditor>_definition' in the
     Traits package (in enthought.traits.ui). This function will be run each time
-    the user runs the setup.py file, and the new editor's definition will be 
+    the user runs the setup.py file, and the new editor's definition will be
     appended to the editors.py file.
- 
+
     The structure of the <myeditor>_definition file should be as follows::
-        
+
         myeditor_definition = '<file name in the backend package>:
                          <name of the Editor or the EditorFactory class'
     """
 
-    base_import_path = 'enthought.traits.ui.'
     definition_files = glob.glob('*_definition.py')
     new_editors = []
     for file in definition_files:
-           import_path = base_import_path + file.rstrip('.py')
-           __import__(import_path)
-           mod = sys.modules[import_path]
+           import_path = file.rstrip('.py')
+           mod = __import__(import_path, globals=globals(), level=1)
            for name in dir(mod):
                if '_definition' in name:
                    new_editors.append(getattr(mod, name))
@@ -53,6 +53,6 @@ def gen_editor_definitions(target_filename = 'editors.py'):
             func_code += ' '*4 + \
                          'return toolkit_object("%s")( *args, **traits )' \
                          % editor_name
-            target_file.write(func_code) 
+            target_file.write(func_code)
             target_file.write('\n\n')
     target_file.close()

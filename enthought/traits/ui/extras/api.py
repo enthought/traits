@@ -9,10 +9,10 @@
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Written by: Jason Sugg
 #  Date:   03/28/2006
-# 
+#
 #------------------------------------------------------------------------------
 
 """ Defines 'pseudo' package that imports all of the traits extras symbols.
@@ -22,5 +22,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from checkbox_column import CheckboxColumn
-from saving import CanSaveMixin, SaveHandler
+from __future__ import absolute_import
+
+from .checkbox_column import CheckboxColumn
+from .saving import CanSaveMixin, SaveHandler

@@ -21,33 +21,26 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import HasTraits, BaseTraitHandler, Range, Str, Any, Int, Instance, \
-           Property, Bool, Callable, Enum, PrototypedFrom
-           
-from enthought.traits.trait_base \
-    import enumerate
+from __future__ import absolute_import
 
+from ...api import (HasTraits, BaseTraitHandler, Range, Str, Any, Int, Instance,
+        Property, Bool, Callable, Enum, PrototypedFrom)
+           
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of 
 # traits.ui.api as well.     
-from enthought.traits.ui.view \
-    import View
+from ..view import View
 
-from enthought.traits.ui.item \
-    import Item
+from ..item import Item
 
-from enthought.traits.ui.ui_traits \
-    import style_trait, AView
+from ..ui_traits import style_trait, AView
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ..editor_factory import EditorFactory
 
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..toolkit import toolkit_object
 
 # Currently, this traits is used only for the wx backend.
-from enthought.traits.ui.helper import DockStyle
+from ..helper import DockStyle
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:

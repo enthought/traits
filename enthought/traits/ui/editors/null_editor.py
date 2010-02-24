@@ -22,19 +22,19 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
-                                      
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from __future__ import absolute_import
+
+from ..basic_editor_factory import BasicEditorFactory
+
+from ..toolkit import toolkit_object
 
 # Callable which returns the editor to use in the ui.
 def null_editor(*args, **traits):
-    return toolkit_object('null_editor:NullEditor')(*args, **traits)       
-    
+    return toolkit_object('null_editor:NullEditor')(*args, **traits)
+
 #-------------------------------------------------------------------------------
 #  Create the editor factory object:
-#-------------------------------------------------------------------------------         
+#-------------------------------------------------------------------------------
 NullEditor = BasicEditorFactory(klass = null_editor)
 
 ### EOF ---------------------------------------------------------------------

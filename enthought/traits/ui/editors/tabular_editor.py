@@ -23,17 +23,15 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Str, Bool, Property, List, Enum, Instance
+from __future__ import absolute_import
 
-from enthought.traits.ui.ui_traits \
-    import Image
+from ...api import Str, Bool, Property, List, Enum, Instance
 
-from enthought.traits.ui.basic_editor_factory \
-    import BasicEditorFactory
+from ..ui_traits import Image
 
-from enthought.traits.ui.toolkit \
-    import toolkit_object
+from ..basic_editor_factory import BasicEditorFactory
+
+from ..toolkit import toolkit_object
 
 #-------------------------------------------------------------------------------
 #  'TabularEditor' editor factory class:

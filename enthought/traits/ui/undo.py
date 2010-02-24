@@ -2,20 +2,20 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   10/07/2004
 #
 #------------------------------------------------------------------------------
 
-""" Defines the manager for Undo and Redo history for Traits user interface 
+""" Defines the manager for Undo and Redo history for Traits user interface
     support.
 """
 
@@ -23,15 +23,14 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from operator \
-    import isSequenceType
+from __future__ import absolute_import
 
-from enthought.traits.api \
-    import HasStrictTraits, HasPrivateTraits, HasTraits, Trait, List, Int, Str,\
-           Any, Event, Property, Instance
+from operator import isSequenceType
 
-from enthought.traits.trait_base \
-    import enumerate
+from ..api import (Event, HasPrivateTraits, HasStrictTraits, HasTraits,
+    Instance, Int, List, Property, Str, Trait)
+
+from ..trait_base import enumerate
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -86,13 +85,13 @@ class UndoItem ( AbstractUndoItem ):
     #---------------------------------------------------------------------------
 
     # Object the change occurred on
-    object    = Trait( HasTraits )  
+    object    = Trait( HasTraits )
     # Name of the trait that changed
-    name      = Str                 
+    name      = Str
     # Old value of the changed trait
-    old_value = Property            
+    old_value = Property
     # New value of the changed trait
-    new_value = Property            
+    new_value = Property
 
     #---------------------------------------------------------------------------
     #  Implementation of the 'old_value' and 'new_value' properties:
@@ -228,15 +227,15 @@ class ListUndoItem ( AbstractUndoItem ):
     #---------------------------------------------------------------------------
 
     # Object that the change occurred on
-    object    = Trait( HasTraits )  
+    object    = Trait( HasTraits )
     # Name of the trait that changed
-    name      = Str                 
+    name      = Str
     # Starting index
-    index     = Int                 
+    index     = Int
     # Items added to the list
-    added     = List                
+    added     = List
     # Items removed from the list
-    removed   = List                
+    removed   = List
 
     #---------------------------------------------------------------------------
     #  Undoes the change:
@@ -316,17 +315,17 @@ class UndoHistory ( HasStrictTraits ):
     #---------------------------------------------------------------------------
 
     # List of accumulated undo changes
-    history  = List           
+    history  = List
     # The current position in the list
-    now      = Int            
+    now      = Int
     # Fired when state changes to undoable
-    undoable = Event( False ) 
+    undoable = Event( False )
     # Fired when state changes to redoable
-    redoable = Event( False ) 
+    redoable = Event( False )
     # Can an action be undone?
-    can_undo = Property       
+    can_undo = Property
     # Can an action be redone?
-    can_redo = Property       
+    can_redo = Property
 
     #---------------------------------------------------------------------------
     #  Adds an UndoItem to the history:
@@ -360,9 +359,9 @@ class UndoHistory ( HasStrictTraits ):
     #---------------------------------------------------------------------------
 
     def extend ( self, undo_item ):
-        """ Extends the undo history. 
-        
-        If possible the method merges the new UndoItem with the last item in 
+        """ Extends the undo history.
+
+        If possible the method merges the new UndoItem with the last item in
         the history; otherwise, it appends the new item.
         """
         if self.now > 0:

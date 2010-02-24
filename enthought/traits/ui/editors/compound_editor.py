@@ -20,11 +20,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import List, true
+from __future__ import absolute_import
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ...api import List, true
+
+from ..editor_factory import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:

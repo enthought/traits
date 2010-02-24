@@ -21,32 +21,26 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import Int, Float, List, Instance, Str, Color, Font, Any, Tuple, Dict, \
-            Enum, Trait, Bool, Callable, Range, on_trait_change
+from __future__ import absolute_import
 
-from enthought.traits.ui.editor_factory \
-    import EditorFactory
+from ...api import (Int, Float, List, Instance, Str, Color, Font, Any, Tuple,
+        Dict, Enum, Trait, Bool, Callable, Range, on_trait_change)
 
-from enthought.traits.ui.handler \
-    import Handler
+from ..editor_factory import EditorFactory
 
-from enthought.traits.ui.helper \
-    import Orientation
+from ..handler import Handler
 
-from enthought.traits.ui.item \
-    import Item
+from ..helper import Orientation
 
-from enthought.traits.ui.table_filter \
-    import TableFilter
+from ..item import Item
 
-from enthought.traits.ui.ui_traits \
-    import AView
+from ..table_filter import TableFilter
 
-from enthought.traits.ui.view \
-    import View
+from ..ui_traits import AView
 
-from enum_editor import EnumEditor
+from ..view import View
+
+from .enum_editor import EnumEditor
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -360,7 +354,7 @@ class ToolkitEditorFactory ( EditorFactory ):
         # NOTE: We are initializing the 'cell_bg_color' trait in this method
         # instead of in the trait definition so as to delay importing from
         # ui.api until needed (will lead to circular imports otherwise).
-        from enthought.traits.ui.api import WindowColor
+        from ..api import WindowColor
         return WindowColor
 
     def _label_bg_color_default(self):
@@ -369,7 +363,7 @@ class ToolkitEditorFactory ( EditorFactory ):
         # NOTE: We are initializing the 'cell_bg_color' trait in this method
         # instead of in the trait definition so as to delay importing from
         # ui.api until needed (will lead to circular imports otherwise).
-        from enthought.traits.ui.api import WindowColor
+        from ..api import WindowColor
         return WindowColor
 
     #---------------------------------------------------------------------------

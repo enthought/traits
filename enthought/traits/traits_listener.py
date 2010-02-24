@@ -23,36 +23,21 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import re
 import string
 import weakref
+from weakref import WeakKeyDictionary
+from string import whitespace
+from types import MethodType
 
-from string \
-    import whitespace
-    
-from weakref \
-    import WeakKeyDictionary
-    
-from types \
-    import MethodType
-
-from has_traits \
-    import HasPrivateTraits
-    
-from trait_base \
-    import Undefined, Uninitialized
-    
-from traits \
-    import Property
-    
-from trait_types \
-    import Str, Int, Bool, Instance, List, Enum, Any
-
-from trait_errors \
-    import TraitError
-    
-from trait_notifiers \
-   import TraitChangeNotifyWrapper
+from .has_traits import HasPrivateTraits
+from .trait_base import Undefined, Uninitialized
+from .traits import Property
+from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
+from .trait_errors import TraitError
+from .trait_notifiers import TraitChangeNotifyWrapper
 
 #---------------------------------------------------------------------------
 #  Constants:  
@@ -305,7 +290,7 @@ class ListenerItem ( ListenerBase ):
     # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
     active = Instance( WeakKeyDictionary, () )
     
-    #-- 'ListenerBase' Class Method Implementations ----------------------------            
+    #-- 'ListenerBase' Class Method Implementations ----------------------------
 
     #---------------------------------------------------------------------------
     #  String representation:
@@ -571,7 +556,7 @@ class ListenerItem ( ListenerBase ):
         if old is not None and old is not Uninitialized:
             raise TraitError( "on_trait_change handler signature is "
                               "incompatible with a change to an intermediate trait" )
-                
+
     #-- Event Handlers ---------------------------------------------------------
     
     #---------------------------------------------------------------------------
@@ -765,7 +750,7 @@ class ListenerItem ( ListenerBase ):
     # the behavior of sets ever diverges from that of lists, then this code may
     # need to be changed.
     _register_set = _register_list
-        
+
     #---------------------------------------------------------------------------
     #  Registers a handler for a dictionary trait:
     #---------------------------------------------------------------------------
@@ -813,7 +798,7 @@ class ListenerItem ( ListenerBase ):
                                  remove   = remove, 
                                  dispatch = self.dispatch,
                                  priority = self.priority )
-            
+
         object._on_trait_change( tl_handler_items, name + '_items', 
                                  remove   = remove, 
                                  dispatch = self.dispatch,
@@ -934,7 +919,7 @@ class ListenerGroup ( ListenerBase ):
                 item.dispatch = dispatch
             
     #-- 'ListenerBase' Class Method Implementations ----------------------------            
-   
+
     #---------------------------------------------------------------------------
     #  String representation:
     #---------------------------------------------------------------------------

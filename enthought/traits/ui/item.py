@@ -2,17 +2,17 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   10/07/2004
-#  
+#
 #------------------------------------------------------------------------------
 
 """ Defines the Item class, which is used to represent a single item within
@@ -23,26 +23,22 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import re
 
-from string \
-    import find, rfind
+from string import find, rfind
 
-from enthought.traits.api \
-    import Instance, Str, Float, Range, Constant, Bool, Callable, Property, \
-           Delegate, Undefined, cached_property
+from ..api import (Bool, Callable, Constant, Delegate, Float, Instance, 
+    Range, Str, Undefined,)
 
-from enthought.traits.trait_base \
-    import user_name_for
+from ..trait_base import user_name_for
 
-from view_element \
-    import ViewSubElement
+from .view_element import ViewSubElement
 
-from ui_traits \
-    import convert_theme, ContainerDelegate, EditorStyle
+from .ui_traits import convert_theme, ContainerDelegate, EditorStyle
 
-from editor_factory \
-    import EditorFactory
+from .editor_factory import EditorFactory
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -61,7 +57,7 @@ tooltip_pat = re.compile( r"^(.*)`(.*)`(.*)$", re.MULTILINE | re.DOTALL )
 #  Trait definitions:
 #-------------------------------------------------------------------------------
 
-# Reference to an EditorFactory: 
+# Reference to an EditorFactory:
 ItemEditor = Instance( EditorFactory, allow_none = True )
 
 # Amount of padding to add around an item:
@@ -111,13 +107,13 @@ class Item ( ViewSubElement ):
 
     # Image to display on notebook tabs:
     image = ContainerDelegate
-    
+
     # The theme to use for the item itself:
     item_theme = ContainerDelegate
-    
+
     # The theme to use for the item's label:
     label_theme = ContainerDelegate
-    
+
     # Category of elements dragged from view:
     export = ContainerDelegate
 
@@ -128,19 +124,19 @@ class Item ( ViewSubElement ):
     editor = ItemEditor
 
     # Should the item use extra space along its Group's layout axis? If set to
-    # True, the widget expands to fill any extra space that is available in the 
-    # display. If set to True for more than one item in the same View, any extra 
+    # True, the widget expands to fill any extra space that is available in the
+    # display. If set to True for more than one item in the same View, any extra
     # space is divided between them. If set to False, the widget uses only
-    # whatever space it is explicitly (or implicitly) assigned. The default 
-    # value of Undefined means that the use (or non-use) of extra space will be 
+    # whatever space it is explicitly (or implicitly) assigned. The default
+    # value of Undefined means that the use (or non-use) of extra space will be
     # determined by the editor associated with the item.
     resizable = Bool( Undefined )
 
-    # Should the item use extra space along its Group's layout axis? For 
+    # Should the item use extra space along its Group's layout axis? For
     # example, it a vertical group, should an item expand vertically to use
     # any extra space available in the group?
     springy = Bool( False )
-    
+
     # Should the item use any extra space along its Group's non-layout
     # orientation? For example, in a vertical group, should an item expand
     # horizontally to the full width of the group? If left to the default value
@@ -174,7 +170,7 @@ class Item ( ViewSubElement ):
     # Pre-condition for enabling the item. If the expression evaluates to False,
     # the widget is disabled, that is, it does not accept input. All
     # **enabled_when** conditions are checked each time that any trait value
-    # is edited in the display. Therefore, you can use **enabled_when** 
+    # is edited in the display. Therefore, you can use **enabled_when**
     # conditions to enable or disable widgets in response to user input.
     enabled_when = Str
 
@@ -197,19 +193,19 @@ class Item ( ViewSubElement ):
     # Python format string to use for formatting the contents of the item.
     # The format string is applied to the string representation of the trait
     # value before it is displayed in the widget. This attribute is ignored if
-    # the widget does not use a string representation, or if the 
+    # the widget does not use a string representation, or if the
     # **format_func** is set.
     format_str = Str
 
     # Requested width of the editor (in pixels or fraction of available width).
-    # For pixel values (i.e. values not in the range from 0.0 to 1.0), the 
+    # For pixel values (i.e. values not in the range from 0.0 to 1.0), the
     # actual displayed width is at least the maximum of **width** and the
     # optimal width of the widget as calculated by the GUI toolkit. Specify a
-    # negative value to ignore the toolkit's optimal width. For example, use 
-    # -50 to force a width of 50 pixels. The default value of -1 ensures that 
+    # negative value to ignore the toolkit's optimal width. For example, use
+    # -50 to force a width of 50 pixels. The default value of -1 ensures that
     # the toolkit's optimal width is used.
     #
-    # A value in the range from 0.0 to 1.0 specifies the fraction of the 
+    # A value in the range from 0.0 to 1.0 specifies the fraction of the
     # available width to assign to the editor. Note that the value is not an
     # absolute value, but is relative to other item's whose **width** is also
     # in the 0.0 to 1.0 range. For example, if you have two item's with a width
@@ -220,25 +216,25 @@ class Item ( ViewSubElement ):
     # values not in the 0.0 to 1.0 range).
     width = Float( -1.0 )
 
-    # Requested height of the editor (in pixels or fraction of available 
-    # height). For pixel values (i.e. values not in the range from 0.0 to 1.0), 
+    # Requested height of the editor (in pixels or fraction of available
+    # height). For pixel values (i.e. values not in the range from 0.0 to 1.0),
     # the actual displayed height is at least the maximum of **height** and the
     # optimal height of the widget as calculated by the GUI toolkit. Specify a
-    # negative value to ignore the toolkit's optimal height. For example, use 
-    # -50 to force a height of 50 pixels. The default value of -1 ensures that 
+    # negative value to ignore the toolkit's optimal height. For example, use
+    # -50 to force a height of 50 pixels. The default value of -1 ensures that
     # the toolkit's optimal height is used.
     #
-    # A value in the range from 0.0 to 1.0 specifies the fraction of the 
+    # A value in the range from 0.0 to 1.0 specifies the fraction of the
     # available height to assign to the editor. Note that the value is not an
     # absolute value, but is relative to other item's whose **height** is also
     # in the 0.0 to 1.0 range. For example, if you have two item's with a height
     # of 0.1, and one item with a height of 0.2, the first two items will each
     # receive 25% of the available height, while the third item will receive
-    # 50% of the available height. The available height is the total height of 
-    # the view minus the height of any item's with fixed pixel sizes (i.e. 
+    # 50% of the available height. The available height is the total height of
+    # the view minus the height of any item's with fixed pixel sizes (i.e.
     # height values not in the 0.0 to 1.0 range).
     height = Float( -1.0 )
-    
+
     # The extended trait name of the trait containing the item's invalid state
     # status (passed through to the item's editor):
     invalid = Str
@@ -251,19 +247,19 @@ class Item ( ViewSubElement ):
         """ Initializes the item object.
         """
         super( Item, self ).__init__( **traits )
-        
+
         if value is None:
             return
-            
+
         if not isinstance( value, basestring ):
             raise TypeError, ("The argument to Item must be a string of the "
                  "form: [id:][object.[object.]*][name]['['label']']`tooltip`"
                  "[<width[,height]>][#^][$|@|*|~|;style]")
-                 
+
         value, empty = self._parse_label( value )
         if empty:
             self.show_label = False
-            
+
         value = self._parse_style( value )
         value = self._parse_size(  value )
         value = self._parse_tooltip( value )
@@ -271,7 +267,7 @@ class Item ( ViewSubElement ):
         value = self._option( value, '^',  'emphasized', True )
         value = self._split( 'id',     value, ':', find,  0, 1 )
         value = self._split( 'object', value, '.', rfind, 0, 1 )
-        
+
         if value != '':
             self.name = value
 
@@ -293,7 +289,7 @@ class Item ( ViewSubElement ):
         """ Returns True if the item represents a spacer or separator.
         """
         name = self.name.strip()
-        
+
         return ((name == '') or (name == '_') or
                 (all_digits.match( name ) is not None))
 
@@ -311,9 +307,9 @@ class Item ( ViewSubElement ):
         # Otherwise, it must be a trait Item:
         if self.help != '':
             return self.help
-            
+
         object = eval( self.object_, globals(), ui.context )
-        
+
         return object.base_trait( self.name ).get_help()
 
     #---------------------------------------------------------------------------
@@ -338,7 +334,7 @@ class Item ( ViewSubElement ):
         tlabel = trait.label
         if tlabel is None:
             return label
-            
+
         if isinstance( tlabel, basestring ):
             if tlabel[0:3] == '...':
                 return label + tlabel[3:]
@@ -347,7 +343,7 @@ class Item ( ViewSubElement ):
             if self.label != '':
                 return self.label
             return tlabel
-            
+
         return tlabel( object, name, label )
 
     #---------------------------------------------------------------------------
@@ -379,7 +375,7 @@ class Item ( ViewSubElement ):
             else:
                 self._set_float( 'width',  data[ : col ] )
                 self._set_float( 'height', data[ col + 1: ] )
-                
+
         return value
 
     #---------------------------------------------------------------------------
@@ -393,7 +389,7 @@ class Item ( ViewSubElement ):
         if match is not None:
             self.tooltip = match.group( 2 )
             value        = match.group( 1 ) + match.group( 3 )
-            
+
         return value
 
     #---------------------------------------------------------------------------
@@ -416,11 +412,11 @@ class Item ( ViewSubElement ):
         """
 
         options = self._repr_options( 'id', 'object', 'label', 'style',
-                                      'show_label', 'width', 'height' ) 
+                                      'show_label', 'width', 'height' )
         if options is None:
             return "Item( '%s' )" % self.name
-            
-        return "Item( '%s'\n%s\n)" % ( 
+
+        return "Item( '%s'\n%s\n)" % (
                self.name, self._indent( options, '      ' ) )
 
 #-------------------------------------------------------------------------------
@@ -430,29 +426,29 @@ class Item ( ViewSubElement ):
 class UItem ( Item ):
     """ An Item that has no label.
     """
-    
+
     show_label = Bool( False )
-    
+
 #-------------------------------------------------------------------------------
 #  'Custom' class:
-#-------------------------------------------------------------------------------    
-    
+#-------------------------------------------------------------------------------
+
 class Custom ( Item ):
     """ An Item using a 'custom' style.
     """
-    
+
     style = EditorStyle( 'custom' )
-    
+
 #-------------------------------------------------------------------------------
 #  'UCustom' class:
-#-------------------------------------------------------------------------------    
-    
+#-------------------------------------------------------------------------------
+
 class UCustom ( Custom ):
     """ An Item using a 'custom' style with no label.
     """
-    
+
     show_label = Bool( False )
-    
+
 #-------------------------------------------------------------------------------
 #  'Readonly' class:
 #-------------------------------------------------------------------------------
@@ -460,9 +456,9 @@ class UCustom ( Custom ):
 class Readonly ( Item ):
     """ An Item using a 'readonly' style.
     """
-    
+
     style = EditorStyle( 'readonly' )
-    
+
 #-------------------------------------------------------------------------------
 #  'UReadonly' class:
 #-------------------------------------------------------------------------------
@@ -470,9 +466,9 @@ class Readonly ( Item ):
 class UReadonly ( Readonly ):
     """ An Item using a 'readonly' style with no label.
     """
-    
+
     show_label = Bool( False )
-    
+
 #-------------------------------------------------------------------------------
 #  'Label' class:
 #-------------------------------------------------------------------------------
@@ -480,14 +476,14 @@ class UReadonly ( Readonly ):
 class Label ( Item ):
     """ An item that is a label.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
 
     def __init__ ( self, label, item_theme = None, **traits ):
-        super( Label, self ).__init__( 
-            label      = label, 
+        super( Label, self ).__init__(
+            label      = label,
             item_theme = convert_theme( item_theme ),
             **traits
         )
@@ -499,10 +495,10 @@ class Label ( Item ):
 class Heading ( Label ):
     """ An item that is a fancy label.
     """
-    
-    # Override the 'style' trait to default to the fancy 'custom' style:    
+
+    # Override the 'style' trait to default to the fancy 'custom' style:
     style = Constant( 'custom' )
-        
+
 #-------------------------------------------------------------------------------
 #  'Spring' class:
 #-------------------------------------------------------------------------------
@@ -510,7 +506,7 @@ class Heading ( Label ):
 class Spring ( Item ):
     """ An item that is a layout "spring".
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------

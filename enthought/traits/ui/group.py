@@ -2,20 +2,20 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   10/07/2004
 #
 #------------------------------------------------------------------------------
 
-""" Defines the Group class used to represent a group of items used in a 
+""" Defines the Group class used to represent a group of items used in a
     Traits-based user interface.
 """
 
@@ -23,31 +23,26 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 from string \
     import find
 
-from enthought.traits.api \
-    import TraitError, ReadOnly, Delegate, List, Str, Float, Range, Bool, \
-           Instance, Property, cached_property
+from ..api import (Bool, Delegate, Float, Instance, List, Property, Range,
+    ReadOnly, Str, TraitError, cached_property)
 
-from enthought.traits.trait_base \
-    import enumerate
+from ..trait_base import enumerate
 
-from view_element \
-    import ViewSubElement
+from .view_element import ViewSubElement
 
-from item \
-    import Item
+from .item import Item
 
-from include \
-    import Include
+from .include import Include
 
-from ui_traits \
-    import SequenceTypes, ATheme, ContainerDelegate, Orientation, Layout
-    
-from dock_window_theme \
-    import dock_window_theme, DockWindowTheme
-    
+from .ui_traits import SequenceTypes, ATheme, ContainerDelegate, Orientation, Layout
+
+from .dock_window_theme import dock_window_theme, DockWindowTheme
+
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
@@ -65,7 +60,7 @@ Padding = Range( 0, 15, desc = 'amount of padding to add around each item' )
 class Group ( ViewSubElement ):
     """ Represents a grouping of items in a user interface view.
     """
-    
+
     #---------------------------------------------------------------------------
     # Trait definitions:
     #---------------------------------------------------------------------------
@@ -73,10 +68,10 @@ class Group ( ViewSubElement ):
     # A list of Group, Item, and Include objects in this group.
     content = List( ViewSubElement )
 
-    # A unique identifier for the group. 
+    # A unique identifier for the group.
     id = Str
 
-    # User interface label for the group. How the label is displayed depends 
+    # User interface label for the group. How the label is displayed depends
     # on the **show_border** attribute, and on the **layout** attribute of
     # the group's parent group or view.
     label = Str
@@ -92,19 +87,19 @@ class Group ( ViewSubElement ):
 
     # Default image to display on notebook tabs.
     image = ContainerDelegate
-    
+
     # The theme to use for a DockWindow:
     dock_theme = Instance( DockWindowTheme, allow_none = False )
 
     # The theme to use for the group itself:
     group_theme = ATheme
-    
+
     # The theme to use for items contained in the group:
     item_theme = ContainerDelegate
-    
+
     # The theme to use for the labels of items contained in the group:
     label_theme = ContainerDelegate
-    
+
     # Category of elements dragged from view.
     export = ContainerDelegate
 
@@ -114,7 +109,7 @@ class Group ( ViewSubElement ):
 
     # Layout style of the group, which can be one of the following:
     #
-    # * 'normal' (default): Sub-groups are displayed sequentially in a single 
+    # * 'normal' (default): Sub-groups are displayed sequentially in a single
     #   panel.
     # * 'flow': Sub-groups are displayed sequentially, and then "wrap" when
     #   they exceed the available space in the **orientation** direction.
@@ -171,14 +166,14 @@ class Group ( ViewSubElement ):
     # evaluates to False, the group is not defined in the display. Conditions
     # for **defined_when** are evaluated only once, when the display is first
     # constructed. Use this attribute for conditions based on attributes that
-    # vary from object to object, but that do not change over time. 
+    # vary from object to object, but that do not change over time.
     defined_when = Str
 
     # Pre-condition for showing the group. If the expression evaluates to False,
     # the group and its items are not visible (and they disappear if they were
     # previously visible). If the value evaluates to True, the group and items
-    # become visible. All **visible_when** conditions are checked each time 
-    # that any trait value is edited in the display. Therefore, you can use 
+    # become visible. All **visible_when** conditions are checked each time
+    # that any trait value is edited in the display. Therefore, you can use
     # **visible_when** conditions to hide or show groups in response to user
     # input.
     visible_when = Str
@@ -186,15 +181,15 @@ class Group ( ViewSubElement ):
     # Pre-condition for enabling the group. If the expression evaluates to False,
     # the group is disabled, that is, none of the widgets accept input. All
     # **enabled_when** conditions are checked each time that any trait value
-    # is edited in the display. Therefore, you can use **enabled_when** 
+    # is edited in the display. Therefore, you can use **enabled_when**
     # conditions to enable or disable groups in response to user input.
     enabled_when = Str
 
     # Amount of padding (in pixels) to add around each item in the group. The
-    # value must be an integer between 0 and 15. (Unlike the Item class, the 
-    # Group class does not support negative padding.) The padding for any 
-    # individual widget is the sum of the padding for its Group, the padding 
-    # for its Item, and the default spacing determined by the toolkit. 
+    # value must be an integer between 0 and 15. (Unlike the Item class, the
+    # Group class does not support negative padding.) The padding for any
+    # individual widget is the sum of the padding for its Group, the padding
+    # for its Item, and the default spacing determined by the toolkit.
     padding = Padding
 
     # Requested width of the group (calculated from widths of contents)
@@ -242,9 +237,9 @@ class Group ( ViewSubElement ):
 
         # Make sure this Group is the container for all its children:
         self.set_container()
-        
+
     #-- Default Trait Values ---------------------------------------------------
-    
+
     def _dock_theme_default ( self ):
         return dock_window_theme()
 
@@ -403,18 +398,18 @@ class Group ( ViewSubElement ):
         items   = ',\n'.join( [ item.__repr__() for item in self.content ] )
         if len( items ) > 0:
             result.append( items )
-            
+
         options = self._repr_options( 'orientation', 'show_border',
-                      'show_labels', 'show_left', 'selected', 'id', 'object', 
+                      'show_labels', 'show_left', 'selected', 'id', 'object',
                       'label', 'style', 'layout' )
         if options is not None:
             result.append( options )
-            
+
         content = ',\n'.join( result )
         if len( content ) == 0:
             return self.__class__.__name__ + '()'
-            
-        return '%s(\n%s\n)' % ( 
+
+        return '%s(\n%s\n)' % (
                self.__class__.__name__, self._indent( content ) )
 
     #---------------------------------------------------------------------------
@@ -462,7 +457,7 @@ class Group ( ViewSubElement ):
 class HGroup ( Group ):
     """ A group whose items are laid out horizontally.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -478,7 +473,7 @@ class HGroup ( Group ):
 class VGroup ( Group ):
     """ A group whose items are laid out vertically.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -493,7 +488,7 @@ class VGroup ( Group ):
 class VGrid ( VGroup ):
     """ A group whose items are laid out in 2 columns.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -506,15 +501,15 @@ class VGrid ( VGroup ):
 #-------------------------------------------------------------------------------
 
 class HFlow ( HGroup ):
-    """ A group in which items are laid out horizontally, and "wrap" when 
+    """ A group in which items are laid out horizontally, and "wrap" when
     they exceed the available horizontal space..
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
-    # Override standard Group trait defaults to give it horizontal flow 
+    # Override standard Group trait defaults to give it horizontal flow
     # behavior:
     layout      = 'flow'
     show_labels = False
@@ -527,7 +522,7 @@ class VFlow ( VGroup ):
     """ A group in which items are laid out vertically, and "wrap" when they
     exceed the available vertical space.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -535,7 +530,7 @@ class VFlow ( VGroup ):
     # Override standard Group trait defaults to give it vertical flow behavior:
     layout      = 'flow'
     show_labels = False
-    
+
 #-------------------------------------------------------------------------------
 #  'VFold' class:
 #-------------------------------------------------------------------------------
@@ -544,7 +539,7 @@ class VFold ( VGroup ):
     """ A group in which items are laid out vertically and can be collapsed
         (i.e. 'folded') by clicking their title.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -561,7 +556,7 @@ class VFold ( VGroup ):
 class HSplit ( Group ):
     """ A horizontal group with splitter bars to separate it from other groups.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -578,7 +573,7 @@ class HSplit ( Group ):
 class VSplit ( Group ):
     """ A vertical group with splitter bars to separate it from other groups.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -595,7 +590,7 @@ class VSplit ( Group ):
 class Tabbed ( Group ):
     """ A group that is shown as a tabbed notebook.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -611,10 +606,10 @@ class Tabbed ( Group ):
 
 class ShadowGroup ( Group ):
     """ Corresponds to a Group object, but with all embedded Include
-        objects resolved, and with all embedded Group objects replaced by 
+        objects resolved, and with all embedded Group objects replaced by
         corresponding ShadowGroup objects.
     """
-    
+
     #---------------------------------------------------------------------------
     # Trait definitions:
     #---------------------------------------------------------------------------
@@ -642,16 +637,16 @@ class ShadowGroup ( Group ):
 
     # Default image to display on notebook tabs
     image = ShadowDelegate
-    
+
     # The theme to use for a DockWindow:
     dock_theme = ShadowDelegate
-    
+
     # The theme to use for the group itself:
     group_theme = ShadowDelegate
-    
+
     # The theme to use for item's contained in the group:
     item_theme = ShadowDelegate
-    
+
     # The theme to use for the labels of items contained in the group:
     label_theme = ShadowDelegate
 

@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #  Author: David C. Morrill
 #  Date:   07/01/2005
 #
@@ -22,19 +22,19 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
-    import HasPrivateTraits, Str, Any, Instance, Trait, List, Property, Event, \
-           Expression, Enum, Callable, Bool
+from __future__ import absolute_import
 
-from editor_factory import EditorFactory
-from editors.api import EnumEditor
-from group import Group
-from handler import Handler
-from include import Include
-from item import Item
-from menu import Action
-from table_column import ObjectColumn
-from view import View
+from ..api import (Any, Bool, Callable, Enum, Event, Expression, HasPrivateTraits,
+    Instance, List, Str, Trait)
+
+from .editor_factory import EditorFactory
+from .editors.api import EnumEditor
+from .group import Group
+from .include import Include
+from .item import Item
+from .menu import Action
+from .table_column import ObjectColumn
+from .view import View
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:
@@ -59,20 +59,20 @@ GenericTableFilterRuleOperation = Trait( '=', {
 class TableFilter ( HasPrivateTraits ):
     """ Filter for items displayed in a table.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
     # UI name of this filter (so the user can identify it in the UI)
     name = Str( 'Default filter' )
-    
+
     # Default name that can be automatically overridden
     _name = Str( 'Default filter' )
-    
+
     # A user-readable description of what kind of object satisfies the filter
     desc = Str( 'All items' )
-    
+
     # A callable function that returns whether the passed object is allowed
     # by the filter
     allowed = Callable( lambda object: True, transient = True )
@@ -91,14 +91,14 @@ class TableFilter ( HasPrivateTraits ):
     #  Traits view definitions:
     #---------------------------------------------------------------------------
 
-    traits_view = View( 
-        'name{Filter name}', '_', 
+    traits_view = View(
+        'name{Filter name}', '_',
         Include( 'filter_view' ),
         title   = 'Edit Filter',
         width   = 0.2,
         buttons = [ 'OK',
                     'Cancel',
-                    Action( 
+                    Action(
                         name         = 'Help',
                         action       = 'show_help',
                         defined_when = "ui.view_elements.content['filter_view']"
@@ -129,7 +129,7 @@ class TableFilter ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
 
     def filter ( self, object ):
-        """ Returns whether a specified object meets the filter or search 
+        """ Returns whether a specified object meets the filter or search
         criteria.
         """
         return self.allowed( object )
@@ -141,7 +141,7 @@ class TableFilter ( HasPrivateTraits ):
     #---------------------------------------------------------------------------
 
     def description ( self ):
-        """ Returns a user-readable description of what kind of object 
+        """ Returns a user-readable description of what kind of object
         satisfies the filter.
         """
         return self.desc
@@ -158,10 +158,10 @@ class TableFilter ( HasPrivateTraits ):
 
     def edit_view ( self, object ):
         """ Return a view to use for editing the filter.
-        
-        The ''object'' parameter is a sample object for the table that the 
+
+        The ''object'' parameter is a sample object for the table that the
         filter will be applied to. It is supplied in case the filter needs to
-        extract data or metadata from the object. If the table is empty, the 
+        extract data or metadata from the object. If the table is empty, the
         ''object'' argument is None.
         """
         return None
@@ -189,7 +189,7 @@ class TableFilter ( HasPrivateTraits ):
 class EvalTableFilter ( TableFilter ):
     """ A table filter based on evaluating an expression.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -212,7 +212,7 @@ class EvalTableFilter ( TableFilter ):
     #---------------------------------------------------------------------------
 
     def filter ( self, object ):
-        """ Returns whether a specified object meets the filter or search 
+        """ Returns whether a specified object meets the filter or search
         criteria.
         """
         if self._traits is None:
@@ -242,7 +242,7 @@ class EvalTableFilter ( TableFilter ):
 class GenericTableFilterRule ( HasPrivateTraits ):
     """ A general rule used by a table filter.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -318,12 +318,12 @@ class GenericTableFilterRule ( HasPrivateTraits ):
     #  set of traits:
     #---------------------------------------------------------------------------
 
-    def clone_traits ( self, traits = None, memo = None, copy = None, 
+    def clone_traits ( self, traits = None, memo = None, copy = None,
                              **metadata ):
-        """ Clones a new object from this one, optionally copying only a 
+        """ Clones a new object from this one, optionally copying only a
         specified set of traits."""
         return super( GenericTableFilterRule, self ).clone_traits( traits,
-                       memo, copy, **metadata ).set( 
+                       memo, copy, **metadata ).set(
                        enabled = self.enabled,
                        name    = self.name )
 
@@ -391,7 +391,7 @@ class GenericTableFilterRule ( HasPrivateTraits ):
 class GenericTableFilterRuleEnabledColumn ( ObjectColumn ):
     """ Table column that indicates whether a filter rule is enabled.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Returns the value of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -409,7 +409,7 @@ class GenericTableFilterRuleAndOrColumn ( ObjectColumn ):
     """ Table column that displays whether a filter rule is conjoining ('and')
         or disjoining ('or').
     """
-    
+
     #---------------------------------------------------------------------------
     #  Returns the value of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -428,7 +428,7 @@ class GenericTableFilterRuleAndOrColumn ( ObjectColumn ):
 class GenericTableFilterRuleNameColumn ( ObjectColumn ):
     """ Table column for the name of an object trait.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Returns the traits editor of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -445,7 +445,7 @@ class GenericTableFilterRuleNameColumn ( ObjectColumn ):
 class GenericTableFilterRuleValueColumn ( ObjectColumn ):
     """ Table column for the value of an object trait.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Returns the traits editor of the column for a specified object:
     #---------------------------------------------------------------------------
@@ -474,7 +474,7 @@ generic_table_filter_rule_columns = [
 class RuleTableFilter ( TableFilter ):
     """ A table filter based on rules.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
@@ -487,7 +487,7 @@ class RuleTableFilter ( TableFilter ):
 
     # Event fired when the contents of the filter have changed
     modified = Event
-    
+
     # Persistence ID of the view
     view_id = Str( 'enthought.traits.ui.table_filter.RuleTableFilter' )
 
@@ -498,9 +498,9 @@ class RuleTableFilter ( TableFilter ):
     _trait_values = Any
 
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-    
+
     error_view = View(
         Item( label = 'A menu or rule based filter can only be created for '
                       'tables with at least one entry'
@@ -510,14 +510,14 @@ class RuleTableFilter ( TableFilter ):
         close_result = False,
         buttons      = [ 'Cancel' ]
     )
-        
+
     #---------------------------------------------------------------------------
     #  Returns whether a specified object meets the filter/search criteria:
     #  (Should normally be overridden)
     #---------------------------------------------------------------------------
 
     def filter ( self, object ):
-        """ Returns whether a specified object meets the filter or search 
+        """ Returns whether a specified object meets the filter or search
         criteria.
         """
         is_first = is_true = True
@@ -538,7 +538,7 @@ class RuleTableFilter ( TableFilter ):
     #---------------------------------------------------------------------------
 
     def description ( self ):
-        """ Returns a user-readable description of the kind of object that 
+        """ Returns a user-readable description of the kind of object that
             satisfies the filter.
         """
         ors  = []
@@ -550,16 +550,16 @@ class RuleTableFilter ( TableFilter ):
                         ors.append( ' and '.join( ands ) )
                         ands = []
                 ands.append( rule.description() )
-                
+
         if len( ands ) > 0:
             ors.append( ' and '.join( ands ) )
-            
+
         if len( ors ) == 1:
             return ors[0]
-            
+
         if len( ors ) > 1:
             return ' or '.join( [ '(%s)' % t for t in ors ] )
-            
+
         return super( RuleTableFilter, self ).description()
 
     #---------------------------------------------------------------------------
@@ -569,15 +569,15 @@ class RuleTableFilter ( TableFilter ):
     def edit_view ( self, object ):
         """ Return a view to use for editing the filter.
 
-        The ''object'' parameter is a sample object for the table that the 
+        The ''object'' parameter is a sample object for the table that the
         filter will be applied to. It is supplied in case the filter needs to
-        extract data or metadata from the object. If the table is empty, the 
+        extract data or metadata from the object. If the table is empty, the
         ''object'' argument is None.
         """
         self._object = object
         if object is None:
             return self.edit_traits( view = 'error_view' )
-            
+
         names              = object.editable_traits()
         self._trait_values = object.get( names )
         return View(
@@ -601,7 +601,7 @@ class RuleTableFilter ( TableFilter ):
     def _get_table_editor ( self, names ):
         """ Returns a table editor to use for editing the filter.
         """
-        from enthought.traits.ui.api import TableEditor
+        from .api import TableEditor
 
         return TableEditor( columns        = generic_table_filter_rule_columns,
                             orientation    = 'vertical',
@@ -620,8 +620,8 @@ class RuleTableFilter ( TableFilter ):
     #---------------------------------------------------------------------------
 
     def __getstate__ ( self ):
-        """ Returns the state to be pickled. 
-        
+        """ Returns the state to be pickled.
+
         This definition overrides **object**.
         """
         dict = self.__dict__.copy()
@@ -629,9 +629,9 @@ class RuleTableFilter ( TableFilter ):
             del dict[ '_object' ]
             del dict[ '_trait_values' ]
         return dict
-        
+
     #---------------------------------------------------------------------------
-    #  Handles the 'rules' trait being changed:  
+    #  Handles the 'rules' trait being changed:
     #---------------------------------------------------------------------------
 
     def _rules_changed ( self, rules ):
@@ -659,14 +659,14 @@ menu_table_filter_rule_columns = [
 class MenuTableFilter ( RuleTableFilter ):
     """ A table filter based on a menu of rules.
     """
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
     # Overrides the default **name** trait
     name = 'Default menu-based filter'
-    
+
     # Overrides the persistence ID of the view
     view_id = Str( 'enthought.traits.ui.table_filter.MenuTableFilter' )
 
@@ -676,7 +676,7 @@ class MenuTableFilter ( RuleTableFilter ):
     #---------------------------------------------------------------------------
 
     def filter ( self, object ):
-        """ Returns whether a specified object meets the filter or search 
+        """ Returns whether a specified object meets the filter or search
         criteria.
         """
         for rule in self.rules:
@@ -691,7 +691,7 @@ class MenuTableFilter ( RuleTableFilter ):
     #---------------------------------------------------------------------------
 
     def description ( self ):
-        """ Returns a user8readable description of what kind of object 
+        """ Returns a user8readable description of what kind of object
             satisfies the filter.
         """
         result = ' and '.join( [ rule.description() for rule in self.rules
@@ -707,7 +707,7 @@ class MenuTableFilter ( RuleTableFilter ):
     def _get_table_editor ( self, names ):
         """ Returns a table editor to use for editing the filter.
         """
-        from enthought.traits.ui.api import TableEditor
+        from .api import TableEditor
 
         names       = self._object.editable_traits()
         name_editor = EnumEditor( values = names )

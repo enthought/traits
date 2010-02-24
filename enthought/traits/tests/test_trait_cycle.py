@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #-------------------------------------------------------------------------------
 
 
@@ -17,13 +17,14 @@
 """ Test whether HasTraits objects with cycles can be garbage collected.
 """
 
-# Standard library imports
+from __future__ import absolute_import
+
 import gc
 import time
 import unittest
 
 # Enthought library imports
-from enthought.traits.api import HasTraits, Any, DelegatesTo, Instance, Int
+from ..api import HasTraits, Any, DelegatesTo, Instance, Int
 
 class TestCase(unittest.TestCase):
     def _simple_cycle_helper(self, foo_class):

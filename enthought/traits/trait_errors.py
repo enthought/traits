@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   06/21/2002
 #
@@ -22,11 +22,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
+
 import exceptions
 
 from types import InstanceType
 
-from trait_base import class_of
+from .trait_base import class_of
 
 
 #-------------------------------------------------------------------------------
@@ -66,7 +68,7 @@ class TraitError ( exceptions.Exception ):
            self.desc   = None
            self.prefix = 'The'
            self.set_desc( None, args )
- 
+
     def set_desc ( self, desc, object = None ):
         if hasattr( self, 'desc' ):
            if desc is not None:
@@ -74,12 +76,12 @@ class TraitError ( exceptions.Exception ):
            if object is not None:
               self.object = object
            self.set_args()
-           
+
     def set_prefix ( self, prefix ):
         if hasattr( self, 'prefix' ):
            self.prefix = prefix
            self.set_args()
-           
+
     def set_args ( self ):
         if self.desc is None:
            extra = ''
@@ -99,9 +101,9 @@ class TraitError ( exceptions.Exception ):
                          self.info, repr_type(self.value))),
         else:
             self.args = ("%s '%s' trait%s must be %s, but a value of %r %r was "
-                         "specified." % (self.prefix, self.name, extra, 
+                         "specified." % (self.prefix, self.name, extra,
                                          self.info, repr_type(self.value))),
-   
+
 #-------------------------------------------------------------------------------
 #  'TraitNotificationError' class:
 #-------------------------------------------------------------------------------
@@ -109,7 +111,7 @@ class TraitError ( exceptions.Exception ):
 class TraitNotificationError ( exceptions.Exception ):
 
     pass
-   
+
 #-------------------------------------------------------------------------------
 #  'DelegationError' class:
 #-------------------------------------------------------------------------------
@@ -119,10 +121,10 @@ class DelegationError ( TraitError ):
     def __init__ ( self, args ):
         # .args must be a tuple.
         self.args = args,
-       
+
 #-------------------------------------------------------------------------------
 #  Export the defined exceptions to the C-base traits module:
 #-------------------------------------------------------------------------------
-       
-import ctraits
+
+from . import ctraits
 ctraits._exceptions( TraitError, DelegationError )

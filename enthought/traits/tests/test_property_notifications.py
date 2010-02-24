@@ -1,17 +1,20 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill
 # Description: <Traits component>
 #------------------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Property
+
+from __future__ import absolute_import
+
+from ..api import HasTraits, Property
 
 class Test ( HasTraits ):
 
@@ -25,7 +28,7 @@ class Test ( HasTraits ):
         if value != old_value:
             self._value = value
             self.trait_property_changed( 'value', old_value, value )
-        
+
     __traits__[ 'value' ] = Property( __value_get, __value_set )
 
 
