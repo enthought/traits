@@ -1204,9 +1204,9 @@ class ListenerNotifyWrapper ( TraitChangeNotifyWrapper ):
     
     #-- TraitChangeNotifyWrapper Method Overrides ------------------------------
     
-    def __init__ ( self, handler, owner, id, listener ):
+    def __init__ ( self, handler, owner, id, listener, target=None):
         self.type     = ListenerType.get( self.init( handler, 
-                                    weakref.ref( owner, self.owner_deleted ) ) )
+                                    weakref.ref( owner, self.owner_deleted ), target ) )
         self.id       = id
         self.listener = listener
     

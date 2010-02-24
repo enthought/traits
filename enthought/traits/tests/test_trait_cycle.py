@@ -23,7 +23,8 @@ import gc
 import time
 import unittest
 
-from ..api import HasTraits, Any
+# Enthought library imports
+from ..api import HasTraits, Any, DelegatesTo, Instance, Int
 
 class TestCase(unittest.TestCase):
     def _simple_cycle_helper(self, foo_class):
@@ -103,6 +104,35 @@ class TestCase(unittest.TestCase):
 
         self.assertTrue(len(referrers) > 0)
         self.assertTrue(foo in referrers)
+
+    def test_delegates_to(self):
+        """ Tests if an object that delegates to another is freed. 
+        """
+        class Base(HasTraits):
+            """ Object we are delegating to. """
+
+            i = Int
+
+
+        class Delegates(HasTraits):
+            """ Object that delegates. """
+
+            b = Instance(Base)
+
+            i = DelegatesTo('b')
+
+        # Make a pair of object
+        b = Base()
+        d = Delegates(b=b)
+
+        # Delete d and thoroughly collect garbage
+        del d
+        for i in range(3):
+            gc.collect(2)
+
+        # See if we still have a Delegates
+        ds = [ obj for obj in gc.get_objects() if isinstance(obj, Delegates) ]
+        self.assert_(ds == [])
 
 if __name__ == '__main__':
     unittest.main()

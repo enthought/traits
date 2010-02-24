@@ -1332,6 +1332,58 @@ def property_depends_on ( dependency, settable = False, flushable = False ):
 
     return decorator
 
+def weak_arg(arg):
+    """ Create a weak reference to arg and wrap the function so that the dereferenced 
+    weakref is passed as the first argument. If arg has been deleted then the 
+    funcion is not called.
+    """
+    # Create the weak reference
+    weak_arg = weakref.ref(arg)
+    def decorator(function):
+        # We need multiple wrappers to traits can find the number of arguments.
+        # The all just deref the weak referene and the call the function if it
+        # is not None
+        def wrapper0():
+            arg = weak_arg()
+            if arg is not None:
+                return function(arg)
+        def wrapper1(arg1):
+            arg = weak_arg()
+            if arg is not None:
+                return function(arg, arg1)
+        def wrapper2(arg1, arg2):
+            arg = weak_arg()
+            if arg is not None:
+                return function(arg, arg1, arg2)
+        def wrapper3(arg1, arg2, arg3):
+            arg = weak_arg()
+            if arg is not None:
+                return function(arg, arg1, arg2, arg3)
+        def wrapper4(arg1, arg2, arg3, arg4):
+            arg = weak_arg()
+            if arg is not None:
+                return function(arg, arg1, arg2, arg3, arg4)
+        def wrappern(*args):
+            arg = weak_arg()
+            if arg is not None:
+                function(arg, *args)
+        # Return the correct wrapper depending on the arg count
+        args = function.func_code.co_argcount-1
+        if args == 0:
+            return wrapper0
+        elif args == 1:
+            return wrapper1
+        elif args == 2:
+            return wrapper2
+        elif args == 3:
+            return wrapper3
+        elif args == 4:
+            return wrapper4
+        else:
+            return wrappern
+
+    return decorator
+
 #-------------------------------------------------------------------------------
 #  'HasTraits' class:
 #-------------------------------------------------------------------------------
@@ -2572,7 +2624,8 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _on_trait_change ( self, handler, name = None, remove = False,
-                                 dispatch = 'same', priority = False ):
+                                 dispatch = 'same', priority = False,
+                                 target = None):
         """Causes the object to invoke a handler whenever a trait attribute
         is modified, or removes the association.
 
@@ -2599,7 +2652,7 @@ class HasTraits ( CHasTraits ):
         if type( name ) is list:
             for name_i in name:
                 self._on_trait_change( handler, name_i, remove, dispatch,
-                                       priority )
+                                       priority, target )
 
             return
 
@@ -2632,7 +2685,7 @@ class HasTraits ( CHasTraits ):
             if notifier.equals( handler ):
                 break
         else:
-            wrapper = self.wrappers[ dispatch ]( handler, notifiers )
+            wrapper = self.wrappers[ dispatch ]( handler, notifiers, target )
 
             if priority:
                 notifiers.insert( 0, wrapper )
@@ -2649,7 +2702,7 @@ class HasTraits ( CHasTraits ):
 
     def on_trait_change ( self, handler, name = None, remove = False,
                                 dispatch = 'same', priority = False,
-                                deferred = False ):
+                                deferred = False, target = None ):
         """Causes the object to invoke a handler whenever a trait attribute
         matching a specified pattern is modified, or removes the association.
 
@@ -2829,7 +2882,7 @@ class HasTraits ( CHasTraits ):
         # handler:
         if ((isinstance( name, basestring ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
-            self._on_trait_change( handler, name, remove, dispatch, priority )
+            self._on_trait_change( handler, name, remove, dispatch, priority, target )
 
             return
 
@@ -2840,7 +2893,7 @@ class HasTraits ( CHasTraits ):
         if isinstance( name, list ):
             for name_i in name:
                 self.on_trait_change( handler, name_i, remove, dispatch,
-                                      priority )
+                                      priority, target )
 
             return
 
@@ -2870,7 +2923,7 @@ class HasTraits ( CHasTraits ):
                     break
             else:
                 listener = ListenerParser( name ).listener
-                lnw = ListenerNotifyWrapper( handler, self, name, listener )
+                lnw = ListenerNotifyWrapper( handler, self, name, listener, target )  
                 listeners.append( lnw )
                 listener.set( handler         = ListenerHandler( handler ),
                               wrapped_handler = lnw,
@@ -3585,33 +3638,36 @@ class HasTraits ( CHasTraits ):
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.
         """
-        def notify ( ):
+        @weak_arg(self)
+        def notify ( self ):
             setattr( self, name, True )
 
-        self.on_trait_change( notify, pattern )
+        self.on_trait_change( notify, pattern, target=self )
 
     def _init_trait_property_listener ( self, name, kind, cached, pattern ):
         """ Sets up the listener for a property with 'depends_on' metadata.
         """
         if cached is None:
-            def notify ( ):
+            @weak_arg(self)
+            def notify ( self ):
                 self.trait_property_changed( name, None )
         else:
             cached_old = cached + ':old'
-            def pre_notify ( ):
+            @weak_arg(self)
+            def pre_notify ( self ):
                 dict = self.__dict__
                 old  = dict.get( cached_old, Undefined )
                 if old is Undefined:
                     dict[ cached_old ] = dict.pop( cached, None )
+            self.on_trait_change( pre_notify, pattern, priority = True, target=self )
 
-            self.on_trait_change( pre_notify, pattern, priority = True )
-
-            def notify ( ):
+            @weak_arg(self)
+            def notify ( self ):
                 old = self.__dict__.pop( cached_old, Undefined )
                 if old is not Undefined:
                     self.trait_property_changed( name, old )
 
-        self.on_trait_change( notify, pattern )
+        self.on_trait_change( notify, pattern, target=self )
 
     def _init_trait_delegate_listener ( self, name, kind, pattern ):
         """ Sets up the listener for a delegate trait.
@@ -3619,11 +3675,12 @@ class HasTraits ( CHasTraits ):
         name_pattern    = self._trait_delegate_name( name, pattern )
         target_name_len = len( name_pattern.split( ':' )[-1] )
 
-        def notify ( object, notify_name, old, new ):
+        @weak_arg(self)
+        def notify ( self, object, notify_name, old, new ):
             self.trait_property_changed( name + notify_name[ target_name_len: ],
                                          old, new )
 
-        self.on_trait_change( notify, name_pattern )
+        self.on_trait_change( notify, name_pattern, target=self )
         self.__dict__.setdefault( ListenerTraits, {} )[ name ] = notify
 
     def _remove_trait_delegate_listener ( self, name, remove ):
