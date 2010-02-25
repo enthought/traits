@@ -20,10 +20,10 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.4')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.3.0')
-TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.3.0')
-TRAITSGUI = etsdep('TraitsGUI', '3.3.0')
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.5')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.3.1')
+TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.3.1')
+TRAITSGUI = etsdep('TraitsGUI', '3.3.1')
 # Notes:
 # - enthought\traits\ui\handler.py and
 #   enthought\traits\ui\dockable_view_element.py depend upon files in
@@ -77,6 +77,6 @@ INFO = {
     'install_requires': [
         ],
     'name': 'Traits',
-    'version': '3.3.0',
+    'version': '3.3.1',
     }
 
