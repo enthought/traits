@@ -19,7 +19,7 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 ENVISAGECORE = etsdep('EnvisageCore', '3.1.2')  # -- all from logger.(plugin|agent|widget)
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.1.2')  # -- all from logger.plugin
-TRAITS = etsdep('Traits', '3.2.1')
+TRAITS = etsdep('Traits', '3.3.0')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.3.0')  # -- only from e.util.traits.editor.parameter_choice_editor.py
 TRAITSGUI = etsdep('TraitsGUI', '3.3.0')  # -- from logger.(agent|plugin|widget)
 TRAITS_UI = etsdep('Traits[ui]', '3.3.0')
