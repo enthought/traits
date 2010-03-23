@@ -1382,18 +1382,9 @@ class BaseFile ( BaseStr ):
         -------------
         *value* or ''
         """
-        # NOTE: 'editors.py' has been removed and 'editors' is now a 
-        # directory in traits ui. We are importing from the source instead
-        # of from ui.api or ui.editors.api just for safety sake (otherwise, 
-        # if there is any class that is part of ui.api which has a File
-        # trait defined, and we try to import that class from the source 
-        # (instead of from the api), then we land up with a circular import 
-        # problem). 
-        from .ui.editors.file_editor import FileEditor
-
-        metadata.setdefault( 'editor', FileEditor( filter   = filter or [],
-                                                   auto_set = auto_set,
-                                                   entries  = entries ) )
+        self.filter = filter
+        self.auto_set = auto_set
+        self.entries = entries
         self.exists = exists
 
         super( BaseFile, self ).__init__( value, **metadata )
@@ -1410,6 +1401,16 @@ class BaseFile ( BaseStr ):
             return value
 
         self.error( object, name, value )
+
+    def create_editor(self):
+        from .ui.editors.file_editor import FileEditor
+        editor = FileEditor(
+            filter = self.filter or [],
+            auto_set = self.auto_set,
+            entries = self.entries,
+        )
+        return editor
+
 
 class File ( BaseFile ):
     """ Defines a trait whose value must be the name of a file using a C-level
@@ -1475,16 +1476,8 @@ class BaseDirectory ( BaseStr ):
         -------------
         *value* or ''
         """
-        # NOTE: 'editors.py' has been removed and 'editors' is now a 
-        # directory in traits ui. We are importing from the source instead
-        # of from ui.api or ui.editors.api just for safety sake (otherwise, 
-        # if there is any class that is part of ui.api which has a File
-        # trait defined, and we try to import that class from the source 
-        # (instead of from the api), then we land up with a circular import 
-        # problem). 
-        from .ui.editors.directory_editor import DirectoryEditor
-        metadata.setdefault( 'editor', DirectoryEditor( auto_set = auto_set,
-                                                        entries  = entries ) )
+        self.entries = entries
+        self.auto_set = auto_set
         self.exists = exists
 
         super( BaseDirectory, self ).__init__( value, **metadata )
@@ -1501,6 +1494,15 @@ class BaseDirectory ( BaseStr ):
             return value
 
         self.error( object, name, value )
+
+    def create_editor(self):
+        from .ui.editors.directory_editor import DirectoryEditor
+        editor = DirectoryEditor(
+            auto_set = self.auto_set,
+            entries = self.entries,
+        )
+        return editor
+
 
 class Directory ( BaseDirectory ):
     """ Defines a trait whose value must be the name of a directory using a
@@ -3042,17 +3044,29 @@ class Button ( Event ):
             -------------
             No default value because events do not store values.
         """
+        self.label = label
+        self.image = image
+        self.style = style
+        self.orientation = orientation
+        self.width_padding = width_padding
+        self.height_padding = height_padding
+        self.view = view
+        super( Button, self ).__init__( **metadata )
+
+    def create_editor(self):
         from .ui.api import ButtonEditor
 
-        self.editor = ButtonEditor( label          = label,
-                                    image          = image,
-                                    style          = style,
-                                    orientation    = orientation,
-                                    width_padding  = width_padding,
-                                    height_padding = height_padding,
-                                    view           = view )
+        editor = ButtonEditor(
+            label = self.label,
+            image = self.image,
+            style = self.style,
+            orientation = self.orientation,
+            width_padding = self.width_padding,
+            height_padding = self.height_padding,
+            view = self.view,
+        )
+        return editor
 
-        super( Button, self ).__init__( **metadata )
 
 #-------------------------------------------------------------------------------
 #  'ToolbarButton' trait:
