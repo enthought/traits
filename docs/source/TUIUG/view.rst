@@ -437,42 +437,42 @@ API Reference* for details.
 
 .. rubric:: Subclasses of Group
 
-+-----------+------------------------------+-----------------------------------+
-|Subclass   |Description                   |Equivalent To                      |
-+===========+==============================+===================================+
-|HGroup     |A group whose items are laid  |:samp:`Group(orientation=          |
-|           |out horizontally.             |'horizontal')`                     |
-+-----------+------------------------------+-----------------------------------+
-|HFlow      |A horizontal group whose items|:samp:`Group(orientation=          |
-|           |"wrap" when they exceed the   |'horizontal, layout='flow',        |
-|           |available horizontal space.   |show_labels=False)`                |
-+-----------+------------------------------+-----------------------------------+
-|HSplit     |A horizontal group with       |:samp:`Group(orientation=          |
-|           |splitter bars to separate it  |'horizontal', layout='split')`     |
-|           |from other groups.            |                                   |
-+-----------+------------------------------+-----------------------------------+
-|Tabbed     |A group that is shown as a tab|:samp:`Group(orientation=          |
-|           |in a notebook.                |'horizontal', layout='tabbed)`     |
-+-----------+------------------------------+-----------------------------------+
-|VGroup     |A group whose items are laid  |:samp:`Group(orientation=          |
-|           |out vertically.               |'vertical')`                       |
-+-----------+------------------------------+-----------------------------------+
-|VFlow      |A vertical group whose items  |:samp:`Group(orientation=          |
-|           |"wrap" when they exceed the   |'vertical', layout='flow',         |
-|           |available vertical space.     |show_labels=False)`                |
-+-----------+------------------------------+-----------------------------------+
-|VFold      |A vertical group in which     |:samp:`Group(orientation=          |
-|           |items can be collapsed (i.e., |'vertical', layout='fold',         |
-|           |folded) by clicking their     |show_labels=False)`                |
-|           |titles.                       |                                   |
-+-----------+------------------------------+-----------------------------------+
-|VGrid      |A vertical group whose items  |:samp:`Group(orientation=          |
-|           |are laid out in two columns.  |'vertical', columns=2)`            |
-+-----------+------------------------------+-----------------------------------+
-|VSplit     |A vertical group with splitter|:samp:`Group(orientation=          |
-|           |bars to separate it from other|'vertical', layout='split')`       |
-|           |groups.                       |                                   |
-+-----------+------------------------------+-----------------------------------+
++-----------+------------------------------+-----------------------------------------+
+|Subclass   |Description                   |Equivalent To                            |
++===========+==============================+=========================================+
+|HGroup     |A group whose items are laid  |:samp:`Group(orientation='horizontal')`  |
+|           |out horizontally.             |                                         |
++-----------+------------------------------+-----------------------------------------+
+|HFlow      |A horizontal group whose items|:samp:`Group(orientation='horizontal',   |
+|           |"wrap" when they exceed the   |layout='flow', show_labels=False)`       |
+|           |available horizontal space.   |                                         |
++-----------+------------------------------+-----------------------------------------+
+|HSplit     |A horizontal group with       |:samp:`Group(orientation='horizontal',   |
+|           |splitter bars to separate it  |layout='split')`                         |
+|           |from other groups.            |                                         |
++-----------+------------------------------+-----------------------------------------+
+|Tabbed     |A group that is shown as a tab|:samp:`Group(orientation='horizontal'    |
+|           |in a notebook.                |layout='tabbed', springy=True)`          |
++-----------+------------------------------+-----------------------------------------+
+|VGroup     |A group whose items are laid  |:samp:`Group(orientation='vertical')`    |
+|           |out vertically.               |                                         |
++-----------+------------------------------+-----------------------------------------+
+|VFlow      |A vertical group whose items  |:samp:`Group(orientation='vertical',     |
+|           |"wrap" when they exceed the   |layout='flow', show_labels=False)`       |
+|           |available vertical space.     |                                         |
++-----------+------------------------------+-----------------------------------------+
+|VFold      |A vertical group in which     |:samp:`Group(orientation='vertical',     |
+|           |items can be collapsed (i.e., |layout='fold', show_labels=False)`       |
+|           |folded) by clicking their     |                                         |
+|           |titles.                       |                                         |
++-----------+------------------------------+-----------------------------------------+
+|VGrid      |A vertical group whose items  |:samp:`Group(orientation='vertical',     |
+|           |are laid out in two columns.  |columns=2)`                              |
++-----------+------------------------------+-----------------------------------------+
+|VSplit     |A vertical group with splitter|:samp:`Group(orientation='vertical',     |
+|           |bars to separate it from other|layout='split')`                         |
+|           |groups.                       |                                         |
++-----------+------------------------------+-----------------------------------------+
 
  
 .. rubric:: Footnotes
