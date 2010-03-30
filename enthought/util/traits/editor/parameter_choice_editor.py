@@ -32,7 +32,7 @@
 import wx
 
 from enthought.traits.ui.wx.editor import Editor
-from enthought.traits.ui.wx.editor_factory import EditorFactory as WxEditorFactory
+from enthought.traits.ui.editor_factory import EditorFactory as WxEditorFactory
 from enthought.traits.api import Any, HasTraits, Int
 
 class ChoiceEditorModel(HasTraits):
