@@ -62,6 +62,7 @@ def create_log_file_handler(path, maxBytes=1000000, backupCount=3, level=None,
     level to the default logging level.
 
     """
+    import pdb;pdb.set_trace()
     if level is None:
         level = LEVEL
     if formatter is None:
