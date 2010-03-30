@@ -94,6 +94,7 @@ setup(
     description = DOCLINES[1],
     extras_require = INFO['extras_require'],
     include_package_data = True,
+    package_data = {'enthought': ['logger/plugin/*.ini']},
     install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
