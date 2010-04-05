@@ -1394,11 +1394,11 @@ class BaseFile ( BaseStr ):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        validated_value = super( BaseFile, self ).validate( object, name, value )
         if not self.exists:
-            return super( BaseFile, self ).validate( object, name, value )
-
-        if isfile( value ):
-            return value
+            return validated_value
+        elif isfile( value ):
+            return validated_value
 
         self.error( object, name, value )
 
