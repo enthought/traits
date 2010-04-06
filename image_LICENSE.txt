@@ -8,7 +8,7 @@ CP (Crystal Project)    LGPL                      image_LICENSE_CP.txt
 Unless stated in this file, icons are the work of Enthought, and are
 released under a 3 clause BSD license.
 
-Files and orginal authors:
+Files and original authors:
 ----------------------------------------------------------------------------
 enthought/logger/widget/images:
                           about.png | CP
