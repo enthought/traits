@@ -1662,7 +1662,7 @@ static PyGetSetDef has_traits_properties[] = {
 static PyTypeObject has_traits_type = {
 	PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
 	0,
-	"CHasTraits",
+	"enthought.traits.ctraits.CHasTraits",
 	sizeof( has_traits_object ),
 	0,
 	(destructor) has_traits_dealloc,                    /* tp_dealloc */
@@ -4933,7 +4933,7 @@ static PyGetSetDef trait_properties[] = {
 static PyTypeObject trait_type = {
     PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
     0,
-    "cTrait",
+    "enthought.traits.ctraits.cTrait",
     sizeof( trait_object ),
     0,
     (destructor) trait_dealloc,                    /* tp_dealloc */
