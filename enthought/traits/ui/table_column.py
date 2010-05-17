@@ -663,7 +663,7 @@ class NumericColumn ( ObjectColumn ):
     #  Gets the type of data for the column for a specified object row:
     #---------------------------------------------------------------------------
 
-    def get_type ( self, object, row ):
+    def get_type ( self, object ):
         """ Gets the type of data for the column for a specified object row.
         """
         return self.type
@@ -672,10 +672,10 @@ class NumericColumn ( ObjectColumn ):
     #  Returns the text color for the column for a specified object row:
     #---------------------------------------------------------------------------
 
-    def get_text_color ( self, object, row ):
+    def get_text_color ( self, object ):
         """ Returns the text color for the column for a specified object row.
         """
-        if self._is_selected( object, row ):
+        if self._is_selected( object ):
             return self.selected_text_color_
         return self.text_color_
 
@@ -683,10 +683,10 @@ class NumericColumn ( ObjectColumn ):
     #  Returns the text font for the column for a specified object row:
     #---------------------------------------------------------------------------
 
-    def get_text_font ( self, object, row ):
+    def get_text_font ( self, object ):
         """ Returns the text font for the column for a specified object row.
         """
-        if self._is_selected( object, row ):
+        if self._is_selected( object ):
             return self.selected_text_font
         return self.text_font
 
