@@ -203,15 +203,6 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Background color of selected item
     selection_bg_color = Color( 'light blue', allow_none = True )
 
-    # The theme to use for normal cells:
-    cell_theme = Any
-
-    # The theme to use for alternate row cells (defaults to 'cell_theme):
-    alt_theme = Any
-
-    # The theme to use for selected cells:
-    selected_theme = Any
-
     # Color of selected text
     selection_color = Color( 'black' )
 
