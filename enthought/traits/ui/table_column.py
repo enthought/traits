@@ -136,11 +136,6 @@ class TableColumn ( HasPrivateTraits ):
     # Optional maximum value a numeric cell value can have:
     maximum = Float( trait_value = True )
 
-    #-- Private Traits ---------------------------------------------------------
-
-    # The toolkit specific themed cell renderer:
-    themed_cell_renderer = Any
-
     #---------------------------------------------------------------------------
     #  Returns the actual object being edited:
     #---------------------------------------------------------------------------
@@ -291,7 +286,7 @@ class TableColumn ( HasPrivateTraits ):
     def get_renderer ( self, object ):
         """ Returns the renderer for the column of a specified object.
         """
-        return self.renderer or self.themed_cell_renderer
+        return self.renderer
 
     #---------------------------------------------------------------------------
     #  Returns whether the column is editable for a specified object:
@@ -390,11 +385,6 @@ class TableColumn ( HasPrivateTraits ):
         """ Returns the string representation of the table column.
         """
         return self.get_label()
-
-    #-- Default Trait Values ---------------------------------------------------
-
-    def _themed_cell_renderer_default ( self ):
-        return toolkit().themed_cell_renderer( self )
 
 #-------------------------------------------------------------------------------
 #  'ObjectColumn' class:
