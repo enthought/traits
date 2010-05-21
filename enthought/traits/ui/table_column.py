@@ -32,8 +32,7 @@ from ..trait_base import user_name_for, xgetattr
 
 from .editor_factory import EditorFactory
 from .menu import Menu
-from .toolkit import toolkit
-from .ui_traits import ATheme, Image, AView, EditorStyle
+from .ui_traits import Image, AView, EditorStyle
 from .view import View
 
 # Set up a logger:
@@ -85,12 +84,6 @@ class TableColumn ( HasPrivateTraits ):
 
     # Vertical alignment of text in the column:
     vertical_alignment = Enum( 'center', [ 'top', 'center', 'bottom' ] )
-
-    # The theme used to render a column cell:
-    cell_theme = ATheme
-
-    # The theme used to render a selected column cell:
-    selected_theme = ATheme
 
     # The image to display in the cell:
     image = Image
@@ -251,24 +244,6 @@ class TableColumn ( HasPrivateTraits ):
             object.
         """
         return self.vertical_alignment
-
-    #---------------------------------------------------------------------------
-    #  Returns the cell theme for the column for a specified object:
-    #---------------------------------------------------------------------------
-
-    def get_cell_theme ( self, object ):
-        """ Returns the cell theme for the column for a specified object.
-        """
-        return self.cell_theme
-
-    #---------------------------------------------------------------------------
-    #  Returns the selected cell theme for the column for a specified object:
-    #---------------------------------------------------------------------------
-
-    def get_selected_theme ( self, object ):
-        """ Returns the selected cell theme for the column for a specified object.
-        """
-        return self.selected_theme
 
     #---------------------------------------------------------------------------
     #  Returns the image to display for the column for a specified object:
@@ -798,8 +773,10 @@ class NumericColumn ( ObjectColumn ):
     def _is_selected ( self, object ):
         """ Returns whether a specified object row is selected.
         """
-        selection = object.model_selection
-        return (selection is not None)
+        if hasattr(object, 'model_selection') \
+                and object.model_selection is not None:
+            return True
+        return False
 
 #-------------------------------------------------------------------------------
 #  'ListColumn' class:
