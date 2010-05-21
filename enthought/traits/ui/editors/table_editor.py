@@ -173,6 +173,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Show column labels?
     show_column_labels = Bool( True )
 
+    # Show row labels?
+    show_row_labels = Bool( False )
+
     # Font to use for text in cells
     cell_font = Font
 
