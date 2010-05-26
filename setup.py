@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2008-2009 by Enthought, Inc.
+# Copyright (c) 2008-2010 by Enthought, Inc.
 # All rights reserved.
-
 
 """
 Explicitly typed attributes for Python.
@@ -161,4 +160,3 @@ setup(
     version = INFO['version'],
     zip_safe = False,
     )
-

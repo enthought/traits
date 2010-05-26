@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2009 by Enthought, Inc.
+# Copyright (c) 2008-2010 by Enthought, Inc.
 # All rights reserved.
 #
 # License: BSD Style.
@@ -21,9 +21,9 @@ def etsdep(p, min, max=None, literal=False):
 
 # Declare our ETS project dependencies.
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.5')
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.3.1')
-TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.3.1')
-TRAITSGUI = etsdep('TraitsGUI', '3.3.1')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.4.0')
+TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.4.0')
+TRAITSGUI = etsdep('TraitsGUI', '3.4.0')
 # Notes:
 # - enthought\traits\ui\handler.py and
 #   enthought\traits\ui\dockable_view_element.py depend upon files in
@@ -77,6 +77,5 @@ INFO = {
     'install_requires': [
         ],
     'name': 'Traits',
-    'version': '3.3.1',
+    'version': '3.4.0',
     }
-
