@@ -130,6 +130,8 @@ setup(
         'build': MyBuild
         },
     description = DOCLINES[1],
+    download_url = ('http://www.enthought.com/repo/ETS/Traits-%s.tar.gz' %
+                    INFO['version']),
     extras_require = INFO['extras_require'],
     ext_modules = [ctraits, speedups],
     include_package_data = True,
