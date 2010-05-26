@@ -63,5 +63,5 @@ INFO = {
     'install_requires' : [
         ],
     'name': 'EnthoughtBase',
-    'version': '3.0.5',
+    'version': '3.0.6',
     }
