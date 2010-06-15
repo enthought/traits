@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -33,14 +33,14 @@ class RingBuffer:
 
 class RingBufferFull:
     def __init__(self,n):
-        raise "you should use RingBuffer"
-    def append(self,x):     
+        raise Exception("you should use RingBuffer")
+    def append(self,x):
         self.data[self.cur]=x
         self.cur=(self.cur+1) % self.max
     def get(self):
         return self.data[self.cur:]+self.data[:self.cur]
-        
-   
+
+
 # sample of use
 """x=RingBuffer(5)
 x.append(1); x.append(2); x.append(3); x.append(4)
