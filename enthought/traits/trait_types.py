@@ -3018,7 +3018,7 @@ class Button ( Event ):
     """ Defines a trait whose UI editor is a button.
     """
 
-    def __init__ ( self, label = '', image = None, style = 'button',
+    def __init__ ( self, label = '', image = None, values_trait = None, style = 'button',
                          orientation = 'vertical', width_padding = 7,
                          height_padding = 5, view = None, **metadata ):
         """ Returns a trait event whose editor is a button.
@@ -3031,6 +3031,10 @@ class Button ( Event ):
                 An image to display on the button
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display
+            values_trait : string
+                For a "button" or "toolbar" style, the name of an enum
+                trait whose values will populate a drop-down menu on the button.
+                The selected value will replace the label on the button.
             orientation : one of: 'horizontal', 'vertical'
                 The orientation of the label relative to the image
             width_padding : integer between 0 and 31
@@ -3045,6 +3049,7 @@ class Button ( Event ):
             No default value because events do not store values.
         """
         self.label = label
+        self.values_trait = values_trait
         self.image = image
         self.style = style
         self.orientation = orientation
@@ -3058,6 +3063,7 @@ class Button ( Event ):
 
         editor = ButtonEditor(
             label = self.label,
+            values_trait = self.values_trait,
             image = self.image,
             style = self.style,
             orientation = self.orientation,
