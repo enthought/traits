@@ -24,7 +24,7 @@
 
 from __future__ import absolute_import
 
-from ...api import Str, Range, Enum, Property
+from ...api import Str, Range, Enum, Property, Trait
 
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
 # to avoid circular imports, as this EditorFactory will be part of
@@ -61,7 +61,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     # values.  If this is set, then the value, label, and label_value traits
     # are ignored; instead, they will be set from this list.  When this button
     # is clicked, the value set will be the one selected from the drop-down.
-    values_trait = Str
+    values_trait = Trait(None, None, Str)
 
     # (Optional) Image to display on the button
     image = Image
