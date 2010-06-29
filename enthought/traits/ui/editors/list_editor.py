@@ -92,6 +92,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Use a notebook for a custom view?
     use_notebook = Bool(False)
 
+    # Show a right-click context menu for the notebook tabs?  (Qt only)
+    show_notebook_menu = Bool(False)
+
     #-- Notebook Specific Traits -----------------------------------------------
 
     # Are notebook items deletable?
