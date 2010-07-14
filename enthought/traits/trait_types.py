@@ -3110,8 +3110,12 @@ class ToolbarButton ( Button ):
             No default value because events do not store values.
 
         """
-        super( ToolbarButton, self ).__init__( label, image, style, orientation,
-                                               width_padding, height_padding,
+        super( ToolbarButton, self ).__init__( label, 
+                                               image=image, 
+                                               style=style, 
+                                               orientation=orientation,
+                                               width_padding=width_padding, 
+                                               height_padding=height_padding,
                                                **metadata )
 
 #-------------------------------------------------------------------------------
