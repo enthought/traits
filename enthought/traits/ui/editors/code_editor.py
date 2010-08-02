@@ -53,6 +53,12 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Object trait containing the currently selected text (optional)
     selected_text = Str
     
+    # Object trait containing the currently selected text start position (optional)
+    selected_start_pos = Str
+
+    # Object trait containing the currently selected text end position (optional)
+    selected_end_pos = Str
+    
     # Background color for selected lines
     selected_color = Color( 0xA4FFFF )
     
