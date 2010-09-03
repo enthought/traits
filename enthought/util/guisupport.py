@@ -45,6 +45,9 @@ we proposed the following informal protocol:
   to see if ``_in_event_loop`` attribute has been set. If it is set, you
   *must* use its value. If it has not been set, you can query the toolkit
   in the normal manner.
+* If you want GUI support and no one else has created an application or
+  started the event loop you *must* do this. We don't want projects to 
+  attempt to defer these things to someone else if they themselves need it.
 
 The functions below implement this logic for each GUI toolkit. If you need
 to create custom application subclasses, you will likely have to modify this
@@ -76,6 +79,8 @@ def get_app_wx(*args, **kwargs):
     import wx
     app = wx.GetApp()
     if app is None:
+        if not kwargs.has_key('redirect'):
+            kwargs['redirect'] = False
         app = wx.PySimpleApp(*args, **kwargs)
     return app
 
@@ -108,13 +113,15 @@ def get_app_qt4(*args, **kwargs):
     from PyQt4 import QtGui
     app = QtGui.QApplication.instance()
     if app is None:
+        if not args:
+            args = ([''],)
         app = QtGui.QApplication(*args, **kwargs)
     return app
 
 def is_event_loop_running_qt4(app=None):
     """Is the qt4 event loop running."""
     if app is None:
-        app = get_app_qt4()
+        app = get_app_qt4([''])
     if hasattr(app, '_in_event_loop'):
         return app._in_event_loop
     else:
@@ -124,7 +131,7 @@ def is_event_loop_running_qt4(app=None):
 def start_event_loop_qt4(app=None):
     """Start the qt4 event loop in a consistent manner."""
     if app is None:
-        app = get_app_qt4()
+        app = get_app_qt4([''])
     if not is_event_loop_running_qt4(app):
         app._in_event_loop = True
         app.exec_()
