@@ -171,7 +171,7 @@ Semantics
 |*itemN*]                      |items. Note that at the topmost level, the    |
 |                              |surrounding square brackets are optional.     |
 +------------------------------+----------------------------------------------+
-|*item*\                       |A trait named *item* is a list. Changes to    |
+|*item*\ []                    |A trait named *item* is a list. Changes to    |
 |                              |*item* or to its members triggers a           |
 |                              |notification.                                 |
 +------------------------------+----------------------------------------------+
