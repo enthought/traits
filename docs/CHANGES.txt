@@ -78,7 +78,7 @@ ones are:
 
  * The Undefined and Uninitialized Traits were made into true singletons.
 
- * Much of the inconsistent formatting across the entire Traits source has 
+ * Much of the inconsistent formatting across the entire Traits source has
    been eliminated and normalized (tabs/spaces, line endings).
 
 
@@ -110,7 +110,7 @@ Enhancements
 
  * Changed behavior of RangeEditor text box to not auto-set
 
- * Added support in RangeEditor for specifying the method to evaluate new values. 
+ * Added support in RangeEditor for specifying the method to evaluate new values.
 
  * Add DefaultOverride editor factory courtesy Stéfan van der Walt
 
