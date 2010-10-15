@@ -1,5 +1,28 @@
-Traits 3.3.1 (not yet released)
+Traits 3.5.1 (not yet released)
 ===============================
+
+
+Traits 3.4.0 (May 26, 2010)
+===========================
+
+Enhancements
+------------
+* adding new example to make testing rgb color editor easier
+
+
+Fixes
+-----
+* fixed NumericColumn to not expect object to have model_selection attribute,
+  and removed more dead theming code
+
+* fixed API bugs with the NumericColumn where its function signatures
+  differed from its base class, but the calling code expected them to all
+  be the same
+
+* fixed bug which was related to type name errors caused when running Sphinx
+
+* when using File(exists=True), be sure to validate the type of the value
+  first before using os.path.isfile()
 
 
 
