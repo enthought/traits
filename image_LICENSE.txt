@@ -78,7 +78,7 @@ examples/demo/Standard Editors/Popup_versions/images:
                 top_left_origin.gif | Enthought
                top_right_origin.gif | Enthought
 examples/tutorials/images:
-                                       next.png | Nuvola
+                           next.png | Nuvola
                          parent.png | Nuvola
                        previous.png | Nuvola
                          reload.png | Nuvola
