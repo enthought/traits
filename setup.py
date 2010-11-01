@@ -48,7 +48,7 @@ Traits:
   for arrays. Version 1.1.0 or later is preferred. Version 1.0.4 will work, but
   some tests may fail.
 * `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
-*-`setupdocs  <http://pypi.python.org/pypi/SetupDocs>`_"""
+"""
 
 import traceback
 import sys
@@ -85,27 +85,6 @@ speedups = Extension(
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
 
-
-class MyDevelop(develop):
-    def run(self):
-        develop.run(self)
-        try:
-            self.run_command('build_docs')
-        except:
-            log.warn("Couldn't build documentation:\n%s" %
-                     traceback.format_exception(*sys.exc_info()))
-
-
-class MyBuild(distbuild):
-    def run(self):
-        distbuild.run(self)
-        try:
-            self.run_command('build_docs')
-        except:
-            log.warn("Couldn't build documentation:\n%s" %
-                     traceback.format_exception(*sys.exc_info()))
-
-
 setup(
     author = 'David C. Morrill, et. al.',
     author_email = 'dmorrill@enthought.com',
@@ -125,10 +104,6 @@ setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
-    cmdclass = {
-        'develop': MyDevelop,
-        'build': MyBuild
-        },
     description = DOCLINES[1],
     download_url = ('http://www.enthought.com/repo/ETS/Traits-%s.tar.gz' %
                     INFO['version']),
@@ -153,7 +128,6 @@ setup(
         'integrationtests.*',
         ]),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    setup_requires = 'setupdocs>=1.0',
     tests_require = [
         'nose >= 0.10.3',
         ],
