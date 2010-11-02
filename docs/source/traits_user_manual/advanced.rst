@@ -46,7 +46,7 @@ The method overrides any default value specified in the trait definition.
 .. index:: get_default_value()
 
 It is also possible to define a dynamic method for the default value in a trait
-type subclass (get_default_value()). However, however, using a 
+type subclass (get_default_value()). However, however, using a
 _\ *name*\ _default()  method avoids the overhead of subclassing a trait.
 
 .. index:: default value; overriding in a subclass
@@ -62,14 +62,14 @@ Often, a subclass must override a trait attribute in a parent class by providing
 a different default value. You can specify a new default value without
 completely re-specifying the trait definition for the attribute. For example::
 
-    # override_default.py -- Example of overriding a default value for 
+    # override_default.py -- Example of overriding a default value for
     #                        a trait attribute in a subclass
     from enthought.traits.api import HasTraits, Range, Str
-    
+
     class Employee(HasTraits):
         name = Str
         salary_grade = Range(value=1, low=1, high=10)
-        
+
     class Manager(Employee):
         salary_grade = 5
 
@@ -81,8 +81,8 @@ In this example, the **salary_grade** of the Employee class is a range from 1 to
 
 .. _reusing-trait-definitions:
 
-Reusing Trait Definitions 
-````````````````````````` 
+Reusing Trait Definitions
+`````````````````````````
 
 As mentioned in :ref:`defining-traits-initialization-and-validation`, in most
 cases, traits are defined in-line in attribute definitions, but they can also be
@@ -92,15 +92,15 @@ the definition of any number of attributes. For example::
 
     # trait_reuse.py --- Example of reusing trait definitions
     from enthought.traits.api import HasTraits, Range
-    
+
     coefficient = Range(-1.0, 1.0, 0.0))
-    
+
     class quadratic(HasTraits):
         c2 = coefficient
         c1 = coefficient
         c0 = coefficient
         x  = Range(-100.0, 100.0, 0.0)
-        
+
 In this example, a trait named **coefficient** is defined externally to the
 class **quadratic**, which references **coefficient** in the definitions of its
 trait attributes **c2**, **c1**, and **c0**. Each of these attributes has a
@@ -134,14 +134,14 @@ Trait Attribute Name Wildcard
 The Traits package enables you to define a category of trait attributes
 associated with a particular trait definition, by including an underscore ('_')
 as a wildcard at the end of a trait attribute name. For example::
-    
+
     # temp_wildcard.py --- Example of using a wildcard with a Trait
     #                      attribute name
     from enthought.traits.api import Any, HasTraits
-    
+
     class Person(HasTraits):
         temp_ = Any
-        
+
 This example defines a class Person, with a category of attributes that have
 names beginning with ``temp``, and that are defined by the Any trait. Thus, any
 part of the program that uses a Person instance can reference attributes such as
@@ -154,15 +154,15 @@ specifying only the wildcard character for the attribute name::
 
     # all_wildcard.py --- Example of trait attribute wildcard rules
     from enthought.traits.api import Any, HasTraits, Int, Str
-    
+
     class Person ( HasTraits ):
-        
+
         # Normal, explicitly defined trait:
         name = Str
-        
+
         # By default, let all traits have any value:
-        _ = Any 
-        
+        _ = Any
+
         # Except for this one, which must be an Int:
         age = Int
     """
@@ -180,7 +180,7 @@ specifying only the wildcard character for the attribute name::
       File "c:\wrk\src\lib\enthought\traits\\trait_handlers.py", line 163, in error
         raise TraitError, ( object, name, self.info(), value )
     TraitError: The 'age' trait of a Person instance must be an integer, but a value
-     of 'middle age' <type 'str'> was specified.    
+     of 'middle age' <type 'str'> was specified.
     """
 
 In this case, all Person instance attributes can be created on the fly and are
@@ -196,11 +196,11 @@ Wildcard Rules
 When using wildcard characters in trait attribute names, the following rules are
 used to determine what trait definition governs an attribute:
 
-1. If an attribute name exactly matches a name without a wildcard character, 
+1. If an attribute name exactly matches a name without a wildcard character,
    that definition applies.
-2. Otherwise, if an attribute name matches one or more names with wildcard 
-   characters, the definition with the longest name applies. 
-   
+2. Otherwise, if an attribute name matches one or more names with wildcard
+   characters, the definition with the longest name applies.
+
 Note that all possible attribute names are covered by one of these two rules.
 The base HasTraits class implicitly contains the attribute definition
 ``_ = Python``. This rule guarantees that, by default, all attributes have
@@ -210,12 +210,12 @@ These rules are demonstrated by the following example::
 
     # wildcard_rules.py -- Example of trait attribute wildcard rules
     from enthought.traits.api import Any, HasTraits, Int, Python
-    
+
     class Person(HasTraits):
         temp_count = Int(-1)
-        temp_      = Any 
+        temp_      = Any
         _          = Python
-    
+
 In this example, the Person class has a **temp_count** attribute, which must be
 an integer and which has an initial value of -1. Any other attribute with a name
 starting with ``temp`` has an initial value of None and allows any value to be
@@ -227,7 +227,7 @@ to them before their first reference).
 
 .. _disallow-object:
 
-Disallow Object 
+Disallow Object
 '''''''''''''''
 
 The singleton object Disallow can be used with wildcards to disallow all
@@ -236,13 +236,13 @@ attributes that are not explicitly defined. For example::
     # disallow.py --- Example of using Disallow with wildcards
     from enthought.traits.api import \
         Disallow, Float, HasTraits, Int, Str
-    
+
     class Person (HasTraits):
-        name   = Str 
-        age    = Int 
+        name   = Str
+        age    = Int
         weight = Float
         _      = Disallow
-    
+
 In this example, a Person instance has three trait attributes:
 
 * **name**: Must be a string; its initial value is ''.
@@ -288,12 +288,12 @@ following::
 
 HasStrictTraits can be used to create type-checked data structures, as in the
 following example::
-    
+
    class TreeNode(HasStrictTraits):
-       left = This 
-       right = This 
-       value = Str 
-       
+       left = This
+       right = This
+       value = Str
+
 This example defines a TreeNode class that has three attributes: **left**,
 **right**, and **value**. The **left** and **right** attributes can only be
 references to other instances of TreeNode (or subclasses), while the **value**
@@ -318,7 +318,7 @@ correct) methods of the class itself. The definition of HasPrivateTraits is the
 following::
 
     class HasPrivateTraits(HasTraits):
-          __ = Any 
+          __ = Any
           _  = Disallow
 
 These subclasses of HasTraits are provided as a convenience, and their use is
@@ -334,35 +334,35 @@ Per-Object Trait Attributes
 
 The Traits package allows you to define dynamic trait attributes that are
 object-, rather than class-, specific. This is accomplished using the
-add_trait() method of the HasTraits class: 
+add_trait() method of the HasTraits class:
 
 .. method:: add_trait(name, trait)
 
 .. index:: examples; per-object trait attributes
 
 For example::
-    
+
     # object_trait_attrs.py --- Example of per-object trait attributes
     from enthought.traits.api import HasTraits, Range
-    
+
     class GUISlider (HasTraits):
-    
-        def __init__(self, eval=None, label='Value', 
-                     trait=None, min=0.0, max=1.0, 
+
+        def __init__(self, eval=None, label='Value',
+                     trait=None, min=0.0, max=1.0,
                      initial=None, **traits):
             HasTraits.__init__(self, **traits)
             if trait is None:
-                if min > max: 
+                if min > max:
                     min, max = max, min
                 if initial is None:
-                    initial = min 
+                    initial = min
                 elif not (min <= initial <= max):
                     initial = [min, max][
-                                abs(initial - min) > 
+                                abs(initial - min) >
                                 abs(initial - max)]
                 trait = Range(min, max, value = initial)
             self.add_trait(label, trait)
-        
+
 This example creates a GUISlider class, whose __init__() method can accept a
 string label and either a trait definition or minimum, maximum, and initial
 values. If no trait definition is specified, one is constructed based on the
@@ -389,35 +389,35 @@ Type-Checked Methods
 In addition type-checked attributes, the Traits package provides the ability to
 create type-checked methods.
 
-.. index:: 
+.. index::
    pair: examples; type-checking methods
-   
+
 A type-checked method is created by writing a normal method definition within a
 class, preceded by a method() signature function call, as shown in the following
 example::
 
-    # type_checked_methods.py --- Example of traits-based method type 
+    # type_checked_methods.py --- Example of traits-based method type
     #                             checking
     from enthought.traits.api import HasTraits, method, Tuple
-    
+
     Color = Tuple(int, int, int, int)
-    
+
     class Palette(HasTraits):
-    
+
         method(Color, color1=Color, color2=Color)
         def blend (self, color1, color2):
             return ((color1[0] + color2[0]) / 2,
                     (color1[1] + color2[1]) / 2,
                     (color1[2] + color2[2]) / 2,
                     (color1[3] + color2[3]) / 2 )
-    
+
         method(Color, Color, Color)
         def max (self, color1, color2):
             return (max( color1[0], color2[0]),
                     max( color1[1], color2[1]),
                     max( color1[2], color2[2]),
                     max( color1[3], color2[3]) )
-                    
+
 In this example, Color is defined to be a trait that accepts tuples of four
 integer values. The method() signature function appearing before the definition
 of the blend() method ensures that the two arguments to blend() both match the
@@ -463,15 +463,15 @@ Defining an Interface
 `````````````````````
 
 To define an interface, create a subclass of Interface::
-    
+
     # interface_definition.py -- Example of defining an interface
     from enthought.traits.api import Interface
-    
+
     class IName(Interface):
-    
+
         def get_name(self):
             ''' Returns a string which is the name of an object. '''
-            
+
 Interface classes serve primarily has documentation of the methods and
 attributes that the interface defines. In this case, a class that implements the
 IName interface must have a method named get_name(), which takes no arguments
@@ -499,23 +499,23 @@ implements() function, which has the signature:
 Interface names beyond the first one are optional. The call to implements() must
 occur at class scope within the class definition. For example::
 
-    # interface_implementation.py -- Example of implementing an 
+    # interface_implementation.py -- Example of implementing an
     #                                interface
     from enthought.traits.api import HasTraits, implements, Str
     from interface_definition import IName
-    
+
     class Person(HasTraits):
         implements(IName)
-    
+
         first_name = Str( 'John' )
         last_name  = Str( 'Doe' )
-    
+
         # Implementation of the 'IName' interface:
         def get_name ( self ):
             ''' Returns the name of an object. '''
             return ('%s %s' % ( self.first_name, self.last_name ))
-            
-A class can contain at most one call to implements(). 
+
+A class can contain at most one call to implements().
 
 In version 3.0, you can specify whether the implements() function verifies that
 the class calling it actually implements the interface that it says it does.
@@ -523,7 +523,7 @@ This is determined by the CHECK_INTERFACES variable, which can take one of three
 values:
 
 * 0 (default): Does not check whether classes implement their declared interfaces.
-* 1: Verifies that classes implement the interfaces they say they do, and logs 
+* 1: Verifies that classes implement the interfaces they say they do, and logs
   a warning if they don't.
 * 2: Verifies that classes implement the interfaces they say they do, and raises
   an InterfaceError if they don't.
@@ -553,7 +553,7 @@ The most common way to use interfaces is with the Instance trait::
     >>> apt1 = Apartment( renter=william )
     >>> print 'Renter is: ', apt1.renter.get_name()
     Renter is: William Adams
-    
+
 Using an interface class with an Instance trait definition declares that the
 trait accepts only values that implement the specified interface. (If the
 assigned object does not implement the interface, the Traits package may
@@ -610,37 +610,37 @@ are:
 
 .. index:: adaptee attribute
 
-* A call to implements() declaring which interfaces the adapter class 
+* A call to implements() declaring which interfaces the adapter class
   implements on behalf of the object it is adapting.
 * A trait attribute named **adaptee** that declares what type of object it is
   an adapter for. Usually, this is an Instance trait.
 * Implementations of the interfaces declared in the implements() call. Usually,
   these methods are implemented using appropriate members on the adaptee object.
 
-.. index:: 
+.. index::
    pair: examples; Adapter class
-   
+
 The following code example shows a definition of a simple adapter class::
 
     # simple_adapter.py -- Example of adaptation using Adapter
     from enthought.traits.api import Adapter, Instance, implements
     from interface_definition import IName
     from interface_implementation import Person
-    
+
     class PersonINameAdapter( Adapter ):
-    
-        # Declare what interfaces this adapter implements for its 
+
+        # Declare what interfaces this adapter implements for its
         # client:
         implements( IName )
-    
+
         # Declare the type of client it supports:
         adaptee = Instance( Person )
-    
+
         # Implement the 'IName' interface on behalf of its client:
         def get_name ( self ):
-            return ('%s %s' % ( self.adaptee.first_name, 
+            return ('%s %s' % ( self.adaptee.first_name,
                                 self.adaptee.last_name ))
-                                
+
 .. index:: adapters; creating from scratch
 
 .. _creating-an-adapter-from-scratch:
@@ -673,29 +673,29 @@ be used by implementation code.
 
 The following code shows an example of implementing an adapter without
 subclassing Adapter::
-  
+
     # scratch_adapter.py -- Example of writing an adapter from scratch
     from enthought.traits.api import HasTraits, Instance, adapts
     from interface_definition import IName
     from interface_implementation import Person
-    
-    
+
+
     class PersonINameAdapter ( HasTraits ):
-        # Declare what interfaces this adapter implements, 
+        # Declare what interfaces this adapter implements,
         # and for what class:
         adapts( Person, IName )
         # Declare the type of client it supports:
         client = Instance( Person )
-    
+
         # Implement the adapter's constructor:
         def __init__ ( self, client ):
             self.client = client
-    
+
         # Implement the 'IName' interface on behalf of its client:
         def get_name ( self ):
-            return ('%s %s' % ( self.client.first_name, 
+            return ('%s %s' % ( self.client.first_name,
                                 self.client.last_name ))
-                                
+
 .. index:: adapters; declaring externally
 
 .. _declaring-a-class-as-an-adapter-externally:
@@ -726,20 +726,20 @@ The following code shows this use of the adapts() function::
     from enthought.traits.api import adapts
     from interface_definition import IName
     from interface_implementation import Person
-    
+
     class AnotherPersonAdapter ( object ):
-    
+
         # Implement the adapter's constructor:
         def __init__ ( self, person ):
             self.person = person
-    
+
         # Implement the 'IName' interface on behalf of its client:
         def get_name ( self ):
-            return ('%s %s' % ( self.person.first_name, 
+            return ('%s %s' % ( self.person.first_name,
                                 self.person.last_name ))
-    
+
     adapts( AnotherPersonAdapter, Person, IName )
-    
+
 .. index:: adapters; using
 
 .. _using-adapters:
@@ -777,26 +777,26 @@ metadata attribute can have one of the following values:
 
 * ``no``: Adaptation is not allowed for this trait attribute.
 * ``yes``: Adaptation is allowed. If adaptation fails, an exception is raised.
-* ``default``: Adaptation is allowed. If adaptation fails, the default value 
+* ``default``: Adaptation is allowed. If adaptation fails, the default value
   for the trait is assigned instead.
-  
+
 .. index:: adapt metadata
 
-The default value for the **adapt** metadata attribute is ``yes``. 
+The default value for the **adapt** metadata attribute is ``yes``.
 
-.. index:: 
+.. index::
    pair: examples; adapt metadata
-   
+
 The following code is an example of an interface Instance trait attribute that
 uses adapt metadata::
 
     # adapt_metadata.py -- Example of using 'adapt' metadata
     from enthought.traits.api import HasTraits, Instance
     from interface_definition import IName
-    
+
     class Apartment( HasTraits ):
         renter = Instance( IName, adapt='no' )
-        
+
 Using this definition, any value assigned to renter must implement the IName
 interface. Otherwise, an exception is raised.
 
@@ -836,7 +836,7 @@ that trait's handler supersedes the *handler* argument, if any. Because the
 trait by simply passing another trait. For example::
 
     source = Property( Code )
-    
+
 This line defines a trait whose value is validated by the Code trait, and whose
 getter and setter methods are defined elsewhere on the same class.
 
@@ -845,8 +845,8 @@ only a setter function, it acts as write-only. It can lack a function due to two
 situations:
 
 * A function with the appropriate name is not defined on the class.
-* The *force* option is True, (which requires the Property() factory function 
-  to ignore functions on the class) and one of the access functions was not 
+* The *force* option is True, (which requires the Property() factory function
+  to ignore functions on the class) and one of the access functions was not
   specified in the arguments.
 
 .. index:: property traits; caching value
@@ -876,21 +876,21 @@ indicate that a getter method's return value should be cached. Use
 
 For example::
 
-    # cached_prop.py -- Example of @cached_property decorator 
+    # cached_prop.py -- Example of @cached_property decorator
     from enthought.traits.api import HasPrivateTraits, List, Int,\
                                      Property, cached_property
-    
+
     class TestScores ( HasPrivateTraits ):
-    
+
         scores  = List( Int )
         average = Property( depends_on = 'scores' )
-    
+
         @cached_property
         def _get_average ( self ):
             s = self.scores
             return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) )
                      / len( s ))
-                     
+
 The @cached_property decorator takes no arguments. Place it on the line
 preceding the property's getter method.
 
@@ -935,7 +935,7 @@ attribute set to True, and saves all other trait attributes. So, to mark which
 trait values should not be saved, you set **transient** to True in the metadata
 for those trait attributes. The benefits of this approach are that you do not
 need to override __getstate__(), and that the metadata helps document the
-pickling behavior of the class. 
+pickling behavior of the class.
 
 .. index:: examples; transient metadata
 
@@ -943,14 +943,14 @@ For example::
 
     # transient_metadata.py -- Example of using 'transient' metadata
     from enthought.traits.api import HasTraits, File, Any
-    
+
     class DataBase ( HasTraits ):
         # The name of the data base file:
         file_name = File
-    
+
         # The open file handle used to access the data base:
         file = Any( transient = True )
-        
+
 In this example, the DataBase class's file trait is marked as transient because
 it normally contains an open file handle used to access a data base. Since file
 handles typically cannot be pickled and restored, the file handle should not be
@@ -975,10 +975,10 @@ automatically transient traits are:
 * Shadow attributes for mapped traits (See :ref:`mapped-traits`)
 * Private attributes of HasPrivateTraits subclasses (See :ref:`hasprivatetraits`)
 * Delegate traits that do not have a local value overriding the delegation.
-  Delegate traits with a local value are non-transient, i.e., they are 
-  serialized. (See :ref:`delegatesto`) You can mark a Delegate trait as 
+  Delegate traits with a local value are non-transient, i.e., they are
+  serialized. (See :ref:`delegatesto`) You can mark a Delegate trait as
   transient if you do not want its value to ever be serialized.
-  
+
 .. index:: __getstate__(); overriding
 
 .. _overriding_getstate:
@@ -995,13 +995,13 @@ to override __getstate__() to remove items that should not be persisted::
 
     def __getstate__ ( self ):
         state = super( XXX, self ).__getstate__()
-    
+
         for key in [ 'foo', 'bar' ]:
             if state.has_key( key ):
                 del state[ key ]
-    
+
         return state
-        
+
 .. index:: unpickling HasTraits objects, HasTraits class; unpickling
 
 .. _unpicking-hastraits-objects:
@@ -1026,15 +1026,15 @@ Overriding __setstate__()
 
 You may wish to override the HasTraits __setstate__() method, for example for
 classes that do not need to receive trait change notifications, and where the
-overhead of explicitly setting each attribute is undesirable. You can 
+overhead of explicitly setting each attribute is undesirable. You can
 override __setstate__() to update the object's __dict__ directly. However, in
-such cases, it is important ensure that trait notifications are properly set 
+such cases, it is important ensure that trait notifications are properly set
 up so that later change notifications are handled. You can do this in two ways:
 
 * Call the __setstate__() super method (for example, with an empty state
   dictionary).
 
-* Call the HasTraits class's private _init_trait_listeners() method; this 
+* Call the HasTraits class's private _init_trait_listeners() method; this
   method has no parameters and does not return a result.
 
 .. index:: HasTraits class; methods
@@ -1089,14 +1089,14 @@ when a number of trait attributes need to be set on an object, or a trait
 attribute value needs to be set in a lambda function. For example::
 
     person.set(name='Bill', age=27)
-    
+
 The statement above is equivalent to the following::
-    
+
     person.name = 'Bill'
     person.age = 27
 
 .. index:: add_class_trait()
-    
+
 .. _add-class-trait:
 
 add_class_trait()
@@ -1123,23 +1123,23 @@ class definition. This occurs, for example, when two classes with trait
 attributes are being defined and each class has a trait attribute that should
 contain a reference to the other. For the class that occurs first in lexical
 order, it is not possible to define the trait attribute that references the
-other class, since the class it needs to refer to has not yet been defined. 
+other class, since the class it needs to refer to has not yet been defined.
 
-.. index:: 
+.. index::
    pair: examples; add_class_trait()
-   
+
 This is illustrated in the following example::
 
     # circular_definition.py --- Non-working example of mutually-
     #                            referring classes
     from enthought.traits.api import HasTraits, Trait
-    
+
     class Chicken(HasTraits):
         hatched_from = Trait(Egg)
-    
+
     class Egg(HasTraits):
         created_by = Trait(Chicken)
-        
+
 As it stands, this example will not run because the **hatched_from** attribute
 references the Egg class, which has not yet been defined. Reversing the
 definition order of the classes does not fix the problem, because then the
@@ -1148,23 +1148,23 @@ definition order of the classes does not fix the problem, because then the
 The problem can be solved using the add_class_trait() method, as shown in the
 following code::
 
-    # add_class_trait.py --- Example of mutually-referring classes 
+    # add_class_trait.py --- Example of mutually-referring classes
     #                        using add_class_trait()
     from enthought.traits.api import HasTraits, Trait
-    
+
     class Chicken(HasTraits):
         pass
-    
+
     class Egg(HasTraits):
         created_by = Trait(Chicken)
-    
+
     Chicken.add_class_trait('hatched_from', Egg)
-    
+
 .. index:: performance of Traits
 
 .. _performance-considerations-of-traits:
 
-Performance Considerations of Traits 
+Performance Considerations of Traits
 ------------------------------------
 
 Using traits can potentially impose a performance penalty on attribute access
@@ -1185,13 +1185,13 @@ characterized as follows:
 
 * Getting a value: No penalty (i.e., standard Python attribute access speed or
   faster)
-* Setting a value: Depends upon the complexity of the validation tests 
-  performed by the trait definition. Many of the predefined trait handlers 
+* Setting a value: Depends upon the complexity of the validation tests
+  performed by the trait definition. Many of the predefined trait handlers
   defined in the Traits package support fast C-level validation. For most of
-  these, the cost of validation is usually negligible. For other trait 
+  these, the cost of validation is usually negligible. For other trait
   handlers, with Python-level validation methods, the cost can be quite a bit
-  higher. 
-  
+  higher.
+
 If a trait attribute does defer its value, the cases to be considered are:
 
 * Getting the default value: Cost of following the deferral chain. The chain
@@ -1205,7 +1205,7 @@ If a trait attribute does defer its value, the cases to be considered are:
 * Setting: Cost of following the deferral chain plus the cost of performing
   the validation of the new value. The preceding discussions about deferral
   chain following and fast versus slow validation apply here as well.
-  
+
 In a typical application scenario, where attributes are read more often than
 they are written, and deferral is not used, the impact of using traits is often
 minimal, because the only cost occurs when attributes are assigned and

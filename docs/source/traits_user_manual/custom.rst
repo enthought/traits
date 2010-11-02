@@ -2,9 +2,9 @@
 
 .. _custom-traits:
 
-============= 
-Custom Traits 
-============= 
+=============
+Custom Traits
+=============
 
 The predefined traits such as those described in :ref:`predefined-traits` are
 handy shortcuts for commonly used types. However, the Traits package also
@@ -27,27 +27,27 @@ subclass one of these traits, or TraitType, to derive new traits. Refer to the
 *Traits API Reference* to see whether a particular predefined trait derives from
 TraitType.
 
-.. index:: 
+.. index::
    pair: subclassing traits; examples
-   
+
 Here's an example of subclassing a predefined trait class::
-    
+
     # trait_subclass.py -- Example of subclassing a trait class
     from enthought.traits.api import BaseInt
-    
+
     class OddInt ( BaseInt ):
-    
+
         # Define the default value
         default_value = 1
-    
+
         # Describe the trait type
         info_text = 'an odd integer'
-    
+
         def validate ( self, object, name, value ):
             value = super(OddInt, self).validate(object, name, value)
             if (value % 2) == 1:
                 return value
-    
+
             self.error( object, name, value )
 
 The OddInt class defines a trait that must be an odd integer. It derives from
@@ -79,7 +79,7 @@ The members that are specific to a trait type subclass are:
 .. index:: default_value attribute, get_default_value()
 
 * validate() method
-* post_setattr() method 
+* post_setattr() method
 * **default_value** attribute or get_default_value() method
 
 Of these, only the validate() method must be overridden in trait type
@@ -92,13 +92,13 @@ performs additional processing after a value has been validated and assigned.
 The signatures of these methods are:
 
 .. method:: validate( object, name, value )
-.. method:: post_setattr( object, name, value 
+.. method:: post_setattr( object, name, value
 
 The parameters of these methods are:
 
 .. index:: object parameter; validate(), name parameter; validate()
 .. index:: value parameter; validate()
-   
+
 * *object*: The object whose trait attribute whose value is being assigned.
 * *name*: The name of the trait attribute whose value is being assigned.
 * *value*: The value being assigned.
@@ -195,7 +195,7 @@ The most general form of the Trait() function is:
 
 .. currentmodule:: enthought.traits.traits
 .. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
-                        
+
 .. index:: compound traits
 
 The notation ``{ | | }+`` means a list of one or more of any of the items listed
@@ -205,20 +205,20 @@ items is called a compound trait. When more than one item is specified, a trait
 value is considered valid if it meets the criteria of at least one of the items
 in the list.
 
-.. index:: 
+.. index::
    pair: Trait() function; examples
-   
+
 The following is an example of a compound trait with multiple criteria::
 
     # compound.py -- Example of multiple criteria in a trait definition
     from enthought.traits.api import HasTraits, Trait, Range
-    
+
     class Die ( HasTraits ):
-        
+
         # Define a compound trait definition:
-        value = Trait( 1, Range( 1, 6 ), 
+        value = Trait( 1, Range( 1, 6 ),
                       'one', 'two', 'three', 'four', 'five', 'six' )
-                      
+
 The Die class has a **value trait**, which has a default value of 1, and can have
 any of the following values:
 
@@ -239,14 +239,14 @@ further explanation.
 .. index:: dictionary parameter to Trait(), class parameter to Trait()
 .. index:: function parameter to Trait(), trait handler; parameter to Trait()
 .. index:: trait; parameter to Trait()
-  
+
 * *type*: See :ref:`type`.
 * *constant_value*: See :ref:`constant-value`.
 * *dictionary*: See :ref:`mapped-traits`.
-* *class*: Specifies that the trait value must be an instance of the specified 
+* *class*: Specifies that the trait value must be an instance of the specified
   class or one of its subclasses.
-* *function*: A "validator" function that determines whether a value being 
-  assigned to the attribute is a legal value. Traits version 3.0 provides a 
+* *function*: A "validator" function that determines whether a value being
+  assigned to the attribute is a legal value. Traits version 3.0 provides a
   more flexible approach, which is to subclass an existing trait (or TraitType)
   and override the validate() method.
 * *trait_handler*: See :ref:`trait-handlers`.
@@ -254,7 +254,7 @@ further explanation.
   valid for the specified trait is also valid for the trait referencing it.
 
 .. index:: type; parameter to Trait()
-  
+
 .. _type:
 
 Type
@@ -320,8 +320,8 @@ this means that the resulting object actually contains two attributes:
 .. index:: shadow values
 
 * An attribute whose value is a key in the dictionary used to define the trait.
-* An attribute containing its corresponding value (i.e., the mapped or 
-  "shadow" value). The name of the shadow attribute is simply the base 
+* An attribute containing its corresponding value (i.e., the mapped or
+  "shadow" value). The name of the shadow attribute is simply the base
   attribute name with an underscore appended.
 
 Mapped traits can be used to allow a variety of user-friendly input values to be
@@ -334,8 +334,8 @@ representing red, green, blue, and transparency values::
 
     # mapped.py --- Example of a mapped trait
     from enthought.traits.api import HasTraits, Trait
-    
-    standard_color = Trait ('black', 
+
+    standard_color = Trait ('black',
                   {'black':       (0.0, 0.0, 0.0, 1.0),
                    'blue':        (0.0, 0.0, 1.0, 1.0),
                    'cyan':        (0.0, 1.0, 1.0, 1.0),
@@ -348,13 +348,13 @@ representing red, green, blue, and transparency values::
                    'yellow':      (1.0, 1.0, 0.0, 1.0),
                    'white':       (1.0, 1.0, 1.0, 1.0),
                    'transparent': (1.0, 1.0, 1.0, 0.0) } )
-                   
+
     red_color = Trait ('red', standard_color)
-    
-    class GraphicShape (HasTraits): 
+
+    class GraphicShape (HasTraits):
         line_color = standard_color
         fill_color = red_color
-        
+
 The GraphicShape class has two attributes: **line_color** and **fill_color**.
 These attributes are defined in terms of the **standard_color** trait, which
 uses a dictionary. The **standard_color** trait is a mapped trait, which means
@@ -384,11 +384,11 @@ because it is usually in a form that can be directly used by program logic.
 
 There are a few other points to keep in mind when creating a mapped trait:
 
-* If not all values passed to the Trait() function are dictionaries, the 
-  non-dictionary values are copied directly to the shadow attribute (i.e., 
+* If not all values passed to the Trait() function are dictionaries, the
+  non-dictionary values are copied directly to the shadow attribute (i.e.,
   the mapping used is the identity mapping).
 * Assigning directly to a shadow attribute (the attribute with the trailing
-  underscore in the name) is not allowed, and raises a TraitError.  
+  underscore in the name) is not allowed, and raises a TraitError.
 
 The concept of a mapped trait extends beyond traits defined via a dictionary.
 Any trait that has a shadow value is a mapped trait. For example, for the
@@ -438,21 +438,21 @@ to the trait attribute is the full string that the substring matches.
 
 .. index::
    pair: TraitPrefixList class; examples
-   
+
 For example::
-    
+
     >>> from enthought.traits.api import HasTraits, Trait
     >>> from enthought.traits.api import TraitPrefixList
     >>> class Alien(HasTraits):
     ...   heads = Trait('one', TraitPrefixList(['one','two','three']))
-    ... 
+    ...
     >>> alf = Alien()
-    >>> alf.heads = 'o'  
+    >>> alf.heads = 'o'
     >>> print alf.heads
     one
-    >>> alf.heads = 'tw' 
+    >>> alf.heads = 'tw'
     >>> print alf.heads
-    two 
+    two
     >>> alf.heads = 't'  # Error, not a unique prefix
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
@@ -476,16 +476,16 @@ constructor takes a parameter that is a dictionary whose keys are strings. A
 string is a valid value if it is a unique prefix for a key in the dictionary.
 The value assigned is the dictionary value corresponding to the matched key.
 
-.. index:: 
+.. index::
    pair: TraitPrefixMap class; examples
-   
+
 The following example uses TraitPrefixMap to define a Boolean trait that accepts
 any prefix of 'true', 'yes', 'false', or 'no', and maps them to 1 or 0.
 ::
 
     # traitprefixmap.py --- Example of using the TraitPrefixMap handler
     from enthought.traits.api import Trait, TraitPrefixMap
-    
+
     boolean_map = Trait('true', TraitPrefixMap( {
                                   'true': 1,
                                   'yes':  1,
@@ -500,7 +500,7 @@ Custom Trait Handlers
 ---------------------
 
 If you need a trait that cannot be defined using a predefined trait handler
-class, you can create your own subclass of TraitHandler. The constructor 
+class, you can create your own subclass of TraitHandler. The constructor
 (i.e., __init__() method) for your TraitHandler subclass can accept whatever
 additional information, if any, is needed to completely specify the trait. The
 constructor does not need to call the TraitHandler base class's constructor.
@@ -508,14 +508,14 @@ constructor does not need to call the TraitHandler base class's constructor.
 The only method that a custom trait handler must implement is validate(). Refer
 to the *Traits API Reference* for details about this function.
 
-.. index:: 
+.. index::
    pair: custom trait handler; examples
 
 .. _example-custom-trait-handler:
 
-Example Custom Trait Handler 
+Example Custom Trait Handler
 ````````````````````````````
-   
+
 The following example defines the OddInt trait (also implemented as a trait type
 in :ref:`defining-a-trait-type`) using a TraitHandler subclass.
 ::
@@ -523,27 +523,27 @@ in :ref:`defining-a-trait-type`) using a TraitHandler subclass.
     # custom_traithandler.py --- Example of a custom TraitHandler
     import types
     from enthought.traits.api import TraitHandler
-    
+
     class TraitOddInteger(TraitHandler):
         def validate(self, object, name, value):
             if ((type(value) is types.IntType) and
                 (value > 0) and ((value % 2) == 1)):
                 return value
             self.error(object, name, value)
-    
+
         def info(self):
             return '**a positive odd integer**'
 
-An application could use this new trait handler to define traits such as the 
+An application could use this new trait handler to define traits such as the
 following::
 
     # use_custom_th.py --- Example of using a custom TraitHandler
     from enthought.traits.api import HasTraits, Trait, TraitRange
     from custom_traithandler import TraitOddInteger
-    
+
     class AnOddClass(HasTraits):
         oddball = Trait(1, TraitOddInteger())
-        very_odd = Trait(-1, TraitOddInteger(), 
+        very_odd = Trait(-1, TraitOddInteger(),
                              TraitRange(-10, -1))
 
 The following example demonstrates why the info() method returns a phrase rather
@@ -554,10 +554,10 @@ than a complete sentence::
     >>> odd_stuff.very_odd = 0
     Traceback (most recent call last):
       File "test.py", line 25, in ?
-        odd_stuff.very_odd = 0   
+        odd_stuff.very_odd = 0
       File "C:\wrk\src\lib\enthought\traits\traits.py", line 1119, in validate
         raise TraitError, excp
-    traits.traits.TraitError: The 'very_odd' trait of an AnOddClass instance 
+    traits.traits.TraitError: The 'very_odd' trait of an AnOddClass instance
     must be **a positive odd integer** or -10 <= an integer <= -1, but a value
     of 0 <type 'int'> was specified.
 
@@ -566,7 +566,7 @@ the exception generated by the invalid assignment.
 
 .. rubric:: Footnotes
 
-.. [6] All of the basic predefined traits (such as Float and Str) have a 
+.. [6] All of the basic predefined traits (such as Float and Str) have a
    BaseType version that does not have the **fast_validate** attribute.
-   
+
 

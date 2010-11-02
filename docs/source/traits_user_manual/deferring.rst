@@ -47,27 +47,27 @@ whenever:
 * The object referenced by the trait named in the *delegate* parameter changes.
 * The delegating attribute is explicitly changed.
 
-Changes to the delegating attribute are propagated to the delegate object's 
+Changes to the delegating attribute are propagated to the delegate object's
 attribute.
 
 The *prefix* and *listenable* parameters to the initializer function specify
 additional information about how to do the delegation.
 
-.. index:: 
+.. index::
    pair: delegation; examples
-   
+
 If *prefix* is the empty string or omitted, the delegation is to an attribute
-of the delegate object with the same name as the trait defined by the 
+of the delegate object with the same name as the trait defined by the
 DelegatesTo object. Consider the following example::
 
     # delegate.py --- Example of trait delegation
     from enthought.traits.api \
-        import DelegatesTo, HasTraits, Instance, Str 
-    
+        import DelegatesTo, HasTraits, Instance, Str
+
     class Parent(HasTraits):
-        first_name = Str 
-        last_name  = Str 
-    
+        first_name = Str
+        last_name  = Str
+
     class Child(HasTraits):
         first_name = Str
         last_name  = DelegatesTo('father')
@@ -86,14 +86,14 @@ DelegatesTo object. Consider the following example::
     >>> sally.last_name = sally.mother # ERR: string expected
     Traceback (most recent call last):
       File "<stdin>", line 1, in ?
-      File "c:\src\trunk\enthought\traits\trait_handlers.py", line 
+      File "c:\src\trunk\enthought\traits\trait_handlers.py", line
     163, in error
         raise TraitError, ( object, name, self.info(), value )
-    enthought.traits.trait_errors.TraitError:  The 'last_name' trait of a 
+    enthought.traits.trait_errors.TraitError:  The 'last_name' trait of a
     Parent instance must be a string, but a value of <__main__.Parent object at
     0x014D6D80> <class '__main__.Parent'> was specified.
     """
-    
+
 A Child object delegates its **last_name** attribute value to its **father**
 object's **last_name** attribute. Because the *prefix* parameter was not
 specified in the DelegatesTo initializer, the attribute name on the delegatee is
@@ -108,7 +108,7 @@ PrototypedFrom
 --------------
 .. class:: PrototypedFrom(prototype[, prefix='', listenable=True, **metadata])
 
-.. index:: prototype parameter to PrototypesFrom 
+.. index:: prototype parameter to PrototypesFrom
 
 The *prototype* parameter is a string that specifies the name of an attribute on
 the same object, which refers to the object whose attribute is prototyped; it is
@@ -121,8 +121,8 @@ additional information about how to do the prototyping.
 
 .. _keyword-parameters:
 
-Keyword Parameters 
------------------- 
+Keyword Parameters
+------------------
 
 The *prefix* and *listenable* parameters of the DelegatesTo and PrototypedFrom
 initializer functions behave similarly for both classes.
@@ -138,15 +138,15 @@ When the *prefix* parameter is a non-empty string, the rule for performing trait
 attribute look-up in the deferred-to object is modified, with the modification
 depending on the format of the prefix string:
 
-* If *prefix* is a valid Python attribute name, then the original attribute 
-  name is replaced by prefix when looking up the deferred-to attribute. 
+* If *prefix* is a valid Python attribute name, then the original attribute
+  name is replaced by prefix when looking up the deferred-to attribute.
 * If *prefix* ends with an asterisk ('*'), and is longer than one character,
   then *prefix*, minus the trailing asterisk, is added to the front of the
   original attribute name when looking up the object attribute.
-* If *prefix* is equal to a single asterisk ('*'), the value of the object 
+* If *prefix* is equal to a single asterisk ('*'), the value of the object
   class's **__prefix__** attribute is added to the front of the original
   attribute name when looking up the object attribute.
-  
+
 .. index::
    single: examples; prototype prefix
    pair: examples; prototyping
@@ -154,15 +154,15 @@ depending on the format of the prefix string:
 Each of these three possibilities is illustrated in the following example, using
 PrototypedFrom::
 
-    # prototype_prefix.py --- Examples of PrototypedFrom() 
+    # prototype_prefix.py --- Examples of PrototypedFrom()
     #                         prefix parameter
     from enthought.traits.api import \
-        PrototypedFrom, Float, HasTraits, Instance, Str 
-    
+        PrototypedFrom, Float, HasTraits, Instance, Str
+
     class Parent (HasTraits):
-        first_name = Str 
-        family_name = '' 
-        favorite_first_name = Str 
+        first_name = Str
+        family_name = ''
+        favorite_first_name = Str
         child_allowance = Float(1.00)
     class Child (HasTraits):
         __prefix__ = 'child_'
@@ -171,7 +171,7 @@ PrototypedFrom::
         allowance  = PrototypedFrom('father', '*')
         father     = Instance(Parent)
         mother     = Instance(Parent)
-    
+
     """
     >>> fred = Parent( first_name = 'Fred', family_name = 'Lopez', \
     ... favorite_first_name = 'Diego', child_allowance = 5.0 )
@@ -181,17 +181,17 @@ PrototypedFrom::
     >>> print '%s %s gets $%.2f for allowance' % (nino.first_name, \ ... nino.last_name, nino.allowance)
     Tomas Lopez gets $5.00 for allowance
     """
-    
-In this example, instances of the Child class have three prototyped trait 
+
+In this example, instances of the Child class have three prototyped trait
 attributes:
 
-* **first_name**, which prototypes from the **favorite_first_name** attribute 
+* **first_name**, which prototypes from the **favorite_first_name** attribute
   of its **mother** object.
 * **last_name**, which prototyped from the **family_name attribute** of its
   **father** object.
 * **allowance**, which prototypes from the **child_allowance** attribute of its
   **father** object.
-  
+
 .. index:: listenable parameter to initializer methods
 
 .. _listenable-keyword:
@@ -205,10 +205,10 @@ following section. However, implementing the notifications correctly requires
 hooking up complicated listeners under the covers. Hooking up these listeners
 can be rather more expensive than hooking up other listeners. Since a common use
 case of deferring is to have a large number of deferred attributes for static
-object hierarchies, this feature can be turned off by setting 
+object hierarchies, this feature can be turned off by setting
 ``listenable=False`` in order to speed up instantiation.
 
-.. index:: 
+.. index::
    single: deferral; notification with
    pair: examples; deferral
 
@@ -229,24 +229,24 @@ example::
     # deferring_notification.py -- Example of notification with deferring
     from enthought.traits.api \
         import HasTraits, Instance, PrototypedFrom, Str
-    
+
     class Parent ( HasTraits ):
-    
+
         first_name = Str
         last_name  = Str
-    
+
         def _last_name_changed(self, new):
             print "Parent's last name changed to %s." % new
-    
+
     class Child ( HasTraits ):
-    
+
         father = Instance( Parent )
         first_name = Str
         last_name  = PrototypedFrom( 'father' )
-    
+
         def _last_name_changed(self, new):
             print "Child's last name changed to %s." % new
-    
+
     """
     >>> dad = Parent( first_name='William', last_name='Chase' )
     Parent's last name changed to Chase.
@@ -265,7 +265,7 @@ example::
     Parent's last name changed to Simmons.
     Child's last name changed to Simmons.
     """
-    
+
 Initially, changing the last name of the father triggers notification on both
 the father and the son. Explicitly setting the son's last name breaks the
 deferring link to the father; therefore changing the father's last name does not
@@ -278,4 +278,4 @@ notif
 .. [5] Both of these class es inherit from the Delegate class. Explicit use of
    Delegate is deprecated, as its name and default behavior (prototyping) are
    incongruous.
-   
+

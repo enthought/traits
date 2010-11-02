@@ -15,7 +15,7 @@ met:
   this list of conditions and the following disclaimer.
 
 * Neither the name of Enthought, Inc., nor the names of contributors may be used
-  to endorse or promote products derived from this document without specific 
+  to endorse or promote products derived from this document without specific
   prior written permission.
 
 THIS DOCUMENT IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
