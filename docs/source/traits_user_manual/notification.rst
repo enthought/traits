@@ -11,7 +11,8 @@ interfaces and for other problem domains.
 
 Requesting trait attribute change notifications can be done in several
 ways:
-.. index:: notification; stragies
+
+.. index:: notification; strategies
 
 * Dynamically, by calling on_trait_change() or on_trait_event() to establish
   (or remove) change notification handlers.

@@ -602,12 +602,13 @@ HasTraits objects:
   the *Traits API Reference* for details on TraitValue. If **trait_value** is
   True, then setting the trait attribute to TraitValue(), with no arguments,
   resets the attribute to it original default value.
-* **transient**: A Boolean indicating whether the trait value is persisted
+* **transient**: A Boolean indicating that the trait value is not persisted
   when the object containing it is persisted. The default value for most
-  predefined traits is True. You can set it to False for traits whose values
-  you know you do not want to persist. Do not set it to False on traits where
-  it is set internally to True, as doing so is likely to create unintended
-  consequences. See :ref:`persistence` for more information.
+  predefined traits is False (the value will be persisted if its container is).
+  You can set it to True for traits whose values you know you do not want to
+  persist. Do not set it to True on traits where it is set internally to
+  False, as doing so is likely to create unintended consequences. See
+  :ref:`persistence` for more information.
 
 Other metadata attributes may be recognized by specific predefined traits.
 
