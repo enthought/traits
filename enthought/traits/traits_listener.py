@@ -252,8 +252,8 @@ class ListenerItem ( ListenerBase ):
     # The handler to be called when any listened-to trait is changed:
     handler = Any
     
-    # A 'wrapped' version of 'handler':
-    wrapped_handler = Any
+    # A weakref 'wrapped' version of 'handler':
+    wrapped_handler_ref = Any
     
     # The dispatch mechanism to use when invoking the handler:
     dispatch = Str
@@ -477,8 +477,10 @@ class ListenerItem ( ListenerBase ):
                 raise TraitError( "on_trait_change handler signature is "
                          "incompatible with a change to an intermediate trait" )
                                   
-            self.wrapped_handler( object, name, old, 
-                                  getattr( object, name, Undefined ) )
+            wh = self.wrapped_handler_ref()
+            if wh is not None:
+                wh( object, name, old, 
+                    getattr( object, name, Undefined ) )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a list (or set) trait:
@@ -509,7 +511,9 @@ class ListenerItem ( ListenerBase ):
         """ Handles a trait change for items of a list (or set) trait with 
             notification.
         """
-        self.wrapped_handler( object, name, new.removed, new.added )
+        wh = self.wrapped_handler_ref()
+        if wh is not None:
+            wh( object, name, new.removed, new.added )
         
     #---------------------------------------------------------------------------
     #  Handles a trait change for a dictionary trait:
@@ -570,14 +574,14 @@ class ListenerItem ( ListenerBase ):
             self.next.handler = handler
     
     #---------------------------------------------------------------------------
-    #  Handles the 'wrapped_handler' trait being changed:
+    #  Handles the 'wrapped_handler_ref' trait being changed:
     #---------------------------------------------------------------------------
     
-    def _wrapped_handler_changed ( self, wrapped_handler ):
-        """ Handles the 'wrapped_handler' trait being changed.
+    def _wrapped_handler_ref_changed ( self, wrapped_handler_ref ):
+        """ Handles the 'wrapped_handler_ref' trait being changed.
         """
         if self.next is not None:
-            self.next.wrapped_handler = wrapped_handler
+            self.next.wrapped_handler_ref = wrapped_handler_ref
     
     #---------------------------------------------------------------------------
     #  Handles the 'dispatch' trait being changed:
@@ -871,8 +875,8 @@ class ListenerGroup ( ListenerBase ):
     # The handler to be called when any listened-to trait is changed
     handler = Property
     
-    # A 'wrapped' version of 'handler':
-    wrapped_handler = Property
+    # A weakref 'wrapped' version of 'handler':
+    wrapped_handler_ref = Property
     
     # The dispatch mechanism to use when invoking the handler:
     dispatch = Property
@@ -906,11 +910,11 @@ class ListenerGroup ( ListenerBase ):
             for item in self.items:
                 item.handler = handler
     
-    def _set_wrapped_handler ( self, wrapped_handler ):
-        if self._wrapped_handler is None:
-            self._wrapped_handler = wrapped_handler
+    def _set_wrapped_handler_ref ( self, wrapped_handler_ref ):
+        if self._wrapped_handler_ref is None:
+            self._wrapped_handler_ref = wrapped_handler_ref
             for item in self.items:
-                item.wrapped_handler = wrapped_handler
+                item.wrapped_handler_ref = wrapped_handler_ref
     
     def _set_dispatch ( self, dispatch ):
         if self._dispatch is None:

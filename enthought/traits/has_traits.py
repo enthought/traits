@@ -2926,7 +2926,7 @@ class HasTraits ( CHasTraits ):
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )  
                 listeners.append( lnw )
                 listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler = lnw,
+                              wrapped_handler_ref = weakref.ref(lnw),
                               type            = lnw.type,
                               dispatch        = dispatch,
                               priority        = priority,
