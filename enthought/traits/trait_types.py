@@ -2549,13 +2549,8 @@ class BaseClass ( TraitType ):
         return theClass
 
     def validate_failed ( self, object, name, value ):
-        kind = type( value )
-        if kind is InstanceType:
-            msg = 'class %s' % value.__class__.__name__
-        else:
-            msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
 
-        self.error( object, name, msg )
+        self.error( object, name, value )
 
 def validate_implements ( value, klass, unused = None ):
     """ Checks to see if a specified value implements the instance class
