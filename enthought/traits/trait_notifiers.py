@@ -271,7 +271,15 @@ class StaticAnyTraitChangeNotifyWrapper:
                  'allowed, but %s were specified.') % ( handler.__name__, n ) )
 
         self.handler  = handler
-        self.__call__ = getattr( self, 'call_%d' % n )
+        self.call_method = 'call_%d' % n
+
+    def __call__(self, object, trait_name, old, new):
+        """ Dispatch to the appropriate method.
+
+        We do explicit dispatch instead of assigning to the .__call__ instance
+        attribute to avoid reference cycles.
+        """
+        getattr(self, self.call_method)(object, trait_name, old, new)
 
     def equals ( self, handler ):
         return False
@@ -326,7 +334,15 @@ class StaticTraitChangeNotifyWrapper:
                  'allowed, but %s were specified.') % ( handler.__name__, n ) )
 
         self.handler  = handler
-        self.__call__ = getattr( self, 'call_%d' % n )
+        self.call_method = 'call_%d' % n
+
+    def __call__(self, object, trait_name, old, new):
+        """ Dispatch to the appropriate method.
+
+        We do explicit dispatch instead of assigning to the .__call__ instance
+        attribute to avoid reference cycles.
+        """
+        getattr(self, self.call_method)(object, trait_name, old, new)
 
     def equals ( self, handler ):
         return False
