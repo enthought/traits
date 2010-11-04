@@ -395,7 +395,7 @@ class TraitChangeNotifyWrapper:
                          'arguments is allowed, but %s were specified.') %
                         ( func.__name__, arg_count ) )
 
-                self.__call__ = getattr( self, 'rebind_call_%d' % arg_count )
+                self.call_method = 'rebind_call_%d' % arg_count
 
                 return arg_count
         elif target is not None:
@@ -414,9 +414,17 @@ class TraitChangeNotifyWrapper:
 
         self.name     = None
         self.handler  = handler
-        self.__call__ = getattr( self, 'call_%d' % arg_count )
+        self.call_method = 'call_%d' % arg_count
 
         return arg_count
+
+    def __call__(self, object, trait_name, old, new):
+        """ Dispatch to the appropriate method.
+
+        We do explicit dispatch instead of assigning to the .__call__ instance
+        attribute to avoid reference cycles.
+        """
+        getattr(self, self.call_method)(object, trait_name, old, new)
 
     # NOTE: This method is normally the only one that needs to be overridden in
     # a subclass to implement the subclass's dispatch mechanism:
