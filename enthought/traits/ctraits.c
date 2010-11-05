@@ -875,11 +875,20 @@ has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
     
     has_traits_object * obj = (has_traits_object *) type->tp_alloc( type, 0 );
     if ( obj != NULL ) {
-        assert( type->tp_dict != NULL );
+        if (type->tp_dict == NULL) {
+            PyErr_SetString(PyExc_RuntimeError, "No tp_dict");
+            return NULL;
+        }
         obj->ctrait_dict = (PyDictObject *) PyDict_GetItem( type->tp_dict, 
                                                             class_traits );
-        assert( obj->ctrait_dict != NULL );
-        assert( PyDict_Check( (PyObject *) obj->ctrait_dict ) );
+        if (obj->ctrait_dict == NULL) {
+            PyErr_SetString(PyExc_RuntimeError, "No ctrait_dict");
+            return NULL;
+        }
+        if (!PyDict_Check( (PyObject *) obj->ctrait_dict ) ) {
+            PyErr_SetString(PyExc_RuntimeError, "ctrait_dict not a dict");
+            return NULL;
+        }
         Py_INCREF( obj->ctrait_dict );
     }
     
@@ -985,8 +994,11 @@ has_traits_clear ( has_traits_object * obj ) {
 static void 
 has_traits_dealloc ( has_traits_object * obj ) {
     
+    PyObject_GC_UnTrack(obj);
+    Py_TRASHCAN_SAFE_BEGIN(obj);
     has_traits_clear( obj );
     obj->ob_type->tp_free( (PyObject *) obj );
+    Py_TRASHCAN_SAFE_END(obj);
 }
 
 /*-----------------------------------------------------------------------------
@@ -1132,7 +1144,9 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
           NULL)) ||
          ((trait = (trait_object *) dict_getitem( obj->ctrait_dict, name )) !=
           NULL) )
+    {
         return trait->getattr( trait, obj, name );
+    }
     
     if ( (value = PyObject_GenericGetAttr( (PyObject *) obj, name )) != NULL )
         return value;
@@ -3057,8 +3071,11 @@ trait_clear ( trait_object * trait ) {
 static void 
 trait_dealloc ( trait_object * trait ) {
     
+    PyObject_GC_UnTrack(trait);
+    Py_TRASHCAN_SAFE_BEGIN(trait);
     trait_clear( trait );
     trait->ob_type->tp_free( (PyObject *) trait );
+    Py_TRASHCAN_SAFE_END(trait);
 }
 
 /*-----------------------------------------------------------------------------
