@@ -20,7 +20,12 @@ if ETSConfig.toolkit == 'qt4':
         import sip
         sip.setapi('QString', 2)
         
-        from PyQt4 import QtCore, QtGui, Qt
+        from PyQt4 import QtCore, QtGui
+        from PyQt4.Qt import QKeySequence, QTextCursor
+        from PyQt4.Qt import Qt
         
     else:
         from PySide import QtCore, QtGui
+        
+        from PySide.QtGui import QKeySequence, QTextCursor
+        from PySide.QtCore import Qt
