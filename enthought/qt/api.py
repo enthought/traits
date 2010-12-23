@@ -21,18 +21,24 @@ if ETSConfig.toolkit == 'qt4':
         import sip
         sip.setapi('QString', 2)
         
-        from PyQt4 import QtCore, QtGui, QtSvg
+        from PyQt4 import QtCore, QtGui, QtSvg, QtWebKit
         from PyQt4.Qt import QKeySequence, QTextCursor
         from PyQt4.Qt import Qt
+        from PyQt4.Qt import QCoreApplication
         
         from PyQt4.QtCore import pyqtSignal as Signal
         
+        def QVariant(obj=None):
+            return QtCore.QVariant(obj)
+        
     else:
         print "---- using PySide ----"
-        from PySide import QtCore, QtGui, QtSvg
+        from PySide import QtCore, QtGui, QtSvg, QtWebKit
         
         from PySide.QtGui import QKeySequence, QTextCursor
         from PySide.QtCore import Qt
         
-        from PySide.QtCore import Signal
+        from PySide.QtCore import Signal, QCoreApplication
 
+        def QVariant(obj=None):
+            return obj
