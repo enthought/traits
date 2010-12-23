@@ -22,7 +22,7 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
  
-from enthought.traits.ui.wx.ui_editor \
+from enthought.traits.ui.ui_editor \
     import UIEditor
     
 from enthought.traits.ui.basic_editor_factory \
