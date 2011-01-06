@@ -38,6 +38,7 @@ class ETSConfig(object):
         self._toolkit          = None
         self._user_data        = None
         self._enable_toolkit   = None
+        self._kiva_backend     = None
 
         return
 
@@ -227,7 +228,7 @@ class ETSConfig(object):
         if self._enable_toolkit is None:
             self._enable_toolkit = self._initialize_enable_toolkit()
 
-        return self._enable_toolkit
+        return self._enable_toolkit.split('.')[0]
 
 
     def _set_enable_toolkit(self, toolkit):
@@ -248,7 +249,34 @@ class ETSConfig(object):
 
 
     enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
+    
+    def _get_kiva_backend(self):
+        """
+        Property getter for the Kiva backend. The value returned is dependent
+        on the value of the enable_toolkit property. If enable_toolkit specifies
+        a kiva backend using the extended syntax: <enable toolkit>[.<kiva backend>]
+        then the value of the property will be whatever was specified. Otherwise
+        the value will be a reasonable default for the given enable backend.
+        """
+        if self._enable_toolkit is None:
+            raise AttributeError, "The kiva_backend attribute is dependent on enable_toolkit, which has not been set."
+        
+        try:
+            self._kiva_backend = self._enable_toolkit.split('.')[1]
+        except IndexError:
+            # Pick a reasonable default based on the toolkit
+            if self.enable_toolkit == "wx":
+                self._kiva_backend = "quartz" if sys.platform == "darwin" else "agg"
+            elif self.enable_toolkit == "qt4":
+                self._kiva_backend = "agg"
+            elif self.enable_toolkit == "pyglet":
+                self._kiva_backend = "gl"
+            else:
+                self._kiva_backend = "agg"
+        
+        return self._kiva_backend
 
+    kiva_backend = property(_get_kiva_backend)
 
     def _get_user_data(self):
         """
