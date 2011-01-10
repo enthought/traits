@@ -104,36 +104,37 @@ def toolkit ( *toolkits ):
     if _toolkit is not None:
         return _toolkit
 
-    # If a toolkit has already been set for ETSConfig, then check if we can use
-    # it:
     if ETSConfig.toolkit:
-        toolkits = ( ETSConfig.toolkit, )
-    elif len( toolkits ) == 0:
-        toolkits = TraitUIToolkits
-
-    for toolkit_name in toolkits:
-        try:
-            _toolkit = _import_toolkit( toolkit_name )
-
-            # In case we have just decided on a toolkit, tell everybody else:
-            ETSConfig.toolkit = toolkit_name
-
-            return _toolkit
-
-        except (AttributeError, ImportError):
-            pass
+        # If a toolkit has already been set for ETSConfig, then use it:
+        _toolkit = _import_toolkit(ETSConfig.toolkit)
+        return _toolkit
     else:
-        # Try using the null toolkit and printing a warning
-        try:
-            _toolkit = _import_toolkit( 'null' )
-            import warnings
-            warnings.warn( "Unable to import the '%s' backend for traits UI; "
-                           "using the 'null' toolkit instead." % toolkit_name )
-            return _toolkit
+        if len( toolkits ) == 0:
+            toolkits = TraitUIToolkits
 
-        except ImportError:
-            raise TraitError( "Could not find any UI toolkit called '%s'" %
-                              toolkit_name )
+        for toolkit_name in toolkits:
+            try:
+                _toolkit = _import_toolkit( toolkit_name )
+    
+                # In case we have just decided on a toolkit, tell everybody else:
+                ETSConfig.toolkit = toolkit_name
+    
+                return _toolkit
+    
+            except (AttributeError, ImportError):
+                pass
+        else:
+            # Try using the null toolkit and printing a warning
+            try:
+                _toolkit = _import_toolkit( 'null' )
+                import warnings
+                warnings.warn( "Unable to import the '%s' backend for traits UI; "
+                               "using the 'null' toolkit instead." % toolkit_name )
+                return _toolkit
+    
+            except ImportError:
+                raise TraitError( "Could not find any UI toolkit called '%s'" %
+                                  toolkit_name )
 
 #-------------------------------------------------------------------------------
 #  'Toolkit' class (abstract base class):
