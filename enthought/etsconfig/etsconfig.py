@@ -36,9 +36,8 @@ class ETSConfig(object):
         self._application_home = None
         self._company          = None
         self._toolkit          = None
-        self._user_data        = None
-        self._enable_toolkit   = None
         self._kiva_backend     = None
+        self._user_data        = None
 
         return
 
@@ -194,7 +193,7 @@ class ETSConfig(object):
         if self._toolkit is None:
             self._toolkit = self._initialize_toolkit()
 
-        return self._toolkit
+        return self._toolkit.split('.')[0]
 
 
     def _set_toolkit(self, toolkit):
@@ -207,7 +206,8 @@ class ETSConfig(object):
         """
 
         if self._toolkit and self._toolkit != toolkit:
-            raise ValueError, "cannot set toolkit to %s because it has already been set to %s" % (toolkit, self._toolkit)
+            raise ValueError, "cannot set toolkit to %s because it has "\
+                            "already been set to %s" % (toolkit, self._toolkit)
 
         self._toolkit = toolkit
 
@@ -218,33 +218,31 @@ class ETSConfig(object):
 
     def _get_enable_toolkit(self):
         """
+        Deprecated: This property is no longer used.
+        
         Property getter for the Enable backend.  The value returned is, in order
         of preference: the value set by the application; the value passed on
         the command line using the '-toolkit' option; the value specified by
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
-
         """
+        from warnings import warn
+        warn('Use of the enable_toolkit attribute is deprecated.')
 
-        if self._enable_toolkit is None:
-            self._enable_toolkit = self._initialize_enable_toolkit()
-
-        return self._enable_toolkit.split('.')[0]
+        return self.toolkit
 
 
     def _set_enable_toolkit(self, toolkit):
         """
+        Deprecated.
+        
         Property setter for the Enable toolkit.  The toolkit can be set more than
         once, but only if it is the same one each time.  An application that is
         written for a particular toolkit can explicitly set it before any other
         module that gets the value is imported.
-
         """
-
-        if self._enable_toolkit and self._enable_toolkit != toolkit:
-            raise ValueError, "cannot set toolkit to %s because it has already been set to %s" % (toolkit, self._enable_toolkit)
-
-        self._enable_toolkit = toolkit
-
+        from warnings import warn
+        warn('Use of the enable_toolkit attribute is deprecated.')
+        
         return
 
 
@@ -253,26 +251,27 @@ class ETSConfig(object):
     def _get_kiva_backend(self):
         """
         Property getter for the Kiva backend. The value returned is dependent
-        on the value of the enable_toolkit property. If enable_toolkit specifies
-        a kiva backend using the extended syntax: <enable toolkit>[.<kiva backend>]
-        then the value of the property will be whatever was specified. Otherwise
-        the value will be a reasonable default for the given enable backend.
+        on the value of the toolkit property. If toolkit specifies a kiva backend
+        using the extended syntax: <enable toolkit>[.<kiva backend>] then the
+        value of the property will be whatever was specified. Otherwise the
+        value will be a reasonable default for the given enable backend.
         """
-        if self._enable_toolkit is None:
-            raise AttributeError, "The kiva_backend attribute is dependent on enable_toolkit, which has not been set."
+        if self._toolkit is None:
+            raise AttributeError, "The kiva_backend attribute is dependent on toolkit, which has not been set."
         
-        try:
-            self._kiva_backend = self._enable_toolkit.split('.')[1]
-        except IndexError:
-            # Pick a reasonable default based on the toolkit
-            if self.enable_toolkit == "wx":
-                self._kiva_backend = "quartz" if sys.platform == "darwin" else "agg"
-            elif self.enable_toolkit == "qt4":
-                self._kiva_backend = "agg"
-            elif self.enable_toolkit == "pyglet":
-                self._kiva_backend = "gl"
-            else:
-                self._kiva_backend = "agg"
+        if self._kiva_backend is None:
+            try:
+                self._kiva_backend = self._toolkit.split('.')[1]
+            except IndexError:
+                # Pick a reasonable default based on the toolkit
+                if self.toolkit == "wx":
+                    self._kiva_backend = "quartz" if sys.platform == "darwin" else "agg"
+                elif self.toolkit == "qt4":
+                    self._kiva_backend = "agg"
+                elif self.toolkit == "pyglet":
+                    self._kiva_backend = "gl"
+                else:
+                    self._kiva_backend = "agg"
         
         return self._kiva_backend
 
@@ -426,36 +425,6 @@ class ETSConfig(object):
 
         return toolkit
 
-    def _initialize_enable_toolkit(self):
-        """
-        Initializes the enable backend.
-
-        """
-
-        # We handle the command line option even though it doesn't have the
-        # highest precedence because we always want to remove it from the
-        # command line.
-        if '-enable_toolkit' in sys.argv:
-            opt_idx = sys.argv.index('-enable_toolkit')
-
-            try:
-                opt_toolkit = sys.argv[opt_idx + 1]
-            except IndexError:
-                raise ValueError, "the -enable_toolkit command line argument must be followed by a backend name"
-
-            # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 1]
-        else:
-            opt_toolkit = None
-
-        if self._enable_toolkit is not None:
-            backend = self._enable_toolkit
-        elif opt_toolkit is not None:
-            backend = opt_backend
-        else:
-            backend = os.environ.get('ENABLE_TOOLKIT', '')
-
-        return backend
 
     def _initialize_user_data(self):
         """
