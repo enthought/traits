@@ -3889,8 +3889,13 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 break;
                 
             case 8:  /* Perform 'slow' validate check: */
-                return PyObject_CallMethod( PyTuple_GET_ITEM( type_info, 1 ), 
+                result = PyObject_CallMethod( PyTuple_GET_ITEM( type_info, 1 ), 
                                   "slow_validate", "(OOO)", obj, name, value );
+                if ( result != NULL )
+                    return result;
+
+                PyErr_Clear();
+                break;
                 
             case 9:  /* Tuple item check: */
                 result = validate_trait_tuple_check( 

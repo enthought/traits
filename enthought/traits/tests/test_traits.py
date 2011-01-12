@@ -750,6 +750,8 @@ class complex_value(HasTraits):
     num3 = Trait(1, TraitRange(1, 5),
                      TraitPrefixMap({ 'one':   1, 'two':  2, 'three': 3,
                                        'four': 4, 'five': 5 }))
+    num4 = Trait(1, Trait(1, TraitRange(1, 3), TraitRange(-3, -1)), 10)
+    num5 = Trait(1, 10, Trait(1, TraitRange(1, 3), TraitRange(-3, -1)))
 
 class test_complex_value(test_base2):
 
@@ -762,6 +764,18 @@ class test_complex_value(test_base2):
             [ 0, 6, -6, '0', '6', '-6', 0.0, 6.0, -6.0, [ 1 ],(1,),
               { 1: 1 }, None ],
             [ 1, 2, 3, 4, 5, -1, -2, -3, -4, -5 ])
+
+    def test_enum_exceptions(self):
+        """ Check that enumerated values can be combined with nested TraitCompound handlers.
+        """
+        self.check_values('num4', 1,
+            [1,2,3,-3,-2,-1, 10],
+            [0, 4, 5, -5, -4, 11],
+        )
+        self.check_values('num5', 1,
+            [1,2,3,-3,-2,-1, 10],
+            [0, 4, 5, -5, -4, 11],
+        )
 
 ##     def check_num2(self):
 ##         self.check_values('num2', 1,
