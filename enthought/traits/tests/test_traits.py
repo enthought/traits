@@ -22,7 +22,7 @@ import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits, Int,
     Long, Trait, TraitError, TraitList, TraitPrefixList, TraitPrefixMap, 
-    TraitRange)
+    TraitRange, Tuple)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -741,6 +741,11 @@ class DelegateTests(unittest.TestCase):
 #  Complex(i.e. 'composite') Traits tests:
 #-------------------------------------------------------------------------------
 
+# Make a TraitCompound handler that does not have a fast_validate so we can
+# check for a particular regression.
+slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
+del slow.handler.fast_validate
+
 class complex_value(HasTraits):
 
     # Trait definitions:
@@ -750,8 +755,8 @@ class complex_value(HasTraits):
     num3 = Trait(1, TraitRange(1, 5),
                      TraitPrefixMap({ 'one':   1, 'two':  2, 'three': 3,
                                        'four': 4, 'five': 5 }))
-    num4 = Trait(1, Trait(1, TraitRange(1, 3), TraitRange(-3, -1)), 10)
-    num5 = Trait(1, 10, Trait(1, TraitRange(1, 3), TraitRange(-3, -1)))
+    num4 = Trait(1, Trait(1, Tuple, slow), 10)
+    num5 = Trait(1, 10, Trait(1, Tuple, slow))
 
 class test_complex_value(test_base2):
 
@@ -769,11 +774,11 @@ class test_complex_value(test_base2):
         """ Check that enumerated values can be combined with nested TraitCompound handlers.
         """
         self.check_values('num4', 1,
-            [1,2,3,-3,-2,-1, 10],
+            [1,2,3,-3,-2,-1, 10, ()],
             [0, 4, 5, -5, -4, 11],
         )
         self.check_values('num5', 1,
-            [1,2,3,-3,-2,-1, 10],
+            [1,2,3,-3,-2,-1, 10, ()],
             [0, 4, 5, -5, -4, 11],
         )
 
