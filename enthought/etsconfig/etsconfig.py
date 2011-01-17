@@ -265,13 +265,13 @@ class ETSConfig(object):
             except IndexError:
                 # Pick a reasonable default based on the toolkit
                 if self.toolkit == "wx":
-                    self._kiva_backend = "quartz" if sys.platform == "darwin" else "agg"
+                    self._kiva_backend = "quartz" if sys.platform == "darwin" else "image"
                 elif self.toolkit == "qt4":
-                    self._kiva_backend = "agg"
+                    self._kiva_backend = "image"
                 elif self.toolkit == "pyglet":
                     self._kiva_backend = "gl"
                 else:
-                    self._kiva_backend = "agg"
+                    self._kiva_backend = "image"
         
         return self._kiva_backend
 
