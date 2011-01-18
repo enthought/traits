@@ -21,7 +21,7 @@ if ETSConfig.toolkit == 'qt4':
         import sip
         sip.setapi('QString', 2)
         
-        from PyQt4 import QtCore, QtGui, QtSvg, QtWebKit
+        from PyQt4 import QtCore, QtGui, QtOpenGL, QtSvg, QtWebKit
         from PyQt4.Qt import QKeySequence, QTextCursor
         from PyQt4.Qt import Qt
         from PyQt4.Qt import QCoreApplication
@@ -33,7 +33,7 @@ if ETSConfig.toolkit == 'qt4':
         
     else:
         print "---- using PySide ----"
-        from PySide import QtCore, QtGui, QtSvg, QtWebKit
+        from PySide import QtCore, QtGui, QtOpenGL, QtSvg, QtWebKit
         
         from PySide.QtGui import QKeySequence, QTextCursor
         from PySide.QtCore import Qt
