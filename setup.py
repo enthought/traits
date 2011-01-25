@@ -50,13 +50,7 @@ Traits:
 * `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
 """
 
-import traceback
-import sys
-
 from setuptools import setup, Extension, find_packages
-from setuptools.command.develop import develop
-from distutils.command.build import build as distbuild
-from distutils import log
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
 # from incorrect packages. Ticket #1592
@@ -110,6 +104,7 @@ setup(
     extras_require = INFO['extras_require'],
     ext_modules = [ctraits, speedups],
     include_package_data = True,
+    package_data = {'enthought': ['traits/protocols/_speedups.pyx']},
     install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
@@ -135,4 +130,4 @@ setup(
     url = 'http://code.enthought.com/projects/traits',
     version = INFO['version'],
     zip_safe = False,
-    )
+)
