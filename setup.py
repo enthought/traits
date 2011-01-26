@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (c) 2008-2010 by Enthought, Inc.
+# Copyright (c) 2008-2011 by Enthought, Inc.
 # All rights reserved.
 
 """
@@ -101,7 +101,6 @@ setup(
     description = DOCLINES[1],
     download_url = ('http://www.enthought.com/repo/ETS/Traits-%s.tar.gz' %
                     INFO['version']),
-    extras_require = INFO['extras_require'],
     ext_modules = [ctraits, speedups],
     include_package_data = True,
     package_data = {'enthought': ['traits/protocols/_speedups.pyx']},
