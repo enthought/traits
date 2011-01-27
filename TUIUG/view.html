@@ -1,0 +1,666 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The View and Its Building Blocks &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits UI User Guide" href="index.html" />
+    <link rel="next" title="Customizing a View" href="custom_view.html" />
+    <link rel="prev" title="Introduction" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="custom_view.html" title="Customizing a View"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">The View and Its Building Blocks</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-view-and-its-building-blocks">
+<span id="id1"></span><h1>The View and Its Building Blocks<a class="headerlink" href="#the-view-and-its-building-blocks" title="Permalink to this headline">¶</a></h1>
+<p>A simple way to edit (or simply observe) the attribute values of a
+<a class="reference internal" href="glossary.html#term-hastraits"><em class="xref std std-term">HasTraits</em></a> object in a GUI window is to call the object&#8217;s
+configure_traits() <a class="footnote-reference" href="#id13" id="id2">[3]</a> method. This method constructs and displays a window
+containing editable fields for each of the object&#8217;s <a class="reference internal" href="glossary.html#term-trait-attribute"><em class="xref std std-term">trait attribute</em></a>s.
+For example, the following sample code <a class="footnote-reference" href="#id14" id="id3">[4]</a> defines the SimpleEmployee class,
+creates an object of that class, and constructs and displays a GUI for the
+object:</p>
+<p class="rubric" id="example-1-using-configure-traits"><span id="index-0"></span>Example 1: Using configure_traits()</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># configure_traits.py -- Sample code to demonstrate</span>
+<span class="c">#                        configure_traits()</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">import</span> <span class="nn">enthought.traits.ui</span>
+
+<span class="k">class</span> <span class="nc">SimpleEmployee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="n">employee_number</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
+
+<span class="n">sam</span> <span class="o">=</span> <span class="n">SimpleEmployee</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Unfortunately, the resulting form simply displays the attributes of the object
+<strong>sam</strong> in alphabetical order with little formatting, which is seldom what is
+wanted:</p>
+<div class="figure">
+<img alt="Dialog box showing all attributes of SimpleEmployee in alphabetical order" src="../_images/ui_for_ex1.jpg" />
+<p class="caption">Figure 1: User interface for Example 1</p>
+</div>
+<div class="section" id="the-view-object">
+<span id="index-1"></span><span id="id4"></span><h2>The View Object<a class="headerlink" href="#the-view-object" title="Permalink to this headline">¶</a></h2>
+<p>In order to control the layout of the interface, it is necessary to define a
+View object. A View object is a template for a GUI window or panel. In other
+words, a View specifies the content and appearance of a Traits UI window or
+panel display.</p>
+<p>For example, suppose you want to construct a GUI window that shows only the
+first three attributes of a SimpleEmployee (e.g., because salary is confidential
+and the employee number should not be edited). Furthermore, you would like to
+specify the order in which those fields appear. You can do this by defining a
+View object and passing it to the configure_traits() method:</p>
+<p class="rubric" id="example-2-using-configure-traits-with-a-view-object"><span id="index-2"></span>Example 2: Using configure_traits() with a View object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># configure_traits_view.py -- Sample code to demonstrate</span>
+<span class="c">#                             configure_traits()</span>
+
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
+<span class="kn">import</span> <span class="nn">enthought.traits.ui</span>
+
+<span class="k">class</span> <span class="nc">SimpleEmployee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">employee_number</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
+
+<span class="n">view1</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span><span class="p">),</span>
+             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span>
+             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;department&#39;</span><span class="p">))</span>
+
+<span class="n">sam</span> <span class="o">=</span> <span class="n">SimpleEmployee</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="n">view1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting window has the desired appearance:</p>
+<div class="figure">
+<img alt="User interface showing only First name, Last name, and Department" src="../_images/ui_for_ex2.jpg" />
+<p class="caption">Figure 2: User interface for Example 2</p>
+</div>
+<p>A View object can have a variety of attribute, which are set in the View
+definition, following any Group or Item objects.</p>
+<p>The sections on <a class="reference internal" href="#contents-of-a-view"><em>Contents of a View</em></a> through <a class="reference internal" href="advanced_view.html#advanced-view-concepts"><em>Advanced View Concepts</em></a>
+explore the contents and capabilities of Views. Refer to
+the <em>Traits API Reference</em> for details of the View class.</p>
+<p>Except as noted, all example code uses the configure_traits() method; a detailed
+description of this and other techniques for creating GUI displays from Views
+can be found in <a class="reference internal" href="advanced_view.html#displaying-a-view"><em>Displaying a View</em></a>.</p>
+</div>
+<div class="section" id="contents-of-a-view">
+<span id="index-3"></span><span id="id5"></span><h2>Contents of a View<a class="headerlink" href="#contents-of-a-view" title="Permalink to this headline">¶</a></h2>
+<p>The contents of a View are specified primarily in terms of two basic building
+blocks: Item objects (which, as suggested by Example 2, correspond roughly to
+individual trait attributes), and Group objects. A given View definition can
+contain one or more objects of either of these types, which are specified as
+arguments to the View constructor, as in the case of the three Items in Example
+2.</p>
+<p>The remainder of this chapter describes the Item and Group classes.</p>
+<div class="section" id="the-item-object">
+<span id="index-4"></span><span id="id6"></span><h3>The Item Object<a class="headerlink" href="#the-item-object" title="Permalink to this headline">¶</a></h3>
+<p>The simplest building block of a View is the <a class="reference internal" href="glossary.html#term-item"><em class="xref std std-term">Item</em></a> object. An Item
+specifies a single interface <a class="reference internal" href="glossary.html#term-widget"><em class="xref std std-term">widget</em></a>, usually the display for a single
+trait attribute of a HasTraits object. The content, appearance, and behavior of
+the widget are controlled by means of the Item object&#8217;s attributes, which are
+usually specified as keyword arguments to the Item constructor, as in the case
+of <em>name</em> in Example 2.</p>
+<p>The remainder of this section describes the attributes of the Item object,
+grouped by categories of functionality. It is not necessary to understand all of
+these attributes in order to create useful Items; many of them can usually be
+left unspecified, as their default values are adequate for most purposes.
+Indeed, as demonstrated by earlier examples, simply specifying the name of the
+trait attribute to be displayed is often enough to produce a usable result.</p>
+<p>The following table lists the attributes of the Item class, organized by
+functional categories. Refer to the <em>Traits API Reference</em> for details on the
+Item class.</p>
+<span class="target" id="index-5"></span><span class="target" id="index-6"></span><span class="target" id="index-7"></span><span class="target" id="index-8"></span><span class="target" id="index-9"></span><span class="target" id="index-10"></span><span class="target" id="index-11"></span><span class="target" id="index-12"></span><span class="target" id="index-13"></span><span class="target" id="index-14"></span><p class="rubric" id="attributes-of-item-by-category-table"><span id="index-15"></span>Attributes of Item, by category</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="28%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Category</th>
+<th class="head">Attributes</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Content</td>
+<td><ul class="first last simple">
+<li><strong>name</strong></li>
+</ul>
+</td>
+<td>These attributes specify the actual data to
+be displayed by an item. Because an Item is
+essentially a template for displaying a
+single trait, its <strong>name</strong> attribute is
+nearly always specified.</td>
+</tr>
+<tr><td>Display
+format</td>
+<td><ul class="first last simple">
+<li><strong>dock</strong></li>
+<li><strong>emphasized</strong></li>
+<li><strong>export</strong></li>
+<li><strong>height</strong></li>
+<li><strong>image</strong></li>
+<li><strong>item_theme</strong></li>
+<li><strong>label</strong></li>
+<li><strong>label_theme</strong></li>
+<li><strong>padding</strong></li>
+<li><strong>resizable</strong></li>
+<li><strong>show_label</strong></li>
+<li><strong>springy</strong></li>
+<li><strong>width</strong></li>
+</ul>
+</td>
+<td><p class="first">In addition to specifying which trait
+attributes are to be displayed, you might
+need to adjust the format of one or more of
+the resulting widgets.</p>
+<p class="last">If an Item&#8217;s <strong>label</strong> attribute is specified
+but not its name, the value of  <strong>label</strong> is
+displayed as a simple, non-editable string.
+(This feature can be useful for displaying
+comments or instructions in a Traits UI
+window.)</p>
+</td>
+</tr>
+<tr><td>Content
+format</td>
+<td><ul class="first last simple">
+<li><strong>format_str</strong></li>
+<li><strong>format_func</strong></li>
+</ul>
+</td>
+<td>In some cases it can be desirable to apply
+special formatting to a widget&#8217;s contents
+rather than to the widget itself. Examples of
+such formatting might include rounding a
+floating-point value to two decimal places,
+or capitalizing all letter characters in a
+license plate number.</td>
+</tr>
+<tr><td>Widget
+override</td>
+<td><ul class="first last simple">
+<li><strong>editor</strong></li>
+<li><strong>style</strong></li>
+</ul>
+</td>
+<td>These attributes override the widget that is
+automatically selected by Traits UI. These
+options are discussed in
+<a class="reference internal" href="factory_intro.html#introduction-to-trait-editor-factories"><em>Introduction to Trait Editor Factories</em></a>
+and
+<a class="reference internal" href="factories_basic.html#the-predefined-trait-editor-factories"><em>The Predefined Trait Editor Factories</em></a>.</td>
+</tr>
+<tr><td>Visibility
+and status</td>
+<td><ul class="first last simple">
+<li><strong>enabled_when</strong></li>
+<li><strong>visible_when</strong></li>
+<li><strong>defined_when</strong></li>
+<li><strong>has_focus</strong></li>
+</ul>
+</td>
+<td>Use these attributes to create a simple form
+of a dynamic GUI, which alters the display
+in response to changes in the data it
+contains. More sophisticated dynamic behavior
+can be implemented using a custom
+<a class="reference internal" href="glossary.html#term-handler"><em class="xref std std-term">Handler</em></a> see
+<a class="reference internal" href="handler.html#controlling-the-interface-the-handler"><em>Controlling the Interface: the Handler</em></a>
+).</td>
+</tr>
+<tr><td>User help</td>
+<td><ul class="first last simple">
+<li><strong>tooltip</strong></li>
+<li><strong>help</strong></li>
+<li><strong>help_id</strong></li>
+</ul>
+</td>
+<td>These attributes provide guidance to the user
+in using the user interface. If the <strong>help</strong>
+attribute is not defined for an Item, a
+system-generated message is used instead. The
+<strong>help_id</strong> attribute is ignored by the
+default help handler, but can be used by a
+custom help handler.</td>
+</tr>
+<tr><td>Unique
+identifier</td>
+<td><ul class="first last simple">
+<li><strong>id</strong></li>
+</ul>
+</td>
+<td>The <strong>id</strong> attribute is used as a key for
+saving user preferences about the widget. If
+<strong>id</strong> is not specified, the value of the
+<strong>name</strong> attribute is used.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subclasses-of-item">
+<span id="index-16"></span><span id="id7"></span><h3>Subclasses of Item<a class="headerlink" href="#subclasses-of-item" title="Permalink to this headline">¶</a></h3>
+<p>The Traits UI package defines the following subclasses of Item:</p>
+<ul class="simple">
+<li>Label</li>
+<li>Heading</li>
+<li>Spring</li>
+</ul>
+<p>These classes are intended to help with the layout of a Traits UI View, and need
+not have a trait attribute associated with them. See the <em>Traits API Reference</em>
+for details.</p>
+</div>
+<div class="section" id="the-group-object">
+<span id="id8"></span><h3>The Group Object<a class="headerlink" href="#the-group-object" title="Permalink to this headline">¶</a></h3>
+<p>The preceding sections have shown how to construct windows that display a simple
+vertical sequence of widgets using instances of the View and Item classes. For
+more sophisticated interfaces, though, it is often desirable to treat a group of
+data elements as a unit for reasons that might be visual (e.g., placing the
+widgets within a labeled border) or logical (activating or deactivating the
+widgets in response to a single condition, defining group-level help text). In
+Traits UI, such grouping is accomplished by means of the <a class="reference internal" href="glossary.html#term-group"><em class="xref std std-term">Group</em></a> object.</p>
+<p>Consider the following enhancement to Example 2:</p>
+<blockquote>
+pair: configure_traits(); examples
+triple: View; Group; examples</blockquote>
+<p class="rubric" id="example-3-using-configure-traits-with-a-view-and-a-group-object">Example 3: Using configure_traits() with a View and a Group object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># configure_traits_view_group.py -- Sample code to demonstrate</span>
+<span class="c">#                                   configure_traits()</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span>
+<span class="kn">import</span> <span class="nn">enthought.traits.ui</span>
+
+<span class="k">class</span> <span class="nc">SimpleEmployee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="n">employee_number</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
+
+<span class="n">view1</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span><span class="p">),</span>
+                   <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span>
+                   <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;department&#39;</span><span class="p">),</span>
+                   <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;Personnel profile&#39;</span><span class="p">,</span>
+                   <span class="n">show_border</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+
+<span class="n">sam</span> <span class="o">=</span> <span class="n">SimpleEmployee</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="n">view1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The resulting window shows the same widgets as before, but they are now enclosed
+in a visible border with a text label:</p>
+<div class="figure">
+<img alt="User interface showing three fields enclosed in a border" src="../_images/ui_for_ex3.jpg" />
+<p class="caption">Figure 3: User interface for Example 3</p>
+</div>
+<div class="section" id="content-of-a-group">
+<span id="id9"></span><h4>Content of a Group<a class="headerlink" href="#content-of-a-group" title="Permalink to this headline">¶</a></h4>
+<p>The content of a Group object is specified exactly like that of a View object.
+In other words, one or more Item or Group objects are given as arguments to the
+Group constructor, e.g., the three Items in Example 3. <a class="footnote-reference" href="#id15" id="id10">[5]</a> The objects
+contained in a Group are called the <em>elements</em> of that Group. Groups can be
+nested to any level.</p>
+</div>
+<div class="section" id="group-attributes">
+<span id="index-17"></span><span id="id11"></span><h4>Group Attributes<a class="headerlink" href="#group-attributes" title="Permalink to this headline">¶</a></h4>
+<p>The following table lists the attributes of the Group class, organized by
+functional categories. As with Item attributes, many of these attributes can
+be left unspecified for any given Group, as the default values usually lead to
+acceptable displays and behavior.</p>
+<p>See the <em>Traits API Reference</em> for details of the Group class.</p>
+<span class="target" id="index-18"></span><span class="target" id="index-19"></span><span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span><p class="rubric" id="attributes-of-group-by-category-table"><span id="index-25"></span>Attributes of Group, by category</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="28%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Category</th>
+<th class="head">Attributes</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Content</td>
+<td><ul class="first last simple">
+<li><strong>object</strong></li>
+<li><strong>content</strong></li>
+</ul>
+</td>
+<td>The <strong>object</strong> attribute references the
+object whose traits are being edited by
+members of the group; by default this is
+&#8216;object&#8217;, but could be another object in the
+current context. The <strong>content</strong> attribute is
+a list of elements in the group.</td>
+</tr>
+<tr><td>Display
+format</td>
+<td><ul class="first last simple">
+<li><strong>columns</strong></li>
+<li><strong>dock</strong></li>
+<li><strong>dock_theme</strong></li>
+<li><strong>export</strong></li>
+<li><strong>group_theme</strong></li>
+<li><strong>image</strong></li>
+<li><strong>item_theme</strong></li>
+<li><strong>label</strong></li>
+<li><strong>label_theme</strong></li>
+<li><strong>layout</strong></li>
+<li><strong>orientation</strong></li>
+<li><strong>padding</strong></li>
+<li><strong>selected</strong></li>
+<li><strong>show_border</strong></li>
+<li><strong>show_labels</strong></li>
+<li><strong>show_left</strong></li>
+<li><strong>springy</strong></li>
+<li><strong>style</strong></li>
+</ul>
+</td>
+<td>These attributes define display options for
+the group as a whole.<span class="target" id="index-26"></span><span class="target" id="index-27"></span><span class="target" id="index-28"></span><span class="target" id="index-29"></span><span class="target" id="index-30"></span></td>
+</tr>
+<tr id="index-31"><td>Visibility
+and status</td>
+<td><ul class="first last simple">
+<li><strong>enabled_when</strong></li>
+<li><strong>visible_when</strong></li>
+<li><strong>defined_when</strong></li>
+</ul>
+</td>
+<td>These attributes work similarly to the
+attributes of the same names on the Item
+class.</td>
+</tr>
+<tr><td>User help</td>
+<td><ul class="first last simple">
+<li><strong>help</strong></li>
+<li><strong>help_id</strong></li>
+</ul>
+</td>
+<td><p class="first">The help text is used by the default help
+handler only if the group is the only
+top-level group for the current View. For
+example, suppose help text is defined for a
+Group called <strong>group1</strong>. The following View
+shows this text in its help window:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">View</span><span class="p">(</span><span class="n">group1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The following two do  not:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">View</span><span class="p">(</span><span class="n">group1</span><span class="p">,</span> <span class="n">group2</span><span class="p">)</span>
+<span class="n">View</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="n">group1</span><span class="p">))</span>
+</pre></div>
+</div>
+<p class="last">The <strong>help_id</strong> attribute is ignored by the
+default help handler, but can be used by a
+custom help handler.</p>
+</td>
+</tr>
+<tr><td>Unique
+identifier</td>
+<td><ul class="first last simple">
+<li><strong>id</strong></li>
+</ul>
+</td>
+<td>The <strong>id</strong> attribute is used as a key for
+saving user preferences about the widget. If
+<strong>id</strong> is not specified, the <strong>id</strong> values
+of the elements of the group are concatenated
+and used as the group identifier.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="subclasses-of-group">
+<span id="index-32"></span><span id="id12"></span><h3>Subclasses of Group<a class="headerlink" href="#subclasses-of-group" title="Permalink to this headline">¶</a></h3>
+<p>The Traits UI package defines the following subclasses of Group, which are
+helpful shorthands for defining certain types of groups. Refer to the <em>Traits
+API Reference</em> for details.</p>
+<p class="rubric" id="subclasses-of-group-table"><span id="index-33"></span>Subclasses of Group</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="37%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Subclass</th>
+<th class="head">Description</th>
+<th class="head">Equivalent To</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>HGroup</td>
+<td>A group whose items are laid
+out horizontally.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='horizontal')</span></tt></td>
+</tr>
+<tr><td>HFlow</td>
+<td>A horizontal group whose items
+&#8220;wrap&#8221; when they exceed the
+available horizontal space.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='horizontal',</span>
+<span class="pre">layout='flow',</span> <span class="pre">show_labels=False)</span></tt></td>
+</tr>
+<tr><td>HSplit</td>
+<td>A horizontal group with
+splitter bars to separate it
+from other groups.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='horizontal',</span>
+<span class="pre">layout='split')</span></tt></td>
+</tr>
+<tr><td>Tabbed</td>
+<td>A group that is shown as a tab
+in a notebook.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='horizontal'</span>
+<span class="pre">layout='tabbed',</span> <span class="pre">springy=True)</span></tt></td>
+</tr>
+<tr><td>VGroup</td>
+<td>A group whose items are laid
+out vertically.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='vertical')</span></tt></td>
+</tr>
+<tr><td>VFlow</td>
+<td>A vertical group whose items
+&#8220;wrap&#8221; when they exceed the
+available vertical space.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='vertical',</span>
+<span class="pre">layout='flow',</span> <span class="pre">show_labels=False)</span></tt></td>
+</tr>
+<tr><td>VFold</td>
+<td>A vertical group in which
+items can be collapsed (i.e.,
+folded) by clicking their
+titles.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='vertical',</span>
+<span class="pre">layout='fold',</span> <span class="pre">show_labels=False)</span></tt></td>
+</tr>
+<tr><td>VGrid</td>
+<td>A vertical group whose items
+are laid out in two columns.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='vertical',</span>
+<span class="pre">columns=2)</span></tt></td>
+</tr>
+<tr><td>VSplit</td>
+<td>A vertical group with splitter
+bars to separate it from other
+groups.</td>
+<td><tt class="samp docutils literal"><span class="pre">Group(orientation='vertical',</span>
+<span class="pre">layout='split')</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[3]</a></td><td>If the code is being run from a program that already has a GUI defined,
+then use edit_traits() instead of configure_traits(). These methods are
+discussed in more detail in Section 4.3.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[4]</a></td><td>All code examples in this guide that include a file name are also
+available as examples in the <tt class="file docutils literal"><span class="pre">tutorials/doc_examples/examples</span></tt>
+subdirectory of the Traits docs directory. You can run them individually,
+or view them in a tutorial program by running:
+<strong class="program">python</strong> <tt class="file docutils literal"><em><span class="pre">Traits_dir</span></em><span class="pre">/tutorials/tutor.py</span></tt> <tt class="file docutils literal"><em><span class="pre">Traits_dir</span></em><span class="pre">/docs/tutorials/doc_examples</span></tt></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id15" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id10">[5]</a></td><td>As with Views, it is possible for a Group to contain objects of more than
+one type, but it is not recommended.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The View and Its Building Blocks</a><ul>
+<li><a class="reference internal" href="#the-view-object">The View Object</a></li>
+<li><a class="reference internal" href="#contents-of-a-view">Contents of a View</a><ul>
+<li><a class="reference internal" href="#the-item-object">The Item Object</a></li>
+<li><a class="reference internal" href="#subclasses-of-item">Subclasses of Item</a></li>
+<li><a class="reference internal" href="#the-group-object">The Group Object</a><ul>
+<li><a class="reference internal" href="#content-of-a-group">Content of a Group</a></li>
+<li><a class="reference internal" href="#group-attributes">Group Attributes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#subclasses-of-group">Subclasses of Group</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="custom_view.html"
+                        title="next chapter">Customizing a View</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/TUIUG/view.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="custom_view.html" title="Customizing a View"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">The View and Its Building Blocks</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

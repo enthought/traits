@@ -1,0 +1,1157 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced Topics &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits 3 User Manual" href="index.html" />
+    <link rel="next" title="Traits 3 Tutorials" href="../tutorials/index.html" />
+    <link rel="prev" title="Custom Traits" href="custom.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../tutorials/index.html" title="Traits 3 Tutorials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="custom.html" title="Custom Traits"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits 3 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Advanced Topics</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="advanced-topics">
+<span id="id1"></span><h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
+<p>The preceding sections provide enough information for you to use traits for
+manifestly-typed attributes, with initialization and validation. This section
+describes the advanced features of the Traits package</p>
+<div class="section" id="initialization-and-validation-revisited">
+<span id="id2"></span><h2>Initialization and Validation Revisited<a class="headerlink" href="#initialization-and-validation-revisited" title="Permalink to this headline">¶</a></h2>
+<p>The following sections present advanced topics related to the initialization and
+validation features of the Traits package.</p>
+<ul class="simple">
+<li>Dynamic initialization</li>
+<li>Overriding default values</li>
+<li>Reusing trait definitions</li>
+<li>Trait attribute definition strategies</li>
+<li>Type-checked methods</li>
+</ul>
+<div class="section" id="dynamic-initialization">
+<span id="index-0"></span><span id="id3"></span><h3>Dynamic Initialization<a class="headerlink" href="#dynamic-initialization" title="Permalink to this headline">¶</a></h3>
+<p>When you define trait attributes using predefined traits, the Trait() factory
+function or trait handlers, you typically specify their default values
+statically. You can also define a method that dynamically initializes a trait
+attribute the first time that the attribute value is accessed. To do this, you
+define a method on the same class as the trait attribute, with a name based on
+the name of the trait attribute:</p>
+<span class="target" id="index-1"></span><dl class="method">
+<dt id="_name_default">
+<tt class="descname">_name_default</tt><big>(</big><big>)</big><a class="headerlink" href="#_name_default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This method initializes the <em>name</em> trait attribute, returning its initial value.
+The method overrides any default value specified in the trait definition.</p>
+<p id="index-2">It is also possible to define a dynamic method for the default value in a trait
+type subclass (get_default_value()). However, however, using a
+_<em>name</em>_default()  method avoids the overhead of subclassing a trait.</p>
+<span class="target" id="index-3"></span></div>
+<div class="section" id="overriding-default-values-in-a-subclass">
+<span id="index-4"></span><span id="id4"></span><h3>Overriding Default Values in a Subclass<a class="headerlink" href="#overriding-default-values-in-a-subclass" title="Permalink to this headline">¶</a></h3>
+<p>Often, a subclass must override a trait attribute in a parent class by providing
+a different default value. You can specify a new default value without
+completely re-specifying the trait definition for the attribute. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># override_default.py -- Example of overriding a default value for</span>
+<span class="c">#                        a trait attribute in a subclass</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary_grade</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Manager</span><span class="p">(</span><span class="n">Employee</span><span class="p">):</span>
+    <span class="n">salary_grade</span> <span class="o">=</span> <span class="mi">5</span>
+</pre></div>
+</div>
+<p>In this example, the <strong>salary_grade</strong> of the Employee class is a range from 1 to
+10, with a default value of 1. In the Manager subclass, the default value of
+<strong>salary_grade</strong> is 5, but it is still a range as defined in the Employee class.</p>
+</div>
+<div class="section" id="reusing-trait-definitions">
+<span id="index-5"></span><span id="id5"></span><h3>Reusing Trait Definitions<a class="headerlink" href="#reusing-trait-definitions" title="Permalink to this headline">¶</a></h3>
+<p>As mentioned in <a class="reference internal" href="defining.html#defining-traits-initialization-and-validation"><em>Defining Traits: Initialization and Validation</em></a>, in most
+cases, traits are defined in-line in attribute definitions, but they can also be
+defined independently. A trait definition only describes the characteristics of
+a trait, and not the current value of a trait attribute, so it can be used in
+the definition of any number of attributes. For example:</p>
+<div class="highlight-python"><pre># trait_reuse.py --- Example of reusing trait definitions
+from enthought.traits.api import HasTraits, Range
+
+coefficient = Range(-1.0, 1.0, 0.0))
+
+class quadratic(HasTraits):
+    c2 = coefficient
+    c1 = coefficient
+    c0 = coefficient
+    x  = Range(-100.0, 100.0, 0.0)</pre>
+</div>
+<p>In this example, a trait named <strong>coefficient</strong> is defined externally to the
+class <strong>quadratic</strong>, which references <strong>coefficient</strong> in the definitions of its
+trait attributes <strong>c2</strong>, <strong>c1</strong>, and <strong>c0</strong>. Each of these attributes has a
+unique value, but they all use the same trait definition to determine whether a
+value assigned to them is valid.</p>
+</div>
+<div class="section" id="trait-attribute-definition-strategies">
+<span id="index-6"></span><span id="id6"></span><h3>Trait Attribute Definition Strategies<a class="headerlink" href="#trait-attribute-definition-strategies" title="Permalink to this headline">¶</a></h3>
+<p>In the preceding examples in this guide, all trait attribute definitions have
+bound a single object attribute to a specified trait definition. This is known
+as &#8220;explicit&#8221; trait attribute definition. The Traits package supports other
+strategies for defining trait attributes. You can associate a category of
+attributes with a particular trait definition, using the trait attribute name
+wildcard. You can also dynamically create trait attributes that are specific to
+an instance, using the add_trait() method, rather than defined on a class. These
+strategies are described in the following sections.</p>
+<div class="section" id="trait-attribute-name-wildcard">
+<span id="index-7"></span><span id="id7"></span><h4>Trait Attribute Name Wildcard<a class="headerlink" href="#trait-attribute-name-wildcard" title="Permalink to this headline">¶</a></h4>
+<p>The Traits package enables you to define a category of trait attributes
+associated with a particular trait definition, by including an underscore (&#8216;_&#8217;)
+as a wildcard at the end of a trait attribute name. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># temp_wildcard.py --- Example of using a wildcard with a Trait</span>
+<span class="c">#                      attribute name</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">temp_</span> <span class="o">=</span> <span class="n">Any</span>
+</pre></div>
+</div>
+<p>This example defines a class Person, with a category of attributes that have
+names beginning with <tt class="docutils literal"><span class="pre">temp</span></tt>, and that are defined by the Any trait. Thus, any
+part of the program that uses a Person instance can reference attributes such as
+<strong>tempCount</strong>, <strong>temp_name</strong>, or <strong>temp_whatever</strong>, without having to explicitly
+declare these trait attributes. Each such attribute has None as the initial
+value and allows assignment of any value (because it is based on the Any trait).</p>
+<p>You can even give all object attributes a default trait definition, by
+specifying only the wildcard character for the attribute name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># all_wildcard.py --- Example of trait attribute wildcard rules</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+    <span class="c"># Normal, explicitly defined trait:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c"># By default, let all traits have any value:</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c"># Except for this one, which must be an Int:</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&gt;&gt;&gt; bill = Person()</span>
+<span class="sd">&gt;&gt;&gt; # These assignments should all work:</span>
+<span class="sd">&gt;&gt;&gt; bill.name      = &#39;William&#39;</span>
+<span class="sd">&gt;&gt;&gt; bill.address  = &#39;121 Drury Lane&#39;</span>
+<span class="sd">&gt;&gt;&gt; bill.zip_code = 55212</span>
+<span class="sd">&gt;&gt;&gt; bill.age      = 49</span>
+<span class="sd">&gt;&gt;&gt; # This should generate an error (must be an Int):</span>
+<span class="sd">&gt;&gt;&gt; bill.age = &#39;middle age&#39;</span>
+<span class="sd">Traceback (most recent call last):</span>
+<span class="sd">  File &quot;all_wildcard.py&quot;, line 33, in &lt;module&gt;</span>
+<span class="sd">    bill.age = &#39;middle age&#39;</span>
+<span class="sd">  File &quot;c:\wrk\src\lib\enthought\traits\\trait_handlers.py&quot;, line 163, in error</span>
+<span class="sd">    raise TraitError, ( object, name, self.info(), value )</span>
+<span class="sd">TraitError: The &#39;age&#39; trait of a Person instance must be an integer, but a value</span>
+<span class="sd"> of &#39;middle age&#39; &lt;type &#39;str&#39;&gt; was specified.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>In this case, all Person instance attributes can be created on the fly and are
+defined by the Any trait.</p>
+<div class="section" id="wildcard-rules">
+<span id="index-8"></span><span id="id8"></span><h5>Wildcard Rules<a class="headerlink" href="#wildcard-rules" title="Permalink to this headline">¶</a></h5>
+<p>When using wildcard characters in trait attribute names, the following rules are
+used to determine what trait definition governs an attribute:</p>
+<ol class="arabic simple">
+<li>If an attribute name exactly matches a name without a wildcard character,
+that definition applies.</li>
+<li>Otherwise, if an attribute name matches one or more names with wildcard
+characters, the definition with the longest name applies.</li>
+</ol>
+<p>Note that all possible attribute names are covered by one of these two rules.
+The base HasTraits class implicitly contains the attribute definition
+<tt class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></tt>. This rule guarantees that, by default, all attributes have
+standard Python language semantics.</p>
+<p>These rules are demonstrated by the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># wildcard_rules.py -- Example of trait attribute wildcard rules</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Python</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">temp_count</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">temp_</span>      <span class="o">=</span> <span class="n">Any</span>
+    <span class="n">_</span>          <span class="o">=</span> <span class="n">Python</span>
+</pre></div>
+</div>
+<p>In this example, the Person class has a <strong>temp_count</strong> attribute, which must be
+an integer and which has an initial value of -1. Any other attribute with a name
+starting with <tt class="docutils literal"><span class="pre">temp</span></tt> has an initial value of None and allows any value to be
+assigned. All other object attributes behave like normal Python attributes
+(i.e., they allow any value to be assigned, but they must have a value assigned
+to them before their first reference).</p>
+</div>
+<div class="section" id="disallow-object">
+<span id="index-9"></span><span id="id9"></span><h5>Disallow Object<a class="headerlink" href="#disallow-object" title="Permalink to this headline">¶</a></h5>
+<p>The singleton object Disallow can be used with wildcards to disallow all
+attributes that are not explicitly defined. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># disallow.py --- Example of using Disallow with wildcards</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> \
+    <span class="n">Disallow</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span>   <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">age</span>    <span class="o">=</span> <span class="n">Int</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
+    <span class="n">_</span>      <span class="o">=</span> <span class="n">Disallow</span>
+</pre></div>
+</div>
+<p>In this example, a Person instance has three trait attributes:</p>
+<ul class="simple">
+<li><strong>name</strong>: Must be a string; its initial value is &#8216;&#8217;.</li>
+<li><strong>age</strong>: Must be an integer; its initial value is 0.</li>
+<li><strong>weight</strong>: Must be a float; its initial value is 0.0.</li>
+</ul>
+<p>All other object attributes are explicitly disallowed. That is, any attempt to
+read or set any object attribute other than <strong>name</strong>, <strong>age</strong>, or <strong>weight</strong>
+causes an exception.</p>
+</div>
+<div class="section" id="hastraits-subclasses">
+<span id="index-10"></span><span id="id10"></span><h5>HasTraits Subclasses<a class="headerlink" href="#hastraits-subclasses" title="Permalink to this headline">¶</a></h5>
+<p>Because the HasTraits class implicitly contains the attribute definition
+<tt class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></tt>, subclasses of HasTraits by default have very standard Python
+attribute behavior for any attribute not explicitly defined as a trait
+attribute. However, the wildcard trait attribute definition rules make it easy
+to create subclasses of HasTraits with very non-standard attribute behavior. Two
+such subclasses are predefined in the Traits package: HasStrictTraits and
+HasPrivateTraits.</p>
+</div>
+<div class="section" id="hasstricttraits">
+<span id="index-11"></span><span id="id11"></span><h5>HasStrictTraits<a class="headerlink" href="#hasstricttraits" title="Permalink to this headline">¶</a></h5>
+<p>This class guarantees that accessing any object attribute that does not have an
+explicit or wildcard trait definition results in an exception. This can be
+useful in cases where a more rigorous software engineering approach is employed
+than is typical for Python programs. It also helps prevent typos and spelling
+mistakes in attribute names from going unnoticed; a misspelled attribute name
+typically causes an exception. The definition of HasStrictTraits is the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">HasStrictTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+      <span class="n">_</span> <span class="o">=</span> <span class="n">Disallow</span>
+</pre></div>
+</div>
+<p>HasStrictTraits can be used to create type-checked data structures, as in the
+following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TreeNode</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="n">This</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">This</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">Str</span>
+</pre></div>
+</div>
+<p>This example defines a TreeNode class that has three attributes: <strong>left</strong>,
+<strong>right</strong>, and <strong>value</strong>. The <strong>left</strong> and <strong>right</strong> attributes can only be
+references to other instances of TreeNode (or subclasses), while the <strong>value</strong>
+attribute must be a string. Attempting to set other types of values generates an
+exception, as does attempting to set an attribute that is not one of the three
+defined attributes. In essence, TreeNode behaves like a type-checked data
+structure.</p>
+</div>
+<div class="section" id="hasprivatetraits">
+<span id="index-12"></span><span id="id12"></span><h5>HasPrivateTraits<a class="headerlink" href="#hasprivatetraits" title="Permalink to this headline">¶</a></h5>
+<p>This class is similar to HasStrictTraits, but allows attributes beginning with
+&#8216;_&#8217; to have an initial value of None, and to not be type-checked. This is useful
+in cases where a class needs private attributes, which are not part of the
+class&#8217;s public API, to keep track of internal object state. Such attributes do
+not need to be type-checked because they are only manipulated by the (presumably
+correct) methods of the class itself. The definition of HasPrivateTraits is the
+following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">HasPrivateTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+      <span class="n">__</span> <span class="o">=</span> <span class="n">Any</span>
+      <span class="n">_</span>  <span class="o">=</span> <span class="n">Disallow</span>
+</pre></div>
+</div>
+<p>These subclasses of HasTraits are provided as a convenience, and their use is
+completely optional. However, they do illustrate how easy it is to create
+subclasses with customized default attribute behavior if desired.</p>
+</div>
+<div class="section" id="per-object-trait-attributes">
+<span id="index-13"></span><span id="id13"></span><h5>Per-Object Trait Attributes<a class="headerlink" href="#per-object-trait-attributes" title="Permalink to this headline">¶</a></h5>
+<p>The Traits package allows you to define dynamic trait attributes that are
+object-, rather than class-, specific. This is accomplished using the
+add_trait() method of the HasTraits class:</p>
+<dl class="method">
+<dt id="add_trait">
+<tt class="descname">add_trait</tt><big>(</big><em>name</em>, <em>trait</em><big>)</big><a class="headerlink" href="#add_trait" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p id="index-14">For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># object_trait_attrs.py --- Example of per-object trait attributes</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
+
+<span class="k">class</span> <span class="nc">GUISlider</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;Value&#39;</span><span class="p">,</span>
+                 <span class="n">trait</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">initial</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="n">HasTraits</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">min</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
+                <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">,</span> <span class="nb">min</span>
+            <span class="k">if</span> <span class="n">initial</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">initial</span> <span class="o">=</span> <span class="nb">min</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">min</span> <span class="o">&lt;=</span> <span class="n">initial</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">):</span>
+                <span class="n">initial</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">][</span>
+                            <span class="nb">abs</span><span class="p">(</span><span class="n">initial</span> <span class="o">-</span> <span class="nb">min</span><span class="p">)</span> <span class="o">&gt;</span>
+                            <span class="nb">abs</span><span class="p">(</span><span class="n">initial</span> <span class="o">-</span> <span class="nb">max</span><span class="p">)]</span>
+            <span class="n">trait</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">initial</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">trait</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example creates a GUISlider class, whose __init__() method can accept a
+string label and either a trait definition or minimum, maximum, and initial
+values. If no trait definition is specified, one is constructed based on the
+<strong>max</strong> and <strong>min</strong> values. A trait attribute whose name is the value of label
+is added to the object, using the trait definition (whether specified or
+constructed). Thus, the label trait attribute on the GUISlider object is
+determined by the calling code, and added in the __init__() method using
+add_trait().</p>
+<p>You can require that add_trait() must be used in order to add attributes to a
+class, by deriving the class from HasStrictTraits (see <a class="reference internal" href="#hasstricttraits"><em>HasStrictTraits</em></a>).
+When a class inherits from HasStrictTraits, the program cannot create a new
+attribute (either a trait attribute or a regular attribute) simply by assigning
+to it, as is normally the case in Python. In this case, add_trait() is the only
+way to create a new attribute for the class outside of the class definition.</p>
+</div>
+</div>
+</div>
+<div class="section" id="type-checked-methods">
+<span id="index-15"></span><span id="id14"></span><h3>Type-Checked Methods<a class="headerlink" href="#type-checked-methods" title="Permalink to this headline">¶</a></h3>
+<p>In addition type-checked attributes, the Traits package provides the ability to
+create type-checked methods.</p>
+<p id="index-16">A type-checked method is created by writing a normal method definition within a
+class, preceded by a method() signature function call, as shown in the following
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># type_checked_methods.py --- Example of traits-based method type</span>
+<span class="c">#                             checking</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="n">Color</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Palette</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="n">method</span><span class="p">(</span><span class="n">Color</span><span class="p">,</span> <span class="n">color1</span><span class="o">=</span><span class="n">Color</span><span class="p">,</span> <span class="n">color2</span><span class="o">=</span><span class="n">Color</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">blend</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="n">color1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">color2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">color1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">color2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">color1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">color2</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">color1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">color2</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">)</span>
+
+    <span class="n">method</span><span class="p">(</span><span class="n">Color</span><span class="p">,</span> <span class="n">Color</span><span class="p">,</span> <span class="n">Color</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">max</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span> <span class="n">color1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color2</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                <span class="nb">max</span><span class="p">(</span> <span class="n">color1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color2</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+                <span class="nb">max</span><span class="p">(</span> <span class="n">color1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color2</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                <span class="nb">max</span><span class="p">(</span> <span class="n">color1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">color2</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, Color is defined to be a trait that accepts tuples of four
+integer values. The method() signature function appearing before the definition
+of the blend() method ensures that the two arguments to blend() both match the
+Color trait definition, as does the result returned by blend(). The method
+signature appearing before the max() method does exactly the same thing, but
+uses positional rather than keyword arguments. When</p>
+<p>Use of the method() signature function is optional. Methods not preceded by a
+method() function have standard Python behavior (i.e., no type-checking of
+arguments or results is performed). Also, the method() function can be used in
+classes that do not subclass from HasTraits, because the resulting method
+performs the type checking directly. And finally, when the method() function is
+used, it must directly precede the definition of the method whose type signature
+it defines. (However, white space is allowed.) If it does not, a TraitError is
+raised.</p>
+</div>
+</div>
+<div class="section" id="interfaces">
+<span id="index-17"></span><span id="id15"></span><h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this headline">¶</a></h2>
+<p>Starting in version 3.0, the Traits package supports declaring and implementing
+<em>interfaces</em>. An interface is an abstract data type that defines a set of
+attributes and methods that an object must have to work in a given situation.
+The interface says nothing about what the attributes or methods do, or how they
+do it; it just says that they have to be there. Interfaces in Traits are similar
+to those in Java. They can be used to declare a relationship among classes which
+have similar behavior but do not have an inheritance relationship. Like Traits
+in general, Traits interfaces don&#8217;t make anything possible that is not already
+possible in Python, but they can make relationships more explicit and enforced.
+Python programmers routinely use implicit, informal interfaces (what&#8217;s known as
+&#8220;duck typing&#8221;). Traits allows programmers to define explicit and formal
+interfaces, so that programmers reading the code can more easily understand what
+kinds of objects are actually <em>intended</em> to be used in a given situation.</p>
+<div class="section" id="defining-an-interface">
+<span id="index-18"></span><span id="id16"></span><h3>Defining an Interface<a class="headerlink" href="#defining-an-interface" title="Permalink to this headline">¶</a></h3>
+<p>To define an interface, create a subclass of Interface:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># interface_definition.py -- Example of defining an interface</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Interface</span>
+
+<span class="k">class</span> <span class="nc">IName</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Returns a string which is the name of an object. &#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<p>Interface classes serve primarily has documentation of the methods and
+attributes that the interface defines. In this case, a class that implements the
+IName interface must have a method named get_name(), which takes no arguments
+and returns a string. Do not include any implementation code in an interface
+declaration. However, the Traits package does not actually check to ensure that
+interfaces do not contain implementations.</p>
+<p>By convention, interface names have a capital &#8216;I&#8217; at the beginning of the name.</p>
+</div>
+<div class="section" id="implementing-an-interface">
+<span id="index-19"></span><span id="id17"></span><h3>Implementing an Interface<a class="headerlink" href="#implementing-an-interface" title="Permalink to this headline">¶</a></h3>
+<p>A class declares that it implements one or more interfaces using the
+implements() function, which has the signature:</p>
+<dl class="function">
+<dt id="enthought.traits.has_traits.implements">
+<tt class="descclassname">enthought.traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p id="index-20">Interface names beyond the first one are optional. The call to implements() must
+occur at class scope within the class definition. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># interface_implementation.py -- Example of implementing an</span>
+<span class="c">#                                interface</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">implements</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">implements</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
+
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;John&#39;</span> <span class="p">)</span>
+    <span class="n">last_name</span>  <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;Doe&#39;</span> <span class="p">)</span>
+
+    <span class="c"># Implementation of the &#39;IName&#39; interface:</span>
+    <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Returns the name of an object. &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_name</span> <span class="p">))</span>
+</pre></div>
+</div>
+<p>A class can contain at most one call to implements().</p>
+<p>In version 3.0, you can specify whether the implements() function verifies that
+the class calling it actually implements the interface that it says it does.
+This is determined by the CHECK_INTERFACES variable, which can take one of three
+values:</p>
+<ul class="simple">
+<li>0 (default): Does not check whether classes implement their declared interfaces.</li>
+<li>1: Verifies that classes implement the interfaces they say they do, and logs
+a warning if they don&#8217;t.</li>
+<li>2: Verifies that classes implement the interfaces they say they do, and raises
+an InterfaceError if they don&#8217;t.</li>
+</ul>
+<p>The CHECK_INTERFACES variable must be imported directly from the
+enthought.traits.has_traits module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">enthought.traits.has_traits</span>
+<span class="n">enthought</span><span class="o">.</span><span class="n">traits</span><span class="o">.</span><span class="n">has_traits</span><span class="o">.</span><span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-interfaces">
+<span id="index-21"></span><span id="id18"></span><h3>Using Interfaces<a class="headerlink" href="#using-interfaces" title="Permalink to this headline">¶</a></h3>
+<p>You can use an interface at any place where you would normally use a class name.
+The most common way to use interfaces is with the Instance trait:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Apartment</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">renter</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">william</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&#39;William&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&#39;Adams&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">apt1</span> <span class="o">=</span> <span class="n">Apartment</span><span class="p">(</span> <span class="n">renter</span><span class="o">=</span><span class="n">william</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&#39;Renter is: &#39;</span><span class="p">,</span> <span class="n">apt1</span><span class="o">.</span><span class="n">renter</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+<span class="go">Renter is: William Adams</span>
+</pre></div>
+</div>
+<p>Using an interface class with an Instance trait definition declares that the
+trait accepts only values that implement the specified interface. (If the
+assigned object does not implement the interface, the Traits package may
+automatically substitute an adapter object that implements the specified
+interface. See <a class="reference internal" href="#adaptation"><em>Adaptation</em></a> for more information.)</p>
+</div>
+</div>
+<div class="section" id="adaptation">
+<span id="index-22"></span><span id="id19"></span><h2>Adaptation<a class="headerlink" href="#adaptation" title="Permalink to this headline">¶</a></h2>
+<p>Adaptation is the process of transforming an object that does not implement a
+specific interface (or set of interfaces) into an object that does. In Traits,
+this process is accomplished with <em>adapters</em>, which are special classes whose
+purpose is to adapt objects from one set of interfaces to another. Once adapter
+classes are defined, they are implicitly instantiated whenever they are needed
+to fulfill interface requirements. That is, if an Instance trait requires its
+values to implement interface IFoo, and an object is assigned to it which is of
+class Bar, which does not implement IFoo, then an adapter from Bar to IFoo is
+instantiated (if such an adapter class exists), and the adapter object is
+assigned to the trait. If necessary, a &#8220;chain&#8221; of adapter objects might be
+created, in order to perform the required adaptation.</p>
+<div class="section" id="defining-adapters">
+<span id="index-23"></span><span id="id20"></span><h3>Defining Adapters<a class="headerlink" href="#defining-adapters" title="Permalink to this headline">¶</a></h3>
+<p>The Traits package provides several mechanisms for defining adapter classes:</p>
+<ul class="simple">
+<li>Subclassing Adapter</li>
+<li>Defining an adapter class without subclassing Adapter</li>
+<li>Declaring a class to be an adapter externally to the class</li>
+</ul>
+<div class="section" id="subclassing-adapter">
+<span id="index-24"></span><span id="id21"></span><h4>Subclassing Adapter<a class="headerlink" href="#subclassing-adapter" title="Permalink to this headline">¶</a></h4>
+<p>The Traits package provides an Adapter class as convenience. This class
+streamlines the process of creating a new adapter class. It has a standard
+constructor that does not normally need to be overridden by subclasses. This
+constructor accepts one parameter, which is the object to be adapted, and
+assigns that object to the adaptee trait attribute.</p>
+<p>As an adapter writer, the only members you need to add to a subclass of Adapter
+are:</p>
+<ul class="simple" id="index-25">
+<li>A call to implements() declaring which interfaces the adapter class
+implements on behalf of the object it is adapting.</li>
+<li>A trait attribute named <strong>adaptee</strong> that declares what type of object it is
+an adapter for. Usually, this is an Instance trait.</li>
+<li>Implementations of the interfaces declared in the implements() call. Usually,
+these methods are implemented using appropriate members on the adaptee object.</li>
+</ul>
+<p id="index-26">The following code example shows a definition of a simple adapter class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># simple_adapter.py -- Example of adaptation using Adapter</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">implements</span>
+<span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+<span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
+
+<span class="k">class</span> <span class="nc">PersonINameAdapter</span><span class="p">(</span> <span class="n">Adapter</span> <span class="p">):</span>
+
+    <span class="c"># Declare what interfaces this adapter implements for its</span>
+    <span class="c"># client:</span>
+    <span class="n">implements</span><span class="p">(</span> <span class="n">IName</span> <span class="p">)</span>
+
+    <span class="c"># Declare the type of client it supports:</span>
+    <span class="n">adaptee</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Person</span> <span class="p">)</span>
+
+    <span class="c"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
+    <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">last_name</span> <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-an-adapter-from-scratch">
+<span id="index-27"></span><span id="id22"></span><h4>Creating an Adapter from Scratch<a class="headerlink" href="#creating-an-adapter-from-scratch" title="Permalink to this headline">¶</a></h4>
+<p>You can create an adapter class without subclassing Adapter. If so, you must
+provide the same information and setup that are implicitly provided by Adapter.</p>
+<p>In particular, you must use the adapts() function instead of the implements()
+function, and you must define a constructor that corresponds to the constructor
+of Adapter. The adapts() function defines the class that contains it as an
+adapter class, and declares the set of interfaces that the class implements.</p>
+<p>The signature  of the adapts() function is:</p>
+<dl class="function">
+<dt id="enthought.traits.adapter.adapts">
+<tt class="descclassname">enthought.traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>adaptee_class</em>, <em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This signature is very similar to that of implements(), but adds the class being
+adapted as the first parameter. Interface names beyond the first one are
+optional.</p>
+<p>The constructor for the adapter class must accept one parameter, which is the
+object being adapted, and it must save this reference in an attribute that can
+be used by implementation code.</p>
+<p id="index-28">The following code shows an example of implementing an adapter without
+subclassing Adapter:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># scratch_adapter.py -- Example of writing an adapter from scratch</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">adapts</span>
+<span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+<span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
+
+
+<span class="k">class</span> <span class="nc">PersonINameAdapter</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="c"># Declare what interfaces this adapter implements,</span>
+    <span class="c"># and for what class:</span>
+    <span class="n">adapts</span><span class="p">(</span> <span class="n">Person</span><span class="p">,</span> <span class="n">IName</span> <span class="p">)</span>
+    <span class="c"># Declare the type of client it supports:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Person</span> <span class="p">)</span>
+
+    <span class="c"># Implement the adapter&#39;s constructor:</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">client</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">client</span>
+
+    <span class="c"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
+    <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">last_name</span> <span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="declaring-a-class-as-an-adapter-externally">
+<span id="index-29"></span><span id="id23"></span><h4>Declaring a Class as an Adapter Externally<a class="headerlink" href="#declaring-a-class-as-an-adapter-externally" title="Permalink to this headline">¶</a></h4>
+<p>You can declare a class to be an adapter by calling the adapts() function
+externally to the class definition. The class must provide the same information
+and setup as the Adapter class, just as in the case where adapts() is called
+within the class definition. That is, it must provide a constructor that accepts
+the object being adapted as a parameter, and it must implement the interfaces
+specified in the call to adapts().</p>
+<p>In this case, signature of the adapts() function is:</p>
+<p>As with implements() and the other form of adapts(), interface names beyond the
+first one are optional.</p>
+<p id="index-30">The following code shows this use of the adapts() function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># external_adapter.py -- Example of declaring a class as an</span>
+<span class="c">#                        adapter externally to the class</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">adapts</span>
+<span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+<span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
+
+<span class="k">class</span> <span class="nc">AnotherPersonAdapter</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+
+    <span class="c"># Implement the adapter&#39;s constructor:</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">person</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">person</span> <span class="o">=</span> <span class="n">person</span>
+
+    <span class="c"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
+    <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">person</span><span class="o">.</span><span class="n">last_name</span> <span class="p">))</span>
+
+<span class="n">adapts</span><span class="p">(</span> <span class="n">AnotherPersonAdapter</span><span class="p">,</span> <span class="n">Person</span><span class="p">,</span> <span class="n">IName</span> <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-adapters">
+<span id="index-31"></span><span id="id24"></span><h3>Using Adapters<a class="headerlink" href="#using-adapters" title="Permalink to this headline">¶</a></h3>
+<p>You define adapter classes as described in the preceding sections, but you do
+not explicitly create instances of these classes. The Traits package
+automatically creates them whenever an object is assigned to an interface
+Instance trait, and the object being assigned does not implement the required
+interface. If an adapter class exists that can adapt the specified object to the
+required interface, an instance of the adapter class is created for the object,
+and is assigned as the actual value of the Instance trait.</p>
+<p>In some cases, no single adapter class exists that adapts the object to the
+required interface, but a series of adapter classes exist that together perform
+the required adaptation. In such cases, the necessary set of adapter objects are
+created, and the &#8220;last&#8221; link in the chain, the one that actually implements the
+required interface, is assigned as the trait value. When a situation like this
+arises, the adapted object assigned to the trait always contains the smallest
+set of adapter objects needed to adapt the original object.</p>
+</div>
+<div class="section" id="controlling-adaptation">
+<span id="index-32"></span><span id="id25"></span><h3>Controlling Adaptation<a class="headerlink" href="#controlling-adaptation" title="Permalink to this headline">¶</a></h3>
+<p>Adaptation normally happens automatically when needed, and when appropriate
+adapter classes are available. However, the Instance trait lets you control how
+adaptation is performed, through its <strong>adapt</strong> metadata attribute. The <strong>adapt</strong>
+metadata attribute can have one of the following values:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">no</span></tt>: Adaptation is not allowed for this trait attribute.</li>
+<li><tt class="docutils literal"><span class="pre">yes</span></tt>: Adaptation is allowed. If adaptation fails, an exception is raised.</li>
+<li><tt class="docutils literal"><span class="pre">default</span></tt>: Adaptation is allowed. If adaptation fails, the default value
+for the trait is assigned instead.</li>
+</ul>
+<p id="index-33">The default value for the <strong>adapt</strong> metadata attribute is <tt class="docutils literal"><span class="pre">yes</span></tt>.</p>
+<p id="index-34">The following code is an example of an interface Instance trait attribute that
+uses adapt metadata:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># adapt_metadata.py -- Example of using &#39;adapt&#39; metadata</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
+
+<span class="k">class</span> <span class="nc">Apartment</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="n">renter</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">IName</span><span class="p">,</span> <span class="n">adapt</span><span class="o">=</span><span class="s">&#39;no&#39;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Using this definition, any value assigned to renter must implement the IName
+interface. Otherwise, an exception is raised.</p>
+</div>
+</div>
+<div class="section" id="property-traits">
+<span id="index-35"></span><span id="id26"></span><h2>Property Traits<a class="headerlink" href="#property-traits" title="Permalink to this headline">¶</a></h2>
+<p>The predefined Property() trait factory function defines a Traits-based version
+of a Python property, with &#8220;getter&#8221; and &#8220;setter&#8221; methods. This type of trait
+provides a powerful technique for defining trait attributes whose values depend
+on the state of other object attributes. In particular, this can be very useful
+for creating synthetic trait attributes which are editable or displayable in a
+Trait UI view.</p>
+<div class="section" id="property-factory-function">
+<span id="id27"></span><h3>Property Factory Function<a class="headerlink" href="#property-factory-function" title="Permalink to this headline">¶</a></h3>
+<p>The Property() function has the following signature:</p>
+<dl class="function">
+<dt id="enthought.traits.traits.Property">
+<tt class="descclassname">enthought.traits.traits.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>All parameters are optional, including the <em>fget</em> &#8220;getter&#8221; and <em>fset</em> &#8220;setter&#8221;
+methods. If no parameters are specified, then the trait looks for and uses
+methods on the same class as the attribute that the trait is assigned to, with
+names of the form _get_<em>name</em>() and _set_<em>name</em>(), where <em>name</em> is the
+name of the trait attribute.</p>
+<p>If you specify a trait as either the <em>fget</em> parameter or the <em>trait</em> parameter,
+that trait&#8217;s handler supersedes the <em>handler</em> argument, if any. Because the
+<em>fget</em> parameter accepts either a method or a trait, you can define a Property
+trait by simply passing another trait. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">source</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">Code</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>This line defines a trait whose value is validated by the Code trait, and whose
+getter and setter methods are defined elsewhere on the same class.</p>
+<p>If a Property trait has only a getter function, it acts as read-only; if it has
+only a setter function, it acts as write-only. It can lack a function due to two
+situations:</p>
+<ul class="simple">
+<li>A function with the appropriate name is not defined on the class.</li>
+<li>The <em>force</em> option is True, (which requires the Property() factory function
+to ignore functions on the class) and one of the access functions was not
+specified in the arguments.</li>
+</ul>
+</div>
+<div class="section" id="caching-a-property-value">
+<span id="index-36"></span><span id="id28"></span><h3>Caching a Property Value<a class="headerlink" href="#caching-a-property-value" title="Permalink to this headline">¶</a></h3>
+<p>In some cases, the cost of computing the value of a property trait attribute may
+be very high. In such cases, it is a good idea to cache the most recently
+computed value, and to return it as the property value without recomputing it.
+When a change occurs in one of the attributes on which the cached value depends,
+the cache should be cleared, and the property value should be recomputed the
+next time its value is requested.</p>
+<p id="index-37">One strategy to accomplish caching would be to use a private attribute for the
+cached value, and notification listener methods on the attributes that are
+depended on. However, to simplify the situation, Property traits support a
+&#64;cached_property decorator and <strong>depends_on</strong> metadata. Use &#64;cached_property to
+indicate that a getter method&#8217;s return value should be cached. Use
+<strong>depends_on</strong> to indicate the other attributes that the property depends on.</p>
+<p id="index-38">For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># cached_prop.py -- Example of @cached_property decorator</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
+                                 <span class="n">Property</span><span class="p">,</span> <span class="n">cached_property</span>
+
+<span class="k">class</span> <span class="nc">TestScores</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
+
+    <span class="n">scores</span>  <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Int</span> <span class="p">)</span>
+    <span class="n">average</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s">&#39;scores&#39;</span> <span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">_get_average</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="nb">reduce</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
+                 <span class="o">/</span> <span class="nb">len</span><span class="p">(</span> <span class="n">s</span> <span class="p">))</span>
+</pre></div>
+</div>
+<p>The &#64;cached_property decorator takes no arguments. Place it on the line
+preceding the property&#8217;s getter method.</p>
+<p>The <strong>depends_on</strong> metadata attribute accepts extended trait references, using
+the same syntax as the on_trait_change() method&#8217;s name parameter, described in
+<a class="reference internal" href="notification.html#the-name-parameter"><em>The name Parameter</em></a>. As a result, it can take values that specify
+attributes on referenced objects, multiple attributes, or attributes that are
+selected based on their metadata attributes.</p>
+</div>
+</div>
+<div class="section" id="persistence">
+<span id="index-39"></span><span id="id29"></span><h2>Persistence<a class="headerlink" href="#persistence" title="Permalink to this headline">¶</a></h2>
+<p>In version 3.0, the Traits package provides __getstate__() and __setstate__()
+methods on HasTraits, to implement traits-aware policies for serialization and
+deserialization (i.e., pickling and unpickling).</p>
+<div class="section" id="pickling-hastraits-objects">
+<span id="index-40"></span><span id="id30"></span><h3>Pickling HasTraits Objects<a class="headerlink" href="#pickling-hastraits-objects" title="Permalink to this headline">¶</a></h3>
+<p>Often, you may wish to control for a HasTraits subclass which parts of an
+instance&#8217;s state are saved, and which are discarded. A typical approach is to
+define a __getstate__() method that copies the object&#8217;s __dict__ attribute, and
+deletes those items that should not be saved. This approach works, but can have
+drawbacks, especially related to inheritance.</p>
+<p id="index-41">The HasTraits __getstate__() method uses a more generic approach, which
+developers can customize through the use of traits metadata attributes, often
+without needing to override or define a __getstate__() method in their
+application classes. In particular, the HasTraits __getstate__() method discards
+the values of all trait attributes that have the <strong>transient</strong> metadata
+attribute set to True, and saves all other trait attributes. So, to mark which
+trait values should not be saved, you set <strong>transient</strong> to True in the metadata
+for those trait attributes. The benefits of this approach are that you do not
+need to override __getstate__(), and that the metadata helps document the
+pickling behavior of the class.</p>
+<p id="index-42">For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># transient_metadata.py -- Example of using &#39;transient&#39; metadata</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="k">class</span> <span class="nc">DataBase</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="c"># The name of the data base file:</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
+
+    <span class="c"># The open file handle used to access the data base:</span>
+    <span class="nb">file</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span> <span class="n">transient</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example, the DataBase class&#8217;s file trait is marked as transient because
+it normally contains an open file handle used to access a data base. Since file
+handles typically cannot be pickled and restored, the file handle should not be
+saved as part of the object&#8217;s persistent state. Normally, the file handle would
+be re-opened by application code after the object has been restored from its
+persisted state.</p>
+</div>
+<div class="section" id="predefined-transient-traits">
+<span id="index-43"></span><span id="id31"></span><h3>Predefined Transient Traits<a class="headerlink" href="#predefined-transient-traits" title="Permalink to this headline">¶</a></h3>
+<p>A number of the predefined traits in the Traits package are defined with
+<strong>transient</strong> set to True, so you do not need to explicitly mark them. The
+automatically transient traits are:</p>
+<ul class="simple">
+<li>Constant</li>
+<li>Event</li>
+<li>Read-only and write-only Property traits (See <a class="reference internal" href="#property-factory-function"><em>Property Factory Function</em></a>)</li>
+<li>Shadow attributes for mapped traits (See <a class="reference internal" href="custom.html#mapped-traits"><em>Mapped Traits</em></a>)</li>
+<li>Private attributes of HasPrivateTraits subclasses (See <a class="reference internal" href="#hasprivatetraits"><em>HasPrivateTraits</em></a>)</li>
+<li>Delegate traits that do not have a local value overriding the delegation.
+Delegate traits with a local value are non-transient, i.e., they are
+serialized. (See <a class="reference internal" href="deferring.html#delegatesto"><em>DelegatesTo</em></a>) You can mark a Delegate trait as
+transient if you do not want its value to ever be serialized.</li>
+</ul>
+</div>
+<div class="section" id="overriding-getstate">
+<span id="index-44"></span><span id="id32"></span><h3>Overriding __getstate__()<a class="headerlink" href="#overriding-getstate" title="Permalink to this headline">¶</a></h3>
+<p>In general, try to avoid overriding __getstate__() in subclasses of HasTraits.
+Instead, mark traits that should not be pickled with <tt class="docutils literal"><span class="pre">transient</span> <span class="pre">=</span> <span class="pre">True</span></tt>
+metadata.</p>
+<p>However, in cases where this strategy is insufficient, use the following pattern
+to override __getstate__() to remove items that should not be persisted:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__getstate__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span> <span class="n">XXX</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="s">&#39;bar&#39;</span> <span class="p">]:</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">key</span> <span class="p">):</span>
+            <span class="k">del</span> <span class="n">state</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">state</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="unpickling-hastraits-objects">
+<span id="unpicking-hastraits-objects"></span><span id="index-45"></span><h3>Unpickling HasTraits Objects<a class="headerlink" href="#unpickling-hastraits-objects" title="Permalink to this headline">¶</a></h3>
+<p>The __setstate__() method of HasTraits differs from the default Python behavior
+in one important respect: it explicitly sets the value of each attribute using
+the values from the state dictionary, rather than simply storing or copying the
+entire state dictionary to its <strong>__dict__</strong> attribute. While slower, this
+strategy has the advantage of generating trait change notifications for each
+attribute. These notifications are important for classes that rely on them to
+ensure that their internal object state remains consistent and up to date.</p>
+</div>
+<div class="section" id="overriding-setstate">
+<span id="index-46"></span><span id="id33"></span><h3>Overriding __setstate__()<a class="headerlink" href="#overriding-setstate" title="Permalink to this headline">¶</a></h3>
+<p>You may wish to override the HasTraits __setstate__() method, for example for
+classes that do not need to receive trait change notifications, and where the
+overhead of explicitly setting each attribute is undesirable. You can
+override __setstate__() to update the object&#8217;s __dict__ directly. However, in
+such cases, it is important ensure that trait notifications are properly set
+up so that later change notifications are handled. You can do this in two ways:</p>
+<ul class="simple">
+<li>Call the __setstate__() super method (for example, with an empty state
+dictionary).</li>
+<li>Call the HasTraits class&#8217;s private _init_trait_listeners() method; this
+method has no parameters and does not return a result.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="useful-methods-on-hastraits">
+<span id="index-47"></span><span id="id34"></span><h2>Useful Methods on HasTraits<a class="headerlink" href="#useful-methods-on-hastraits" title="Permalink to this headline">¶</a></h2>
+<p>The HasTraits class defines a number of methods, which are available to any
+class derived from it, i.e., any class that uses trait attributes. This section
+provides examples of a sampling of these methods. Refer to the <em>Traits API
+Reference</em> for a complete list of HasTraits methods.</p>
+<div class="section" id="add-trait">
+<span id="index-48"></span><span id="id35"></span><h3>add_trait()<a class="headerlink" href="#add-trait" title="Permalink to this headline">¶</a></h3>
+<p>This method adds a trait attribute to an object dynamically, after the object
+has been created. For more information, see <a class="reference internal" href="#per-object-trait-attributes"><em>Per-Object Trait Attributes</em></a>.</p>
+</div>
+<div class="section" id="clone-traits">
+<span id="index-49"></span><span id="id36"></span><h3>clone_traits()<a class="headerlink" href="#clone-traits" title="Permalink to this headline">¶</a></h3>
+<p>This method copies trait attributes from one object to another. It can copy
+specified attributes, all explicitly defined trait attributes, or all explicitly
+and implicitly defined trait attributes on the source object.</p>
+<p>This method is useful if you want to allow a user to edit a clone of an object,
+so that changes are made permanent only when the user commits them. In such a
+case, you might clone an object and its trait attributes; allow the user to
+modify the clone; and then re-clone only the trait attributes back to the
+original object when the user commits changes.</p>
+</div>
+<div class="section" id="set">
+<span id="index-50"></span><span id="id37"></span><h3>set()<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h3>
+<p>This method takes a list of keyword-value pairs, and sets the trait attribute
+corresponding to each keyword to the matching value. This shorthand is useful
+when a number of trait attributes need to be set on an object, or a trait
+attribute value needs to be set in a lambda function. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The statement above is equivalent to the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bill&#39;</span>
+<span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-class-trait">
+<span id="index-51"></span><span id="id38"></span><h3>add_class_trait()<a class="headerlink" href="#add-class-trait" title="Permalink to this headline">¶</a></h3>
+<p>The add_class_trait() method is a class method, while the preceding HasTraits
+methods are instance methods. This method is very similar to the add_trait()
+instance method. The difference is that adding a trait attribute by using
+add_class_trait() is the same as having declared the trait as part of the class
+definition. That is, any trait attribute added using add_class_trait() is
+defined in every subsequently-created instance of the class, and in any
+subsequently-defined subclasses of the class. In contrast, the add_trait()
+method adds the specified trait attribute only to the object instance it is
+applied to.</p>
+<p>In addition, if the name of the trait attribute ends with a &#8216;_&#8217;, then a new (or
+replacement) prefix rule is added to the class definition, just as if the prefix
+rule had been specified statically in the class definition. It is not possible
+to define new prefix rules using the add_trait() method.</p>
+<p>One of the main uses of the add_class_trait() method is to add trait attribute
+definitions that could not be defined statically as part of the body of the
+class definition. This occurs, for example, when two classes with trait
+attributes are being defined and each class has a trait attribute that should
+contain a reference to the other. For the class that occurs first in lexical
+order, it is not possible to define the trait attribute that references the
+other class, since the class it needs to refer to has not yet been defined.</p>
+<p id="index-52">This is illustrated in the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># circular_definition.py --- Non-working example of mutually-</span>
+<span class="c">#                            referring classes</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+
+<span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">hatched_from</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Egg</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Egg</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">created_by</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Chicken</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>As it stands, this example will not run because the <strong>hatched_from</strong> attribute
+references the Egg class, which has not yet been defined. Reversing the
+definition order of the classes does not fix the problem, because then the
+<strong>created_by</strong> trait references the Chicken class, which has not yet been defined.</p>
+<p>The problem can be solved using the add_class_trait() method, as shown in the
+following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># add_class_trait.py --- Example of mutually-referring classes</span>
+<span class="c">#                        using add_class_trait()</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+
+<span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">Egg</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">created_by</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Chicken</span><span class="p">)</span>
+
+<span class="n">Chicken</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="s">&#39;hatched_from&#39;</span><span class="p">,</span> <span class="n">Egg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="performance-considerations-of-traits">
+<span id="index-53"></span><span id="id39"></span><h2>Performance Considerations of Traits<a class="headerlink" href="#performance-considerations-of-traits" title="Permalink to this headline">¶</a></h2>
+<p>Using traits can potentially impose a performance penalty on attribute access
+over and above that of normal Python attributes. For the most part, this
+penalty, if any, is small, because the core of the Traits package is written in
+C, just like the Python interpreter. In fact, for some common cases, subclasses
+of HasTraits can actually have the same or better performance than old or new
+style Python classes.</p>
+<p>However, there are a couple of performance-related factors to keep in mind when
+defining classes and attributes using traits:</p>
+<ul class="simple">
+<li>Whether a trait attribute defers its value through delegation or prototyping</li>
+<li>The complexity of a trait definition</li>
+</ul>
+<p>If a trait attribute does not defer its value, the performance penalty can be
+characterized as follows:</p>
+<ul class="simple">
+<li>Getting a value: No penalty (i.e., standard Python attribute access speed or
+faster)</li>
+<li>Setting a value: Depends upon the complexity of the validation tests
+performed by the trait definition. Many of the predefined trait handlers
+defined in the Traits package support fast C-level validation. For most of
+these, the cost of validation is usually negligible. For other trait
+handlers, with Python-level validation methods, the cost can be quite a bit
+higher.</li>
+</ul>
+<p>If a trait attribute does defer its value, the cases to be considered are:</p>
+<ul class="simple">
+<li>Getting the default value: Cost of following the deferral chain. The chain
+is resolved at the C level, and is quite fast, but its cost is linear with
+the number of deferral links that must be followed to find the default value
+for the trait.</li>
+<li>Getting an explicitly assigned value for a prototype: No penalty (i.e.,
+standard Python attribute access speed or faster)</li>
+<li>Getting an explicitly assigned value for a delegate: Cost of following the
+deferral chain.</li>
+<li>Setting: Cost of following the deferral chain plus the cost of performing
+the validation of the new value. The preceding discussions about deferral
+chain following and fast versus slow validation apply here as well.</li>
+</ul>
+<p>In a typical application scenario, where attributes are read more often than
+they are written, and deferral is not used, the impact of using traits is often
+minimal, because the only cost occurs when attributes are assigned and
+validated.</p>
+<p>The worst case scenario occurs when deferral is used heavily, either for
+delegation, or for prototyping to provide attributes with default values that
+are seldom changed. In this case, the cost of frequently following deferral
+chains may impose a measurable performance detriment on the application. Of
+course, this is offset by the convenience and flexibility provided by the
+deferral model. As with any powerful tool, it is best to understand its
+strengths and weaknesses and apply that understanding in determining when use of
+the tool is justified and appropriate.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced Topics</a><ul>
+<li><a class="reference internal" href="#initialization-and-validation-revisited">Initialization and Validation Revisited</a><ul>
+<li><a class="reference internal" href="#dynamic-initialization">Dynamic Initialization</a></li>
+<li><a class="reference internal" href="#overriding-default-values-in-a-subclass">Overriding Default Values in a Subclass</a></li>
+<li><a class="reference internal" href="#reusing-trait-definitions">Reusing Trait Definitions</a></li>
+<li><a class="reference internal" href="#trait-attribute-definition-strategies">Trait Attribute Definition Strategies</a><ul>
+<li><a class="reference internal" href="#trait-attribute-name-wildcard">Trait Attribute Name Wildcard</a><ul>
+<li><a class="reference internal" href="#wildcard-rules">Wildcard Rules</a></li>
+<li><a class="reference internal" href="#disallow-object">Disallow Object</a></li>
+<li><a class="reference internal" href="#hastraits-subclasses">HasTraits Subclasses</a></li>
+<li><a class="reference internal" href="#hasstricttraits">HasStrictTraits</a></li>
+<li><a class="reference internal" href="#hasprivatetraits">HasPrivateTraits</a></li>
+<li><a class="reference internal" href="#per-object-trait-attributes">Per-Object Trait Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-checked-methods">Type-Checked Methods</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#interfaces">Interfaces</a><ul>
+<li><a class="reference internal" href="#defining-an-interface">Defining an Interface</a></li>
+<li><a class="reference internal" href="#implementing-an-interface">Implementing an Interface</a></li>
+<li><a class="reference internal" href="#using-interfaces">Using Interfaces</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#adaptation">Adaptation</a><ul>
+<li><a class="reference internal" href="#defining-adapters">Defining Adapters</a><ul>
+<li><a class="reference internal" href="#subclassing-adapter">Subclassing Adapter</a></li>
+<li><a class="reference internal" href="#creating-an-adapter-from-scratch">Creating an Adapter from Scratch</a></li>
+<li><a class="reference internal" href="#declaring-a-class-as-an-adapter-externally">Declaring a Class as an Adapter Externally</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-adapters">Using Adapters</a></li>
+<li><a class="reference internal" href="#controlling-adaptation">Controlling Adaptation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#property-traits">Property Traits</a><ul>
+<li><a class="reference internal" href="#property-factory-function">Property Factory Function</a></li>
+<li><a class="reference internal" href="#caching-a-property-value">Caching a Property Value</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#persistence">Persistence</a><ul>
+<li><a class="reference internal" href="#pickling-hastraits-objects">Pickling HasTraits Objects</a></li>
+<li><a class="reference internal" href="#predefined-transient-traits">Predefined Transient Traits</a></li>
+<li><a class="reference internal" href="#overriding-getstate">Overriding __getstate__()</a></li>
+<li><a class="reference internal" href="#unpickling-hastraits-objects">Unpickling HasTraits Objects</a></li>
+<li><a class="reference internal" href="#overriding-setstate">Overriding __setstate__()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#useful-methods-on-hastraits">Useful Methods on HasTraits</a><ul>
+<li><a class="reference internal" href="#add-trait">add_trait()</a></li>
+<li><a class="reference internal" href="#clone-traits">clone_traits()</a></li>
+<li><a class="reference internal" href="#set">set()</a></li>
+<li><a class="reference internal" href="#add-class-trait">add_class_trait()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#performance-considerations-of-traits">Performance Considerations of Traits</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="custom.html"
+                        title="previous chapter">Custom Traits</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../tutorials/index.html"
+                        title="next chapter">Traits 3 Tutorials</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/traits_user_manual/advanced.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../tutorials/index.html" title="Traits 3 Tutorials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="custom.html" title="Custom Traits"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits 3 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Advanced Topics</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

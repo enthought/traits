@@ -1,0 +1,194 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tips, Tricks and Gotchas &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits UI User Guide" href="index.html" />
+    <link rel="next" title="Appendix I: Glossary of Terms" href="glossary.html" />
+    <link rel="prev" title="Advanced Trait Editors" href="factories_advanced_extra.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="glossary.html" title="Appendix I: Glossary of Terms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="factories_advanced_extra.html" title="Advanced Trait Editors"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Tips, Tricks and Gotchas</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tips-tricks-and-gotchas">
+<span id="id1"></span><h1>Tips, Tricks and Gotchas<a class="headerlink" href="#tips-tricks-and-gotchas" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="getting-and-setting-model-view-elements">
+<h2>Getting and Setting Model View Elements<a class="headerlink" href="#getting-and-setting-model-view-elements" title="Permalink to this headline">¶</a></h2>
+<p>For some applications, it can be necessary to retrieve or manipulate the View
+objects associated with a given model object. The HasTraits class defines two
+methods for this purpose: trait_views() and trait_view().</p>
+<div class="section" id="trait-views">
+<span id="id2"></span><h3>trait_views()<a class="headerlink" href="#trait-views" title="Permalink to this headline">¶</a></h3>
+<p>The trait_views() method, when called without arguments, returns a list
+containing the names of all Views defined in the object&#8217;s class. For example, if
+<strong>sam</strong> is an object of type SimpleEmployee3 (from
+<a class="reference internal" href="advanced_view.html#example-6-defining-multiple-view-objects-in-a-hastraits-class"><em>Example 6</em></a>),
+the method call <tt class="docutils literal"><span class="pre">sam.trait_views()</span></tt> returns the list <tt class="docutils literal"><span class="pre">['all_view',</span>
+<span class="pre">'traits_view']</span></tt>.</p>
+<p>Alternatively, a call to <tt class="samp docutils literal"><span class="pre">trait_views(</span><em><span class="pre">view_element_type</span></em><span class="pre">)</span></tt> returns a list
+of all named instances of class <em>view_element_type</em> defined in the object&#8217;s
+class. The possible values of <em>view_element_type</em> are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="glossary.html#term-29"><em class="xref std std-term">View</em></a></li>
+<li><a class="reference internal" href="glossary.html#term-group"><em class="xref std std-term">Group</em></a></li>
+<li><a class="reference internal" href="glossary.html#term-item"><em class="xref std std-term">Item</em></a></li>
+<li><a class="reference internal" href="glossary.html#term-viewelement"><em class="xref std std-term">ViewElement</em></a></li>
+<li>ViewSubElement</li>
+</ul>
+<p>Thus calling <tt class="docutils literal"><span class="pre">trait_views(View)</span></tt> is identical to calling <tt class="docutils literal"><span class="pre">trait_views()</span></tt>.
+Note that the call <tt class="docutils literal"><span class="pre">sam.trait_views(Group)</span></tt> returns an empty list, even though
+both of the Views defined in SimpleEmployee contain Groups. This is because only
+<em>named</em> elements are returned by the method.</p>
+<p>Group and Item are both subclasses of ViewSubElement, while ViewSubElement and
+View are both subclasses of ViewElement. Thus, a call to
+<tt class="docutils literal"><span class="pre">trait_views(ViewSubElement)</span></tt> returns a list of named Items and Groups, while
+<tt class="docutils literal"><span class="pre">trait_views(ViewElement)</span></tt> returns a list of named Items, Groups and Views.</p>
+</div>
+<div class="section" id="trait-view">
+<h3>trait_view()<a class="headerlink" href="#trait-view" title="Permalink to this headline">¶</a></h3>
+<p>The trait_view() method is used for three distinct purposes:</p>
+<ul class="simple">
+<li>To retrieve the default View associated with an object</li>
+<li>To retrieve a particular named ViewElement (i.e., Item, Group or View)</li>
+<li>To define a new named ViewElement</li>
+</ul>
+<p>For example:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">obj.trait_view()</span></tt> returns the default View associated with object <em>obj</em>.
+For example, <tt class="docutils literal"><span class="pre">sam.trait_view()</span></tt> returns the View object called
+<tt class="docutils literal"><span class="pre">traits_view</span></tt>. Note that unlike trait_views(), trait_view() returns the
+View itself, not its name.</li>
+<li><tt class="docutils literal"><span class="pre">obj.trait_view('my_view')</span></tt> returns the view element named <tt class="docutils literal"><span class="pre">my_view</span></tt>
+(or None if <tt class="docutils literal"><span class="pre">my_view</span></tt> is not defined).</li>
+<li><tt class="docutils literal"><span class="pre">obj.trait_view('my_group',</span> <span class="pre">Group('a',</span> <span class="pre">'b'))</span></tt> defines a Group with the name
+<tt class="docutils literal"><span class="pre">my_group</span></tt>. Note that although this Group can be retrieved using
+<tt class="docutils literal"><span class="pre">trait_view()</span></tt>, its name does not appear in the list returned by
+<tt class="docutils literal"><span class="pre">traits_view(Group)</span></tt>. This is because <tt class="docutils literal"><span class="pre">my_group</span></tt> is associated with
+<em>obj</em> itself, rather than with its class.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tips, Tricks and Gotchas</a><ul>
+<li><a class="reference internal" href="#getting-and-setting-model-view-elements">Getting and Setting Model View Elements</a><ul>
+<li><a class="reference internal" href="#trait-views">trait_views()</a></li>
+<li><a class="reference internal" href="#trait-view">trait_view()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="factories_advanced_extra.html"
+                        title="previous chapter">Advanced Trait Editors</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="glossary.html"
+                        title="next chapter">Appendix I: Glossary of Terms</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/TUIUG/tips.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="glossary.html" title="Appendix I: Glossary of Terms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="factories_advanced_extra.html" title="Advanced Trait Editors"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Tips, Tricks and Gotchas</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

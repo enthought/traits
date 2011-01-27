@@ -1,0 +1,355 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Traits UI Themes &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits UI User Guide" href="index.html" />
+    <link rel="next" title="Introduction to Trait Editor Factories" href="factory_intro.html" />
+    <link rel="prev" title="Controlling the Interface: the Handler" href="handler.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="factory_intro.html" title="Introduction to Trait Editor Factories"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="handler.html" title="Controlling the Interface: the Handler"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Traits UI Themes</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="traits-ui-themes">
+<span id="id1"></span><h1>Traits UI Themes<a class="headerlink" href="#traits-ui-themes" title="Permalink to this headline">¶</a></h1>
+<p>Beginning in Traits 3.0, Traits UI supports using <em>themes</em> to customize the
+appearance of user interfaces, by applying graphical elements extracted from
+simple images. For example, Figure 8 shows an unthemed Traits user interface.</p>
+<div class="figure">
+<img alt="Dialog box with standard widgets" src="../_images/unthemed_ui.jpg" />
+<p class="caption">Figure 8: Unthemed Traits user interface</p>
+</div>
+<p>Figure 9 shows the same user interface with a theme applied to it.</p>
+<div class="figure">
+<img alt="Dialog box with blue labels and an orange-outlined heading" src="../_images/themed_ui1.jpg" />
+<p class="caption">Figure 9: Themed Traits user interface</p>
+</div>
+<p>Figure 10 shows the same user interface with a different theme applied.</p>
+<div class="figure">
+<img alt="Dialog box with tan background and raised widgets and labels" src="../_images/themed_ui2.jpg" />
+<p class="caption">Figure 10: Theme Traits user interface with alternate theme</p>
+</div>
+<div class="section" id="theme-data">
+<h2>Theme Data<a class="headerlink" href="#theme-data" title="Permalink to this headline">¶</a></h2>
+<p>All of the data used by Traits UI for themes is in the form of simple images, a
+few examples of which are shown in Figure 11:</p>
+<img alt="Gray square with rounded, gray, shaded border" src="../_images/theme_image1.gif" />
+<img alt="Yellow square with sharp-cornered, orange, raised border" src="../_images/theme_image2.gif" />
+<div class="figure">
+<img alt="Green square, raised, with no border" src="../_images/theme_image3.gif" />
+<p class="caption">Figure 11: Theme images</p>
+</div>
+<p>Any type of JPEG or Portable Network Graphics (PNG) file is supported. In
+particular, PNG files with alpha information allow smooth compositing of
+multiple theme images. The first image in Figure 11 is an example of a PNG
+file containing alpha information. That is, the interior of the rectangle is not
+gray, but transparent, with a thin alpha gradient shadow around its edges.</p>
+</div>
+<div class="section" id="themeable-traits-ui-elements">
+<h2>Themeable Traits UI Elements<a class="headerlink" href="#themeable-traits-ui-elements" title="Permalink to this headline">¶</a></h2>
+<p>Theme information can be applied to the following classes of Traits UI objects:</p>
+<ul class="simple">
+<li><a class="reference internal" href="glossary.html#term-group"><em class="xref std std-term">Group</em></a></li>
+<li><a class="reference internal" href="glossary.html#term-item"><em class="xref std std-term">Item</em></a></li>
+<li><a class="reference internal" href="glossary.html#term-29"><em class="xref std std-term">View</em></a></li>
+</ul>
+<p>All of these classes have <strong>item_theme</strong> and <strong>label_theme</strong> attributes, which
+specify the themes for an editor and its label, respectively; the Group class
+also has a <strong>group_theme</strong> attribute, which specifies the theme for the group
+itself. These attributes are defined to be Theme traits, which accept values
+which are either PyFace ImageResource objects, or strings that specify an image
+file to use. In the case of string values, no path information need be included.
+The path to the image file is assumed to be the images subdirectory or
+<tt class="file docutils literal"><span class="pre">images.zip</span></tt> file located in the same directory as the source file
+containing the string. <a class="footnote-reference" href="#id4" id="id2">[13]</a> However, if the string begins with an &#8216;&#64;&#8217;
+(at-sign), the string is assumed to be a reference to an image in the default
+image library provided with PyFace. <a class="footnote-reference" href="#id5" id="id3">[14]</a></p>
+<p>The <strong>item_theme</strong> and <strong>label_theme</strong> attributes are transferred via
+containment. That is, if an Item object has an <strong>item_theme</strong> defined, that
+value is used for the Item object&#8217;s editor. If <strong>item_theme</strong> is not defined on
+the Item object, the <strong>item_theme</strong> value from the containing Group is used, and
+so on up to the <strong>item_theme</strong> value on containing View, if necessary.
+Therefore, it is possible to set the item and label themes for a whole user
+interface at the view level.</p>
+<p>The <strong>group_theme</strong> attribute value is not transferred through containment, but
+nested groups automatically visually inherit the theme of the containing group.
+You can, of course, explicitly specify theme information at each level of a
+nested group hierarchy.</p>
+</div>
+<div class="section" id="adding-themes-to-a-ui">
+<h2>Adding Themes to a UI<a class="headerlink" href="#adding-themes-to-a-ui" title="Permalink to this headline">¶</a></h2>
+<p>To add themes to a Traits user interface, you add the theme-related attributes
+to the View, Group, and Item definitions. Example 10 shows the code for the
+unthemed user interface shown in Figure 8.</p>
+<p class="rubric" id="example-10-traits-ui-without-themes">Example 10: Traits UI without themes</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># unthemed.py -- Example of a Traits UI without themes</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
+<span class="k">class</span> <span class="nc">Test</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+    <span class="n">name</span>   <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">age</span>    <span class="o">=</span> <span class="n">Range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span> <span class="p">)</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span> <span class="s">&#39;Male&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span> <span class="p">)</span>
+
+    <span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
+        <span class="n">Group</span><span class="p">(</span>
+            <span class="n">Label</span><span class="p">(</span> <span class="s">&#39;An Unthemed Label&#39;</span> <span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;name&#39;</span> <span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;age&#39;</span> <span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;weight&#39;</span> <span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;gender&#39;</span> <span class="p">)</span>
+        <span class="p">),</span>
+        <span class="n">title</span>   <span class="o">=</span> <span class="s">&#39;Unthemed Traits UI&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">Test</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>Example 11 shows the code for the user interface shown in Figure 9, which is
+essentially the same as in Example 10, but with theme data added.</p>
+<p class="rubric" id="example-11-traits-ui-with-themese">Example 11: Traits UI with themes</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># themed.py -- Example of a Traits UI with themes</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.themed_text_editor</span> <span class="kn">import</span> \
+    <span class="n">ThemedTextEditor</span>
+
+<span class="k">class</span> <span class="nc">Test</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+
+    <span class="n">name</span>   <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">age</span>    <span class="o">=</span> <span class="n">Range</span><span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span> <span class="p">)</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
+    <span class="n">gender</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span> <span class="s">&#39;Male&#39;</span><span class="p">,</span> <span class="s">&#39;Female&#39;</span> <span class="p">)</span>
+
+    <span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
+        <span class="n">Group</span><span class="p">(</span>
+            <span class="n">Group</span><span class="p">(</span>
+                <span class="n">Label</span><span class="p">(</span> <span class="s">&#39;A Themed Label&#39;</span><span class="p">,</span> <span class="s">&#39;@GF6&#39;</span> <span class="p">),</span>
+                <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;name&#39;</span> <span class="p">),</span>
+                <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;age&#39;</span> <span class="p">),</span>
+                <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;weight&#39;</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="n">ThemedTextEditor</span><span class="p">()),</span>
+                <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;gender&#39;</span> <span class="p">),</span>
+                <span class="n">group_theme</span> <span class="o">=</span> <span class="s">&#39;@GD0&#39;</span>
+            <span class="p">),</span>
+            <span class="n">group_theme</span> <span class="o">=</span> <span class="s">&#39;@G&#39;</span><span class="p">,</span>
+            <span class="n">item_theme</span>  <span class="o">=</span> <span class="s">&#39;@B0B&#39;</span><span class="p">,</span>
+            <span class="n">label_theme</span> <span class="o">=</span> <span class="s">&#39;@BEA&#39;</span>
+        <span class="p">),</span>
+        <span class="n">title</span>   <span class="o">=</span> <span class="s">&#39;Themed Traits UI&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">Test</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</td></tr></table></div>
+<p>This example uses the following theme-related items:</p>
+<ul class="simple">
+<li>The <strong>group_theme</strong>, <strong>item_theme</strong>, and <strong>label_theme</strong> attributes are
+explicitly specified (lines 24 to 26).</li>
+<li>The Label constructor (line 17)takes an optional second argument (in this
+case <a class="reference external" href="mailto:'&#37;&#52;&#48;GF6">'<span>&#64;</span>GF6</a>&#8216;), which specifies the <strong>item_theme</strong> information for the Label
+object. (Label is a subclass of Item.)</li>
+<li>The item for weight (line 20) uses a ThemedTextEditor factory; this isn&#8217;t
+strictly necessary, but illustrates the use of a themed editor factory. For
+more information on themed editor factories, refer to
+<a class="reference internal" href="factories_advanced_extra.html#extra-trait-editor-factories"><em>&#8220;Extra&#8221; Trait Editor Factories</em></a>, and to the <em>Traits API Reference</em>.</li>
+<li>The example contains an extra Group level (line 16), and shows the results of
+two nested <strong>group_theme</strong> values (&#8216;&#64;G&#8217; and <a class="reference external" href="mailto:'&#37;&#52;&#48;GD0">'<span>&#64;</span>GD0</a>&#8216;). The outermost
+<strong>group_theme</strong> value (&#8216;&#64;G&#8217;) specifies the gray background, while the
+innermost <strong>group_theme</strong> value (<a class="reference external" href="mailto:'&#37;&#52;&#48;GD0">'<span>&#64;</span>GD0</a>&#8216;) specifies the light gray rectangle
+drawn over it. This combination demonstrates the automatic compositing of
+themes, since the rounded rectangle is transparent except where the light
+gray band appears.</li>
+<li>The theme data strings use the &#8216;&#64;&#8217; prefix to reference images from the
+default image library.</li>
+</ul>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[13]</a></td><td>This is very similar to the way that PyFace ImageResource objects work
+when no search path is specified.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[14]</a></td><td>PyFace is provided by the enthought.pyface package in the Traits GUI
+project (not to be confused with the Traits UI package, enthought.traits.ui,
+the subject of this document.)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Traits UI Themes</a><ul>
+<li><a class="reference internal" href="#theme-data">Theme Data</a></li>
+<li><a class="reference internal" href="#themeable-traits-ui-elements">Themeable Traits UI Elements</a></li>
+<li><a class="reference internal" href="#adding-themes-to-a-ui">Adding Themes to a UI</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="handler.html"
+                        title="previous chapter">Controlling the Interface: the Handler</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="factory_intro.html"
+                        title="next chapter">Introduction to Trait Editor Factories</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/TUIUG/themes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="factory_intro.html" title="Introduction to Trait Editor Factories"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="handler.html" title="Controlling the Interface: the Handler"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Traits UI Themes</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

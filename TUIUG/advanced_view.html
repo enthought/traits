@@ -1,0 +1,536 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced View Concepts &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits UI User Guide" href="index.html" />
+    <link rel="next" title="Controlling the Interface: the Handler" href="handler.html" />
+    <link rel="prev" title="Customizing a View" href="custom_view.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="handler.html" title="Controlling the Interface: the Handler"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="custom_view.html" title="Customizing a View"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Advanced View Concepts</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="advanced-view-concepts">
+<span id="index-0"></span><span id="id1"></span><h1>Advanced View Concepts<a class="headerlink" href="#advanced-view-concepts" title="Permalink to this headline">¶</a></h1>
+<p>The preceding chapters of this Guide give an overview of how to use the View
+class to quickly construct a simple window for a single HasTraits object. This
+chapter explores a number of more complex techniques that significantly increase
+the power and versatility of the View object.</p>
+<ul class="simple">
+<li><em>Internal Views:</em> Views can be defined as attributes of a HasTraits class;
+one class can have multiple views. View attributes can be inherited by
+subclasses.</li>
+<li><em>External Views:</em> A view can be defined as a module variable, inline as a
+function or method argument, or as an attribute of a <a class="reference internal" href="glossary.html#term-handler"><em class="xref std std-term">Handler</em></a>.</li>
+<li><em>Ways of displaying Views:</em> You can display a View by calling
+configure_traits() or edit_traits() on a HasTraits object, or by calling the
+ui() method on the View object.</li>
+<li><em>View context:</em> You can pass a context to any of the methods for displaying
+views, which is a dictionary of labels and objects. In the default case, this
+dictionary contains only one object, referenced as &#8216;object&#8217;, but you can
+define contexts that contain multiple objects.</li>
+<li><em>Include objects:</em> You can use an Include object as a placeholder for view
+items defined elsewhere.</li>
+</ul>
+<div class="section" id="internal-views">
+<span id="id2"></span><h2>Internal Views<a class="headerlink" href="#internal-views" title="Permalink to this headline">¶</a></h2>
+<p>In the examples thus far, the View objects have been external. That is to say,
+they have been defined outside the model (HasTraits object or objects) that they
+are used to display. This approach is in keeping with the separation of the two
+concepts prescribed by the <a class="reference internal" href="glossary.html#term-mvc"><em class="xref std std-term">MVC</em></a> design pattern.</p>
+<p>There are cases in which it is useful to define a View within a HasTraits class.
+In particular, it can be useful to associate one or more Views with a particular
+type of object so that they can be incorporated into other parts of the
+application with little or no additional programming. Further, a View that is
+defined within a model class is inherited by any subclasses of that class, a
+phenomenon called <em>visual inheritance</em>.</p>
+<div class="section" id="defining-a-default-view">
+<span id="id3"></span><h3>Defining a Default View<a class="headerlink" href="#defining-a-default-view" title="Permalink to this headline">¶</a></h3>
+<p>index:: default view, View; default</p>
+<p>It is easy to define a default view for a HasTraits class: simply create a View
+attribute called <strong>traits_view</strong> for that class. Consider the following
+variation on Example 3:</p>
+<span class="target" id="index-1"></span><p class="rubric" id="example-5-using-configure-traits-with-a-default-view-object"><span id="index-2"></span>Example 5: Using configure_traits() with a default View object</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># default_traits_view.py -- Sample code to demonstrate the use of</span>
+<span class="c">#                           &#39;traits_view&#39;</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span>
+<span class="kn">import</span> <span class="nn">enthought.traits.ui</span>
+
+<span class="k">class</span> <span class="nc">SimpleEmployee2</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="n">employee_number</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
+
+    <span class="n">traits_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span><span class="p">),</span>
+                             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span>
+                             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;department&#39;</span><span class="p">),</span>
+                             <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;Personnel profile&#39;</span><span class="p">,</span>
+                             <span class="n">show_border</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+
+<span class="n">sam</span> <span class="o">=</span> <span class="n">SimpleEmployee2</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In this example, configure_traits() no longer requires a <em>view</em> keyword
+argument; the <strong>traits_view</strong> attribute is used by default, resulting in the
+same display as in Figure 3:</p>
+<div class="figure">
+<img alt="User interface showing three fields enclosed in a border" src="../_images/ui_for_ex3.jpg" />
+<p class="caption">Figure 5: User interface for Example 5</p>
+</div>
+<p>It is not strictly necessary to call this View attribute <strong>traits_view</strong>. If
+exactly one View attribute is defined for a HasTraits class, that View is always
+treated as the default display template for the class. However, if there are
+multiple View attributes for the class (as discussed in the next section), if
+one is named &#8216;traits_view&#8217;, it is always used as the default.</p>
+</div>
+<div class="section" id="defining-multiple-views-within-the-model">
+<span id="index-3"></span><span id="id4"></span><h3>Defining Multiple Views Within the Model<a class="headerlink" href="#defining-multiple-views-within-the-model" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes it is useful to have more than one pre-defined view for a model class.
+In the case of the SimpleEmployee class, one might want to have both a &#8220;public
+information&#8221; view like the one above and an &#8220;all information&#8221; view. One can do
+this by simply adding a second View attribute:</p>
+<p class="rubric" id="example-6-defining-multiple-view-objects-in-a-hastraits-class"><span id="index-4"></span>Example 6: Defining multiple View objects in a HasTraits class</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># multiple_views.py -- Sample code to demonstrate the use of</span>
+<span class="c">#                      multiple views</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span>
+<span class="kn">import</span> <span class="nn">enthought.traits.ui</span>
+
+<span class="k">class</span> <span class="nc">SimpleEmployee3</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">department</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="n">employee_number</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
+
+    <span class="n">traits_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span><span class="p">),</span>
+                             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span>
+                             <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;department&#39;</span><span class="p">),</span>
+                             <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;Personnel profile&#39;</span><span class="p">,</span>
+                             <span class="n">show_border</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+
+    <span class="n">all_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span><span class="n">Group</span><span class="p">(</span><span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;first_name&#39;</span><span class="p">),</span>
+                          <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;last_name&#39;</span><span class="p">),</span>
+                          <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;department&#39;</span><span class="p">),</span>
+                          <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;employee_number&#39;</span><span class="p">),</span>
+                          <span class="n">Item</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;salary&#39;</span><span class="p">),</span>
+                          <span class="n">label</span> <span class="o">=</span> <span class="s">&#39;Personnel database &#39;</span> <span class="o">+</span>
+                                  <span class="s">&#39;entry&#39;</span><span class="p">,</span>
+                          <span class="n">show_border</span> <span class="o">=</span> <span class="bp">True</span><span class="p">))</span>
+
+<span class="n">sam</span> <span class="o">=</span> <span class="n">SimpleEmployee3</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+<span class="n">sam</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="s">&#39;all_view&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p id="index-5">As before, a simple call to configure_traits() for an object of this class
+produces a window based on the default View (<strong>traits_view</strong>). In order to use
+the alternate View, use the same syntax as for an external view, except that the
+View name is specified in single quotes to indicate that it is associated with
+the object rather than being a module-level variable:</p>
+<div class="highlight-python"><pre>configure_traits(view='all_view').</pre>
+</div>
+<p>Note that if more than one View is defined for a model class, you must indicate
+which one is to be used as the default by naming it <tt class="docutils literal"><span class="pre">traits_view</span></tt>. Otherwise,
+Traits UI gives preference to none of them, and instead tries to construct a
+default View, resulting in a simple alphabetized display as described in
+<a class="reference internal" href="view.html#the-view-and-its-building-blocks"><em>The View and Its Building Blocks</em></a>. For this reason, it is usually
+preferable to name a model&#8217;s default View traits_view even if there are no other
+Views; otherwise, simply defining additional Views, even if they are never
+used, can unexpectedly change the behavior of the GUI.</p>
+</div>
+</div>
+<div class="section" id="separating-model-and-view-external-views">
+<span id="index-6"></span><span id="id5"></span><h2>Separating Model and View: External Views<a class="headerlink" href="#separating-model-and-view-external-views" title="Permalink to this headline">¶</a></h2>
+<p>In all the preceding examples in this guide, the concepts of model and view have
+remained closely coupled. In some cases the view has been defined in the model
+class, as in <a class="reference internal" href="#internal-views"><em>Internal Views</em></a>; in other cases the configure_traits() method
+that produces a window from a View has been called from a HasTraits object.
+However, these strategies are simply conveniences; they are not an intrinsic
+part of the relationship between model and view in Traits UI. This section
+begins to explore how the Traits UI package truly supports the separation of
+model and view prescribed by the <a class="reference internal" href="glossary.html#term-mvc"><em class="xref std std-term">MVC</em></a> design pattern.</p>
+<p>An <em>external</em> view is one that is defined outside the model classes. In Traits
+UI, you can define a named View wherever you can define a variable or class
+attribute. <a class="footnote-reference" href="#id17" id="id6">[7]</a> A View can even be defined in-line as a function or method
+argument, for example:</p>
+<div class="highlight-python"><pre>object.configure_traits(view=View(Group(Item(name='a'),
+                                        Item(name='b'),
+                                        Item(name='c')))</pre>
+</div>
+<p>However, this approach is apt to obfuscate the code unless the View is very
+simple.</p>
+<p><a class="reference internal" href="view.html#example-2-using-configure-traits-with-a-view-object"><em>Example 2</em></a> through
+<a class="reference internal" href="custom_view.html#example-4-using-a-view-object-with-buttons"><em>Example 4</em></a> demonstrate
+external Views defined as variables. One advantage of this convention is that
+the variable name provides an easily accessible &#8220;handle&#8221; for re-using the View.
+This technique does not, however, support visual inheritance.</p>
+<p>A powerful alternative is to define a View within the <a class="reference internal" href="glossary.html#term-controller"><em class="xref std std-term">controller</em></a>
+(Handler) class that controls the window for that View. <a class="footnote-reference" href="#id18" id="id7">[8]</a> This technique is
+described in <a class="reference internal" href="handler.html#controlling-the-interface-the-handler"><em>Controlling the Interface: the Handler</em></a>.</p>
+</div>
+<div class="section" id="displaying-a-view">
+<span id="index-7"></span><span id="id8"></span><h2>Displaying a View<a class="headerlink" href="#displaying-a-view" title="Permalink to this headline">¶</a></h2>
+<p>Traits UI provides three methods for creating a window or panel from a View
+object. The first two, configure_traits() and edit_traits(), are defined on the
+HasTraits class, which is a superclass of all Traits-based model classes, as
+well as of Handler and its subclasses. The third method, ui(), is defined on the
+View class itself.</p>
+<div class="section" id="configure-traits">
+<span id="index-8"></span><span id="id9"></span><h3>configure_traits()<a class="headerlink" href="#configure-traits" title="Permalink to this headline">¶</a></h3>
+<p>The configure_traits() method creates a standalone window for a given View
+object, i.e., it does not require an existing GUI to run in. It is therefore
+suitable for building command-line functions, as well as providing an accessible
+tool for the beginning Traits UI programmer.</p>
+<p>The configure_traits() method also provides options for saving
+<a class="reference internal" href="glossary.html#term-trait-attribute"><em class="xref std std-term">trait attribute</em></a> values to and restoring them from a file. Refer to the
+<em>Traits API Reference</em> for details.</p>
+</div>
+<div class="section" id="edit-traits">
+<span id="index-9"></span><span id="id10"></span><h3>edit_traits()<a class="headerlink" href="#edit-traits" title="Permalink to this headline">¶</a></h3>
+<p>The edit_traits() method is very similar to configure_traits(), with two major
+exceptions. First, it is designed to run from within a larger application whose
+GUI is already defined. Second, it does not provide options for saving data to
+and restoring data from a file, as it is assumed that these operations are
+handled elsewhere in the application.</p>
+</div>
+<div class="section" id="ui">
+<span id="index-10"></span><span id="id11"></span><h3>ui()<a class="headerlink" href="#ui" title="Permalink to this headline">¶</a></h3>
+<p>The View object includes a method called ui(), which performs the actual
+generation of the window or panel from the View for both edit_traits() and
+configure_traits(). The ui() method is also available directly through the
+Traits UI API; however, using one of the other two methods is usually
+preferable. <a class="footnote-reference" href="#id19" id="id12">[9]</a></p>
+<p>The ui() method has five keyword parameters:</p>
+<ul class="simple">
+<li><em>kind</em></li>
+<li><em>context</em></li>
+<li><em>handler</em></li>
+<li><em>parent</em></li>
+<li><em>view_elements</em></li>
+</ul>
+<p>The first four are identical in form and function to the corresponding arguments
+of edit_traits(), except that <em>context</em> is not optional; the following section
+explains why.</p>
+<p>The fifth argument, <em>view_elements</em>, is used only in the context of a call to
+ui() from a model object method, i.e., from configure_traits() or edit_traits(),
+Therefore it is irrelevant in the rare cases when ui() is used directly by
+client code. It contains a dictionary of the named <a class="reference internal" href="glossary.html#term-viewelement"><em class="xref std std-term">ViewElement</em></a> objects
+defined for the object whose configure_traits() (or edit_traits()) method was
+called..</p>
+</div>
+</div>
+<div class="section" id="the-view-context">
+<span id="index-11"></span><span id="id13"></span><h2>The View Context<a class="headerlink" href="#the-view-context" title="Permalink to this headline">¶</a></h2>
+<p>All three of the methods described in <a class="reference internal" href="#displaying-a-view"><em>Displaying a View</em></a> have a <em>context</em>
+parameter. This parameter can be a single object or a dictionary of
+string/object pairs; the object or objects are the model objects whose traits
+attributes are to be edited. In general a &#8220;context&#8221; is a Python dictionary whose
+keys are strings; the key strings are used to look up the values. In the case of
+the <em>context</em> parameter to the ui() method, the dictionary values are objects.
+In the special case where only one object is relevant, it can be passed directly
+instead of wrapping it in a dictionary.</p>
+<p>When the ui() method is called from configure_traits() or edit_traits() on a
+HasTraits object, the relevant object is the HasTraits object whose method was
+called. For this reason, you do not need to specify the <em>context</em> argument in
+most calls to configure_traits() or edit_traits(). However, when you call the
+ui() method on a View object, you <em>must</em> specify the <em>context</em> parameter, so
+that the ui() method receives references to the objects whose trait attributes
+you want to modify.</p>
+<p>So, if configure_traits() figures out the relevant context for you, why call
+ui() at all? One answer lies in <em>multi-object Views</em>.</p>
+<div class="section" id="multi-object-views">
+<span id="index-12"></span><span id="id14"></span><h3>Multi-Object Views<a class="headerlink" href="#multi-object-views" title="Permalink to this headline">¶</a></h3>
+<p>A multi-object view is any view whose contents depend on multiple &#8220;independent&#8221;
+model objects, i.e., objects that are not attributes of one another. For
+example, suppose you are building a real estate listing application, and want to
+display a window that shows two properties side by side for a comparison of
+price and features. This is straightforward in Traits UI, as the following
+example shows:</p>
+<span class="target" id="index-13"></span><p class="rubric" id="example-7-using-a-multi-object-view-with-a-context"><span id="index-14"></span>Example 7: Using a multi-object view with a context</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># multi_object_view.py -- Sample code to show multi-object view</span>
+<span class="c">#                         with context</span>
+
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span>
+
+<span class="c"># Sample class</span>
+<span class="k">class</span> <span class="nc">House</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+   <span class="n">address</span> <span class="o">=</span> <span class="n">Str</span>
+   <span class="n">bedrooms</span> <span class="o">=</span> <span class="n">Int</span>
+   <span class="n">pool</span> <span class="o">=</span> <span class="n">Bool</span>
+   <span class="n">price</span> <span class="o">=</span> <span class="n">Int</span>
+
+<span class="c"># View object designed to display two objects of class &#39;House&#39;</span>
+<span class="n">comp_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
+    <span class="n">Group</span><span class="p">(</span>
+        <span class="n">Group</span><span class="p">(</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h1.address&#39;</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h1.bedrooms&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h1.pool&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h1.price&#39;</span><span class="p">),</span>
+            <span class="n">show_border</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">),</span>
+        <span class="n">Group</span><span class="p">(</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h2.address&#39;</span><span class="p">,</span> <span class="n">resizable</span><span class="o">=</span><span class="bp">True</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h2.bedrooms&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h2.pool&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="s">&#39;h2.price&#39;</span><span class="p">),</span>
+            <span class="n">show_border</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">),</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="s">&#39;horizontal&#39;</span>
+    <span class="p">),</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;House Comparison&#39;</span>
+<span class="p">)</span>
+<span class="c"># A pair of houses to demonstrate the View</span>
+<span class="n">house1</span> <span class="o">=</span> <span class="n">House</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s">&#39;4743 Dudley Lane&#39;</span><span class="p">,</span>
+               <span class="n">bedrooms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+               <span class="n">pool</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+               <span class="n">price</span><span class="o">=</span><span class="mi">150000</span><span class="p">)</span>
+<span class="n">house2</span> <span class="o">=</span> <span class="n">House</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s">&#39;11604 Autumn Ridge&#39;</span><span class="p">,</span>
+               <span class="n">bedrooms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+               <span class="n">pool</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+               <span class="n">price</span><span class="o">=</span><span class="mi">200000</span><span class="p">)</span>
+
+<span class="c"># ...And the actual display command</span>
+<span class="n">house1</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">(</span><span class="n">view</span><span class="o">=</span><span class="n">comp_view</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;h1&#39;</span><span class="p">:</span><span class="n">house1</span><span class="p">,</span>
+                                                 <span class="s">&#39;h2&#39;</span><span class="p">:</span><span class="n">house2</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>The resulting window has the desired appearance: <a class="footnote-reference" href="#id20" id="id15">[10]</a></p>
+<div class="figure">
+<img alt="UI showing side-by-side groups." src="../_images/ui_for_ex7.jpg" />
+<p class="caption">Figure 6: User interface for Example 7</p>
+</div>
+<p>For the purposes of this particular example, it makes sense to create a separate
+Group for each model object, and to use two model objects of the same class.
+Note, however, that neither is a requirement.</p>
+<p id="index-15">Notice that the Item definitions in Example 7 use the same type of extended
+trait attribute syntax as is supported for the on_trait_change() dynamic trait
+change notification method. In fact, Item <strong>name</strong> attributes can reference any
+trait attribute that is reachable from an object in the context. This is true
+regardless of whether the context contains a single object or multiple objects.
+For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Item</span><span class="p">(</span><span class="s">&#39;object.axle.chassis.serial_number&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Because an Item can refer only to a single trait, do not use extended trait
+references that refer to multiple traits, since the behavior of such references
+is not defined. Also, avoid extended trait references where one of the
+intermediate objects could be None, because there is no way to obtain a valid
+reference from None.</p>
+<p>Refer to the <em>Traits User Manual</em>, in the chapter on trait notification, for
+details of the extended trait name syntax.</p>
+</div>
+</div>
+<div class="section" id="include-objects">
+<span id="index-16"></span><span id="id16"></span><h2>Include Objects<a class="headerlink" href="#include-objects" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the Item and Group class, a third building block class for Views
+exists in Traits UI: the Include class. For the sake of completeness, this
+section gives a brief description of Include objects and their purpose and
+usage. However, they are not commonly used as of this writing, and should be
+considered unsupported pending redesign.</p>
+<p>In essence, an Include object is a placeholder for a named Group or Item object
+that is specified outside the Group or View in which it appears. For example,
+the following two definitions, taken together, are equivalent to the third:</p>
+<p class="rubric" id="example-8-using-an-include-object"><span id="index-17"></span>Example 8: Using an Include object</p>
+<div class="highlight-python"><pre># This fragment...
+my_view = View(Group(Item('a'),
+                     Item('b')),
+               Include('my_group'))
+
+# ...plus this fragment...
+my_group = Group(Item('c'),
+                 Item('d'),
+                 Item('e'))
+
+#...are equivalent to this:
+my_view = View(Group(Item('a'),
+                     Item('b')),
+               Group(Item('c'),
+                     Item('d'),
+                     Item('e'))</pre>
+</div>
+<p>This opens an interesting possibility when a View is part of a model class: any
+Include objects belonging to that View can be defined differently for different
+instances or subclasses of that class. This technique is called <em>view
+parameterization</em>.</p>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="id17" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[7]</a></td><td>Note that although the definition of a View within a HasTraits class has
+the syntax of a trait attribute definition, the resulting View is not stored
+as an attribute of the class.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id18" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[8]</a></td><td>Assuming there is one; not all GUIs require an explicitly defined
+Handler.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id19" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id12">[9]</a></td><td>One possible exception is the case where a View object is defined as a
+variable (i.e., outside any class) or within a custom Handler, and is
+associated more or less equally with multiple model objects; see
+<a class="reference internal" href="#multi-object-views"><em>Multi-Object Views</em></a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id20" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id15">[10]</a></td><td>If the script were designed to run within an existing GUI, it would make
+sense to replace the last line with
+<tt class="docutils literal"><span class="pre">comp_view.ui(context={'h1':</span> <span class="pre">house1,</span> <span class="pre">'h2':</span> <span class="pre">house2})</span></tt>, since neither object
+particularly dominates the view. However, the examples in this Guide are
+designed to be fully executable from the Python command line, which is why
+configure_traits() was used instead.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced View Concepts</a><ul>
+<li><a class="reference internal" href="#internal-views">Internal Views</a><ul>
+<li><a class="reference internal" href="#defining-a-default-view">Defining a Default View</a></li>
+<li><a class="reference internal" href="#defining-multiple-views-within-the-model">Defining Multiple Views Within the Model</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#separating-model-and-view-external-views">Separating Model and View: External Views</a></li>
+<li><a class="reference internal" href="#displaying-a-view">Displaying a View</a><ul>
+<li><a class="reference internal" href="#configure-traits">configure_traits()</a></li>
+<li><a class="reference internal" href="#edit-traits">edit_traits()</a></li>
+<li><a class="reference internal" href="#ui">ui()</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-view-context">The View Context</a><ul>
+<li><a class="reference internal" href="#multi-object-views">Multi-Object Views</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#include-objects">Include Objects</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="custom_view.html"
+                        title="previous chapter">Customizing a View</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="handler.html"
+                        title="next chapter">Controlling the Interface: the Handler</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/TUIUG/advanced_view.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="handler.html" title="Controlling the Interface: the Handler"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="custom_view.html" title="Customizing a View"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Advanced View Concepts</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

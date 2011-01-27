@@ -1,0 +1,261 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Traits 3 User Manual &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="next" title="Traits 3 User Manual" href="front.html" />
+    <link rel="prev" title="Traits Documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="front.html" title="Traits 3 User Manual"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Traits Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Traits 3 User Manual</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="traits-3-user-manual">
+<h1>Traits 3 User Manual<a class="headerlink" href="#traits-3-user-manual" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="front.html">Traits 3 User Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#what-are-traits">What Are Traits?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#background">Background</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="defining.html">Defining Traits: Initialization and Validation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="defining.html#predefined-traits">Predefined Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="defining.html#predefined-traits-for-simple-types">Predefined Traits for Simple Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="defining.html#other-predefined-traits">Other Predefined Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="defining.html#trait-metadata">Trait Metadata</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="defining.html#internal-metadata-attributes">Internal Metadata Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="defining.html#recognized-metadata-attributes">Recognized Metadata Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="defining.html#accessing-metadata-attributes">Accessing Metadata Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notification.html">Trait Notification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notification.html#dynamic-notification">Dynamic Notification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#example-of-a-dynamic-notification-handler">Example of a Dynamic Notification Handler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#the-name-parameter">The <em>name</em> Parameter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#notification-handler-signatures">Notification Handler Signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#dynamic-handler-special-cases">Dynamic Handler Special Cases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="notification.html#static-notification">Static Notification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#handler-decorator">Handler Decorator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#specially-named-notification-handlers">Specially-named Notification Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#attribute-specific-handler-signatures">Attribute-specific Handler Signatures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#general-static-handler-signatures">General Static Handler Signatures</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="notification.html#trait-events">Trait Events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="notification.html#undefined-object">Undefined Object</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deferring.html">Deferring Trait Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#delegatesto">DelegatesTo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#prototypedfrom">PrototypedFrom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#keyword-parameters">Keyword Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deferring.html#prefix-keyword">Prefix Keyword</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deferring.html#listenable-keyword">Listenable Keyword</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deferring.html#notification-with-deferring">Notification with Deferring</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom.html">Custom Traits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="custom.html#trait-subclassing">Trait Subclassing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#defining-a-trait-type">Defining a Trait Type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#defining-a-trait-property">Defining a Trait Property</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#other-traittype-members">Other TraitType Members</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom.html#the-trait-factory-function">The Trait() Factory Function</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#trait-parameters">Trait () Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#mapped-traits">Mapped Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom.html#trait-handlers">Trait Handlers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#traitprefixlist">TraitPrefixList</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#traitprefixmap">TraitPrefixMap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="custom.html#custom-trait-handlers">Custom Trait Handlers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="custom.html#example-custom-trait-handler">Example Custom Trait Handler</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#initialization-and-validation-revisited">Initialization and Validation Revisited</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#dynamic-initialization">Dynamic Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#overriding-default-values-in-a-subclass">Overriding Default Values in a Subclass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#reusing-trait-definitions">Reusing Trait Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#trait-attribute-definition-strategies">Trait Attribute Definition Strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#type-checked-methods">Type-Checked Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#interfaces">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#defining-an-interface">Defining an Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#implementing-an-interface">Implementing an Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#using-interfaces">Using Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#adaptation">Adaptation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#defining-adapters">Defining Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#using-adapters">Using Adapters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#controlling-adaptation">Controlling Adaptation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#property-traits">Property Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#property-factory-function">Property Factory Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#caching-a-property-value">Caching a Property Value</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#persistence">Persistence</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#pickling-hastraits-objects">Pickling HasTraits Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#predefined-transient-traits">Predefined Transient Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#overriding-getstate">Overriding __getstate__()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#unpickling-hastraits-objects">Unpickling HasTraits Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#overriding-setstate">Overriding __setstate__()</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#useful-methods-on-hastraits">Useful Methods on HasTraits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#add-trait">add_trait()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#clone-traits">clone_traits()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#set">set()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#add-class-trait">add_class_trait()</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#performance-considerations-of-traits">Performance Considerations of Traits</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="../genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="../search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Traits 3 User Manual</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">Traits Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="front.html"
+                        title="next chapter">Traits 3 User Manual</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/traits_user_manual/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="front.html" title="Traits 3 User Manual"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../index.html" title="Traits Documentation"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Traits 3 User Manual</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

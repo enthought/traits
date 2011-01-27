@@ -1,0 +1,1665 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced Trait Editors &mdash; Traits 3 User Manual</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 3 User Manual" href="../index.html" />
+    <link rel="up" title="Traits UI User Guide" href="index.html" />
+    <link rel="next" title="Tips, Tricks and Gotchas" href="tips.html" />
+    <link rel="prev" title="The Predefined Trait Editor Factories" href="factories_basic.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tips.html" title="Tips, Tricks and Gotchas"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="factories_basic.html" title="The Predefined Trait Editor Factories"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Advanced Trait Editors</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="advanced-trait-editors">
+<span id="id1"></span><h1>Advanced Trait Editors<a class="headerlink" href="#advanced-trait-editors" title="Permalink to this headline">¶</a></h1>
+<p>The editor factories described in the following sections are more advanced than
+those in the previous section. In some cases, they require writing additional
+code; in others, the editors they generate are intended for use in complex user
+interfaces, in conjunction with other editors.</p>
+<div class="section" id="customeditor">
+<h2>CustomEditor()<a class="headerlink" href="#customeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Special cases</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Required parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>factory</em></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>args</em></td>
+</tr>
+</tbody>
+</table>
+<p>Use CustomEditor() to create an &#8220;editor&#8221; that is a non-Traits-based custom
+control. The <em>factory</em> parameter must be a function that generates the custom
+control. The function must have the following signature:</p>
+<p>factory_function(<em>window_parent</em>, <em>editor*[, **args</em>, **<em>kwargs</em>])</p>
+<ul class="simple">
+<li><em>window_parent</em>: The parent window for the control</li>
+<li><em>editor</em>: The editor object created by CustomEditor()</li>
+</ul>
+<p>Additional arguments, if any, can be passed as a tuple in the <em>args</em> parameter
+of CustomEditor().</p>
+<p>For an example of using CustomEditor(),examine the implementation of the
+NumericModelExplorer class in the enthought.model.numeric_model_explorer module;
+CustomEditor() is used to generate the plots in the user interface.</p>
+</div>
+<div class="section" id="dropeditor">
+<h2>DropEditor()<a class="headerlink" href="#dropeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Instance traits</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>binding</em>, <em>klass</em>, <em>readonly</em></td>
+</tr>
+</tbody>
+</table>
+<p>DropEditor() generates an editor that is a text field containing a string
+representation of the trait attribute&#8217;s value. The user can change the value
+assigned to the attribute by dragging and dropping an object on the text field,
+for example, a node from a tree editor (See <a class="reference internal" href="#treeeditor"><em>TreeEditor()</em></a>). If the
+<em>readonly</em> parameter is True (the default), the user cannot modify the value by
+typing in the text field.</p>
+<p>You can restrict the class of objects that can be dropped on the editor by
+specifying the <em>klass</em> parameter.</p>
+<p>You can specify that the dropped object must be a binding
+(enthought.naming.api.Binding) by setting the <em>binding</em> parameter to True. If
+so, the bound object is retrieved and checked to see if it can be assigned to
+the trait attribute.</p>
+<p>If the dropped object (or the bound object associated with it) has a method
+named drop_editor_value(), it is called to obtain the value to assign to the
+trait attribute. Similarly, if the object has a method named
+drop_editor_update(), it is called to update the value displayed in the text
+editor. This method requires one parameter, which is the GUI control for the
+text editor.</p>
+</div>
+<div class="section" id="dndeditor">
+<h2>DNDEditor()<a class="headerlink" href="#dndeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Instance traits</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>drag_target, drop_target, image</em></td>
+</tr>
+</tbody>
+</table>
+<p>DNDEditor() generates an editor that represents a file or a HasTraits instance
+as an image that supports dragging and dropping. Depending on the editor style,
+the editor can be a <em>drag source</em> (the user can set the value of the trait
+attribute by dragging a file or object onto the editor, for example, from a tree
+editor), or <em>drop target</em> (the user can drag from the editor onto another
+target).</p>
+<p class="rubric" id="drag-and-drop-editor-style-variations-table">Table 9: Drag-and-drop editor style variations</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Editor Style</th>
+<th class="head">Drag Source?</th>
+<th class="head">Drop Target?</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Simple</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr><td>Custom</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr><td>Read-only</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="keybindingeditor">
+<h2>KeyBindingEditor()<a class="headerlink" href="#keybindingeditor" title="Permalink to this headline">¶</a></h2>
+<p>The KeyBindingEditor() factory differs from other trait editor factories because
+it generates an editor, not for a single attribute, but for an object of a
+particular class, enthought.traits.ui.key_bindings.KeyBindings. A KeyBindings
+object is a list of bindings between key codes and handler methods. You can
+specify a KeyBindings object as an attribute of a View. When the user presses a
+key while a View has input focus, the user interface searches the View for a
+KeyBindings that contains a binding that corresponds to the key press; if such a
+binding does not exist on the View, it searches enclosing Views in order, and
+uses the first matching binding, if any. If it does not find any matching
+bindings, it ignores the key press.</p>
+<p>A key binding editor is a separate <a class="reference internal" href="glossary.html#term-dialog-box"><em class="xref std std-term">dialog box</em></a> that displays the string
+representation of each key code and a description of the corresponding method.
+The user can click a text box, and then press a key or key combination to
+associate that key press with a method.</p>
+<div class="figure">
+<img alt="Dialog box with fields for key presses corresponding to operations" src="../_images/key_binding_editor.jpg" />
+<p class="caption">Figure 50: Key binding editor dialog box</p>
+</div>
+<p>The following code example creates a user interface containing a code editor
+with associated key bindings, and a button that invokes the key binding editor.</p>
+<p class="rubric" id="example-17-code-editor-with-key-binding-editor">Example 17: Code editor with key binding editor</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># key_bindings.py -- Example of a code editor with a</span>
+<span class="c">#                    key bindings editor</span>
+
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+    <span class="kn">import</span> <span class="n">Button</span><span class="p">,</span> <span class="n">Code</span><span class="p">,</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+    <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">CodeEditor</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.key_bindings</span> \
+    <span class="kn">import</span> <span class="n">KeyBinding</span><span class="p">,</span> <span class="n">KeyBindings</span>
+
+<span class="n">key_bindings</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">(</span>
+    <span class="n">KeyBinding</span><span class="p">(</span> <span class="n">binding1</span>    <span class="o">=</span> <span class="s">&#39;Ctrl-s&#39;</span><span class="p">,</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="s">&#39;Save to a file&#39;</span><span class="p">,</span>
+                <span class="n">method_name</span> <span class="o">=</span> <span class="s">&#39;save_file&#39;</span> <span class="p">),</span>
+    <span class="n">KeyBinding</span><span class="p">(</span> <span class="n">binding1</span>    <span class="o">=</span> <span class="s">&#39;Ctrl-r&#39;</span><span class="p">,</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="s">&#39;Run script&#39;</span><span class="p">,</span>
+                <span class="n">method_name</span> <span class="o">=</span> <span class="s">&#39;run_script&#39;</span> <span class="p">),</span>
+    <span class="n">KeyBinding</span><span class="p">(</span> <span class="n">binding1</span>    <span class="o">=</span> <span class="s">&#39;Ctrl-k&#39;</span><span class="p">,</span>
+                <span class="n">description</span> <span class="o">=</span> <span class="s">&#39;Edit key bindings&#39;</span><span class="p">,</span>
+                <span class="n">method_name</span> <span class="o">=</span> <span class="s">&#39;edit_bindings&#39;</span> <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c"># Traits UI Handler class for bound methods</span>
+<span class="k">class</span> <span class="nc">CodeHandler</span> <span class="p">(</span> <span class="n">Handler</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">save_file</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="p">):</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">&quot;save file&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run_script</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="p">):</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">&quot;run script&quot;</span>
+
+    <span class="k">def</span> <span class="nf">edit_bindings</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="p">):</span>
+        <span class="n">info</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s">&quot;edit bindings&quot;</span>
+        <span class="n">key_bindings</span><span class="o">.</span><span class="n">edit_traits</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">KBCodeExample</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
+
+    <span class="n">code</span>   <span class="o">=</span> <span class="n">Code</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">kb</span>    <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&#39;Edit Key Bindings&#39;</span><span class="p">)</span>
+
+    <span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span> <span class="n">Group</span> <span class="p">(</span>
+                 <span class="n">Item</span><span class="p">(</span> <span class="s">&#39;code&#39;</span><span class="p">,</span>
+                       <span class="n">style</span>     <span class="o">=</span> <span class="s">&#39;custom&#39;</span><span class="p">,</span>
+                       <span class="n">resizable</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">),</span>
+                 <span class="n">Item</span><span class="p">(</span><span class="s">&#39;status&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;readonly&#39;</span><span class="p">),</span>
+                 <span class="s">&#39;kb&#39;</span><span class="p">,</span>
+                 <span class="n">orientation</span> <span class="o">=</span> <span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                 <span class="n">show_labels</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+                 <span class="p">),</span>
+               <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;KBCodeExample&#39;</span><span class="p">,</span>
+               <span class="n">key_bindings</span> <span class="o">=</span> <span class="n">key_bindings</span><span class="p">,</span>
+               <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Code Editor With Key Bindings&#39;</span><span class="p">,</span>
+               <span class="n">resizable</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+
+               <span class="n">handler</span>   <span class="o">=</span> <span class="n">CodeHandler</span><span class="p">()</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_kb_fired</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">event</span> <span class="p">):</span>
+        <span class="n">key_bindings</span><span class="o">.</span><span class="n">edit_traits</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">KBCodeExample</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tableeditor">
+<span id="id2"></span><h2>TableEditor()<a class="headerlink" href="#tableeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">List(<em>InstanceType</em>)</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Required parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>columns</em> or <em>columns_name</em></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body">See <em>Traits API Reference</em>,
+enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.</td>
+</tr>
+</tbody>
+</table>
+<p>TableEditor() generates an editor that displays instances in a list as rows in a
+table, with attributes of the instances as values in columns. You must specify
+the columns in the table. Optionally, you can provide filters for filtering the
+set of displayed items, and you can specify a wide variety of options for
+interacting with and formatting the table.</p>
+<div class="figure">
+<img alt="Table editor with toolbar and instance editor" src="../_images/table_editor.jpg" />
+<p class="caption">Figure 51: Table editor</p>
+</div>
+<p>To see the code that results in Figure 51, refer to <tt class="file docutils literal"><span class="pre">TableEditor_demo.py</span></tt>
+in the <tt class="file docutils literal"><span class="pre">demos/Traits</span> <span class="pre">UI</span> <span class="pre">Demo/Standard</span> <span class="pre">Editors</span></tt> subdirectory of the Traits
+UI package. This example demonstrates object columns, expression columns,
+filters, searching, and adding and deleting rows.</p>
+<p>The parameters for TableEditor() can be grouped in several broad categories,
+described in the following sections.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#specifying-columns"><em>Specifying Columns</em></a></li>
+<li><a class="reference internal" href="#managing-items"><em>Managing Items</em></a></li>
+<li><a class="reference internal" href="#editing-the-table"><em>Editing the Table</em></a></li>
+<li><a class="reference internal" href="#defining-the-layout"><em>Defining the Layout</em></a></li>
+<li><a class="reference internal" href="#table-defining-the-format"><em>Defining the Format</em></a></li>
+<li><a class="reference internal" href="#other-user-interactions"><em>Other User Interactions</em></a></li>
+</ul>
+<div class="section" id="specifying-columns">
+<span id="id3"></span><h3>Specifying Columns<a class="headerlink" href="#specifying-columns" title="Permalink to this headline">¶</a></h3>
+<p>You must provide the TableEditor() factory with a list of columns for the table.
+You can specify this list directly, as the value of the <em>columns</em> parameter, or
+indirectly, in an extended context attribute referenced by the <em>columns_name</em>
+parameter.</p>
+<p>The items in the list must be instances of enthought.traits.ui.api.TableColumn,
+or of a subclass of TableColumn. Some subclasses of TableColumn that are
+provided by the Traits UI package include ObjectColumn, ListColumn,
+NumericColumn, and ExpressionColumn. (See the <em>Traits API Reference</em> for details
+about these classes.) In practice, most columns are derived from one of these
+subclasses, rather than from TableColumn. For the usual case of editing trait
+attributes on objects in the list, use ObjectColumn. You must specify the <em>name</em>
+parameter to the ObjectColumn() constructor, referencing the name of the trait
+attribute to be edited.</p>
+<p>You can specify additional columns that are not initially displayed using the
+<em>other_columns</em> parameter. If the <em>configurable</em> parameter is True (the
+default), a <em class="guilabel">Set user preferences for table</em> icon (<img alt="preferences_icon" src="../_images/table_prefs.gif" />)
+appears on the table&#8217;s toolbar. When the user clicks this icon, a dialog box
+opens that enables the user to select and order the columns displayed in the
+table, as shown in Figure 52. (The dialog box is implemented using a set editor;
+see <a class="reference internal" href="factories_basic.html#seteditor"><em>SetEditor()</em></a>.) Any columns that were specified in the <em>other_columns</em>
+parameter are listed in the left list box of this dialog box, and can be
+displayed by moving them into the right list box.</p>
+<div class="figure">
+<img alt="Dialog box with two list boxes for selecting column names" src="../_images/table_column_selection.jpg" />
+<p class="caption">Figure 52: Column selection dialog box for a table editor</p>
+</div>
+</div>
+<div class="section" id="managing-items">
+<span id="id4"></span><h3>Managing Items<a class="headerlink" href="#managing-items" title="Permalink to this headline">¶</a></h3>
+<p>Table editors support several mechanisms to help users locate items of interest.</p>
+<div class="section" id="organizing-items">
+<span id="id5"></span><h4>Organizing Items<a class="headerlink" href="#organizing-items" title="Permalink to this headline">¶</a></h4>
+<p>Table editors provide two mechanisms for the user to organize the contents of a
+table: sorting and reordering. The user can sort the items based on the values
+in a column, or the user can manually order the items. Usually, only one of
+these mechanisms is used in any particular table, although the Traits UI package
+does not enforce a separation. If the user has manually ordered the items,
+sorting them would throw away that effort.</p>
+<p>If the <em>reorderable</em> parameter is True, <em class="guilabel">Move up</em> (<img alt="move_up_icon" src="../_images/move_up_icon.gif" />) and
+<em class="guilabel">Move down</em> (<img alt="move_down_icon" src="../_images/move_down_icon.gif" />) icons appear in the table toolbar. Clicking one of
+these icons changes the position of the selected item.</p>
+<p>If the <em>sortable</em> parameter is True (the default), then the user can sort the
+items in the table based on the values in a column by Control-clicking the
+header of that column.</p>
+<ul class="simple">
+<li>On the first click, the items are sorted in ascending order. The characters
+<em class="guilabel">&gt;&gt;</em> appear in the column header to indicate that the table is
+sorted ascending on this column&#8217;s values.</li>
+<li>On the second click, the items are sorted descending order. The characters
+<em class="guilabel">&lt;&lt;</em> appear in the column header to indicate that the table is
+sorted descending on this column&#8217;s values.</li>
+<li>On the third click, the items are restored to their original order, and the
+column header is undecorated.</li>
+</ul>
+<p>If the <em>sort_model</em> parameter is true, the items in the list being edited are
+sorted when the table is sorted. The default value is False, in which case, the
+list order is not affected by sorting the table.</p>
+<p>If <em>sortable</em> is True and <em>sort_model</em> is False, then a
+<em class="guilabel">Do not sort columns</em> icon (<img alt="no_sort_icon" src="../_images/no_sort_icon.gif" />) appears in the table
+toolbar. Clicking this icon restores the original sort order.</p>
+<p>If the <em>reverse</em> parameter is True, then the items in the underlying list are
+maintained in the reverse order of the items in the table (regardless of whether
+the table is sortable or reorderable).</p>
+</div>
+<div class="section" id="filtering-and-searching">
+<span id="id6"></span><h4>Filtering and Searching<a class="headerlink" href="#filtering-and-searching" title="Permalink to this headline">¶</a></h4>
+<p>You can provide an option for the user to apply a filter to a table, so that
+only items that pass the filter are displayed. This feature can be very useful
+when dealing with lengthy lists. You can specify a filter to apply to the table
+either directly, or via another trait. Table filters must be instances of
+enthought.traits.ui.api.TableFilter, or of a subclass of TableFilter. Some
+subclasses of TableFilter that are provided by the Traits UI package include
+EvalTableFilter, RuleTableFilter, and MenuTableFilter. (See the <em>Traits API
+Reference</em> for details about these classes.) The Traits UI package also provides
+instances of these filter classes as &#8220;templates&#8221;, which cannot be edited or
+deleted, but which can be used as models for creating new filters.</p>
+<p>The <em>filter</em> parameter specifies a filter that is applied to the table when it
+is first displayed. The <em>filter_name</em> parameter specifies an extended trait name
+for a trait that is either a table filter object or a callable that accepts an
+object and returns True if the object passes the filter criteria, or false if it
+does not. You can use <em>filter_name</em> to embed a view of a table filter in the
+same view as its table.</p>
+<p>You can specify use the <em>filters</em> parameter to specify a list of table filters
+that are available to apply to a table. When <em>filters</em> is specified, a drop-down
+list box appears in the table toolbar, containing the filters that are available
+for the user to apply. When the user selects a filter, it is automatically
+applied to the table. A status message to the right of the filters list
+indicates what subset of the items in the table is currently displayed. A
+special item in the filter list, named <em class="guilabel">Customize</em>, is always
+provided; clicking this item opens a dialog box that enables the user to create
+new filters, or to edit or delete existing filters (except templates).</p>
+<p>You can also provide an option for the user to use filters to search the table.
+If you set the <em>search</em> parameter to an instance of TableFilter (or of a
+subclass), a <em class="guilabel">Search table</em> icon (<img alt="search_table_icon" src="../_images/search_table_icon.gif" />) appears on the
+table toolbar. Clicking this icon opens a <em class="guilabel">Search for</em> dialog box,
+which enables the user to specify filter criteria, to browse through matching
+items, or select all matching items.</p>
+</div>
+<div class="section" id="interacting-with-items">
+<span id="id7"></span><h4>Interacting with Items<a class="headerlink" href="#interacting-with-items" title="Permalink to this headline">¶</a></h4>
+<p>As the user clicks in the table, you may wish to enable certain program
+behavior.</p>
+<p>The value of the <em>selection_mode</em> parameter specifies how the user can make
+selections in the grid:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">cell</span></tt>: A single cell at a time</li>
+<li><tt class="docutils literal"><span class="pre">cells</span></tt>: Multiple cells</li>
+<li><tt class="docutils literal"><span class="pre">column</span></tt>: A single column at a time</li>
+<li><tt class="docutils literal"><span class="pre">columns</span></tt>: Multiple columns</li>
+<li><tt class="docutils literal"><span class="pre">row</span></tt>: A single row at a time</li>
+<li><tt class="docutils literal"><span class="pre">rows</span></tt>: Multiple rows</li>
+</ul>
+<p>You can use the <em>selected</em> parameter to specify the name of a trait attribute in
+the current context to synchronize with the user&#8217;s current selection. For
+example, you can enable or disable menu items or toolbar icons depending on
+which item is selected. The synchronization is two-way; you can set the
+attribute referenced by <em>selected</em> to force the table to select a particular
+item.</p>
+<p>You can use the <em>selected_indices</em> parameter to specify the name of a trait
+attribute in the current context to synchronize with the indices of the table
+editor selection. The content of the selection depends on the <em>selection_mode</em>
+value:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><tt class="docutils literal"><span class="pre">cell</span></tt>: The selection is a tuple of the form (<em>object</em>, <em>column_name</em>),</dt>
+<dd><p class="first last">where <em>object</em> is the object contains the selected cell, and <em>column_name</em>
+is the name of the column the cell is in. If there is no selection, the
+tuple is (None, &#8216;&#8217;).</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">cells</span></tt>: The selection is a list of tuples of the form (<em>object</em>,
+<em>column_name</em>), with one tuple for each selected cell, in order from top to
+bottom and left to right. If there is no selection, the list is empty.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">column</span></tt>: The selection is the name of the selected column, or the empty
+string if there is no selection.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">columns</span></tt>: The selection is a list containing the names of the selected
+columns, in order from left to right. If there is no selection, the list is empty.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">row</span></tt>: The selection is either the selected object or None if nothing is
+selected in the table.</p>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">rows</span></tt>: The selection is a list of the selected objects, in ascending row
+order. If there is no selection, the list is empty.</p>
+</li>
+</ul>
+<p>The <em>on_select</em> and <em>on_dclick</em> parameters are callables to invoke when the user
+selects or double-clicks an item, respectively.</p>
+<p>You can define a shortcut menu that opens when the user right-clicks an item.
+Use the <em>menu</em> parameter to specify a Traits UI or PyFace Menu, containing
+Action objects for the menu commands.</p>
+</div>
+</div>
+<div class="section" id="editing-the-table">
+<span id="id8"></span><h3>Editing the Table<a class="headerlink" href="#editing-the-table" title="Permalink to this headline">¶</a></h3>
+<p>The Boolean <em>editable</em> parameter controls whether the table or its items can be
+modified in any way. This parameter defaults to True, except when the style is
+&#8216;readonly&#8217;. Even when the table as a whole is editable, you can control whether
+individual columns are editable through the <strong>editable</strong> attribute of
+TableColumn.</p>
+<div class="section" id="adding-items">
+<span id="id9"></span><h4>Adding Items<a class="headerlink" href="#adding-items" title="Permalink to this headline">¶</a></h4>
+<p>To enable users to add items to the table, specify as the <em>row_factory</em>
+parameter a callable that generates an object that can be added to the list in
+the table; for example, the class of the objects in the table. When
+<em>row_factory</em> is specified, an <em class="guilabel">Insert new item</em> icon
+(<img alt="insert_item_icon" src="../_images/insert_item_icon.gif" />) appears in the table toolbar, which generates a new row in
+the table. Optionally, you can use <em>row_factory_args</em> and <em>row_factory_kw</em> to
+specify positional and keyword arguments to the row factory callable.</p>
+<p>To save users the trouble of mousing to the toolbar, you can enable them to add
+an item by selecting the last row in the table. To do this, set <em>auto_add</em> to
+True. In this case, the last row is blank until the user sets values. Pressing
+Enter creates the new item and generates a new, blank last row.</p>
+</div>
+<div class="section" id="deleting-items">
+<h4>Deleting Items<a class="headerlink" href="#deleting-items" title="Permalink to this headline">¶</a></h4>
+<p>The <em>deletable</em> parameter controls whether items can be deleted from the table.
+This parameter can be a Boolean (defaulting to False) or a callable; the
+callable must take an item as an argument and handle deleting it. If <em>deletable</em>
+is not False, a <em class="guilabel">Delete current item</em> icon (<img alt="delete_item_icon" src="../_images/delete_item_icon.gif" />) appears on the table
+toolbar; clicking it deletes the item corresponding to the row that is selected
+in the table.</p>
+</div>
+<div class="section" id="modifying-items">
+<span id="id10"></span><h4>Modifying Items<a class="headerlink" href="#modifying-items" title="Permalink to this headline">¶</a></h4>
+<p>The user can modify items in two ways.</p>
+<ul class="simple">
+<li>For columns that are editable, the user can change an item&#8217;s value directly
+in the table. The editor used for each attribute in the table is the simple
+style of editor for the corresponding trait.</li>
+<li>Alternatively, you can specify a View for editing instances, using the
+<em>edit_view</em> parameter. The resulting user interface appears in a
+<a class="reference internal" href="glossary.html#term-subpanel"><em class="xref std std-term">subpanel</em></a> to the right or below the table (depending on the
+<em>orientation</em> parameter).  You can specify a handler to use with the view,
+using <em>edit_view_handler</em>. You can also specify the subpanel&#8217;s height and
+width, with <em>edit_view_height</em> and <em>edit_view_width</em>.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="defining-the-layout">
+<span id="id11"></span><h3>Defining the Layout<a class="headerlink" href="#defining-the-layout" title="Permalink to this headline">¶</a></h3>
+<p>Some of the parameters for the TableEditor() factory affect global aspects of
+the display of the table.</p>
+<ul class="simple">
+<li><em>auto_size</em>: If True, the cells of the table automatically adjust to the
+optimal size based on their contents.</li>
+<li><em>orientation</em>: The layout of the table relative to its associated editor pane.
+Can be &#8216;horizontal&#8217; or &#8216;vertical&#8217;.</li>
+<li><em>rows</em>: The number of visible rows in the table.</li>
+<li><em>show_column_labels</em>: If True (the default), displays labels for the columns.
+You can specify the labels to use in the column definitions; otherwise, a
+&#8220;user friendly&#8221; version of the trait attribute name is used.</li>
+<li><em>show_toolbar</em>: If False, the table toolbar is not displayed, regardless of
+whether other settings would normally create a toolbar. The default is True.</li>
+</ul>
+</div>
+<div class="section" id="defining-the-format">
+<span id="table-defining-the-format"></span><h3>Defining the Format<a class="headerlink" href="#defining-the-format" title="Permalink to this headline">¶</a></h3>
+<p>The TableEditor() factory supports a variety of parameters to control the visual
+formatting of the table, such as colors, fonts, and sizes for lines, cells, and
+labels. For details, refer to the <em>Traits API Reference</em>,
+enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.</p>
+<p>You can also specify formatting options for individual table columns when you
+define them.</p>
+</div>
+<div class="section" id="other-user-interactions">
+<span id="id12"></span><h3>Other User Interactions<a class="headerlink" href="#other-user-interactions" title="Permalink to this headline">¶</a></h3>
+<p>The table editor supports additional types of user interaction besides those
+controlled by the factory parameters.</p>
+<ul class="simple">
+<li>Column dragging: The user can reorganize the column layout of a table editor
+by clicking and dragging a column label to its new location. If you have
+enabled user preferences for the view and table editor (by specifying view
+and item IDs), the new column layout is persisted across user sessions.</li>
+<li>Column resizing: The user can resize a column by dragging the column
+separator (in one of the data rows) to a new position. Because of the
+column-dragging support, clicking the column separator in the column label
+row does not work.</li>
+<li>Data dragging: The user can drag the contents of any cell by clicking and
+dragging.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="tabulareditor">
+<h2>TabularEditor()<a class="headerlink" href="#tabulareditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">lists, arrays, and other large sequences of objects</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Required parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>adapter</em></td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>activated, clicked, column_clicked, dclicked, drag_move, editable,</em>
+<em>horizontal_lines, images, multi_select, operations, right_clicked,</em>
+<em>right_dclicked, selected, selected_row, show_titles, vertical_lines</em></td>
+</tr>
+</tbody>
+</table>
+<p>The TabularEditor() factory can be used for many of the same purposes as the
+TableEditor() factory, that is, for displaying a table of attributes of lists or
+arrays of objects. While similar in function, the tabular editor has advantages
+and disadvantages relative to the table editor.</p>
+<div class="section" id="advantages">
+<span id="tabular-advantages"></span><h3>Advantages<a class="headerlink" href="#advantages" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Very fast</strong>: The tabular editor uses a virtual model, which accesses data
+from the underlying model only as needed. For example, if you have a
+million-element array, but can display only 50 rows at a time, the editor
+requests only 50 elements of data at a time.</li>
+<li><strong>Very flexible data model</strong>: The editor uses an adapter model to interface
+with the underlying data. This strategy allows it to easily deal with many
+types  of data representation, from list of objects, to arrays of numbers, to
+tuples of tuples, and many other formats.</li>
+<li><strong>Supports useful data operations</strong>, including:<ul>
+<li>Moving the selection up and down using the keyboard arrow keys.</li>
+<li>Moving rows up and down using the keyboard.</li>
+<li>Inserting and deleting items using the keyboard.</li>
+<li>Initiating editing of items using the keyboard.</li>
+<li>Dragging and dropping of table items to and from the editor, including
+support for both copy and move operations for single and multiple items.</li>
+</ul>
+</li>
+<li><strong>Visually appealing</strong>: The tabular editor, in general, uses the underlying
+operating system&#8217;s native table or grid control, and as a result often looks
+better than the control used by the table editor.</li>
+<li><strong>Supports displaying text and images in any cell</strong>. However, the images
+displayed must be all the same size for optimal results.</li>
+</ul>
+</div>
+<div class="section" id="disadvantages">
+<span id="tabular-disadvantages"></span><h3>Disadvantages<a class="headerlink" href="#disadvantages" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Not as full-featured</strong>: The table editor includes support for arbitrary data
+filters, searches, and different types of sorting. These differences may
+narrow as features are added to the tabular editor.</li>
+<li><strong>Limited data editing capabilities</strong>: The tabular editor supports editing
+only textual values, whereas the table editor supports a wide variety of
+column editors, and can be extended with more as needed. This is due to
+limitations of the underlying native control used by the tabular editor.</li>
+</ul>
+</div>
+<div class="section" id="tabularadapter">
+<span id="id13"></span><h3>TabularAdapter<a class="headerlink" href="#tabularadapter" title="Permalink to this headline">¶</a></h3>
+<p>The tabular editor works in conjunction with an adapter class, derived from
+TabularAdapter. The tabular adapter interfaces between the tabular editor and
+the data being displayed. The tabular adapter is the reason for the flexibility
+and power of the tabular editor to display a wide variety of data.</p>
+<p>The most important attribute of TabularAdapter is <strong>columns</strong>, which is list of
+columns to be displayed. Each entry in the <strong>columns</strong> list can be either a
+string, or a tuple consisting of a string and another value, which can be of any
+type. The string is used as the label for the column. The second value in the
+tuple, called the* column ID*, identifies the column to the adapter. It is
+typically a trait attribute name or an integer index, but it can be any value
+appropriate to the adapter. If only a string is specified for an entry, then the
+index of the entry within the <strong>columns</strong> list is used as that entry&#8217;s column
+ID.</p>
+<p>Attributes on TabularAdapter control the appearance of items, and aspects of
+interaction with items, such as whether they can be edited, and how they respond
+to dragging and dropping. Setting any of these attributes on the adapter
+subclass sets the global behavior for the editor. Refer to the <em>Traits API
+Reference</em> for details of the available attributes.</p>
+<p>You can also specify these attributes for a specific class or column ID, or
+combination of class and column ID. When the TabularAdapter needs to look up the
+value of one of its attributes for a specific item in the table, it looks for
+attributes with the following naming conventions in the following order:</p>
+<ol class="arabic simple">
+<li><em>classname_columnid_attribute</em></li>
+<li><em>classname_attribute</em></li>
+<li><em>columnid_attribute</em></li>
+<li><em>attribute</em></li>
+</ol>
+<p>For example, to find the <strong>text_color</strong> value for an item whose class is Person
+and whose column ID is &#8216;age&#8217;, the get_text_color() method looks for the
+following attributes in sequence, and returns the first value it finds:</p>
+<ol class="arabic simple">
+<li><strong>Person_age_text_color</strong></li>
+<li><strong>Person_text_color</strong></li>
+<li><strong>age_text_color</strong></li>
+<li><strong>text_color</strong></li>
+</ol>
+<p>Note that the <em>classname</em> can be the name of a base class, searched in the
+method resolution order (MRO) for the item&#8217;s class. So for example, if the item
+were a direct instance of Employee, which is a subclass of Person, then the
+<strong>Person_age_text_color</strong> attribute would apply to that item (as long as there
+were no <strong>Employee_age_text_color</strong> attribute).</p>
+</div>
+<div class="section" id="the-tabular-editor-user-interface">
+<span id="id14"></span><h3>The Tabular Editor User Interface<a class="headerlink" href="#the-tabular-editor-user-interface" title="Permalink to this headline">¶</a></h3>
+<p>Figure 53 shows an example of a tabular editor on Microsoft Windows, displaying
+information about source files in the Traits package. This example includes a
+column that contains an image for files that meet certain conditions.</p>
+<div class="figure">
+<img alt="Tabular editor with columns for file name, size, an icon, time, and date" src="../_images/tabular_editor.jpg" />
+<p class="caption">Figure 53: Tabular editor on MS Windows</p>
+</div>
+<p>Depending on how the tabular editor is configured, certain keyboard interactions
+may be available. For some interactions, you must specify that the corresponding
+operation is allowed by including the operation name in the <em>operations</em> list
+parameter of TabularEditor().</p>
+<ul>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Up</span> <span class="pre">arrow</span></tt>: Selects the row above the currently selected row.</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Down</span> <span class="pre">arrow</span></tt>: Selects the row below the currently selected row.</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Page</span> <span class="pre">down</span></tt>: Appends a new item to the end of the list (&#8216;append&#8217;
+operation).</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Left</span> <span class="pre">arrow</span></tt>: Moves the currently selected row up one line (&#8216;move&#8217;
+operation).</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Right</span> <span class="pre">arrow</span></tt>: Moves the currently selected row down one line (&#8216;move&#8217;
+operation).</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Backspace,</span> <span class="pre">Delete</span></tt>: Deletes from the list all items in the current
+selection (&#8216;delete&#8217; operation).</p>
+</li>
+<li><p class="first"><tt class="kbd docutils literal"><span class="pre">Enter,</span> <span class="pre">Escape</span></tt>: Initiates editing on the current selection (&#8216;edit&#8217;
+operation).</p>
+</li>
+<li><dl class="first docutils">
+<dt><tt class="kbd docutils literal"><span class="pre">Insert:</span></tt>: Inserts a new item before the current selection (&#8216;insert&#8217;</dt>
+<dd><p class="first last">operation).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The &#8216;append&#8217;, &#8216;move&#8217;, &#8216;edit&#8217;, and &#8216;insert&#8217; operations can occur only when a
+single item is selected. The &#8216;delete&#8217; operation works for one or more items
+selected.</p>
+<p>Depending on how the editor and adapter are specified, drag and drop operations
+may be available. If the user selects multiple items and drags one of them, all
+selected items are included in the drag operation. If the user drags a
+non-selected item, only that item is dragged.</p>
+<p>The editor supports both &#8220;drag-move&#8221; and &#8220;drag-copy&#8221; semantics. A drag-move
+operation means that the dragged items are sent to the target and are removed
+from the list displayed in the editor. A drag-copy operation means that the
+dragged items are sent to the target, but are not deleted from the list data.</p>
+</div>
+</div>
+<div class="section" id="treeeditor">
+<span id="id15"></span><h2>TreeEditor()<a class="headerlink" href="#treeeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Instance</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Required parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>nodes</em> (required except for shared editors; see <a class="reference internal" href="#editing-objects"><em>Editing Objects</em></a>)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>auto_open, editable, editor, hide_root, icon_size, lines_mode,</em>
+<em>on_dclick, on_select, orientation, selected, shared_editor, show_icons</em></td>
+</tr>
+</tbody>
+</table>
+<p>TreeEditor() generates a hierarchical tree control, consisting of nodes. It is
+useful for cases where objects contain lists of other objects.</p>
+<p>The tree control is displayed in one pane of the editor, and a user interface
+for the selected object is displayed in the other pane. The layout orientation
+of the tree and the object editor is determined by the <em>orientation</em> parameter
+of TreeEditor(), which can be &#8216;horizontal&#8217; or &#8216;vertical&#8217;.</p>
+<p>You must specify the types of nodes that can appear in the tree using the
+<em>nodes</em> parameter, which must be a list of instances of TreeNode (or of
+subclasses of TreeNode).</p>
+<div class="figure">
+<img alt="Tree control with instance editor pane" src="../_images/tree_editor.gif" />
+<p class="caption">Figure 54: Tree editor</p>
+</div>
+<p>The following example shows the code that produces the editor shown in Figure
+54.</p>
+<p class="rubric" id="example-18-code-for-example-tree-editor">Example 18: Code for example tree editor</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># tree_editor.py -- Example of a tree editor</span>
+
+<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+    <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+    <span class="kn">import</span> <span class="n">TreeEditor</span><span class="p">,</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">VSplit</span><span class="p">,</span> \
+           <span class="n">HGroup</span><span class="p">,</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">Group</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.menu</span> \
+    <span class="kn">import</span> <span class="n">Menu</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Separator</span>
+<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.tree_editor</span> \
+    <span class="kn">import</span> <span class="n">NewAction</span><span class="p">,</span> <span class="n">CopyAction</span><span class="p">,</span> <span class="n">CutAction</span><span class="p">,</span> \
+           <span class="n">PasteAction</span><span class="p">,</span> <span class="n">DeleteAction</span><span class="p">,</span> <span class="n">RenameAction</span>
+
+<span class="c"># DATA CLASSES</span>
+
+<span class="k">class</span> <span class="nc">Employee</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="n">name</span>  <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;&lt;unknown&gt;&#39;</span> <span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">Regex</span><span class="p">(</span> <span class="n">regex</span> <span class="o">=</span> <span class="s">r&#39;\d\d\d-\d\d\d\d&#39;</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">default_title</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Senior Engineer&#39;</span>
+
+<span class="k">class</span> <span class="nc">Department</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="n">name</span>      <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;&lt;unknown&gt;&#39;</span> <span class="p">)</span>
+    <span class="n">employees</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Employee</span> <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Company</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="n">name</span>        <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;&lt;unknown&gt;&#39;</span> <span class="p">)</span>
+    <span class="n">departments</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Department</span> <span class="p">)</span>
+    <span class="n">employees</span>   <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Employee</span> <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Owner</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="n">name</span>    <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;&lt;unknown&gt;&#39;</span> <span class="p">)</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Company</span> <span class="p">)</span>
+
+<span class="c"># INSTANCES</span>
+
+<span class="n">jason</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span>
+     <span class="n">name</span>  <span class="o">=</span> <span class="s">&#39;Jason&#39;</span><span class="p">,</span>
+     <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Engineer&#39;</span><span class="p">,</span>
+     <span class="n">phone</span> <span class="o">=</span> <span class="s">&#39;536-1057&#39;</span> <span class="p">)</span>
+
+<span class="n">mike</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span>
+     <span class="n">name</span>  <span class="o">=</span> <span class="s">&#39;Mike&#39;</span><span class="p">,</span>
+     <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Sr. Marketing Analyst&#39;</span><span class="p">,</span>
+     <span class="n">phone</span> <span class="o">=</span> <span class="s">&#39;536-1057&#39;</span> <span class="p">)</span>
+
+<span class="n">dave</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span>
+     <span class="n">name</span>  <span class="o">=</span> <span class="s">&#39;Dave&#39;</span><span class="p">,</span>
+     <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Sr. Engineer&#39;</span><span class="p">,</span>
+     <span class="n">phone</span> <span class="o">=</span> <span class="s">&#39;536-1057&#39;</span> <span class="p">)</span>
+
+<span class="n">susan</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span>
+     <span class="n">name</span>  <span class="o">=</span> <span class="s">&#39;Susan&#39;</span><span class="p">,</span>
+     <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Engineer&#39;</span><span class="p">,</span>
+     <span class="n">phone</span> <span class="o">=</span> <span class="s">&#39;536-1057&#39;</span> <span class="p">)</span>
+
+<span class="n">betty</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">(</span>
+     <span class="n">name</span>  <span class="o">=</span> <span class="s">&#39;Betty&#39;</span><span class="p">,</span>
+     <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Marketing Analyst&#39;</span> <span class="p">)</span>
+
+<span class="n">owner</span> <span class="o">=</span> <span class="n">Owner</span><span class="p">(</span>
+    <span class="n">name</span>    <span class="o">=</span> <span class="s">&#39;wile&#39;</span><span class="p">,</span>
+    <span class="n">company</span> <span class="o">=</span> <span class="n">Company</span><span class="p">(</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Acme Labs, Inc.&#39;</span><span class="p">,</span>
+        <span class="n">departments</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Department</span><span class="p">(</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Marketing&#39;</span><span class="p">,</span>
+                <span class="n">employees</span> <span class="o">=</span> <span class="p">[</span> <span class="n">mike</span><span class="p">,</span> <span class="n">betty</span> <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">Department</span><span class="p">(</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Engineering&#39;</span><span class="p">,</span>
+                <span class="n">employees</span> <span class="o">=</span> <span class="p">[</span> <span class="n">dave</span><span class="p">,</span> <span class="n">susan</span><span class="p">,</span> <span class="n">jason</span> <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">],</span>
+        <span class="n">employees</span> <span class="o">=</span> <span class="p">[</span> <span class="n">dave</span><span class="p">,</span> <span class="n">susan</span><span class="p">,</span> <span class="n">mike</span><span class="p">,</span> <span class="n">betty</span><span class="p">,</span> <span class="n">jason</span> <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c"># View for objects that aren&#39;t edited</span>
+<span class="n">no_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">()</span>
+
+<span class="c"># Actions used by tree editor context menu</span>
+
+<span class="n">def_title_action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Default title&#39;</span><span class="p">,</span>
+                          <span class="n">action</span> <span class="o">=</span> <span class="s">&#39;object.default&#39;</span><span class="p">)</span>
+
+<span class="n">dept_action</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">&#39;Department&#39;</span><span class="p">,</span>
+    <span class="n">action</span><span class="o">=</span><span class="s">&#39;handler.employee_department(editor,object)&#39;</span><span class="p">)</span>
+
+<span class="c"># View used by tree editor</span>
+<span class="n">employee_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
+    <span class="n">VSplit</span><span class="p">(</span>
+        <span class="n">HGroup</span><span class="p">(</span> <span class="s">&#39;3&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span> <span class="p">),</span>
+        <span class="n">HGroup</span><span class="p">(</span> <span class="s">&#39;9&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span> <span class="p">),</span>
+        <span class="n">HGroup</span><span class="p">(</span> <span class="s">&#39;phone&#39;</span> <span class="p">),</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;vsplit&#39;</span> <span class="p">),</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;enthought.traits.doc.example.treeeditor&#39;</span><span class="p">,</span>
+    <span class="n">dock</span> <span class="o">=</span> <span class="s">&#39;vertical&#39;</span> <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">TreeHandler</span> <span class="p">(</span> <span class="n">Handler</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">employee_department</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">editor</span><span class="p">,</span> <span class="nb">object</span> <span class="p">):</span>
+        <span class="n">dept</span> <span class="o">=</span> <span class="n">editor</span><span class="o">.</span><span class="n">get_parent</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> works in the </span><span class="si">%s</span><span class="s"> department.&#39;</span> <span class="o">%</span>\
+            <span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dept</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+
+<span class="c"># Tree editor</span>
+<span class="n">tree_editor</span> <span class="o">=</span> <span class="n">TreeEditor</span><span class="p">(</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Company</span> <span class="p">],</span>
+                  <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                  <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+                  <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+                  <span class="n">view</span>      <span class="o">=</span> <span class="n">View</span><span class="p">(</span> <span class="n">Group</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span>
+                                   <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                                   <span class="n">show_left</span><span class="o">=</span><span class="bp">True</span> <span class="p">))</span> <span class="p">),</span>
+        <span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Company</span> <span class="p">],</span>
+                  <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                  <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;departments&#39;</span><span class="p">,</span>
+                  <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;=Departments&#39;</span><span class="p">,</span>
+                  <span class="n">view</span>      <span class="o">=</span> <span class="n">no_view</span><span class="p">,</span>
+                  <span class="n">add</span>       <span class="o">=</span> <span class="p">[</span> <span class="n">Department</span> <span class="p">]</span> <span class="p">),</span>
+        <span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Company</span> <span class="p">],</span>
+                  <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                  <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;employees&#39;</span><span class="p">,</span>
+                  <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;=Employees&#39;</span><span class="p">,</span>
+                  <span class="n">view</span>      <span class="o">=</span> <span class="n">no_view</span><span class="p">,</span>
+                  <span class="n">add</span>       <span class="o">=</span> <span class="p">[</span> <span class="n">Employee</span> <span class="p">]</span> <span class="p">),</span>
+        <span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Department</span> <span class="p">],</span>
+                  <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                  <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;employees&#39;</span><span class="p">,</span>
+                  <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+                  <span class="n">menu</span>      <span class="o">=</span> <span class="n">Menu</span><span class="p">(</span> <span class="n">NewAction</span><span class="p">,</span>
+                                    <span class="n">Separator</span><span class="p">(),</span>
+                                    <span class="n">DeleteAction</span><span class="p">,</span>
+                                    <span class="n">Separator</span><span class="p">(),</span>
+                                    <span class="n">RenameAction</span><span class="p">,</span>
+                                    <span class="n">Separator</span><span class="p">(),</span>
+                                    <span class="n">CopyAction</span><span class="p">,</span>
+                                    <span class="n">CutAction</span><span class="p">,</span>
+                                    <span class="n">PasteAction</span> <span class="p">),</span>
+                  <span class="n">view</span>      <span class="o">=</span> <span class="n">View</span><span class="p">(</span> <span class="n">Group</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span>
+                                   <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                                   <span class="n">show_left</span><span class="o">=</span><span class="bp">True</span> <span class="p">)),</span>
+                  <span class="n">add</span>       <span class="o">=</span> <span class="p">[</span> <span class="n">Employee</span> <span class="p">]</span> <span class="p">),</span>
+        <span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Employee</span> <span class="p">],</span>
+                  <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                  <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+                  <span class="n">menu</span><span class="o">=</span><span class="n">Menu</span><span class="p">(</span> <span class="n">NewAction</span><span class="p">,</span>
+                             <span class="n">Separator</span><span class="p">(),</span>
+                             <span class="n">def_title_action</span><span class="p">,</span>
+                             <span class="n">dept_action</span><span class="p">,</span>
+                             <span class="n">Separator</span><span class="p">(),</span>
+                             <span class="n">CopyAction</span><span class="p">,</span>
+                             <span class="n">CutAction</span><span class="p">,</span>
+                             <span class="n">PasteAction</span><span class="p">,</span>
+                             <span class="n">Separator</span><span class="p">(),</span>
+                             <span class="n">DeleteAction</span><span class="p">,</span>
+                             <span class="n">Separator</span><span class="p">(),</span>
+                             <span class="n">RenameAction</span> <span class="p">),</span>
+                  <span class="n">view</span> <span class="o">=</span> <span class="n">employee_view</span> <span class="p">)</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c"># The main view</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
+           <span class="n">Group</span><span class="p">(</span>
+               <span class="n">Item</span><span class="p">(</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;company&#39;</span><span class="p">,</span>
+                    <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;company&#39;</span><span class="p">,</span>
+                    <span class="n">editor</span> <span class="o">=</span> <span class="n">tree_editor</span><span class="p">,</span>
+                    <span class="n">resizable</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">),</span>
+                <span class="n">orientation</span> <span class="o">=</span> <span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                <span class="n">show_labels</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                <span class="n">show_left</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="p">),</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Company Structure&#39;</span><span class="p">,</span>
+            <span class="nb">id</span> <span class="o">=</span> \
+             <span class="s">&#39;enthought.traits.ui.tests.tree_editor_test&#39;</span><span class="p">,</span>
+            <span class="n">dock</span> <span class="o">=</span> <span class="s">&#39;horizontal&#39;</span><span class="p">,</span>
+            <span class="n">drop_class</span> <span class="o">=</span> <span class="n">HasTraits</span><span class="p">,</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">TreeHandler</span><span class="p">(),</span>
+            <span class="n">buttons</span> <span class="o">=</span> <span class="p">[</span> <span class="s">&#39;Undo&#39;</span><span class="p">,</span> <span class="s">&#39;OK&#39;</span><span class="p">,</span> <span class="s">&#39;Cancel&#39;</span> <span class="p">],</span>
+            <span class="n">resizable</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">height</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span> <span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">owner</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">(</span> <span class="n">view</span> <span class="o">=</span> <span class="n">view</span> <span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="defining-nodes">
+<span id="id16"></span><h3>Defining Nodes<a class="headerlink" href="#defining-nodes" title="Permalink to this headline">¶</a></h3>
+<p>For details on the attributes of the TreeNode class, refer to the <em>Traits API
+Reference</em>.</p>
+<p>You must specify the classes whose instances the node type applies to. Use the
+<strong>node_for</strong> attribute of TreeNode to specify a list of classes; often, this
+list contains only one class. You can have more than one node type that applies
+to a particular class; in this case, each object of that class is represented by
+multiple nodes, one for each applicable node type. In Figure 54, one Company
+object is represented by the nodes labeled &#8220;Acme Labs, Inc.&#8221;, &#8220;Departments&#8221;, and
+&#8220;Employees&#8221;.</p>
+<div class="section" id="a-node-type-without-children">
+<span id="id17"></span><h4>A Node Type without Children<a class="headerlink" href="#a-node-type-without-children" title="Permalink to this headline">¶</a></h4>
+<p>To define a node type without children, set the <strong>children</strong> attribute of
+TreeNode to the empty string. In Example 16, the following lines define the node
+type for the node that displays the company name, with no children:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Company</span> <span class="p">],</span>
+          <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+          <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">,</span>
+          <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+          <span class="n">view</span>      <span class="o">=</span> <span class="n">View</span><span class="p">(</span> <span class="n">Group</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span>
+                           <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                           <span class="n">show_left</span><span class="o">=</span><span class="bp">True</span> <span class="p">))</span> <span class="p">),</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="a-node-type-with-children">
+<span id="id18"></span><h4>A Node Type with Children<a class="headerlink" href="#a-node-type-with-children" title="Permalink to this headline">¶</a></h4>
+<p>To define a node type that has children, set the <strong>children</strong> attribute of
+TreeNode to the (extended) name of a trait on the object that it is a node for;
+the named trait contains a list of the node&#8217;s children. In Example 16, the
+following lines define the node type for the node that contains the departments
+of a company. The node type is for instances of Company, and &#8216;departments&#8217; is a
+trait attribute of Company.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Company</span> <span class="p">],</span>
+          <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+          <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;departments&#39;</span><span class="p">,</span>
+          <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;=Departments&#39;</span><span class="p">,</span>
+          <span class="n">view</span>      <span class="o">=</span> <span class="n">no_view</span><span class="p">,</span>
+          <span class="n">add</span>       <span class="o">=</span> <span class="p">[</span> <span class="n">Department</span> <span class="p">]</span> <span class="p">),</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setting-the-label-of-a-tree-node">
+<span id="id19"></span><h4>Setting the Label of a Tree Node<a class="headerlink" href="#setting-the-label-of-a-tree-node" title="Permalink to this headline">¶</a></h4>
+<p>The <strong>label</strong> attribute of Tree Node can work in either of two ways: as a trait
+attribute name, or as a literal string.</p>
+<p>If the value is a simple string, it is interpreted as the extended trait name of
+an attribute on the object that the node is for, whose value is used as the
+label. This approach is used in the code snippet in
+<a class="reference internal" href="#a-node-type-without-children"><em>A Node Type without Children</em></a>.</p>
+<p>If the value is a string that begins with an equals sign (&#8216;=&#8217;), the rest of the
+string is used as the literal label. This approach is used in the code snippet
+in <a class="reference internal" href="#a-node-type-with-children"><em>A Node Type with Children</em></a>.</p>
+<p>You can also specify a callable to format the label of the node, using the
+<strong>formatter</strong> attribute of TreeNode.</p>
+</div>
+</div>
+<div class="section" id="defining-operations-on-nodes">
+<span id="id20"></span><h3>Defining Operations on Nodes<a class="headerlink" href="#defining-operations-on-nodes" title="Permalink to this headline">¶</a></h3>
+<p>You can use various attributes of TreeNode to define operations or behavior of
+nodes.</p>
+<div class="section" id="shortcut-menus-on-nodes">
+<span id="id21"></span><h4>Shortcut Menus on Nodes<a class="headerlink" href="#shortcut-menus-on-nodes" title="Permalink to this headline">¶</a></h4>
+<p>Use the <strong>menu</strong> attribute of TreeNode to define a shortcut menu that opens when
+the user right-clicks on a node. The value is a Traits UI or PyFace menu
+containing Action objects for the menu commands. In Example 16, the following
+lines define the node type for employees, including a shortcut menu for employee
+nodes:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TreeNode</span><span class="p">(</span> <span class="n">node_for</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">Department</span> <span class="p">],</span>
+          <span class="n">auto_open</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+          <span class="n">children</span>  <span class="o">=</span> <span class="s">&#39;employees&#39;</span><span class="p">,</span>
+          <span class="n">label</span>     <span class="o">=</span> <span class="s">&#39;name&#39;</span><span class="p">,</span>
+          <span class="n">menu</span>      <span class="o">=</span> <span class="n">Menu</span><span class="p">(</span> <span class="n">NewAction</span><span class="p">,</span>
+                            <span class="n">Separator</span><span class="p">(),</span>
+                            <span class="n">DeleteAction</span><span class="p">,</span>
+                            <span class="n">Separator</span><span class="p">(),</span>
+                            <span class="n">RenameAction</span><span class="p">,</span>
+                            <span class="n">Separator</span><span class="p">(),</span>
+                            <span class="n">CopyAction</span><span class="p">,</span>
+                            <span class="n">CutAction</span><span class="p">,</span>
+                            <span class="n">PasteAction</span> <span class="p">),</span>
+          <span class="n">view</span>      <span class="o">=</span> <span class="n">View</span><span class="p">(</span> <span class="n">Group</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span>
+                           <span class="n">orientation</span><span class="o">=</span><span class="s">&#39;vertical&#39;</span><span class="p">,</span>
+                           <span class="n">show_left</span><span class="o">=</span><span class="bp">True</span> <span class="p">)),</span>
+          <span class="n">add</span>       <span class="o">=</span> <span class="p">[</span> <span class="n">Employee</span> <span class="p">]</span> <span class="p">),</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="allowing-the-hierarchy-to-be-modified">
+<span id="id22"></span><h4>Allowing the Hierarchy to Be Modified<a class="headerlink" href="#allowing-the-hierarchy-to-be-modified" title="Permalink to this headline">¶</a></h4>
+<p>If a node contains children, you can allow objects to be added to its set of
+children, through operations such as dragging and dropping, copying and pasting,
+or creating new objects. Two attributes control these operations: <strong>add</strong> and
+<strong>move</strong>. Both are lists of classes. The <strong>add</strong> attribute contains classes that
+can be added by any means, including creation. The code snippet in the preceding
+section (8.2.7.2.1) includes an example of the <strong>add</strong> attribute. The <strong>move</strong>
+attribute contains classes that can be dragged and dropped, but not created. The
+<strong>move</strong> attribute need not be specified if all classes that can be moved can
+also be created (and therefore are specified in the <strong>add</strong> value).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The <strong>add</strong> attribute alone is not enough to create objects.</p>
+<p class="last">Specifying the <strong>add</strong> attribute makes it possible for objects of the
+specified classes to be created, but by itself, it does not provide a way for
+the user to do so. In the code snippet in the preceding section
+(<a class="reference internal" href="#shortcut-menus-on-nodes"><em>Shortcut Menus on Nodes</em></a>), &#8216;NewAction&#8217; in the Menu constructor call
+defines a <em class="menuselection">New &gt; Employee</em> menu item that creates Employee
+objects.</p>
+</div>
+<p>In the example tree editor, users can create new employees using the
+<em class="menuselection">New &gt; Employee</em> shortcut menu item, and they can drag an
+employee node and drop it on a department node. The corresponding object becomes
+a member of the appropriate list.</p>
+<p>You can specify the label that appears on the <em class="menuselection">New</em> submenu when
+adding a particular type of object, using the <strong>name</strong> attribute of TreeNode.
+Note that you set this attribute on the tree node type that will be <em>added</em> by
+the menu item, not the node type that <em>contains</em> the menu item. For example, to
+change <em class="menuselection">New &gt; Employee</em> to <em class="menuselection">New &gt; Worker</em>, set
+<tt class="docutils literal"><span class="pre">name</span> <span class="pre">=</span> <span class="pre">'Worker'</span></tt> on the tree node whose <strong>node_for</strong> value contains
+Employee. If this attribute is not set, the class name is used.</p>
+<p>You can determine whether a node or its children can be copied, renamed, or
+deleted, by setting the following attributes on TreeNode:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="40%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Attribute</th>
+<th class="head">If True, the ...</th>
+<th class="head">can be...</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><strong>copy</strong></td>
+<td>object&#8217;s children</td>
+<td>copied.</td>
+</tr>
+<tr><td><strong>delete</strong></td>
+<td>object&#8217;s children</td>
+<td>deleted.</td>
+</tr>
+<tr><td><strong>delete_me</strong></td>
+<td>object</td>
+<td>deleted.</td>
+</tr>
+<tr><td><strong>rename</strong></td>
+<td>object&#8217;s children</td>
+<td>renamed.</td>
+</tr>
+<tr><td><strong>rename_me</strong></td>
+<td>object</td>
+<td>renamed.</td>
+</tr>
+</tbody>
+</table>
+<p>All of these attributes default to True. As with <strong>add</strong>, you must also define
+actions to perform these operations.</p>
+</div>
+<div class="section" id="behavior-on-nodes">
+<span id="id23"></span><h4>Behavior on Nodes<a class="headerlink" href="#behavior-on-nodes" title="Permalink to this headline">¶</a></h4>
+<p>As the user clicks in the tree, you may wish to enable certain program behavior.</p>
+<p>You can use the <em>selected</em> parameter to specify the name of a trait attribute on
+the current context object to synchronize with the user&#8217;s current selection. For
+example, you can enable or disable menu items or toolbar icons depending on
+which node is selected. The synchronization is two-way; you can set the
+attribute referenced by <em>selected</em> to force the tree to select a particular
+node.</p>
+<p>The <em>on_select</em> and <em>on_dclick</em> parameters are callables to invoke when the user
+selects or double-clicks a node, respectively.</p>
+</div>
+<div class="section" id="expanding-and-collapsing-nodes">
+<span id="id24"></span><h4>Expanding and Collapsing Nodes<a class="headerlink" href="#expanding-and-collapsing-nodes" title="Permalink to this headline">¶</a></h4>
+<p>You can control some aspects of expanding and collapsing of nodes in the tree.</p>
+<p>The integer <em>auto_open</em> parameter of TreeEditor() determines how many levels are
+expanded below the root node, when the tree is first displayed. For example, if
+<em>auto_open</em> is 2, then two levels below the root node are displayed (whether or
+not the root node itself is displayed, which is determined by <em>hide_root</em>).</p>
+<p>The Boolean <strong>auto_open</strong> attribute of TreeNode determines whether nodes of that
+type are expanded when they are displayed (at any time, not just on initial
+display of the tree). For example, suppose that a tree editor has <em>auto_open</em>
+setting of 2, and contains a tree node at level 3 whose <strong>auto_open</strong> attribute
+is True. The nodes at level 3 are not displayed initially, but when the user
+expands a level 2 node, displaying the level 3 node, that&#8217;s nodes children are
+automatically displayed also. Similarly, the number of levels of nodes initially
+displayed can be greater than specified by the tree editor&#8217;s <em>auto_open</em>
+setting, if some of the nodes have <strong>auto_open</strong> set to True.</p>
+<p>If the <strong>auto_close</strong> attribute of TreeNode is set to True, then when a node is
+expanded, any siblings of that node are automatically closed. In other words,
+only one node of this type can be expanded at a time.</p>
+</div>
+<div class="section" id="editing-objects">
+<span id="id25"></span><h4>Editing Objects<a class="headerlink" href="#editing-objects" title="Permalink to this headline">¶</a></h4>
+<p>One pane of the tree editor displays a user interface for editing the object
+that is selected in the tree. You can specify a View to use for each node type
+using the <strong>view</strong> attribute of TreeNode. If you do not specify a view, then the
+default view for the object is displayed. To suppress the editor pane, set the
+<em>editable</em> parameter of TreeEditor() to False; in this case, the objects
+represented by the nodes can still be modified by other means, such as shortcut
+menu commands.</p>
+<p>You can define multiple tree editors that share a single editor pane. Each tree
+editor has its own tree pane. Each time the user selects a different node in any
+of the sharing tree controls, the editor pane updates to display the user
+interface for the selected object. To establish this relationship, do the
+following:</p>
+<ol class="arabic">
+<li><p class="first">Call TreeEditor() with the <em>shared_editor</em> parameter set to True, without
+defining any tree nodes. The object this call returns defines the shared
+editor pane. For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">my_shared_editor_pane</span> <span class="o">=</span> <span class="n">TreeEditor</span><span class="p">(</span><span class="n">shared_editor</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">For each editor that uses the shared editor pane:</p>
+<ul class="simple">
+<li>Set the <em>shared_editor</em> parameter of TreeEditor() to True.</li>
+<li>Set the editor parameter of TreeEditor() to the object returned in Step 1.</li>
+</ul>
+<p>For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">shared_tree_1</span> <span class="o">=</span> <span class="n">TreeEditor</span><span class="p">(</span><span class="n">shared_editor</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                           <span class="n">editor</span> <span class="o">=</span> <span class="n">my_shared_editor_pane</span><span class="p">,</span>
+                           <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TreeNode</span><span class="p">(</span> <span class="c"># ...</span>
+                                             <span class="p">)</span>
+                                   <span class="p">]</span>
+                           <span class="p">)</span>
+<span class="n">shared_tree_2</span> <span class="o">=</span> <span class="n">TreeEditor</span><span class="p">(</span><span class="n">shared_editor</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                           <span class="n">editor</span> <span class="o">=</span> <span class="n">my_shared_editor_pane</span><span class="p">,</span>
+                           <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">TreeNode</span><span class="p">(</span> <span class="c"># ...</span>
+                                              <span class="p">)</span>
+                                   <span class="p">]</span>
+                           <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="tree-defining-the-format">
+<span id="id26"></span><h3>Defining the Format<a class="headerlink" href="#tree-defining-the-format" title="Permalink to this headline">¶</a></h3>
+<p>Several parameters to TreeEditor() affect the formatting of the tree control:</p>
+<ul class="simple">
+<li><em>show_icons</em>: If True (the default), icons are displayed for the nodes in the
+tree.</li>
+<li><em>icon_size</em>: A two-integer tuple indicating the size of the icons for the
+nodes.</li>
+<li><em>lines_mode</em>: Determines whether lines are displayed between related nodes.
+The valid values are &#8216;on&#8217;, &#8216;off&#8217;, and &#8216;appearance&#8217; (the default). When set to
+&#8216;appearance&#8217;, lines are displayed except on Posix-based platforms.</li>
+<li><em>hide_root</em>: If True, the root node in the hierarchy is not displayed. If
+this parameter were specified as True in Example 16, the node in Figure 54
+that is labeled &#8220;Acme Labs, Inc.&#8221; would not appear.</li>
+</ul>
+<p>Additionally, several attributes of TreeNode also affect the display of the
+tree:</p>
+<ul class="simple">
+<li><strong>icon_path</strong>: A directory path to search for icon files. This path can be
+relative to the module it is used in.</li>
+<li><strong>icon_item</strong>: The icon for a leaf node.</li>
+<li><strong>icon_open</strong>: The icon for a node with children whose children are displayed.</li>
+<li><strong>icon_group</strong>: The icon for a node with children whose children are not
+displayed.</li>
+</ul>
+<p>The wxWidgets implementation automatically detects the bitmap format of the
+icon.</p>
+</div>
+</div>
+</div>
+<div class="section" id="extra-trait-editor-factories">
+<span id="id27"></span><h1>&#8220;Extra&#8221; Trait Editor Factories<a class="headerlink" href="#extra-trait-editor-factories" title="Permalink to this headline">¶</a></h1>
+<p>The enthought.traits.ui.wx package defines a few editor factories that are
+specific to the wxWidgets toolkit, some of which are also specific to the
+Microsoft Windows platform. These editor factories are not necessarily
+implemented for other GUI toolkits or other operating system platforms.</p>
+<div class="section" id="animatedgifeditor">
+<h2>AnimatedGIFEditor()<a class="headerlink" href="#animatedgifeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">File</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>playing</em></td>
+</tr>
+</tbody>
+</table>
+<p>AnimatedGIFEditor() generates a display of the contents of an animated GIF image
+file. The Boolean <em>playing</em> parameter determines whether the image is animated
+or static.</p>
+</div>
+<div class="section" id="arrayvieweditor">
+<h2>ArrayViewEditor()<a class="headerlink" href="#arrayvieweditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">2-D Array, 2-D CArray</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>format, show_index, titles, transpose</em></td>
+</tr>
+</tbody>
+</table>
+<p>ArrayViewEditor() generates a tabular display for an array. It is suitable for
+use with large arrays, which do not work well with the editors generated by
+ArrayEditor(). All styles of the editor have the same appearance.</p>
+<div class="figure">
+<img alt="Tabular display of numeric data, with columns Index, x, y, and z" src="../_images/array_view_editor.jpg" />
+<p class="caption">Figure 55: Array view editor</p>
+</div>
+</div>
+<div class="section" id="flasheditor">
+<h2>FlashEditor()<a class="headerlink" href="#flasheditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">string traits, Enum(string values)</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+</tbody>
+</table>
+<p>FlashEditor() generates a display of an Adobe Flash Video file, using an ActiveX
+control (if one is installed on the system). This factory is available only on
+Microsoft Windows platforms. The attribute being edited must have a value whose
+text representation is the name or URL of a Flash video file. If the value is a
+Unicode string, it must contain only characters that are valid for filenames or
+URLs.</p>
+</div>
+<div class="section" id="historyeditor">
+<h2>HistoryEditor()<a class="headerlink" href="#historyeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">string traits</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>entries</em></td>
+</tr>
+</tbody>
+</table>
+<p>HistoryEditor() generates a combo box, which allows the user to either enter a
+text string or select a value from a list of previously-entered values. The same
+control is used for all editor styles. The <em>entries</em> parameter determines how
+many entries are preserved in the history list. This type of control is used as
+part of the simple style of file editor; see <a class="reference internal" href="factories_basic.html#fileeditor"><em>FileEditor()</em></a>.</p>
+</div>
+<div class="section" id="iehtmleditor">
+<h2>IEHTMLEditor()<a class="headerlink" href="#iehtmleditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">string traits, Enum(string values)</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>back, forward, home, html, page_loaded, refresh, search, status, stop,</em>
+<em>title</em></td>
+</tr>
+</tbody>
+</table>
+<p>IEHTMLEditor() generates a display of a web page, using Microsoft Internet
+Explorer (IE) via ActiveX to render the page. This factory is available only on
+Microsoft Windows platforms. The attribute being edited must have value whose
+text representation is a URL. If the value is a Unicode string, it must contain
+only characters that are valid for URLs.</p>
+<p>The <em>back</em>, <em>forward</em>, <em>home</em>, <em>refresh</em>, <em>search</em> and <em>stop</em> parameters are
+extended names of event attributes that represent the user clicking on the
+corresponding buttons in the standard IE interface. The IE buttons are not
+displayed by the editor; you must create buttons separately in the View,
+if you want the user to be able to actually click buttons.</p>
+<p>The <em>html</em>, <em>page_loaded</em>, <em>status</em>, and <em>title</em> parameters are the extended
+names of string attributes, which the editor updates with values based on its
+own state. You can display these attributes elsewhere in the View.</p>
+<ul class="simple">
+<li><em>html</em>: The current page content as HTML (as would be displayed by the
+<em class="menuselection">View &gt; Source</em> command in IE).</li>
+<li><em>page_loaded</em>: The URL of the currently displayed page; this may be different
+from the URL represented by the attribute being edited.</li>
+<li><em>status</em>: The text that would appear in the IE status bar.</li>
+<li><em>title</em>: The title of the currently displayed page.</li>
+</ul>
+</div>
+<div class="section" id="imageeditor">
+<h2>ImageEditor()<a class="headerlink" href="#imageeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">(any)</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>image</em></td>
+</tr>
+</tbody>
+</table>
+<p>ImageEditor() generates a read-only display of an image. The image to be
+displayed is determined by the <em>image</em> parameter, or by the value of the trait
+attribute being edited, if <em>image</em> is not specified. In either case, the value
+must be a PyFace ImageResource (enthought.pyface.api.ImageResource), or a string
+that can be converted to one. If <em>image</em> is specified, then the type and value
+of the trait attribute being edited are irrelevant and are ignored.</p>
+</div>
+<div class="section" id="lededitor">
+<h2>LEDEditor()<a class="headerlink" href="#lededitor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">numeric traits</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>alignment, format_str</em></td>
+</tr>
+</tbody>
+</table>
+<p>LEDEditor() generates a display that resembles a &#8220;digital&#8221; display using
+light-emitting diodes. All styles of this editor are the same, and are
+read-only.</p>
+<p>The <em>alignment</em> parameter can be &#8216;left&#8217;, &#8216;center&#8217;, or &#8216;right&#8217; to indicate how
+the value should be aligned within the display. The default is right-alignment.</p>
+<div class="figure">
+<img alt="LED-like display of 90452" src="../_images/led_editor.gif" />
+<p class="caption">Figure 56: LED Editor with right alignment</p>
+</div>
+</div>
+<div class="section" id="themedbuttoneditor">
+<h2>ThemedButtonEditor()<a class="headerlink" href="#themedbuttoneditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Event</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>label</em>, <em>theme, down_theme, hover_theme, disabled_theme, image, position,</em>
+<em>spacing, view</em></td>
+</tr>
+</tbody>
+</table>
+<p>The ThemedButtonEditor() factory generates a button that is formatted according
+to specified or default themes. All editor styles have the same appearance.</p>
+<div class="figure">
+<img alt="Themed buttons for normal, hover, down, and disabled states" src="../_images/themed_button_editor.gif" />
+<p class="caption">Figure 57: Themed buttons in various states</p>
+</div>
+<p>The theme-related parameters determine the appearance of the button in various
+states. Figure 57 shows the default theme.</p>
+</div>
+<div class="section" id="themedcheckboxeditor">
+<h2>ThemedCheckboxEditor()<a class="headerlink" href="#themedcheckboxeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Boolean</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>label</em>, <em>theme, hover_off_image,  hover_off_theme, hover_on_image,</em>
+<em>hover_on_theme,  image, on_image, on_theme, position, spacing</em></td>
+</tr>
+</tbody>
+</table>
+<p>The ThemedCheckboxEditor() factory generates a checkbox that is formatted
+according to specified or default themes. All editor styles have the same
+appearance.</p>
+<div class="figure">
+<img alt="Themed checkbox for On, Off, Hover Off, and Hover On states" src="../_images/themed_checkbox_editor.gif" />
+<p class="caption">Figure 58: Themed checkbox in various states</p>
+</div>
+<p>The theme-related parameters determine the appearance of the checkbox in the
+various states. shows the default theme. If <em>label</em> is not specified for the
+editor factory, the value is inherited from the <em>label</em> value of the enclosing
+Item. Both labels may be displayed, if the Item&#8217;s label is not hidden.</p>
+</div>
+<div class="section" id="themedslidereditor">
+<h2>ThemedSliderEditor()<a class="headerlink" href="#themedslidereditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Range</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>alignment, bg_color,  high, increment, low, show_value, slider_color,</em>
+<em>text_color, tip_color</em></td>
+</tr>
+</tbody>
+</table>
+<p>The ThemedSliderEditor() factory generates a slider control that is formatted
+according to specified or default themes. All editor styles have the same
+appearance. The value is edited by modifying its textual representation. The
+background of the control updates to reflect the value relative to the total
+range represented by a slider. For example, if the range is from -2 to 2, a
+value of 0 is represented by a bar covering the left half of the control area,
+as shown in Figure 59.</p>
+<img alt="Themed box with shading in the left half and a vertical orange bar in the middle" src="../_images/themed_slider_no_focus.gif" />
+<div class="figure">
+<img alt="Themed box with the value 0 selected in the center" src="../_images/themed_slide_with_focus.gif" />
+<p class="caption">Figure 59: Themed slider without focus, and with focus</p>
+</div>
+</div>
+<div class="section" id="themedtexteditor">
+<h2>ThemedTextEditor()<a class="headerlink" href="#themedtexteditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Str, String, Unicode, CStr, CUnicode, and any trait whose value is a string</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>auto_set</em>, <em>enter_set</em>, <em>evaluate</em>, <em>evaluate_name</em>, <em>mapping</em>,
+<em>multi_line</em>, <em>password, theme</em></td>
+</tr>
+</tbody>
+</table>
+<p>The ThemedTextEditor() factory generates a text editor that is formatted
+according to a specified theme. If no theme is specified, the editor uses the
+theme, if any, specified by the surrounding Group or View. Thus, there is no
+default theme. All editor styles have the same appearance, except the read-only
+style, which is not editable.</p>
+<img alt="Themed text editor, displaying text ``a*x*x-b*x``" src="../_images/themed_text_editor_no_focus.gif" />
+<div class="figure">
+<img alt="Themed text editor, with text ``a*x*x-b*x`` selected" src="../_images/themed_text_editor_with_focus.gif" />
+<p class="caption">Figure 60: Themed text editor, without focus and with focus</p>
+</div>
+</div>
+<div class="section" id="themedverticalnotebookeditor">
+<h2>ThemedVerticalNotebookEditor()<a class="headerlink" href="#themedverticalnotebookeditor" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Suitable for:</th><td class="field-body">Lists of Instances</td>
+</tr>
+<tr class="field"><th class="field-name">Default for:</th><td class="field-body">(none)</td>
+</tr>
+<tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
+<tr><td>&nbsp;</td><td class="field-body"><em>closed_theme, double_click, open_theme, page_name, multiple_open,</em>
+<em>scrollable, view</em></td>
+</tr>
+</tbody>
+</table>
+<p>The ThemedVerticalNotebookEditor() factory generates a &#8220;notebook&#8221; editor,
+containing tabs that can be vertically expanded or collapsed. It can be used for
+lists of instances, similarly to the ListEditor() factory, with the
+<em>use_notebook</em> parameter. You can specify themes to use for the open and closed
+states of the tabs.</p>
+<div class="figure">
+<img alt="Stacked boxes displaying names as labels" src="../_images/themed_notebook_closed.gif" />
+<p class="caption">Figure 61: Themed vertical notebook, with tabs for Person instances closed</p>
+</div>
+<div class="figure">
+<img alt="Stacked boxes, with one expanded to show themed text editors" src="../_images/themed_notebook_open.gif" />
+<p class="caption">Figure 62: Themed vertical notebook, with one tab open</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Advanced Trait Editors</a><ul>
+<li><a class="reference internal" href="#customeditor">CustomEditor()</a></li>
+<li><a class="reference internal" href="#dropeditor">DropEditor()</a></li>
+<li><a class="reference internal" href="#dndeditor">DNDEditor()</a></li>
+<li><a class="reference internal" href="#keybindingeditor">KeyBindingEditor()</a></li>
+<li><a class="reference internal" href="#tableeditor">TableEditor()</a><ul>
+<li><a class="reference internal" href="#specifying-columns">Specifying Columns</a></li>
+<li><a class="reference internal" href="#managing-items">Managing Items</a><ul>
+<li><a class="reference internal" href="#organizing-items">Organizing Items</a></li>
+<li><a class="reference internal" href="#filtering-and-searching">Filtering and Searching</a></li>
+<li><a class="reference internal" href="#interacting-with-items">Interacting with Items</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#editing-the-table">Editing the Table</a><ul>
+<li><a class="reference internal" href="#adding-items">Adding Items</a></li>
+<li><a class="reference internal" href="#deleting-items">Deleting Items</a></li>
+<li><a class="reference internal" href="#modifying-items">Modifying Items</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defining-the-layout">Defining the Layout</a></li>
+<li><a class="reference internal" href="#defining-the-format">Defining the Format</a></li>
+<li><a class="reference internal" href="#other-user-interactions">Other User Interactions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tabulareditor">TabularEditor()</a><ul>
+<li><a class="reference internal" href="#advantages">Advantages</a></li>
+<li><a class="reference internal" href="#disadvantages">Disadvantages</a></li>
+<li><a class="reference internal" href="#tabularadapter">TabularAdapter</a></li>
+<li><a class="reference internal" href="#the-tabular-editor-user-interface">The Tabular Editor User Interface</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#treeeditor">TreeEditor()</a><ul>
+<li><a class="reference internal" href="#defining-nodes">Defining Nodes</a><ul>
+<li><a class="reference internal" href="#a-node-type-without-children">A Node Type without Children</a></li>
+<li><a class="reference internal" href="#a-node-type-with-children">A Node Type with Children</a></li>
+<li><a class="reference internal" href="#setting-the-label-of-a-tree-node">Setting the Label of a Tree Node</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defining-operations-on-nodes">Defining Operations on Nodes</a><ul>
+<li><a class="reference internal" href="#shortcut-menus-on-nodes">Shortcut Menus on Nodes</a></li>
+<li><a class="reference internal" href="#allowing-the-hierarchy-to-be-modified">Allowing the Hierarchy to Be Modified</a></li>
+<li><a class="reference internal" href="#behavior-on-nodes">Behavior on Nodes</a></li>
+<li><a class="reference internal" href="#expanding-and-collapsing-nodes">Expanding and Collapsing Nodes</a></li>
+<li><a class="reference internal" href="#editing-objects">Editing Objects</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tree-defining-the-format">Defining the Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#extra-trait-editor-factories">&#8220;Extra&#8221; Trait Editor Factories</a><ul>
+<li><a class="reference internal" href="#animatedgifeditor">AnimatedGIFEditor()</a></li>
+<li><a class="reference internal" href="#arrayvieweditor">ArrayViewEditor()</a></li>
+<li><a class="reference internal" href="#flasheditor">FlashEditor()</a></li>
+<li><a class="reference internal" href="#historyeditor">HistoryEditor()</a></li>
+<li><a class="reference internal" href="#iehtmleditor">IEHTMLEditor()</a></li>
+<li><a class="reference internal" href="#imageeditor">ImageEditor()</a></li>
+<li><a class="reference internal" href="#lededitor">LEDEditor()</a></li>
+<li><a class="reference internal" href="#themedbuttoneditor">ThemedButtonEditor()</a></li>
+<li><a class="reference internal" href="#themedcheckboxeditor">ThemedCheckboxEditor()</a></li>
+<li><a class="reference internal" href="#themedslidereditor">ThemedSliderEditor()</a></li>
+<li><a class="reference internal" href="#themedtexteditor">ThemedTextEditor()</a></li>
+<li><a class="reference internal" href="#themedverticalnotebookeditor">ThemedVerticalNotebookEditor()</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="factories_basic.html"
+                        title="previous chapter">The Predefined Trait Editor Factories</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tips.html"
+                        title="next chapter">Tips, Tricks and Gotchas</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/TUIUG/factories_advanced_extra.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tips.html" title="Tips, Tricks and Gotchas"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="factories_basic.html" title="The Predefined Trait Editor Factories"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits UI User Guide</a> &raquo;</li>
+  
+    <li><a href="#">Advanced Trait Editors</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 27, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>
