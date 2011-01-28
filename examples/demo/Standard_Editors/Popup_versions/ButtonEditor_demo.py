@@ -14,11 +14,11 @@ from enthought.traits.ui.message import message
 #  Demo Class
 #-------------------------------------------------------------------------------
 
-class ButtonEditorDemo ( HasTraits ): 
+class ButtonEditorDemo ( HasTraits ):
     """ This class specifies the details of the ButtonEditor demo.
     """
 
-    # To demonstrate any given Trait editor, an appropriate Trait is required. 
+    # To demonstrate any given Trait editor, an appropriate Trait is required.
     fire_event = Button('Click Me')
 
 
@@ -50,4 +50,4 @@ popup = ButtonEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

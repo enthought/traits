@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in /LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill Date: 11/02/2004 Description: Test case for Traits
 # User Interface
 # ------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ import wx
 from enthought.traits.api \
     import Trait, HasTraits, Str, Int, Range, List, Event, File, Directory, \
            Bool, Color, Font, Enum
-           
+
 from enthought.traits.ui.api \
     import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
            DirectoryEditor, ImageEnumEditor
@@ -31,25 +31,25 @@ from enthought.traits.ui.api \
 #-------------------------------------------------------------------------------
 
 origin_values = [ 'top left', 'top right', 'bottom left', 'bottom right' ]
-        
+
 #-------------------------------------------------------------------------------
 #  'Instance' class:
 #-------------------------------------------------------------------------------
-            
+
 class Instance ( HasTraits ):
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     integer_text = Int( 1 )
-    enumeration  = Enum( 'one', 'two', 'three', 'four', 'five', 'six', 
+    enumeration  = Enum( 'one', 'two', 'three', 'four', 'five', 'six',
                          cols = 3 )
     float_range  = Range( 0.0, 10.0, 10.0 )
     int_range    = Range( 1, 5 )
     boolean      = Bool( True )
-    
-    view         = View( 'integer_text', 'enumeration', 'float_range', 
+
+    view         = View( 'integer_text', 'enumeration', 'float_range',
                          'int_range', 'boolean' )
 
 #-------------------------------------------------------------------------------
@@ -57,43 +57,43 @@ class Instance ( HasTraits ):
 #-------------------------------------------------------------------------------
 
 class TraitsTest ( HasTraits ):
-    
+
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     integer_text = Int( 1 )
-    enumeration  = Enum( 'one', 'two', 'three', 'four', 'five', 'six', 
+    enumeration  = Enum( 'one', 'two', 'three', 'four', 'five', 'six',
                          cols = 3 )
     float_range  = Range( 0.0, 10.0, 10.0 )
     int_range    = Range( 1, 6 )
     int_range2   = Range( 1, 50 )
-    compound     = Trait( 1, Range( 1, 6 ), 
+    compound     = Trait( 1, Range( 1, 6 ),
                           'one', 'two', 'three', 'four', 'five', 'six' )
     boolean      = Bool( True )
     instance     = Trait( Instance() )
     color        = Color
     font         = Font
-    check_list   = List( editor = CheckListEditor( 
+    check_list   = List( editor = CheckListEditor(
                                    values = [ 'one', 'two', 'three', 'four' ],
                                    cols   = 4 ) )
-    list         = List( Str, [ 'East of Eden', 'The Grapes of Wrath', 
+    list         = List( Str, [ 'East of Eden', 'The Grapes of Wrath',
                                 'Of Mice and Men' ] )
-    button       = Event( 0, editor = ButtonEditor( label = 'Click' ) )                                  
+    button       = Event( 0, editor = ButtonEditor( label = 'Click' ) )
     file         = File
     directory    = Directory
     image_enum   = Trait( editor = ImageEnumEditor( values = origin_values,
-                                                   suffix = '_origin', 
+                                                   suffix = '_origin',
                                                    cols   = 4,
                                                    klass  = Instance ),
                          *origin_values )
-                         
+
     #---------------------------------------------------------------------------
-    #  View definitions: 
+    #  View definitions:
     #---------------------------------------------------------------------------
-        
-    view = View( 
-                 ( '|{Enum}',              
+
+    view = View(
+                 ( '|{Enum}',
                    ( '|<[Enumeration]',  'enumeration[Simple]',  '_',
                                          'enumeration[Custom]@', '_',
                                          'enumeration[Text]*',   '_',
@@ -102,8 +102,8 @@ class TraitsTest ( HasTraits ):
                                          'check_list[Custom]@', '_',
                                          'check_list[Text]*',   '_',
                                          'check_list[Readonly]~' )
-                 ),                      
-                 ( '|{Range}',           
+                 ),
+                 ( '|{Range}',
                    ( '|<[Float Range]',  'float_range[Simple]',  '_',
                                          'float_range[Custom]@', '_',
                                          'float_range[Text]*',   '_',
@@ -112,12 +112,12 @@ class TraitsTest ( HasTraits ):
                                          'int_range[Custom]@', '_',
                                          'int_range[Text]*',   '_',
                                          'int_range[Readonly]~' ),
-                   ( '|<[Int Range 2]',  'int_range2[Simple]',  '_', 
+                   ( '|<[Int Range 2]',  'int_range2[Simple]',  '_',
                                          'int_range2[Custom]@', '_',
                                          'int_range2[Text]*',   '_',
                                          'int_range2[Readonly]~' )
-                 ),                      
-                 ( '|{Misc}',            
+                 ),
+                 ( '|{Misc}',
                    ( '|<[Integer Text]', 'integer_text[Simple]',  '_',
                                          'integer_text[Custom]@', '_',
                                          'integer_text[Text]*',   '_',
@@ -130,9 +130,9 @@ class TraitsTest ( HasTraits ):
                                          'boolean[Custom]@', '_',
                                          'boolean[Text]*',   '_',
                                          'boolean[Readonly]~' )
-                 ),                      
-                 ( '|{Color/Font}',                        
-                   ( '|<[Color]',        'color[Simple]',  '_', 
+                 ),
+                 ( '|{Color/Font}',
+                   ( '|<[Color]',        'color[Simple]',  '_',
                                          'color[Custom]@', '_',
                                          'color[Text]*',   '_',
                                          'color[Readonly]~' ),
@@ -140,17 +140,17 @@ class TraitsTest ( HasTraits ):
                                          'font[Custom]@', '_',
                                          'font[Text]*',   '_',
                                          'font[Readonly]~' )
-                 ),                      
-                 ( '|{List}',            
+                 ),
+                 ( '|{List}',
                    ( '|<[List]',         'list[Simple]',  '_',
                                          'list[Custom]@', '_',
                                          'list[Text]*',   '_',
                                          'list[Readonly]~' )
-                 ),                      
-                 ( '|{Button}',          
+                 ),
+                 ( '|{Button}',
                    ( '|<[Button]',       'button[Simple]',  '_',
                                          'button[Custom]@' ),
-#                                        'button[Text]*', 
+#                                        'button[Text]*',
 #                                        'button[Readonly]~' ),
                    ( '|<[Image Enum]',   'image_enum[Simple]',  '_',
                                          'image_enum[Custom]@', '_',
@@ -160,14 +160,14 @@ class TraitsTest ( HasTraits ):
                                          'instance[Custom]@', '_',
                                          'instance[Text]*',   '_',
                                          'instance[Readonly]~' ),
-                 ),                      
-                 ( '|{File}',            
-                                         
+                 ),
+                 ( '|{File}',
+
                    ( '|<[File]',         'file[Simple]',  '_',
                                          'file[Custom]@', '_',
                                          'file[Text]*',   '_',
                                          'file[Readonly]~', ),
-                   ( '|<[Directory]',    'directory[Simple]',  '_', 
+                   ( '|<[Directory]',    'directory[Simple]',  '_',
                                          'directory[Custom]@', '_',
                                          'directory[Text]*',   '_',
                                          'directory[Readonly]~' )
@@ -176,7 +176,7 @@ class TraitsTest ( HasTraits ):
                )
 
 #-------------------------------------------------------------------------------
-#  'TraitSheetApp' class:  
+#  'TraitSheetApp' class:
 #-------------------------------------------------------------------------------
 
 class TraitSheetApp ( wx.App ):
@@ -184,17 +184,17 @@ class TraitSheetApp ( wx.App ):
     #---------------------------------------------------------------------------
     #  Initialize the object:
     #---------------------------------------------------------------------------
-    
+
     def __init__ ( self, object ):
         self.object = object
         wx.InitAllImageHandlers()
         wx.App.__init__( self, 1, 'debug.log' )
         self.MainLoop()
-    
+
     #---------------------------------------------------------------------------
     #  Handle application initialization:
     #---------------------------------------------------------------------------
- 
+
     def OnInit ( self ):
         ui = self.object.edit_traits( kind = 'modal' )
         ui = self.object.edit_traits( kind = 'wizard' )
@@ -202,11 +202,11 @@ class TraitSheetApp ( wx.App ):
         ui = self.object.edit_traits( kind = 'live' )
         self.SetTopWindow( ui.control )
         return True
-    
+
 #-------------------------------------------------------------------------------
 #  Main program:
 #-------------------------------------------------------------------------------
-    
+
 if __name__ == '__main__':
     TraitSheetApp( TraitsTest() )
 

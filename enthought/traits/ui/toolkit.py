@@ -115,12 +115,12 @@ def toolkit ( *toolkits ):
         for toolkit_name in toolkits:
             try:
                 _toolkit = _import_toolkit( toolkit_name )
-    
+
                 # In case we have just decided on a toolkit, tell everybody else:
                 ETSConfig.toolkit = toolkit_name
-    
+
                 return _toolkit
-    
+
             except (AttributeError, ImportError):
                 pass
         else:
@@ -131,7 +131,7 @@ def toolkit ( *toolkits ):
                 warnings.warn( "Unable to import the '%s' backend for traits UI; "
                                "using the 'null' toolkit instead." % toolkit_name )
                 return _toolkit
-    
+
             except ImportError:
                 raise TraitError( "Could not find any UI toolkit called '%s'" %
                                   toolkit_name )

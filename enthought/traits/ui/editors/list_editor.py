@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
@@ -25,10 +25,10 @@ from __future__ import absolute_import
 
 from ...api import (HasTraits, BaseTraitHandler, Range, Str, Any, Int, Instance,
         Property, Bool, Callable, Enum, PrototypedFrom)
-           
+
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well.     
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
 from ..view import View
 
 from ..item import Item
@@ -73,7 +73,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # The editor to use for each list item:
     editor = editor_trait
-    
+
     # Can the list be reorganized, or have items added and deleted.
     mutable = Bool(True)
 
@@ -156,7 +156,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
 #-------------------------------------------------------------------------------
 #  'ListItemProxy' class:
-#   This class is used to update the list editors when the object changes 
+#   This class is used to update the list editors when the object changes
 #   external to the editor.
 #-------------------------------------------------------------------------------
 
@@ -165,17 +165,17 @@ class ListItemProxy ( HasTraits ):
     # The list proxy:
     list = Property
 
-    # The item proxies index into the original list: 
-    index = Int 
+    # The item proxies index into the original list:
+    index = Int
 
-    # Delegate all other traits to the original object: 
-    _ = PrototypedFrom( '_zzz_object' ) 
+    # Delegate all other traits to the original object:
+    _ = PrototypedFrom( '_zzz_object' )
 
-    # Define all of the private internal use values (the funny names are an 
-    # attempt to avoid name collisions with delegated trait names): 
-    _zzz_inited = Any 
-    _zzz_object = Any 
-    _zzz_name   = Any 
+    # Define all of the private internal use values (the funny names are an
+    # attempt to avoid name collisions with delegated trait names):
+    _zzz_inited = Any
+    _zzz_object = Any
+    _zzz_name   = Any
 
     def __init__ ( self, object, name, index, trait, value ):
         super( ListItemProxy, self ).__init__()
@@ -198,7 +198,7 @@ class ListItemProxy ( HasTraits ):
         if self._zzz_inited:
             self.list[ self.index ] = new_value
 
-    
+
 # Define the ListEditor class
 ListEditor = ToolkitEditorFactory
 

@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-# view_standalone.py --- Example of a view as a 
+# view_standalone.py --- Example of a view as a
 #                        standalone object
 import wx
 from enthought.traits.api import HasTraits, Int, Str, Trait
@@ -17,7 +17,7 @@ class Person(HasTraits):
 
 # Note that person_view is a standalone object.
 person_view = View('first_name', 'last_name', 'age', 'gender')
-                   
+
 bill = Person()
 
 class TraitApp ( wx.App ):
@@ -28,13 +28,13 @@ class TraitApp ( wx.App ):
         wx.InitAllImageHandlers()
         wx.App.__init__( self, 1, 'debug.log' )
         self.MainLoop()
-    
+
     def OnInit ( self ):
         # This is the call to the ui() method.
         ui = self.view.ui(self.object)
         self.SetTopWindow( ui.control )
         return True
-    
+
 
 #  Main program:
 TraitApp( bill, person_view )

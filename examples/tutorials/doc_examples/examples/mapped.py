@@ -19,17 +19,17 @@ standard_color = Trait ('black', {
     'violet':      ( 0.31, 0.184, 0.31, 1.0 ),
     'yellow':      ( 1.0, 1.0, 0.0, 1.0 ),
     'white':       ( 1.0, 1.0, 1.0, 1.0 ),
-    'transparent': ( 1.0, 1.0, 1.0, 0.0 ) 
+    'transparent': ( 1.0, 1.0, 1.0, 0.0 )
 } )
-               
+
 red_color = Trait( 'red', standard_color )
 
-class GraphicShape( HasTraits ): 
+class GraphicShape( HasTraits ):
     line_color = standard_color
     fill_color = red_color
-    
+
 #--[Example*]-------------------------------------------------------------------
-    
+
 my_shape1 = GraphicShape()
 
 # Default values for normal trait attributes
@@ -50,4 +50,4 @@ print my_shape2.line_color, my_shape2.fill_color
 
 print my_shape2.line_color_, my_shape2.fill_color_
 # Output: (0.0, 0.0, 1.0, 1.0) (0.0, 1.0, 0.0, 1.0)
-    
+

@@ -47,7 +47,7 @@ from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
 
 from .trait_errors import TraitError
 
-    
+
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
@@ -916,10 +916,10 @@ class This ( BaseType ):
 
     # A description of the type of value this trait accepts:
     info_text = 'an instance of the same type as the receiver'
-    
+
     def __init__ ( self, value = None, allow_none = True, **metadata ):
         super( This, self ).__init__( value, **metadata )
-        
+
         if allow_none:
             self.fast_validate = ( 2, None )
             self.validate      = self.validate_none
@@ -928,13 +928,13 @@ class This ( BaseType ):
     def validate ( self, object, name, value ):
         if isinstance( value, object.__class__ ):
             return value
-            
+
         self.validate_failed( object, name, value )
 
     def validate_none ( self, object, name, value ):
         if isinstance( value, object.__class__ ) or (value is None):
             return value
-            
+
         self.validate_failed( object, name, value )
 
     def info ( self ):
@@ -949,9 +949,9 @@ class This ( BaseType ):
             msg = 'class %s' % value.__class__.__name__
         else:
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
-            
+
         self.error( object, name, msg )
-        
+
 
 class self ( This ):
     """ Defines a trait whose value must be an instance of the defining class
@@ -1642,7 +1642,7 @@ class BaseRange ( TraitType ):
             if isinstance( value, basestring ):
                 value = 'object.' + value
             self._value = compile( str( value ), '<string>', 'eval' )
-            
+
             self.default_value_type = 8
             self.default_value      = self._get_default_value
 
@@ -1730,7 +1730,7 @@ class BaseRange ( TraitType ):
         """ Returns the default value of the range.
         """
         return eval( self._value )
-        
+
     def _get ( self, object, name, trait ):
         """ Returns the current value of a dynamic range trait.
         """
@@ -1747,7 +1747,7 @@ class BaseRange ( TraitType ):
             value = high
 
         return self._typed_value( value, low, high )
-        
+
     def _set ( self, object, name, value ):
         """ Sets the current value of a dynamic range trait.
         """
@@ -1894,16 +1894,16 @@ class BaseEnum ( TraitType ):
             self.get, self.set, self.validate = self._get, self._set, None
         else:
             default_value = args[0]
-            if (len( args ) == 1) and isinstance( default_value, SequenceTypes): 
+            if (len( args ) == 1) and isinstance( default_value, SequenceTypes):
                 args          = default_value
                 default_value = args[0]
             elif (len( args ) == 2) and isinstance( args[1], SequenceTypes ):
                 args = args[1]
-                
+
             self.name   = ''
             self.values = tuple( args )
             self.init_fast_validator( 5, self.values )
-                
+
         super( BaseEnum, self ).__init__( default_value, **metadata )
 
     def init_fast_validator ( self, *args ):
@@ -1928,7 +1928,7 @@ class BaseEnum ( TraitType ):
             values = self.values
         else:
             values = eval( self.values )
-            
+
         return ' or '.join( [ repr( x ) for x in values ] )
 
     def create_editor ( self ):
@@ -1939,13 +1939,13 @@ class BaseEnum ( TraitType ):
         values = self
         if self.name != '':
             values = None
-                
+
         return EnumEditor( values   = values,
                            name     = self.name,
                            cols     = self.cols or 3,
                            evaluate = self.evaluate,
                            mode     = self.mode or 'radio' )
-        
+
     def _get ( self, object, name, trait ):
         """ Returns the current value of a dynamic enum trait.
         """
@@ -1955,15 +1955,15 @@ class BaseEnum ( TraitType ):
             value = None
             if len( values ) > 0:
                 value = values[0]
-        
+
         return value
-    
+
     def _set ( self, object, name, value ):
         """ Sets the current value of a dynamic range trait.
         """
         if value in eval( self.values ):
             self.set_value( object, name, value )
-        else:    
+        else:
             self.error( object, name, value )
 
 class Enum ( BaseEnum ):
@@ -2750,7 +2750,7 @@ class BaseInstance ( BaseClass ):
                 return super( BaseInstance, self ).get_default_value()
 
             self.default_value_type = dvt = 7
-            self.default_value      = dv  = ( self.create_default_value, 
+            self.default_value      = dv  = ( self.create_default_value,
                                               dv.args, dv.kw )
 
         return ( dvt, dv )
@@ -3105,11 +3105,11 @@ class ToolbarButton ( Button ):
             No default value because events do not store values.
 
         """
-        super( ToolbarButton, self ).__init__( label, 
-                                               image=image, 
-                                               style=style, 
+        super( ToolbarButton, self ).__init__( label,
+                                               image=image,
+                                               style=style,
                                                orientation=orientation,
-                                               width_padding=width_padding, 
+                                               width_padding=width_padding,
                                                height_padding=height_padding,
                                                **metadata )
 
@@ -3125,7 +3125,7 @@ class Either ( TraitType ):
         """ Creates a trait whose value can be any of of a specified list of
             traits.
         """
-        self.trait_maker = _TraitMaker( metadata.pop( 'default', None ), 
+        self.trait_maker = _TraitMaker( metadata.pop( 'default', None ),
                                         *traits, **metadata )
 
     def as_ctrait ( self ):
@@ -3276,14 +3276,14 @@ class WeakRef ( Instance ):
 
     def set ( self, object, name, value ):
         old = self.get( object, name )
-        
+
         if value is None:
             object.__dict__[ name + '_' ] = None
         else:
             object.__dict__[ name + '_' ] = HandleWeakRef( object, name, value )
-        
+
         if value is not old:
-            object.trait_property_changed( name, old, value ) 
+            object.trait_property_changed( name, old, value )
 
     def resolve_class ( self, object, name, value ):
         # fixme: We have to override this method to prevent the 'fast validate'
@@ -3311,11 +3311,11 @@ class HandleWeakRef ( object ):
             object.trait_property_changed( self.name, Undefined, None )
 
 
-#-- Date Trait definition ---------------------------------------------------- 
+#-- Date Trait definition ----------------------------------------------------
 Date = BaseInstance(datetime.date, editor=date_editor)
 
 
-#-- Time Trait definition ---------------------------------------------------- 
+#-- Time Trait definition ----------------------------------------------------
 Time = BaseInstance(datetime.time, editor=time_editor)
 
 

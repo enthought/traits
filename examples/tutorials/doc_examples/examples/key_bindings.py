@@ -24,30 +24,30 @@ key_bindings = KeyBindings(
                 method_name = 'run_script' ),
     KeyBinding( binding1    = 'Ctrl-k',
                 description = 'Edit key bindings',
-                method_name = 'edit_bindings' )  
-)  
-              
+                method_name = 'edit_bindings' )
+)
+
 # Traits UI Handler class for bound methods
 class CodeHandler ( Handler ):
-    
+
     def save_file ( self, info ):
         info.object.status = "save file"
-        
+
     def run_script ( self, info ):
         info.object.status = "run script"
-        
+
     def edit_bindings ( self, info ):
         info.object.status = "edit bindings"
-        key_bindings.edit_traits()        
-               
+        key_bindings.edit_traits()
+
 class KBCodeExample ( HasPrivateTraits ):
-    
+
     code   = Code
     status = Str
     kb    = Button(label='Edit Key Bindings')
-    
+
     view = View( Group (
-                 Item( 'code', 
+                 Item( 'code',
                        style     = 'custom',
                        resizable = True ),
                  Item('status', style='readonly'),
@@ -61,10 +61,10 @@ class KBCodeExample ( HasPrivateTraits ):
                resizable = True,
 
                handler   = CodeHandler() )
-               
+
     def _kb_fired( self, event ):
         key_bindings.edit_traits()
-          
+
 
 if __name__ == '__main__':
     KBCodeExample().configure_traits()

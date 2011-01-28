@@ -2,7 +2,7 @@
 #  License: BSD Style.
 
 
-# temp_wildcard.py --- Example of using a wildcard 
+# temp_wildcard.py --- Example of using a wildcard
 #                      with a trait attribute name
 from enthought.traits.api import Any, HasTraits
 

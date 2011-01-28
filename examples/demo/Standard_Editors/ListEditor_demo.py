@@ -10,20 +10,20 @@ This demo shows each of the four styles of ListEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, List, Str
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View
 
 # Define the demo class:
-class ListEditorDemo ( HasTraits ): 
+class ListEditorDemo ( HasTraits ):
     """ Defines the main ListEditor demo class. """
 
     # Define a List trait to display:
     play_list = List( Str, [ "The Merchant of Venice", "Hamlet", "MacBeth" ] )
 
     # Items are used to define display, one per editor style:
-    list_group = Group( 
-        Item( 'play_list', style = 'simple',   label = 'Simple', height = 75 ), 
+    list_group = Group(
+        Item( 'play_list', style = 'simple',   label = 'Simple', height = 75 ),
         Item( '_' ),
         Item( 'play_list', style = 'custom',   label = 'Custom' ),
         Item( '_' ),
@@ -31,13 +31,13 @@ class ListEditorDemo ( HasTraits ):
         Item( '_' ),
         Item( 'play_list', style = 'readonly', label = 'ReadOnly' )
     )
- 
+
     # Demo view:
     view = View(
         list_group,
         title     = 'ListEditor',
         buttons   = [ 'OK' ],
-        resizable = True 
+        resizable = True
     )
 
 # Create the demo:

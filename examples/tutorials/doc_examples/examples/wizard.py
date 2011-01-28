@@ -12,6 +12,6 @@ class Person(HasTraits):
     city = Str
     state = Str
     pcode = Str
-    
+
 bill = Person()
 bill.configure_traits(kind='modal')

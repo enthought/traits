@@ -20,14 +20,14 @@ class Person(HasTraits):
 
     def _anytrait_changed(self, name, old, new):
          print 'The %s trait changed from %s to %s ' % (name, old, new)
-                
+
 #--[Example*]-------------------------------------------------------------------
 
 bob = Person()
 bob.height_m = 1.75
 # Output: The height_m trait changed from 1.0 to 1.75
 bob.weight_kg = 100.0
-# Output: 
+# Output:
 # The weight_kg trait changed from 0.0 to 100.0
 # weight_kg changed from 0.0 to 100.0
 # The bmi trait changed from 0.0 to 32.6530612245

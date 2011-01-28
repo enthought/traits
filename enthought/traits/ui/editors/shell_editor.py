@@ -25,9 +25,9 @@
 from __future__ import absolute_import
 
 from ...api import Bool, Str, Event, Property
-    
+
 from ..editor import Editor
-    
+
 from ..basic_editor_factory import BasicEditorFactory
 
 from ..toolkit import toolkit_object
@@ -36,33 +36,33 @@ from ..toolkit import toolkit_object
 #-------------------------------------------------------------------------------
 #  'ShellEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class _ShellEditor ( Editor ):
     """ Base class for an editor that displays an interactive Python shell.
     """
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     # An event fired whenver the user executes a command in the shell:
     command_executed = Event( Bool )
-        
+
     # Is the shell editor is scrollable? This value overrides the default.
-    scrollable = True 
-        
+    scrollable = True
+
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
         """
         # Moving the import here, since PythonShell is implemented in the
         # Pyface backend packages, and we want to delay loading this toolkit
-        # specific class until this editor is actually used.    
+        # specific class until this editor is actually used.
         from ....pyface.python_shell import PythonShell
 
         locals = None
@@ -82,17 +82,17 @@ class _ShellEditor ( Editor ):
                 self._base_locals = locals = {}
                 for name in self._shell.interpreter().locals.keys():
                     locals[ name ] = None
-                    
+
         # Synchronize any editor events:
         self.sync_value( self.factory.command_executed,
                          'command_executed', 'to' )
-                    
+
         self.set_tooltip()
 
     #---------------------------------------------------------------------------
     #  Handles the user entering input data in the edit control:
     #---------------------------------------------------------------------------
-  
+
     def update_object ( self, event ):
         """ Handles the user entering input data in the edit control.
         """
@@ -114,9 +114,9 @@ class _ShellEditor ( Editor ):
                         dic[ name ] = locals[ name ]
                     except:
                         pass
-         
+
         self.command_executed = True
-                        
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
@@ -140,13 +140,13 @@ class _ShellEditor ( Editor ):
                 dic = self.value
                 for name, value in dic.items():
                     locals[ name ] = value
-        
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-        
+
     def update_any ( self, object, name, old, new ):
-        """ Updates the editor when the object trait changes externally to the 
+        """ Updates the editor when the object trait changes externally to the
             editor.
         """
         locals = self._shell.interpreter().locals
@@ -154,28 +154,28 @@ class _ShellEditor ( Editor ):
             locals[ name ] = new
         else:
             self.value[ name ] = new
-        
+
     #---------------------------------------------------------------------------
-    #  Disposes of the contents of an editor:    
+    #  Disposes of the contents of an editor:
     #---------------------------------------------------------------------------
-                
+
     def dispose ( self ):
         """ Disposes of the contents of an editor.
         """
-        self._shell.on_trait_change( self.update_object, 'command_executed', 
+        self._shell.on_trait_change( self.update_object, 'command_executed',
                                      remove = True )
         if self._base_locals is None:
             self.object.on_trait_change( self.update_any, remove = True )
-            
+
         super( _ShellEditor, self ).dispose()
 
     #---------------------------------------------------------------------------
-    #  Restores any saved user preference information associated with the 
+    #  Restores any saved user preference information associated with the
     #  editor:
     #---------------------------------------------------------------------------
-            
+
     def restore_prefs ( self, prefs ):
-        """ Restores any saved user preference information associated with the 
+        """ Restores any saved user preference information associated with the
             editor.
         """
         control = self._shell.control
@@ -184,16 +184,16 @@ class _ShellEditor ( Editor ):
             control.historyIndex = prefs.get( 'historyIndex', -1 )
         except:
             pass
-            
+
     #---------------------------------------------------------------------------
     #  Returns any user preference information associated with the editor:
     #---------------------------------------------------------------------------
-            
+
     def save_prefs ( self ):
         """ Returns any user preference information associated with the editor.
         """
         control = self._shell.control
-        return { 'history':      control.history, 
+        return { 'history':      control.history,
                  'historyIndex': control.historyIndex }
 
 #-------------------------------------------------------------------------------
@@ -202,17 +202,17 @@ class _ShellEditor ( Editor ):
 
 # Editor factory for shell editors.
 class ToolkitEditorFactory ( BasicEditorFactory ):
-    
+
     # The editor class to be instantiated.
     klass = Property
-    
+
     # Should the shell interpreter use the object value's dictionary?
     share = Bool( False )
 
-    # Extended trait name of the object event trait which is fired when a 
+    # Extended trait name of the object event trait which is fired when a
     # command is executed
     command_executed = Str
-    
+
     def _get_klass(self):
         """ Returns the toolkit-specific editor class to be used in the UI.
         """

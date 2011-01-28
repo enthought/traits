@@ -12,16 +12,16 @@ class Team ( HasTraits ):
 
     captain = Str( 'Dick' )
     players = List( [ 'Tom', 'Dick', 'Harry', 'Sally' ], Str )
-    
-    captain_editor = EnumEditor( name = 'players', evaluate=evaluate_value ) 
-    
+
+    captain_editor = EnumEditor( name = 'players', evaluate=evaluate_value )
+
     view = View( Item( 'captain', editor = captain_editor),
-                 '_', 
+                 '_',
                  'players@',
                  height=200 )
-                 
+
 if __name__ == '__main__':
     team = Team()
-    team.configure_traits()  
+    team.configure_traits()
     team.print_traits()
-                   
+

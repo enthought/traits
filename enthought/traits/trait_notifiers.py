@@ -419,7 +419,7 @@ class TraitChangeNotifyWrapper:
             # is deleted
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
-                
+
         arg_count = handler.func_code.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(

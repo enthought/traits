@@ -1,6 +1,6 @@
 """
 Demonstrates using the TreeEditor to display a hierarchically organized data
-structure. 
+structure.
 
 In this case, the tree has the following hierarchy:
   - Partner
@@ -11,7 +11,7 @@ In this case, the tree has the following hierarchy:
 
 from enthought.traits.api \
     import HasTraits, Str, Regex, List, Instance
-    
+
 from enthought.traits.ui.api \
     import Item, View, TreeEditor, TreeNode
 
@@ -19,7 +19,7 @@ class Employee ( HasTraits ):
     name  = Str( '<unknown>' )
     title = Str
     phone = Regex( regex = r'\d\d\d-\d\d\d\d' )
-    
+
     def default_title ( self ):
         self.title = 'Senior Engineer'
 
@@ -32,11 +32,11 @@ class Company ( HasTraits ):
     departments = List( Department )
     employees   = List( Employee )
 
-# Create an empty view for objects that have no data to display:    
+# Create an empty view for objects that have no data to display:
 no_view = View()
 
 # Define the TreeEditor used to display the hierarchy:
-tree_editor = TreeEditor( 
+tree_editor = TreeEditor(
     nodes = [
         TreeNode( node_for  = [ Company ],
                   auto_open = True,
@@ -77,9 +77,9 @@ class Partner ( HasTraits ):
     name    = Str( '<unknown>' )
     company = Instance( Company )
 
-    view = View( 
-        Item( name       = 'company',   
-              editor     = tree_editor, 
+    view = View(
+        Item( name       = 'company',
+              editor     = tree_editor,
               show_label = False
         ),
         title     = 'Company Structure',
@@ -90,32 +90,32 @@ class Partner ( HasTraits ):
         height    = .3
     )
 
-# Create an example data structure:    
-jason  = Employee( name  = 'Jason', 
-                   title = 'Senior Engineer', 
+# Create an example data structure:
+jason  = Employee( name  = 'Jason',
+                   title = 'Senior Engineer',
                    phone = '536-1057' )
-mike   = Employee( name  = 'Mike', 
-                   title = 'Senior Engineer', 
+mike   = Employee( name  = 'Mike',
+                   title = 'Senior Engineer',
                    phone = '536-1057' )
-dave   = Employee( name  = 'Dave', 
-                   title = 'Senior Software Developer', 
+dave   = Employee( name  = 'Dave',
+                   title = 'Senior Software Developer',
                    phone = '536-1057' )
-martin = Employee( name  = 'Martin', 
-                   title = 'Senior Engineer', 
+martin = Employee( name  = 'Martin',
+                   title = 'Senior Engineer',
                    phone = '536-1057' )
-duncan = Employee( name  = 'Duncan', 
-                   title = 'Consultant', 
+duncan = Employee( name  = 'Duncan',
+                   title = 'Consultant',
                    phone = '526-1057' )
 
-# Create the demo:                   
-popup = Partner( 
+# Create the demo:
+popup = Partner(
     name    = 'Enthought, Inc.',
     company = Company(
-        name        = 'Enthought', 
+        name        = 'Enthought',
         employees   = [ dave, martin, duncan, jason, mike ],
-        departments = [ 
-            Department( 
-                name      = 'Business', 
+        departments = [
+            Department(
+                name      = 'Business',
                 employees = [ jason, mike ]
             ),
             Department(
@@ -129,4 +129,4 @@ popup = Partner(
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

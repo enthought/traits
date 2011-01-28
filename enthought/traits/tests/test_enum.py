@@ -22,4 +22,4 @@ class EnumTestCase(unittest.TestCase):
 
         self.assertRaises(TraitError, assign_invalid)
 
-        
+

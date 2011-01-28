@@ -2,7 +2,7 @@
 #  License: BSD Style.
 
 
-# configure_traits_view_buttons.py -- Sample code to demonstrate 
+# configure_traits_view_buttons.py -- Sample code to demonstrate
 #                                     configure_traits()
 
 #--[Imports]--------------------------------------------------------------------
@@ -26,5 +26,5 @@ view1 = View(Item(name = 'first_name'),
              buttons = [OKButton, CancelButton])
 
 sam = SimpleEmployee()
-sam.configure_traits(view=view1)    
+sam.configure_traits(view=view1)
 

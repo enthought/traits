@@ -1,56 +1,56 @@
 #-------------------------------------------------------------------------------
-#    
-#  NumericEditor test case for Traits UI 
-#    
+#
+#  NumericEditor test case for Traits UI
+#
 #  Written by: David C. Morrill
-#    
+#
 #  Date: 11/29/2005
-#    
-#  (c) Copyright 2005 by Enthought, Inc.  
+#
+#  (c) Copyright 2005 by Enthought, Inc.
 #  License: BSD Style.
-#    
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Imports:  
+#  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
     import HasPrivateTraits, Array, Instance
-    
+
 from enthought.traits.ui.api \
     import View, Item, HGroup
-    
+
 from enthought.traits.ui.table_column \
     import NumericColumn
-    
+
 from enthought.traits.ui.wx.numeric_editor \
     import ToolkitEditorFactory as NumericEditor
-    
+
 from enthought.model.api \
     import ANumericModel, NumericArrayModel, ReductionModel, SelectionModel, \
            NumericItem, ExpressionFilter, IndexFilter
-    
+
 from numpy \
     import array, sin, arange
-    
+
 #-------------------------------------------------------------------------------
-#  Defines the numeric editor:  
+#  Defines the numeric editor:
 #-------------------------------------------------------------------------------
-        
+
 number_editor = NumericEditor(
     extendable              = True,
-    new_columns             = 'last', 
+    new_columns             = 'last',
     configurable            = True,
     columns                 = [ NumericColumn( name   = 'model_indices',
                                                label  = 'i' ),
                                 NumericColumn( name   = 'x',
                                                label  = 'x',
                                                format = '%.2f' ),
-                                NumericColumn( name   = 'sinx',  
+                                NumericColumn( name   = 'sinx',
                                                label  = 'sin(x)',
                                                format = '%.3f' ),
-                                NumericColumn( name   = 'xsinx', 
+                                NumericColumn( name   = 'xsinx',
                                                label  = 'x*sin(x)',
                                                format = '%.3f' ) ],
     other_columns           = [],
@@ -86,41 +86,41 @@ number_editor = NumericEditor(
     #row_label_width         = Int( 82 )
     #on_select               = Callable
     #on_dclick               = Callable
-)    
-    
+)
+
 #-------------------------------------------------------------------------------
-#  'BunchANumbersApp' class:  
+#  'BunchANumbersApp' class:
 #-------------------------------------------------------------------------------
-    
-class BunchANumbersApp ( HasPrivateTraits ):    
-    
+
+class BunchANumbersApp ( HasPrivateTraits ):
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-        
+
     model = Instance( ANumericModel )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-        
-    view = View( 
+
+    view = View(
                HGroup( Item( 'model', editor = number_editor,
-                                      id     = 'model' ), 
+                                      id     = 'model' ),
 #                       Item( 'model', editor = number_editor ),
-                       show_labels = False ), 
+                       show_labels = False ),
                  title     = 'Numeric Editor Test',
                  id        = 'enthought.traits.ui.tests.numeric_editor_test',
                  width     = 0.28,
                  height    = 0.6,
                  resizable = True )
-          
+
 #-------------------------------------------------------------------------------
-#  Run the test:  
+#  Run the test:
 #-------------------------------------------------------------------------------
-                
+
 if __name__ == '__main__':
     x     = arange( 0.0, 20.005, 0.1 )
     model = NumericArrayModel( x = x, sinx = sin( x ), xsinx = x * sin( x ) )
-    BunchANumbersApp( model = model ).configure_traits() 
-        
+    BunchANumbersApp( model = model ).configure_traits()
+

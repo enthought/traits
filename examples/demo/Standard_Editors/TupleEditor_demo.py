@@ -10,12 +10,12 @@ This demo shows each of the four styles of the TupleEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, Tuple, Color, Range, Str
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View
 
 # The main demo class:
-class TupleEditorDemo ( HasTraits ): 
+class TupleEditorDemo ( HasTraits ):
     """ Defines the TupleEditor demo class.
     """
 
@@ -25,14 +25,14 @@ class TupleEditorDemo ( HasTraits ):
 
     # Display specification (one Item per editor style):
     tuple_group = Group(
-        Item( 'tuple', style = 'simple',   label = 'Simple' ), 
+        Item( 'tuple', style = 'simple',   label = 'Simple' ),
         Item( '_' ),
-        Item( 'tuple', style = 'custom',   label = 'Custom' ), 
+        Item( 'tuple', style = 'custom',   label = 'Custom' ),
         Item( '_' ),
-        Item( 'tuple', style = 'text',     label = 'Text' ), 
+        Item( 'tuple', style = 'text',     label = 'Text' ),
         Item( '_' ),
         Item( 'tuple', style = 'readonly', label = 'ReadOnly' )
-    ) 
+    )
 
     # Demo view
     view = View(
@@ -49,4 +49,4 @@ demo = TupleEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

@@ -13,7 +13,7 @@ from enthought.traits.ui.api import Item, Group, View
 #  Demo Class
 #-------------------------------------------------------------------------------
 
-class EnumEditorDemo ( HasTraits ): 
+class EnumEditorDemo ( HasTraits ):
     """ This class specifies the details of the BooleanEditor demo.
     """
 
@@ -21,11 +21,11 @@ class EnumEditorDemo ( HasTraits ):
     name_list = Enum('A-495', 'A-498', 'R-1226', 'TS-17', 'TS-18')
 
     # Items are used to define the display; one Item per editor style.
-    enum_group = Group( Item('name_list', style='simple', label='Simple'), 
+    enum_group = Group( Item('name_list', style='simple', label='Simple'),
                         Item('_'),
-                        Item('name_list', style='custom', label='Custom'), 
+                        Item('name_list', style='custom', label='Custom'),
                         Item('_'),
-                        Item('name_list', style='text', label='Text'), 
+                        Item('name_list', style='text', label='Text'),
                         Item('_'),
                         Item('name_list', style='readonly', label='ReadOnly'))
 
@@ -41,4 +41,4 @@ popup = EnumEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

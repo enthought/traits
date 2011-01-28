@@ -13,14 +13,14 @@ from enthought.traits.api import HasTraits, Bool
 from enthought.traits.ui.api import Item, Group, View
 
 
-class BooleanEditorDemo ( HasTraits ): 
+class BooleanEditorDemo ( HasTraits ):
     """ This class specifies the details of the BooleanEditor demo.
     """
 
-    # To demonstrate any given Trait editor, an appropriate Trait is required. 
-    boolean_trait    = Bool 
+    # To demonstrate any given Trait editor, an appropriate Trait is required.
+    boolean_trait    = Bool
 
-    # Items are used to define the demo display - one Item per 
+    # Items are used to define the demo display - one Item per
     # editor style
     bool_group = Group( Item('boolean_trait', style='simple', label='Simple'),
                         Item('_'),
@@ -37,7 +37,7 @@ class BooleanEditorDemo ( HasTraits ):
                   width = 300 )
 
 
-# Hook for 'demo.py' 
+# Hook for 'demo.py'
 popup = BooleanEditorDemo()
 
 # Run the demo (if invoked from the command line):

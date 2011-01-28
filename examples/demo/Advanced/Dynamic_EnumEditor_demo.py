@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-""" 
+"""
 Demonstrates how to set up an EnumEditor that is updated dynamically.
 
 The scenario is a restaurant that at the beginning of the day has a menu list
@@ -16,7 +16,7 @@ The Order tab represents a customer's order and consists of a single Entree
 field, which represents the customer's selection from the drop-down list of
 entrees that the kitchen can currently prepare.
 
-The Kitchen tab represents the current set of entrees that the kitchen can 
+The Kitchen tab represents the current set of entrees that the kitchen can
 prepare, based upon the current contents of its larder.
 
 As entrees are checked on or off from the Kitchen tab, the customer's Entree
@@ -26,14 +26,14 @@ Notes:
  - The key point of the demo is the use of the 'name' trait in the EnumEditor
    definition, which links the list of available entrees from the
    KitchenCapabilities object to the OrderMenu object's entree EnumEditor.
-  
+
  - The design will work with any number of active OrderMenu objects, since they
    all share a common KitchenCapabilities object. As the KitchenCapabilities
    object is updated, all OrderMenu UI's will automatically update their
    associated Entree's drop-down list.
-  
- - A careful reader will also observe that this example contains only 
-   declarative code. No imperative code is required to handle the automatic 
+
+ - A careful reader will also observe that this example contains only
+   declarative code. No imperative code is required to handle the automatic
    updating of the Entree list.
 """
 
@@ -41,10 +41,10 @@ Notes:
 
 from enthought.traits.api \
     import HasPrivateTraits, Str, List, Constant
-    
+
 from enthought.traits.ui.api \
     import View, Item, VGroup, HSplit, EnumEditor, CheckListEditor
-    
+
 #-- The list of possible entrees -----------------------------------------------
 
 possible_entrees = [
@@ -57,28 +57,28 @@ possible_entrees = [
     'Club Sandwich',
     'Ceasar Salad',
     'Cobb Salad'
-]    
+]
 
 #-- The KitchenCapabilities class ----------------------------------------------
 
 class KitchenCapabilities ( HasPrivateTraits ):
-    
+
     # The current set of entrees the kitchen can make (based on its larder):
     available = List( possible_entrees )
-    
+
 # The KitchenCapabilities are shared by all waitstaff taking orders:
 kitchen_capabilities = KitchenCapabilities()
 
 #-- The OrderMenu class --------------------------------------------------------
 
 class OrderMenu ( HasPrivateTraits ):
-    
+
     # The person's entree order:
     entree = Str
-    
+
     # Reference to the restaurant's current entree capabilities:
     capabilities = Constant( kitchen_capabilities )
-    
+
     # The user interface view:
     view = View(
         HSplit(
@@ -107,10 +107,10 @@ class OrderMenu ( HasPrivateTraits ):
 
 #-------------------------------------------------------------------------------
 
-# Create the demo:    
+# Create the demo:
 demo = OrderMenu()
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

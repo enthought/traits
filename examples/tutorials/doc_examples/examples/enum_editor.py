@@ -10,10 +10,10 @@ from enthought.traits.ui.api import EnumEditor, View, Item
 #--[Code]-----------------------------------------------------------------------
 
 class EnumExample(HasTraits):
-    priority = Enum('Medium', 'Highest', 
-                              'High', 
-                              'Medium', 
-                              'Low', 
+    priority = Enum('Medium', 'Highest',
+                              'High',
+                              'Medium',
+                              'Low',
                               'Lowest')
 
     view = View( Item(name='priority',

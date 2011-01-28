@@ -1333,8 +1333,8 @@ def property_depends_on ( dependency, settable = False, flushable = False ):
     return decorator
 
 def weak_arg(arg):
-    """ Create a weak reference to arg and wrap the function so that the dereferenced 
-    weakref is passed as the first argument. If arg has been deleted then the 
+    """ Create a weak reference to arg and wrap the function so that the dereferenced
+    weakref is passed as the first argument. If arg has been deleted then the
     funcion is not called.
     """
     # Create the weak reference
@@ -2923,7 +2923,7 @@ class HasTraits ( CHasTraits ):
                     break
             else:
                 listener = ListenerParser( name ).listener
-                lnw = ListenerNotifyWrapper( handler, self, name, listener, target )  
+                lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
                 listener.set( handler         = ListenerHandler( handler ),
                               wrapped_handler_ref = weakref.ref(lnw),

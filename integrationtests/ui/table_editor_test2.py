@@ -1,74 +1,74 @@
 #-------------------------------------------------------------------------------
-#    
-#  TableEditor test case for Traits UI 
-#    
+#
+#  TableEditor test case for Traits UI
+#
 #  Written by: David C. Morrill
-#    
+#
 #  Date: 07/05/2005
-#    
-#  (c) Copyright 2005 by Enthought, Inc.  
+#
+#  (c) Copyright 2005 by Enthought, Inc.
 #  License: BSD Style.
-#    
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Imports:  
+#  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
     import HasStrictTraits, Str, Int, Regex, List
-    
+
 from enthought.traits.ui.api \
     import View
-        
+
 #-------------------------------------------------------------------------------
-#  'Person' class:  
+#  'Person' class:
 #-------------------------------------------------------------------------------
-                        
+
 class Person ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     name  = Str
     age   = Int
     phone = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d' )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
-    
-    traits_view = View( 'name', 'age', 'phone', 
+
+    traits_view = View( 'name', 'age', 'phone',
                         title   = 'Create new person',
                         width   = 0.18,
                         buttons = [ 'OK', 'Cancel' ] )
-                        
+
 #-------------------------------------------------------------------------------
-#  'WorkingPerson' class  
+#  'WorkingPerson' class
 #-------------------------------------------------------------------------------
-                        
+
 class WorkingPerson ( Person ):
 
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-        
+
     job = Str
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
-    
-    traits_view = View( 'name', 'age', 'phone', 'job', 
+
+    traits_view = View( 'name', 'age', 'phone', 'job',
                         title   = 'Create new working person.........',
                         width   = 0.18,
                         buttons = [ 'OK', 'Cancel' ] )
-    
+
 #-------------------------------------------------------------------------------
-#  Sample data:  
+#  Sample data:
 #-------------------------------------------------------------------------------
-    
+
 people = [
    Person( name = 'Dave',   age = 39, phone = '555-1212' ),
    Person( name = 'Mike',   age = 28, phone = '555-3526' ),
@@ -81,27 +81,27 @@ people = [
 ]
 
 #-------------------------------------------------------------------------------
-#  'TableTest' class:  
+#  'TableTest' class:
 #-------------------------------------------------------------------------------
 
 class TableTest ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     people = List( Person )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-    
+
     traits_view = View( [ 'people#', '|<>' ], resizable = True )
-        
+
 #-------------------------------------------------------------------------------
-#  Run the tests:  
+#  Run the tests:
 #-------------------------------------------------------------------------------
-                 
+
 if __name__ == '__main__':
     tt = TableTest( people = people )
     tt.configure_traits()

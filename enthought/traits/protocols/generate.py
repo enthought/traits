@@ -4,7 +4,7 @@ from __future__ import absolute_import
 
 #from interfaces import Protocol, allocate_lock, Interface
 
-from .protocols import (Protocol, allocate_lock, Interface, 
+from .protocols import (Protocol, allocate_lock, Interface,
     declareAdapterForProtocol, declareAdapterForType, declareAdapter, adapt,
     NO_ADAPTER_NEEDED)
 

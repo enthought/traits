@@ -3,7 +3,7 @@
 
 """
 Simple demonstration of the ListStrEditor, which can be used for editing and
-displaying lists of strings, or other data that can be logically mapped to a 
+displaying lists of strings, or other data that can be logically mapped to a
 list of strings.
 """
 
@@ -11,19 +11,19 @@ list of strings.
 
 from enthought.traits.api \
     import HasTraits, List, Str
-    
+
 from enthought.traits.ui.api \
     import View, Item, ListStrEditor
 
 #-- ShoppingListDemo Class -----------------------------------------------------
 
 class ShoppingListDemo ( HasTraits ):
-    
+
     # The list of things to buy at the store:
     shopping_list = List( Str )
-    
+
     #-- Traits View Definitions ------------------------------------------------
-    
+
     view = View(
         Item( 'shopping_list',
               show_label = False,
@@ -34,7 +34,7 @@ class ShoppingListDemo ( HasTraits ):
         height    = 0.5,
         resizable = True
     )
-    
+
 #-- Set up the Demo ------------------------------------------------------------
 
 demo = ShoppingListDemo( shopping_list = [
@@ -53,4 +53,4 @@ demo = ShoppingListDemo( shopping_list = [
 # Run the demo (in invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

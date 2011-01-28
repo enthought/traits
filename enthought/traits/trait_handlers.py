@@ -2351,7 +2351,7 @@ class TraitList ( TraitHandler ):
                 try:
                     object = handler.aClass()
                     from .ui.table_column import ObjectColumn
-                    from .ui.table_filter import (EvalFilterTemplate, 
+                    from .ui.table_filter import (EvalFilterTemplate,
                         RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
                     from .ui.api import TableEditor
 

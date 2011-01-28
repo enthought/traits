@@ -27,5 +27,5 @@ view1 = View(Group(Item(name = 'first_name'),
 
 
 sam = SimpleEmployee()
-sam.configure_traits(view=view1)    
+sam.configure_traits(view=view1)
 

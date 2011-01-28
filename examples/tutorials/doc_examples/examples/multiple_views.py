@@ -29,11 +29,11 @@ class SimpleEmployee3(HasTraits):
                           Item(name = 'department'),
                           Item(name = 'employee_number'),
                           Item(name = 'salary'),
-                          label = 'Personnel database ' + 
+                          label = 'Personnel database ' +
                                   'entry',
                           show_border = True))
 
 sam = SimpleEmployee3()
 sam.configure_traits()
 sam.configure_traits(view='all_view')
-                          
+

@@ -19,7 +19,7 @@ class _MPLFigureEditor(Editor):
     def init(self, parent):
         self.control = self._create_canvas(parent)
         self.set_tooltip()
-        
+
     def update_editor(self):
         pass
 

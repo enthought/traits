@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in /LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill
 # Date: 12/04/2004
 # Description: Test case for the traits tree editor.
@@ -32,10 +32,10 @@ class Employee ( HasTraits ):
     name  = Str( '<unknown>' )
     title = Str
     phone = Regex( regex = r'\d\d\d-\d\d\d\d' )
-    
+
     def default_title ( self ):
         self.title = 'Senior Engineer'
-    
+
 #-------------------------------------------------------------------------------
 #  'Department' class:
 #-------------------------------------------------------------------------------
@@ -52,11 +52,11 @@ class Company ( HasTraits ):
     name        = Str( '<unknown>' )
     departments = List( Department )
     employees   = List( Employee )
-    
+
 #-------------------------------------------------------------------------------
-#  'Partner' class:  
+#  'Partner' class:
 #-------------------------------------------------------------------------------
-        
+
 class Partner ( HasTraits ):
     name    = Str( '<unknown>' )
     company = Instance( Company )
@@ -65,42 +65,42 @@ class Partner ( HasTraits ):
 #  Create a hierarchy:
 #-------------------------------------------------------------------------------
 
-jason = Employee( 
+jason = Employee(
      name  = 'Jason',
-     title = 'Sr. Engineer', 
+     title = 'Sr. Engineer',
      phone = '536-1057' )
-     
-mike = Employee( 
+
+mike = Employee(
      name  = 'Mike',
-     title = 'Sr. Engineer', 
+     title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 dave = Employee(
      name  = 'Dave',
      title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 martin = Employee(
      name  = 'Martin',
      title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 duncan = Employee(
      name  = 'Duncan',
      title = 'Sr. Engineer' )
-        
+
 partner = Partner(
     name    = 'eric',
-    company = Company( 
+    company = Company(
         name        = 'Enthought, Inc.',
         departments = [
-            Department( 
+            Department(
                 name      = 'Business',
                 employees = [ jason, mike ]
             ),
             Department(
                 name      = 'Scientific',
-                employees = [ dave, martin, duncan ] 
+                employees = [ dave, martin, duncan ]
             )
         ],
         employees = [ dave, martin, mike, duncan, jason ]
@@ -113,7 +113,7 @@ partner = Partner(
 
 no_view = View()
 
-tree_editor = TreeEditor( 
+tree_editor = TreeEditor(
     nodes = [
         TreeNode( node_for  = [ Company ],
                   auto_open = True,
@@ -142,8 +142,8 @@ tree_editor = TreeEditor(
                                     Separator(),
                                     RenameAction,
                                     Separator(),
-                                    CopyAction, 
-                                    CutAction, 
+                                    CopyAction,
+                                    CutAction,
                                     PasteAction ),
                   view      = View( [ 'name', '|<' ] ),
                   add       = [ Employee ] ),
@@ -157,15 +157,15 @@ tree_editor = TreeEditor(
                                     Action( name   = 'Department',
                                             action = 'handler.employee_department(editor,object)' ),
                                     Separator(),
-                                    CopyAction, 
-                                    CutAction, 
+                                    CopyAction,
+                                    CutAction,
                                     PasteAction,
                                     Separator(),
                                     DeleteAction,
                                     Separator(),
                                     RenameAction ),
                   view      = View( VSplit( HGroup( '3', 'name' ),
-                                            HGroup( '9', 'title' ), 
+                                            HGroup( '9', 'title' ),
                                             HGroup( 'phone' ),
                                             id = 'vsplit' ),
                                     id   = 'enthought.traits.ui.test.tree_editor_test.employee',
@@ -174,22 +174,22 @@ tree_editor = TreeEditor(
 )
 
 #-------------------------------------------------------------------------------
-#  'TreeHandler' class:  
+#  'TreeHandler' class:
 #-------------------------------------------------------------------------------
 
 class TreeHandler ( Handler ):
-    
+
     def employee_department ( self, editor, object ):
         dept = editor.get_parent( object )
         print '%s works in the %s department.' % ( object.name, dept.name )
- 
+
 #-------------------------------------------------------------------------------
 #  Define the View to use:
 #-------------------------------------------------------------------------------
 
 view = View( [ Item( name      = 'company',
                      id        = 'company',
-                     editor    = tree_editor, 
+                     editor    = tree_editor,
                      resizable = True ), '|<>' ],
              title      = 'Company Structure',
              id         = 'enthought.traits.ui.tests.tree_editor_test',
@@ -200,11 +200,11 @@ view = View( [ Item( name      = 'company',
              resizable  = True,
              width      = .3,
              height     = .3 )
-             
+
 #-------------------------------------------------------------------------------
-#  Edit it:  
+#  Edit it:
 #-------------------------------------------------------------------------------
-           
+
 if __name__ == '__main__':
     partner.configure_traits( view = view )
 

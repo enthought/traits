@@ -48,17 +48,17 @@ feature.
 
 from __future__ import absolute_import
 
-from types import (NoneType, IntType, LongType, FloatType, ComplexType, 
+from types import (NoneType, IntType, LongType, FloatType, ComplexType,
     StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
     ClassType, MethodType, InstanceType, TypeType)
 
 from . import trait_handlers
-from .ctraits import cTrait 
+from .ctraits import cTrait
 from .trait_errors import TraitError
 from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
     add_article, enumerate, BooleanType)
 
-from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction, 
+from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
     TraitString, ThisClass, TraitType, _arg_count, _read_only, _write_only,
     _undefined_get, _undefined_set)

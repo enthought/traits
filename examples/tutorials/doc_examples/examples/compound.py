@@ -13,11 +13,11 @@ from enthought.traits.api import HasTraits, Range, Trait, TraitError
 # Shows the definition of a compound trait.
 
 class Die ( HasTraits ):
-    
+
     # Define a compound trait definition:
-    value = Trait( 1, Range( 1, 6 ), 
+    value = Trait( 1, Range( 1, 6 ),
                   'one', 'two', 'three', 'four', 'five', 'six' )
-                  
+
 #--[Example*]-------------------------------------------------------------------
 
 # Create a sample Die:
@@ -39,4 +39,4 @@ try:
     die.value = 'zero'
 except TraitError, excp:
     print excp
-    
+

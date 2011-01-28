@@ -29,7 +29,7 @@ import re
 
 from string import find, rfind
 
-from ..api import (Bool, Callable, Constant, Delegate, Float, Instance, 
+from ..api import (Bool, Callable, Constant, Delegate, Float, Instance,
     Range, Str, Undefined,)
 
 from ..trait_base import user_name_for

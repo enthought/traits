@@ -15,12 +15,12 @@ The four tabs of this demo show variations on the interface as follows:
 # Imports:
 from enthought.traits.api \
     import HasTraits, List
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View, SetEditor
 
 # Define the main demo class:
-class SetEditorDemo ( HasTraits ): 
+class SetEditorDemo ( HasTraits ):
     """ Defines the SetEditor demo class.
     """
 
@@ -37,14 +37,14 @@ class SetEditorDemo ( HasTraits ):
                               right_column_title = 'Exotic Fruit Bowl' ) )
 
     ord_nma_set = List( editor = SetEditor(
-                            values  = ['apples', 'berries', 'cantaloupe' ], 
+                            values  = ['apples', 'berries', 'cantaloupe' ],
                             ordered            = True,
                             can_move_all       = False,
                             left_column_title  = 'Available Fruit',
                             right_column_title = 'Fruit Bowl' ) )
 
     ord_ma_set = List( editor = SetEditor(
-                       values  = ['apples', 'berries', 'cantaloupe' ], 
+                       values  = ['apples', 'berries', 'cantaloupe' ],
                        ordered            = True,
                        left_column_title  = 'Available Fruit',
                        right_column_title = 'Fruit Bowl' ) )
@@ -81,12 +81,12 @@ class SetEditorDemo ( HasTraits ):
     # on separate tabbed panels:
     view = View(
         no_nma_group,
-        no_ma_group, 
-        o_nma_group, 
+        no_ma_group,
+        o_nma_group,
         o_ma_group,
         title   = 'SetEditor',
         buttons = ['OK']
-    ) 
+    )
 
 # Create the demo:
 demo = SetEditorDemo()
@@ -94,4 +94,4 @@ demo = SetEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

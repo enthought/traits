@@ -7,10 +7,10 @@ A demo showing how to use a TabularEditor to create a multi-select list box.
 
 from enthought.traits.api \
     import HasPrivateTraits, List, Str, Property
-    
+
 from enthought.traits.ui.api \
     import View, HGroup, Item, TabularEditor
-    
+
 from enthought.traits.ui.tabular_adapter \
     import TabularAdapter
 
@@ -22,12 +22,12 @@ class MultiSelectAdapter ( TabularAdapter ):
 
     def _get_value_text ( self ):
         return self.item
-        
+
 class MultiSelect ( HasPrivateTraits ):
-    
+
     choices  = List( Str )
     selected = List( Str )
-    
+
     view = View(
         HGroup(
             Item( 'choices',
@@ -48,12 +48,12 @@ class MultiSelect ( HasPrivateTraits ):
             )
         )
     )
-    
+
 # Create the demo:
-demo = MultiSelect( choices = [ 'one', 'two', 'three', 'four', 'five', 'six', 
+demo = MultiSelect( choices = [ 'one', 'two', 'three', 'four', 'five', 'six',
                                 'seven', 'eight', 'nine', 'ten' ] )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

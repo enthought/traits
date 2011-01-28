@@ -10,7 +10,7 @@ This demo shows each of the four styles of the ImageEnumEditor.
 # Imports:
 from enthought.traits.api \
     import HasTraits, Str, Trait
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View, ImageEnumEditor
 
@@ -22,39 +22,39 @@ class Dummy ( HasTraits ):
     """ Dummy class for ImageEnumEditor
     """
     x = Str
-    
+
     view = View()
 
-class ImageEnumEditorDemo ( HasTraits ): 
+class ImageEnumEditorDemo ( HasTraits ):
     """ Defines the ImageEnumEditor demo class.
     """
 
     # Define a trait to view:
-    image_from_list = Trait( editor = ImageEnumEditor( values = image_list, 
+    image_from_list = Trait( editor = ImageEnumEditor( values = image_list,
                                                        prefix = '@icons:',
-                                                       suffix = '_origin', 
-                                                       cols   = 4, 
-                                                       klass  = Dummy ), 
-                             *image_list ) 
+                                                       suffix = '_origin',
+                                                       cols   = 4,
+                                                       klass  = Dummy ),
+                             *image_list )
 
     # Items are used to define the demo display, one Item per editor style:
     img_group = Group(
-        Item( 'image_from_list', style = 'simple',   label = 'Simple' ), 
+        Item( 'image_from_list', style = 'simple',   label = 'Simple' ),
         Item( '_' ),
-        Item( 'image_from_list', style = 'custom',   label = 'Custom' ), 
+        Item( 'image_from_list', style = 'custom',   label = 'Custom' ),
         Item( '_' ),
-        Item( 'image_from_list', style = 'text',     label = 'Text' ), 
+        Item( 'image_from_list', style = 'text',     label = 'Text' ),
         Item( '_' ),
         Item( 'image_from_list', style = 'readonly', label = 'ReadOnly' )
-    ) 
+    )
 
     # Demo view:
-    view = View( 
+    view = View(
         img_group,
         title     = 'ImageEnumEditor',
         buttons   = [ 'OK' ],
         resizable = True
-    ) 
+    )
 
 # Create the demo:
 demo = ImageEnumEditorDemo()
@@ -62,4 +62,4 @@ demo = ImageEnumEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     demo.configure_traits()
-    
+

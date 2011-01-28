@@ -22,24 +22,24 @@ the selected tab completely visible.
 
 from enthought.traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance, Range
-    
+
 from enthought.traits.ui.api \
     import View, VGroup, Item, ListEditor
-        
+
 #-- Person Class ---------------------------------------------------------------
 
 class Person ( HasStrictTraits ):
-    
-    # Trait definitions:  
+
+    # Trait definitions:
     name  = Str
     age   = Int
     phone = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d' )
-    
-    # Traits view definition:  
-    traits_view = View( 'name', 'age', 'phone', 
+
+    # Traits view definition:
+    traits_view = View( 'name', 'age', 'phone',
                         width   = 0.18,
                         buttons = [ 'OK', 'Cancel' ] )
-    
+
 #-- Sample Data ----------------------------------------------------------------
 
 people = [
@@ -56,28 +56,28 @@ people = [
 #-- ListEditorNotebookSelectionDemo Class --------------------------------------
 
 class ListEditorNotebookSelectionDemo ( HasStrictTraits ):
-    
+
     #-- Trait Definitions ------------------------------------------------------
-    
+
     # List of people:
     people = List( Person )
-    
+
     # The currently selected person:
     selected = Instance( Person )
-    
+
     # The index of the currently selected person:
     index = Range( 0, 7, mode = 'spinner' )
-    
+
     #-- Traits View Definitions ------------------------------------------------
 
     traits_view = View(
         Item( 'index' ),
         '_',
-        VGroup( 
+        VGroup(
             Item( 'people@',
                   id         = 'notebook',
                   show_label = False,
-                  editor     = ListEditor( use_notebook = True, 
+                  editor     = ListEditor( use_notebook = True,
                                            deletable    = False,
                                            selected     = 'selected',
                                            export       = 'DockWindowShell',
@@ -87,12 +87,12 @@ class ListEditorNotebookSelectionDemo ( HasStrictTraits ):
         id   = 'enthought.traits.ui.demo.Traits UI Demo.Advanced.'
                'List_editor_notebook_selection_demo',
         dock = 'horizontal' )
-        
+
     #-- Trait Event Handlers ---------------------------------------------------
 
     def _selected_changed ( self, selected ):
         self.index = self.people.index( selected )
-        
+
     def _index_changed ( self, index ):
         self.selected = self.people[ index ]
 
@@ -101,5 +101,5 @@ class ListEditorNotebookSelectionDemo ( HasStrictTraits ):
 demo = ListEditorNotebookSelectionDemo( people = people )
 
 if __name__ == "__main__":
-    demo.configure_traits()        
-    
+    demo.configure_traits()
+

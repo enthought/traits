@@ -2,20 +2,20 @@
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
 #------------------------------------------------------------------------------
 
-""" Defines the HTML editor factory. HTML editors interpret and display 
+""" Defines the HTML editor factory. HTML editors interpret and display
     HTML-formatted text, but do not modify it.
 """
 
@@ -26,11 +26,11 @@
 from __future__ import absolute_import
 
 from ...api import Str, false
-    
+
 from ..basic_editor_factory import BasicEditorFactory
-    
+
 from ..toolkit import toolkit_object
-                    
+
 # Callable that returns the editor to use in the UI.
 def html_editor(*args, **traits):
     return toolkit_object('html_editor:SimpleEditor')(*args, **traits)
@@ -56,9 +56,9 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
     """ Editor factory for HTML editors.
     """
     #--------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #--------------------------------------------------------------------------
-    
+
     # Should implicit text formatting be converted to HTML?
     format_text = false
 
@@ -72,12 +72,12 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
     open_externally = false
 
     #---------------------------------------------------------------------------
-    #  Parses the contents of a formatted text string into the corresponding 
+    #  Parses the contents of a formatted text string into the corresponding
     #  HTML:
     #---------------------------------------------------------------------------
-    
+
     def parse_text ( self, text ):
-        """ Parses the contents of a formatted text string into the 
+        """ Parses the contents of a formatted text string into the
             corresponding HTML.
         """
         text  = text.replace( '\r\n', '\n' )
@@ -98,7 +98,7 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
                     i, line = self.parse_list( lines, i )
                 else:
                     i, line = self.parse_block( lines, i )
-                new_lines.append( line ) 
+                new_lines.append( line )
             else:
                 new_lines.append( line )
                 i += 1
@@ -108,11 +108,11 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
             if paragraph[:3].lower() != '<p>':
                 paragraphs[i] = '<p>%s</p>' % paragraph
         return '\n'.join( paragraphs )
-      
+
     #---------------------------------------------------------------------------
-    #  Parses a code block:  
+    #  Parses a code block:
     #---------------------------------------------------------------------------
-                    
+
     def parse_block ( self, lines, i ):
         """ Parses a code block.
         """
@@ -131,14 +131,14 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
         while (j > i) and (lines[j] == ''):
             j -= 1
         j += 1
-        temp = [ (('&nbsp;' * (self.indent( line ) - m)) + 
+        temp = [ (('&nbsp;' * (self.indent( line ) - m)) +
                   line.strip()) for line in lines[ i: j ] ]
         return ( j, block_template % '\n<br>'.join( temp ) )
-        
+
     #---------------------------------------------------------------------------
-    #  Parses a list:  
+    #  Parses a list:
     #---------------------------------------------------------------------------
-            
+
     def parse_list ( self, lines, i ):
         """ Parses a list.
         """
@@ -166,16 +166,16 @@ class ToolkitEditorFactory ( BasicEditorFactory ):
                 j += 1
         style = [ 'ul', 'ol' ][ kind == '*' ]
         return ( j, list_template % ( style, '\n'.join( result ), style ) )
-        
+
     #---------------------------------------------------------------------------
-    #  Calculates the amount of white space at the beginning of a line:  
+    #  Calculates the amount of white space at the beginning of a line:
     #---------------------------------------------------------------------------
-                    
+
     def indent ( self, line ):
         """ Calculates the amount of white space at the beginning of a line.
         """
         return len( line ) - len( (line + '.').strip() ) + 1
-    
+
 HTMLEditor = ToolkitEditorFactory(klass = html_editor)
 
 #-EOF--------------------------------------------------------------------------

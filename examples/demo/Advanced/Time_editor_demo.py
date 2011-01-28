@@ -13,7 +13,7 @@ from enthought.traits.ui.api import View, Item, TimeEditor
 class TimeEditorDemo(HasTraits):
     """ Demo class. """
     time = Time(datetime.time(12, 0, 0))
-    view = View(Item('time', label='Simple Editor'), 
+    view = View(Item('time', label='Simple Editor'),
                 Item('time', label='Readonly Editor',
                      style='readonly',
                      # Show 24-hour mode instead of default 12 hour.
@@ -27,10 +27,10 @@ class TimeEditorDemo(HasTraits):
 
 
 #-- Set Up The Demo ------------------------------------------------------------
-    
+
 demo = TimeEditorDemo()
 
 if __name__ == "__main__":
-    demo.configure_traits()        
+    demo.configure_traits()
 
-#-- eof ----------------------------------------------------------------------- 
+#-- eof -----------------------------------------------------------------------

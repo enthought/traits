@@ -39,13 +39,13 @@ comp_view = View(
 )
 
 # A pair of houses to demonstrate the View
-house1 = House(address  = '4743 Dudley Lane', 
-               bedrooms = 3, 
-               pool     = False, 
+house1 = House(address  = '4743 Dudley Lane',
+               bedrooms = 3,
+               pool     = False,
                price    = 150000)
-house2 = House(address  ='11604 Autumn Ridge', 
-               bedrooms = 3, 
-               pool     = True, 
+house2 = House(address  ='11604 Autumn Ridge',
+               bedrooms = 3,
+               pool     = True,
                price    = 200000)
 
 # ...And the actual display command

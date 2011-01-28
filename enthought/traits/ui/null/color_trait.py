@@ -35,10 +35,10 @@ def convert_to_color ( object, name, value ):
     """
     if type( value ) is int:
         return value & 0xFFFFFF
-    
+
     elif isinstance( value, tuple ):
         return (value[0]/255., value[1]/255., value[2]/255.)
-    
+
     raise TraitError
 
 convert_to_color.info = ('an integer which in hex is of the form 0xRRGGBB, '

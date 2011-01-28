@@ -106,7 +106,7 @@ class TestCase(unittest.TestCase):
         self.assertTrue(foo in referrers)
 
     def test_delegates_to(self):
-        """ Tests if an object that delegates to another is freed. 
+        """ Tests if an object that delegates to another is freed.
         """
         class Base(HasTraits):
             """ Object we are delegating to. """

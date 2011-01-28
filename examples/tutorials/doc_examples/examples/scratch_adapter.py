@@ -12,7 +12,7 @@ from interface_implementation import Person
 
 class PersonINameAdapter ( HasTraits ):
 
-    # Declare what interfaces this adapter implements, 
+    # Declare what interfaces this adapter implements,
     # and for what class:
     adapts( Person, IName )
 
@@ -25,6 +25,6 @@ class PersonINameAdapter ( HasTraits ):
 
     # Implement the 'IName' interface on behalf of its client:
     def get_name ( self ):
-        return ('%s %s' % ( self.client.first_name, 
+        return ('%s %s' % ( self.client.first_name,
                             self.client.last_name ))
 

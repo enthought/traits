@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-# view_multi_object.py --- Example of a view for 
+# view_multi_object.py --- Example of a view for
 #                          editing multiple objects
 import wx
 from enthought.traits.api import HasTraits, Int, Str, Trait
@@ -31,14 +31,14 @@ class TraitApp ( wx.App ):
         wx.InitAllImageHandlers()
         wx.App.__init__( self, 1, 'debug.log' )
         self.MainLoop()
-    
+
     def OnInit ( self ):
-        # This is the call to the ui() method, which includes a 
+        # This is the call to the ui() method, which includes a
         # context dictionary
         ui = self.view.ui({'e':self.obj1, 'c':self.obj2})
         self.SetTopWindow( ui.control )
         return True
-    
+
 
 #  Main program:
 TraitApp( bill, acme, employee_view )

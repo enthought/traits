@@ -27,8 +27,8 @@ class TestClass(HasTraits):
     b3 = Bool
     _updated = Bool(False)
 
-view1 = View('b1', 'b2', 'b3', 
-             title="Alter Title", 
+view1 = View('b1', 'b2', 'b3',
+             title="Alter Title",
              handler=TC_Handler(),
              buttons = ['OK', 'Cancel'])
 

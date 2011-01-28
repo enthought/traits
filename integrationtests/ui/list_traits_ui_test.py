@@ -1,59 +1,59 @@
 #-------------------------------------------------------------------------------
-#    
-#  TableEditor test case for Traits UI 
-#    
+#
+#  TableEditor test case for Traits UI
+#
 #  Written by: David C. Morrill
-#    
+#
 #  Date: 11/11/2005
-#    
-#  (c) Copyright 2005 by Enthought, Inc.  
+#
+#  (c) Copyright 2005 by Enthought, Inc.
 #  License: BSD Style.
-#    
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Imports:  
+#  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
-    
+
 from enthought.traits.ui.api \
     import View, Item, VSplit, TableEditor, ListEditor
-    
+
 from enthought.traits.ui.table_column \
     import ObjectColumn
-    
+
 from enthought.traits.ui.table_filter \
     import TableFilter, RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
-        
+
 #-------------------------------------------------------------------------------
-#  'Person' class:  
+#  'Person' class:
 #-------------------------------------------------------------------------------
-                        
+
 class Person ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     name  = Str
     age   = Int
     phone = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d' )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
-    
-    traits_view = View( 'name', 'age', 'phone', 
+
+    traits_view = View( 'name', 'age', 'phone',
                         width   = 0.18,
                         buttons = [ 'OK', 'Cancel' ] )
-    
+
 #-------------------------------------------------------------------------------
-#  Sample data:  
+#  Sample data:
 #-------------------------------------------------------------------------------
-    
+
 people = [
    Person( name = 'Dave',   age = 39, phone = '555-1212' ),
    Person( name = 'Mike',   age = 28, phone = '555-3526' ),
@@ -66,7 +66,7 @@ people = [
 ]
 
 #-------------------------------------------------------------------------------
-#  Table editor definition:  
+#  Table editor definition:
 #-------------------------------------------------------------------------------
 
 filters      = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ]
@@ -85,21 +85,21 @@ table_editor = TableEditor(
 )
 
 #-------------------------------------------------------------------------------
-#  'ListTraitTest' class:  
+#  'ListTraitTest' class:
 #-------------------------------------------------------------------------------
 
 class ListTraitTest ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     people = List( Person )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-        
+
     traits_view = View(
         VSplit(
             Item( 'people',
@@ -107,11 +107,11 @@ class ListTraitTest ( HasStrictTraits ):
                   editor = table_editor ),
             Item( 'people@',
                   id     = 'list',
-                  editor = ListEditor( style = 'custom', 
+                  editor = ListEditor( style = 'custom',
                                        rows  = 5 ) ),
             Item( 'people@',
                   id     = 'notebook',
-                  editor = ListEditor( use_notebook = True, 
+                  editor = ListEditor( use_notebook = True,
                                        deletable    = True,
                                        export       = 'DockShellWindow',
                                        page_name    = '.name' ) ),
@@ -124,11 +124,11 @@ class ListTraitTest ( HasStrictTraits ):
         height    = .6,
         resizable = True,
         kind      = 'live' )
-        
+
 #-------------------------------------------------------------------------------
-#  Run the tests:  
+#  Run the tests:
 #-------------------------------------------------------------------------------
-                 
+
 if __name__ == '__main__':
     ListTraitTest( people = people ).configure_traits()
-    
+

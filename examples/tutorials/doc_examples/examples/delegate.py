@@ -9,15 +9,15 @@ from enthought.traits.api import TraitError
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):
-    first_name = Str 
-    last_name  = Str 
+    first_name = Str
+    last_name  = Str
 
 class Child(HasTraits):
     first_name = Str
     last_name  = DelegatesTo('father')
     father     = Instance(Parent)
     mother     = Instance(Parent)
-    
+
 #--[Example*]-------------------------------------------------------------------
 
 tony  = Parent(first_name='Anthony', last_name='Jones')
@@ -39,7 +39,7 @@ try:
     sally.last_name = sally.mother # ERR: string expected
 except TraitError, c:
     print 'TraitError: ', c
-    
+
 """
 The exception printed will look similar to the following:
 
@@ -47,7 +47,7 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in ?
   File "c:\src\trunk\enthought\traits\trait_handlers.py", line 163, in error
     raise TraitError, ( object, name, self.info(), value )
-enthought.traits.trait_errors.TraitError: The 'last_name' trait of a Child 
-instance must be a value of type 'str', but a value of <__main__.Parent object 
+enthought.traits.trait_errors.TraitError: The 'last_name' trait of a Child
+instance must be a value of type 'str', but a value of <__main__.Parent object
 at 0x009DD6F0> was specified.
 """

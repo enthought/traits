@@ -366,7 +366,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     @on_trait_change('filters[]')
     def _update_filter_editor ( self, object, name, old, new ):
-        """ Handles the set of filters associated with the editor's factory 
+        """ Handles the set of filters associated with the editor's factory
             being changed.
         """
         values = { None: '000:No filter' }
@@ -429,12 +429,12 @@ class BaseTableEditor(object):
         """ Returns whether the action should be defined in the user interface.
         """
         if action.defined_when != '':
-            if not eval( action.defined_when, globals(), 
+            if not eval( action.defined_when, globals(),
                          self._menu_context ):
                 return False
 
         if action.visible_when != '':
-            if not eval( action.visible_when, globals(), 
+            if not eval( action.visible_when, globals(),
                          self._menu_context ):
                 return False
 
@@ -514,7 +514,7 @@ class ReversedList ( object ):
         """
         list = self.list[:]
         list.reverse()
-        
+
         return list.index( value )
 
     def __len__ ( self ):
@@ -543,9 +543,9 @@ class ReversedList ( object ):
         """
         if index < 0:
             return (-1 - index)
-            
+
         result = (len( self.list ) - index - 1)
         if result >= 0:
             return result
-            
+
         return index

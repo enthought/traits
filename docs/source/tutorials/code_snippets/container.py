@@ -21,7 +21,7 @@ class Container(HasTraits):
     camera = Instance(Camera, ())
     display = Instance(Display, ())
 
-    view = View( 
+    view = View(
                 Item('camera', style='custom', show_label=False, ),
                 Item('display', style='custom', show_label=False, ),
                )

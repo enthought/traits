@@ -14,7 +14,7 @@ class Parent ( HasTraits ):
 
     def _last_name_changed(self, new):
         print "Parent's last name changed to %s." % new
-        
+
 class Child ( HasTraits ):
 
     father = Instance( Parent )
@@ -23,7 +23,7 @@ class Child ( HasTraits ):
 
     def _last_name_changed(self, new):
         print "Child's last name changed to %s." % new
-        
+
 #--[Example*]-------------------------------------------------------------------
 
 dad = Parent( first_name='William', last_name='Chase' )

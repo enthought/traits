@@ -1,14 +1,14 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2008, Enthought, Inc.
 # All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #
 #------------------------------------------------------------------------------
@@ -22,10 +22,10 @@
 from __future__ import absolute_import
 
 from ...api import List, Str, Bool, Int, Unicode
-    
+
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well.     
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
 from ..view import View
 
 from ..group import Group
@@ -63,9 +63,9 @@ class ToolkitEditorFactory ( EditorFactory ):
     # Can the user select directories as well as files?
     allow_dir = Bool( False )
 
-    # Is user input set on every keystroke? (Overrides the default) ('simple' 
+    # Is user input set on every keystroke? (Overrides the default) ('simple'
     # style only):
-    auto_set = False      
+    auto_set = False
 
     # Is user input set when the Enter key is pressed? (Overrides the default)
     # ('simple' style only):
@@ -75,20 +75,20 @@ class ToolkitEditorFactory ( EditorFactory ):
     # FIXME: add support
     entries = Int( 10 )
 
-    # Optional extended trait name used to notify the editor when the file 
+    # Optional extended trait name used to notify the editor when the file
     # system view should be reloaded ('custom' style only):
     reload_name = Str
 
     # Optional extended trait name used to notify when the user double-clicks
     # an entry in the file tree view:
     dclick_name = Str
-    
+
     # The style of file dialog to use when the 'Browse...' button is clicked
     # Should be one of 'open' or 'save'
     dialog_style = Str('open')
 
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
 
     traits_view = View( [ [ '<options>',
@@ -97,7 +97,7 @@ class ToolkitEditorFactory ( EditorFactory ):
                           [ 'filter', '|[Wildcard filters]<>' ] ] )
 
     extras = Group()
-    
+
 # Define the FileEditor class.
 FileEditor = ToolkitEditorFactory
 

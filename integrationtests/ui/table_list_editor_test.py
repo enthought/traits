@@ -1,38 +1,38 @@
 #-------------------------------------------------------------------------------
-#    
+#
 #  TableEditor test case for Traits UI which tests editing of lists instead of
 #  editing of objects.
-#    
+#
 #  Written by: David C. Morrill
-#    
+#
 #  Date: 07/06/2005
-#    
-#  (c) Copyright 2005 by Enthought, Inc.  
+#
+#  (c) Copyright 2005 by Enthought, Inc.
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
-#    
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-#  Imports:  
+#  Imports:
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api \
     import HasStrictTraits, List
-    
+
 from enthought.traits.ui.api \
     import View, Item, TableEditor
-    
+
 from enthought.traits.ui.table_column \
     import ListColumn
-    
+
 from enthought.traits.ui.table_filter \
     import TableFilter
-    
+
 #-------------------------------------------------------------------------------
-#  Sample data:  
+#  Sample data:
 #-------------------------------------------------------------------------------
-    
+
 people = [
    [ 'Dave',   39, '555-1212' ],
    [ 'Mike',   28, '555-3526' ],
@@ -45,7 +45,7 @@ people = [
 ]
 
 #-------------------------------------------------------------------------------
-#  Table editor definition:  
+#  Table editor definition:
 #-------------------------------------------------------------------------------
 
 table_editor = TableEditor(
@@ -57,22 +57,22 @@ table_editor = TableEditor(
 )
 
 #-------------------------------------------------------------------------------
-#  'TableTest' class:  
+#  'TableTest' class:
 #-------------------------------------------------------------------------------
 
 class TableTest ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     people = List
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-        
-    traits_view = View( [ Item( 'people', 
+
+    traits_view = View( [ Item( 'people',
                                 editor    = table_editor,
                                 resizable = True ),
                           '|[]<>' ],
@@ -81,11 +81,11 @@ class TableTest ( HasStrictTraits ):
                         height  = .23,
                         buttons = [ 'OK', 'Cancel' ],
                         kind    = 'live' )
-        
+
 #-------------------------------------------------------------------------------
-#  Run the tests:  
+#  Run the tests:
 #-------------------------------------------------------------------------------
-                 
+
 if __name__ == '__main__':
     tt = TableTest( people = people )
     tt.configure_traits()

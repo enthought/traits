@@ -31,7 +31,7 @@ from configobj import ConfigObj
 from ...api import (HasTraits, HasPrivateTraits, Str, Instance, Property, Any,
     Code, HTML, true, false, Dict)
 
-from ..api import (TreeEditor, ObjectTreeNode, TreeNodeObject, View, Item, 
+from ..api import (TreeEditor, ObjectTreeNode, TreeNodeObject, View, Item,
     VSplit, Tabbed, VGroup, HGroup, Heading, Handler, UIInfo, InstanceEditor,
     Include, spring)
 

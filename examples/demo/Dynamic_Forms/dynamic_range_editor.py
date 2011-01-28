@@ -11,21 +11,21 @@ The demo is divided into three pages:
  - A dynamic range using a large range slider.
  - A dynamic range using a spinner.
 
-In each section of the demo, the top-most 'value' trait can have its range 
-end points changed dynamically by modifying the 'low' and 'high' sliders 
+In each section of the demo, the top-most 'value' trait can have its range
+end points changed dynamically by modifying the 'low' and 'high' sliders
 below it.
 
 This demo also illustrates how the value, label formatting and label
 widths can also be specified if desired.
-""" 
+"""
 
-# Imports:  
+# Imports:
 from enthought.traits.api \
     import HasPrivateTraits, Float, Range, Int
-           
+
 from enthought.traits.ui.api \
     import View, Group, Item, Label, RangeEditor
-    
+
 class DynamicRangeEditor ( HasPrivateTraits ):
     """ Defines an editor for dynamic ranges (i.e. ranges whose bounds can be
         changed at run time).
@@ -36,26 +36,26 @@ class DynamicRangeEditor ( HasPrivateTraits ):
 
     # This determines the low end of the range:
     low = Range( 0.0, 10.0, 0.0 )
-    
+
     # This determines the high end of the range:
     high = Range( 20.0, 100.0, 20.0 )
 
     # An integer value:
     int_value = Int
-    
+
     # This determines the low end of the integer range:
     int_low = Range( 0, 10, 0 )
-    
+
     # This determines the high end of the range:
     int_high = Range( 20, 100, 20 )
-    
-    # Traits view definitions:  
+
+    # Traits view definitions:
     view = View(
-    
+
         # Dynamic simple slider demo:
         Group(
-            Item( 'value', 
-                   editor = RangeEditor( low_name    = 'low', 
+            Item( 'value',
+                   editor = RangeEditor( low_name    = 'low',
                                          high_name   = 'high',
                                          format      = '%.1f',
                                          label_width = 28,
@@ -69,11 +69,11 @@ class DynamicRangeEditor ( HasPrivateTraits ):
                    'Value.' ),
             label = 'Simple Slider'
         ),
-        
+
         # Dynamic large range slider demo:
         Group(
-            Item( 'value', 
-                  editor = RangeEditor( low_name    = 'low', 
+            Item( 'value',
+                  editor = RangeEditor( low_name    = 'low',
                                         high_name   = 'high',
                                         format      = '%.1f',
                                         label_width = 28,
@@ -87,13 +87,13 @@ class DynamicRangeEditor ( HasPrivateTraits ):
                    'Value.' ),
             label = 'Large Range Slider'
         ),
-        
+
         # Dynamic spinner demo:
         Group(
-            Item( 'int_value', 
+            Item( 'int_value',
                   editor = RangeEditor( low         = 0,
                                         high        = 20,
-                                        low_name    = 'int_low', 
+                                        low_name    = 'int_low',
                                         high_name   = 'int_high',
                                         format      = '%d',
                                         is_float    = False,
@@ -112,7 +112,7 @@ class DynamicRangeEditor ( HasPrivateTraits ):
         buttons   = [ 'OK' ],
         resizable = True
     )
-    
+
 
 # Create the demo:
 demo = DynamicRangeEditor()

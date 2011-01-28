@@ -11,12 +11,12 @@ from enthought.traits.ui.api import Item, Group, View
 #  Demo Class
 #-------------------------------------------------------------------------------
 
-class CodeEditorDemo ( HasTraits ): 
+class CodeEditorDemo ( HasTraits ):
     """ This class specifies the details of the CodeEditor demo.
     """
 
-    # To demonstrate any given Trait editor, an appropriate Trait is required. 
-    code_sample = Code( 'import sys\n\nsys.print("hello world!")' ) 
+    # To demonstrate any given Trait editor, an appropriate Trait is required.
+    code_sample = Code( 'import sys\n\nsys.print("hello world!")' )
 
     # Display specification
     code_group = Group( Item('code_sample', style='simple', label='Simple'),
@@ -40,4 +40,4 @@ popup = CodeEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

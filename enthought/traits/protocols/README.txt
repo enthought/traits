@@ -1,5 +1,5 @@
 The files contained in this directory are from the pyprotocols project
-(http://peak.telecommunity.com/PyProtocols.html). 
+(http://peak.telecommunity.com/PyProtocols.html).
 
 Copyright (C) 2003, Phillip J. Eby
 

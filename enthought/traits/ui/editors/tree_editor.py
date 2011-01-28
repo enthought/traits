@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #
 #------------------------------------------------------------------------------
@@ -25,13 +25,13 @@ from __future__ import absolute_import
 from ...api import Any, Dict, Bool, Tuple, Int, List, Instance, Str, Enum
 
 from ..tree_node import TreeNode
-    
+
 from ..dock_window_theme import DockWindowTheme
 
 from ..editor_factory import EditorFactory
 
 from ..helper import Orientation
-    
+
 #-------------------------------------------------------------------------------
 #  Trait definitions:
 #-------------------------------------------------------------------------------
@@ -67,7 +67,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Reference to a shared object editor
     editor = Instance( EditorFactory )
-    
+
     # The DockWindow graphical theme
     # FIXME: Implemented only in wx backend.
     dock_theme = Instance( DockWindowTheme )
@@ -97,7 +97,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Called when a node is double-clicked
     on_dclick = Any
-    
+
     # Call when the mouse hovers over a node
     on_hover = Any
 
@@ -126,12 +126,12 @@ class ToolkitEditorFactory ( EditorFactory ):
     # handler.
     veto = Str
 
-    # Mode for lines connecting tree nodes 
+    # Mode for lines connecting tree nodes
     #
     # * 'appearance': Show lines only when they look good.
     # * 'on': Always show lines.
     # * 'off': Don't show lines.
-    lines_mode = Enum ( 'appearance', 'on', 'off' ) 
+    lines_mode = Enum ( 'appearance', 'on', 'off' )
     # FIXME: Document as unimplemented or wx specific.
 
 

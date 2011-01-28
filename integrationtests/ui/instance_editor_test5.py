@@ -7,30 +7,30 @@ from enthought.traits.ui.instance_choice \
     import InstanceChoice, InstanceFactoryChoice
 
 #-------------------------------------------------------------------------------
-#  'Person' class:  
+#  'Person' class:
 #-------------------------------------------------------------------------------
-                        
+
 class Person ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     name  = Str
     age   = Int
     phone = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d' )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definition:  
+    #  Traits view definition:
     #---------------------------------------------------------------------------
-    
+
     traits_view = View( 'name~', 'age~', 'phone~' )
     edit_view   = View( 'name',  'age',  'phone'  )
-    
+
 #-------------------------------------------------------------------------------
-#  Sample data:  
+#  Sample data:
 #-------------------------------------------------------------------------------
-    
+
 people = [
    Person( name = 'Dave',   age = 39, phone = '555-1212' ),
    Person( name = 'Mike',   age = 28, phone = '555-3526' ),
@@ -43,29 +43,29 @@ people = [
 ]
 
 #-------------------------------------------------------------------------------
-#  'Team' class:  
+#  'Team' class:
 #-------------------------------------------------------------------------------
 
 class Team ( HasStrictTraits ):
-    
+
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-        
+
     name    = Str
     captain = Instance( Person )
     roster  = List( Person )
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-        
+
     traits_view = View( [ [ 'name', '_',
-                            Item( 'captain@', 
+                            Item( 'captain@',
                                   editor = InstanceEditor( name     = 'roster',
                                                            editable = False,
-                                                           values   = [ 
-                                               InstanceFactoryChoice( 
+                                                           values   = [
+                                               InstanceFactoryChoice(
                                                    klass = Person,
                                                    name  = 'Non player',
                                                    view  = 'edit_view' ) ] ) ),
@@ -73,9 +73,9 @@ class Team ( HasStrictTraits ):
                         [ 'captain@', '|<>' ] ] )
 
 #-------------------------------------------------------------------------------
-#  Run the test:  
+#  Run the test:
 #-------------------------------------------------------------------------------
-                                                
+
 if __name__ == '__main__':
     Team( name    = 'Vultures',
           captain = people[0],

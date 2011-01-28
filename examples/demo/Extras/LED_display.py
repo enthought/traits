@@ -2,46 +2,46 @@
 #  License: BSD Style.
 
 """
-This demo illustrates use of the LEDEditor for displaying numeric values 
+This demo illustrates use of the LEDEditor for displaying numeric values
 using a simulated LED display control.
 """
 
 from threading \
     import Thread
-    
+
 from time \
     import sleep
-    
+
 from enthought.traits.api \
     import HasTraits, Instance, Int, Bool, Float
-    
+
 from enthought.traits.ui.api \
     import View, Item, HGroup, Handler, UIInfo, spring
-    
+
 from enthought.traits.ui.wx.extra.led_editor \
     import LEDEditor
- 
-# Handler class for the LEDDemo class view:    
+
+# Handler class for the LEDDemo class view:
 class LEDDemoHandler ( Handler ):
-    
+
     # The UIInfo object associated with the UI:
     info = Instance( UIInfo )
-    
+
     # Is the demo currently running:
     running = Bool( True )
-    
+
     # Is the thread still alive?
     alive = Bool( True )
-    
+
     def init ( self, info ):
         self.info = info
-        Thread( target = self._update_counter ).start() 
-        
+        Thread( target = self._update_counter ).start()
+
     def closed ( self, info, is_ok ):
         self.running = False
         while self.alive:
             sleep( .05 )
-        
+
     def _update_counter ( self ):
         while self.running:
             self.info.object.counter1 += 1
@@ -49,15 +49,15 @@ class LEDDemoHandler ( Handler ):
             sleep( .01 )
         self.alive = False
 
-# The main demo class:            
+# The main demo class:
 class LEDDemo ( HasTraits ):
-    
+
     # A counter to display:
     counter1 = Int
-    
+
     # A floating point value to display:
     counter2 = Float
-                 
+
     # The traits view:
     view = View(
         Item( 'counter1',
@@ -77,7 +77,7 @@ class LEDDemo ( HasTraits ):
               editor = LEDEditor( format_str = '%.3f' )
         ),
         '_',
-        HGroup( 
+        HGroup(
             Item( 'counter1',
                   label  = 'Left',
                   height = -40,
@@ -110,8 +110,8 @@ class LEDDemo ( HasTraits ):
         buttons = [ 'OK' ],
         handler = LEDDemoHandler
     )
-           
-# Create the demo:           
+
+# Create the demo:
 demo = LEDDemo()
 
 # Run the demo (if invoked from the command line):

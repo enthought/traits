@@ -11,7 +11,7 @@ The Traits package is installed using the standard Python 'distutils' package.
 Enter the following command in the 'traits-1.0' directory:
 
    python setup.py install
-   
+
 This will perform a normal install of the Traits package into your Python
 installation. Refer to the Python 'distutils' documentation for more
 installation options.
@@ -19,19 +19,19 @@ installation options.
 Download
 --------
 
-The Traits package is available as part of the Enthought Tool Suite (ETS), 
+The Traits package is available as part of the Enthought Tool Suite (ETS),
 available from:
 
     http://code.enthought.com/ets/
-    
+
 To install ETS using Enthought's egg-based 'Enstaller', download and run:
 
     http://code.enthought.com/enstaller/run_enstaller.py
-    
+
 License
 -------
 
-The 'traits' package is available under a BSD style license. 
+The 'traits' package is available under a BSD style license.
 
 Contact
 -------
@@ -41,7 +41,7 @@ or suggestions about the package, please contact the primary author:
 
    David C. Morrill
    dmorrill@enthought.com
-   
+
 For discussion of the Traits package, as well as other tools in the Enthought
 Tool Suite, use the enthought-dev mailing list:
 
@@ -53,7 +53,7 @@ Prerequisites
 -------------
 
 The base Traits package should work on any platform supporting Python >= 2.4
-   
+
 The user interface capabilities of the traits package require additional
 Python packages to be installed.
 

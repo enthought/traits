@@ -10,8 +10,8 @@ from enthought.traits.api import Disallow, Float, \
 #--[Code]-----------------------------------------------------------------------
 
 class Person (HasTraits):
-    name   = Str 
-    age    = Int 
+    name   = Str
+    age    = Int
     weight = Float
     _      = Disallow
-    
+

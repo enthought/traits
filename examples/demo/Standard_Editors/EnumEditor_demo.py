@@ -12,12 +12,12 @@ Fixme: This only shows the capabilities of the old-style EnumEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, Enum
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View
 
-# Define the demo class:    
-class EnumEditorDemo ( HasTraits ): 
+# Define the demo class:
+class EnumEditorDemo ( HasTraits ):
     """ Defines the main EnumEditor demo class. """
 
     # Define an Enum trait to view:
@@ -25,11 +25,11 @@ class EnumEditorDemo ( HasTraits ):
 
     # Items are used to define the display, one Item per editor style:
     enum_group = Group(
-        Item( 'name_list', style = 'simple',   label = 'Simple' ), 
+        Item( 'name_list', style = 'simple',   label = 'Simple' ),
         Item( '_' ),
-        Item( 'name_list', style = 'custom',   label = 'Custom' ), 
+        Item( 'name_list', style = 'custom',   label = 'Custom' ),
         Item( '_' ),
-        Item( 'name_list', style = 'text',     label = 'Text' ), 
+        Item( 'name_list', style = 'text',     label = 'Text' ),
         Item( '_' ),
         Item( 'name_list', style = 'readonly', label = 'ReadOnly' )
     )

@@ -18,5 +18,5 @@ class SimpleEmployee(HasTraits):
     salary = Int
 
 sam = SimpleEmployee()
-sam.configure_traits()    
+sam.configure_traits()
 

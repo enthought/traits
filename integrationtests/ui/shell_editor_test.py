@@ -1,14 +1,14 @@
 #-------------------------------------------------------------------------------
-#  
-#  Traits UI Python ShellEditor test.  
-#  
+#
+#  Traits UI Python ShellEditor test.
+#
 #  Written by: David C. Morrill
-#  
+#
 #  Date: 10/13/2005
-#  
+#
 #  (c) Copyright 2005 by Enthought, Inc.
 #  License: BSD Style.
-#  
+#
 #-------------------------------------------------------------------------------
 
 from enthought.traits.api         import *
@@ -16,13 +16,13 @@ from enthought.traits.ui.api      import *
 from enthought.traits.ui.menu import *
 
 #-------------------------------------------------------------------------------
-#  'ShellTest' class:  
+#  'ShellTest' class:
 #-------------------------------------------------------------------------------
 
 class ShellTest ( HasPrivateTraits ):
 
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
 
     name    = Str
@@ -30,11 +30,11 @@ class ShellTest ( HasPrivateTraits ):
     weight  = Float
     shell_1 = Str
     shell_2 = Dict
-    
+
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
-        
+
     view = View( 'name', 'age', 'weight', '_',
                  Item( 'shell_1', editor = ShellEditor() ),
                  Item( 'shell_2', editor = ShellEditor() ),
@@ -44,9 +44,9 @@ class ShellTest ( HasPrivateTraits ):
                  height    = 0.3 )
 
 #-------------------------------------------------------------------------------
-#  Run the test:  
+#  Run the test:
 #-------------------------------------------------------------------------------
-                
+
 if __name__ == '__main__':
     ShellTest().configure_traits()
-    
+

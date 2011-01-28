@@ -10,17 +10,17 @@ This demo shows each of the four styles of the CodeEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, Code
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View
 
 # The main demo class:
-class CodeEditorDemo ( HasTraits ): 
+class CodeEditorDemo ( HasTraits ):
     """ Defines the CodeEditor demo class.
     """
 
     # Define a trait to view:
-    code_sample = Code( 'import sys\n\nsys.print("hello world!")' ) 
+    code_sample = Code( 'import sys\n\nsys.print("hello world!")' )
 
     # Display specification:
     code_group = Group(

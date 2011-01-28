@@ -24,7 +24,7 @@ class Widget (HasTraits):
 
   def update_cost(self):
     self.cost = self.part1.cost + self.part2.cost
-    
+
 #--[Example*]-------------------------------------------------------------------
 w = Widget()
 w.part1.cost = 2.25

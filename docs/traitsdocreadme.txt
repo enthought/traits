@@ -1,7 +1,7 @@
 Traits documentation files in this directory:
 
 Traits3_UM.pdf
-    PDF version of User's Manual 
+    PDF version of User's Manual
 Traits3_UM.doc
     MS Word source for User's Manual
 Traits3_UM.css

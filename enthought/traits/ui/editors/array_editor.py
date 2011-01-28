@@ -131,8 +131,8 @@ class ArrayStructure ( HasTraits ):
                                    enter_set = self.editor.factory.enter_set )
                           )
             items.append( Item( name        = name,
- 	                        style       = style,
- 	                        width       = width,
+                                style       = style,
+                                width       = width,
                                 format_func = format_func,
                                 format_str  = format_str,
                                 padding     = -3 ) )

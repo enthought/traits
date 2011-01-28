@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-# type_checked_methods.py --- Example of traits-based 
+# type_checked_methods.py --- Example of traits-based
 #                             method type checking
 
 #--[Imports]--------------------------------------------------------------------

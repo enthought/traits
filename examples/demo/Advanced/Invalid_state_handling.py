@@ -5,13 +5,13 @@
 Sometimes the inputs to a model are not correlated. That is, any valid model
 input produces a corresponding valid model state. However, in other cases, some
 or all of the model inputs are correlated. That is, there may exist one or more
-combinations of individually valid model inputs which produce invalid model 
+combinations of individually valid model inputs which produce invalid model
 states.
 
 In cases where this can happen, it is very often desirable to warn the user if
 a particular combination of input values will not produce a usable result. This
 problem cannot be solved solely though the use of carefully chosen trait types
-and editors, because each individual input may be valid, but it is the 
+and editors, because each individual input may be valid, but it is the
 combination of inputs which is invalid.
 
 Solving this problem therefore typically requires providing a way of determining
@@ -40,7 +40,7 @@ kinetic energy level of the system exceeds the safety threshold. This trait is
 then synchronized with the user interface's 'mass', velocity' and 'status'
 editors, turning them red whenever the model enters an invalid state.
 
-The 'status' trait is another property, based on the 'error' trait, which 
+The 'status' trait is another property, based on the 'error' trait, which
 provides a human readable description of the current system state.
 
 Note that in this example, we synchronize the 'error' trait with the user
@@ -61,7 +61,7 @@ normal color.
 
 from enthought.traits.api \
     import HasTraits, Range, Float, Bool, Str, Property, property_depends_on
-    
+
 from enthought.traits.ui.api \
     import View, VGroup, Item
 
@@ -71,26 +71,26 @@ class System ( HasTraits ):
 
     # The mass of the system:
     mass = Range( 0.0, 100.0 )
-    
+
     # The velocity of the system:
     velocity = Range( 0.0, 100.0 )
-    
+
     # The kinetic energy of the system:
     kinetic_energy = Property( Float )
-    
+
     # The current error status of the system:
-    error = Property( Bool, 
+    error = Property( Bool,
                sync_to_view = 'mass.invalid, velocity.invalid, status.invalid' )
-    
+
     # The current status of the system:
     status = Property( Str )
-    
+
     view = View(
-        VGroup( 
+        VGroup(
             VGroup(
                 Item( 'mass' ),
                 Item( 'velocity' ),
-                Item( 'kinetic_energy', 
+                Item( 'kinetic_energy',
                       style      = 'readonly',
                       format_str = '%.0f'
                 ),
@@ -106,20 +106,20 @@ class System ( HasTraits ):
             ),
         )
     )
-    
+
     @property_depends_on( 'mass, velocity' )
     def _get_kinetic_energy ( self ):
         return (self.mass * self.velocity * self.velocity) / 2.0
-    
+
     @property_depends_on( 'kinetic_energy' )
     def _get_error ( self ):
         return (self.kinetic_energy > 50000.0)
-    
+
     @property_depends_on( 'error' )
     def _get_status ( self ):
         if self.error:
             return 'The kinetic energy of the system is too high.'
-            
+
         return ''
 
 #-- Create and run the demo ----------------------------------------------------

@@ -9,8 +9,8 @@ from enthought.traits.api import Any, HasTraits, Int, Python
 #--[Code]-----------------------------------------------------------------------
 class Person(HasTraits):
     temp_count = Int(-1)
-    temp_      = Any 
+    temp_      = Any
     _          = Python
-    
-    
+
+
 

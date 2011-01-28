@@ -10,16 +10,16 @@ from enthought.traits.api import Any, Str, Int, HasTraits, TraitError
 #--[Code]-----------------------------------------------------------------------
 
 class Person ( HasTraits ):
-    
+
     # Normal, explicitly defined trait:
     name = Str
-    
+
     # By default, let all traits have any value:
-    _ = Any 
-    
+    _ = Any
+
     # Except for this one, which must be an Int:
     age = Int
-    
+
 #--[Example*]-------------------------------------------------------------------
 
 # Create a sample Person:
@@ -37,6 +37,6 @@ try:
     bill.age = 'middle age'
 except TraitError, c:
     print 'TraitError: ', c, '\n'
-    
+
 # Display the final results:
 bill.print_traits()

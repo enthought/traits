@@ -11,7 +11,7 @@ from enthought.traits.ui.api import Item, Group, View
 #  Demo Class
 #-------------------------------------------------------------------------------
 
-class ListEditorDemo ( HasTraits ): 
+class ListEditorDemo ( HasTraits ):
     """ This class specifies the details of the BooleanEditor demo.
     """
 
@@ -20,16 +20,16 @@ class ListEditorDemo ( HasTraits ):
 
 
     # Items are used to define display; one per editor style.
-    list_group = Group( Item('play_list', style='simple', label='Simple'), 
+    list_group = Group( Item('play_list', style='simple', label='Simple'),
                         Item('_'),
                         Item('play_list', style='custom', label='Custom'),
                         Item('_'),
                         Item('play_list', style='text', label='Text'),
                         Item('_'),
-                        Item('play_list', 
-                              style='readonly', 
+                        Item('play_list',
+                              style='readonly',
                               label='ReadOnly'))
- 
+
     # Demo view
     view1 = View( list_group,
                   title = 'ListEditor',
@@ -44,4 +44,4 @@ popup = ListEditorDemo()
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

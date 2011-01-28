@@ -21,7 +21,7 @@ from __future__ import absolute_import
 import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits, Int,
-    Long, Trait, TraitError, TraitList, TraitPrefixList, TraitPrefixMap, 
+    Long, Trait, TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
     TraitRange, Tuple)
 
 #-------------------------------------------------------------------------------

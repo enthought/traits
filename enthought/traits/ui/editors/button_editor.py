@@ -57,7 +57,7 @@ class ToolkitEditorFactory ( EditorFactory ):
     # The name of the external object trait that the button label is synced to
     label_value = Str
 
-    # The name of the trait on the object that contains the list of possible 
+    # The name of the trait on the object that contains the list of possible
     # values.  If this is set, then the value, label, and label_value traits
     # are ignored; instead, they will be set from this list.  When this button
     # is clicked, the value set will be the one selected from the drop-down.

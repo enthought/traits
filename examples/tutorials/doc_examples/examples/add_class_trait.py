@@ -2,7 +2,7 @@
 #  License: BSD Style.
 
 
-# add_class_trait.py --- Example of mutually-referring classes 
+# add_class_trait.py --- Example of mutually-referring classes
 #                        using add_class_trait()
 
 
@@ -15,12 +15,12 @@ from enthought.traits.api import HasTraits, Instance
 # Defining mutually-referring classes using add_class_trait()
 
 class Chicken ( HasTraits ):
-    
+
     pass
 
-    
+
 class Egg ( HasTraits ):
-    
+
     created_by = Instance( Chicken )
 
 # Now that 'Egg' is defined, we can add the 'hatched_from' trait to

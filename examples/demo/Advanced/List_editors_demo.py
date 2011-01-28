@@ -4,43 +4,43 @@
 """
 This shows the three different types of editor that can be applied to a list
 of objects:
-    
+
  - Table
  - List
  - Dockable notebook (a list variant)
- 
+
 Each editor style is editing the exact same list of objects. Note that any
 changes made in one editor are automatically reflected in the others.
 """
 
-# Imports:  
+# Imports:
 from enthought.traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
-    
+
 from enthought.traits.ui.api \
     import View, Item, Tabbed, TableEditor, ListEditor
-    
+
 from enthought.traits.ui.table_column \
     import ObjectColumn
-    
+
 from enthought.traits.ui.table_filter \
     import RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
-        
-# 'Person' class:  
+
+# 'Person' class:
 class Person ( HasStrictTraits ):
-    
-    # Trait definitions:  
+
+    # Trait definitions:
     name  = Str
     age   = Int
     phone = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d' )
-    
-    # Traits view definition:  
-    traits_view = View( 'name', 'age', 'phone', 
+
+    # Traits view definition:
+    traits_view = View( 'name', 'age', 'phone',
                         width   = 0.18,
                         buttons = [ 'OK', 'Cancel' ] )
-    
-# Sample data:  
+
+# Sample data:
 people = [
    Person( name = 'Dave',   age = 39, phone = '555-1212' ),
    Person( name = 'Mike',   age = 28, phone = '555-3526' ),
@@ -52,7 +52,7 @@ people = [
    Person( name = 'Fields', age = 31, phone = '555-3547' )
 ]
 
-# Table editor definition:  
+# Table editor definition:
 filters      = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ]
 
 table_editor = TableEditor(
@@ -69,13 +69,13 @@ table_editor = TableEditor(
     row_factory = Person
 )
 
-# 'ListTraitTest' class:  
+# 'ListTraitTest' class:
 class ListTraitTest ( HasStrictTraits ):
-    
-    # Trait definitions:  
+
+    # Trait definitions:
     people = List( Instance( Person, () ) )
-    
-    # Traits view definitions:  
+
+    # Traits view definitions:
     traits_view = View(
         Tabbed(
             Item( 'people',
@@ -85,12 +85,12 @@ class ListTraitTest ( HasStrictTraits ):
             Item( 'people@',
                   label  = 'List',
                   id     = 'list',
-                  editor = ListEditor( style = 'custom', 
+                  editor = ListEditor( style = 'custom',
                                        rows  = 5 ) ),
             Item( 'people@',
                   label  = 'Notebook',
                   id     = 'notebook',
-                  editor = ListEditor( use_notebook = True, 
+                  editor = ListEditor( use_notebook = True,
                                        deletable    = True,
                                        export       = 'DockShellWindow',
                                        page_name    = '.name' ) ),
@@ -104,5 +104,5 @@ demo = ListTraitTest( people = people )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
-    demo.configure_traits()        
-    
+    demo.configure_traits()
+

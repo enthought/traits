@@ -12,25 +12,25 @@ from enthought.traits.api \
     import HasTraits, Button
 
 from enthought.traits.ui.api \
-    import View, VGroup, HGroup, Item, spring 
+    import View, VGroup, HGroup, Item, spring
 
 button = Item( 'ignore', show_label = False )
 
 class SpringDemo ( HasTraits ):
-    
+
     ignore = Button( 'Ignore' )
-    
-    view = View( 
+
+    view = View(
                VGroup(
                    HGroup( button, spring, button,
                            show_border = True,
                            label       = 'Left and right justified' ),
-                   HGroup( button, button, spring, 
-                           button, button, spring, 
-                           button, button, 
+                   HGroup( button, button, spring,
+                           button, button, spring,
+                           button, button,
                            show_border = True,
                            label       = 'Left, center and right justified' ),
-                   HGroup( spring, button, button, 
+                   HGroup( spring, button, button,
                            show_border = True,
                            label       = 'Right justified' ),
                    HGroup( button, button,
@@ -40,7 +40,7 @@ class SpringDemo ( HasTraits ):
                title   = 'Spring Demo',
                buttons = [ 'OK' ]
            )
-                         
+
 demo = SpringDemo()
 
 if __name__ == '__main__':

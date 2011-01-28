@@ -10,8 +10,8 @@ New in Traits 3.0 is the *cached_property* method decorator which helps
 streamline the process of writing properties which cache their current value.
 
 Defining properties is a very powerful technique for exposing as traits items
-whose value depends upon the current state of other object traits. In 
-particular, this can be very useful for creating synthetic traits which are 
+whose value depends upon the current state of other object traits. In
+particular, this can be very useful for creating synthetic traits which are
 editable or displayable in a traits-based user interface.
 
 In some cases however, the cost of computing the current value of a property
@@ -24,44 +24,44 @@ value is requested.
 Combined with the **Property** *depends_on* metadata, the *cached_property*
 decorator greatly simplifies the process of writing a cached property. Take a
 look at the following code for example::
-    
+
     class TestScores ( HasPrivateTraits ):
-        
+
         scores  = List( Int )
         average = Property( depends_on = 'scores' )
-        
+
         @cached_property
         def _get_average ( self ):
             s = self.scores
             return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) ) / len( s ))
-            
+
 Presumably this is much easier to write and understand that the following
 equivalent code written without using *depends_on* and *cached_property*::
-    
+
     class TestScores ( HasPrivateTraits ):
-        
+
         scores  = List( Int )
         average = Property
-        
+
         def _get_average ( self ):
             if self._average is None:
                 s = self.scores
                 self._average = (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) )
                                  / len( s ))
             return self._average
-            
+
         def _scores_changed ( self ):
             old, self._average = self._average, None
             self.trait_property_changed( 'average', old, self._average )
-            
+
         def _scores_items_changed ( self ):
             self._scores_changed()
-            
+
 The *cached_property* decorator takes no arguments, and should simply be
 written on the line preceding the property's *getter* method, as shown in the
 previous example.
 
-Use of the *cached_property* decorator also eliminates the need to add 
+Use of the *cached_property* decorator also eliminates the need to add
 *cached = True* metadata to the property declaration, as was previously required
 when using *depends_on* metadata with a cached property definition.
 """
@@ -72,27 +72,27 @@ from enthought.traits.api import *
 from enthought.traits.ui.api import *
 
 #--[TestScores Class]-----------------------------------------------------------
-    
+
 class TestScores ( HasPrivateTraits ):
-    
+
     scores  = List( Int )
     average = Property( depends_on = 'scores' )
-    
+
     @cached_property
     def _get_average ( self ):
         s = self.scores
         return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) ) / len( s ))
-        
+
 #--[Sample User Interface]------------------------------------------------------
 
 class TestScoresHandler ( ModelView ):
-    
+
     new_score = Int
     add_score = Button( 'Add New Score' )
-    
+
     view = View(
         VGroup(
-            HGroup( 
+            HGroup(
                 Item( 'new_score' ),
                 Item( 'add_score', show_label = False )
             ),
@@ -102,13 +102,13 @@ class TestScoresHandler ( ModelView ):
                   style = 'readonly' )
         )
     )
-    
+
     def _add_score_changed ( self ):
         """ Handles the user clicking the 'Add New Score' button by adding the
             current 'New score' value to the current list of scores.
         """
         self.model.scores.append( self.new_score )
-            
+
 #--[Example*]-------------------------------------------------------------------
 
 # Create a sample TestScores object with some sample scores:

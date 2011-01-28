@@ -2,20 +2,20 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #  Date:   10/21/2004
 #
 #------------------------------------------------------------------------------
 
-""" Defines the instance editor factory for all traits user interface 
+""" Defines the instance editor factory for all traits user interface
 toolkits.
 """
 
@@ -77,7 +77,7 @@ class ToolkitEditorFactory ( EditorFactory ):
 
     # Optional instance view to use
     view = AView
-    
+
     # Extended name of the context object trait containing the view, or name of
     # the view, to use
     view_name = Str
@@ -86,20 +86,20 @@ class ToolkitEditorFactory ( EditorFactory ):
     id = Str
 
     # Kind of pop-up editor (live, modal, nonmodal, wizard)
-    kind = AKind 
+    kind = AKind
 
     # The orientation of the instance editor relative to the instance selector
     orientation = Enum( 'default', 'horizontal', 'vertical' )
 
-    # The default adapter class used to create InstanceChoice compatible 
-    # adapters for instance objects: 
+    # The default adapter class used to create InstanceChoice compatible
+    # adapters for instance objects:
     adapter = Type( InstanceChoice, allow_none = False )
 
     #---------------------------------------------------------------------------
-    #  Traits view definitions:  
+    #  Traits view definitions:
     #---------------------------------------------------------------------------
 
-    traits_view = View( [ [ 'label{Button label}', 
+    traits_view = View( [ [ 'label{Button label}',
                             'view{View name}', '|[]' ],
                           [ 'kind@', '|[Pop-up editor style]<>' ] ] )
 
@@ -108,4 +108,4 @@ class ToolkitEditorFactory ( EditorFactory ):
 InstanceEditor = ToolkitEditorFactory
 
 ### EOF #######################################################################
-    
+

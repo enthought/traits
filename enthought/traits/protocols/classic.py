@@ -6,7 +6,7 @@ __all__ = ['ProviderMixin']
 
 from types import FunctionType, ModuleType, InstanceType, ClassType
 
-from .protocols import (IImplicationListener, IOpenProvider, 
+from .protocols import (IImplicationListener, IOpenProvider,
     NO_ADAPTER_NEEDED, advise, updateWithSimplestAdapter, composeAdapters,
     declareAdapterForObject)
 

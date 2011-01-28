@@ -3,7 +3,7 @@
 
 """
 The example demonstrates how to create a 'settable cached' property. The example
-itself is nonsensical, and is provided mainly to show how to set up such a 
+itself is nonsensical, and is provided mainly to show how to set up such a
 property, and how it differs from a standard 'cached' property.
 
 A normal 'cached' property does not have a 'setter' method, meaning that the
@@ -21,9 +21,9 @@ However, it is possible to define a 'settable cached' property which in addition
 to the capabilities of a normal 'cached' property, also allows the property's
 value to be explicitly set.
 
-To accomplish this, simply set the 'settable' argument to the 
-'property_depends_on' decorator to True (see the '_get_c' method in the 
-example code). When set this way, an appropriate 'setter' method is 
+To accomplish this, simply set the 'settable' argument to the
+'property_depends_on' decorator to True (see the '_get_c' method in the
+example code). When set this way, an appropriate 'setter' method is
 automatically generated for the associated property.
 
 This allows code to set the value of the property directly if desired, subject
@@ -34,7 +34,7 @@ exception, just like any other trait would.
 
 If any of the traits which the property depends upon change value, the current
 value of the property will be flushed from the cache and a change notification
-for the property will be generated. Any code that then attempts to read the 
+for the property will be generated. Any code that then attempts to read the
 value of the property will result in the cache being reloaded with the new value
 returned by the property's 'getter' method.
 
@@ -52,7 +52,7 @@ as well, illustrating that the 'c' trait can be set directly, as well as
 indirectly by changes to 'a' and 'b'.
 
 Also, try typing non-numeric values into the 'c' field and you will see that
-any values set are being type checked as well (i.e. they must be integer 
+any values set are being type checked as well (i.e. they must be integer
 values).
 
 Now try typing a value into the 'd' trait and you will see that an error
@@ -64,37 +64,37 @@ normal 'cached' trait that has no 'setter' method defined.
 
 from enthought.traits.api \
     import HasTraits, Int, Range, Property, property_depends_on
-    
+
 from enthought.traits.ui.api \
     import View, Item, RangeEditor
 
 #-- Demo Class -----------------------------------------------------------------
 
-class SettableCachedProperty ( HasTraits ): 
+class SettableCachedProperty ( HasTraits ):
 
     a = Range( 1, 10 )
     b = Range( 1, 10 )
     c = Property( Int )
     d = Property
-    
-    view = View( 
+
+    view = View(
         Item( 'a' ),
         Item( 'b' ),
         '_',
-        Item( 'c', 
+        Item( 'c',
               editor = RangeEditor( low = 1, high = 100, mode = 'slider' ) ),
         Item( 'c' ),
         '_',
-        Item( 'd', 
+        Item( 'd',
               editor = RangeEditor( low = 1, high = 400, mode = 'slider' ) ),
         Item( 'd' ),
         width = 0.3
     )
-    
+
     @property_depends_on( 'a,b', settable = True )
     def _get_c(self):
         return (self.a * self.b)
-        
+
     @property_depends_on( 'c' )
     def _get_d(self):
         return (self.c + self.c)

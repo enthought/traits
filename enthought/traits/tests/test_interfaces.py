@@ -1,21 +1,21 @@
 #-------------------------------------------------------------------------------
-#  
+#
 #  Unit test case for testing interfaces and adaptation.
-#  
+#
 #  Written by: David C. Morrill
-#  
+#
 #  Date: 4/10/2007
-#  
+#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-# 
+#
 #-------------------------------------------------------------------------------
 
 """ Unit test case for testing interfaces and adaptation.
@@ -57,7 +57,7 @@ class IList(Interface):
         """ Returns the list value for the object. """
 
 #-------------------------------------------------------------------------------
-#  Test 'model' classes:  
+#  Test 'model' classes:
 #-------------------------------------------------------------------------------
 
 class Sample ( HasTraits ):
@@ -105,7 +105,7 @@ class SampleBad ( HasTraits ):
 #  Test interfaces class:
 #-------------------------------------------------------------------------------
 
-class TraitsHolder ( HasTraits ): 
+class TraitsHolder ( HasTraits ):
 
     a_no      = Instance( IAverage, adapt = 'no' )
     a_yes     = Instance( IAverage, adapt = 'yes' )
@@ -115,7 +115,7 @@ class TraitsHolder ( HasTraits ):
     fp_yes    = AdaptedTo( IFooPlus )
 
 #-------------------------------------------------------------------------------
-#  Test 'adapter' definitions:  
+#  Test 'adapter' definitions:
 #-------------------------------------------------------------------------------
 
 class SampleListAdapter ( Adapter ):
@@ -124,7 +124,7 @@ class SampleListAdapter ( Adapter ):
 
     def get_list ( self ):
         obj = self.adaptee
-        return [ getattr( obj, name ) 
+        return [ getattr( obj, name )
                  for name in obj.trait_names( sample = True ) ]
 
 class ListAverageAdapter ( Adapter ):
@@ -174,7 +174,7 @@ adapts( FooPlusAdapter, IFoo, IFooPlus )
 class InterfacesTest ( unittest.TestCase ):
 
     #---------------------------------------------------------------------------
-    #  Individual unit test methods:  
+    #  Individual unit test methods:
     #---------------------------------------------------------------------------
 
     def test_implements_none ( self ):
@@ -285,6 +285,6 @@ class InterfacesTest ( unittest.TestCase ):
         class Test ( HasTraits ):
             implements( Sample )
 
-# Run the unit tests (if invoked from the command line):        
+# Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':
     unittest.main()

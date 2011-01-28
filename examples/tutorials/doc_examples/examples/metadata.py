@@ -46,5 +46,5 @@ print t.trait( 'any' ).default                    # [1, 2, 3]
 print t.trait( 'any' ).default_kind               # list
 print t.trait( 'any' ).inner_traits               # ()
 print t.trait( 'any' ).is_trait_type( Any )       # True
-print t.trait( 'any' ).is_trait_type( List )      # False 
+print t.trait( 'any' ).is_trait_type( List )      # False
 

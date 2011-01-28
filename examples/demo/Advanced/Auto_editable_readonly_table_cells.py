@@ -29,36 +29,36 @@ trait.
 
 from enthought.traits.api \
     import HasTraits, Int, List, Range, Property, property_depends_on
-    
+
 from enthought.traits.ui.api \
     import View, VGroup, Item, TableEditor
-    
+
 from enthought.traits.ui.table_column \
     import ObjectColumn
 
 #-- Integer Class --------------------------------------------------------------
 
 class Integer ( HasTraits ):
-    
+
     # The value:
     n = Int
 
 #-- Factor Class ---------------------------------------------------------------
 
 class Factor ( HasTraits ):
-    
+
     # The number being factored:
     n = Int
-    
+
     # The list of factors of 'n':
     factors = Property( List )
-    
+
     @property_depends_on( 'n' )
     def _get_factors ( self ):
         n      = self.n
         i      = 1
         result = []
-        
+
         while (i * i) <= n:
             j = n / i
             if (i * j) == n:
@@ -66,16 +66,16 @@ class Factor ( HasTraits ):
                 if i != j:
                     result.append( Integer( n = j ) )
             i += 1
-            
+
         result.sort( lambda l, r: cmp( l.n, r.n ) )
-        
+
         return result
 
 #-- The table editor used for the pop-up view ----------------------------------
 
 factor_table_editor = TableEditor(
-    columns = [ 
-        ObjectColumn( name                 = 'n', 
+    columns = [
+        ObjectColumn( name                 = 'n',
                       width                = 1.0,
                       editable             = False,
                       horizontal_alignment = 'center' )
@@ -84,8 +84,8 @@ factor_table_editor = TableEditor(
     auto_size          = False,
     show_toolbar       = False,
     show_column_labels = False
-)    
-        
+)
+
 #-- The table editor used for the main view ------------------------------------
 
 factors_view = View(
@@ -97,16 +97,16 @@ factors_view = View(
     id     = 'enthought.traits.examples.demo.Advanced.factors_view',
     kind   = 'info',
     height = 0.30,
-)    
+)
 
 factors_table_editor = TableEditor(
     columns = [
-        ObjectColumn( name                 = 'n', 
+        ObjectColumn( name                 = 'n',
                       width                = 0.5,
                       editable             = False,
                       horizontal_alignment = 'center' ),
         ObjectColumn( name                 = 'factors',
-                      width                = 0.5, 
+                      width                = 0.5,
                       editable             = False,
                       horizontal_alignment = 'center',
                       auto_editable        = True,
@@ -116,7 +116,7 @@ factors_table_editor = TableEditor(
     sortable     = False,
     auto_size    = False,
     show_toolbar = False
-)    
+)
 
 #-- Factors Class --------------------------------------------------------------
 
@@ -124,10 +124,10 @@ class Factors ( HasTraits ):
 
     # The maximum number to include in the table:
     max_n = Range( 1, 1000, 20, mode = 'slider' )
-    
+
     # The list of Factor objects:
     factors = Property( List )
-    
+
     # The view of the list of Factor objects:
     view = View(
         VGroup(
@@ -149,7 +149,7 @@ class Factors ( HasTraits ):
         height    = 0.4,
         resizable = True
     )
-    
+
     @property_depends_on( 'max_n' )
     def _get_factors ( self ):
         return [ Factor( n = i + 1 ) for i in xrange( self.max_n ) ]

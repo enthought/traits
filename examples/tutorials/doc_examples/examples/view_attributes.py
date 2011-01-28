@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-# view_attributes.py --- Example of a view as an 
+# view_attributes.py --- Example of a view as an
 #                        attribute of a class
 from enthought.traits.api import HasTraits, Int, Str, Trait
 from enthought.traits.ui.api import View

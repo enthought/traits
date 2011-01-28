@@ -11,12 +11,12 @@ This demo shows each of the two styles of the ButtonEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, Button
-    
+
 from enthought.traits.ui.api \
     import Item, View, Group
-    
+
 # Define the demo class:
-class ButtonEditorDemo ( HasTraits ): 
+class ButtonEditorDemo ( HasTraits ):
     """ Defines the main ButtonEditor demo class. """
 
     # Define a Button trait:
@@ -38,7 +38,7 @@ class ButtonEditorDemo ( HasTraits ):
     )
 
     # Demo view:
-    view = View( 
+    view = View(
         event_group,
         title     = 'ButtonEditor',
         buttons   = [ 'OK' ],

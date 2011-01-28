@@ -3,18 +3,18 @@
 Flash Editor (Windows Only)
 ===========================
 
-In Traits 3.0, a new **FlashEditor** has been added to the Traits UI package. 
+In Traits 3.0, a new **FlashEditor** has been added to the Traits UI package.
 The editor allows displaying and interacting with Adobe Flash compatible files.
 
-This editor is currently only available for the Windows platform and is 
-located in the wxPython version of the Traits UI in the 
-*enthought.traits.ui.wx.extras.windows* package. The purpose of the 
-*extras.windows* package is to provide a location for editors which may be 
-toolkit and Windows platform specific, and not necessarily available in all 
+This editor is currently only available for the Windows platform and is
+located in the wxPython version of the Traits UI in the
+*enthought.traits.ui.wx.extras.windows* package. The purpose of the
+*extras.windows* package is to provide a location for editors which may be
+toolkit and Windows platform specific, and not necessarily available in all
 Traits UI toolkit packages or platforms.
 
 The **FlashEditor** has no developer settable traits.
-    
+
 The value edited by a **FlashEditor** should be a string containing either the
 URL or file name of the Flash file to display. This is a *read only* value that
 is not modified by the editor. Changing the value causes the editor to display
@@ -25,17 +25,17 @@ the Flash file defined by the new value of the trait.
 
 from enthought.traits.ui.wx.extra.windows.flash_editor \
     import FlashEditor
-    
+
 from enthought.traits.api \
     import HasTraits, Enum
-    
+
 from enthought.traits.ui.api \
     import View, HGroup, Item
-    
+
 #--[FlashDemo Class]------------------------------------------------------------
 
 class FlashDemo ( HasTraits ):
-    
+
     # The Flash file to display:
     flash = Enum(
         'http://www.ianag.com/arcade/swf/sudoku.swf',
@@ -49,10 +49,10 @@ class FlashDemo ( HasTraits ):
         'http://www.ianag.com/arcade/swf/game_e4fe4e55fedc2f502be627ee6df716c5.swf',
         'http://www.ianag.com/arcade/swf/rhumb.swf'
     )
-                   
+
     # The view to display:
     view = View(
-        HGroup( 
+        HGroup(
             Item( 'flash', label = 'Pick a game to play' )
         ),
         '_',
@@ -62,7 +62,7 @@ class FlashDemo ( HasTraits ):
         )
     )
 
-#--<Example*>-------------------------------------------------------------------    
+#--<Example*>-------------------------------------------------------------------
 
 demo = FlashDemo()
 

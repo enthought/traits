@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in /LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: David C. Morrill
 # Date: 12/04/2004
 # Description: Test case for the traits tree editor.
@@ -19,16 +19,16 @@
 
 from enthought.traits.api \
     import HasTraits, Str, Regex, List, Instance
-    
+
 from enthought.traits.ui.api \
     import TreeEditor, TreeNode, View, Group, Item, Handler, InstanceEditor
-    
+
 from enthought.traits.ui.instance_choice \
     import InstanceDropChoice
-                      
+
 from enthought.traits.ui.menu \
     import Menu, Action, Separator
-    
+
 from enthought.traits.ui.wx.tree_editor \
     import NewAction, CopyAction, CutAction, PasteAction, DeleteAction, \
            RenameAction
@@ -41,12 +41,12 @@ class Employee ( HasTraits ):
     name  = Str( '<unknown>' )
     title = Str
     phone = Regex( regex = r'\d\d\d-\d\d\d\d' )
-    
+
     view = View( 'title', 'phone' )
-    
+
     def default_title ( self ):
         self.title = 'Senior Engineer'
-        
+
 #-------------------------------------------------------------------------------
 #  'Department' class:
 #-------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ class Employee ( HasTraits ):
 class Department ( HasTraits ):
     name      = Str( '<unknown>' )
     employees = List( Employee )
-    
+
     view = View( [ 'employees', '|<>' ] )
 
 #-------------------------------------------------------------------------------
@@ -65,11 +65,11 @@ class Company ( HasTraits ):
     name        = Str( '<unknown>' )
     departments = List( Department )
     employees   = List( Employee )
-    
+
 #-------------------------------------------------------------------------------
-#  'Partner' class:  
+#  'Partner' class:
 #-------------------------------------------------------------------------------
-        
+
 class Partner ( HasTraits ):
     name    = Str( '<unknown>' )
     company = Instance( Company )
@@ -80,42 +80,42 @@ class Partner ( HasTraits ):
 #  Create a hierarchy:
 #-------------------------------------------------------------------------------
 
-jason = Employee( 
+jason = Employee(
      name  = 'Jason',
-     title = 'Sr. Engineer', 
+     title = 'Sr. Engineer',
      phone = '536-1057' )
-     
-mike = Employee( 
+
+mike = Employee(
      name  = 'Mike',
-     title = 'Sr. Engineer', 
+     title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 dave = Employee(
      name  = 'Dave',
      title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 martin = Employee(
      name  = 'Martin',
      title = 'Sr. Engineer',
      phone = '536-1057' )
-     
+
 duncan = Employee(
      name  = 'Duncan',
      title = 'Sr. Engineer' )
-        
+
 partner = Partner(
     name    = 'eric',
-    company = Company( 
+    company = Company(
         name        = 'Enthought, Inc.',
         departments = [
-            Department( 
+            Department(
                 name      = 'Business',
                 employees = [ jason, mike ]
             ),
             Department(
                 name      = 'Scientific',
-                employees = [ dave, martin, duncan ] 
+                employees = [ dave, martin, duncan ]
             )
         ],
         employees = [ dave, martin, mike, duncan, jason ]
@@ -128,7 +128,7 @@ partner = Partner(
 
 no_view = View()
 
-tree_editor = TreeEditor( 
+tree_editor = TreeEditor(
     editable = False,
     nodes = [
         TreeNode( node_for  = [ Company ],
@@ -158,8 +158,8 @@ tree_editor = TreeEditor(
                                     Separator(),
                                     RenameAction,
                                     Separator(),
-                                    CopyAction, 
-                                    CutAction, 
+                                    CopyAction,
+                                    CutAction,
                                     PasteAction ),
                   view      = View( [ 'name', '|<' ] ),
                   add       = [ Employee ] ),
@@ -173,8 +173,8 @@ tree_editor = TreeEditor(
                                     Action( name   = 'Department',
                                             action = 'handler.employee_department(editor,object)' ),
                                     Separator(),
-                                    CopyAction, 
-                                    CutAction, 
+                                    CopyAction,
+                                    CutAction,
                                     PasteAction,
                                     Separator(),
                                     DeleteAction,
@@ -185,36 +185,36 @@ tree_editor = TreeEditor(
 )
 
 #-------------------------------------------------------------------------------
-#  'TreeHandler' class:  
+#  'TreeHandler' class:
 #-------------------------------------------------------------------------------
 
 class TreeHandler ( Handler ):
-    
+
     def employee_department ( self, editor, object ):
         dept = editor.get_parent( object )
         print '%s works in the %s department.' % ( object.name, dept.name )
- 
+
 #-------------------------------------------------------------------------------
 #  Define the View to use:
 #-------------------------------------------------------------------------------
 
 view = View(
     Group(
-        [ Item( 'company', 
-                editor    = tree_editor, 
+        [ Item( 'company',
+                editor    = tree_editor,
                 resizable = True ),
           '|<>' ],
-        Group( 
+        Group(
             [ '{Employee of the Month}@',
-              Item( 'eom@', 
-                    editor = InstanceEditor( values = [ 
+              Item( 'eom@',
+                    editor = InstanceEditor( values = [
                                  InstanceDropChoice( klass      = Employee,
                                                      selectable = True ) ] ),
                     resizable = True ),
               '|<>' ],
             [ '{Department of the Month}@',
-              Item( 'dom@', 
-                    editor = InstanceEditor( values = [ 
+              Item( 'dom@',
+                    editor = InstanceEditor( values = [
                                  InstanceDropChoice( klass = Department ) ] ),
                     resizable = True ),
               '|<>' ],
@@ -230,11 +230,11 @@ view = View(
     width     = .5,
     height    = .5
 )
-             
+
 #-------------------------------------------------------------------------------
-#  Edit it:  
+#  Edit it:
 #-------------------------------------------------------------------------------
- 
+
 if __name__ == '__main__':
     partner.configure_traits( view = view )
 

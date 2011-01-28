@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-# instance_editor_selection.py -- Example of an instance editor with 
+# instance_editor_selection.py -- Example of an instance editor with
 #                                 instance selection
 
 #--[Imports]--------------------------------------------------------------------
@@ -12,15 +12,15 @@ from enthought.traits.ui.api \
     import View, Item, InstanceEditor
 
 #--[Code]-----------------------------------------------------------------------
-    
+
 class Person ( HasStrictTraits ):
     name  = Str
     age   = Int
-    phone = Regex( value = '000-0000', 
+    phone = Regex( value = '000-0000',
                    regex = '\d\d\d[-]\d\d\d\d' )
-    
-    traits_view = View( 'name', 'age', 'phone' ) 
-    
+
+    traits_view = View( 'name', 'age', 'phone' )
+
 people = [
   Person( name = 'Dave',   age = 39, phone = '555-1212' ),
   Person( name = 'Mike',   age = 28, phone = '555-3526' ),
@@ -37,12 +37,12 @@ class Team ( HasStrictTraits ):
     name    = Str
     captain = Instance( Person )
     roster  = List( Person )
-        
-    traits_view = View( Item('name'), 
+
+    traits_view = View( Item('name'),
                         Item('_'),
-                        Item( 'captain', 
+                        Item( 'captain',
                               label='Team Captain',
-                              editor = 
+                              editor =
                                   InstanceEditor( name = 'roster',
                                                   editable = True),
                               style = 'custom',
@@ -50,7 +50,7 @@ class Team ( HasStrictTraits ):
                         buttons = ['OK'])
 
 #--[Example*]-------------------------------------------------------------------
-       
+
 if __name__ == '__main__':
     Team( name    = 'Vultures',
           captain = people[0],

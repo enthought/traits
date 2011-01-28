@@ -23,7 +23,7 @@
 
 from __future__ import absolute_import
 
-from ...api import (CTrait, Property, Range, Enum, Str, Int, Any, Unicode, 
+from ...api import (CTrait, Property, Range, Enum, Str, Int, Any, Unicode,
         Bool, Undefined)
 
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api

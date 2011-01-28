@@ -20,7 +20,7 @@ joe = Person()
 print joe.weight
 
 # Assign new values
-joe.weight = 161.9     # OK to assign a float 
+joe.weight = 161.9     # OK to assign a float
 print joe.weight
 
 joe.weight = 162       # OK to assign an int

@@ -3,23 +3,23 @@
 LED Editor
 ==========
 
-In Traits 3.0, a new **LEDEditor** has been added to the Traits UI package. The 
-editor allows displaying (but not editing) numeric values using a set of 
-simulated LEDs. 
+In Traits 3.0, a new **LEDEditor** has been added to the Traits UI package. The
+editor allows displaying (but not editing) numeric values using a set of
+simulated LEDs.
 
-This editor is currently only available in the wxPython version of the Traits UI 
+This editor is currently only available in the wxPython version of the Traits UI
 in the *enthought.traits.ui.wx.extras* package. The purpose of the *extras*
-package is to provide a location for editors which may be toolkit specific, and 
+package is to provide a location for editors which may be toolkit specific, and
 not necessarily available in all Traits UI toolkit packages.
 
 The traits supported by the **LEDEditor** editor are as follows:
-    
+
 alignment
-    Specifies the alignment of the numeric text within the control. The possible 
+    Specifies the alignment of the numeric text within the control. The possible
     values are: *right* (the default), *left* and *center*.
-    
+
 The value edited by an **LEDEditor** should be an integer or float value,
-or a string value containing only characters that would be found in an interger 
+or a string value containing only characters that would be found in an interger
 or float value.
 """
 
@@ -27,42 +27,42 @@ or float value.
 
 from threading \
     import Thread
-    
+
 from time \
     import sleep
-    
+
 from enthought.traits.api \
     import HasTraits, Instance, Int, Float, Bool
-    
+
 from enthought.traits.ui.api \
     import View, Item, HGroup, Handler, UIInfo, spring
-    
+
 from enthought.traits.ui.wx.extra.led_editor \
     import LEDEditor
 
 #--[LEDDemoHandler Class]-------------------------------------------------------
 
-# Handler class for the LEDDemo class view:    
+# Handler class for the LEDDemo class view:
 class LEDDemoHandler ( Handler ):
-    
+
     # The UIInfo object associated with the UI:
     info = Instance( UIInfo )
-    
+
     # Is the demo currently running:
     running = Bool( True )
-    
+
     # Is the thread still alive?
     alive = Bool( True )
-    
+
     def init ( self, info ):
         self.info = info
-        Thread( target = self._update_counter ).start() 
-        
+        Thread( target = self._update_counter ).start()
+
     def closed ( self, info, is_ok ):
         self.running = False
         while self.alive:
             sleep( .05 )
-        
+
     def _update_counter ( self ):
         while self.running:
             self.info.object.counter1 += 1
@@ -72,15 +72,15 @@ class LEDDemoHandler ( Handler ):
 
 #--[LEDDemo Class]--------------------------------------------------------------
 
-# The main demo class:            
+# The main demo class:
 class LEDDemo ( HasTraits ):
-    
+
     # A counter to display:
     counter1 = Int
-    
+
     # A floating point value to display:
     counter2 = Float
-                 
+
     # The traits view:
     view = View(
         Item( 'counter1',
@@ -100,7 +100,7 @@ class LEDDemo ( HasTraits ):
               editor = LEDEditor( format_str = '%.3f' )
         ),
         '_',
-        HGroup( 
+        HGroup(
             Item( 'counter1',
                   label  = 'Left',
                   height = -40,

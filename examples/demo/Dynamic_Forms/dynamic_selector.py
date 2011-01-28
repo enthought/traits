@@ -4,8 +4,8 @@
 """
 Demo to redefine legal values of one attribute based on another via GUI.
 
-Code sample showing a simple implementation of the dynamic 
-redefining of a trait attribute's legal values on the basis of another 
+Code sample showing a simple implementation of the dynamic
+redefining of a trait attribute's legal values on the basis of another
 trait attribute's assigned value.
 
 Demo class "Address" has a simple set of attributes: 'street_address',
@@ -27,11 +27,11 @@ trait attributes.)
 # Imports:
 from enthought.traits.api \
     import HasTraits, Str, Enum, List
-    
+
 from enthought.traits.ui.api \
     import View, Item, Handler, EnumEditor
 
-    
+
 # Dictionary of defined states and cities.
 cities = {
     'GA': [ 'Athens', 'Atlanta', 'Macon', 'Marietta', 'Savannah' ],
@@ -43,10 +43,10 @@ cities = {
 class AddressHandler ( Handler ):
     """ Handler class to redefine the possible values of 'city' based on 'st'.
     """
-    
+
     # Current list of cities that apply:
     cities = List( Str )
-    
+
     def object_st_changed ( self, info ):
         # Change the selector options:
         #info.cityedit.factory.values = cities[ info.object.st ]
@@ -59,16 +59,16 @@ class AddressHandler ( Handler ):
 class Address ( HasTraits ):
     """ Demo class for demonstrating dynamic redefinition of valid trait values.
     """
-    
+
     street_address = Str
     st             = Enum( cities.keys()[0], cities.keys() )
     city           = Str
 
-    view = View( 
+    view = View(
         Item( name  = 'street_address' ),
         Item( name  = 'st', label = 'State' ),
-        Item( name  = 'city', 
-              editor = EnumEditor( name = 'handler.cities' ), 
+        Item( name  = 'city',
+              editor = EnumEditor( name = 'handler.cities' ),
               id     = 'cityedit' ),
         title     = 'Address Information',
         buttons   = [ 'OK' ],
@@ -83,4 +83,4 @@ demo = Address(street_address="4743 Dudley Lane")
 # Run the demo (if invoked from the command line):
 if __name__== '__main__':
     demo.configure_traits()
-    
+

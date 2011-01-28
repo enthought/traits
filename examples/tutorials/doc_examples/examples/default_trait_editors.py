@@ -20,9 +20,9 @@ class Adult(HasTraits):
                        Item(name='age'),
                        Item(name='registered_voter'))
 
-alice = Adult(first_name='Alice', 
+alice = Adult(first_name='Alice',
               last_name='Smith',
-              age=42, 
+              age=42,
               registered_voter=True)
 
 alice.configure_traits()

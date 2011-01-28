@@ -10,12 +10,12 @@ This demo shows each of the four styles of the ColorEditor
 # Imports:
 from enthought.traits.api \
     import HasTraits, RGBColor
-    
+
 from enthought.traits.ui.api \
     import Item, Group, View
 
-# Demo class definition:    
-class ColorEditorDemo ( HasTraits ): 
+# Demo class definition:
+class ColorEditorDemo ( HasTraits ):
     """ Defines the main ColorEditor demo. """
 
     # Define a Color trait to view:
@@ -25,12 +25,12 @@ class ColorEditorDemo ( HasTraits ):
     color_group = Group(
         Item( 'color_trait', style = 'simple',   label = 'Simple' ),
         Item(  '_' ),
-        Item( 'color_trait', style = 'custom',   label = 'Custom' ), 
+        Item( 'color_trait', style = 'custom',   label = 'Custom' ),
         Item( '_'),
-        Item( 'color_trait', style = 'text',     label = 'Text' ), 
+        Item( 'color_trait', style = 'text',     label = 'Text' ),
         Item( '_'),
         Item( 'color_trait', style = 'readonly', label = 'ReadOnly' )
-    ) 
+    )
 
     # Demo view
     view1 = View(
@@ -39,7 +39,7 @@ class ColorEditorDemo ( HasTraits ):
         buttons   = ['OK'],
         resizable = True
     )
-               
+
 # Create the demo:
 demo = ColorEditorDemo()
 

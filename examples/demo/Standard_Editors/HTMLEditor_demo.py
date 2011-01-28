@@ -7,11 +7,11 @@ Implementation of a HTMLEditor demo plugin for the Traits UI demo program.
 
 # Imports:
 from enthought.traits.api import HasTraits, HTML
-    
+
 from enthought.traits.ui.api import Item, Group, View
 
 # Define the demo class:
-class HTMLEditorDemo ( HasTraits ): 
+class HTMLEditorDemo ( HasTraits ):
     """ Defines the main HTMLEditor demo class. """
 
     # Define a HTML trait to view
@@ -19,8 +19,8 @@ class HTMLEditorDemo ( HasTraits ):
 <p>two paragraphs of text.</p></body></html>""")
 
     # Demo view
-    view = View(Group(Item('html_trait', 
-                           style = 'simple', 
+    view = View(Group(Item('html_trait',
+                           style = 'simple',
                            label = 'Simple'),
                       show_labels = False),
                 title     = 'HTMLEditor',

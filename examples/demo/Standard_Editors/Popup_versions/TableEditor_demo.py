@@ -8,13 +8,13 @@ one style of TableEditor is implemented, so that is the one shown.
 # Imports:
 from enthought.traits.api \
     import HasTraits, HasStrictTraits, Str, Int, Regex, List, Enum
-    
+
 from enthought.traits.ui.api \
     import View, Group, Item, TableEditor
-    
+
 from enthought.traits.ui.table_column \
     import ObjectColumn
-    
+
 from enthought.traits.ui.table_filter \
     import EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate, \
            RuleTableFilter
@@ -25,11 +25,11 @@ class Employee ( HasTraits ):
     age     = Int
     gender  = Enum( 'Male', 'Female' )
     phone   = Regex( value = '000-0000', regex = '\d\d\d[-]\d\d\d\d')
-    
-    traits_view = View( 
-        'name', 'age', 'phone', 
-        title = 'Create new employee', 
-        width = 0.18, 
+
+    traits_view = View(
+        'name', 'age', 'phone',
+        title = 'Create new employee',
+        width = 0.18,
         buttons = [ 'OK', 'Cancel' ]
     )
 
@@ -41,10 +41,10 @@ table_editor = TableEditor(
                     ObjectColumn( name = 'gender', width = 0.25 ),
                     ObjectColumn( name = 'phone',  width = 0.25 ) ],
     auto_size   = False,
-    deletable   = True,   
-    sort_model  = True,   
+    deletable   = True,
+    sort_model  = True,
     orientation = 'vertical',
-    edit_view   = View( Group( 'name', 'age', 'phone', show_border=True), 
+    edit_view   = View( Group( 'name', 'age', 'phone', show_border=True),
                           resizable = True ),
     filters     = [ EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate ],
     search      = RuleTableFilter(),
@@ -52,16 +52,16 @@ table_editor = TableEditor(
 
 # The class to be edited with the TableEditor:
 class Department ( HasStrictTraits ):
-    employees = List( Employee )        
-    traits_view = View( Group( Item( 'employees', 
-                                     editor = table_editor),  
+    employees = List( Employee )
+    traits_view = View( Group( Item( 'employees',
+                                     editor = table_editor),
                                show_border=True,
                                show_labels=False),
-                        title = 'Department Personnel', 
-                        width = .4, 
+                        title = 'Department Personnel',
+                        width = .4,
                         height = .4,
-                        resizable = True,  
-                        buttons  = [ 'OK', 'Cancel', 'Undo' ], 
+                        resizable = True,
+                        buttons  = [ 'OK', 'Cancel', 'Undo' ],
                         kind = 'live' )
 
 
@@ -79,4 +79,4 @@ popup = Department( employees = [ jas, mike, dave, lyn, greg ] )
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':
     popup.configure_traits()
-    
+

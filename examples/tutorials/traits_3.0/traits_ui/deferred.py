@@ -26,9 +26,9 @@ the latest new value.
 
 Although this may sound like it should slow down user interface updates, in many
 cases where a model is being rapidly updated by calculations running either on a
-background or UI thread, it should actually appear to make the system more 
-responsive, and should in fact, help prevent or reduce situations where the user 
-interface would previously have appeared to be unresponsive due to an excessive 
+background or UI thread, it should actually appear to make the system more
+responsive, and should in fact, help prevent or reduce situations where the user
+interface would previously have appeared to be unresponsive due to an excessive
 number of screen updates.
 """
 
@@ -40,25 +40,25 @@ from enthought.traits.ui.api import *
 #--[Count Class]----------------------------------------------------------------
 
 class Count ( HasTraits ):
-    
+
     count = Int
     go    = Button( 'Count' )
-    
-    view = View( 
+
+    view = View(
         Item( 'count', style = 'readonly' ),
         Item( 'go', show_label = False )
     )
-        
+
     def _go_changed ( self ):
         # Even though the 'count' trait (which is visible in the UI) is being
-        # rapidly updated here, the UI should show only a single update each 
-        # time the 'Count' button is clicked. In previous Traits versions, the 
-        # user would actually see the counter update sequentially through all 
-        # 10,000 values, during which time the user interface would be 
+        # rapidly updated here, the UI should show only a single update each
+        # time the 'Count' button is clicked. In previous Traits versions, the
+        # user would actually see the counter update sequentially through all
+        # 10,000 values, during which time the user interface would be
         # unresponsive:
         for i in range( 10000 ):
             self.count += 1
-    
+
 #--<Example*>-------------------------------------------------------------------
 
 demo = Count()

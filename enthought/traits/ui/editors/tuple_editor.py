@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2008, Enthought, Inc.
 #  All rights reserved.
-#  
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: David C. Morrill
 #
 #------------------------------------------------------------------------------
@@ -23,20 +23,20 @@
 from __future__ import absolute_import
 
 from ...trait_base import SequenceTypes, enumerate
-    
+
 from ...api import Bool, HasTraits, List, Tuple, Unicode, Int, Any, TraitType
-    
+
 # CIRCULAR IMPORT FIXME: Importing from the source rather than traits.ui.api
-# to avoid circular imports, as this EditorFactory will be part of 
-# traits.ui.api as well.     
+# to avoid circular imports, as this EditorFactory will be part of
+# traits.ui.api as well.
 from ..view import View
-    
+
 from ..group import Group
-    
+
 from ..item import Item
-    
+
 from ..editor_factory import EditorFactory
-    
+
 from ..editor import Editor
 
 #-------------------------------------------------------------------------------
@@ -49,44 +49,44 @@ class ToolkitEditorFactory ( EditorFactory ):
     #---------------------------------------------------------------------------
     #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     # Trait definitions for each tuple field
-    types = Any         
+    types = Any
 
     # Labels for each of the tuple fields
-    labels = List( Unicode ) 
+    labels = List( Unicode )
 
     # Editors for each of the tuple fields:
     editors = List( EditorFactory )
 
     # Number of tuple fields or rows
-    cols   = Int( 1 )    
-    
+    cols   = Int( 1 )
+
     # Is user input set on every keystroke? This is applied to every field
     # of the tuple, provided the field does not already have an 'auto_set'
     # metadata or an editor defined.
     auto_set = Bool( True )
-    
-    # Is user input set when the Enter key is pressed? This is applied to 
-    # every field of the tuple, provided the field does not already have an 
+
+    # Is user input set when the Enter key is pressed? This is applied to
+    # every field of the tuple, provided the field does not already have an
     # 'enter_set' metadata or an editor defined.
     enter_set = Bool( False )
-                                      
+
 #-------------------------------------------------------------------------------
 #  'SimpleEditor' class:
 #-------------------------------------------------------------------------------
-                               
+
 class SimpleEditor ( Editor ):
     """ Simple style of editor for tuples.
-    
+
     The editor displays an editor for each of the fields in the tuple, based on
-    the type of each field. 
+    the type of each field.
     """
     #---------------------------------------------------------------------------
     #  Finishes initializing the editor by creating the underlying toolkit
     #  widget:
     #---------------------------------------------------------------------------
-        
+
     def init ( self, parent ):
         """ Finishes initializing the editor by creating the underlying toolkit
             widget.
@@ -96,18 +96,18 @@ class SimpleEditor ( Editor ):
                                         parent = self.ui )
         self.control = ui.control
         self.set_tooltip()
-        
+
     #---------------------------------------------------------------------------
     #  Updates the editor when the object trait changes external to the editor:
     #---------------------------------------------------------------------------
-        
+
     def update_editor ( self ):
-        """ Updates the editor when the object trait changes external to the 
+        """ Updates the editor when the object trait changes external to the
             editor.
         """
         ts = self._ts
         for i, value in enumerate( self.value ):
-            setattr( ts, 'f%d' % i, value ) 
+            setattr( ts, 'f%d' % i, value )
 
     #---------------------------------------------------------------------------
     #  Returns the editor's control for indicating error status:
@@ -121,27 +121,27 @@ class SimpleEditor ( Editor ):
 #-------------------------------------------------------------------------------
 #  'TupleStructure' class:
 #-------------------------------------------------------------------------------
-        
+
 class TupleStructure ( HasTraits ):
     """ Creates a view containing items for each field in a tuple.
     """
     #---------------------------------------------------------------------------
-    #  Trait definitions:  
+    #  Trait definitions:
     #---------------------------------------------------------------------------
-    
+
     # Editor this structure is linked to
     editor = Any
-    
+
     # The constructed View for the tuple
     view = Any
-    
+
     # Number of tuple fields
     fields = Int
-    
+
     #---------------------------------------------------------------------------
     #  Initializes the object:
     #---------------------------------------------------------------------------
-    
+
     def __init__ ( self, editor ):
         """ Initializes the object.
         """
@@ -150,14 +150,14 @@ class TupleStructure ( HasTraits ):
         labels  = factory.labels
         editors = factory.editors
         cols    = factory.cols
-        
+
         # Save the reference to the editor:
         self.editor = editor
-        
+
         # Get the tuple we are mirroring:
         object = editor.value
-        
-        # For each tuple field, add a trait with the appropriate trait 
+
+        # For each tuple field, add a trait with the appropriate trait
         # definition and default value:
         content     = []
         self.fields = len( object )
@@ -176,10 +176,10 @@ class TupleStructure ( HasTraits ):
         if len_types == 0:
             types     = [ Any ]
             len_types = 1
-            
+
         for i, value in enumerate( object ):
             type = types[ i % len_types ]
- 
+
             auto_set = enter_set = None
             if isinstance(type, TraitType):
                 auto_set = type.auto_set
@@ -198,7 +198,7 @@ class TupleStructure ( HasTraits ):
                 field_editor = editors[i]
 
             name = 'f%d' % i
-            self.add_trait( name, type( value, event = 'field', 
+            self.add_trait( name, type( value, event = 'field',
                                                auto_set = auto_set,
                                                enter_set = enter_set ) )
             item = Item( name = name, label = label, editor = field_editor )
@@ -216,11 +216,11 @@ class TupleStructure ( HasTraits ):
     #---------------------------------------------------------------------------
     #  Updates the underlying tuple when any field changes value:
     #---------------------------------------------------------------------------
-                
+
     def _field_changed ( self ):
         """ Updates the underlying tuple when any field changes value.
         """
-        self.editor.value = tuple( [ getattr( self, 'f%d' % i ) 
+        self.editor.value = tuple( [ getattr( self, 'f%d' % i )
                                      for i in range( self.fields ) ] )
 
 
