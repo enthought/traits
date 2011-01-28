@@ -12,4 +12,4 @@ class Point(object):
         ytemp = -sin(theta) * self.x + cos(theta) * self.y
         self.x = xtemp
         self.y = ytemp
-        
+
