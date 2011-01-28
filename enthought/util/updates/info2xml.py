@@ -36,7 +36,7 @@ def main():
     parser = build_argparser()
     opts = parser.parse_args(sys.argv[1:])
 
-    # Process all the files 
+    # Process all the files
     xml_strs = []
     filespecs = opts.filespecs[:]
     for filespec in filespecs:

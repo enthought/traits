@@ -11,7 +11,7 @@ class LoggerPreferences(PreferencesHelper):
     #### Preferences ###########################################################
 
     # The log levels
-    level = Trait('Info', 
+    level = Trait('Info',
         {'Debug'    : logging.DEBUG,
          'Info'     : logging.INFO,
          'Warning'  : logging.WARNING,

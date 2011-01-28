@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2010, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Travis Oliphant, Enthought, Inc.
 #
 # Description:
@@ -52,14 +52,14 @@ class Tests(unittest.TestCase):
         fid.write(test_file_info)
         fid.close()
         self.files = [name]
-    
+
     def test_files2xml(self):
         print files2xml(self.files)
 
     def tearDown(self):
         os.unlink(self.files[0])
         os.unlink(self.files[0]+'.info')
-        
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -47,7 +47,7 @@ class LoggerDemoPlugin(Plugin):
     PERSPECTIVES = 'enthought.envisage.ui.workbench.perspectives'
     COMMANDS = 'enthought.plugins.python_shell.commands'
     MAIL_FILES = 'enthought.logger.plugin.mail_files'
-    
+
     perspectives = List(contributes_to=PERSPECTIVES)
     bindings = List(contributes_to=BINDINGS)
     commands = List(contributes_to=COMMANDS)

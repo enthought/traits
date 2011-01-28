@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ import threading
 class Worker(threading.Thread):
     """ Performs numerically intensive computations on a separate thread.
 
-    Computations that take more than ~0.1 second should not be run in the 
+    Computations that take more than ~0.1 second should not be run in the
     same thread as the user interface.
 
     Typical usage:
@@ -30,9 +30,9 @@ class Worker(threading.Thread):
     def __init__(self, **kwds):
         """ Passes the thread constructor a name for the thread.
 
-        Naming threads makes debugging less impossible. The thread is set to be 
+        Naming threads makes debugging less impossible. The thread is set to be
         a daemon thread, which means that if is the only remaining executing
-        thread the program will terminate. 
+        thread the program will terminate.
         """
         self._stopevent = threading.Event()
         threading.Thread.__init__(self, **kwds)
@@ -41,7 +41,7 @@ class Worker(threading.Thread):
     def perform_work(self, callable, *args, **kwds):
         """ Indicates to the thread the method or function and it's arguments.
 
-        When the thread begins to run it will execute 'callable' and pass it 
+        When the thread begins to run it will execute 'callable' and pass it
         'args' and 'kwds'
         """
         self.callable = callable
@@ -65,6 +65,6 @@ class Worker(threading.Thread):
         threading.Thread.join(self, timeout)
 
     def abort(self):
-        """ should the algorithm stop computing? 
+        """ should the algorithm stop computing?
         """
         return self._stopevent.isSet()

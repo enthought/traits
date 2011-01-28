@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ from default_renderer import DefaultRenderer
 class VirtualModel(PyGridTableBase):
     """
     A custom wxGrid Table that expects a user supplied data source.
-    THIS CLASS IS NOT LIMITED TO ONLY DISPLAYING LOG DATA!  
+    THIS CLASS IS NOT LIMITED TO ONLY DISPLAYING LOG DATA!
     """
     def __init__(self, data, column_names):
         """data is currently a list of the form
@@ -40,7 +40,7 @@ class VirtualModel(PyGridTableBase):
         # we need to store the row length and col length to see if the table has changed size
         self._rows = self.GetNumberRows()
         self._cols = self.GetNumberCols()
-        
+
 #-------------------------------------------------------------------------------
 # Implement/override the methods from PyGridTableBase
 #-------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ class VirtualModel(PyGridTableBase):
         print 'Before ', self.GetValue(row, col)
         self._data[row][1][self.GetColLabelValue(col)] = value
         print 'After ', self.GetValue(row, col)
-        
+
     ''' def GetTypeName(self, row, col):
         if col == 2 or col == 6:
             res = "MeasurementUnits"
@@ -86,15 +86,15 @@ class VirtualModel(PyGridTableBase):
         """ The data structure we provide the data in.
         """
         return self._data
-        
+
     def set_data_source(self, source):
         self._data = source
         return
-        
+
 #-------------------------------------------------------------------------------
-# Methods controlling updating and editing of cells in grid 
+# Methods controlling updating and editing of cells in grid
 #-------------------------------------------------------------------------------
-        
+
     def ResetView(self, grid):
         """
         (wxGrid) -> Reset the grid view.   Call this to
@@ -117,7 +117,7 @@ class VirtualModel(PyGridTableBase):
 
         self._rows = self.GetNumberRows()
         self._cols = self.GetNumberCols()
-        
+
         # update the renderers
         # self._updateColAttrs(grid)
         # self._updateRowAttrs(grid) too expensive to use on a large grid
@@ -132,23 +132,23 @@ class VirtualModel(PyGridTableBase):
         # This sends an event to the grid table to update all of the values
         msg = GridTableMessage(self, GRIDTABLE_REQUEST_VIEW_GET_VALUES)
         grid.ProcessTableMessage(msg)
-        
-    def GetAttr88(self, row, col, someExtraParameter ): 
+
+    def GetAttr88(self, row, col, someExtraParameter ):
         print 'Overridden GetAttr ', row, col
-        """Part of a workaround to avoid use of attributes, queried by _PropertyGrid's IsCurrentCellReadOnly""" 
-        #property = self.GetPropertyForCoordinate( row, col ) 
-        #object = self.GetObjectForCoordinate( row, col ) 
-        #if property.ReadOnly( object ): 
-        attr = GridCellAttr() 
-        attr.SetReadOnly( 1 ) 
-        return attr 
-        #return None 
+        """Part of a workaround to avoid use of attributes, queried by _PropertyGrid's IsCurrentCellReadOnly"""
+        #property = self.GetPropertyForCoordinate( row, col )
+        #object = self.GetObjectForCoordinate( row, col )
+        #if property.ReadOnly( object ):
+        attr = GridCellAttr()
+        attr.SetReadOnly( 1 )
+        return attr
+        #return None
 
 
     def _updateColAttrs88(self, grid):
         """
         wxGrid -> update the column attributes to add the
-        appropriate renderer given the column name.  
+        appropriate renderer given the column name.
         """
         for col, colname in enumerate(self.colnames):
             attr = GridCellAttr()
@@ -166,19 +166,19 @@ class VirtualModel(PyGridTableBase):
                 renderer = self.renderers["DEFAULT_RENDERER"] # .Clone()
 
             attr.SetRenderer(renderer)
-                
+
             """else:
                 #renderer = GridCellFloatRenderer(6,2)
                 #attr.SetReadOnly(True)
                 #attr.SetRenderer(renderer)"""
-                
+
             if colname in self.editors:
                 editor = self.editors[colname]
                 attr.SetEditor(editor)
-                
+
             grid.SetColAttr(col, attr)
         return
-                
+
 #------------------------------------------------------------------------------
 # code to manipulate the table (non wx related)
 #------------------------------------------------------------------------------
@@ -193,7 +193,7 @@ class VirtualModel(PyGridTableBase):
         for name in self.colnames:
             entry[name] = "Appended_%i"%row
         return'''
-        
+
     def DeleteCols88(self, cols):
         """
         cols -> delete the columns from the dataset
@@ -217,7 +217,7 @@ class VirtualModel(PyGridTableBase):
         name, data = row
         print 'Deleting ', name
         self._data.remove(row)
-           
+
     def DeleteRows88(self, rows):
         """
         rows -> delete the rows from the dataset
@@ -231,10 +231,10 @@ class VirtualModel(PyGridTableBase):
             # we need to advance the delete count
             # to make sure we delete the right rows
             deleteCount += 1
-        
+
     def SortColumn88(self, col):
         """
-        to do - never tested 
+        to do - never tested
         tried to rename data to _data and _data to _tmp_data
         col -> sort the data based on the column indexed by col
         """

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought pyface package component>
 #------------------------------------------------------------------------------
@@ -30,19 +30,19 @@ class FilteringHandler(logging.Handler):
     Example
     -------
     ::
-        
+
         from enthought.logger.api import DebugHandler, logger
-    
+
         handler = FilteringHandler(
             include = {
                 'enthought.envisage.core' : True
             },
-    
+
             exclude = {
                 'enthought.envisage.core.application' : False
             }
         )
-    
+
         logger.addHandler(handler)
 
     Notes
@@ -82,14 +82,14 @@ class FilteringHandler(logging.Handler):
 
     def emit(self, record):
         """ Emits a log record. """
-        
+
         # Get the name of the module that the logger was called from.
         module_name = self._get_module_name()
 
         if len(self.include) == 0 or self._include(module_name):
-            if len(self.exclude) == 0 or not self._exclude(module_name): 
+            if len(self.exclude) == 0 or not self._exclude(module_name):
                 self.filtered_emit(record)
-        
+
         return
 
     ###########################################################################
@@ -100,7 +100,7 @@ class FilteringHandler(logging.Handler):
         """ Emits a log record if it has not been filtered. """
 
         print record.getMessage()
-        
+
         return
 
     ###########################################################################
@@ -127,7 +127,7 @@ class FilteringHandler(logging.Handler):
         # The plugin definition's location is the directory containing the
         # module that it is defined in.
         self.location = os.path.dirname(filename)
-        
+
         # We can't use 'inspect.getmodulename' here as it gets confused because
         # of our import hook in Envisage 8^(
         #
@@ -170,7 +170,7 @@ class FilteringHandler(logging.Handler):
             exclude = False
 
         return exclude
-        
+
     def _is_child_of(self, x, y):
         """ Is 'y' a child symbol of 'x'?
 
@@ -183,12 +183,12 @@ class FilteringHandler(logging.Handler):
         if y.startswith(x):
             x_atoms = x.split('.')
             y_atoms = y.split('.')
-            
+
             is_child_of = y_atoms[:len(x_atoms)] == x_atoms
 
         else:
             is_child_of = False
-            
+
         return is_child_of
 
 #### EOF ######################################################################

@@ -24,7 +24,7 @@ def deprecated(message):
             """ The method/function wrapper. """
 
             global _cache
-            
+
             module_name = fn.__module__
             function_name = fn.__name__
 
@@ -41,7 +41,7 @@ def deprecated(message):
 
         wrapper.__doc__  = fn.__doc__
         wrapper.__name__ = fn.__name__
-        
+
         return wrapper
 
     return decorator

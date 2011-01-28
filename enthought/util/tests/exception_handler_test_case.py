@@ -23,16 +23,16 @@ class ExceptionHandlerTestCase(unittest.TestCase):
         except:
             ex_handler = ExceptionHandler(message='Your message here!')
             t, v, tb = sys.exc_info()
-            
+
             self.assertEqual(t, ex_handler.ex_type)
             self.assertEqual(v, ex_handler.ex_value)
             self.assertEqual(tb, ex_handler.ex_traceback)
             self.assert_(str(ex_handler).startswith('Your message here!'))
             self.assert_(str(ex_handler).endswith('Exception: test exception'))
-        
+
         self.assert_(ex_handler is not None)
 
-    
+
     def ui_simple_dialog(self):
         try:
             ex_handler = None
@@ -43,7 +43,7 @@ class ExceptionHandlerTestCase(unittest.TestCase):
                                           'Your application message here!')
             ex_handler.configure_traits()
 
-    
+
     def ui_file_not_found(self):
         try:
             ex_handler = None

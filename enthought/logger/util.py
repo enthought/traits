@@ -16,13 +16,13 @@ def get_module_name(filename):
     """ Get the fully qualified module name for a filename.
 
     For example, if the filename is
-        
-    /enthought/envisage/core/core_plugin_definition.py 
 
-    this method would return 
+    /enthought/envisage/core/core_plugin_definition.py
+
+    this method would return
 
     enthought.envisage.core.core_plugin_definition
-        
+
     """
 
     if os.path.exists(filename):
@@ -60,10 +60,10 @@ def get_module_name_from_zip(filename):
               and splitdrive(filepath)[1] != '/':
         filepath, tail = os.path.split(filepath)
         if zippath is not None:
-            zippath = tail + '/' + zippath 
+            zippath = tail + '/' + zippath
         else:
             zippath = tail
-            
+
     if not is_zipfile(filepath):
         return None
 
@@ -91,10 +91,10 @@ def get_module_name_from_zip(filename):
         parentpath = dirname(parentpath)
 
     z.close()
-            
+
     return '.'.join(module_path)
 
-# fixme: WIP        
+# fixme: WIP
 def path_exists_in_zip(zfile, path):
 
     try:
@@ -132,7 +132,7 @@ def get_zip_path(filename):
               and splitdrive(filepath)[1] != '/':
         filepath, tail = os.path.split(filepath)
         if zippath is not None:
-            zippath = tail + '/' + zippath 
+            zippath = tail + '/' + zippath
         else:
             zippath = tail
 

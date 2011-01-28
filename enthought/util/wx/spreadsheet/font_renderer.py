@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -19,14 +19,14 @@ class FontRenderer(DefaultRenderer):
     """Render data in the specified color and font and fontsize.
     """
 
-    def DrawForeground(self, grid, attr, dc, rect, row, col, isSelected): 
+    def DrawForeground(self, grid, attr, dc, rect, row, col, isSelected):
         text = grid.model.GetValue(row, col)
         dc.SetTextForeground(self.color)
         dc.SetFont(self.font)
         dc.DrawText(text, rect.x+1, rect.y+1)
-        
+
         return
-    
+
     def DrawOld(self, grid, attr, dc, rect, row, col, isSelected):
         # Here we draw text in a grid cell using various fonts
         # and colors.  We have to set the clipping region on
@@ -74,9 +74,9 @@ class FontRenderer(DefaultRenderer):
 
         dc.DestroyClippingRegion()
         return
-        
+
 class FontRendererFactory88:
-    """ I don't grok why this Factory (which I copied from the wx demo) 
+    """ I don't grok why this Factory (which I copied from the wx demo)
         was ever necessary? """
     def __init__(self, color, font, fontsize):
         """

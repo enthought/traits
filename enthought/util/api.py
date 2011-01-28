@@ -29,9 +29,9 @@ def test(level=1, verbosity=1):
     #runner = unittest.TextTestRunner(verbosity=verbosity)
     #runner.run(test_suite(level))
     #return runner
-    
-    
-# returns a test suite for use elsewhere 
+
+
+# returns a test suite for use elsewhere
 def test_suite(level=1):
     pass
     # The stuff below is broken, and seems obsolete since we use nosetests.

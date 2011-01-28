@@ -35,7 +35,7 @@ else :
         in package __init__ files.
 
         Here is the original docstring:
-        
+
         Checks to see if the default version of wxPython is greater-than
         or equal to `minVersion`.  If not then it will try to find an
         installed version that is >= minVersion.  If none are available
@@ -45,7 +45,7 @@ else :
 
         As mentioned above, the function used to also ensure that wxPython had
         not been imported yet.
-        
+
         Now, the function simply checks if the default version is >= minVersion
         and raises an exception if not.
         """

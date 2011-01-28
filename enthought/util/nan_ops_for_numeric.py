@@ -38,7 +38,7 @@ try:
         x = _asarray1d(x).copy()
         _nx.putmask(x,isnan(x),inf)
         return argmin(x,axis)
-        
+
 
     def nanmax(x,axis=-1):
         """Find the maximum over the given axis ignoring nans.
@@ -56,7 +56,7 @@ try:
 
     def nanmean(x):
         """Find the mean of x ignoring nans.
-        
+
             fixme: should be fixed to work along an axis.
         """
         x = _asarray1d(x).copy()

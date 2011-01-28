@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ WILDCARD_PY = "Python files (*.py)|*.py|"
 WILDCARD_TXT = "Text files (*.txt)|*.txt|"
 
 # A file dialog wildcard for all files.
-WILDCARD_ALL = "All files (*.*)|*.*" 
+WILDCARD_ALL = "All files (*.*)|*.*"
 
 # A file dialog wildcard for Zip archives.
 WILDCARD_ZIP = "Zip files (*.zip)|*.zip|"
@@ -68,7 +68,7 @@ class SaveFileAsDialog(wx.FileDialog):
         wx.FileDialog.__init__(self, parent, "Save As", style=style, **kw)
 
         return
-    
+
 
 def confirmation(parent, message, title=None, default=wx.NO_DEFAULT):
     """ Displays a confirmation dialog. """
@@ -102,10 +102,10 @@ def yes_no_cancel(parent, message, title=None, default=wx.NO_DEFAULT):
 
 def information(parent, message, title=None):
     """ Displays a modal information dialog. """
-        
+
     dialog = wx.MessageDialog(
         parent,
-        message, 
+        message,
         _get_title(title, parent, 'Information'),
         wx.OK | wx.ICON_INFORMATION | wx.STAY_ON_TOP
     )
@@ -117,7 +117,7 @@ def information(parent, message, title=None):
 
 def warning(parent, message, title=None):
     """ Displays a modal warning dialog. """
-    
+
     dialog = wx.MessageDialog(
         parent,
         message,
@@ -127,24 +127,24 @@ def warning(parent, message, title=None):
 
     dialog.ShowModal()
     dialog.Destroy()
-    
+
     return
 
 def error(parent, message, title=None):
     """ Displays a modal error dialog. """
-        
+
     dialog = wx.MessageDialog(
         parent,
-        message, 
+        message,
         _get_title(title, parent, 'Error'),
         wx.OK | wx.ICON_ERROR | wx.STAY_ON_TOP
     )
-    
+
     dialog.ShowModal()
     dialog.Destroy()
 
     return
-    
+
 def _get_title(title, parent, default):
     """ Get a sensible title for a dialog! """
 
@@ -156,5 +156,5 @@ def _get_title(title, parent, default):
             title = default
 
     return title
-    
+
 #### EOF ######################################################################

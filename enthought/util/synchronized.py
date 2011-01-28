@@ -17,12 +17,12 @@ def synchronized(lock_attribute='_lk'):
 
             finally:
                 lock.release()
-            
+
             return result
 
         wrapper.__doc__  = fn.__doc__
         wrapper.__name__ = fn.__name__
-        
+
         return wrapper
 
     return decorator

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ class LoggerPlugin(Plugin):
     preferences_pages = List(contributes_to=PREFERENCES_PAGES)
     views = List(contributes_to=VIEWS)
 
-    
+
     def _preferences_default(self):
         return ['pkgfile://%s/plugin/preferences.ini' % ID]
 
@@ -93,13 +93,13 @@ class LoggerPlugin(Plugin):
         root_logger.setLevel(preferences.level_)
         service.handler = handler
         self.application.register_service(ILOGGER, service)
-    
+
     def stop(self):
         """ Stops the plugin.
         """
         service = self.application.get_service(ILOGGER)
         service.save_preferences()
-    
+
 
     #### LoggerPlugin private interface ########################################
 

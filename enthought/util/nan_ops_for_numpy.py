@@ -31,7 +31,7 @@ try:
 
     def nanmean(x):
         """ Find the mean of x ignoring nans.
-        
+
             fixme: should be fixed to work along an axis.
         """
         x = _asarray1d(x).copy()

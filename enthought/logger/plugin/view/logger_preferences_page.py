@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class LoggerPreferencesPage(PreferencesPage):
     #### Preferences ###########################################################
 
     # The log levels
-    level = Trait('Info', 
+    level = Trait('Info',
         {'Debug'    : logging.DEBUG,
          'Info'     : logging.INFO,
          'Warning'  : logging.WARNING,
@@ -56,7 +56,7 @@ class LoggerPreferencesPage(PreferencesPage):
     smtp_server = Str
     to_address = Str
     from_address = Str
-    
+
 
     # The view used to change the plugin preferences
     traits_view = View(
@@ -74,7 +74,7 @@ class LoggerPreferencesPage(PreferencesPage):
                         },
                     ),
                     style='simple',
-                ), 
+                ),
                 label='Logger Settings',
                 show_border=True,
             ),
@@ -83,7 +83,7 @@ class LoggerPreferencesPage(PreferencesPage):
                 Group(
                     Group(Item(name='enable_agent', label='Enable quality agent'), show_left=False),
                     Group(Item(name='smtp_server', label='SMTP server'),
-                          Item(name='from_address'), 
+                          Item(name='from_address'),
                           Item(name='to_address'), enabled_when='enable_agent==True')),
                 label='Quality Agent Settings',
                 show_border=True,

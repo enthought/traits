@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ import wx
 
 def clone_font(font):
     """ Clones the specified font. """
-    
+
     point_size = font.GetPointSize()
     family = font.GetFamily()
     style = font.GetStyle()
@@ -47,12 +47,12 @@ def set_font_size(window, size):
     sizer = window.GetSizer()
     if sizer is not None:
         sizer.Layout()
-        
+
     window.Refresh()
 
     for child in window.GetChildren():
         set_font_size(child, size)
-    
+
     return
 
 def increase_font_size(window, delta=2):
@@ -68,19 +68,19 @@ def increase_font_size(window, delta=2):
     sizer = window.GetSizer()
     if sizer is not None:
         sizer.Layout()
-        
+
     window.Refresh()
 
     for child in window.GetChildren():
         increase_font_size(child, delta)
-    
+
     return
 
 def decrease_font_size(window, delta=2):
     """ Recursively decreases the font size starting from 'window'. """
 
     increase_font_size(window, delta=-2)
-    
+
     return
 
 def set_bold_font(window):

@@ -128,7 +128,7 @@ def discard_nans(a):
         return a
     # array
     # isnan(a) ignores Infs, so use isfinite(a)
-    
+
     ids = numpy.nonzero(numpy.isfinite(a))[0]
     nids = safe_len(ids)
     if nids == np:
@@ -256,7 +256,7 @@ def nearest_index(index_array, value):
 
     # find the index of the last data point that is smaller than the 'value'
     # we are looking for ....
-    ind1 = len(index_array.compress(index_array < value))  
+    ind1 = len(index_array.compress(index_array < value))
 
     # if we are at the very end of the array then this is our best estimate ...
     if ind1 == len(index_array)-1:

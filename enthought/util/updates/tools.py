@@ -12,13 +12,13 @@ def files2xml(filenames):
 
     There are no constraints or restrictions on the names or extensions
     of the input files.  They just need to be accompanied by a sidecar
-    file named similarly, but with a ".info" extension, that can be 
+    file named similarly, but with a ".info" extension, that can be
     loaded by the InfoFile class.
 
     If there is no .info file for a filename or an error occurs while constructing it
-    a warning message is printed. 
+    a warning message is printed.
     """
-    
+
     _xmlheader = """<?xml version="1.0" encoding="ISO-8859-1"?>
     <!-- DO NOT EDIT MANUALLY -->
     <!-- Automatically generated file using enthought.util.updates -->
@@ -39,7 +39,7 @@ def files2xml(filenames):
             #print "Warning: Failure in creating XML for {0}".format(info_file_name)
             print "Warning: Failure in creating XML for %s" % (info_file_name,)
             continue
-        xmlparts.append('<update_file>') 
+        xmlparts.append('<update_file>')
         xmlparts.extend(xml_list)
         xmlparts.append('</update_file>')
 

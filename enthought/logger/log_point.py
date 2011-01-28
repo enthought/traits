@@ -1,18 +1,18 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
 """ Prints a stack trace every time it is called but does not halt execution
-    of the application. 
+    of the application.
 
     Copied from Uche Ogbuji's blog
 """
@@ -41,7 +41,7 @@ def log_point(msg='\n'):
         if lines:
             output.write('  %s\n' % ''.join(lines)[:-1])
     s = output.getvalue()
-    
+
     return s
 
 ## EOF ##################################################################

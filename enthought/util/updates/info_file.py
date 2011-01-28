@@ -49,8 +49,8 @@ class InfoFile:
     """Representation of an .info file, which provides metadata of another
     file (its "target").
 
-    Important methods: 
-    
+    Important methods:
+
     @classmethod
     from_info_file(filename)
 
@@ -60,12 +60,12 @@ class InfoFile:
       version: %filename% (if not present it is extracted from name of file)
       checksum: md5hash (if not present it is computed from the basefile)
       html: (everything else in the file from the next line to the end)
-    
+
     get_xml()
-      return a list of xml elements for this file       
+      return a list of xml elements for this file
     """
 
-    # The filename of the update_file. This is not the full path - 
+    # The filename of the update_file. This is not the full path -
     # see **location_root** below.
     filename = ""
 
@@ -109,7 +109,7 @@ class InfoFile:
             else:
                 value = match.group(1)
             setattr(obj, attr, value)
-            
+
         match = desc_re.search(str)
         if match is None:
             warnings.warn("Info file " + filename + " lacks a description: field")
@@ -142,7 +142,7 @@ class InfoFile:
 
     def __init__(self, **kwargs):
         # Do a strict Traits-like construction
-        for attr in ("filename", "version", "checksum", "description", 
+        for attr in ("filename", "version", "checksum", "description",
                      "location", "version_parser"):
             if attr in kwargs:
                 setattr(self, attr, kwargs[attr])
@@ -166,7 +166,7 @@ class InfoFile:
         return ET.tostring(self.to_xml())
 
     def to_info_str(self):
-        """ Returns a multi-line string in the .info file format 
+        """ Returns a multi-line string in the .info file format
         """
         lines = []
         for attr in ["filename", "version", "checksum"]:

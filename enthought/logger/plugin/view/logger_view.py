@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
@@ -97,14 +97,14 @@ class LoggerView(TraitsUIView):
     reset_button = Button("Reset Logs")
     show_button = Button("Complete Text Log")
     copy_button = Button("Copy Log to Clipboard")
-    
+
 
     code_editor = CodeEditor(lexer='null',
                              show_line_numbers=False)
     log_records_editor = TabularEditor(adapter=LogRecordAdapter(),
                                        editable=False,
                                        activated='activated')
-    trait_view = View(Group(Item('log_records', 
+    trait_view = View(Group(Item('log_records',
                                  editor=log_records_editor),
                             Group(Item('reset_button'),
                                   spring,
@@ -119,7 +119,7 @@ class LoggerView(TraitsUIView):
     ###########################################################################
 
     def update(self, force=False):
-        """ Update 'log_records' if our handler has new records or 'force' is 
+        """ Update 'log_records' if our handler has new records or 'force' is
             set.
         """
         service = self.service

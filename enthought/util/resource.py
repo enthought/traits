@@ -1,25 +1,25 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """ Utility functions for managing and finding resources (ie. images/files etc).
 
     get_path :           Returns the absolute path of a class or instance
-    
+
     create_unique_name : Creates a name with a given prefix that is not in a
                          given list of existing names. The separator between the
                          prefix and the rest of the name can also be specified
                          (default is a '_')
-                         
+
     find_resource:       Given a setuptools project specification string
                          ('MyProject>=2.1') and a partial path leading from the
                          projects base directory to the desired resource, will
@@ -50,7 +50,7 @@ def get_path(path):
 
         # Get the name of the module that the class was loaded from.
         module_name = klass.__module__
-        
+
         # Look the module up.
         module = sys.modules[module_name]
 
@@ -70,17 +70,17 @@ def create_unique_name(prefix, names, separator='_'):
     """ Creates a name starting with 'prefix' that is not in 'names'. """
 
     i = 1
-        
+
     name = prefix
     while name in names:
         name = prefix + separator + str(i)
         i += 1
-            
+
     return name
 
 def find_resource(project, resource_path, alt_path=None, return_path=False):
     """ Returns a file object or file path pointing to the desired resource.
-    
+
     Parameters
     ----------
     project : string
@@ -98,14 +98,14 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
     return_path : bool
         Determines whether the function should return a file object or a full
         path to the resource.
-        
+
     Returns
     -------
     file : file object or file path
         A file object containing the resource. If return_path is True, 'file'
         will be the full path to the resource. If the file is not found or
         cannot be opened, None is returned.
-        
+
     Description
     -----------
     This function will find a desired resource file and return an opened file
@@ -116,7 +116,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
     find/open the resource, find_resource will use the sys.path[0] to find the
     resource if alt_path is defined.
     """
-    
+
     try:
         # Get the image using the pkg_resources resource_stream module, which
         # will find the file by getting the Chaco install path and appending the
@@ -124,14 +124,14 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
         # installed. If setuptools isn't installed, the backup sys.path[0]
         # method is used.
         from pkg_resources import resource_stream, working_set, Requirement
-            
+
         # Get a requirement for the project
         requirement = Requirement.parse(project)
-        
+
         if return_path:
             dist = working_set.find(requirement)
             full_path = os.path.join(dist.location, resource_path)
-            
+
             # If the path exists, return it
             if os.path.exists(full_path):
                 return full_path
@@ -139,7 +139,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
                 raise
         else:
             return resource_stream(requirement, resource_path)
-            
+
     except:
         # Setuptools was either not installed, or it failed to find the file.
         # First check to see if the package was installed using egginst by
@@ -150,7 +150,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
                 return full_path
             else:
                 return open(full_path, 'rb')
-        
+
         # Get the image using sys.path[0], which is the directory that the
         # running script lives in. The path to the file is then constructed by
         # navigating from the script's location. This method only works if this
@@ -172,7 +172,7 @@ def store_resource(project, resource_path, filename):
     """ Store the content of a resource, given by the name of the projet
         and the path (relative to the root of the project), into a newly
         created file.
-        
+
         The first two arguments (project and resource_path) are the same
         as for the function find_resource in this module.  The third
         argument (filename) is the name of the file which will be created,
@@ -183,12 +183,12 @@ def store_resource(project, resource_path, filename):
     if fi is None:
         raise RuntimeError('Resource not found for project "%s": %s' %
                            (project, resource_path))
-        
+
     fo = open(filename, 'wb')
     fo.write(fi.read())
     fo.close()
-    
+
     fi.close()
-    
+
 
 #### EOF ######################################################################

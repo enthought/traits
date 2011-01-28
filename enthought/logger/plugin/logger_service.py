@@ -46,8 +46,8 @@ class LoggerService(HasTraits):
         text = '\n'.join(lines)
         return text
 
-    def create_email_message(self, fromaddr, toaddrs, ccaddrs, subject, 
-                             priority, include_userdata=False, stack_trace="", 
+    def create_email_message(self, fromaddr, toaddrs, ccaddrs, subject,
+                             priority, include_userdata=False, stack_trace="",
                              comments="", include_environment=True):
         """ Format a bug report email from the log files.
         """
@@ -143,7 +143,7 @@ class LoggerService(HasTraits):
 
     @on_trait_change('preferences.level_')
     def _level_changed(self, new):
-        if (new is not None and new is not Undefined and 
+        if (new is not None and new is not Undefined and
             self.handler is not None):
             root_logger.setLevel(self.preferences.level_)
             self.handler.setLevel(self.preferences.level_)

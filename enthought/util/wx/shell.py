@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
@@ -226,7 +226,7 @@ class Shell(wxStyledTextCtrl):
         # environment. They can override anything they want.
         try: self.execStartupScript(self.interp.startupScript)
         except: pass
-        
+
     def destroy(self):
         # del self.interp
         pass
@@ -436,7 +436,7 @@ class Shell(wxStyledTextCtrl):
             if self.AutoCompActive(): self.AutoCompCancel()
             if self.CallTipActive(): self.CallTipCancel()
             if (not self.more and
-                (self.GetTextRange(self.promptPosEnd, 
+                (self.GetTextRange(self.promptPosEnd,
                                    self.GetCurrentPos()) == '')):
                 self.historyShow()
             else:
@@ -568,7 +568,7 @@ class Shell(wxStyledTextCtrl):
     def replaceFromHistory(self, step, history=None):
         """Replace selection with command from the history buffer."""
         self.ReplaceSelection('')
-        if history is None: 
+        if history is None:
             history = self.history
         newindex = self.historyIndex + step
         if -1 <= newindex <= len(history):
@@ -904,7 +904,7 @@ class Shell(wxStyledTextCtrl):
             # In case there isn't enough room, only go back to the fallback.
             tippos = max(tippos, fallback)
             self.CallTipShow(tippos, tip)
-            
+
     def historyShow(self, prefix=''):
         items = []
         for item in self.history:
@@ -912,7 +912,7 @@ class Shell(wxStyledTextCtrl):
             if (prefix == item[:len(prefix)]) and item not in items:
                 items.append(item)
         self.UserListShow(1, '\n'.join(items))
-        
+
     def OnHistorySelected(self, event):
         command = event.GetText()
         if command.find('\\n') >= 0:
@@ -928,14 +928,14 @@ class Shell(wxStyledTextCtrl):
     def topLevelComplete(self):
         command = self.getCommand(rstrip=0)
         completions = self.interp.getTopLevelCompletions(command)
-        if len(completions) == 0: 
+        if len(completions) == 0:
             return 0
         if len(completions) == 1:
             self.write(completions[0][len(command):])
         else:
             self.AutoCompShow(len(command), '\n'.join(completions))
         return 1
-        
+
     def writeOut(self, text):
         """Replacement for stdout."""
         self.write(text)
@@ -1166,20 +1166,20 @@ class ShellMenu:
                      'Auto Completion Options')
         m.AppendMenu(ID_CALLTIPS, '&Call Tips', self.calltipsMenu, \
                      'Call Tip Options')
-                 
+
         if hasattr( self, 'crust' ):
             fm = self.fillingMenu = wxMenu()
-            fm.Append(ID_FILLING_AUTO_UPDATE, 'Automatic Update', 
+            fm.Append(ID_FILLING_AUTO_UPDATE, 'Automatic Update',
                       'Automatically update tree view after each command', 1)
-            fm.Append(ID_FILLING_SHOW_METHODS, 'Show Methods', 
+            fm.Append(ID_FILLING_SHOW_METHODS, 'Show Methods',
                       'Show methods and functions in the tree view', 1)
-            fm.Append(ID_FILLING_SHOW_CLASS, 'Show __class__', 
+            fm.Append(ID_FILLING_SHOW_CLASS, 'Show __class__',
                       'Show __class__ entries in the tree view', 1)
-            fm.Append(ID_FILLING_SHOW_DICT, 'Show __dict__', 
+            fm.Append(ID_FILLING_SHOW_DICT, 'Show __dict__',
                       'Show __dict__ entries in the tree view', 1)
-            fm.Append(ID_FILLING_SHOW_DOC, 'Show __doc__', 
+            fm.Append(ID_FILLING_SHOW_DOC, 'Show __doc__',
                       'Show __doc__ entries in the tree view', 1)
-            fm.Append(ID_FILLING_SHOW_MODULE, 'Show __module__', 
+            fm.Append(ID_FILLING_SHOW_MODULE, 'Show __module__',
                       'Show __module__ entries in the tree view', 1)
             m.AppendMenu(ID_FILLING, '&Filling', fm, 'Filling Options')
 
@@ -1295,32 +1295,32 @@ class ShellMenu:
 
     def OnCallTipsShow(self, event):
         self.shell.autoCallTip = event.IsChecked()
-    
+
     def OnFillingAutoUpdate(self, event):
         tree = self.crust.filling.fillingTree
         tree.autoUpdate = event.IsChecked()
         tree.if_autoUpdate()
-    
+
     def OnFillingShowMethods(self, event):
         tree = self.crust.filling.fillingTree
         tree.showMethods = event.IsChecked()
         tree.update()
-    
+
     def OnFillingShowClass(self, event):
         tree = self.crust.filling.fillingTree
         tree.showClass = event.IsChecked()
         tree.update()
-    
+
     def OnFillingShowDict(self, event):
         tree = self.crust.filling.fillingTree
         tree.showDict = event.IsChecked()
         tree.update()
-    
+
     def OnFillingShowDoc(self, event):
         tree = self.crust.filling.fillingTree
         tree.showDoc = event.IsChecked()
         tree.update()
-    
+
     def OnFillingShowModule(self, event):
         tree = self.crust.filling.fillingTree
         tree.showModule = event.IsChecked()

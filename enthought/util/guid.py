@@ -2,19 +2,19 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 
 # GUID.py
-# Version 2.1. 
+# Version 2.1.
 #
 # Copyright (C) 2003  Dr. Conan C. Albrecht <conan_albrechtATbyu.edu>
 #
@@ -36,13 +36,13 @@
 
 ##################################################################################################
 ###   A globally-unique identifier made up of time and ip and 8 random digits: 40 characters wide
-###  
-###   A globally unique identifier that combines ip, time, and random bits.  Since the 
-###   time is listed first, you can sort records by guid.  You can also extract the time 
-###   and ip if needed.  
-###     
-###   GUIDs make wonderful database keys.  They require no access to the 
-###   database (to get the max index number), they are extremely unique, and they sort 
+###
+###   A globally unique identifier that combines ip, time, and random bits.  Since the
+###   time is listed first, you can sort records by guid.  You can also extract the time
+###   and ip if needed.
+###
+###   GUIDs make wonderful database keys.  They require no access to the
+###   database (to get the max index number), they are extremely unique, and they sort
 ###   automatically by time.   GUIDs prevent key clashes when merging
 ###   two databases together, combining data, or generating keys in distributed
 ###   systems.
@@ -94,7 +94,7 @@ hexip = ''.join(["%04x" % long(i) for i in ip.split('.')]) # leave space for ip 
 ###   A simple circular set
 ###   to ensure we don't duplicate
 ###   GUIDs in the same millisecond
-  
+
 class CircularSet:
   '''A circular set.  A set that maxes at a given size, replacing the oldest element after maximum size.
      This implementation is NOT thread safe.  (generate() below is thread safe, though)
@@ -108,7 +108,7 @@ class CircularSet:
     '''Adds a value to the queue'''
     # check to see if we have this value.  If so, throw an exception
     assert not self.queue_map.has_key(val), 'This value is already in the set!'
-    
+
     # add the new one to the list
     if len(self.queue) > self.queueindex:
       # first remove the previous key at this location
@@ -116,17 +116,17 @@ class CircularSet:
       self.queue[self.queueindex] = val
     else:
       self.queue.append(val)
-      
+
     # now add to the map for efficiency
     self.queue_map[val] = val
-    
+
     # increment the queue index
     self.queueindex += 1
     if self.queueindex >= QUEUE_SIZE:
       self.queueindex = 0
-      
+
 queue = CircularSet()
-  
+
 #################################
 ###   Public module functions
 
@@ -152,10 +152,10 @@ def generate():
         pass
   finally:
     lock.release()
-    
+
 
 def extract_time(guid):
-  '''Extracts the time portion out of the guid and returns the 
+  '''Extracts the time portion out of the guid and returns the
      number of seconds since the epoch as a float'''
   return float(long(guid[0:16], 16)) / 1000
 

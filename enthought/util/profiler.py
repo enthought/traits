@@ -1,20 +1,20 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """ Modifications to the standard profile.py API.
 
-    The standard profile.run() method in the Python library does not provide 
-    access to variables available to the code snippet during a run.  For 
+    The standard profile.run() method in the Python library does not provide
+    access to variables available to the code snippet during a run.  For
     example, the following fails:
 
         a = 1
@@ -27,7 +27,7 @@
 import profile
 
 def run(statement, filename=None):
-    """ Runs 'statement' under profiler, optionally saving results in 
+    """ Runs 'statement' under profiler, optionally saving results in
     'filename'.
 
     This function takes a single argument that can be passed to the

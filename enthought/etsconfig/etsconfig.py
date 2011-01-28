@@ -50,7 +50,7 @@ class ETSConfig(object):
 
     def get_application_data(self, create=False):
         """ Return the application data directory path.
-        
+
             **Parameters**
 
             create: create the corresponding directory or not
@@ -71,7 +71,7 @@ class ETSConfig(object):
                     self._initialize_application_data(create=create)
 
         return self._application_data
-        
+
 
     def _get_application_data(self):
         """ Property getter, see get_application_data's docstring.
@@ -91,7 +91,7 @@ class ETSConfig(object):
 
     def get_application_home(self, create=False):
         """ Return the application home directory path.
-        
+
             **Parameters**
 
             create: create the corresponding directory or not
@@ -131,7 +131,7 @@ class ETSConfig(object):
         return self._application_home
 
 
- 
+
     application_data = property(_get_application_data, _set_application_data)
 
 
@@ -219,7 +219,7 @@ class ETSConfig(object):
     def _get_enable_toolkit(self):
         """
         Deprecated: This property is no longer used.
-        
+
         Property getter for the Enable backend.  The value returned is, in order
         of preference: the value set by the application; the value passed on
         the command line using the '-toolkit' option; the value specified by
@@ -234,7 +234,7 @@ class ETSConfig(object):
     def _set_enable_toolkit(self, toolkit):
         """
         Deprecated.
-        
+
         Property setter for the Enable toolkit.  The toolkit can be set more than
         once, but only if it is the same one each time.  An application that is
         written for a particular toolkit can explicitly set it before any other
@@ -242,12 +242,12 @@ class ETSConfig(object):
         """
         from warnings import warn
         warn('Use of the enable_toolkit attribute is deprecated.')
-        
+
         return
 
 
     enable_toolkit = property(_get_enable_toolkit, _set_enable_toolkit)
-    
+
     def _get_kiva_backend(self):
         """
         Property getter for the Kiva backend. The value returned is dependent
@@ -258,7 +258,7 @@ class ETSConfig(object):
         """
         if self._toolkit is None:
             raise AttributeError, "The kiva_backend attribute is dependent on toolkit, which has not been set."
-        
+
         if self._kiva_backend is None:
             try:
                 self._kiva_backend = self._toolkit.split('.')[1]
@@ -272,7 +272,7 @@ class ETSConfig(object):
                     self._kiva_backend = "gl"
                 else:
                     self._kiva_backend = "image"
-        
+
         return self._kiva_backend
 
     kiva_backend = property(_get_kiva_backend)
@@ -376,7 +376,7 @@ class ETSConfig(object):
             # a directory!
             if os.path.exists(application_data):
                 if not os.path.isdir(application_data):
-                    raise ValueError('File "%s" already exists' 
+                    raise ValueError('File "%s" already exists'
                                                     % application_data)
 
             # Otherwise, create the directory.

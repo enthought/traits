@@ -37,11 +37,11 @@ def build_argparser():
 def main():
     parser = build_argparser()
     opts = parser.parse_args(sys.argv[1:])
-    
+
     filespecs = opts.filespecs[:]
     for filespec in filespecs:
         infofile_name = filespec + ".info"
-        
+
         # Regular file
         if isfile(filespec):
 
