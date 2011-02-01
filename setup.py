@@ -52,13 +52,11 @@ Traits:
 
 from setuptools import setup, Extension, find_packages
 
-# FIXME: This works around a setuptools bug which gets setup_data.py metadata
-# from incorrect packages. Ticket #1592
-#from setup_data import INFO
+# This works around a setuptools bug which gets setup_data.py metadata
+# from incorrect packages.
 setup_data = dict(__name__='', __file__='setup_data.py')
 execfile('setup_data.py', setup_data)
 INFO = setup_data['INFO']
-
 
 ctraits = Extension(
     'enthought.traits.ctraits',
@@ -69,8 +67,8 @@ ctraits = Extension(
 
 speedups = Extension(
     'enthought.traits.protocols._speedups',
-    # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can play
-    # with each other. See #1364
+    # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can
+    # play with each other. See #1364
     sources = ['enthought/traits/protocols/_speedups.c'],
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
     )
