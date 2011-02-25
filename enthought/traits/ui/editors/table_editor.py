@@ -509,7 +509,7 @@ class ReversedList ( object ):
         return self.list.insert( self._index( index - 1 ), value )
 
     def index ( self, value ):
-        """ Returns the index of the first occurence of the specified value in
+        """ Returns the index of the first occurrence of the specified value in
             the list.
         """
         list = self.list[:]

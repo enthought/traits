@@ -165,7 +165,7 @@ class SaveHandler(Handler):
     def save(self, info):
         """ Saves the object to its current filepath. If this is not specified,
             opens a dialog to select this path. Returns whether the save
-            actually occured.
+            actually occurred.
         """
         if self.saveObject.filepath == '':
             return self.saveAs(info)

@@ -858,7 +858,7 @@ class Password ( String ):
     """ Defines a trait whose value must be a string, optionally of constrained
     length or matching a regular expression.
 
-    The trait is indentical to a String trait except that by default it uses a
+    The trait is identical to a String trait except that by default it uses a
     PasswordEditor in TraitsUI views, which obscures text entered by the user.
     """
 
