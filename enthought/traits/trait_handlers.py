@@ -36,6 +36,7 @@ from __future__ import absolute_import
 import sys
 import re
 import copy
+import copy_reg
 from types import InstanceType, TypeType, FunctionType, MethodType
 from weakref import ref
 
@@ -2418,17 +2419,29 @@ class TraitListObject ( list ):
 
         self.len_error( len( value ) )
 
+    def _send_trait_items_event(self, name, event, items_event=None):
+        """ Send a TraitListEvent to the owning object if there is one.
+        """
+        object = self.object()
+        if object is not None:
+            if items_event is None and hasattr(self, 'trait'):
+                items_event = self.trait.items_event()
+            object.trait_items_event(name, event, items_event)
+
     def __deepcopy__ ( self, memo ):
         id_self = id( self )
         if id_self in memo:
             return memo[ id_self ]
 
-        memo[ id_self ] = result = TraitListObject( self.trait, self.object(),
+        memo[ id_self ] = result = TraitListObject( self.trait, lambda: None,
                          self.name, [ copy.deepcopy( x, memo ) for x in self ] )
 
         return result
 
     def __setitem__ ( self, key, value ):
+        self_trait = getattr(self, 'trait', None)
+        if self_trait is None:
+            return list.__setitem__(self, key, value)
         try:
             removed = self[ key ]
         except:
@@ -2451,9 +2464,8 @@ class TraitListObject ( list ):
                     # Treat incomparable values as unequal:
                     pass
 
-                object.trait_items_event( self.name_items,
-                    TraitListEvent( key, [ removed ], [ value ] ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( key, [ removed ], [ value ] ))
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
@@ -2464,7 +2476,9 @@ class TraitListObject ( list ):
         except:
             raise TypeError, 'must assign sequence (not "%s") to slice' % (
                              values.__class__.__name__ )
-        self_trait = self.trait
+        self_trait = getattr(self, 'trait', None)
+        if self_trait is None:
+            return list.__setslice__(self, i, j, values)
         if self_trait.minlen <= (len(self) + delta) <= self_trait.maxlen:
             try:
                 object   = self.object()
@@ -2485,9 +2499,8 @@ class TraitListObject ( list ):
                         except:
                             # Treat incomparable values as equal:
                             pass
-                    object.trait_items_event( self.name_items,
-                        TraitListEvent( max( 0, i ), removed, values ),
-                        self_trait.items_event() )
+                    self._send_trait_items_event( self.name_items,
+                        TraitListEvent( max( 0, i ), removed, values ) )
 
                 return
 
@@ -2498,6 +2511,9 @@ class TraitListObject ( list ):
         self.len_error( len( self ) + delta )
 
     def __delitem__ ( self, key ):
+        trait = getattr(self, 'trait', None)
+        if trait is None:
+            return list.__delitem__(self, key)
         if self.trait.minlen <= (len( self ) - 1):
             try:
                 removed = [ self[ key ] ]
@@ -2510,22 +2526,24 @@ class TraitListObject ( list ):
                 if key < 0:
                     key = len( self ) + key + 1
 
-                self.object().trait_items_event( self.name_items,
-                    TraitListEvent( key, removed ), self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( key, removed ) )
 
             return
 
         self.len_error( len( self ) - 1 )
 
     def __delslice__ ( self, i, j ):
+        trait = getattr(self, 'trait', None)
+        if trait is None:
+            return list.__delslice__(self, i, j)
         delta = min( j, len( self ) ) - max( 0, i )
         if self.trait.minlen <= (len( self ) - delta):
             removed = self[ i: j ]
             list.__delslice__( self, i, j )
             if (self.name_items is not None) and (len( removed ) != 0):
-                self.object().trait_items_event( self.name_items,
-                    TraitListEvent( max( 0, i ), removed ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( max( 0, i ), removed ) )
 
             return
 
@@ -2545,7 +2563,7 @@ class TraitListObject ( list ):
                     value = validate( object, self.name, value )
                 list.append( self, value )
                 if self.name_items is not None:
-                    object.trait_items_event( self.name_items,
+                    self._send_trait_items_event( self.name_items,
                         TraitListEvent( len( self ) - 1, None, [ value ] ),
                         trait.items_event() )
                 return
@@ -2557,7 +2575,9 @@ class TraitListObject ( list ):
         self.len_error( len( self ) + 1 )
 
     def insert ( self, index, value ):
-        trait = self.trait
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            return list.insert(self, index, value)
         if trait.minlen <= (len( self ) + 1) <= trait.maxlen:
             try:
                 validate = trait.item_trait.handler.validate
@@ -2571,7 +2591,7 @@ class TraitListObject ( list ):
                     if index < 0:
                         index = len( self ) + index - 1
 
-                    object.trait_items_event( self.name_items,
+                    self._send_trait_items_event( self.name_items,
                         TraitListEvent( index, None, [ value ] ),
                         trait.items_event() )
 
@@ -2607,7 +2627,7 @@ class TraitListObject ( list ):
                 list.extend( self, xlist )
 
                 if (self.name_items is not None) and (len( xlist ) != 0):
-                    object.trait_items_event( self.name_items,
+                    self._send_trait_items_event( self.name_items,
                         TraitListEvent( len( self ) - len( xlist ), None,
                                         xlist ), trait.items_event() )
 
@@ -2620,7 +2640,11 @@ class TraitListObject ( list ):
         self.len_error( len( self ) + len( xlist ) )
 
     def remove ( self, value ):
-        if self.trait.minlen < len( self ):
+        trait = getattr(self, 'trait', None)
+        if trait is None:
+            list.remove(self, value)
+            return
+        if trait.minlen < len( self ):
             try:
                 index   = self.index( value )
                 removed = [ self[ index ] ]
@@ -2630,8 +2654,8 @@ class TraitListObject ( list ):
             list.remove( self, value )
 
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitListEvent( index, removed ), self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( index, removed ) )
         else:
             self.len_error( len( self ) - 1 )
 
@@ -2639,21 +2663,22 @@ class TraitListObject ( list ):
         removed = self[:]
         list.sort( self, cmp = cmp, key = key, reverse = reverse )
 
-        if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitListEvent( 0, removed, self[:] ),
-                self.trait.items_event() )
+        if (getattr(self, 'name_items', None) is not None and
+            getattr(self, 'trait', None) is not None):
+            self._send_trait_items_event( self.name_items,
+                TraitListEvent( 0, removed, self[:] ) )
 
     def reverse ( self ):
         removed = self[:]
         if len( self ) > 1:
             list.reverse( self )
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitListEvent( 0, removed, self[:] ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( 0, removed, self[:] ) )
 
     def pop ( self, *args ):
+        if not hasattr(self, 'trait'):
+            return list.pop(self, *args)
         if self.trait.minlen < len( self ):
             if len( args ) > 0:
                 index = args[0]
@@ -2671,9 +2696,8 @@ class TraitListObject ( list ):
                 if index < 0:
                     index = len( self ) + index + 1
 
-                self.object().trait_items_event( self.name_items,
-                    TraitListEvent( index, removed ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( index, removed ) )
 
             return result
 
@@ -2695,18 +2719,19 @@ class TraitListObject ( list ):
 
     def __getstate__ ( self ):
         result = self.__dict__.copy()
-        result[ 'object' ] = self.object()
-        if 'trait' in result:
-            del result[ 'trait' ]
+        result.pop('object', None)
+        #result.pop('trait', None)
 
         return result
 
     def __setstate__ ( self, state ):
         name   = state.pop( 'name' )
-        object = state.pop( 'object' )
+        object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
             self.rename( name )
+        else:
+            self.object = lambda: None
 
         self.__dict__.update( state )
 
@@ -2757,17 +2782,28 @@ class TraitSetObject ( set ):
             excp.set_prefix( 'Each element of the' )
             raise excp
 
+    def _send_trait_items_event(self, name, event, items_event=None):
+        """ Send a TraitDictEvent to the owning object if there is one.
+        """
+        object = self.object()
+        if object is not None:
+            if items_event is None and hasattr(self, 'trait'):
+                items_event = self.trait.items_event()
+            object.trait_items_event(name, event, items_event)
+
     def __deepcopy__ ( self, memo ):
         id_self = id( self )
         if id_self in memo:
             return memo[ id_self ]
 
-        memo[ id_self ] = result = TraitSetObject( self.trait, self.object(),
+        memo[ id_self ] = result = TraitSetObject( self.trait, lambda: None,
                          self.name, [ copy.deepcopy( x, memo ) for x in self ] )
 
         return result
 
     def update ( self, value ):
+        if not hasattr(self, 'trait'):
+            return set.update(self, value)
         try:
             added = value.difference( self )
             if len( added ) > 0:
@@ -2781,8 +2817,8 @@ class TraitSetObject ( set ):
                 set.update( self, added )
 
                 if self.name_items is not None:
-                    object.trait_items_event( self.name_items,
-                        TraitSetEvent( None, added ), self.trait.items_event() )
+                    self._send_trait_items_event( self.name_items,
+                        TraitSetEvent( None, added ) )
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
@@ -2793,8 +2829,8 @@ class TraitSetObject ( set ):
             set.difference_update( self, removed )
 
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitSetEvent( removed ), self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitSetEvent( removed ) )
 
     def difference_update ( self, value ):
         removed = self.intersection( value )
@@ -2802,10 +2838,12 @@ class TraitSetObject ( set ):
             set.difference_update( self, removed )
 
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitSetEvent( removed ), self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitSetEvent( removed ) )
 
     def symmetric_difference_update ( self, value ):
+        if not hasattr(self, 'trait'):
+            return set.symmetric_difference_update(self, value)
         removed = self.intersection( value )
         added   = value.difference( self )
         if (len( removed ) > 0) or (len( added ) > 0):
@@ -2822,10 +2860,12 @@ class TraitSetObject ( set ):
                 set.update( self, added )
 
             if self.name_items is not None:
-                object.trait_items_event( self.name_items,
-                    TraitSetEvent( removed, added ), self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitSetEvent( removed, added ) )
 
     def add ( self, value ):
+        if not hasattr(self, 'trait'):
+            return set.add(self, value)
         if value not in self:
             try:
                 object   = self.object()
@@ -2836,9 +2876,8 @@ class TraitSetObject ( set ):
                 set.add( self, value )
 
                 if self.name_items is not None:
-                    object.trait_items_event( self.name_items,
-                        TraitSetEvent( None, set( [ value ] ) ),
-                        self.trait.items_event() )
+                    self._send_trait_items_event( self.name_items,
+                        TraitSetEvent( None, set( [ value ] ) ) )
             except TraitError, excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
@@ -2847,8 +2886,8 @@ class TraitSetObject ( set ):
         set.remove( self, value )
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitSetEvent( set( [ value ] ) ), self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitSetEvent( set( [ value ] ) ) )
 
     def discard ( self, value ):
         if value in self:
@@ -2858,8 +2897,8 @@ class TraitSetObject ( set ):
         value = set.pop( self )
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitSetEvent( set( [ value ] ) ), self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitSetEvent( set( [ value ] ) ) )
 
         return value
 
@@ -2868,25 +2907,34 @@ class TraitSetObject ( set ):
         set.clear( self )
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitSetEvent( removed ), self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitSetEvent( removed ) )
+
+    def __reduce_ex__(self, protocol=None):
+        """ Overridden to make sure we call our custom __getstate__.
+        """
+        return (copy_reg._reconstructor,
+                (type(self), set, list(self)),
+                self.__getstate__())
 
     def __getstate__ ( self ):
         result = self.__dict__.copy()
-        result[ 'object' ] = self.object()
-        if 'trait' in result:
-            del result[ 'trait' ]
-
+        result.pop('object', None)
+        # We keep the trait in the state since we do not pass it to our
+        # constructor.
         return result
 
     def __setstate__ ( self, state ):
         name   = state.pop( 'name' )
-        object = state.pop( 'object' )
+        object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
             self.rename( name )
+        else:
+            self.object = lambda: None
 
         self.__dict__.update( state )
+
 
 #-------------------------------------------------------------------------------
 #  'TraitDictEvent' class:
@@ -3040,6 +3088,25 @@ class TraitDictObject ( dict ):
         if len( value ) > 0:
             dict.update( self, self._validate_dic( value ) )
 
+    def _send_trait_items_event(self, name, event, items_event=None):
+        """ Send a TraitDictEvent to the owning object if there is one.
+        """
+        object = self.object()
+        if object is not None:
+            if items_event is None and hasattr(self, 'trait'):
+                items_event = self.trait.items_event()
+            object.trait_items_event(name, event, items_event)
+
+    def __deepcopy__ ( self, memo ):
+        id_self = id( self )
+        if id_self in memo:
+            return memo[ id_self ]
+
+        memo[ id_self ] = result = TraitDictObject( self.trait, lambda: None,
+                         self.name, dict([ copy.deepcopy( x, memo ) for x in self.iteritems() ]) )
+
+        return result
+
     def __setitem__ ( self, key, value ):
         trait = getattr( self, 'trait', None )
         if trait is None:
@@ -3080,7 +3147,7 @@ class TraitDictObject ( dict ):
                     except:
                         # Treat incomparable objects as unequal:
                         pass
-                object.trait_items_event( self.name_items,
+                self._send_trait_items_event( self.name_items,
                     TraitDictEvent( added, changed ), trait.items_event() )
 
         except TraitError, excp:
@@ -3094,8 +3161,8 @@ class TraitDictObject ( dict ):
         dict.__delitem__( self, key )
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitDictEvent( removed = removed ), self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitDictEvent( removed = removed ) )
 
     def clear ( self ):
         if len( self ) > 0:
@@ -3105,9 +3172,8 @@ class TraitDictObject ( dict ):
             dict.clear( self )
 
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitDictEvent( removed = removed ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitDictEvent( removed = removed ) )
 
     def update ( self, dic ):
         if len( dic ) > 0:
@@ -3124,9 +3190,8 @@ class TraitDictObject ( dict ):
 
                 dict.update( self, new_dic )
 
-                self.object().trait_items_event( self.name_items,
-                    TraitDictEvent( added = added, changed = changed ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitDictEvent( added = added, changed = changed ) )
             else:
                 dict.update( self, new_dic )
 
@@ -3138,9 +3203,8 @@ class TraitDictObject ( dict ):
         result      = self[ key ]
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitDictEvent( added = { key: result } ),
-                self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitDictEvent( added = { key: result } ) )
 
         return result
 
@@ -3149,9 +3213,8 @@ class TraitDictObject ( dict ):
             result = dict.pop( self, key )
 
             if self.name_items is not None:
-                self.object().trait_items_event( self.name_items,
-                    TraitDictEvent( removed = { key: result } ),
-                    self.trait.items_event() )
+                self._send_trait_items_event( self.name_items,
+                    TraitDictEvent( removed = { key: result } ) )
 
             return result
 
@@ -3161,9 +3224,8 @@ class TraitDictObject ( dict ):
         result = dict.popitem( self )
 
         if self.name_items is not None:
-            self.object().trait_items_event( self.name_items,
-                TraitDictEvent( removed = { result[0]: result[1] } ),
-                self.trait.items_event() )
+            self._send_trait_items_event( self.name_items,
+                TraitDictEvent( removed = { result[0]: result[1] } ) )
 
         return result
 
@@ -3178,21 +3240,18 @@ class TraitDictObject ( dict ):
 
     def __getstate__ ( self ):
         result = self.__dict__.copy()
-        result[ 'object' ] = self.object()
-        #del result[ 'trait' ]
-        if 'trait' not in result:
-            logger.debug( "__getstate__: No 'trait' in %s for '%s'" %
-                          ( self.object(), self.name ) )
-        else:
-            del result[ 'trait' ]
+        result.pop('object', None)
+        result.pop('trait', None)
         return result
 
     def __setstate__ ( self, state ):
         name   = state.pop( 'name' )
-        object = state.pop( 'object' )
+        object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
             self.rename( name )
+        else:
+            self.object = lambda: None
 
         self.__dict__.update( state )
 
