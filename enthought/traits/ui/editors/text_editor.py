@@ -42,7 +42,7 @@ from ..editor_factory import EditorFactory
 #-------------------------------------------------------------------------------
 
 class _Identity ( object ):
-    """ A simple indentity mapping.
+    """ A simple identity mapping.
     """
     def __call__ ( self, value ):
         return value
