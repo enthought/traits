@@ -30,6 +30,8 @@ def test_trait_list_object_persists():
     assert len(a.events) == 0
     a.list.append(20)
     assert len(a.events) == 1
+    list2 = loads(dumps(list))
+    assert list2.object() is None
 
 def test_trait_dict_object_persists():
     a = A()
@@ -39,6 +41,8 @@ def test_trait_dict_object_persists():
     assert len(a.events) == 0
     a.dict['key'] = 'value'
     assert len(a.events) == 1
+    dict2 = loads(dumps(dict))
+    assert dict2.object() is None
 
 def test_trait_set_object_persists():
     a = A()
@@ -48,6 +52,8 @@ def test_trait_set_object_persists():
     assert len(a.events) == 0
     a.set.add(20)
     assert len(a.events) == 1
+    set2 = loads(dumps(set))
+    assert set2.object() is None
 
 def test_trait_list_object_copies():
     a = A()

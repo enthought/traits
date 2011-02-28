@@ -2725,7 +2725,7 @@ class TraitListObject ( list ):
         return result
 
     def __setstate__ ( self, state ):
-        name   = state.pop( 'name' )
+        name   = state.setdefault('name', '')
         object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
@@ -2925,7 +2925,7 @@ class TraitSetObject ( set ):
         return result
 
     def __setstate__ ( self, state ):
-        name   = state.pop( 'name' )
+        name   = state.setdefault('name', '')
         object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
@@ -3245,7 +3245,7 @@ class TraitDictObject ( dict ):
         return result
 
     def __setstate__ ( self, state ):
-        name   = state.pop( 'name' )
+        name   = state.setdefault('name', '')
         object = state.pop( 'object', None )
         if object is not None:
             self.object = ref( object )
