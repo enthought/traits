@@ -100,7 +100,7 @@ class TraitError ( exceptions.Exception ):
                          self.prefix, self.name, class_of(obj), extra,
                          self.info, repr_type(self.value))),
         else:
-            self.args = ("%s '%s' trait%s must be %s, but a value of %r %r was "
+            self.args = ("%s '%s' trait%s must be %s, but a value of %s was "
                          "specified." % (self.prefix, self.name, extra,
                                          self.info, repr_type(self.value))),
 
