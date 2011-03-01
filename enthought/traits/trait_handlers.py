@@ -2720,7 +2720,7 @@ class TraitListObject ( list ):
     def __getstate__ ( self ):
         result = self.__dict__.copy()
         result.pop('object', None)
-        #result.pop('trait', None)
+        result.pop('trait', None)
 
         return result
 
@@ -2920,8 +2920,7 @@ class TraitSetObject ( set ):
     def __getstate__ ( self ):
         result = self.__dict__.copy()
         result.pop('object', None)
-        # We keep the trait in the state since we do not pass it to our
-        # constructor.
+        result.pop('trait', None)
         return result
 
     def __setstate__ ( self, state ):
