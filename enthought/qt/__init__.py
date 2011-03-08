@@ -20,6 +20,7 @@ if ETSConfig.toolkit == 'qt4':
     if qt_api == 'pyqt':
         import sip
         sip.setapi('QString', 2)
+        sip.setapi('QVariant', 2)
 
     else:
         print "---- using PySide ----"
