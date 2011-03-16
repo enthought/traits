@@ -27,7 +27,7 @@ class CamelCaseTestCase(unittest.TestCase):
         """ Does CamelCase -> words work?
         """
         self.assertEqual(camel_case_to_words('FooBarBaz'), 'Foo Bar Baz')
-        
+
 
 if __name__ == "__main__":
     unittest.main()
