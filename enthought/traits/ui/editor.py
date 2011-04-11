@@ -165,6 +165,15 @@ class Editor ( HasPrivateTraits ):
         raise NotImplementedError
 
     #---------------------------------------------------------------------------
+    #  Assigns focus to the editor's underlying toolkit widget:
+    #---------------------------------------------------------------------------
+    
+    def set_focus ( self ):
+        """ Assigns focus to the editor's underlying toolkit widget.
+        """
+        raise NotImplementedError
+
+    #---------------------------------------------------------------------------
     #  Disposes of the contents of an editor:
     #---------------------------------------------------------------------------
 

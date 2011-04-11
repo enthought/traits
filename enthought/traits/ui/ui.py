@@ -607,6 +607,15 @@ class UI ( HasPrivateTraits ):
             return None
 
     #---------------------------------------------------------------------------
+    #  Returns a list of editors for the given trait name.
+    #---------------------------------------------------------------------------
+
+    def get_editors ( self, name ):
+        """ Returns a list of editors for the given trait name.
+        """
+        return [ editor for editor in self._editors if editor.name == name ]
+
+    #---------------------------------------------------------------------------
     #  Returns the list of editor error controls contained by the user
     #  interface:
     #---------------------------------------------------------------------------
