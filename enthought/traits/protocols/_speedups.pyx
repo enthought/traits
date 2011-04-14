@@ -59,9 +59,13 @@ cdef extern from "Python.h":
 
 cdef object _marker, __conform, __adapt, __mro, __ECType
 from sys import exc_info, exc_clear
-# since we can't do "from future import absolute_import":
+# Since we can't do "from future import absolute_import", we use __import__
+# directly.  Fake the globals dictionary with just the relevant information. In
+# an extension module, globals() returns the globals dictionary of the last
+# pure Python module that was executing.
 AdaptationFailure = __import__(
-    'protocols', globals=globals(), fromlist=['AdaptationFailure'], level=1
+    'protocols', globals=dict(__name__=__name__, __package__=__package__),
+    fromlist=['AdaptationFailure'], level=1
 ).AdaptationFailure
 
 try:
