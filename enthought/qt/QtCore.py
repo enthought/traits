@@ -13,8 +13,5 @@ if qt_api == 'pyqt':
     __version_info__ = tuple(map(int, QT_VERSION_STR.split('.')))
 
 else:
-    import PySide
+    from PySide import __version__, __version_info__
     from PySide.QtCore import *
-
-    __version__ = PySide.__version__
-    __version_info__ = PySide.__version_info__
