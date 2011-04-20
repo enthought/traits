@@ -303,7 +303,7 @@ static const char *__pyx_f[] = {
 
 /* Type declarations */
 
-/* "enthought/traits/protocols/_speedups.pyx":101
+/* "traits/protocols/_speedups.pyx":101
  * 
  * 
  * cdef class metamethod:             # <<<<<<<<<<<<<<
@@ -495,7 +495,7 @@ static CYTHON_INLINE signed PY_LONG_LONG __Pyx_PyInt_AsSignedLongLong(PyObject *
 static void __Pyx_AddTraceback(const char *funcname); /*proto*/
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
-/* Module declarations from enthought.traits.protocols._speedups */
+/* Module declarations from traits.protocols._speedups */
 
 static PyTypeObject *__pyx_ptype_9enthought_6traits_9protocols_9_speedups_metamethod = 0;
 static PyObject *__pyx_v_9enthought_6traits_9protocols_9_speedups__marker = 0;
@@ -506,10 +506,10 @@ static PyObject *__pyx_v_9enthought_6traits_9protocols_9_speedups___ECType = 0;
 static PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObject *, PyObject *, PyObject *, PyObject *); /*proto*/
 static PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicMRO(PyClassObject *, PyListObject *); /*proto*/
 static PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(PyObject *, PyListObject *); /*proto*/
-#define __Pyx_MODULE_NAME "enthought.traits.protocols._speedups"
+#define __Pyx_MODULE_NAME "traits.protocols._speedups"
 static int __pyx_module_is_main_enthought__traits__protocols___speedups = 0;
 
-/* Implementation of enthought.traits.protocols._speedups */
+/* Implementation of traits.protocols._speedups */
 static PyObject *__pyx_builtin___import__;
 static PyObject *__pyx_builtin___package__;
 static PyObject *__pyx_builtin_ImportError;
@@ -523,7 +523,7 @@ static char __pyx_k_4[] = "The 'factory' argument to 'adapt()' will be removed i
 static char __pyx_k_5[] = "Can't adapt";
 static char __pyx_k_10[] = "Not a classic class";
 static char __pyx_k_13[] = "C Speedups for commonly-used operations";
-static char __pyx_k_15[] = "enthought.traits.protocols._speedups";
+static char __pyx_k_15[] = "traits.protocols._speedups";
 static char __pyx_k__ob[] = "ob";
 static char __pyx_k__get[] = "get";
 static char __pyx_k__obj[] = "obj";
@@ -643,7 +643,7 @@ static PyObject *__pyx_k_tuple_2;
 static PyObject *__pyx_k_tuple_3;
 static PyObject *__pyx_k_tuple_14;
 
-/* "enthought/traits/protocols/_speedups.pyx":92
+/* "traits/protocols/_speedups.pyx":92
  * # Fundamental Adapters
  * 
  * def NO_ADAPTER_NEEDED(obj, protocol=None):             # <<<<<<<<<<<<<<
@@ -700,12 +700,12 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_NO_ADAPTER_NE
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("NO_ADAPTER_NEEDED", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.NO_ADAPTER_NEEDED");
+  __Pyx_AddTraceback("traits.protocols._speedups.NO_ADAPTER_NEEDED");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":94
+  /* "traits/protocols/_speedups.pyx":94
  * def NO_ADAPTER_NEEDED(obj, protocol=None):
  *     """Assume 'obj' implements 'protocol' directly"""
  *     return obj             # <<<<<<<<<<<<<<
@@ -724,7 +724,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_NO_ADAPTER_NE
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":96
+/* "traits/protocols/_speedups.pyx":96
  *     return obj
  * 
  * def DOES_NOT_SUPPORT(obj, protocol=None):             # <<<<<<<<<<<<<<
@@ -781,12 +781,12 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_1DOES_NOT_SUP
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("DOES_NOT_SUPPORT", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.DOES_NOT_SUPPORT");
+  __Pyx_AddTraceback("traits.protocols._speedups.DOES_NOT_SUPPORT");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":98
+  /* "traits/protocols/_speedups.pyx":98
  * def DOES_NOT_SUPPORT(obj, protocol=None):
  *     """Prevent 'obj' from supporting 'protocol'"""
  *     return None             # <<<<<<<<<<<<<<
@@ -805,7 +805,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_1DOES_NOT_SUP
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":106
+/* "traits/protocols/_speedups.pyx":106
  *     cdef object func
  * 
  *     def __init__(self, func):             # <<<<<<<<<<<<<<
@@ -846,12 +846,12 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod___init
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.metamethod.__init__");
+  __Pyx_AddTraceback("traits.protocols._speedups.metamethod.__init__");
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":107
+  /* "traits/protocols/_speedups.pyx":107
  * 
  *     def __init__(self, func):
  *         self.func = func             # <<<<<<<<<<<<<<
@@ -869,7 +869,7 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod___init
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":109
+/* "traits/protocols/_speedups.pyx":109
  *         self.func = func
  * 
  *     def __get__(self, ob, typ):             # <<<<<<<<<<<<<<
@@ -887,7 +887,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_
   PyObject *__pyx_t_5 = NULL;
   __Pyx_RefNannySetupContext("__get__");
 
-  /* "enthought/traits/protocols/_speedups.pyx":110
+  /* "traits/protocols/_speedups.pyx":110
  * 
  *     def __get__(self, ob, typ):
  *         if ob is None:             # <<<<<<<<<<<<<<
@@ -897,7 +897,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_
   __pyx_t_1 = (__pyx_v_ob == Py_None);
   if (__pyx_t_1) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":111
+    /* "traits/protocols/_speedups.pyx":111
  *     def __get__(self, ob, typ):
  *         if ob is None:
  *             return self             # <<<<<<<<<<<<<<
@@ -912,7 +912,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_
   }
   __pyx_L5:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":112
+  /* "traits/protocols/_speedups.pyx":112
  *         if ob is None:
  *             return self
  *         return PyMethod_New(self.func, ob, typ)             # <<<<<<<<<<<<<<
@@ -942,7 +942,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.metamethod.__get__");
+  __Pyx_AddTraceback("traits.protocols._speedups.metamethod.__get__");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -950,7 +950,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":114
+/* "traits/protocols/_speedups.pyx":114
  *         return PyMethod_New(self.func, ob, typ)
  * 
  *     def __set__(self, ob, value):             # <<<<<<<<<<<<<<
@@ -964,7 +964,7 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_2__set
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__set__");
 
-  /* "enthought/traits/protocols/_speedups.pyx":115
+  /* "traits/protocols/_speedups.pyx":115
  * 
  *     def __set__(self, ob, value):
  *         raise AttributeError("Read-only attribute")             # <<<<<<<<<<<<<<
@@ -981,14 +981,14 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_2__set
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.metamethod.__set__");
+  __Pyx_AddTraceback("traits.protocols._speedups.metamethod.__set__");
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":117
+/* "traits/protocols/_speedups.pyx":117
  *         raise AttributeError("Read-only attribute")
  * 
  *     def __delete__(self, ob):             # <<<<<<<<<<<<<<
@@ -1002,7 +1002,7 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_3__del
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("__delete__");
 
-  /* "enthought/traits/protocols/_speedups.pyx":118
+  /* "traits/protocols/_speedups.pyx":118
  * 
  *     def __delete__(self, ob):
  *         raise AttributeError("Read-only attribute")             # <<<<<<<<<<<<<<
@@ -1019,14 +1019,14 @@ static int __pyx_pf_9enthought_6traits_9protocols_9_speedups_10metamethod_3__del
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.metamethod.__delete__");
+  __Pyx_AddTraceback("traits.protocols._speedups.metamethod.__delete__");
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":131
+/* "traits/protocols/_speedups.pyx":131
  * 
  * 
  * cdef object _adapt(obj, protocol, default, factory):             # <<<<<<<<<<<<<<
@@ -1053,7 +1053,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   __pyx_v_e = Py_None; __Pyx_INCREF(Py_None);
   __pyx_v_warn = Py_None; __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":149
+  /* "traits/protocols/_speedups.pyx":149
  * ###                return obj
  * 
  *     if PyObject_IsInstance(obj,protocol):             # <<<<<<<<<<<<<<
@@ -1069,7 +1069,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (__pyx_t_3) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":150
+    /* "traits/protocols/_speedups.pyx":150
  * 
  *     if PyObject_IsInstance(obj,protocol):
  *         return obj             # <<<<<<<<<<<<<<
@@ -1084,7 +1084,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   }
   __pyx_L3:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":152
+  /* "traits/protocols/_speedups.pyx":152
  *         return obj
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -1099,7 +1099,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __Pyx_XGOTREF(__pyx_save_exc_tb);
     /*try:*/ {
 
-      /* "enthought/traits/protocols/_speedups.pyx":153
+      /* "traits/protocols/_speedups.pyx":153
  * 
  *     try:
  *         meth = getattr(obj, __conform)             # <<<<<<<<<<<<<<
@@ -1118,7 +1118,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __pyx_v_meth = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":154
+      /* "traits/protocols/_speedups.pyx":154
  *     try:
  *         meth = getattr(obj, __conform)
  *         try:             # <<<<<<<<<<<<<<
@@ -1133,7 +1133,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
         __Pyx_XGOTREF(__pyx_save_exc_tb);
         /*try:*/ {
 
-          /* "enthought/traits/protocols/_speedups.pyx":155
+          /* "traits/protocols/_speedups.pyx":155
  *         meth = getattr(obj, __conform)
  *         try:
  *             result = meth(protocol)             # <<<<<<<<<<<<<<
@@ -1152,7 +1152,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __pyx_v_result = __pyx_t_1;
           __pyx_t_1 = 0;
 
-          /* "enthought/traits/protocols/_speedups.pyx":156
+          /* "traits/protocols/_speedups.pyx":156
  *         try:
  *             result = meth(protocol)
  *             if result is not None:             # <<<<<<<<<<<<<<
@@ -1162,7 +1162,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __pyx_t_5 = (__pyx_v_result != Py_None);
           if (__pyx_t_5) {
 
-            /* "enthought/traits/protocols/_speedups.pyx":157
+            /* "traits/protocols/_speedups.pyx":157
  *             result = meth(protocol)
  *             if result is not None:
  *                 return result             # <<<<<<<<<<<<<<
@@ -1192,7 +1192,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "enthought/traits/protocols/_speedups.pyx":158
+        /* "traits/protocols/_speedups.pyx":158
  *             if result is not None:
  *                 return result
  *         except TypeError, e:             # <<<<<<<<<<<<<<
@@ -1201,7 +1201,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
  */
         __pyx_t_3 = PyErr_ExceptionMatches(__pyx_builtin_TypeError);
         if (__pyx_t_3) {
-          __Pyx_AddTraceback("enthought.traits.protocols._speedups._adapt");
+          __Pyx_AddTraceback("traits.protocols._speedups._adapt");
           if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_4, &__pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L14_except_error;}
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_GOTREF(__pyx_t_4);
@@ -1210,7 +1210,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __Pyx_DECREF(__pyx_v_e);
           __pyx_v_e = __pyx_t_4;
 
-          /* "enthought/traits/protocols/_speedups.pyx":159
+          /* "traits/protocols/_speedups.pyx":159
  *                 return result
  *         except TypeError, e:
  *             if exc_info()[2].tb_next is not None:             # <<<<<<<<<<<<<<
@@ -1232,7 +1232,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
           if (__pyx_t_5) {
 
-            /* "enthought/traits/protocols/_speedups.pyx":160
+            /* "traits/protocols/_speedups.pyx":160
  *         except TypeError, e:
  *             if exc_info()[2].tb_next is not None:
  *                 raise             # <<<<<<<<<<<<<<
@@ -1284,7 +1284,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":161
+    /* "traits/protocols/_speedups.pyx":161
  *             if exc_info()[2].tb_next is not None:
  *                 raise
  *     except AttributeError, e:             # <<<<<<<<<<<<<<
@@ -1293,7 +1293,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
  */
     __pyx_t_3 = PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_3) {
-      __Pyx_AddTraceback("enthought.traits.protocols._speedups._adapt");
+      __Pyx_AddTraceback("traits.protocols._speedups._adapt");
       if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_4, &__pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 161; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_4);
@@ -1302,7 +1302,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __Pyx_DECREF(__pyx_v_e);
       __pyx_v_e = __pyx_t_4;
 
-      /* "enthought/traits/protocols/_speedups.pyx":165
+      /* "traits/protocols/_speedups.pyx":165
  *         # sys.exc_* objects are also removed. This has caused some frames to
  *         # live too long.
  *         exc_clear()             # <<<<<<<<<<<<<<
@@ -1334,7 +1334,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __pyx_L11_try_end:;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":167
+  /* "traits/protocols/_speedups.pyx":167
  *         exc_clear()
  * 
  *     try:             # <<<<<<<<<<<<<<
@@ -1349,7 +1349,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __Pyx_XGOTREF(__pyx_save_exc_tb);
     /*try:*/ {
 
-      /* "enthought/traits/protocols/_speedups.pyx":168
+      /* "traits/protocols/_speedups.pyx":168
  * 
  *     try:
  *         meth = getattr(protocol, __adapt)             # <<<<<<<<<<<<<<
@@ -1368,7 +1368,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __pyx_v_meth = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":169
+      /* "traits/protocols/_speedups.pyx":169
  *     try:
  *         meth = getattr(protocol, __adapt)
  *         try:             # <<<<<<<<<<<<<<
@@ -1383,7 +1383,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
         __Pyx_XGOTREF(__pyx_save_exc_tb);
         /*try:*/ {
 
-          /* "enthought/traits/protocols/_speedups.pyx":170
+          /* "traits/protocols/_speedups.pyx":170
  *         meth = getattr(protocol, __adapt)
  *         try:
  *             result = meth(obj)             # <<<<<<<<<<<<<<
@@ -1402,7 +1402,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __pyx_v_result = __pyx_t_4;
           __pyx_t_4 = 0;
 
-          /* "enthought/traits/protocols/_speedups.pyx":171
+          /* "traits/protocols/_speedups.pyx":171
  *         try:
  *             result = meth(obj)
  *             if result is not None:             # <<<<<<<<<<<<<<
@@ -1412,7 +1412,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __pyx_t_5 = (__pyx_v_result != Py_None);
           if (__pyx_t_5) {
 
-            /* "enthought/traits/protocols/_speedups.pyx":172
+            /* "traits/protocols/_speedups.pyx":172
  *             result = meth(obj)
  *             if result is not None:
  *                 return result             # <<<<<<<<<<<<<<
@@ -1444,7 +1444,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
         __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-        /* "enthought/traits/protocols/_speedups.pyx":173
+        /* "traits/protocols/_speedups.pyx":173
  *             if result is not None:
  *                 return result
  *         except TypeError:             # <<<<<<<<<<<<<<
@@ -1453,13 +1453,13 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
  */
         __pyx_t_3 = PyErr_ExceptionMatches(__pyx_builtin_TypeError);
         if (__pyx_t_3) {
-          __Pyx_AddTraceback("enthought.traits.protocols._speedups._adapt");
+          __Pyx_AddTraceback("traits.protocols._speedups._adapt");
           if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_2, &__pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L36_except_error;}
           __Pyx_GOTREF(__pyx_t_4);
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_GOTREF(__pyx_t_1);
 
-          /* "enthought/traits/protocols/_speedups.pyx":174
+          /* "traits/protocols/_speedups.pyx":174
  *                 return result
  *         except TypeError:
  *             if exc_info()[2].tb_next is not None:             # <<<<<<<<<<<<<<
@@ -1481,7 +1481,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
           if (__pyx_t_5) {
 
-            /* "enthought/traits/protocols/_speedups.pyx":175
+            /* "traits/protocols/_speedups.pyx":175
  *         except TypeError:
  *             if exc_info()[2].tb_next is not None:
  *                 raise             # <<<<<<<<<<<<<<
@@ -1533,7 +1533,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":176
+    /* "traits/protocols/_speedups.pyx":176
  *             if exc_info()[2].tb_next is not None:
  *                 raise
  *     except AttributeError, e:             # <<<<<<<<<<<<<<
@@ -1542,7 +1542,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
  */
     __pyx_t_3 = PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_3) {
-      __Pyx_AddTraceback("enthought.traits.protocols._speedups._adapt");
+      __Pyx_AddTraceback("traits.protocols._speedups._adapt");
       if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 176; __pyx_clineno = __LINE__; goto __pyx_L28_except_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_2);
@@ -1551,7 +1551,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __Pyx_DECREF(__pyx_v_e);
       __pyx_v_e = __pyx_t_2;
 
-      /* "enthought/traits/protocols/_speedups.pyx":177
+      /* "traits/protocols/_speedups.pyx":177
  *                 raise
  *     except AttributeError, e:
  *         exc_clear()             # <<<<<<<<<<<<<<
@@ -1583,7 +1583,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __pyx_L33_try_end:;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":179
+  /* "traits/protocols/_speedups.pyx":179
  *         exc_clear()
  * 
  *     if default is _marker:             # <<<<<<<<<<<<<<
@@ -1593,7 +1593,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   __pyx_t_5 = (__pyx_v_default == __pyx_v_9enthought_6traits_9protocols_9_speedups__marker);
   if (__pyx_t_5) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":180
+    /* "traits/protocols/_speedups.pyx":180
  * 
  *     if default is _marker:
  *         if factory is not _marker:             # <<<<<<<<<<<<<<
@@ -1603,7 +1603,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     __pyx_t_5 = (__pyx_v_factory != __pyx_v_9enthought_6traits_9protocols_9_speedups__marker);
     if (__pyx_t_5) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":181
+      /* "traits/protocols/_speedups.pyx":181
  *     if default is _marker:
  *         if factory is not _marker:
  *             from warnings import warn             # <<<<<<<<<<<<<<
@@ -1626,7 +1626,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":183
+      /* "traits/protocols/_speedups.pyx":183
  *             from warnings import warn
  *             warn("The 'factory' argument to 'adapt()' will be removed in 1.0",
  *                 DeprecationWarning, 1)             # <<<<<<<<<<<<<<
@@ -1649,7 +1649,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
       __Pyx_DECREF(((PyObject *)__pyx_t_2)); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":184
+      /* "traits/protocols/_speedups.pyx":184
  *             warn("The 'factory' argument to 'adapt()' will be removed in 1.0",
  *                 DeprecationWarning, 1)
  *             return factory(obj, protocol)             # <<<<<<<<<<<<<<
@@ -1675,7 +1675,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
     }
     __pyx_L49:;
 
-    /* "enthought/traits/protocols/_speedups.pyx":185
+    /* "traits/protocols/_speedups.pyx":185
  *                 DeprecationWarning, 1)
  *             return factory(obj, protocol)
  *         raise AdaptationFailure("Can't adapt", obj, protocol)             # <<<<<<<<<<<<<<
@@ -1706,7 +1706,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   }
   __pyx_L48:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":187
+  /* "traits/protocols/_speedups.pyx":187
  *         raise AdaptationFailure("Can't adapt", obj, protocol)
  * 
  *     return default             # <<<<<<<<<<<<<<
@@ -1726,7 +1726,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups._adapt");
+  __Pyx_AddTraceback("traits.protocols._speedups._adapt");
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_meth);
@@ -1738,7 +1738,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups__adapt(PyObje
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":190
+/* "traits/protocols/_speedups.pyx":190
  * 
  * 
  * def adapt(obj, protocol, default=_marker, factory=_marker):             # <<<<<<<<<<<<<<
@@ -1824,12 +1824,12 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_2adapt(PyObje
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("adapt", 0, 2, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.adapt");
+  __Pyx_AddTraceback("traits.protocols._speedups.adapt");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":196
+  /* "traits/protocols/_speedups.pyx":196
  *     raise 'AdaptationFailure'."""
  * 
  *     return _adapt(obj,protocol,default,factory)             # <<<<<<<<<<<<<<
@@ -1863,7 +1863,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_2adapt(PyObje
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.adapt");
+  __Pyx_AddTraceback("traits.protocols._speedups.adapt");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1871,7 +1871,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_2adapt(PyObje
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":198
+/* "traits/protocols/_speedups.pyx":198
  *     return _adapt(obj,protocol,default,factory)
  * 
  * def Protocol__call__(self, ob, default=_marker):             # <<<<<<<<<<<<<<
@@ -1945,12 +1945,12 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_3Protocol__ca
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("Protocol__call__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 198; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__call__");
+  __Pyx_AddTraceback("traits.protocols._speedups.Protocol__call__");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":200
+  /* "traits/protocols/_speedups.pyx":200
  * def Protocol__call__(self, ob, default=_marker):
  *     """Adapt to this protocol"""
  *     return _adapt(ob,self,default,_marker)             # <<<<<<<<<<<<<<
@@ -1984,7 +1984,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_3Protocol__ca
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__call__");
+  __Pyx_AddTraceback("traits.protocols._speedups.Protocol__call__");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1992,7 +1992,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_3Protocol__ca
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":203
+/* "traits/protocols/_speedups.pyx":203
  * 
  * 
  * cdef buildClassicMRO(PyClassObject *cls, PyListObject *list):             # <<<<<<<<<<<<<<
@@ -2013,7 +2013,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
   __Pyx_RefNannySetupContext("buildClassicMRO");
   __pyx_v_tmp = Py_None; __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":208
+  /* "traits/protocols/_speedups.pyx":208
  *     cdef int i
  * 
  *     PyList_Append(list, <object> cls)             # <<<<<<<<<<<<<<
@@ -2026,7 +2026,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
   __pyx_t_3 = PyList_Append(__pyx_t_1, __pyx_t_2); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":209
+  /* "traits/protocols/_speedups.pyx":209
  * 
  *     PyList_Append(list, <object> cls)
  *     bases = cls.cl_bases             # <<<<<<<<<<<<<<
@@ -2035,7 +2035,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
  */
   __pyx_v_bases = __pyx_v_cls->cl_bases;
 
-  /* "enthought/traits/protocols/_speedups.pyx":211
+  /* "traits/protocols/_speedups.pyx":211
  *     bases = cls.cl_bases
  * 
  *     if bases:             # <<<<<<<<<<<<<<
@@ -2045,7 +2045,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
   __pyx_t_4 = (__pyx_v_bases != 0);
   if (__pyx_t_4) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":212
+    /* "traits/protocols/_speedups.pyx":212
  * 
  *     if bases:
  *         for i from 0 <= i < PyTuple_GET_SIZE(bases):             # <<<<<<<<<<<<<<
@@ -2055,7 +2055,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
     __pyx_t_3 = PyTuple_GET_SIZE(__pyx_v_bases);
     for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_3; __pyx_v_i++) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":213
+      /* "traits/protocols/_speedups.pyx":213
  *     if bases:
  *         for i from 0 <= i < PyTuple_GET_SIZE(bases):
  *             tmp = <object> PyTuple_GET_ITEM(bases, i)             # <<<<<<<<<<<<<<
@@ -2067,7 +2067,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
       __Pyx_DECREF(__pyx_v_tmp);
       __pyx_v_tmp = ((PyObject *)__pyx_t_5);
 
-      /* "enthought/traits/protocols/_speedups.pyx":214
+      /* "traits/protocols/_speedups.pyx":214
  *         for i from 0 <= i < PyTuple_GET_SIZE(bases):
  *             tmp = <object> PyTuple_GET_ITEM(bases, i)
  *             buildClassicMRO(<PyClassObject *>tmp, list)             # <<<<<<<<<<<<<<
@@ -2086,7 +2086,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.buildClassicMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.buildClassicMRO");
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_tmp);
@@ -2095,7 +2095,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildClassicM
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":217
+/* "traits/protocols/_speedups.pyx":217
  * 
  * 
  * def classicMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -2160,13 +2160,13 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("classicMRO", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.classicMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.classicMRO");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   __pyx_v_mro = ((PyObject*)Py_None); __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":219
+  /* "traits/protocols/_speedups.pyx":219
  * def classicMRO(ob, extendedClassic=False):
  * 
  *     if PyClass_Check(ob):             # <<<<<<<<<<<<<<
@@ -2179,7 +2179,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":220
+    /* "traits/protocols/_speedups.pyx":220
  * 
  *     if PyClass_Check(ob):
  *         mro = []             # <<<<<<<<<<<<<<
@@ -2192,7 +2192,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
     __pyx_v_mro = __pyx_t_1;
     __pyx_t_1 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":221
+    /* "traits/protocols/_speedups.pyx":221
  *     if PyClass_Check(ob):
  *         mro = []
  *         buildClassicMRO(<PyClassObject *>ob, <PyListObject *>mro)             # <<<<<<<<<<<<<<
@@ -2203,7 +2203,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":222
+    /* "traits/protocols/_speedups.pyx":222
  *         mro = []
  *         buildClassicMRO(<PyClassObject *>ob, <PyListObject *>mro)
  *         if extendedClassic:             # <<<<<<<<<<<<<<
@@ -2213,7 +2213,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
     __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_extendedClassic); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_3) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":223
+      /* "traits/protocols/_speedups.pyx":223
  *         buildClassicMRO(<PyClassObject *>ob, <PyListObject *>mro)
  *         if extendedClassic:
  *             PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)             # <<<<<<<<<<<<<<
@@ -2227,7 +2227,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
       __pyx_t_2 = PyList_Append(__pyx_t_4, __pyx_t_1); if (unlikely(__pyx_t_2 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 223; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":224
+      /* "traits/protocols/_speedups.pyx":224
  *         if extendedClassic:
  *             PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
  *             PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)             # <<<<<<<<<<<<<<
@@ -2244,7 +2244,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
     }
     __pyx_L7:;
 
-    /* "enthought/traits/protocols/_speedups.pyx":225
+    /* "traits/protocols/_speedups.pyx":225
  *             PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
  *             PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)
  *         return mro             # <<<<<<<<<<<<<<
@@ -2259,7 +2259,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
   }
   __pyx_L6:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":227
+  /* "traits/protocols/_speedups.pyx":227
  *         return mro
  * 
  *     raise TypeError("Not a classic class", ob)             # <<<<<<<<<<<<<<
@@ -2286,7 +2286,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.classicMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.classicMRO");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_mro);
@@ -2295,7 +2295,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_4classicMRO(P
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":244
+/* "traits/protocols/_speedups.pyx":244
  * 
  * 
  * cdef buildECMRO(object cls, PyListObject *list):             # <<<<<<<<<<<<<<
@@ -2314,7 +2314,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(Py
   __Pyx_RefNannySetupContext("buildECMRO");
   __pyx_v_i = Py_None; __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":245
+  /* "traits/protocols/_speedups.pyx":245
  * 
  * cdef buildECMRO(object cls, PyListObject *list):
  *     PyList_Append(list, cls)             # <<<<<<<<<<<<<<
@@ -2327,7 +2327,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(Py
   __pyx_t_3 = PyList_Append(__pyx_t_1, __pyx_t_2); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 245; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":246
+  /* "traits/protocols/_speedups.pyx":246
  * cdef buildECMRO(object cls, PyListObject *list):
  *     PyList_Append(list, cls)
  *     for i in cls.__bases__:             # <<<<<<<<<<<<<<
@@ -2362,7 +2362,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(Py
     __pyx_v_i = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":247
+    /* "traits/protocols/_speedups.pyx":247
  *     PyList_Append(list, cls)
  *     for i in cls.__bases__:
  *         buildECMRO(i, list)             # <<<<<<<<<<<<<<
@@ -2380,7 +2380,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(Py
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.buildECMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.buildECMRO");
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_i);
@@ -2389,7 +2389,7 @@ static  PyObject *__pyx_f_9enthought_6traits_9protocols_9_speedups_buildECMRO(Py
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":250
+/* "traits/protocols/_speedups.pyx":250
  * 
  * 
  * def extClassMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -2454,13 +2454,13 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("extClassMRO", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 250; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.extClassMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.extClassMRO");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   __pyx_v_mro = ((PyObject*)Py_None); __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":251
+  /* "traits/protocols/_speedups.pyx":251
  * 
  * def extClassMRO(ob, extendedClassic=False):
  *     mro = []             # <<<<<<<<<<<<<<
@@ -2473,7 +2473,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   __pyx_v_mro = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":252
+  /* "traits/protocols/_speedups.pyx":252
  * def extClassMRO(ob, extendedClassic=False):
  *     mro = []
  *     buildECMRO(ob, <PyListObject *>mro)             # <<<<<<<<<<<<<<
@@ -2487,7 +2487,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":253
+  /* "traits/protocols/_speedups.pyx":253
  *     mro = []
  *     buildECMRO(ob, <PyListObject *>mro)
  *     if extendedClassic:             # <<<<<<<<<<<<<<
@@ -2497,7 +2497,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_v_extendedClassic); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 253; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__pyx_t_3) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":254
+    /* "traits/protocols/_speedups.pyx":254
  *     buildECMRO(ob, <PyListObject *>mro)
  *     if extendedClassic:
  *         PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)             # <<<<<<<<<<<<<<
@@ -2511,7 +2511,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
     __pyx_t_6 = PyList_Append(__pyx_t_4, __pyx_t_2); if (unlikely(__pyx_t_6 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 254; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":255
+    /* "traits/protocols/_speedups.pyx":255
  *     if extendedClassic:
  *         PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
  *         PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)             # <<<<<<<<<<<<<<
@@ -2528,7 +2528,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   }
   __pyx_L6:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":256
+  /* "traits/protocols/_speedups.pyx":256
  *         PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
  *         PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)
  *     return mro             # <<<<<<<<<<<<<<
@@ -2545,7 +2545,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.extClassMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.extClassMRO");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_mro);
@@ -2554,7 +2554,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_5extClassMRO(
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":260
+/* "traits/protocols/_speedups.pyx":260
  * 
  * 
  * def getMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -2614,12 +2614,12 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("getMRO", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.getMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.getMRO");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":262
+  /* "traits/protocols/_speedups.pyx":262
  * def getMRO(ob, extendedClassic=False):
  * 
  *     if PyClass_Check(ob):             # <<<<<<<<<<<<<<
@@ -2632,7 +2632,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":263
+    /* "traits/protocols/_speedups.pyx":263
  * 
  *     if PyClass_Check(ob):
  *         return classicMRO(ob,extendedClassic)             # <<<<<<<<<<<<<<
@@ -2660,7 +2660,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
     goto __pyx_L6;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":265
+  /* "traits/protocols/_speedups.pyx":265
  *         return classicMRO(ob,extendedClassic)
  * 
  *     elif PyType_Check(ob):             # <<<<<<<<<<<<<<
@@ -2673,7 +2673,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":266
+    /* "traits/protocols/_speedups.pyx":266
  * 
  *     elif PyType_Check(ob):
  *         return ob.__mro__             # <<<<<<<<<<<<<<
@@ -2689,7 +2689,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
     goto __pyx_L6;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":268
+  /* "traits/protocols/_speedups.pyx":268
  *         return ob.__mro__
  * 
  *     elif PyObject_TypeCheck(ob,__ECType):             # <<<<<<<<<<<<<<
@@ -2705,7 +2705,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":269
+    /* "traits/protocols/_speedups.pyx":269
  * 
  *     elif PyObject_TypeCheck(ob,__ECType):
  *         return extClassMRO(ob, extendedClassic)             # <<<<<<<<<<<<<<
@@ -2734,7 +2734,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   }
   __pyx_L6:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":271
+  /* "traits/protocols/_speedups.pyx":271
  *         return extClassMRO(ob, extendedClassic)
  * 
  *     return ob,             # <<<<<<<<<<<<<<
@@ -2757,7 +2757,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.getMRO");
+  __Pyx_AddTraceback("traits.protocols._speedups.getMRO");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2765,7 +2765,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_6getMRO(PyObj
   return __pyx_r;
 }
 
-/* "enthought/traits/protocols/_speedups.pyx":285
+/* "traits/protocols/_speedups.pyx":285
  * 
  * 
  * def Protocol__adapt__(self, obj):             # <<<<<<<<<<<<<<
@@ -2839,7 +2839,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("Protocol__adapt__", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 285; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__adapt__");
+  __Pyx_AddTraceback("traits.protocols._speedups.Protocol__adapt__");
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
@@ -2848,7 +2848,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_v_get = Py_None; __Pyx_INCREF(Py_None);
   __pyx_v_factory = Py_None; __Pyx_INCREF(Py_None);
 
-  /* "enthought/traits/protocols/_speedups.pyx":290
+  /* "traits/protocols/_speedups.pyx":290
  *     cdef int i
  * 
  *     if PyInstance_Check(obj):             # <<<<<<<<<<<<<<
@@ -2861,7 +2861,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":291
+    /* "traits/protocols/_speedups.pyx":291
  * 
  *     if PyInstance_Check(obj):
  *         cls = <object> ((<PyInstanceObject *>obj).in_class)             # <<<<<<<<<<<<<<
@@ -2875,7 +2875,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   }
   /*else*/ {
 
-    /* "enthought/traits/protocols/_speedups.pyx":294
+    /* "traits/protocols/_speedups.pyx":294
  *     else:
  *         # We use __class__ instead of type to support proxies
  *         try:             # <<<<<<<<<<<<<<
@@ -2890,7 +2890,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __Pyx_XGOTREF(__pyx_save_exc_tb);
       /*try:*/ {
 
-        /* "enthought/traits/protocols/_speedups.pyx":295
+        /* "traits/protocols/_speedups.pyx":295
  *         # We use __class__ instead of type to support proxies
  *         try:
  *             cls = getattr(obj, __class)             # <<<<<<<<<<<<<<
@@ -2918,7 +2918,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":296
+      /* "traits/protocols/_speedups.pyx":296
  *         try:
  *             cls = getattr(obj, __class)
  *         except AttributeError:             # <<<<<<<<<<<<<<
@@ -2927,13 +2927,13 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
  */
       __pyx_t_2 = PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
       if (__pyx_t_2) {
-        __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__adapt__");
+        __Pyx_AddTraceback("traits.protocols._speedups.Protocol__adapt__");
         if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_3, &__pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 296; __pyx_clineno = __LINE__; goto __pyx_L9_except_error;}
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GOTREF(__pyx_t_1);
 
-        /* "enthought/traits/protocols/_speedups.pyx":298
+        /* "traits/protocols/_speedups.pyx":298
  *         except AttributeError:
  *             # Some object have no __class__; use their type
  *             cls = <object> (<PyObject *>obj).ob_type             # <<<<<<<<<<<<<<
@@ -2964,7 +2964,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   }
   __pyx_L6:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":300
+  /* "traits/protocols/_speedups.pyx":300
  *             cls = <object> (<PyObject *>obj).ob_type
  * 
  *     mro = None             # <<<<<<<<<<<<<<
@@ -2975,7 +2975,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __Pyx_DECREF(__pyx_v_mro);
   __pyx_v_mro = Py_None;
 
-  /* "enthought/traits/protocols/_speedups.pyx":301
+  /* "traits/protocols/_speedups.pyx":301
  * 
  *     mro = None
  *     if PyType_Check(cls):             # <<<<<<<<<<<<<<
@@ -2985,7 +2985,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_t_2 = PyType_Check(__pyx_v_cls);
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":303
+    /* "traits/protocols/_speedups.pyx":303
  *     if PyType_Check(cls):
  *         # It's a type, we can use its mro directly
  *         tmp = <void*>((<PyTypeObject *>cls).tp_mro)             # <<<<<<<<<<<<<<
@@ -2994,7 +2994,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
  */
     __pyx_v_tmp = ((void *)((PyTypeObject *)__pyx_v_cls)->tp_mro);
 
-    /* "enthought/traits/protocols/_speedups.pyx":304
+    /* "traits/protocols/_speedups.pyx":304
  *         # It's a type, we can use its mro directly
  *         tmp = <void*>((<PyTypeObject *>cls).tp_mro)
  *         if tmp != NULL:             # <<<<<<<<<<<<<<
@@ -3004,7 +3004,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     __pyx_t_5 = (__pyx_v_tmp != NULL);
     if (__pyx_t_5) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":305
+      /* "traits/protocols/_speedups.pyx":305
  *         tmp = <void*>((<PyTypeObject *>cls).tp_mro)
  *         if tmp != NULL:
  *             mro = <object>tmp             # <<<<<<<<<<<<<<
@@ -3021,7 +3021,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   }
   __pyx_L17:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":307
+  /* "traits/protocols/_speedups.pyx":307
  *             mro = <object>tmp
  * 
  *     if mro is None:             # <<<<<<<<<<<<<<
@@ -3031,7 +3031,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_t_5 = (__pyx_v_mro == Py_None);
   if (__pyx_t_5) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":308
+    /* "traits/protocols/_speedups.pyx":308
  * 
  *     if mro is None:
  *         if PyClass_Check(cls):             # <<<<<<<<<<<<<<
@@ -3041,7 +3041,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     __pyx_t_2 = PyClass_Check(__pyx_v_cls);
     if (__pyx_t_2) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":310
+      /* "traits/protocols/_speedups.pyx":310
  *         if PyClass_Check(cls):
  *             # It's a classic class, build up its MRO
  *             mro = []             # <<<<<<<<<<<<<<
@@ -3054,7 +3054,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_v_mro = ((PyObject *)__pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":311
+      /* "traits/protocols/_speedups.pyx":311
  *             # It's a classic class, build up its MRO
  *             mro = []
  *             buildClassicMRO(<PyClassObject *>cls, <PyListObject *>mro)             # <<<<<<<<<<<<<<
@@ -3065,7 +3065,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":312
+      /* "traits/protocols/_speedups.pyx":312
  *             mro = []
  *             buildClassicMRO(<PyClassObject *>cls, <PyListObject *>mro)
  *             PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)             # <<<<<<<<<<<<<<
@@ -3079,7 +3079,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_t_2 = PyList_Append(__pyx_t_6, __pyx_t_1); if (unlikely(__pyx_t_2 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 312; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":313
+      /* "traits/protocols/_speedups.pyx":313
  *             buildClassicMRO(<PyClassObject *>cls, <PyListObject *>mro)
  *             PyList_Append(<PyListObject *>mro, <object> &PyInstance_Type)
  *             PyList_Append(<PyListObject *>mro, <object> &PyBaseObject_Type)             # <<<<<<<<<<<<<<
@@ -3096,7 +3096,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     }
     /*else*/ {
 
-      /* "enthought/traits/protocols/_speedups.pyx":317
+      /* "traits/protocols/_speedups.pyx":317
  *         else:
  *             # Fallback to getting __mro__ (for e.g. security proxies/ExtensionClass)
  *             try:             # <<<<<<<<<<<<<<
@@ -3111,7 +3111,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
         __Pyx_XGOTREF(__pyx_save_exc_tb);
         /*try:*/ {
 
-          /* "enthought/traits/protocols/_speedups.pyx":318
+          /* "traits/protocols/_speedups.pyx":318
  *             # Fallback to getting __mro__ (for e.g. security proxies/ExtensionClass)
  *             try:
  *                 mro = getattr(cls, __mro)             # <<<<<<<<<<<<<<
@@ -3136,7 +3136,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "enthought/traits/protocols/_speedups.pyx":319
+        /* "traits/protocols/_speedups.pyx":319
  *             try:
  *                 mro = getattr(cls, __mro)
  *             except Exception:             # <<<<<<<<<<<<<<
@@ -3145,13 +3145,13 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
  */
         __pyx_t_2 = PyErr_ExceptionMatches(__pyx_builtin_Exception);
         if (__pyx_t_2) {
-          __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__adapt__");
+          __Pyx_AddTraceback("traits.protocols._speedups.Protocol__adapt__");
           if (__Pyx_GetException(&__pyx_t_3, &__pyx_t_1, &__pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 319; __pyx_clineno = __LINE__; goto __pyx_L23_except_error;}
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_GOTREF(__pyx_t_1);
           __Pyx_GOTREF(__pyx_t_4);
 
-          /* "enthought/traits/protocols/_speedups.pyx":321
+          /* "traits/protocols/_speedups.pyx":321
  *             except Exception:
  *                 # No __mro__?  Is it an ExtensionClass?
  *                 if PyObject_TypeCheck(cls,__ECType):             # <<<<<<<<<<<<<<
@@ -3164,7 +3164,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           if (__pyx_t_2) {
 
-            /* "enthought/traits/protocols/_speedups.pyx":323
+            /* "traits/protocols/_speedups.pyx":323
  *                 if PyObject_TypeCheck(cls,__ECType):
  *                     # Yep, toss out the error and compute a reasonable MRO
  *                     mro = extClassMRO(cls, 1)             # <<<<<<<<<<<<<<
@@ -3192,7 +3192,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
           }
           /*else*/ {
 
-            /* "enthought/traits/protocols/_speedups.pyx":325
+            /* "traits/protocols/_speedups.pyx":325
  *                     mro = extClassMRO(cls, 1)
  *                 else:
  *                     raise             # <<<<<<<<<<<<<<
@@ -3231,7 +3231,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   }
   __pyx_L19:;
 
-  /* "enthought/traits/protocols/_speedups.pyx":336
+  /* "traits/protocols/_speedups.pyx":336
  * 
  * 
  *     get = self._Protocol__adapters.get             # <<<<<<<<<<<<<<
@@ -3247,7 +3247,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_v_get = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":338
+  /* "traits/protocols/_speedups.pyx":338
  *     get = self._Protocol__adapters.get
  * 
  *     if PyTuple_Check(mro):             # <<<<<<<<<<<<<<
@@ -3257,7 +3257,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_t_2 = PyTuple_Check(__pyx_v_mro);
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":340
+    /* "traits/protocols/_speedups.pyx":340
  *     if PyTuple_Check(mro):
  *         #print "tuple",mro
  *         for i from 0 <= i < PyTuple_GET_SIZE(<PyTupleObject *>mro):             # <<<<<<<<<<<<<<
@@ -3267,7 +3267,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     __pyx_t_2 = PyTuple_GET_SIZE(((PyTupleObject *)__pyx_v_mro));
     for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_2; __pyx_v_i++) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":341
+      /* "traits/protocols/_speedups.pyx":341
  *         #print "tuple",mro
  *         for i from 0 <= i < PyTuple_GET_SIZE(<PyTupleObject *>mro):
  *             cls = <object> PyTuple_GET_ITEM(<PyTupleObject *>mro, i)             # <<<<<<<<<<<<<<
@@ -3279,7 +3279,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __Pyx_DECREF(__pyx_v_cls);
       __pyx_v_cls = ((PyObject *)__pyx_t_13);
 
-      /* "enthought/traits/protocols/_speedups.pyx":342
+      /* "traits/protocols/_speedups.pyx":342
  *         for i from 0 <= i < PyTuple_GET_SIZE(<PyTupleObject *>mro):
  *             cls = <object> PyTuple_GET_ITEM(<PyTupleObject *>mro, i)
  *             factory=get(cls)             # <<<<<<<<<<<<<<
@@ -3298,7 +3298,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_v_factory = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":343
+      /* "traits/protocols/_speedups.pyx":343
  *             cls = <object> PyTuple_GET_ITEM(<PyTupleObject *>mro, i)
  *             factory=get(cls)
  *             if factory is not None:             # <<<<<<<<<<<<<<
@@ -3308,7 +3308,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_t_5 = (__pyx_v_factory != Py_None);
       if (__pyx_t_5) {
 
-        /* "enthought/traits/protocols/_speedups.pyx":344
+        /* "traits/protocols/_speedups.pyx":344
  *             factory=get(cls)
  *             if factory is not None:
  *                 return factory[0](obj)             # <<<<<<<<<<<<<<
@@ -3337,7 +3337,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     goto __pyx_L32;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":346
+  /* "traits/protocols/_speedups.pyx":346
  *                 return factory[0](obj)
  * 
  *     elif PyList_Check(mro):             # <<<<<<<<<<<<<<
@@ -3347,7 +3347,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __pyx_t_2 = PyList_Check(__pyx_v_mro);
   if (__pyx_t_2) {
 
-    /* "enthought/traits/protocols/_speedups.pyx":348
+    /* "traits/protocols/_speedups.pyx":348
  *     elif PyList_Check(mro):
  *         #print "list",mro
  *         for i from 0 <= i < PyList_GET_SIZE(<PyListObject *>mro):             # <<<<<<<<<<<<<<
@@ -3357,7 +3357,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
     __pyx_t_2 = PyList_GET_SIZE(((PyListObject *)__pyx_v_mro));
     for (__pyx_v_i = 0; __pyx_v_i < __pyx_t_2; __pyx_v_i++) {
 
-      /* "enthought/traits/protocols/_speedups.pyx":349
+      /* "traits/protocols/_speedups.pyx":349
  *         #print "list",mro
  *         for i from 0 <= i < PyList_GET_SIZE(<PyListObject *>mro):
  *             cls = <object> PyList_GET_ITEM(<PyListObject *>mro, i)             # <<<<<<<<<<<<<<
@@ -3369,7 +3369,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __Pyx_DECREF(__pyx_v_cls);
       __pyx_v_cls = ((PyObject *)__pyx_t_14);
 
-      /* "enthought/traits/protocols/_speedups.pyx":350
+      /* "traits/protocols/_speedups.pyx":350
  *         for i from 0 <= i < PyList_GET_SIZE(<PyListObject *>mro):
  *             cls = <object> PyList_GET_ITEM(<PyListObject *>mro, i)
  *             factory=get(cls)             # <<<<<<<<<<<<<<
@@ -3388,7 +3388,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_v_factory = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":351
+      /* "traits/protocols/_speedups.pyx":351
  *             cls = <object> PyList_GET_ITEM(<PyListObject *>mro, i)
  *             factory=get(cls)
  *             if factory is not None:             # <<<<<<<<<<<<<<
@@ -3398,7 +3398,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_t_5 = (__pyx_v_factory != Py_None);
       if (__pyx_t_5) {
 
-        /* "enthought/traits/protocols/_speedups.pyx":352
+        /* "traits/protocols/_speedups.pyx":352
  *             factory=get(cls)
  *             if factory is not None:
  *                 return factory[0](obj)             # <<<<<<<<<<<<<<
@@ -3428,7 +3428,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   }
   /*else*/ {
 
-    /* "enthought/traits/protocols/_speedups.pyx":357
+    /* "traits/protocols/_speedups.pyx":357
  *         #print "other",mro
  * 
  *         for cls in mro:             # <<<<<<<<<<<<<<
@@ -3460,7 +3460,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_v_cls = __pyx_t_3;
       __pyx_t_3 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":358
+      /* "traits/protocols/_speedups.pyx":358
  * 
  *         for cls in mro:
  *             factory=get(cls)             # <<<<<<<<<<<<<<
@@ -3479,7 +3479,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_v_factory = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":359
+      /* "traits/protocols/_speedups.pyx":359
  *         for cls in mro:
  *             factory=get(cls)
  *             if factory is not None:             # <<<<<<<<<<<<<<
@@ -3489,7 +3489,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
       __pyx_t_5 = (__pyx_v_factory != Py_None);
       if (__pyx_t_5) {
 
-        /* "enthought/traits/protocols/_speedups.pyx":360
+        /* "traits/protocols/_speedups.pyx":360
  *             factory=get(cls)
  *             if factory is not None:
  *                 return factory[0](obj)             # <<<<<<<<<<<<<<
@@ -3529,7 +3529,7 @@ static PyObject *__pyx_pf_9enthought_6traits_9protocols_9_speedups_7Protocol__ad
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_AddTraceback("enthought.traits.protocols._speedups.Protocol__adapt__");
+  __Pyx_AddTraceback("traits.protocols._speedups.Protocol__adapt__");
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_DECREF(__pyx_v_cls);
@@ -3695,7 +3695,7 @@ static PyBufferProcs __pyx_tp_as_buffer_metamethod = {
 
 static PyTypeObject __pyx_type_9enthought_6traits_9protocols_9_speedups_metamethod = {
   PyVarObject_HEAD_INIT(0, 0)
-  __Pyx_NAMESTR("enthought.traits.protocols._speedups.metamethod"), /*tp_name*/
+  __Pyx_NAMESTR("traits.protocols._speedups.metamethod"), /*tp_name*/
   sizeof(struct __pyx_obj_9enthought_6traits_9protocols_9_speedups_metamethod), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_9enthought_6traits_9protocols_9_speedups_metamethod, /*tp_dealloc*/
@@ -3842,7 +3842,7 @@ static int __Pyx_InitCachedBuiltins(void) {
 static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants");
 
-  /* "enthought/traits/protocols/_speedups.pyx":115
+  /* "traits/protocols/_speedups.pyx":115
  * 
  *     def __set__(self, ob, value):
  *         raise AttributeError("Read-only attribute")             # <<<<<<<<<<<<<<
@@ -3856,7 +3856,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_1));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_2));
 
-  /* "enthought/traits/protocols/_speedups.pyx":118
+  /* "traits/protocols/_speedups.pyx":118
  * 
  *     def __delete__(self, ob):
  *         raise AttributeError("Read-only attribute")             # <<<<<<<<<<<<<<
@@ -3870,7 +3870,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(((PyObject *)__pyx_kp_s_1));
   __Pyx_GIVEREF(((PyObject *)__pyx_k_tuple_3));
 
-  /* "enthought/traits/protocols/_speedups.pyx":66
+  /* "traits/protocols/_speedups.pyx":66
  * # an extension module, globals() returns the globals dictionary of the last
  * # pure Python module that was executing.
  * AdaptationFailure = __import__(             # <<<<<<<<<<<<<<
@@ -3970,7 +3970,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "enthought/traits/protocols/_speedups.pyx":3
+  /* "traits/protocols/_speedups.pyx":3
  * """C Speedups for commonly-used operations"""
  * 
  * __all__ = [             # <<<<<<<<<<<<<<
@@ -4006,7 +4006,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s____all__, ((PyObject *)__pyx_t_1)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":61
+  /* "traits/protocols/_speedups.pyx":61
  * 
  * cdef object _marker, __conform, __adapt, __mro, __ECType
  * from sys import exc_info, exc_clear             # <<<<<<<<<<<<<<
@@ -4034,7 +4034,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":66
+  /* "traits/protocols/_speedups.pyx":66
  * # an extension module, globals() returns the globals dictionary of the last
  * # pure Python module that was executing.
  * AdaptationFailure = __import__(             # <<<<<<<<<<<<<<
@@ -4044,7 +4044,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(((PyObject *)__pyx_t_2));
 
-  /* "enthought/traits/protocols/_speedups.pyx":67
+  /* "traits/protocols/_speedups.pyx":67
  * # pure Python module that was executing.
  * AdaptationFailure = __import__(
  *     'protocols', globals=dict(__name__=__name__, __package__=__package__),             # <<<<<<<<<<<<<<
@@ -4061,7 +4061,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyDict_SetItem(__pyx_t_2, ((PyObject *)__pyx_n_s__globals), ((PyObject *)__pyx_t_1)) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(((PyObject *)__pyx_t_1)); __pyx_t_1 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":68
+  /* "traits/protocols/_speedups.pyx":68
  * AdaptationFailure = __import__(
  *     'protocols', globals=dict(__name__=__name__, __package__=__package__),
  *     fromlist=['AdaptationFailure'], level=1             # <<<<<<<<<<<<<<
@@ -4085,7 +4085,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__AdaptationFailure, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":71
+  /* "traits/protocols/_speedups.pyx":71
  * ).AdaptationFailure
  * 
  * try:             # <<<<<<<<<<<<<<
@@ -4100,7 +4100,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
     __Pyx_XGOTREF(__pyx_save_exc_tb);
     /*try:*/ {
 
-      /* "enthought/traits/protocols/_speedups.pyx":72
+      /* "traits/protocols/_speedups.pyx":72
  * 
  * try:
  *     from ExtensionClass import ExtensionClass             # <<<<<<<<<<<<<<
@@ -4121,7 +4121,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "enthought/traits/protocols/_speedups.pyx":73
+      /* "traits/protocols/_speedups.pyx":73
  * try:
  *     from ExtensionClass import ExtensionClass
  *     __ECType = ExtensionClass             # <<<<<<<<<<<<<<
@@ -4145,7 +4145,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "enthought/traits/protocols/_speedups.pyx":74
+    /* "traits/protocols/_speedups.pyx":74
  *     from ExtensionClass import ExtensionClass
  *     __ECType = ExtensionClass
  * except ImportError:             # <<<<<<<<<<<<<<
@@ -4154,13 +4154,13 @@ PyMODINIT_FUNC PyInit__speedups(void)
  */
     __pyx_t_4 = PyErr_ExceptionMatches(__pyx_builtin_ImportError);
     if (__pyx_t_4) {
-      __Pyx_AddTraceback("enthought.traits.protocols._speedups");
+      __Pyx_AddTraceback("traits.protocols._speedups");
       if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L4_except_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_3);
 
-      /* "enthought/traits/protocols/_speedups.pyx":75
+      /* "traits/protocols/_speedups.pyx":75
  *     __ECType = ExtensionClass
  * except ImportError:
  *     __ECType = type             # <<<<<<<<<<<<<<
@@ -4191,7 +4191,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
     __pyx_L9_try_end:;
   }
 
-  /* "enthought/traits/protocols/_speedups.pyx":77
+  /* "traits/protocols/_speedups.pyx":77
  *     __ECType = type
  * 
  * _marker    = object()             # <<<<<<<<<<<<<<
@@ -4206,7 +4206,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __pyx_v_9enthought_6traits_9protocols_9_speedups__marker = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":78
+  /* "traits/protocols/_speedups.pyx":78
  * 
  * _marker    = object()
  * __conform  = PyString_InternFromString("__conform__")             # <<<<<<<<<<<<<<
@@ -4221,7 +4221,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __pyx_v_9enthought_6traits_9protocols_9_speedups___conform = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":79
+  /* "traits/protocols/_speedups.pyx":79
  * _marker    = object()
  * __conform  = PyString_InternFromString("__conform__")
  * __adapt    = PyString_InternFromString("__adapt__")             # <<<<<<<<<<<<<<
@@ -4236,7 +4236,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __pyx_v_9enthought_6traits_9protocols_9_speedups___adapt = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":80
+  /* "traits/protocols/_speedups.pyx":80
  * __conform  = PyString_InternFromString("__conform__")
  * __adapt    = PyString_InternFromString("__adapt__")
  * __class    = PyString_InternFromString("__class__")             # <<<<<<<<<<<<<<
@@ -4248,7 +4248,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s____class, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":81
+  /* "traits/protocols/_speedups.pyx":81
  * __adapt    = PyString_InternFromString("__adapt__")
  * __class    = PyString_InternFromString("__class__")
  * __mro      = PyString_InternFromString("__mro__")             # <<<<<<<<<<<<<<
@@ -4263,7 +4263,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __pyx_v_9enthought_6traits_9protocols_9_speedups___mro = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":92
+  /* "traits/protocols/_speedups.pyx":92
  * # Fundamental Adapters
  * 
  * def NO_ADAPTER_NEEDED(obj, protocol=None):             # <<<<<<<<<<<<<<
@@ -4275,7 +4275,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__NO_ADAPTER_NEEDED, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":96
+  /* "traits/protocols/_speedups.pyx":96
  *     return obj
  * 
  * def DOES_NOT_SUPPORT(obj, protocol=None):             # <<<<<<<<<<<<<<
@@ -4287,7 +4287,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__DOES_NOT_SUPPORT, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":190
+  /* "traits/protocols/_speedups.pyx":190
  * 
  * 
  * def adapt(obj, protocol, default=_marker, factory=_marker):             # <<<<<<<<<<<<<<
@@ -4305,7 +4305,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__adapt, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":198
+  /* "traits/protocols/_speedups.pyx":198
  *     return _adapt(obj,protocol,default,factory)
  * 
  * def Protocol__call__(self, ob, default=_marker):             # <<<<<<<<<<<<<<
@@ -4320,7 +4320,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Protocol__call__, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 198; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":217
+  /* "traits/protocols/_speedups.pyx":217
  * 
  * 
  * def classicMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -4337,7 +4337,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__classicMRO, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":250
+  /* "traits/protocols/_speedups.pyx":250
  * 
  * 
  * def extClassMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -4354,7 +4354,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__extClassMRO, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 250; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":260
+  /* "traits/protocols/_speedups.pyx":260
  * 
  * 
  * def getMRO(ob, extendedClassic=False):             # <<<<<<<<<<<<<<
@@ -4371,7 +4371,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__getMRO, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":285
+  /* "traits/protocols/_speedups.pyx":285
  * 
  * 
  * def Protocol__adapt__(self, obj):             # <<<<<<<<<<<<<<
@@ -4383,7 +4383,7 @@ PyMODINIT_FUNC PyInit__speedups(void)
   if (PyObject_SetAttr(__pyx_m, __pyx_n_s__Protocol__adapt__, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 285; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "enthought/traits/protocols/_speedups.pyx":1
+  /* "traits/protocols/_speedups.pyx":1
  * """C Speedups for commonly-used operations"""             # <<<<<<<<<<<<<<
  * 
  * __all__ = [
@@ -4398,10 +4398,10 @@ PyMODINIT_FUNC PyInit__speedups(void)
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   if (__pyx_m) {
-    __Pyx_AddTraceback("init enthought.traits.protocols._speedups");
+    __Pyx_AddTraceback("init traits.protocols._speedups");
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init enthought.traits.protocols._speedups");
+    PyErr_SetString(PyExc_ImportError, "init traits.protocols._speedups");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

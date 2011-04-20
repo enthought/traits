@@ -17,16 +17,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ListColumn
 
-from enthought.traits.ui.table_filter \
+from traitsui.table_filter \
     import TableFilter
 
 #-------------------------------------------------------------------------------

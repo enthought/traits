@@ -18,7 +18,7 @@
 """ Pseudo-package for all of the core symbols from Traits and TraitsUI.
 Use this module for importing Traits names into your namespace. For example::
 
-    from enthought.traits.api import HasTraits
+    from traits.api import HasTraits
 """
 
 from __future__ import absolute_import
@@ -90,7 +90,7 @@ try:
     #  features of traits will not work.
     #---------------------------------------------------------------------------
 
-    from .ui import view_elements
+    from traitsui import view_elements
     has_traits.ViewElements = view_elements.ViewElements
 
     #-------------------------------------------------------------------------------

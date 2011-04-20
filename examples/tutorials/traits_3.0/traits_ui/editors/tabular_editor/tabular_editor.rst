@@ -2,7 +2,7 @@ The TabularEditor
 =================
 
 Traits 3.0 introduces a new editor, called the **TabularEditor**, located in the
-*enthought.traits.ui.wx.extras.tabular_editor* module that can be used for many
+*traitsui.wx.extras.tabular_editor* module that can be used for many
 of the same purposes as the existing **TableEditor**. However, while similar in
 function, each editor has its own particular strengths and weaknesses.
 

@@ -9,7 +9,7 @@ Internet Explorer browser.
 
 This editor is currently only available for the Windows platform and is
 located in the wxPython version of the Traits UI in the
-*enthought.traits.ui.wx.extras.windows* package. The purpose of the
+*traitsui.wx.extras.windows* package. The purpose of the
 *extras.windows* package is to provide a location for editors which may be
 toolkit and Windows platform specific, and not necessarily available in all
 Traits UI toolkit packages or platforms.
@@ -78,13 +78,13 @@ the browser to display the page defined by the new value of the trait.
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.ui.wx.extra.windows.ie_html_editor \
+from traitsui.wx.extra.windows.ie_html_editor \
     import IEHTMLEditor
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, List, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, TextEditor, ListEditor, spring
 
 #--[WebPage Class]--------------------------------------------------------------

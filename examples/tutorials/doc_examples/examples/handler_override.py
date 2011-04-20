@@ -6,8 +6,8 @@
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api import HasTraits, Bool
-from enthought.traits.ui.api import View, Handler
+from traits.api import HasTraits, Bool
+from traitsui.api import View, Handler
 
 #--[Code]-----------------------------------------------------------------------
 

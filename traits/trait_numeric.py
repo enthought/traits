@@ -228,10 +228,10 @@ class AbstractArray ( TraitType ):
         enter_set = self.enter_set or False
 
         if self.shape is not None and len( self.shape ) == 2:
-            from .ui.api import ArrayEditor
+            from traitsui.api import ArrayEditor
             editor = ArrayEditor( auto_set=auto_set, enter_set=enter_set )
         else:
-            from .ui.api import TupleEditor
+            from traitsui.api import TupleEditor
 
             if self.dtype is None:
                 types = Any

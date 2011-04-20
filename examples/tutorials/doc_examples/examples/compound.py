@@ -6,7 +6,7 @@
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api import HasTraits, Range, Trait, TraitError
+from traits.api import HasTraits, Range, Trait, TraitError
 
 #--[Code]-----------------------------------------------------------------------
 

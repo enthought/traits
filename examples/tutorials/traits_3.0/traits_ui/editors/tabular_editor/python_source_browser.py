@@ -37,8 +37,8 @@ related trait and property definitions in the adapter class itself.
 
 #--<Imports>--------------------------------------------------------------------
 
-import enthought.traits
-import enthought.traits.ui
+import traits
+import traitsui
 
 import wx
 
@@ -51,23 +51,23 @@ from os \
 from os.path \
     import getsize, getmtime, isfile, join, splitext, basename, dirname
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Float, List, Directory, File, Code, \
            Instance, Property, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, HSplit, VSplit, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 #--<Constants>------------------------------------------------------------------
 
 # Necessary because of the dynamic way in which the demos are loaded:
-search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
+search_path = [ join( dirname( traitsui.api.__file__ ),
                       'demo', 'Applications' ) ]
 
 #--[FileInfo Class]-------------------------------------------------------------
@@ -179,5 +179,5 @@ class PythonBrowser ( HasPrivateTraits ):
 
 #--[Example*]-------------------------------------------------------------------
 
-demo = PythonBrowser( dir = dirname( enthought.traits.api.__file__ ) )
+demo = PythonBrowser( dir = dirname( traits.api.__file__ ) )
 

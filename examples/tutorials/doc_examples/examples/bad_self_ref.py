@@ -4,7 +4,7 @@
 # bad_self_ref.py -- Non-working example with self-referencing class definition
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Trait, Instance
+from traits.api import HasTraits, Trait, Instance
 
 #--[Code]-----------------------------------------------------------------------
 # Shows the incorrect way of defining a self-referencing class.

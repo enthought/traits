@@ -22,10 +22,10 @@ so that the dynamic portion of the interface is displayed in a panel
 rather than a separate window.
 """
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Range, Enum, Bool, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View, Handler
 
 

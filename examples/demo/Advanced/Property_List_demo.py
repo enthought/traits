@@ -39,14 +39,14 @@ from threading \
 from time \
     import sleep
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, HasPrivateTraits, Str, Int, Enum, List, Event, \
            Property, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
 #-- Person Class ---------------------------------------------------------------

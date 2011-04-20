@@ -93,7 +93,7 @@ This provides the exact same functionality as the previous definition of
 """
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[OddInt Definition]----------------------------------------------------------
 

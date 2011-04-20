@@ -15,7 +15,7 @@ Defining Interfaces
 Interfaces are defined by subclassing from the **Interface** class, as shown
 in the example below::
 
-    from enthought.traits.api import Interface
+    from traits.api import Interface
 
     class IName ( Interface ):
 
@@ -42,7 +42,7 @@ each of the *interfaces* specified as an argument to **implements**.
 Also, the call to **implements** must occur at class scope within the class
 definition, as shown in the following example::
 
-    from enthought.traits.api import HasTraits, implements
+    from traits.api import HasTraits, implements
 
     class Person ( HasTraits ):
 
@@ -66,7 +66,7 @@ Being able to define and implement interfaces would be of little use without
 the ability to *use* interfaces in your code. In traits, using an interface is
 accomplished using the **Instance** trait, as shown in the following example::
 
-    from enthought.traits.api import HasTraits, Instance
+    from traits.api import HasTraits, Instance
 
     class Apartment ( HasTraits ):
 
@@ -84,7 +84,7 @@ interface is presented in the next section of the tutorial.
 As before, the **Instance** trait can also be used with classes that are not
 interfaces, such as::
 
-    from enthought.traits.api import HasTraits, Instance
+    from traits.api import HasTraits, Instance
 
     class Apartment ( HasTraits ):
 
@@ -95,7 +95,7 @@ the specified class or one of its subclasses.
 """
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[IName Interface]------------------------------------------------------------
 

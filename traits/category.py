@@ -96,7 +96,7 @@ class Category ( object ):
 
     The following example demonstrates defining a category::
 
-        from enthought.traits.api import HasTraits, Str, Category
+        from traits.api import HasTraits, Str, Category
 
         class Base(HasTraits):
             x = Str("Base x")

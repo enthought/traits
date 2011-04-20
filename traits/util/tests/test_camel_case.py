@@ -2,7 +2,7 @@
 import unittest
 
 # Local imports.
-from enthought.util.camel_case import camel_case_to_python, camel_case_to_words
+from traits.util.camel_case import camel_case_to_python, camel_case_to_words
 
 
 class CamelCaseTestCase(unittest.TestCase):

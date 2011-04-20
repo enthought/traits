@@ -4,7 +4,7 @@
 # trait_reuse.py --- Example of reusing trait definitions
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Range
+from traits.api import HasTraits, Range
 
 #--[Code]-----------------------------------------------------------------------
 coefficient = Range(-1.0, 1.0, 0.0)

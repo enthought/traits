@@ -21,7 +21,7 @@ from ETS around the 3.5 release.
 """
 
 import warnings
-warnings.warn("The enthought.util.numeric module is deprecated and will " \
+warnings.warn("The traits.util.numeric module is deprecated and will " \
         "be removed from ETS in a future release.", DeprecationWarning)
 
 import numpy

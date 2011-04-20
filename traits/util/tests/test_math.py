@@ -14,7 +14,7 @@
 import unittest
 
 import numpy
-import enthought.util.math as M
+import traits.util.math as M
 
 
 class test_math(unittest.TestCase):

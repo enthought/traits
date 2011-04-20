@@ -61,7 +61,7 @@ of the delegate object with the same name as the trait defined by the
 DelegatesTo object. Consider the following example::
 
     # delegate.py --- Example of trait delegation
-    from enthought.traits.api \
+    from traits.api \
         import DelegatesTo, HasTraits, Instance, Str
 
     class Parent(HasTraits):
@@ -89,7 +89,7 @@ DelegatesTo object. Consider the following example::
       File "c:\src\trunk\enthought\traits\trait_handlers.py", line
     163, in error
         raise TraitError, ( object, name, self.info(), value )
-    enthought.traits.trait_errors.TraitError:  The 'last_name' trait of a
+    traits.trait_errors.TraitError:  The 'last_name' trait of a
     Parent instance must be a string, but a value of <__main__.Parent object at
     0x014D6D80> <class '__main__.Parent'> was specified.
     """
@@ -156,7 +156,7 @@ PrototypedFrom::
 
     # prototype_prefix.py --- Examples of PrototypedFrom()
     #                         prefix parameter
-    from enthought.traits.api import \
+    from traits.api import \
         PrototypedFrom, Float, HasTraits, Instance, Str
 
     class Parent (HasTraits):
@@ -227,7 +227,7 @@ directly changed) were notified. This behavior is shown in the following
 example::
 
     # deferring_notification.py -- Example of notification with deferring
-    from enthought.traits.api \
+    from traits.api \
         import HasTraits, Instance, PrototypedFrom, Str
 
     class Parent ( HasTraits ):

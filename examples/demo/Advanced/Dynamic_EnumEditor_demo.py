@@ -39,10 +39,10 @@ Notes:
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, List, Constant
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, VGroup, HSplit, EnumEditor, CheckListEditor
 
 #-- The list of possible entrees -----------------------------------------------

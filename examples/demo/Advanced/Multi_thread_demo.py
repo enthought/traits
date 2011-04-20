@@ -19,10 +19,10 @@ from threading \
 from time \
     import sleep
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Int, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item
 
 class ThreadDemo ( HasTraits ):

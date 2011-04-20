@@ -70,9 +70,9 @@ package. These features are elaborated in the rest of this guide.
     # all_traits_features.py --- Shows primary features of the Traits
     #                            package
 
-    from enthought.traits.api import Delegate, HasTraits, Instance,\
+    from traits.api import Delegate, HasTraits, Instance,\
                                      Int, Str
-    import enthought.traits.ui
+    import traitsui
 
     class Parent ( HasTraits ):
 
@@ -186,5 +186,5 @@ more work on the part of the programmer.
        subdirectory of the Traits docs directory.  You can run them
        individually, or view them in a tutorial program by running:
 
-       python <Traits dir>/enthought/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples
+       python <Traits dir>/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples
 

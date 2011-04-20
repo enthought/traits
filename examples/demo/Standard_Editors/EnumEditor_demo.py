@@ -10,10 +10,10 @@ Fixme: This only shows the capabilities of the old-style EnumEditor
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Enum
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 # Define the demo class:

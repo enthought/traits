@@ -8,10 +8,10 @@ This demo shows each of the four styles of the TupleEditor
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Tuple, Color, Range, Str
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 # The main demo class:

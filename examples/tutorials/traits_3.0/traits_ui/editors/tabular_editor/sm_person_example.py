@@ -49,27 +49,27 @@ from os.path \
 from random \
     import randint, choice, shuffle
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, Margin, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import NoButtons
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 #--<Constants>------------------------------------------------------------------
 
 # Necessary because of the dynamic way in which the demos are loaded:
-import enthought.traits.ui.api
+import traitsui.api
 
-search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
+search_path = [ join( dirname( traitsui.api.__file__ ),
                       'demo', 'Advanced' ) ]
 
 #--[Person Class]---------------------------------------------------------------
@@ -130,7 +130,7 @@ class Report ( HasTraits ):
             show_labels        = False,
         ),
         title     = 'Tabular Editor Demo',
-        id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
+        id        = 'traitsui.demo.Applications.tabular_editor_demo',
         width     = 0.60,
         height    = 0.75,
         resizable = True,

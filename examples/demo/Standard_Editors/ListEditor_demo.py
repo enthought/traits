@@ -8,10 +8,10 @@ This demo shows each of the four styles of ListEditor
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, List, Str
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 # Define the demo class:

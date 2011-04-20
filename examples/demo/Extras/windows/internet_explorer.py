@@ -5,13 +5,13 @@
 """
 
 # Imports:
-from enthought.traits.ui.wx.extra.windows.ie_html_editor \
+from traitsui.wx.extra.windows.ie_html_editor \
     import IEHTMLEditor
 
-from enthought.traits.api \
+from traits.api \
     import Str, List, Button, HasTraits
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, TextEditor, ListEditor
 
 # The web page class:

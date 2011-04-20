@@ -97,9 +97,9 @@ for an example of a related **Controller** based design.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
-from enthought.traits.ui.api import *
-from enthought.traits.ui.table_column import *
+from traits.api import *
+from traitsui.api import *
+from traitsui.table_column import *
 
 #--[Parent Class]---------------------------------------------------------------
 

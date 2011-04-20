@@ -4,8 +4,8 @@ Implementation of a DirectoryEditor demo plugin for Traits UI demo program.
 This demo shows each of the four styles of the DirectoryEditor.
 """
 
-from enthought.traits.api import HasTraits, Directory
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Directory
+from traitsui.api import Item, Group, View
 
 
 #-------------------------------------------------------------------------------

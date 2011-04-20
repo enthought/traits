@@ -4,7 +4,7 @@
 # wildcard_rules.py --- Example of trait attribute wildcard rules
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Any, HasTraits, Int, Python
+from traits.api import Any, HasTraits, Int, Python
 
 #--[Code]-----------------------------------------------------------------------
 class Person(HasTraits):

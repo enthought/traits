@@ -4,8 +4,8 @@
 # delegate.py --- Example of trait delegation
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import DelegatesTo, HasTraits, Instance, Str
-from enthought.traits.api import TraitError
+from traits.api import DelegatesTo, HasTraits, Instance, Str
+from traits.api import TraitError
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):
@@ -47,7 +47,7 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in ?
   File "c:\src\trunk\enthought\traits\trait_handlers.py", line 163, in error
     raise TraitError, ( object, name, self.info(), value )
-enthought.traits.trait_errors.TraitError: The 'last_name' trait of a Child
+traits.trait_errors.TraitError: The 'last_name' trait of a Child
 instance must be a value of type 'str', but a value of <__main__.Parent object
 at 0x009DD6F0> was specified.
 """

@@ -6,8 +6,8 @@ This demo shows each of the four styles of the EnumEditor.
 Fixme: This only shows the capabilities of the old-style EnumEditor
 """
 
-from enthought.traits.api import HasTraits, Enum
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Enum
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

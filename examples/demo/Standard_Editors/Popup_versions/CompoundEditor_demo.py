@@ -4,8 +4,8 @@ Implementation of a CompoundEditor demo plugin for Traits UI demo program.
 This demo shows each of the four styles of the CompoundEditor.
 """
 
-from enthought.traits.api import HasTraits, Trait, Range
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Trait, Range
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

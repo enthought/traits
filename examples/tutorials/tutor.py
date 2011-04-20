@@ -33,29 +33,29 @@ import re
 from string \
     import capwords
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, HasTraits, File, Directory, Instance, Int, Str, \
            List, Bool, Dict, Any, Property, Delegate, Button, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, VSplit, HSplit, Tabbed, Item, Heading, \
            Handler, ListEditor, CodeEditor, EnumEditor, HTMLEditor, \
            TreeEditor, TitleEditor, ValueEditor, ShellEditor
 
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import NoButtons
 
-from enthought.traits.ui.tree_node \
+from traitsui.tree_node \
     import TreeNode
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 try:
-    from enthought.traits.ui.wx.extra.windows.ie_html_editor \
+    from traitsui.wx.extra.windows.ie_html_editor \
         import IEHTMLEditor
 
-    from enthought.traits.ui.wx.extra.windows.flash_editor \
+    from traitsui.wx.extra.windows.flash_editor \
         import FlashEditor
 except:
     IEHTMLEditor = FlashEditor = None

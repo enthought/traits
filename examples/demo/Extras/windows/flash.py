@@ -5,13 +5,13 @@
 """
 
 # Imports:
-from enthought.traits.ui.wx.extra.windows.flash_editor \
+from traitsui.wx.extra.windows.flash_editor \
     import FlashEditor
 
-from enthought.traits.api \
+from traits.api \
     import Enum, HasTraits
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item
 
 # The demo class:

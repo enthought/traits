@@ -6,9 +6,9 @@ Implementation of a HTMLEditor demo plugin for the Traits UI demo program.
 """
 
 # Imports:
-from enthought.traits.api import HasTraits, HTML
+from traits.api import HasTraits, HTML
 
-from enthought.traits.ui.api import Item, Group, View
+from traitsui.api import Item, Group, View
 
 # Define the demo class:
 class HTMLEditorDemo ( HasTraits ):

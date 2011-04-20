@@ -5,7 +5,7 @@ import sys
 import traceback
 import types
 
-from enthought.traits.api import Any, Bool, HasTraits, Instance, Str
+from traits.api import Any, Bool, HasTraits, Instance, Str
 
 
 #Setup a logger for this module.
@@ -46,13 +46,13 @@ class ExceptionHandler(HasTraits):
     # Formatted text for the exception only. I.e. without stack trace.
     exception_only_text = Str
 
-    # Enter message in the log using enthought.logger; default is True.
+    # Enter message in the log using traits.logger; default is True.
     use_logger = Bool(True)
 
     def __init__(self, **traits):
         """ Creates an ExceptionHandler initialized with the most recent
         traceback information.
-        Optionally logs the exception using enthought.logger.
+        Optionally logs the exception using traits.logger.
         """
         super(ExceptionHandler,self).__init__(**traits)
         self.ex_type, self.ex_value, self.ex_traceback = sys.exc_info()

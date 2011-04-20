@@ -47,13 +47,13 @@ Additional notes:
 from random \
     import randint, choice, shuffle
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Int, List, Instance, Property, Constant, Color
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
 #-- Person Class Definition ----------------------------------------------------
@@ -114,7 +114,7 @@ class Report ( HasTraits ):
             show_labels        = False
         ),
         title     = 'Tabular Editor Demo',
-        id        = 'enthought.traits.ui.demo.Applications.tabular_editor_demo',
+        id        = 'traitsui.demo.Applications.tabular_editor_demo',
         width     = 0.60,
         height    = 0.75,
         resizable = True

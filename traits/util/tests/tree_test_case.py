@@ -1,6 +1,6 @@
 import unittest
-from enthought.testing.api import doctest_for_module
-import enthought.util.tree as tree
+from traits.testing.api import doctest_for_module
+import traits.util.tree as tree
 
 class TreeDocTestCase(doctest_for_module(tree)):
     pass

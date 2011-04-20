@@ -1,7 +1,7 @@
 from copy import copy
 
-from enthought.traits.api import HasTraits, Instance, List, Property
-from enthought.util.sequence import union
+from traits.api import HasTraits, Instance, List, Property
+from traits.util.sequence import union
 
 # Our representation of equivalence classes can be optimized. It looks like all
 # of our methods are linear in the number of classes; liberal use of hashes

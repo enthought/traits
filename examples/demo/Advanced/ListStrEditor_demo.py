@@ -9,10 +9,10 @@ list of strings.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, List, Str
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, ListStrEditor
 
 #-- ShoppingListDemo Class -----------------------------------------------------

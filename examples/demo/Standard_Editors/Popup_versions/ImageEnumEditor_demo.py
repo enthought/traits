@@ -4,8 +4,8 @@ Implementation of an ImageEnumEditor demo plugin for the Traits UI demo program.
 This demo shows each of the four styles of the ImageEnumEditor.
 """
 
-from enthought.traits.api import HasTraits, Str, Trait
-from enthought.traits.ui.api import Item, Group, View, ImageEnumEditor
+from traits.api import HasTraits, Str, Trait
+from traitsui.api import Item, Group, View, ImageEnumEditor
 
 #-------------------------------------------------------------------------------
 #  Constants:

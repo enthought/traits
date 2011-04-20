@@ -7,10 +7,10 @@ Demonstrates one possible approach to writing Model/View/Controller
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Bool, TraitError
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, Controller
 
 class MyModel ( HasTraits ):

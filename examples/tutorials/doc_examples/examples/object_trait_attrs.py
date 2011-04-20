@@ -4,7 +4,7 @@
 # object_trait_attrs.py --- Example of per-object trait attributes
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Range
+from traits.api import HasTraits, Range
 
 #--[Code]-----------------------------------------------------------------------
 

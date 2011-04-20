@@ -1,3 +1,3 @@
 """
-lib.enthought.logger.agent
+lib.traits.logger.agent
 """

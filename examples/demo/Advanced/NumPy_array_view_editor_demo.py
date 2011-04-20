@@ -45,13 +45,13 @@ Setting 'transpose' to True will logically transpose the input array (e.g. an
 from numpy.random \
     import random
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Array
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item
 
-from enthought.traits.ui.ui_editors.array_view_editor \
+from traitsui.ui_editors.array_view_editor \
     import ArrayViewEditor
 
 #-- ShowArray demo class -------------------------------------------------------

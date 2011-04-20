@@ -12,16 +12,16 @@ over the standard OS file dialog, select the <b>File Open</b> demo.
 from os.path \
     import getsize
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Button, Property, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item
 
-from enthought.traits.ui.file_dialog  \
+from traitsui.file_dialog  \
     import open_file, MFileDialogModel
 
-from enthought.traits.ui.helper \
+from traitsui.helper \
     import commatize
 
 #-- LineCountInfo Class --------------------------------------------------------
@@ -66,7 +66,7 @@ class LineCountInfo ( MFileDialogModel ):
 #-- FileDialogDemo Class -------------------------------------------------------
 
 # Demo specific file dialig id:
-demo_id = ('enthought.traits.ui.demo.standard_editors.file_dialog.'
+demo_id = ('traitsui.demo.standard_editors.file_dialog.'
            'line_count_info')
 
 class FileDialogDemo ( HasTraits ):

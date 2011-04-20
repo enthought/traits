@@ -31,7 +31,7 @@ class FilteringHandler(logging.Handler):
     -------
     ::
 
-        from enthought.logger.api import DebugHandler, logger
+        from traits.logger.api import DebugHandler, logger
 
         handler = FilteringHandler(
             include = {

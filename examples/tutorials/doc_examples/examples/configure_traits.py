@@ -4,8 +4,8 @@
 # configure_traits.py -- Sample code to demonstrate configure_traits()
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Int
-import enthought.traits.ui
+from traits.api import HasTraits, Str, Int
+import traitsui
 
 #--[Code]-----------------------------------------------------------------------
 

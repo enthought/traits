@@ -62,10 +62,10 @@ normal 'cached' trait that has no 'setter' method defined.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Int, Range, Property, property_depends_on
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, RangeEditor
 
 #-- Demo Class -----------------------------------------------------------------

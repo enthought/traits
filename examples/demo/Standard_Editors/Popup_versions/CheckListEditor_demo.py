@@ -5,8 +5,8 @@ For each of three CheckListEditor column formations, this demo shows
 each of the four styles of the CheckListEditor.
 """
 
-from enthought.traits.api import HasTraits, List
-from enthought.traits.ui.api import Item, Group, View, CheckListEditor
+from traits.api import HasTraits, List
+from traitsui.api import Item, Group, View, CheckListEditor
 
 #-------------------------------------------------------------------------------
 #  Demo Class

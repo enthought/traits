@@ -16,19 +16,19 @@ demonstration of writing a custom file dialog extension, select the
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item
 
-from enthought.traits.ui.file_dialog  \
+from traitsui.file_dialog  \
     import open_file, FileInfo
 
 #-- FileDialogDemo Class -------------------------------------------------------
 
 # Demo specific file dialig id:
-demo_id = 'enthought.traits.ui.demo.standard_editors.file_dialog.file_info'
+demo_id = 'traitsui.demo.standard_editors.file_dialog.file_info'
 
 class FileDialogDemo ( HasTraits ):
 

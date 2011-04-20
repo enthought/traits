@@ -11,7 +11,7 @@
 
 import os
 
-from enthought.etsconfig.api import ETSConfig
+from traits.etsconfig.api import ETSConfig
 
 qt_api = os.environ.get('QT_API', 'pyqt')
 

@@ -6,8 +6,8 @@
 #                            package
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Delegate, HasTraits, Instance, Int, Str
-import enthought.traits.ui
+from traits.api import Delegate, HasTraits, Instance, Int, Str
+import traitsui
 
 #--[Code]-----------------------------------------------------------------------
 # Shows the five primary features of the Traits package.

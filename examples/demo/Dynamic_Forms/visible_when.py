@@ -17,10 +17,10 @@ crosses the boundary.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Range, Bool, Enum
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 class Person ( HasTraits ):

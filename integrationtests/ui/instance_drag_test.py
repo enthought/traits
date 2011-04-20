@@ -17,19 +17,19 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Regex, List, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import TreeEditor, TreeNode, View, Group, Item, Handler, InstanceEditor
 
-from enthought.traits.ui.instance_choice \
+from traitsui.instance_choice \
     import InstanceDropChoice
 
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import Menu, Action, Separator
 
-from enthought.traits.ui.wx.tree_editor \
+from traitsui.wx.tree_editor \
     import NewAction, CopyAction, CutAction, PasteAction, DeleteAction, \
            RenameAction
 

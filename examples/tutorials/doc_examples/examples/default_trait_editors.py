@@ -4,8 +4,8 @@
 # default_trait_editors.py -- Example of using default trait editors
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Range, Bool
-from enthought.traits.ui.api import View, Item
+from traits.api import HasTraits, Str, Range, Bool
+from traitsui.api import View, Item
 
 #--[Code]-----------------------------------------------------------------------
 

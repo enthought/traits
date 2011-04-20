@@ -4,8 +4,8 @@
 # multi_object_view.py -- Sample code to show multi-object view with context
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Int, Bool
-from enthought.traits.ui.api import View, Group, Item
+from traits.api import HasTraits, Str, Int, Bool
+from traitsui.api import View, Group, Item
 
 #--[Code]-----------------------------------------------------------------------
 

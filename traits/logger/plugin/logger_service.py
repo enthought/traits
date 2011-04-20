@@ -5,8 +5,8 @@ import os
 import zipfile
 
 # Enthought library imports
-from enthought.pyface.workbench.api import View as WorkbenchView
-from enthought.traits.api import Any, Callable, HasTraits, Instance, List, \
+from pyface.workbench.api import View as WorkbenchView
+from traits.api import Any, Callable, HasTraits, Instance, List, \
     Property, Undefined, on_trait_change
 
 root_logger = logging.getLogger()
@@ -139,7 +139,7 @@ class LoggerService(HasTraits):
 
     def _get_mail_files(self):
         return self.application.get_extensions(
-            'enthought.logger.plugin.mail_files')
+            'traits.logger.plugin.mail_files')
 
     @on_trait_change('preferences.level_')
     def _level_changed(self, new):

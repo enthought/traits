@@ -5,8 +5,8 @@ For each of three data types for which TextEditor is used, this demo shows
 each of the four styles of the TextEditor.
 """
 
-from enthought.traits.api import HasTraits, Str, Int, Password
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Str, Int, Password
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

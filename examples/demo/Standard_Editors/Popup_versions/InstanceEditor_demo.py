@@ -7,8 +7,8 @@ Fixme: This version of the demo only shows the old-style InstanceEditor
 capabilities.
 """
 
-from enthought.traits.api import HasTraits, Str, Range, Bool, Trait
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Str, Range, Bool, Trait
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Classes:

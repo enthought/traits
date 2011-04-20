@@ -8,7 +8,7 @@ import os
 from os.path import isfile
 import sys
 
-from enthought.util.updates.info_file import InfoFile
+from traits.util.updates.info_file import InfoFile
 
 def build_argparser():
     parser = argparse.ArgumentParser(

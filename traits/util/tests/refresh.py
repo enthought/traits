@@ -23,7 +23,7 @@ import sys
 import pickle
 
 from types import ClassType, FunctionType
-from enthought.util.refresh import refresh
+from traits.util.refresh import refresh
 
 def create_module(name, code):
     # get rid of pyc file
@@ -140,7 +140,7 @@ class RefreshTestCase(unittest.TestCase):
             except:
                 pass
 
-            f1 = "from enthought.traits.api import HasTraits, Float\n" + \
+            f1 = "from traits.api import HasTraits, Float\n" + \
                  """class FooTraits(HasTraits):
                         bar = Float(1.0)
                         def method1(self):
@@ -157,7 +157,7 @@ class RefreshTestCase(unittest.TestCase):
             foo = FooTraits()
             assert(foo.method1() == 0)
 
-            f2 = "from enthought.traits.api import HasTraits, Int\n" + \
+            f2 = "from traits.api import HasTraits, Int\n" + \
                  """class FooTraits(HasTraits):
                         bar = Int(2)
                         def method1(self):
@@ -190,7 +190,7 @@ class RefreshTestCase(unittest.TestCase):
             except:
                 pass
 
-            f1 = "from enthought.traits.api import HasTraits, Float\n" + \
+            f1 = "from traits.api import HasTraits, Float\n" + \
                  """class FooTraits(HasTraits):
                         bar = Float(1.0)
                         def method1(self):
@@ -207,7 +207,7 @@ class RefreshTestCase(unittest.TestCase):
             foo = FooTraits()
             assert(foo.method1() == 0)
 
-            f2 = "from enthought.traits.api import HasTraits, Int\n" + \
+            f2 = "from traits.api import HasTraits, Int\n" + \
                  """class FooTraits(HasTraits):
                         bar = Int(2)
                         def method1(self):

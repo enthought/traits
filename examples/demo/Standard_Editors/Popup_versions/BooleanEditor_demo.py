@@ -9,8 +9,8 @@ This demo shows each of the four styles of the BooleanEditor
 #  Demo Class
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api import HasTraits, Bool
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Bool
+from traitsui.api import Item, Group, View
 
 
 class BooleanEditorDemo ( HasTraits ):

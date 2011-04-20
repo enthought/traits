@@ -21,10 +21,10 @@ additional threads.
 from time \
     import sleep
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Int, Button, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, ListEditor
 
 #-- The Counter objects used to keep track of the current count ----------------

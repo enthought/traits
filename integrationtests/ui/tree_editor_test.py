@@ -17,11 +17,11 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api         import HasTraits, Str, Regex, List, Instance
-from enthought.traits.ui.api      import TreeEditor, TreeNode, View, Item, VSplit, \
+from traits.api         import HasTraits, Str, Regex, List, Instance
+from traitsui.api      import TreeEditor, TreeNode, View, Item, VSplit, \
                                      HGroup, Handler
-from enthought.traits.ui.menu import Menu, Action, Separator
-from enthought.traits.ui.wx.tree_editor import NewAction, CopyAction, \
+from traitsui.menu import Menu, Action, Separator
+from traitsui.wx.tree_editor import NewAction, CopyAction, \
                               CutAction, PasteAction, DeleteAction, RenameAction
 
 #-------------------------------------------------------------------------------
@@ -168,7 +168,7 @@ tree_editor = TreeEditor(
                                             HGroup( '9', 'title' ),
                                             HGroup( 'phone' ),
                                             id = 'vsplit' ),
-                                    id   = 'enthought.traits.ui.test.tree_editor_test.employee',
+                                    id   = 'traitsui.test.tree_editor_test.employee',
                                     dock = 'vertical' ) )
     ]
 )
@@ -192,7 +192,7 @@ view = View( [ Item( name      = 'company',
                      editor    = tree_editor,
                      resizable = True ), '|<>' ],
              title      = 'Company Structure',
-             id         = 'enthought.traits.ui.tests.tree_editor_test',
+             id         = 'traitsui.tests.tree_editor_test',
              dock       = 'horizontal',
              drop_class = HasTraits,
              handler    = TreeHandler(),

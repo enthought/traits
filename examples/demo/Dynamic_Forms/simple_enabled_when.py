@@ -21,10 +21,10 @@ that the evaluation is triggered by its trait handler.)
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Range, Enum, Bool
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 

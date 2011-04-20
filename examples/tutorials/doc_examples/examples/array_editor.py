@@ -6,9 +6,9 @@
 #--[Imports]--------------------------------------------------------------------
 from numpy.numarray import Int, Float
 
-from enthought.traits.api import HasPrivateTraits, Array
-from enthought.traits.ui.api import View, ArrayEditor, Item
-from enthought.traits.ui.menu import NoButtons
+from traits.api import HasPrivateTraits, Array
+from traitsui.api import View, ArrayEditor, Item
+from traitsui.menu import NoButtons
 
 #--[Code]-----------------------------------------------------------------------
 

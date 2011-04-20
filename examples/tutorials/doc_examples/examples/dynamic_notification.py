@@ -4,7 +4,7 @@
 # dynamic_notification.py --- Example of dynamic notification
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Float, HasTraits, Instance
+from traits.api import Float, HasTraits, Instance
 
 #--[Code]-----------------------------------------------------------------------
 

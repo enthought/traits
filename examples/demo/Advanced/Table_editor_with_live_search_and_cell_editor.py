@@ -82,15 +82,15 @@ from os \
 from os.path \
     import basename, dirname, splitext, join
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Directory, Str, Bool, Int, Enum, Instance, \
            Property, Any, property_depends_on
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, VSplit, HGroup, Item, TableEditor, CodeEditor, \
            TitleEditor, HistoryEditor, DNDEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
 #-- Constants ------------------------------------------------------------------

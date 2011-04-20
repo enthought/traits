@@ -5,7 +5,7 @@ from StringIO import StringIO
 import sys
 import unittest
 
-from enthought.util.ui.exception_handler import ExceptionHandler
+from traits.util.ui.exception_handler import ExceptionHandler
 
 
 class ExceptionHandlerTestCase(unittest.TestCase):

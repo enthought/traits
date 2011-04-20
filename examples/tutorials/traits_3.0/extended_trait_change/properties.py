@@ -54,13 +54,13 @@ reference. In particular, take a look at the **LeagueModelView Class** tab's
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import *
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import *
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import *
 
 #--[Player Class]---------------------------------------------------------------

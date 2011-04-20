@@ -17,7 +17,7 @@ import logging
 import os
 
 # Enthought library imports.
-from enthought.util.home_directory import get_home_directory
+from traits.util.home_directory import get_home_directory
 
 
 # Setup a logger for this module.

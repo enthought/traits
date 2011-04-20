@@ -15,16 +15,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, VSplit, TableEditor, ListEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
-from enthought.traits.ui.table_filter \
+from traitsui.table_filter \
     import TableFilter, RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
 
@@ -118,7 +118,7 @@ class ListTraitTest ( HasStrictTraits ):
             id          = 'splitter',
             show_labels = False ),
         title     = 'List Trait Editor Test',
-        id        = 'enthought.traits.ui.tests.list_traits_ui_test',
+        id        = 'traitsui.tests.list_traits_ui_test',
         dock      = 'horizontal',
         width     = .4,
         height    = .6,

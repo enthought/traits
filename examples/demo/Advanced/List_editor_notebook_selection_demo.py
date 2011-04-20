@@ -20,10 +20,10 @@ the selected tab completely visible.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance, Range
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item, ListEditor
 
 #-- Person Class ---------------------------------------------------------------
@@ -84,7 +84,7 @@ class ListEditorNotebookSelectionDemo ( HasStrictTraits ):
                                            page_name    = '.name' )
             )
         ),
-        id   = 'enthought.traits.ui.demo.Traits UI Demo.Advanced.'
+        id   = 'traitsui.demo.Traits UI Demo.Advanced.'
                'List_editor_notebook_selection_demo',
         dock = 'horizontal' )
 

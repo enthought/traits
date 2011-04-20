@@ -4,7 +4,7 @@
 # deferring_notification.py -- Example of notification with deferring
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Instance, PrototypedFrom, Str
+from traits.api import HasTraits, Instance, PrototypedFrom, Str
 
 #--[Code]-----------------------------------------------------------------------
 class Parent ( HasTraits ):

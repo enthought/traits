@@ -9,10 +9,10 @@ each of the four styles of the TextEditor.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Int, Password
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View
 
 # The main demo class:

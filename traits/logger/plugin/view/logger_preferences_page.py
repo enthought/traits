@@ -15,8 +15,8 @@
 import logging
 
 from enthought.preferences.ui.api import PreferencesPage
-from enthought.traits.api import Bool, Trait, Str
-from enthought.traits.ui.api import EnumEditor, Group, Item, View
+from traits.api import Bool, Trait, Str
+from traitsui.api import EnumEditor, Group, Item, View
 
 class LoggerPreferencesPage(PreferencesPage):
     """ A preference page for the logger plugin.
@@ -36,7 +36,7 @@ class LoggerPreferencesPage(PreferencesPage):
     name = 'Logger'
 
     # The path to the preferences node that contains the preferences.
-    preferences_path = 'enthought.logger'
+    preferences_path = 'traits.logger'
 
 
     #### Preferences ###########################################################

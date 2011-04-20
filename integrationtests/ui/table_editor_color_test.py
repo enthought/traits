@@ -15,13 +15,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor
 
-from enthought.traits.ui.wx.color_column \
+from traitsui.wx.color_column \
     import ColorColumn
 
 from enthought.enable.api \
@@ -75,7 +75,7 @@ class TableTest ( HasTraits ):
                 editor = table_editor ),
           '|[]<>' ],
         title     = 'Table Editor Test',
-        id        = 'enthought.traits.ui.tests.table_editor_color_test',
+        id        = 'traitsui.tests.table_editor_color_test',
         dock      = 'horizontal',
         width     = .4,
         height    = .3,

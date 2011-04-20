@@ -47,8 +47,8 @@ removed from the **View** class.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
-from enthought.traits.ui.api import *
+from traits.api import *
+from traitsui.api import *
 
 #--[Adder Class]----------------------------------------------------------------
 

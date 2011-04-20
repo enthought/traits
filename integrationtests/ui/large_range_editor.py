@@ -1,8 +1,8 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-from enthought.traits.api import HasTraits, Float, List
-from enthought.traits.ui.api import View, Item, RangeEditor
+from traits.api import HasTraits, Float, List
+from traitsui.api import View, Item, RangeEditor
 
 # Tests the Large Range Slider editor. It also tests the case where the
 # editor is embedded in a list.

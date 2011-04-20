@@ -6,9 +6,9 @@
 #                                     configure_traits()
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Int
-from enthought.traits.ui.api import View, Item
-from enthought.traits.ui.menu import OKButton, CancelButton
+from traits.api import HasTraits, Str, Int
+from traitsui.api import View, Item
+from traitsui.menu import OKButton, CancelButton
 
 #--[Code]-----------------------------------------------------------------------
 

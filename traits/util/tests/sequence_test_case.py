@@ -1,6 +1,6 @@
 import unittest
-from enthought.testing.api import doctest_for_module
-import enthought.util.sequence as sequence
+from traits.testing.api import doctest_for_module
+import traits.util.sequence as sequence
 
 class SequenceDocTestCase(doctest_for_module(sequence)):
     pass

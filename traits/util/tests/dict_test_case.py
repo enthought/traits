@@ -1,6 +1,6 @@
 import unittest
-from enthought.testing.api import doctest_for_module
-import enthought.util.dict as dict
+from traits.testing.api import doctest_for_module
+import traits.util.dict as dict
 
 class DictDocTestCase(doctest_for_module(dict)):
     pass

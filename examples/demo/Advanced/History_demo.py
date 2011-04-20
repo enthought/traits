@@ -23,10 +23,10 @@ value it had when the demo was run the previous time.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, File, Directory
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, FileEditor, DirectoryEditor, HistoryEditor
 
 #-- HistoryDemo Class ----------------------------------------------------------

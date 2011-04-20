@@ -21,16 +21,16 @@ is 'affects_average').
 from random \
     import randint
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Float, List, Property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor
 
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import Menu, Action
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
 

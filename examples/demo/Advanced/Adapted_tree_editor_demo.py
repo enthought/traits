@@ -31,10 +31,10 @@ tree view.
 from os \
     import getcwd
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Property, Directory, adapts, property_depends_on
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item, TreeEditor, ITreeNode, ITreeNodeAdapter
 
 from enthought.io.api \

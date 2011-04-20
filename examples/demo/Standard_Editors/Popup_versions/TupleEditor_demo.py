@@ -4,8 +4,8 @@ Implementation of a TupleEditor demo plugin for Traits UI demo program.
 This demo shows each of the four styles of the TupleEditor.
 """
 
-from enthought.traits.api import HasTraits, Tuple, Color, Range, Str
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Tuple, Color, Range, Str
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

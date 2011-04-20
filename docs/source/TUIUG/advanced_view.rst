@@ -67,9 +67,9 @@ variation on Example 3:
 
     # default_traits_view.py -- Sample code to demonstrate the use of 
     #                           'traits_view'
-    from enthought.traits.api import HasTraits, Str, Int
-    from enthought.traits.ui.api import View, Item, Group
-    import enthought.traits.ui
+    from traits.api import HasTraits, Str, Int
+    from traitsui.api import View, Item, Group
+    import traitsui
     
     class SimpleEmployee2(HasTraits):
         first_name = Str
@@ -127,9 +127,9 @@ this by simply adding a second View attribute:
 
     # multiple_views.py -- Sample code to demonstrate the use of 
     #                      multiple views
-    from enthought.traits.api import HasTraits, Str, Int
-    from enthought.traits.ui.api import View, Item, Group
-    import enthought.traits.ui
+    from traits.api import HasTraits, Str, Int
+    from traitsui.api import View, Item, Group
+    import traitsui
     
     class SimpleEmployee3(HasTraits):
         first_name = Str
@@ -342,8 +342,8 @@ example shows:
     # multi_object_view.py -- Sample code to show multi-object view 
     #                         with context
     
-    from enthought.traits.api import HasTraits, Str, Int, Bool
-    from enthought.traits.ui.api import View, Group, Item
+    from traits.api import HasTraits, Str, Int, Bool
+    from traitsui.api import View, Group, Item
     
     # Sample class
     class House(HasTraits):

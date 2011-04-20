@@ -15,16 +15,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Array, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, HGroup
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import NumericColumn
 
-from enthought.traits.ui.wx.numeric_editor \
+from traitsui.wx.numeric_editor \
     import ToolkitEditorFactory as NumericEditor
 
 from enthought.model.api \
@@ -110,7 +110,7 @@ class BunchANumbersApp ( HasPrivateTraits ):
 #                       Item( 'model', editor = number_editor ),
                        show_labels = False ),
                  title     = 'Numeric Editor Test',
-                 id        = 'enthought.traits.ui.tests.numeric_editor_test',
+                 id        = 'traitsui.tests.numeric_editor_test',
                  width     = 0.28,
                  height    = 0.6,
                  resizable = True )

@@ -27,13 +27,13 @@ trait.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Int, List, Range, Property, property_depends_on
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item, TableEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
 #-- Integer Class --------------------------------------------------------------
@@ -94,7 +94,7 @@ factors_view = View(
           show_label = False,
           editor     = factor_table_editor
     ),
-    id     = 'enthought.traits.examples.demo.Advanced.factors_view',
+    id     = 'traits.examples.demo.Advanced.factors_view',
     kind   = 'info',
     height = 0.30,
 )

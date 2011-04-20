@@ -24,10 +24,10 @@ from enthought.kiva.traits.kiva_font_trait \
 from enthought.enable.traits.api \
     import RGBAColor
 
-from enthought.traits.api \
+from traits.api \
     import Trait, HasTraits, Str, Int, Range, List, Event, Bool
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
            DirectoryEditor, ImageEnumEditor
 

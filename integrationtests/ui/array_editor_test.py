@@ -15,10 +15,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Array
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, ArrayEditor
 
 #-------------------------------------------------------------------------------

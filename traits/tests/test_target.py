@@ -21,7 +21,7 @@
 import unittest
 
 # Enthought library imports
-from enthought.traits.api import HasTraits, Instance, Int
+from traits.api import HasTraits, Instance, Int
 
 class TestCase(unittest.TestCase):
     """ Tests the 'target' argument for on_traits_change. """

@@ -13,19 +13,19 @@ applications.
 
 #-- Imports ------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, List, Str, Property, on_trait_change
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
-from enthought.traits.ui.ui_editor \
+from traitsui.ui_editor \
     import UIEditor
 
-from enthought.traits.ui.basic_editor_factory \
+from traitsui.basic_editor_factory \
     import BasicEditorFactory
 
 #-- Define the reusable StringListEditor class and its helper classes --------

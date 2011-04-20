@@ -21,7 +21,7 @@ docs/source/tutorials/images:
                     interactive.png | Enthought
               mpl_figure_editor.png | Enthought
                   traits_thread.png | Enthought
-enthought/traits/ui/images:
+traitsui/images:
                      array_node.png | Enthought
                       bool_node.png | Enthought
                      class_node.png | Eclipse

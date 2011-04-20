@@ -5,7 +5,7 @@
 #                       externally to the class
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import adapts
+from traits.api import adapts
 from interface_definition import IName
 from interface_implementation import Person
 

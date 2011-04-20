@@ -17,7 +17,7 @@ import sys
 import os.path
 import unittest
 
-from enthought.util.updates.tools import InfoFile, files2xml
+from traits.util.updates.tools import InfoFile, files2xml
 
 
 test_file = """

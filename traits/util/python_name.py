@@ -9,7 +9,7 @@
 
 """ Provides the capability to format a string to a valid python name.
 
-    DEPRECATED: Please use the enthought.util.clean_strings module instead.
+    DEPRECATED: Please use the traits.util.clean_strings module instead.
 """
 
 # Standard library imports.
@@ -20,11 +20,11 @@ import warnings
 def python_name(name):
     """ Attempt to make a valid Python identifier out of a name.
 
-        DEPRECATED: Please use the enthought.util.clean_strings.python_name
+        DEPRECATED: Please use the traits.util.clean_strings.python_name
         function instead.
     """
-    warnings.warn('enthought.util.python_name has been ' + \
-        'deprecated in favor of enthought.util.clean_strings',
+    warnings.warn('traits.util.python_name has been ' + \
+        'deprecated in favor of traits.util.clean_strings',
         DeprecationWarning)
 
     if len(name) > 0:

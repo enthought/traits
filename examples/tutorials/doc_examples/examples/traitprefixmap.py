@@ -4,7 +4,7 @@
 # traitprefixmap.py --- Example of using the TraitPrefixMap handler
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Trait, TraitPrefixMap
+from traits.api import Trait, TraitPrefixMap
 
 #--[Code]-----------------------------------------------------------------------
 boolean_map = Trait('true', TraitPrefixMap( {

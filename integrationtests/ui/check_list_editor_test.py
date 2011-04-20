@@ -15,10 +15,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Enum, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Handler, View, Item, CheckListEditor
 
 #-------------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 #                             method type checking
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, method, Tuple
+from traits.api import HasTraits, method, Tuple
 
 #--[Code]-----------------------------------------------------------------------
 

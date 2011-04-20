@@ -4,7 +4,7 @@
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
+from traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 #--[Code]-----------------------------------------------------------------------
 

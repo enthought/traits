@@ -20,10 +20,10 @@ widths can also be specified if desired.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Float, Range, Int
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, Label, RangeEditor
 
 class DynamicRangeEditor ( HasPrivateTraits ):

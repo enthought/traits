@@ -18,7 +18,7 @@
 """ Run the Traits UI demo.
 """
 
-from enthought.traits.ui.extras.demo import demo
+from traitsui.extras.demo import demo
 
 demo()
 

@@ -159,9 +159,9 @@ Consider the following variation on Example 3:
     # configure_traits_view_buttons.py -- Sample code to demonstrate 
     #                                     configure_traits()
     
-    from enthought.traits.api import HasTraits, Str, Int
-    from enthought.traits.ui.api import View, Item
-    from enthought.traits.ui.menu import OKButton, CancelButton
+    from traits.api import HasTraits, Str, Int
+    from traitsui.api import View, Item
+    from traitsui.menu import OKButton, CancelButton
     
     class SimpleEmployee(HasTraits):
         first_name = Str
@@ -213,7 +213,7 @@ names, or simply use their aliases:
 +--------------+---------------------------+
 
 Alternatively, there are several pre-defined button lists that can be imported
-from enthought.traits.ui.menu and assigned to the buttons attribute:
+from traitsui.menu and assigned to the buttons attribute:
 
 .. index:: OKCancelsButtons, ModalButtons, LiveButtons
 
@@ -224,7 +224,7 @@ from enthought.traits.ui.menu and assigned to the buttons attribute:
 Thus, one could rewrite the lines in Example 4 as follows, and the
 effect would be exactly the same::
 
-    from enthought.traits.ui.menu import OKCancelButtons
+    from traitsui.menu import OKCancelButtons
     
                  buttons = OKCancelButtons
 

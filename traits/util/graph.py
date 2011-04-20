@@ -23,8 +23,8 @@ where node ``a`` has an arc to node ``b`` if and only if ``b in d[a]``.
 import __builtin__
 from itertools import chain
 
-from enthought.util.cbook import flatten
-from enthought.util.dict import map_items, map_values
+from traits.util.cbook import flatten
+from traits.util.dict import map_items, map_values
 
 class CyclicGraph(Exception):
     """

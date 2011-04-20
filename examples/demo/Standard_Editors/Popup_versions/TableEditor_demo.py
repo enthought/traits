@@ -6,16 +6,16 @@ one style of TableEditor is implemented, so that is the one shown.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, HasStrictTraits, Str, Int, Regex, List, Enum
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, TableEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
-from enthought.traits.ui.table_filter \
+from traitsui.table_filter \
     import EvalFilterTemplate, MenuFilterTemplate, RuleFilterTemplate, \
            RuleTableFilter
 

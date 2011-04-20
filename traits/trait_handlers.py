@@ -391,7 +391,7 @@ class BaseTraitHandler ( object ):
     def create_editor ( self ):
         """ Returns the default traits UI editor to use for a trait.
         """
-        from .ui.api import TextEditor
+        from traitsui.api import TextEditor
 
         return TextEditor()
 
@@ -960,7 +960,7 @@ class TraitRange ( TraitHandler ):
                '='[ self._exclude_high: ], self._high )
 
     def get_editor ( self, trait ):
-        from .ui.api import RangeEditor
+        from traitsui.api import RangeEditor
 
         auto_set = trait.auto_set
         if auto_set is None:
@@ -1186,7 +1186,7 @@ class TraitCoerceType ( TraitHandler ):
         # Make the special case of a 'bool' type use the boolean editor:
         if self.aType is bool:
             if self.editor is None:
-                from .ui.api import BooleanEditor
+                from traitsui.api import BooleanEditor
 
                 self.editor = BooleanEditor()
 
@@ -1197,7 +1197,7 @@ class TraitCoerceType ( TraitHandler ):
         if auto_set is None:
             auto_set = True
 
-        from .ui.api import TextEditor
+        from traitsui.api import TextEditor
 
         return TextEditor( auto_set  = auto_set,
                            enter_set = trait.enter_set or False,
@@ -1328,7 +1328,7 @@ class ThisClass ( TraitHandler ):
 
     def get_editor ( self, trait ):
         if self.editor is None:
-            from .ui.api import InstanceEditor
+            from traitsui.api import InstanceEditor
 
             self.editor = InstanceEditor( label = trait.label or '',
                                           view  = trait.view  or '',
@@ -1715,7 +1715,7 @@ class TraitEnum ( TraitHandler ):
         return ' or '.join( [ repr( x ) for x in self.values ] )
 
     def get_editor ( self, trait ):
-        from .ui.api import EnumEditor
+        from traitsui.api import EnumEditor
 
         return EnumEditor( values   = self,
                            cols     = trait.cols or 3,
@@ -1799,7 +1799,7 @@ class TraitPrefixList ( TraitHandler ):
                 ' (or any unique prefix)')
 
     def get_editor ( self, trait ):
-        from .ui.api import EnumEditor
+        from traitsui.api import EnumEditor
 
         return EnumEditor( values = self,
                            cols   = trait.cols or 3  )
@@ -1886,7 +1886,7 @@ class TraitMap ( TraitHandler ):
         return ' or '.join( keys )
 
     def get_editor ( self, trait ):
-        from .ui.api import EnumEditor
+        from traitsui.api import EnumEditor
 
         return EnumEditor( values = self,
                            cols   = trait.cols or 3  )
@@ -2124,7 +2124,7 @@ class TraitCompound ( TraitHandler ):
         setattr( object, name + '_', value )
 
     def get_editor ( self, trait ):
-        from .ui.api import TextEditor, CompoundEditor
+        from traitsui.api import TextEditor, CompoundEditor
 
         the_editors = [ x.get_editor( trait ) for x in self.handlers ]
         text_editor = TextEditor()
@@ -2213,7 +2213,7 @@ class TraitTuple ( TraitHandler ):
         return handler.full_info( object, name, value )
 
     def get_editor ( self, trait ):
-        from .ui.api import TupleEditor
+        from traitsui.api import TupleEditor
 
         return TupleEditor( types  = self.types,
                             labels = trait.labels or [],
@@ -2351,10 +2351,10 @@ class TraitList ( TraitHandler ):
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
-                    from .ui.table_column import ObjectColumn
-                    from .ui.table_filter import (EvalFilterTemplate,
+                    from traitsui.table_column import ObjectColumn
+                    from traitsui.table_filter import (EvalFilterTemplate,
                         RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from .ui.api import TableEditor
+                    from traitsui.api import TableEditor
 
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
@@ -2370,7 +2370,7 @@ class TraitList ( TraitHandler ):
                 except:
                     pass
 
-        from .ui.api import ListEditor
+        from traitsui.api import ListEditor
 
         return ListEditor( trait_handler = self,
                            rows          = trait.rows or 5,
@@ -3057,7 +3057,7 @@ class TraitDict ( TraitHandler ):
 
     def get_editor ( self, trait ):
         if self.editor is None:
-            from .ui.api import TextEditor
+            from traitsui.api import TextEditor
 
             self.editor = TextEditor( evaluate = eval )
 

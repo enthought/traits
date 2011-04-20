@@ -230,7 +230,7 @@ class NotificationExceptionHandler ( object ):
             import logging
 
             self.traits_logger = logger = logging.getLogger(
-                                                  'enthought.traits' )
+                                                  'traits' )
             handler = logging.StreamHandler()
             handler.setFormatter( logging.Formatter( '%(message)s' ) )
             logger.addHandler( handler )

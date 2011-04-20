@@ -7,7 +7,7 @@
 # use_custom_th.py --- Example of using a custom TraitHandler
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Trait, TraitRange
+from traits.api import HasTraits, Trait, TraitRange
 from custom_traithandler import TraitOddInteger
 
 #--[Code]-----------------------------------------------------------------------

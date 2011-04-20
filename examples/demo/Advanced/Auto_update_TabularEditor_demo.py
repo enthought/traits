@@ -16,13 +16,13 @@ To interact with the demo:
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Float, List, Instance, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item, TabularEditor, spring
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
 #-- EmployeeAdapter Class ------------------------------------------------------

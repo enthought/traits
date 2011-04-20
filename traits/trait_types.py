@@ -88,7 +88,7 @@ def default_text_editor ( trait, type = None ):
 
     enter_set = trait.enter_set or False
 
-    from .ui.api import TextEditor
+    from traitsui.api import TextEditor
 
     if type is None:
         return TextEditor( auto_set = auto_set, enter_set = enter_set )
@@ -348,7 +348,7 @@ class Title ( Str ):
     def create_editor ( self ):
         """ Returns the default traits UI editor to use for a trait.
         """
-        from .ui.api import TitleEditor
+        from traitsui.api import TitleEditor
 
         return TitleEditor()
 
@@ -429,7 +429,7 @@ class BaseBool ( TraitType ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .ui.api import BooleanEditor
+        from traitsui.api import BooleanEditor
 
         return BooleanEditor()
 
@@ -1077,7 +1077,7 @@ class missing ( TraitType ):
         type-checking is performed; default value is the singleton Missing
         object.
 
-        See the **enthought.traits.has_traits.method()**.
+        See the **traits.has_traits.method()**.
     """
 
     # The default value for the trait:
@@ -1403,7 +1403,7 @@ class BaseFile ( BaseStr ):
         self.error( object, name, value )
 
     def create_editor(self):
-        from .ui.editors.file_editor import FileEditor
+        from traitsui.editors.file_editor import FileEditor
         editor = FileEditor(
             filter = self.filter or [],
             auto_set = self.auto_set,
@@ -1496,7 +1496,7 @@ class BaseDirectory ( BaseStr ):
         self.error( object, name, value )
 
     def create_editor(self):
-        from .ui.editors.directory_editor import DirectoryEditor
+        from traitsui.editors.directory_editor import DirectoryEditor
         editor = DirectoryEditor(
             auto_set = self.auto_set,
             entries = self.entries,
@@ -1836,7 +1836,7 @@ class BaseRange ( TraitType ):
         if auto_set is None:
             auto_set = True
 
-        from .ui.api import RangeEditor
+        from traitsui.api import RangeEditor
 
         return RangeEditor( self,
                             mode       = self.mode or 'auto',
@@ -1934,7 +1934,7 @@ class BaseEnum ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from .ui.api import EnumEditor
+        from traitsui.api import EnumEditor
 
         values = self
         if self.name != '':
@@ -2094,7 +2094,7 @@ class BaseTuple ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from .ui.api import TupleEditor
+        from traitsui.api import TupleEditor
 
         auto_set = self.auto_set
         if auto_set is None:
@@ -2212,11 +2212,11 @@ class List ( TraitType ):
             from .api import HasTraits
 
             if issubclass( handler.aClass, HasTraits ):
-                from .ui.api import TableEditor
+                from traitsui.api import TableEditor
 
                 return TableEditor()
 
-        from .ui.api import ListEditor
+        from traitsui.api import ListEditor
 
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
@@ -2331,10 +2331,10 @@ class Set ( TraitType ):
             if issubclass( handler.aClass, HasTraits ):
                 try:
                     object = handler.aClass()
-                    from .ui.table_column import ObjectColumn
-                    from .ui.table_filter import (EvalFilterTemplate,
+                    from traitsui.table_column import ObjectColumn
+                    from traitsui.table_filter import (EvalFilterTemplate,
                         RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from .ui.api import TableEditor
+                    from traitsui.api import TableEditor
 
                     return TableEditor(
                             columns = [ ObjectColumn( name = name )
@@ -2350,7 +2350,7 @@ class Set ( TraitType ):
                 except:
                     pass
 
-        from .ui.api import ListEditor
+        from traitsui.api import ListEditor
 
         return ListEditor( trait_handler = self,
                            rows          = self.rows or 5,
@@ -2474,7 +2474,7 @@ class Dict ( TraitType ):
     def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
-        from .ui.api import TextEditor
+        from traitsui.api import TextEditor
 
         return TextEditor( evaluate = eval )
 
@@ -2758,7 +2758,7 @@ class BaseInstance ( BaseClass ):
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .ui.api import InstanceEditor
+        from traitsui.api import InstanceEditor
 
         return InstanceEditor( label = self.label or '',
                                view  = self.view  or '',
@@ -3022,7 +3022,7 @@ class Button ( Event ):
             ----------
             label : string
                 The label for the button
-            image : enthought.pyface.ImageResource
+            image : pyface.ImageResource
                 An image to display on the button
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display
@@ -3054,7 +3054,7 @@ class Button ( Event ):
         super( Button, self ).__init__( **metadata )
 
     def create_editor(self):
-        from .ui.api import ButtonEditor
+        from traitsui.api import ButtonEditor
 
         editor = ButtonEditor(
             label = self.label,
@@ -3087,7 +3087,7 @@ class ToolbarButton ( Button ):
             ----------
             label : string
                 The label for the button
-            image : enthought.pyface.ImageResource
+            image : pyface.ImageResource
                 An image to display on the button
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display
@@ -3239,7 +3239,7 @@ class WeakRef ( Instance ):
     assigned value.
     """
 
-    def __init__ ( self, klass = 'enthought.traits.has_traits.HasTraits',
+    def __init__ ( self, klass = 'traits.has_traits.HasTraits',
                          allow_none = False, adapt = 'yes', **metadata ):
         """ Returns a WeakRef trait.
 

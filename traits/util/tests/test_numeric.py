@@ -15,7 +15,7 @@ import unittest
 
 from numpy import arange, array
 
-import enthought.util.numeric as N
+import traits.util.numeric as N
 
 
 class test_numeric(unittest.TestCase):

@@ -106,7 +106,7 @@ KeyBindingEditor()
 
 The KeyBindingEditor() factory differs from other trait editor factories because
 it generates an editor, not for a single attribute, but for an object of a
-particular class, enthought.traits.ui.key_bindings.KeyBindings. A KeyBindings
+particular class, traitsui.key_bindings.KeyBindings. A KeyBindings
 object is a list of bindings between key codes and handler methods. You can
 specify a KeyBindings object as an attribute of a View. When the user presses a
 key while a View has input focus, the user interface searches the View for a
@@ -137,11 +137,11 @@ with associated key bindings, and a button that invokes the key binding editor.
     # key_bindings.py -- Example of a code editor with a 
     #                    key bindings editor
     
-    from enthought.traits.api \
+    from traits.api \
         import Button, Code, HasPrivateTraits, Str
-    from enthought.traits.ui.api \
+    from traitsui.api \
         import View, Item, Group, Handler, CodeEditor
-    from enthought.traits.ui.key_bindings \
+    from traitsui.key_bindings \
         import KeyBinding, KeyBindings
     
     key_bindings = KeyBindings(
@@ -211,7 +211,7 @@ TableEditor()
     *columns* or *columns_name*
 :Optional parameters:
     See *Traits API Reference*, 
-    enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.
+    traitsui.wx.table_editor.ToolkitEditorFactory attributes.
     
 TableEditor() generates an editor that displays instances in a list as rows in a
 table, with attributes of the instances as values in columns. You must specify
@@ -249,7 +249,7 @@ You can specify this list directly, as the value of the *columns* parameter, or
 indirectly, in an extended context attribute referenced by the *columns_name*
 parameter.
 
-The items in the list must be instances of enthought.traits.ui.api.TableColumn,
+The items in the list must be instances of traitsui.api.TableColumn,
 or of a subclass of TableColumn. Some subclasses of TableColumn that are
 provided by the Traits UI package include ObjectColumn, ListColumn,
 NumericColumn, and ExpressionColumn. (See the *Traits API Reference* for details
@@ -339,7 +339,7 @@ You can provide an option for the user to apply a filter to a table, so that
 only items that pass the filter are displayed. This feature can be very useful
 when dealing with lengthy lists. You can specify a filter to apply to the table
 either directly, or via another trait. Table filters must be instances of
-enthought.traits.ui.api.TableFilter, or of a subclass of TableFilter. Some
+traitsui.api.TableFilter, or of a subclass of TableFilter. Some
 subclasses of TableFilter that are provided by the Traits UI package include
 EvalTableFilter, RuleTableFilter, and MenuTableFilter. (See the *Traits API
 Reference* for details about these classes.) The Traits UI package also provides
@@ -519,7 +519,7 @@ Defining the Format
 The TableEditor() factory supports a variety of parameters to control the visual
 formatting of the table, such as colors, fonts, and sizes for lines, cells, and
 labels. For details, refer to the *Traits API Reference*,
-enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.
+traitsui.wx.table_editor.ToolkitEditorFactory attributes.
 
 You can also specify formatting options for individual table columns when you
 define them.
@@ -746,14 +746,14 @@ The following example shows the code that produces the editor shown in Figure
 
     # tree_editor.py -- Example of a tree editor
     
-    from enthought.traits.api \
+    from traits.api \
         import HasTraits, Str, Regex, List, Instance
-    from enthought.traits.ui.api \
+    from traitsui.api \
         import TreeEditor, TreeNode, View, Item, VSplit, \
                HGroup, Handler, Group
-    from enthought.traits.ui.menu \
+    from traitsui.menu \
         import Menu, Action, Separator
-    from enthought.traits.ui.wx.tree_editor \
+    from traitsui.wx.tree_editor \
         import NewAction, CopyAction, CutAction, \
                PasteAction, DeleteAction, RenameAction
     
@@ -844,7 +844,7 @@ The following example shows the code that produces the editor shown in Figure
             HGroup( '9', 'title' ), 
             HGroup( 'phone' ),
             id = 'vsplit' ),
-        id = 'enthought.traits.doc.example.treeeditor',
+        id = 'traits.doc.example.treeeditor',
         dock = 'vertical' ) 
     
     class TreeHandler ( Handler ):
@@ -925,7 +925,7 @@ The following example shows the code that produces the editor shown in Figure
                     show_left = True, ),
                 title = 'Company Structure',
                 id = \
-                 'enthought.traits.ui.tests.tree_editor_test',
+                 'traitsui.tests.tree_editor_test',
                 dock = 'horizontal',
                 drop_class = HasTraits,
                 handler = TreeHandler(),
@@ -1225,7 +1225,7 @@ icon.
 "Extra" Trait Editor Factories
 ------------------------------
 
-The enthought.traits.ui.wx package defines a few editor factories that are
+The traitsui.wx package defines a few editor factories that are
 specific to the wxWidgets toolkit, some of which are also specific to the
 Microsoft Windows platform. These editor factories are not necessarily
 implemented for other GUI toolkits or other operating system platforms.
@@ -1341,7 +1341,7 @@ ImageEditor()
 ImageEditor() generates a read-only display of an image. The image to be
 displayed is determined by the *image* parameter, or by the value of the trait
 attribute being edited, if *image* is not specified. In either case, the value
-must be a PyFace ImageResource (enthought.pyface.api.ImageResource), or a string
+must be a PyFace ImageResource (pyface.api.ImageResource), or a string
 that can be converted to one. If *image* is specified, then the type and value
 of the trait attribute being edited are irrelevant and are ignored.
 

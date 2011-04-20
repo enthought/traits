@@ -15,10 +15,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Code
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, HTMLEditor
 
 #-------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ import os.path
 from email import Encoders
 from email.MIMEBase import MIMEBase
 
-from enthought.traits.api import Any, HasTraits
+from traits.api import Any, HasTraits
 
 
 logger = logging.getLogger(__name__)

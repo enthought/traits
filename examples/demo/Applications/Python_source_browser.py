@@ -19,8 +19,8 @@ As an extra <i>feature</i>, the <b>TabularEditor</b> also displays a:
  - Blue ball if the file size > 16KB.
 """
 
-import enthought.traits
-import enthought.traits.ui
+import traits
+import traitsui
 
 from time \
     import localtime, strftime
@@ -31,23 +31,23 @@ from os \
 from os.path \
     import getsize, getmtime, isfile, join, splitext, basename, dirname
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Float, List, Directory, File, Code, \
            Instance, Property, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, HSplit, VSplit, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 #-- Constants ------------------------------------------------------------------
 
 # Necessary because of the dynamic way in which the demos are loaded:
-search_path = [ join( dirname( enthought.traits.api.__file__ ),
+search_path = [ join( dirname( traits.api.__file__ ),
                       '..', '..', 'examples', 'demo', 'Applications' ) ]
 
 #-- FileInfo Class Definition --------------------------------------------------
@@ -162,7 +162,7 @@ class PythonBrowser ( HasPrivateTraits ):
             fh.close()
 
 # Create the demo:
-demo = PythonBrowser( dir = dirname( enthought.traits.api.__file__ ) )
+demo = PythonBrowser( dir = dirname( traits.api.__file__ ) )
 
 # Run the demo (if invoked from the command line):
 if __name__ == '__main__':

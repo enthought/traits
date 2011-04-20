@@ -29,10 +29,10 @@ from time \
 from threading \
     import Thread
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, StatusItem
 
 #-- The demo class -------------------------------------------------------------
@@ -52,7 +52,7 @@ class TextEditor ( HasPrivateTraits ):
     view = View(
         Item( 'text', style = 'custom', show_label = False ),
         title     = 'Text Editor',
-        id        = 'enthought.traits.ui.demo.advanced.statusbar_demo',
+        id        = 'traitsui.demo.advanced.statusbar_demo',
         width     = 0.4,
         height    = 0.4,
         resizable = True,

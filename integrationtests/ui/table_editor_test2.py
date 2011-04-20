@@ -15,10 +15,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Regex, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View
 
 #-------------------------------------------------------------------------------

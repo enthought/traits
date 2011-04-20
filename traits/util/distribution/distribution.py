@@ -14,8 +14,8 @@
 
 """ Base class representing distribution input variables used for stocastic modeling """
 
-from enthought.traits.api import HasTraits, Property, Float, Int
-from enthought.traits.ui.api import View, Item
+from traits.api import HasTraits, Property, Float, Int
+from traitsui.api import View, Item
 
 import numpy
 

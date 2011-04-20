@@ -26,7 +26,7 @@ class ComboboxFocusHandler(wx.EvtHandler):
     """ Workaround for combobox focus problems in wx 2.6."""
 
     # This is copied from enthought/pyface/grid.combobox_focus_handler.py.
-    # Since this was the only thing that enthought.util.wx needed from pyface,
+    # Since this was the only thing that traits.util.wx needed from pyface,
     # and it's a temporary workaround for an outdated version of wx, we're just
     # copying it here instead of introducing a dependency on a large package.
 

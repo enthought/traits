@@ -4,7 +4,7 @@
 # static_notification.py --- Example of static attribute notification
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Float
+from traits.api import HasTraits, Float
 
 #--[Code]-----------------------------------------------------------------------
 

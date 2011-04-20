@@ -491,7 +491,7 @@ def function_and_class_names_in_file(file_name):
             class Bar:
                 pass
 
-            >>> import enthought.util.refresh
+            >>> import traits.util.refresh
             >>> refresh.function_and_class_names_in_file('foo.py')
             [], ['Foo', 'Bar']
     """

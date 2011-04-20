@@ -99,7 +99,7 @@ def password_editor ( auto_set=True, enter_set=False ):
     global PasswordEditor
 
     if PasswordEditor is None:
-        from .ui.api import TextEditor
+        from traitsui.api import TextEditor
         PasswordEditor = TextEditor( password = True ,
                                      auto_set   = auto_set,
                                      enter_set  = enter_set )
@@ -112,7 +112,7 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
     global MultilineTextEditor
 
     if MultilineTextEditor is None:
-        from .ui.api import TextEditor
+        from traitsui.api import TextEditor
         MultilineTextEditor = TextEditor( multi_line = True,
                                           auto_set   = auto_set,
                                           enter_set  = enter_set )
@@ -126,7 +126,7 @@ def code_editor ( ):
     global SourceCodeEditor
 
     if SourceCodeEditor is None:
-        from .ui.api import CodeEditor
+        from traitsui.api import CodeEditor
         SourceCodeEditor = CodeEditor()
 
     return SourceCodeEditor
@@ -138,7 +138,7 @@ def html_editor ( ):
     global HTMLTextEditor
 
     if HTMLTextEditor is None:
-        from .ui.api import HTMLEditor
+        from traitsui.api import HTMLEditor
         HTMLTextEditor = HTMLEditor()
 
     return HTMLTextEditor
@@ -149,7 +149,7 @@ def shell_editor ( ):
     global PythonShellEditor
 
     if PythonShellEditor is None:
-        from .ui.api import ShellEditor
+        from traitsui.api import ShellEditor
         PythonShellEditor = ShellEditor()
 
     return PythonShellEditor
@@ -160,7 +160,7 @@ def time_editor ( ):
     global TimeEditor
 
     if TimeEditor is None:
-        from .ui.api import TimeEditor
+        from traitsui.api import TimeEditor
         TimeEditor = TimeEditor()
 
     return TimeEditor
@@ -171,7 +171,7 @@ def date_editor ( ):
     global DateEditor
 
     if DateEditor is None:
-        from .ui.api import DateEditor
+        from traitsui.api import DateEditor
         DateEditor = DateEditor()
 
     return DateEditor
@@ -258,7 +258,7 @@ class CTrait ( cTrait ):
     def get_editor ( self ):
         """ Returns the user interface editor associated with the trait.
         """
-        from .ui.api import EditorFactory
+        from traitsui.api import EditorFactory
 
         # See if we have an editor:
         editor = self.editor
@@ -271,7 +271,7 @@ class CTrait ( cTrait ):
 
             # If not, give up and use a default text editor:
             if editor is None:
-                from .ui.api import TextEditor
+                from traitsui.api import TextEditor
                 editor = TextEditor
 
         # If the result is not an EditoryFactory:
@@ -665,7 +665,7 @@ def Trait ( *value_type, **metadata ):
     +-------------------+---------------+-------------------------------------+
     | Trait(*handler*)  | Trait(        | Assignment to this trait is         |
     |                   | TraitEnum )   | validated by an object derived from |
-    |                   |               | **enthought.traits.TraitHandler**.  |
+    |                   |               | **traits.TraitHandler**.  |
     +-------------------+---------------+-------------------------------------+
     | Trait(*default*,  | Trait(0.0, 0.0| This is the most general form of    |
     | { *type* |        | 'stuff',      | the function. The notation:         |
@@ -693,7 +693,7 @@ def Trait ( *value_type, **metadata ):
     label : string
         Provides a human-readable name for the trait. It is used to label user
         interface editors for traits.
-    editor : instance of a subclass of enthought.traits.api.Editor
+    editor : instance of a subclass of traits.api.Editor
         Object to use when creating a user interface editor for the trait. See
         the "Traits UI User Guide" for more information on trait editors.
     comparison_mode : integer
@@ -1177,7 +1177,7 @@ def Color ( *args, **metadata ):
     -------------
     For wxPython, 0x000000 (that is, white)
     """
-    from .ui.toolkit_traits import ColorTrait
+    from traitsui.toolkit_traits import ColorTrait
 
     return ColorTrait( *args, **metadata )
 
@@ -1201,7 +1201,7 @@ def RGBColor ( *args, **metadata ):
     -------------
     For wxPython, (0.0, 0.0, 0.0) (that is, white)
     """
-    from .ui.toolkit_traits import RGBColorTrait
+    from traitsui.toolkit_traits import RGBColorTrait
 
     return RGBColorTrait( *args, **metadata )
 
@@ -1223,7 +1223,7 @@ def Font ( *args, **metadata ):
     -------------
     For wxPython, 'Arial 10'
     """
-    from .ui.toolkit_traits import FontTrait
+    from traitsui.toolkit_traits import FontTrait
 
     return FontTrait( *args, **metadata )
 

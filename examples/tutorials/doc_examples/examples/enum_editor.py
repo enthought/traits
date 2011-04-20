@@ -4,8 +4,8 @@
 # enum_editor.py -- Example of using an enumeration editor
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Enum
-from enthought.traits.ui.api import EnumEditor, View, Item
+from traits.api import HasTraits, Enum
+from traitsui.api import EnumEditor, View, Item
 
 #--[Code]-----------------------------------------------------------------------
 

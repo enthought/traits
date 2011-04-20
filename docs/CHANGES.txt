@@ -58,7 +58,7 @@ The major enhancement this release is that the entire Traits package has been
 changed to use relative imports so that it can be installed as a sub-package
 inside another larger library or package.  This was not previously possible,
 since the various modules inside Traits would import each other directly
-through "enthought.traits.[module]".  Many thanks to Darren Dale for the
+through "traits.[module]".  Many thanks to Darren Dale for the
 patch.
 
 

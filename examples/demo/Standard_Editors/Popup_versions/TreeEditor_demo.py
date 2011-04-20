@@ -9,10 +9,10 @@ In this case, the tree has the following hierarchy:
         - Employee
 """
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Regex, List, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, View, TreeEditor, TreeNode
 
 class Employee ( HasTraits ):

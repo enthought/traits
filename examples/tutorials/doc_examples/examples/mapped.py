@@ -4,7 +4,7 @@
 # mapped.py --- Example of a mapped trait
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Trait
+from traits.api import HasTraits, Trait
 
 #--[Code]-----------------------------------------------------------------------
 standard_color = Trait ('black', {

@@ -1269,7 +1269,7 @@ def cached_property ( function ):
         Note the use, in the example, of the **depends_on** metadata attribute
         to specify that the value of **file_contents** depends on **file_name**,
         so that _get_file_contents() is called only when **file_name** changes.
-        For details, see the enthought.traits.traits.Property() function.
+        For details, see the traits.traits.Property() function.
     """
     name = TraitsCache + function.__name__[ 5: ]
 
@@ -2213,7 +2213,7 @@ class HasTraits ( CHasTraits ):
             object's UI window.
         kind : string
             The type of user interface window to create. See the
-            **enthought.traits.ui.view.kind_trait** trait for values and
+            **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
         context : object or dictionary
@@ -2368,7 +2368,7 @@ class HasTraits ( CHasTraits ):
 
         # Otherwise, create and return a View based on the set of editable
         # traits defined for the object:
-        from .ui.api import View
+        from traitsui.api import View
 
         return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
 
@@ -2477,7 +2477,7 @@ class HasTraits ( CHasTraits ):
             not specified, the View object returned by trait_view() is used.
         kind : string
             The type of user interface window to create. See the
-            **enthought.traits.ui.view.kind_trait** trait for values and
+            **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
         edit : Boolean
@@ -2531,7 +2531,7 @@ class HasTraits ( CHasTraits ):
                     fd.close()
 
         if edit:
-            from .ui.api import toolkit
+            from traitsui.api import toolkit
             if context is None:
                 context = self
             rc = toolkit().view_application( context, self.trait_view( view ),

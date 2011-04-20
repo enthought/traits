@@ -6,8 +6,8 @@ A Traits UI editor that wraps a WX timer control.
 """
 import datetime
 
-from enthought.traits.api import HasTraits, Time
-from enthought.traits.ui.api import View, Item, TimeEditor
+from traits.api import HasTraits, Time
+from traitsui.api import View, Item, TimeEditor
 
 
 class TimeEditorDemo(HasTraits):

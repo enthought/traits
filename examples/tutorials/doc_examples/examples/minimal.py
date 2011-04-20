@@ -4,7 +4,7 @@
 # minimal.py --- Minimal example of using traits.
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Float, TraitError
+from traits.api import HasTraits, Float, TraitError
 
 #--[Code]-----------------------------------------------------------------------
 

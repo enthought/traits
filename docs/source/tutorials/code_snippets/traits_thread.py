@@ -1,7 +1,7 @@
 from threading import Thread
 from time import sleep
-from enthought.traits.api import *
-from enthought.traits.ui.api import View, Item, ButtonEditor
+from traits.api import *
+from traitsui.api import View, Item, ButtonEditor
 
 class TextDisplay(HasTraits):
     string = String()

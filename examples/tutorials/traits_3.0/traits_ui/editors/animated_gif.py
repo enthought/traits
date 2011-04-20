@@ -24,19 +24,19 @@ provided by this editor, it is display only.
 from os.path \
     import join, dirname
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Bool, Int
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, EnumEditor
 
-from enthought.traits.ui.wx.animated_gif_editor \
+from traitsui.wx.animated_gif_editor \
     import AnimatedGIFEditor
 
 #--[Setup]----------------------------------------------------------------------
 
 # Some sample animated GIF files:
-import enthought.traits.ui as ui
+import traitsui as ui
 
 base_path = join( dirname( ui.__file__ ), 'demo', 'Extras', 'images' )
 

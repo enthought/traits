@@ -21,7 +21,7 @@ import subprocess
 import unittest
 import tempfile
 
-from enthought.util.resource import store_resource, get_path
+from traits.util.resource import store_resource, get_path
 
 
 class Tests(unittest.TestCase):

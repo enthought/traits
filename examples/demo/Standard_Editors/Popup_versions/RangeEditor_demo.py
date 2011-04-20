@@ -6,8 +6,8 @@ small integer range, a medium-sized integer range, a large integer range
 and a float range are demonstrated on separate tabs.
 """
 
-from enthought.traits.api import HasTraits, Range
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Range
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

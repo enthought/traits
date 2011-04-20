@@ -12,7 +12,7 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 import os, wx
-from enthought.util.resource import get_path
+from traits.util.resource import get_path
 
 
 def get_bitmap(root, name):

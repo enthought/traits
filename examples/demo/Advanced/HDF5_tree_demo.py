@@ -7,9 +7,9 @@ changes.  In order to run, a path to an existing HDF5 database must be given
 at the bottom of this file.
 """
 
-from enthought.traits.api import HasTraits, Str, List, Instance
-from enthought.traits.ui.api import TreeEditor, TreeNode, View, Item, VSplit, HGroup, Handler, Group
-from enthought.traits.ui.menu import Menu, Action, Separator
+from traits.api import HasTraits, Str, List, Instance
+from traitsui.api import TreeEditor, TreeNode, View, Item, VSplit, HGroup, Handler, Group
+from traitsui.menu import Menu, Action, Separator
 
 import tables as tb
 
@@ -135,7 +135,7 @@ def _hdf5_tree_editor(selected=''):
 
 
 if __name__ == '__main__':
-    from enthought.traits.api import Any
+    from traits.api import Any
 
     class ATree(HasTraits):
         h5_tree = Instance(Hdf5FileNode)

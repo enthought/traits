@@ -31,9 +31,9 @@
 
 import wx
 
-from enthought.traits.ui.wx.editor import Editor
-from enthought.traits.ui.editor_factory import EditorFactory as WxEditorFactory
-from enthought.traits.api import Any, HasTraits, Int
+from traitsui.wx.editor import Editor
+from traitsui.editor_factory import EditorFactory as WxEditorFactory
+from traits.api import Any, HasTraits, Int
 
 class ChoiceEditorModel(HasTraits):
     "An interface for model for use with the ChoiceEditorFactory"

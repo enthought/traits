@@ -251,7 +251,7 @@ notification handler using *on_trait_change*.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[Employee Class]-------------------------------------------------------------
 

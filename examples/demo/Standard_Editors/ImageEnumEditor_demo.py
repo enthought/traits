@@ -8,10 +8,10 @@ This demo shows each of the four styles of the ImageEnumEditor.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Trait
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, Group, View, ImageEnumEditor
 
 # This list of image names (with the standard suffix "_origin") is used to

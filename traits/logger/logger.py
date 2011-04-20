@@ -19,7 +19,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 # Enthought library imports.
-from enthought.util.api import deprecated
+from traits.util.api import deprecated
 
 # Local imports.
 from log_queue_handler import LogQueueHandler

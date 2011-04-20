@@ -17,10 +17,10 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Trait, Enum, Range
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import EnumEditor
 
 #-------------------------------------------------------------------------------

@@ -95,13 +95,13 @@ their default editors.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Range, Float
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, ScrubberEditor, spring
 
-from enthought.traits.ui.ui_traits \
+from traitsui.ui_traits \
     import ATheme
 
 #-- Shared Themed Item Definition ----------------------------------------------

@@ -130,7 +130,7 @@ Failure to call this method may result in lost change notifications.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 from time import time, sleep
 

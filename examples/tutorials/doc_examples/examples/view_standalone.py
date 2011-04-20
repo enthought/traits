@@ -4,9 +4,9 @@
 # view_standalone.py --- Example of a view as a
 #                        standalone object
 import wx
-from enthought.traits.api import HasTraits, Int, Str, Trait
-from enthought.traits.ui.api import View
-import enthought.traits.ui
+from traits.api import HasTraits, Int, Str, Trait
+from traitsui.api import View
+import traitsui
 
 class Person(HasTraits):
     first_name = Str

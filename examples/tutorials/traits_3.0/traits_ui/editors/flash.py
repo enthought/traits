@@ -8,7 +8,7 @@ The editor allows displaying and interacting with Adobe Flash compatible files.
 
 This editor is currently only available for the Windows platform and is
 located in the wxPython version of the Traits UI in the
-*enthought.traits.ui.wx.extras.windows* package. The purpose of the
+*traitsui.wx.extras.windows* package. The purpose of the
 *extras.windows* package is to provide a location for editors which may be
 toolkit and Windows platform specific, and not necessarily available in all
 Traits UI toolkit packages or platforms.
@@ -23,13 +23,13 @@ the Flash file defined by the new value of the trait.
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.ui.wx.extra.windows.flash_editor \
+from traitsui.wx.extra.windows.flash_editor \
     import FlashEditor
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Enum
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item
 
 #--[FlashDemo Class]------------------------------------------------------------

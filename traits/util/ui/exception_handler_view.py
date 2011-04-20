@@ -1,5 +1,5 @@
 
-from enthought.traits.ui.api import Group, Item, View
+from traitsui.api import Group, Item, View
 
 class ExceptionHandlerView( View ):
     """ Default trait view for the ExceptionHandler. """

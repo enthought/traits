@@ -14,7 +14,7 @@
 import time
 import unittest
 
-from enthought.util.Worker import Worker
+from traits.util.Worker import Worker
 
 def slow_eval(worker, sleep_time):
     for i in range(10):

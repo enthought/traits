@@ -5,7 +5,7 @@
 import os, time, unittest
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
+from traits.etsconfig.api import ETSConfig
 
 
 class ETSConfigTestCase(unittest.TestCase):

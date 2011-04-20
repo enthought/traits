@@ -3,7 +3,7 @@
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api import HasTraits, Trait, Instance
+from traits.api import HasTraits, Trait, Instance
 
 #--[Code]-----------------------------------------------------------------------
 

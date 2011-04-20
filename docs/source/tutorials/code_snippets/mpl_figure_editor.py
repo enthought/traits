@@ -8,9 +8,9 @@ from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wx import NavigationToolbar2Wx
 
-from enthought.traits.api import Any, Instance
-from enthought.traits.ui.wx.editor import Editor
-from enthought.traits.ui.wx.basic_editor_factory import BasicEditorFactory
+from traits.api import Any, Instance
+from traitsui.wx.editor import Editor
+from traitsui.wx.basic_editor_factory import BasicEditorFactory
 
 class _MPLFigureEditor(Editor):
 
@@ -44,8 +44,8 @@ class MPLFigureEditor(BasicEditorFactory):
 
 if __name__ == "__main__":
     # Create a window to demo the editor
-    from enthought.traits.api import HasTraits
-    from enthought.traits.ui.api import View, Item
+    from traits.api import HasTraits
+    from traitsui.api import View, Item
     from numpy import sin, cos, linspace, pi
 
     class Test(HasTraits):

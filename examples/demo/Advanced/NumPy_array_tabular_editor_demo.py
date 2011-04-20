@@ -21,13 +21,13 @@ from numpy \
 from numpy.random \
     import random
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Property, Array
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
 #-- Tabular Adapter Definition -------------------------------------------------

@@ -17,19 +17,19 @@ selected.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item
 
-from enthought.traits.ui.file_dialog  \
+from traitsui.file_dialog  \
     import open_file, ImageInfo
 
 #-- FileDialogDemo Class -------------------------------------------------------
 
 # Demo specific file dialig id:
-demo_id = 'enthought.traits.ui.demo.standard_editors.file_dialog.image_info'
+demo_id = 'traitsui.demo.standard_editors.file_dialog.image_info'
 
 # The image filters description:
 filters = [

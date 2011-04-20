@@ -4,7 +4,7 @@
 # simple_adapter.py - Example of adaptation using Adapter
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Adapter, Instance, implements
+from traits.api import Adapter, Instance, implements
 from interface_definition import IName
 from interface_implementation import Person
 

@@ -4,14 +4,14 @@
 # tree_editor.py -- Example of a tree editor
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Regex, List, Instance
-from enthought.traits.ui.api \
+from traitsui.api \
     import TreeEditor, TreeNode, View, Item, VSplit, \
            HGroup, Handler, Group
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import Menu, Action, Separator
-from enthought.traits.ui.wx.tree_editor \
+from traitsui.wx.tree_editor \
     import NewAction, CopyAction, CutAction, \
            PasteAction, DeleteAction, RenameAction
 
@@ -103,7 +103,7 @@ employee_view = View(
         HGroup( '9', 'title' ),
         HGroup( 'phone' ),
         id = 'vsplit' ),
-    id = 'enthought.traits.doc.example.treeeditor',
+    id = 'traits.doc.example.treeeditor',
     dock = 'vertical' )
 
 class TreeHandler ( Handler ):
@@ -183,7 +183,7 @@ view = View(
                 show_left = True, ),
             title = 'Company Structure',
             id = \
-             'enthought.traits.ui.tests.tree_editor_test',
+             'traitsui.tests.tree_editor_test',
             dock = 'horizontal',
             drop_class = HasTraits,
             handler = TreeHandler(),

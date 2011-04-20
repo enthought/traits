@@ -16,16 +16,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Group, Item, TableEditor, EnumEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
-from enthought.traits.ui.table_filter \
+from traitsui.table_filter \
     import TableFilter, RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
 
@@ -213,7 +213,7 @@ class TableTest ( HasStrictTraits ):
                 editor = table_editor ),
           '|[]<>' ],
         title     = 'Table Editor Test',
-        id        = 'enthought.traits.ui.tests.table_editor_test',
+        id        = 'traitsui.tests.table_editor_test',
         dock      = 'horizontal',
         width     = .4,
         height    = .3,

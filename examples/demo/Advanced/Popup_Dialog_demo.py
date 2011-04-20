@@ -29,10 +29,10 @@ Notes:
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Int, Enum, Instance, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item, Handler, UIInfo, spring
 
 #-- The PersonHandler class ----------------------------------------------------

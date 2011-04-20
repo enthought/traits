@@ -1,7 +1,7 @@
 import logging
 
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import Bool, Str, Trait
+from traits.api import Bool, Str, Trait
 
 
 class LoggerPreferences(PreferencesHelper):
@@ -27,4 +27,4 @@ class LoggerPreferences(PreferencesHelper):
     from_address = Str()
 
     # The path to the preferences node that contains the preferences.
-    preferences_path = Str('enthought.logger')
+    preferences_path = Str('traits.logger')

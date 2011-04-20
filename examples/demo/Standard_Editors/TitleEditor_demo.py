@@ -21,10 +21,10 @@ This demonstration shows three variations of using a TitleEditor:
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Enum, Str, Float, Property, cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, TitleEditor
 
 class TitleEditorDemo ( HasTraits ):

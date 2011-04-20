@@ -3,9 +3,9 @@
 
 # include_extra.py --- Example of Include object
 #                      provided for subclasses
-from enthought.traits.api import HasTraits, Int, Str, Trait
-from enthought.traits.ui.api import Group, Include, View
-import enthought.traits.ui
+from traits.api import HasTraits, Int, Str, Trait
+from traitsui.api import Group, Include, View
+import traitsui
 
 class Person(HasTraits):
     name = Str

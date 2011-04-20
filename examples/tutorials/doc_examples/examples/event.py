@@ -4,7 +4,7 @@
 # event.py --- Example of a trait event
 
 #--<Imports>--------------------------------------------------------------------
-from enthought.traits.api import Event, HasTraits, List, RGBColor, Tuple
+from traits.api import Event, HasTraits, List, RGBColor, Tuple
 
 #--[Code]-----------------------------------------------------------------------
 

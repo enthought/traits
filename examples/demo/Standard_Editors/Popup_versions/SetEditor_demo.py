@@ -9,8 +9,8 @@ The four tabs of this demo show variations on the interface as follows:
    Ord II:   Creates a set whose order is specifed by the user, has "move all"
 """
 
-from enthought.traits.api import HasTraits, List
-from enthought.traits.ui.api import Item, Group, View, SetEditor
+from traits.api import HasTraits, List
+from traitsui.api import Item, Group, View, SetEditor
 
 #-------------------------------------------------------------------------------
 #  Demo Class

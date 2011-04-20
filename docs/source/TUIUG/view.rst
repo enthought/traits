@@ -23,8 +23,8 @@ object:
 
     # configure_traits.py -- Sample code to demonstrate 
     #                        configure_traits()
-    from enthought.traits.api import HasTraits, Str, Int
-    import enthought.traits.ui
+    from traits.api import HasTraits, Str, Int
+    import traitsui
     
     class SimpleEmployee(HasTraits):
         first_name = Str
@@ -77,9 +77,9 @@ View object and passing it to the configure_traits() method:
     # configure_traits_view.py -- Sample code to demonstrate 
     #                             configure_traits()
     
-    from enthought.traits.api import HasTraits, Str, Int
-    from enthought.traits.ui.api import View, Item
-    import enthought.traits.ui
+    from traits.api import HasTraits, Str, Int
+    from traitsui.api import View, Item
+    import traitsui
     
     class SimpleEmployee(HasTraits):
         first_name = Str
@@ -280,9 +280,9 @@ Consider the following enhancement to Example 2:
 
     # configure_traits_view_group.py -- Sample code to demonstrate 
     #                                   configure_traits()
-    from enthought.traits.api import HasTraits, Str, Int
-    from enthought.traits.ui.api import View, Item, Group
-    import enthought.traits.ui
+    from traits.api import HasTraits, Str, Int
+    from traitsui.api import View, Item, Group
+    import traitsui
     
     class SimpleEmployee(HasTraits):
         first_name = Str

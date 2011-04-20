@@ -116,7 +116,7 @@ Refer to the code tabs of this lesson for a complete example using the
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[Employee Class]-------------------------------------------------------------
 

@@ -5,7 +5,7 @@
 #                     containing a list
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, List
+from traits.api import HasTraits, List
 
 #--[Code]-----------------------------------------------------------------------
 

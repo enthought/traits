@@ -12,13 +12,13 @@ from threading \
 from time \
     import sleep
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Instance, Int, Bool, Float
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, HGroup, Handler, UIInfo, spring
 
-from enthought.traits.ui.wx.extra.led_editor \
+from traitsui.wx.extra.led_editor \
     import LEDEditor
 
 # Handler class for the LEDDemo class view:

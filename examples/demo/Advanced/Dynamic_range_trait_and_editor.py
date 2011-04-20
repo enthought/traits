@@ -59,11 +59,11 @@ logging.basicConfig(stream=sys.stderr)
 from random \
     import choice
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Enum, Range, List, Button, Instance, \
            Property, cached_property, on_trait_change
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, ListEditor, spring
 
 #-- The Hotel class ------------------------------------------------------------

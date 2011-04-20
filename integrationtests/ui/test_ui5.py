@@ -24,14 +24,14 @@
 
 import wx
 
-from enthought.traits.api \
+from traits.api \
     import Trait, HasTraits, Str, Int, Range, List, Event, File, Directory, Bool
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Handler, Item, CheckListEditor, ButtonEditor, FileEditor, \
            DirectoryEditor, ImageEnumEditor
 
-from enthought.traits.api \
+from traits.api \
     import Color, Font
 
 #-------------------------------------------------------------------------------

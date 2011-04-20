@@ -9,10 +9,10 @@ This demo shows each of the two styles of the ButtonEditor
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, View, Group
 
 # Define the demo class:

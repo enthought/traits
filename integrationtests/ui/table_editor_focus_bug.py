@@ -2,9 +2,9 @@
 #  License: BSD Style.
 
 
-from enthought.traits.api import HasTraits, Str, List
-from enthought.traits.ui.api import Group, Item, TableEditor, View
-from enthought.traits.ui.table_column \
+from traits.api import HasTraits, Str, List
+from traitsui.api import Group, Item, TableEditor, View
+from traitsui.table_column \
     import ObjectColumn
 
 class Word(HasTraits):

@@ -16,8 +16,8 @@
 import logging
 
 # Enthought library imports.
-from enthought.pyface.api import Dialog
-from enthought.traits.api import Any, Str, Tuple
+from pyface.api import Dialog
+from traits.api import Any, Str, Tuple
 
 
 # Setup a logger for this module.

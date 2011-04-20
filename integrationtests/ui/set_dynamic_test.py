@@ -1,8 +1,8 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-from enthought.traits.api    import *
-from enthought.traits.ui.api import *
+from traits.api    import *
+from traitsui.api import *
 
 class Team ( HasTraits ):
 

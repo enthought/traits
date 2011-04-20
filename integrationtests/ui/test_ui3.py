@@ -19,9 +19,9 @@
 
 import wx
 
-from enthought.traits.api    import Trait, HasTraits, Str, Int
-from enthought.traits.ui.api import View, Group
-from enthought.traits.api import Color
+from traits.api    import Trait, HasTraits, Str, Int
+from traitsui.api import View, Group
+from traits.api import Color
 
 #-------------------------------------------------------------------------------
 #  Model/View classes:

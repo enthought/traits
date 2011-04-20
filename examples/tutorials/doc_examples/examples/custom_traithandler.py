@@ -5,7 +5,7 @@
 
 #--[Imports]--------------------------------------------------------------------
 import types
-from enthought.traits.api import TraitHandler
+from traits.api import TraitHandler
 
 #--[Code]-----------------------------------------------------------------------
 

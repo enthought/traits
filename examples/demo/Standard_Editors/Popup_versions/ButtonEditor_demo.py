@@ -5,9 +5,9 @@ This demo shows each of the two styles of the ButtonEditor.
 (As of this writing, they are identical.)
 """
 
-from enthought.traits.api import HasTraits, Button
-from enthought.traits.ui.api import Item, View, Group
-from enthought.traits.ui.message import message
+from traits.api import HasTraits, Button
+from traitsui.api import Item, View, Group
+from traitsui.message import message
 
 
 #-------------------------------------------------------------------------------

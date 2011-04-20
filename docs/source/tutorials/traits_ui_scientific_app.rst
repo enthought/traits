@@ -224,8 +224,8 @@ to open a dialog to edit its properties :
 
     .. code-block:: python
 
-        from enthought.traits.api import *
-        from enthought.traits.ui.api import *
+        from traits.api import *
+        from traitsui.api import *
 
         class Camera(HasTraits):
             """ Camera object """
@@ -282,8 +282,8 @@ like (see the TraitsUI manual):
 
     .. code-block:: python
 
-        from enthought.traits.api import *
-        from enthought.traits.ui.api import *
+        from traits.api import *
+        from traitsui.api import *
 
         class Camera(HasTraits):
             gain = Enum(1, 2, 3, )
@@ -384,7 +384,7 @@ loop in wx speech).
 
     .. code-block:: python
 
-        from enthought.traits.api import *
+        from traits.api import *
         import wx
 
         class Counter(HasTraits):
@@ -429,7 +429,7 @@ duplicated to output.
 
     .. code-block:: python
 
-        from enthought.traits.api import *
+        from traits.api import *
 
         class EchoBox(HasTraits):
             input =  Str()
@@ -451,8 +451,8 @@ button:
 
     .. code-block:: python
 
-        from enthought.traits.api import *
-        from enthought.traits.ui.api import View, Item, ButtonEditor
+        from traits.api import *
+        from traitsui.api import View, Item, ButtonEditor
 
         class Counter(HasTraits):
             value =  Int()
@@ -592,8 +592,8 @@ modification to traits objects by hand in the event loop:
 
         from threading import Thread
         from time import sleep
-        from enthought.traits.api import *
-        from enthought.traits.ui.api import View, Item, ButtonEditor
+        from traits.api import *
+        from traitsui.api import View, Item, ButtonEditor
 
         class TextDisplay(HasTraits):
             string =  String()
@@ -734,9 +734,9 @@ displaying and positioning the editor.
         from matplotlib.figure import Figure
         from matplotlib.backends.backend_wx import NavigationToolbar2Wx
 
-        from enthought.traits.api import Any, Instance
-        from enthought.traits.ui.wx.editor import Editor
-        from enthought.traits.ui.wx.basic_editor_factory import BasicEditorFactory
+        from traits.api import Any, Instance
+        from traitsui.wx.editor import Editor
+        from traitsui.wx.basic_editor_factory import BasicEditorFactory
 
         class _MPLFigureEditor(Editor):
 
@@ -770,8 +770,8 @@ displaying and positioning the editor.
 
         if __name__ == "__main__":
             # Create a window to demo the editor
-            from enthought.traits.api import HasTraits
-            from enthought.traits.ui.api import View, Item
+            from traits.api import HasTraits
+            from traitsui.api import View, Item
             from numpy import sin, cos, linspace, pi
 
             class Test(HasTraits):
@@ -842,9 +842,9 @@ The MPLFigureEditor is imported from the last example.
 
         from threading import Thread
         from time import sleep
-        from enthought.traits.api import *
-        from enthought.traits.ui.api import View, Item, Group, HSplit, Handler
-        from enthought.traits.ui.menu import NoButtons
+        from traits.api import *
+        from traitsui.api import View, Item, Group, HSplit, Handler
+        from traitsui.menu import NoButtons
         from mpl_figure_editor import MPLFigureEditor 
         from matplotlib.figure import Figure
         from scipy import * import wx

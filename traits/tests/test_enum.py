@@ -1,6 +1,6 @@
 import unittest
 
-from enthought.traits.api import Enum, HasTraits, List, Property, TraitError
+from traits.api import Enum, HasTraits, List, Property, TraitError
 
 class ExampleModel(HasTraits):
     valid_models = Property(List)

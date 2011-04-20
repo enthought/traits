@@ -1,6 +1,6 @@
-from enthought.traits import *
-from enthought.pyface.api import GUI
-from enthought.traits.ui import View, Item, ButtonEditor
+from traits import *
+from pyface.api import GUI
+from traitsui import View, Item, ButtonEditor
 
 class Counter(HasTraits):
     value =  Int()

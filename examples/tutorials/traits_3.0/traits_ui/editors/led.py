@@ -8,7 +8,7 @@ editor allows displaying (but not editing) numeric values using a set of
 simulated LEDs.
 
 This editor is currently only available in the wxPython version of the Traits UI
-in the *enthought.traits.ui.wx.extras* package. The purpose of the *extras*
+in the *traitsui.wx.extras* package. The purpose of the *extras*
 package is to provide a location for editors which may be toolkit specific, and
 not necessarily available in all Traits UI toolkit packages.
 
@@ -31,13 +31,13 @@ from threading \
 from time \
     import sleep
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Instance, Int, Float, Bool
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, HGroup, Handler, UIInfo, spring
 
-from enthought.traits.ui.wx.extra.led_editor \
+from traitsui.wx.extra.led_editor \
     import LEDEditor
 
 #--[LEDDemoHandler Class]-------------------------------------------------------

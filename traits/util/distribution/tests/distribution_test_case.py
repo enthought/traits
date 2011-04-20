@@ -1,7 +1,7 @@
 import unittest
 import numpy
 
-from enthought.util.distribution.api import Uniform
+from traits.util.distribution.api import Uniform
 
 class DistributionTest(unittest.TestCase):
 

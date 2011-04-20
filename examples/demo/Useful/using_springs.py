@@ -8,10 +8,10 @@ It illustrates several different combinations, including a normal, non-spring,
 example.
 """
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, spring
 
 button = Item( 'ignore', show_label = False )

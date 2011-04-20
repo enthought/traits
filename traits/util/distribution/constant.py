@@ -14,8 +14,8 @@
 
 import numpy
 
-from enthought.traits.api import Float
-from enthought.traits.ui.api import View, Item
+from traits.api import Float
+from traitsui.api import View, Item
 
 from distribution import Distribution
 

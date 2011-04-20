@@ -6,9 +6,9 @@
 
 #--[Imports]--------------------------------------------------------------------
 
-from enthought.traits.api    \
+from traits.api    \
     import HasStrictTraits, Int, Instance, List, Regex, Str
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, InstanceEditor
 
 #--[Code]-----------------------------------------------------------------------

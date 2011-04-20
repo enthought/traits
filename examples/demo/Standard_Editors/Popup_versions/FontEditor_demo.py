@@ -4,8 +4,8 @@ Implementation of a FontEditor demo plugin for Traits UI demo program.
 This demo shows each of the four styles of the FontEditor.
 """
 
-from enthought.traits.api import HasTraits, Font
-from enthought.traits.ui.api import Item, Group, View
+from traits.api import HasTraits, Font
+from traitsui.api import Item, Group, View
 
 #-------------------------------------------------------------------------------
 #  Demo Class

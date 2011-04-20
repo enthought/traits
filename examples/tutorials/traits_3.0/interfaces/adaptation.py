@@ -62,7 +62,7 @@ are:
 
 The following shows the definition of a simple adapter class::
 
-  from enthought.traits.api import Adapter, Instance, implements
+  from traits.api import Adapter, Instance, implements
 
   class PersonINameAdapter ( Adapter ):
 
@@ -93,7 +93,7 @@ to the adapter.
 Creating an adapter class from scratch, we can re-write the previous adapter
 example as follows::
 
-  from enthought.traits.api import HasTraits, Instance, adapts
+  from traits.api import HasTraits, Instance, adapts
 
   class PersonINameAdapter ( HasTraits ):
 
@@ -226,7 +226,7 @@ re-running the example code to verify that this is indeed the case.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[IName Interface]------------------------------------------------------------
 

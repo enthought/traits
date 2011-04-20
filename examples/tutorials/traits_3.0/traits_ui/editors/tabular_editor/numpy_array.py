@@ -31,27 +31,27 @@ from numpy \
 from numpy.random \
     import random
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Property, Array
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
-from enthought.traits.ui.menu \
+from traitsui.menu \
     import NoButtons
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 #--<Constants>------------------------------------------------------------------
 
 # Necessary because of the dynamic way in which the demos are loaded:
-import enthought.traits.ui.api
+import traitsui.api
 
-search_path = [ join( dirname( enthought.traits.ui.api.__file__ ),
+search_path = [ join( dirname( traitsui.api.__file__ ),
                       'demo', 'Advanced' ) ]
 
 #--[Tabular Adapter Definition]-------------------------------------------------

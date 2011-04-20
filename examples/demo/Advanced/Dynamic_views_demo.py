@@ -4,13 +4,13 @@
 """ Demonstrates how to use the Dynamic Views facility.
 """
 
-from enthought.traits.api \
+from traits.api \
     import Bool, HasTraits, Str, Instance, Button
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Group, Item, Handler, Label, spring
 
-from enthought.traits.has_dynamic_views \
+from traits.has_dynamic_views \
     import DynamicView, HasDynamicViews
 
 class HasFooView ( HasDynamicViews ):
@@ -27,7 +27,7 @@ class HasFooView ( HasDynamicViews ):
         # Declare and add our dynamic view:
         declaration = DynamicView(
             name     = 'foo',
-            id       = 'enthought.traits.ui.demos.dynamic_views',
+            id       = 'traitsui.demos.dynamic_views',
             keywords = {
                 'buttons':    [ 'OK' ],
                 'dock':       'tab',

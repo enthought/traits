@@ -5,7 +5,7 @@
 # all_wildcard.py --- Example of trait attribute wildcard rules
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Any, Str, Int, HasTraits, TraitError
+from traits.api import Any, Str, Int, HasTraits, TraitError
 
 #--[Code]-----------------------------------------------------------------------
 

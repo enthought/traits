@@ -25,10 +25,10 @@ trait attributes.)
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, Enum, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, Handler, EnumEditor
 
 

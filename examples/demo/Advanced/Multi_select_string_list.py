@@ -5,13 +5,13 @@
 A demo showing how to use a TabularEditor to create a multi-select list box.
 """
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, List, Str, Property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, HGroup, Item, TabularEditor
 
-from enthought.traits.ui.tabular_adapter \
+from traitsui.tabular_adapter \
     import TabularAdapter
 
 class MultiSelectAdapter ( TabularAdapter ):

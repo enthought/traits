@@ -1,8 +1,8 @@
 import sys, unittest
 
-from enthought.testing.api import doctest_for_module
+from traits.testing.api import doctest_for_module
 
-import enthought.util.graph as G
+import traits.util.graph as G
 
 
 class GraphDocTestCase(doctest_for_module(G)):

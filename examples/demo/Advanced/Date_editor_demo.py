@@ -5,8 +5,8 @@
 A Traits UI editor that wraps a WX calendar panel.
 """
 
-from enthought.traits.api import HasTraits, Date, List, Str, on_trait_change
-from enthought.traits.ui.api import View, Item, DateEditor, Group
+from traits.api import HasTraits, Date, List, Str, on_trait_change
+from traitsui.api import View, Item, DateEditor, Group
 
 
 class DateEditorDemo(HasTraits):

@@ -2,7 +2,7 @@
 files.
 """
 
-from enthought.util.updates.info_file import InfoFile
+from traits.util.updates.info_file import InfoFile
 import os
 
 
@@ -21,7 +21,7 @@ def files2xml(filenames):
 
     _xmlheader = """<?xml version="1.0" encoding="ISO-8859-1"?>
     <!-- DO NOT EDIT MANUALLY -->
-    <!-- Automatically generated file using enthought.util.updates -->
+    <!-- Automatically generated file using traits.util.updates -->
     """
 
     xmlparts = [_xmlheader]

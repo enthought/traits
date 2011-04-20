@@ -18,10 +18,10 @@ of the code is simply declarative.</p>
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Trait, CFloat, Property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item
 
 # Help text:

@@ -59,10 +59,10 @@ normal color.
 
 #-- Imports --------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Range, Float, Bool, Str, Property, property_depends_on
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item
 
 #-- System Class ---------------------------------------------------------------

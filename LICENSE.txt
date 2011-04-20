@@ -27,7 +27,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-The software contained in the enthought/traits/protocols/ directory is
+The software contained in the traits/protocols/ directory is
 the pyprotocols project (http://peak.telecommunity.com/PyProtocols.html),
 it is originaly licensed under the terms of the Python Software
 Foundation License, which is compatible with the above terms.

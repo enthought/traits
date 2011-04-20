@@ -4,7 +4,7 @@
 # trait_subclass.py -- Example of subclassing a trait class
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import BaseInt
+from traits.api import BaseInt
 
 #--[Code]-----------------------------------------------------------------------
 class OddInt ( BaseInt ):

@@ -40,7 +40,7 @@ vi = sys.version_info
 python_version = vi[0] + (float( vi[1] ) / 10.0)
 
 try:
-    from enthought.etsconfig.api import ETSConfig
+    from traits.etsconfig.api import ETSConfig
 except:
     # If the ETSConfig package is not available, fake it:
     class ETSConfig ( object ):

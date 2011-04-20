@@ -7,10 +7,10 @@ action when the 'Apply' or 'Revert' buttons are pressed.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str, List
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import Item, View, Handler, HGroup, VGroup
 
 # 'ApplyRevert_Handler' class:

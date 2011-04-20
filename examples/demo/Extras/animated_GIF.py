@@ -8,17 +8,17 @@ This demo shows you how to use animated GIF files in a traits user interface.
 from os.path \
     import join, dirname, abspath
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, File, Bool
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Item, EnumEditor
 
-from enthought.traits.ui.wx.animated_gif_editor \
+from traitsui.wx.animated_gif_editor \
     import AnimatedGIFEditor
 
 # Some sample animated GIF files:
-import enthought.traits as traits
+import traits as traits
 
 base_path = join( dirname( traits.api.__file__ ),
                   '..', '..', 'examples', 'demo', 'Extras', 'images' )

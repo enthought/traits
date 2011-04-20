@@ -5,7 +5,7 @@
 #                 attribute name
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import Any, HasTraits
+from traits.api import Any, HasTraits
 
 #--[Code]-----------------------------------------------------------------------
 

@@ -14,16 +14,16 @@ changes made in one editor are automatically reflected in the others.
 """
 
 # Imports:
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Regex, List, Instance
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, Tabbed, TableEditor, ListEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
-from enthought.traits.ui.table_filter \
+from traitsui.table_filter \
     import RuleTableFilter, RuleFilterTemplate, \
            MenuFilterTemplate, EvalFilterTemplate
 
@@ -96,7 +96,7 @@ class ListTraitTest ( HasStrictTraits ):
                                        page_name    = '.name' ) ),
             id          = 'splitter',
             show_labels = False ),
-        id   = 'enthought.traits.ui.demo.Traits UI Demo.Advanced.List_editors_demo',
+        id   = 'traitsui.demo.Traits UI Demo.Advanced.List_editors_demo',
         dock = 'horizontal' )
 
 # Create the demo:

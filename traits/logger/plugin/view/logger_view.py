@@ -17,18 +17,18 @@ from datetime import datetime
 import logging
 
 # Enthought library imports.
-from enthought.pyface.api import ImageResource, clipboard
-from enthought.pyface.workbench.api import TraitsUIView
-from enthought.traits.api import Button, Instance, List, Property, Str, \
+from pyface.api import ImageResource, clipboard
+from pyface.workbench.api import TraitsUIView
+from traits.api import Button, Instance, List, Property, Str, \
     cached_property, on_trait_change
-from enthought.traits.ui.api import View, Group, Item, CodeEditor, \
+from traitsui.api import View, Group, Item, CodeEditor, \
     TabularEditor, spring
-from enthought.traits.ui.tabular_adapter import TabularAdapter
+from traitsui.tabular_adapter import TabularAdapter
 
 # Local imports
-from enthought.logger.agent.quality_agent_view import QualityAgentView
-from enthought.logger.plugin import view
-from enthought.logger.plugin.logger_service import LoggerService
+from traits.logger.agent.quality_agent_view import QualityAgentView
+from traits.logger.plugin import view
+from traits.logger.plugin.logger_service import LoggerService
 
 # Constants
 _IMAGE_MAP = { logging.DEBUG: ImageResource('debug'),
@@ -85,7 +85,7 @@ class LoggerView(TraitsUIView):
     """ The Workbench View showing the list of log items.
     """
 
-    id = Str('enthought.logger.plugin.view.logger_view.LoggerView')
+    id = Str('traits.logger.plugin.view.logger_view.LoggerView')
     name = Str('Logger')
     service = Instance(LoggerService)
 

@@ -7,27 +7,27 @@ to a Traits UI View.
 """
 
 # Imports:
-import enthought.traits.ui
+import traitsui
 
 from os.path \
     import join, dirname
 
-from enthought.traits.api \
+from traits.api \
     import HasTraits, Str
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import ImageEditor
 
-from enthought.pyface.image_resource \
+from pyface.image_resource \
     import ImageResource
 
 # Constants:
 
 # Necessary because of the dynamic way in which the demos are loaded:
-search_path = [ join( dirname( enthought.traits.api.__file__ ),
+search_path = [ join( dirname( traits.api.__file__ ),
                       '..', '..', 'examples', 'demo', 'Extras' ) ]
 
 # Define the demo class:

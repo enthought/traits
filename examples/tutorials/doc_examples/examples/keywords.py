@@ -4,7 +4,7 @@
 # keywords.py --- Example of trait keywords
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str
+from traits.api import HasTraits, Str
 
 #--[Code]-----------------------------------------------------------------------
 

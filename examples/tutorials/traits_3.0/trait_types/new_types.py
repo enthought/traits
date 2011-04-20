@@ -138,7 +138,7 @@ that applies to properties as well.
 
 #--<Imports>--------------------------------------------------------------------
 
-from enthought.traits.api import *
+from traits.api import *
 
 #--[DiceRoll Type]--------------------------------------------------------------
 

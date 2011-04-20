@@ -11,9 +11,9 @@
 #
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api         import *
-from enthought.traits.ui.api      import *
-from enthought.traits.ui.menu import *
+from traits.api         import *
+from traitsui.api      import *
+from traitsui.menu import *
 
 #-------------------------------------------------------------------------------
 #  'ShellTest' class:
@@ -38,7 +38,7 @@ class ShellTest ( HasPrivateTraits ):
     view = View( 'name', 'age', 'weight', '_',
                  Item( 'shell_1', editor = ShellEditor() ),
                  Item( 'shell_2', editor = ShellEditor() ),
-                 id        = 'enthought.traits.ui.tests.shell_editor_test',
+                 id        = 'traitsui.tests.shell_editor_test',
                  resizable = True,
                  width     = 0.3,
                  height    = 0.3 )

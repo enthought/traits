@@ -15,13 +15,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Code, Str
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, Handler, CodeEditor
 
-from enthought.traits.ui.key_bindings \
+from traitsui.key_bindings \
     import KeyBinding, KeyBindings
 
 #-------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class TestCode ( HasPrivateTraits ):
                        editor    = CodeEditor( key_bindings = key_bindings ) ),
                  'status~',
                  '|<>' ],
-               id = 'enthought.traits.ui.tests.test_code_editor.TestCode',
+               id = 'traitsui.tests.test_code_editor.TestCode',
                title     = 'Sample Code Editor',
                width     = 0.4,
                height    = 0.4,

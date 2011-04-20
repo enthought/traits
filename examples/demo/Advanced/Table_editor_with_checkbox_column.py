@@ -10,16 +10,16 @@ data columns.
 from random \
     import randint
 
-from enthought.traits.api \
+from traits.api \
     import HasStrictTraits, Str, Int, Float, List, Bool, Property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
-from enthought.traits.ui.extras.checkbox_column \
+from traitsui.extras.checkbox_column \
     import CheckboxColumn
 
 

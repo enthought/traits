@@ -5,9 +5,9 @@
 # configure_traits_view_group.py -- Sample code to demonstrate configure_traits()
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Int
-from enthought.traits.ui.api import View, Item, Group
-import enthought.traits.ui
+from traits.api import HasTraits, Str, Int
+from traitsui.api import View, Item, Group
+import traitsui
 
 #--[Code]-----------------------------------------------------------------------
 

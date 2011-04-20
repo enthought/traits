@@ -6,9 +6,9 @@
 
 
 #--[Imports]--------------------------------------------------------------------
-from enthought.traits.api import HasTraits, Str, Int
-from enthought.traits.ui.api import View, Item
-import enthought.traits.ui
+from traits.api import HasTraits, Str, Int
+from traitsui.api import View, Item
+import traitsui
 
 #--[Code]-----------------------------------------------------------------------
 

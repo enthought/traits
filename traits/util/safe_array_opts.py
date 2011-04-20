@@ -1,2 +1,2 @@
-from enthought.util.numeric import *
+from traits.util.numeric import *
 

@@ -35,6 +35,6 @@ def test(level=1, verbosity=1):
 def test_suite(level=1):
     pass
     # The stuff below is broken, and seems obsolete since we use nosetests.
-    #import enthought.util
-    #import enthought.util.testingx as testing
-    #return testing.harvest_test_suites(enthought.util,level=level)
+    #import traits.util
+    #import traits.util.testingx as testing
+    #return testing.harvest_test_suites(traits.util,level=level)

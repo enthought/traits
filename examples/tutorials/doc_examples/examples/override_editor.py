@@ -3,9 +3,9 @@
 
 # override_editor.py --- Example of overriding a trait
 #                        editor
-from enthought.traits.api import HasTraits, Trait
-import enthought.traits.ui
-from enthought.traits.ui.api import ColorEditor
+from traits.api import HasTraits, Trait
+import traitsui
+from traitsui.api import ColorEditor
 from wxPython import wx
 
 class Polygon(HasTraits):
