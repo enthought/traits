@@ -34,7 +34,7 @@ import re
 
 from types import FunctionType, MethodType
 
-from .version import __version__ as TraitsVersion
+from . import __version__ as TraitsVersion
 
 from .ctraits import CHasTraits, CTraitMethod, _HasTraits_monitors
 
