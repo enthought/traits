@@ -19,7 +19,7 @@ def doctest_for_module(module):
             import unittest
 
             import foo
-            from enthought.testing.api import doctest_for_module
+            from traits.testing.api import doctest_for_module
 
             class FooTestCase(unittest.TestCase):
                 ...
