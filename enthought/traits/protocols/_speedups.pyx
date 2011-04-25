@@ -64,7 +64,7 @@ from sys import exc_info, exc_clear
 # an extension module, globals() returns the globals dictionary of the last
 # pure Python module that was executing.
 AdaptationFailure = __import__(
-    'protocols', globals=dict(__name__=__name__, __package__=__package__),
+    'protocols', globals=dict(__name__=__name__),
     fromlist=['AdaptationFailure'], level=1
 ).AdaptationFailure
 
