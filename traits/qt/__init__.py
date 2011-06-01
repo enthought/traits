@@ -11,23 +11,28 @@
 
 import os
 
+def prepare_pyqt4():
+    # Set PySide compatible APIs.
+    import sip
+    sip.setapi('QString', 2)
+    sip.setapi('QVariant', 2)
+
 qt_api = os.environ.get('QT_API')
+
 if qt_api is None:
     try:
         import PySide
         qt_api = 'pyside'
     except ImportError:
         try:
+            prepare_pyqt4()
             import PyQt4
             qt_api = 'pyqt'
         except ImportError:
             raise ImportError('Cannot import PySide or PyQt4')
 
-if qt_api == 'pyqt':
-    # Set PySide compatible APIs.
-    import sip
-    sip.setapi('QString', 2)
-    sip.setapi('QVariant', 2)
+elif qt_api == 'pyqt':
+    prepare_pyqt4()
 
 elif qt_api != 'pyside':
     raise RuntimeError('Invalid Qt API %r, valid values are: pyqt or pyside')
