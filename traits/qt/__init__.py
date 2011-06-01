@@ -11,16 +11,23 @@
 
 import os
 
-from traits.etsconfig.api import ETSConfig
+qt_api = os.environ.get('QT_API')
+if qt_api is None:
+    try:
+        import PySide
+        qt_api = 'pyside'
+    except ImportError:
+        try:
+            import PyQt4
+            qt_api = 'pyqt'
+        except ImportError:
+            raise ImportError('Cannot import PySide or PyQt4')
 
-qt_api = os.environ.get('QT_API', 'pyqt')
+if qt_api == 'pyqt':
+    # Set PySide compatible APIs.
+    import sip
+    sip.setapi('QString', 2)
+    sip.setapi('QVariant', 2)
 
-if ETSConfig.toolkit == 'qt4':
-
-    if qt_api == 'pyqt':
-        import sip
-        sip.setapi('QString', 2)
-        sip.setapi('QVariant', 2)
-
-    else:
-        print "---- using PySide ----"
+elif qt_api != 'pyside':
+    raise RuntimeError('Invalid Qt API %r, valid values are: pyqt or pyside')
