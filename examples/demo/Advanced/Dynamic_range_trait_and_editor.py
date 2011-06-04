@@ -171,7 +171,7 @@ class Guest ( HasPrivateTraits ):
         return choice(
             [ 'Leah', 'Vibha', 'Janet', 'Jody', 'Dave', 'Evan', 'Ilan', 'Gael',
               'Peter', 'Robert', 'Judah', 'Eric', 'Travis', 'Mike', 'Bryce',
-              'Chris' ] )
+              'Chris', 'Anthony' ] )
 
 #-- Create the demo ------------------------------------------------------------
 
