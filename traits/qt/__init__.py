@@ -35,4 +35,5 @@ elif qt_api == 'pyqt':
     prepare_pyqt4()
 
 elif qt_api != 'pyside':
-    raise RuntimeError('Invalid Qt API %r, valid values are: pyqt or pyside')
+    raise RuntimeError("Invalid Qt API %r, valid values are: 'pyqt' or 'pyside'"
+                       % qt_api)
