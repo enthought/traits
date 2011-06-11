@@ -44,10 +44,8 @@ Prerequisites
 You must have the following libraries installed before building or installing
 Traits:
 
-* `Numpy <http://pypi.python.org/pypi/numpy/1.1.1>`_ to support the trait types
-  for arrays. Version 1.1.0 or later is preferred. Version 1.0.4 will work, but
-  some tests may fail.
-* `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_
+* `Numpy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
+  for arrays.
 """
 
 from os.path import join
@@ -98,7 +96,7 @@ setup(
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
     description = DOCLINES[1],
-    download_url = ('http://www.enthought.com/repo/ETS/traits-%s.tar.gz' %
+    download_url = ('http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
                     version),
     ext_modules = [ctraits, speedups],
     include_package_data = True,
