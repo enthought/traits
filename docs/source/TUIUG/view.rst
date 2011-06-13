@@ -102,7 +102,7 @@ The resulting window has the desired appearance:
    
    Figure 2: User interface for Example 2
 
-A View object can have a variety of attribute, which are set in the View
+A View object can have a variety of attributes, which are set in the View
 definition, following any Group or Item objects.
 
 The sections on :ref:`contents-of-a-view` through :ref:`advanced-view-concepts`
