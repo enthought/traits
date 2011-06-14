@@ -40,7 +40,7 @@ camera, analysis of the retrieved data and display of the results. This
 tutorial focuses on building the general structure and flow-control of
 the application, and on the aspects specific to traitsUI programming.
 Interfacing with the hardware or processing the data is left aside. The
-tutorial progressively introduces the tools used, and in the end present
+tutorial progressively introduces the tools used, and in the end presents
 the skeleton of a real application that has been developed for real-time
 controlling of an experiment, monitoring through a camera, and processing
 the data. The tutorial goes into more and more intricate details that are
@@ -96,7 +96,7 @@ than their software implementation.
 Code re-use is paramount for good software development. It reduces the
 number of code-lines required to read and understand and allows to
 identify large operations in the code. Functions and procedures have been
-invented to avoid copy and pasting code, and hide the low-level details
+invented to avoid copy-and-pasting code, and hide the low-level details
 of an operation.
 
 Object-oriented programming allows yet more modularity and abstraction.
@@ -414,7 +414,7 @@ returns to the code.
 Interactions with objects generate events, and these events can be
 associated to callbacks, ie functions or methods processing the event. In
 a GUI, callbacks created by user-generated events are placed on an "event
-stack". The event loop process each call on the event queue one after the
+stack". The event loop processes each call on the event queue one after the
 other, thus emptying the event queue. The flow of the program is still
 sequential (two code blocks never run at the same time in an event loop),
 but the execution order is chosen by the user, and not by the developer.
@@ -687,12 +687,12 @@ Extending TraitsUI: Adding a matplotlib figure to our application
 -----------------------------------------------------------------
 
 This section gives a few guidelines on how to build your own traits
-editor. A traits editor is the view associated to each traits that allows
-that graphically edit its value. We can twist a bit the notion and simply
+editor. A traits editor is the view associated with a trait that allows the
+user to graphically edit its value. We can twist a bit the notion and simply
 use it to graphically represent the attribute. This section involves a
 bit of `wxPython` code that may be hard to understand if you do not know
-`wxPython`, but it will bring a lot of power and flexibility to you use
-of traits. The reason it appears in this tutorial is that I wanted to
+`wxPython`, but it will bring a lot of power and flexibility to how you use
+traits. The reason it appears in this tutorial is that I wanted to
 insert a matplotlib in my `traitsUI` application. It is not necessary to
 fully understand the code of this section to be able to read on.
 
@@ -709,13 +709,13 @@ powerful tool for plotting we have to get our hands a bit dirty and
 create our own traits editor.
 
 This involves some `wxPython` coding, as we need to translate a
-`wxPython` object in a traits editor by providing the corresponding API 
-(i.e. the standard way of building a `traits` editor, so that the `traits` 
-framework can do it automatically.
+`wxPython` object to a traits editor by providing the corresponding API 
+(i.e. the standard way of building a `traits` editor), so that the `traits` 
+framework will know how to create the editor.
 
-Traits editor are created by an editor factory that instanciates an
+Traits editors are created by an editor factory that instantiates an
 editor class and passes it the object that the editor represents in its
-*value* attribute. It calls the editor *int()* method to create the *wx*
+*value* attribute. It calls the editor *init()* method to create the *wx*
 widget. Here we create a wx figure canvas from a matplotlib figure using
 the matplotlib wx backend. Instead of displaying this widget, we set its
 control as the *control* attribute of the editor. TraitsUI takes care of
@@ -828,8 +828,8 @@ a full-blown application can be built. This code can be found in the
   time, gain...) will be represented as the object's attributes, and
   exposed through traitsUI.
 
-* The continuous acquisition/processing/user-interaction will be dealt
-  with appropriate threads, as discussed in section 2.3.
+* The continuous acquisition/processing/user-interaction will be handled
+  by appropriate threads, as discussed in section 2.3.
 
 * The plotting of the results will be done through the MPLWidget object.
 
@@ -847,7 +847,8 @@ The MPLFigureEditor is imported from the last example.
         from traitsui.menu import NoButtons
         from mpl_figure_editor import MPLFigureEditor 
         from matplotlib.figure import Figure
-        from scipy import * import wx
+        from scipy import *
+        import wx
 
 User interface objects
 ``````````````````````
@@ -909,10 +910,10 @@ There are three threads in this application:
 * The acquisition thread, started through the GUI. This thread is an
   infinite loop that waits for the camera to be triggered, retrieves the
   images, displays them, and spawns the processing thread for each image
-  recieved.
+  received.
 
 * The processing thread, started by the acquisition thread. This thread is
-  responsible for the numerical intensive work of the application. it
+  responsible for the numerical intensive work of the application. It
   processes the data and displays the results. It dies when it is done. One
   processing thread runs per shot acquired on the camera, but to avoid
   accumulation of threads in the case that the processing takes longer than
@@ -937,30 +938,30 @@ There are three threads in this application:
             """
             wants_abort = False
 
-        def process(self, image):
-            """ Spawns the processing job. """
-            try:
-                if self.processing_job.isAlive():
-                    self.display("Processing to slow")
-                    return
-            except AttributeError:
-                pass
-            self.processing_job = Thread(target=process, args=(image,
-                                         self.results))
-            self.processing_job.start()
+            def process(self, image):
+                """ Spawns the processing job. """
+                try:
+                    if self.processing_job.isAlive():
+                        self.display("Processing too slow")
+                        return
+                except AttributeError:
+                    pass
+                self.processing_job = Thread(target=process, args=(image,
+                                            self.results))
+                self.processing_job.start()
 
-        def run(self):
-            """ Runs the acquisition loop. """
-            self.display('Camera started')
-            n_img = 0
-            while not self.wants_abort:
-                n_img += 1
-                img =self.acquire(self.experiment)
-                self.display('%d image captured' % n_img)
-                self.image_show(img)
-                self.process(img)
-                sleep(1)
-            self.display('Camera stopped')
+            def run(self):
+                """ Runs the acquisition loop. """
+                self.display('Camera started')
+                n_img = 0
+                while not self.wants_abort:
+                    n_img += 1
+                    img =self.acquire(self.experiment)
+                    self.display('%d image captured' % n_img)
+                    self.image_show(img)
+                    self.process(img)
+                    sleep(1)
+                self.display('Camera stopped')
 
 The GUI elements
 ````````````````
@@ -968,15 +969,15 @@ The GUI elements
 The GUI of this application is separated in two (and thus created by a
 sub-class of SplitApplicationWindow).
 
-On the left a plotting area, made of an MPL figure, and its editor,
+On the left a plotting area, made of an MPL figure and its editor,
 displays the images acquired by the camera.
 
 On the right a panel hosts the TraitsUI representation of a ControlPanel
 object. This object is mainly a container for our other objects, but it
 also has an Button for starting or stopping the acquisition, and a string
-(represented by a textbox) to display informations on the acquisition
+(represented by a textbox) to display information on the acquisition
 process. The view attribute is tweaked to produce a pleasant and usable
-dialog. Tabs are used as it help the display to be light and clear.
+dialog. Tabs are used to help the display to be light and clear.
 
     .. code-block:: python
 
@@ -1006,36 +1007,36 @@ dialog. Tabs are used as it help the display to be light and clear.
                                     Item('results', style='custom', show_label=False),
                                     label="Results",),
                             label='Experiment', dock="tab"),
-                        Item('camera', style='custom', show_label=False,  dock="tab"),
+                        Item('camera', style='custom', show_label=False, dock="tab"),
                         layout='tabbed'),
                         )
 
-        def _start_stop_acquisition_fired(self):
-            """ Callback of the "start stop acquisition" button. This starts
-            the acquisition thread, or kills it.
-            """
-            if self.acquisition_thread and self.acquisition_thread.isAlive():
-                self.acquisition_thread.wants_abort = True
-            else:
-                self.acquisition_thread = AcquisitionThread()
-                self.acquisition_thread.display = self.add_line
-                self.acquisition_thread.acquire = self.camera.acquire
-                self.acquisition_thread.experiment = self.experiment
-                self.acquisition_thread.image_show = self.image_show
-                self.acquisition_thread.results = self.results
-                self.acquisition_thread.start()
+            def _start_stop_acquisition_fired(self):
+                """ Callback of the "start stop acquisition" button. This starts
+                the acquisition thread, or kills it.
+                """
+                if self.acquisition_thread and self.acquisition_thread.isAlive():
+                    self.acquisition_thread.wants_abort = True
+                else:
+                    self.acquisition_thread = AcquisitionThread()
+                    self.acquisition_thread.display = self.add_line
+                    self.acquisition_thread.acquire = self.camera.acquire
+                    self.acquisition_thread.experiment = self.experiment
+                    self.acquisition_thread.image_show = self.image_show
+                    self.acquisition_thread.results = self.results
+                    self.acquisition_thread.start()
 
-        def add_line(self, string):
-            """ Adds a line to the textbox display.
-            """
-            self.results_string = (string + "\n" + self.results_string)[0:1000]
+            def add_line(self, string):
+                """ Adds a line to the textbox display.
+                """
+                self.results_string = (string + "\n" + self.results_string)[0:1000]
 
-        def image_show(self, image):
-            """ Plots an image on the canvas in a thread safe way.
-            """
-            self.figure.axes[0].images=[]
-            self.figure.axes[0].imshow(image, aspect='auto')
-            wx.CallAfter(self.figure.canvas.draw)
+            def image_show(self, image):
+                """ Plots an image on the canvas in a thread safe way.
+                """
+                self.figure.axes[0].images=[]
+                self.figure.axes[0].imshow(image, aspect='auto')
+                wx.CallAfter(self.figure.canvas.draw)
 
         class MainWindowHandler(Handler):
             def close(self, info, is_OK):
