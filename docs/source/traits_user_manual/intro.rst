@@ -72,8 +72,6 @@ package. These features are elaborated in the rest of this guide.
 
     from traits.api import Delegate, HasTraits, Instance,\
                                      Int, Str
-    import traitsui
-
     class Parent ( HasTraits ):
 
         # INITIALIZATION: last_name' is initialized to '':
