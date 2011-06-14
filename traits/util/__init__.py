@@ -12,11 +12,10 @@
 # Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-Utility functions, part of the EnthoughtBase project.
+Utility functions, part of the Traits project.
 
-:Copyright: 2003 Enthought, Inc.
+:Copyright: 2003-2011 Enthought, Inc.
 
 
 """
 
-from api import called_from, test, test_suite
