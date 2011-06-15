@@ -7,7 +7,6 @@ from setuptools import setup, Extension, find_packages
 
 d = {}
 execfile(join('traits', '__init__.py'), d)
-version = d['__version__']
 
 
 ctraits = Extension(
@@ -27,6 +26,9 @@ speedups = Extension(
 
 
 setup(
+    name = 'traits',
+    version = d['__version__'],
+    url = 'http://code.enthought.com/projects/traits',
     author = 'David C. Morrill, et. al.',
     author_email = 'dmorrill@enthought.com',
     classifiers = [c.strip() for c in """\
@@ -48,26 +50,14 @@ setup(
     description = 'explicitly typed attributes for Python',
     long_description = open('README.rst').read(),
     download_url = ('http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
-                    version),
+                    d['__version__']),
     ext_modules = [ctraits, speedups],
     include_package_data = True,
     package_data = {'traits': ['protocols/_speedups.pyx']},
     license = 'BSD',
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
-    name = 'traits',
-    packages = find_packages(exclude = [
-        'docs',
-        'docs.*',
-        'integrationtests',
-        'integrationtests.*',
-        ]),
+    packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    tests_require = [
-        'nose >= 0.10.3',
-        ],
-    test_suite = 'nose.collector',
-    url = 'http://code.enthought.com/projects/traits',
-    version = version,
     zip_safe = False,
 )
