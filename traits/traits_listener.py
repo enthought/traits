@@ -327,8 +327,8 @@ class ListenerItem ( ListenerBase ):
     notify = %r,
     is_list_handler = %r,
     type = %r,
-    next = %s
-')""" % ( self.__class__.__name__, self.name, self.metadata_name,
+    next = %s,
+)""" % ( self.__class__.__name__, self.name, self.metadata_name,
           self.metadata_defined, self.is_any_trait, self.dispatch, self.notify,
           self.is_list_handler, self.type, indent( next_repr, False ) )
 

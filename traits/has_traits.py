@@ -837,6 +837,8 @@ class MetaHasTraitsObject ( object ):
             else:
                 for ct in inherited_class_traits:
                     if name in ct:
+                        # The subclass is providing a default value for the
+                        # trait defined in a superclass.
                         ictrait = ct[ name ]
                         if ictrait.type in CantHaveDefaultValue:
                             raise TraitError( "Cannot specify a default value "
@@ -844,7 +846,11 @@ class MetaHasTraitsObject ( object ):
                                 "the trait definition instead." %
                                 ( ictrait.type, name ) )
 
-                        class_traits[ name ] = value = ictrait( value )
+                        default_value = value
+                        class_traits[ name ] = value = ictrait( default_value )
+                        # Make sure that the trait now has the default value
+                        # has the correct initializer.
+                        value.default_value(1, default_value)
                         del class_dict[ name ]
                         override_bases = []
                         handler        = value.handler

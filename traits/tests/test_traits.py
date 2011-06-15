@@ -20,9 +20,9 @@ from __future__ import absolute_import
 
 import unittest
 
-from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits, Int,
-    Long, Trait, TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
-    TraitRange, Tuple)
+from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits,
+    Instance, Int, Long, Trait, TraitError, TraitList, TraitPrefixList,
+    TraitPrefixMap, TraitRange, Tuple)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -523,6 +523,27 @@ class NewInstanceTest(AnyTraitTest):
     _bad_values    = [0, 0L, 0.0, 0j, NTraitTest1, NTraitTest2, NBadTraitTest(),
                       'string', u'string', [ntrait_test1],(ntrait_test1,),
                       {'data': ntrait_test1}]
+
+
+class FactoryClass(HasTraits):
+    pass
+
+class ConsumerClass(HasTraits):
+    x = Instance(FactoryClass, ())
+
+class ConsumerSubclass(ConsumerClass):
+    x = FactoryClass()
+
+class InstanceFactoryTest(unittest.TestCase):
+
+    def test_factory_subclass_no_segfault(self):
+        """ Test that we can provide an instance as a default in the definition
+        of a subclass.
+        """
+        # There used to be a bug where this would segfault.
+        obj = ConsumerSubclass()
+        obj.x
+
 
 #-------------------------------------------------------------------------------
 #  Trait(using a function) that must be an odd integer:
