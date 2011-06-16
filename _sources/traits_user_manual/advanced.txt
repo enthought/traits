@@ -812,7 +812,7 @@ of a Python property, with "getter" and "setter" methods. This type of trait
 provides a powerful technique for defining trait attributes whose values depend
 on the state of other object attributes. In particular, this can be very useful
 for creating synthetic trait attributes which are editable or displayable in a
-Trait UI view.
+TraitUI view.
 
 .. _property-factory-function:
 
