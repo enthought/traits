@@ -1,5 +1,5 @@
-Traits 3 User Manual
-===================================
+Traits 4 User Manual
+====================
 
 .. toctree::
     :maxdepth: 3

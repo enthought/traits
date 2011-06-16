@@ -170,7 +170,7 @@ If there is type-specific initialization that must be performed when the trait
 type is created, you can override the init() method. This method is
 automatically called from the __init__() method of the TraitType class.
 
-If you want to specify a default Traits UI editor for the new trait type, you
+If you want to specify a default TraitsUI editor for the new trait type, you
 can override the create_editor() method. This method has no parameters, and
 returns the default trait editor to use for any instances of the type.
 
