@@ -35,13 +35,11 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'Traits'
-copyright = '2008, Enthought'
+project = 'traits'
+copyright = '2008-2011, Enthought'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
-#
-# Pull from the actual release number without imports
 d = {}
 execfile(os.path.join('..', '..', 'traits', '__init__.py'), d)
 version = release = d['__version__']
