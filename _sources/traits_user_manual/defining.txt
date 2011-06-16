@@ -586,8 +586,7 @@ HasTraits objects:
 * **desc**: A string describing the intended meaning of the trait. It is used
   in exception messages and fly-over help in user interface trait editors.
 * **editor**: Specifies an instance of a subclass of TraitEditor to use when
-  creating a user interface editor for the trait. Refer to the  *TraitsUI User
-  Manual* for more information on trait editors.
+  creating a user interface editor for the trait. Refer to the `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_ for more information on trait editors.
 * **label**: A string providing a human-readable name for the trait. It is
   used to label trait attribute values in user interface trait editors.
 * **rich_compare**: A Boolean indicating whether the basis for considering a
