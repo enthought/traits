@@ -64,7 +64,7 @@ completely re-specifying the trait definition for the attribute. For example::
 
     # override_default.py -- Example of overriding a default value for
     #                        a trait attribute in a subclass
-    from enthought.traits.api import HasTraits, Range, Str
+    from traits.api import HasTraits, Range, Str
 
     class Employee(HasTraits):
         name = Str
@@ -91,7 +91,7 @@ a trait, and not the current value of a trait attribute, so it can be used in
 the definition of any number of attributes. For example::
 
     # trait_reuse.py --- Example of reusing trait definitions
-    from enthought.traits.api import HasTraits, Range
+    from traits.api import HasTraits, Range
 
     coefficient = Range(-1.0, 1.0, 0.0))
 
@@ -137,7 +137,7 @@ as a wildcard at the end of a trait attribute name. For example::
 
     # temp_wildcard.py --- Example of using a wildcard with a Trait
     #                      attribute name
-    from enthought.traits.api import Any, HasTraits
+    from traits.api import Any, HasTraits
 
     class Person(HasTraits):
         temp_ = Any
@@ -153,7 +153,7 @@ You can even give all object attributes a default trait definition, by
 specifying only the wildcard character for the attribute name::
 
     # all_wildcard.py --- Example of trait attribute wildcard rules
-    from enthought.traits.api import Any, HasTraits, Int, Str
+    from traits.api import Any, HasTraits, Int, Str
 
     class Person ( HasTraits ):
 
@@ -209,7 +209,7 @@ standard Python language semantics.
 These rules are demonstrated by the following example::
 
     # wildcard_rules.py -- Example of trait attribute wildcard rules
-    from enthought.traits.api import Any, HasTraits, Int, Python
+    from traits.api import Any, HasTraits, Int, Python
 
     class Person(HasTraits):
         temp_count = Int(-1)
@@ -234,7 +234,7 @@ The singleton object Disallow can be used with wildcards to disallow all
 attributes that are not explicitly defined. For example::
 
     # disallow.py --- Example of using Disallow with wildcards
-    from enthought.traits.api import \
+    from traits.api import \
         Disallow, Float, HasTraits, Int, Str
 
     class Person (HasTraits):
@@ -343,7 +343,7 @@ add_trait() method of the HasTraits class:
 For example::
 
     # object_trait_attrs.py --- Example of per-object trait attributes
-    from enthought.traits.api import HasTraits, Range
+    from traits.api import HasTraits, Range
 
     class GUISlider (HasTraits):
 
@@ -398,7 +398,7 @@ example::
 
     # type_checked_methods.py --- Example of traits-based method type
     #                             checking
-    from enthought.traits.api import HasTraits, method, Tuple
+    from traits.api import HasTraits, method, Tuple
 
     Color = Tuple(int, int, int, int)
 
@@ -465,7 +465,7 @@ Defining an Interface
 To define an interface, create a subclass of Interface::
 
     # interface_definition.py -- Example of defining an interface
-    from enthought.traits.api import Interface
+    from traits.api import Interface
 
     class IName(Interface):
 
@@ -491,7 +491,7 @@ Implementing an Interface
 A class declares that it implements one or more interfaces using the
 implements() function, which has the signature:
 
-.. currentmodule:: enthought.traits.has_traits
+.. currentmodule:: traits.has_traits
 .. function:: implements( interface[, interface2 , ... , interfaceN] )
 
 .. index:: examples; interface implementation, interfaces; implementation; example
@@ -501,7 +501,7 @@ occur at class scope within the class definition. For example::
 
     # interface_implementation.py -- Example of implementing an
     #                                interface
-    from enthought.traits.api import HasTraits, implements, Str
+    from traits.api import HasTraits, implements, Str
     from interface_definition import IName
 
     class Person(HasTraits):
@@ -529,10 +529,10 @@ values:
   an InterfaceError if they don't.
 
 The CHECK_INTERFACES variable must be imported directly from the
-enthought.traits.has_traits module::
+traits.has_traits module::
 
-    import enthought.traits.has_traits
-    enthought.traits.has_traits.CHECK_INTERFACES = 1
+    import traits.has_traits
+    traits.has_traits.CHECK_INTERFACES = 1
 
 .. index:: interfaces; using, examples; interface usage
 
@@ -544,7 +544,7 @@ Using Interfaces
 You can use an interface at any place where you would normally use a class name.
 The most common way to use interfaces is with the Instance trait::
 
-    >>> from enthought.traits.api import HasTraits, Instance
+    >>> from traits.api import HasTraits, Instance
     >>> from interface_definition import IName
     >>> class Apartment(HasTraits):
     ...     renter = Instance(IName)
@@ -623,7 +623,7 @@ are:
 The following code example shows a definition of a simple adapter class::
 
     # simple_adapter.py -- Example of adaptation using Adapter
-    from enthought.traits.api import Adapter, Instance, implements
+    from traits.api import Adapter, Instance, implements
     from interface_definition import IName
     from interface_implementation import Person
 
@@ -658,7 +658,7 @@ adapter class, and declares the set of interfaces that the class implements.
 
 The signature  of the adapts() function is:
 
-.. currentmodule:: enthought.traits.adapter
+.. currentmodule:: traits.adapter
 .. function:: adapts( adaptee_class, interface[, interface2, ... , interfaceN])
 
 This signature is very similar to that of implements(), but adds the class being
@@ -675,7 +675,7 @@ The following code shows an example of implementing an adapter without
 subclassing Adapter::
 
     # scratch_adapter.py -- Example of writing an adapter from scratch
-    from enthought.traits.api import HasTraits, Instance, adapts
+    from traits.api import HasTraits, Instance, adapts
     from interface_definition import IName
     from interface_implementation import Person
 
@@ -723,7 +723,7 @@ The following code shows this use of the adapts() function::
 
     # external_adapter.py -- Example of declaring a class as an
     #                        adapter externally to the class
-    from enthought.traits.api import adapts
+    from traits.api import adapts
     from interface_definition import IName
     from interface_implementation import Person
 
@@ -791,7 +791,7 @@ The following code is an example of an interface Instance trait attribute that
 uses adapt metadata::
 
     # adapt_metadata.py -- Example of using 'adapt' metadata
-    from enthought.traits.api import HasTraits, Instance
+    from traits.api import HasTraits, Instance
     from interface_definition import IName
 
     class Apartment( HasTraits ):
@@ -821,7 +821,7 @@ Property Factory Function
 
 The Property() function has the following signature:
 
-.. currentmodule:: enthought.traits.traits
+.. currentmodule:: traits.traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
 All parameters are optional, including the *fget* "getter" and *fset* "setter"
@@ -877,7 +877,7 @@ indicate that a getter method's return value should be cached. Use
 For example::
 
     # cached_prop.py -- Example of @cached_property decorator
-    from enthought.traits.api import HasPrivateTraits, List, Int,\
+    from traits.api import HasPrivateTraits, List, Int,\
                                      Property, cached_property
 
     class TestScores ( HasPrivateTraits ):
@@ -942,7 +942,7 @@ pickling behavior of the class.
 For example::
 
     # transient_metadata.py -- Example of using 'transient' metadata
-    from enthought.traits.api import HasTraits, File, Any
+    from traits.api import HasTraits, File, Any
 
     class DataBase ( HasTraits ):
         # The name of the data base file:
@@ -1132,7 +1132,7 @@ This is illustrated in the following example::
 
     # circular_definition.py --- Non-working example of mutually-
     #                            referring classes
-    from enthought.traits.api import HasTraits, Trait
+    from traits.api import HasTraits, Trait
 
     class Chicken(HasTraits):
         hatched_from = Trait(Egg)
@@ -1150,7 +1150,7 @@ following code::
 
     # add_class_trait.py --- Example of mutually-referring classes
     #                        using add_class_trait()
-    from enthought.traits.api import HasTraits, Trait
+    from traits.api import HasTraits, Trait
 
     class Chicken(HasTraits):
         pass

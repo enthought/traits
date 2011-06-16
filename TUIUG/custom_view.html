@@ -168,9 +168,9 @@ Consider the following variation on Example 3:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># configure_traits_view_buttons.py -- Sample code to demonstrate</span>
 <span class="c">#                                     configure_traits()</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.menu</span> <span class="kn">import</span> <span class="n">OKButton</span><span class="p">,</span> <span class="n">CancelButton</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">traitsui.menu</span> <span class="kn">import</span> <span class="n">OKButton</span><span class="p">,</span> <span class="n">CancelButton</span>
 
 <span class="k">class</span> <span class="nc">SimpleEmployee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -228,7 +228,7 @@ names, or simply use their aliases:</p>
 </tbody>
 </table>
 <p>Alternatively, there are several pre-defined button lists that can be imported
-from enthought.traits.ui.menu and assigned to the buttons attribute:</p>
+from traitsui.menu and assigned to the buttons attribute:</p>
 <ul class="simple" id="index-12">
 <li>OKCancelButtons = <tt class="docutils literal"><span class="pre">[OKButton,</span> <span class="pre">CancelButton</span> <span class="pre">]</span></tt></li>
 <li>ModalButtons = <tt class="docutils literal"><span class="pre">[</span> <span class="pre">ApplyButton,</span> <span class="pre">RevertButton,</span> <span class="pre">OKButton,</span> <span class="pre">CancelButton,</span> <span class="pre">HelpButton</span> <span class="pre">]</span></tt></li>
@@ -236,7 +236,7 @@ from enthought.traits.ui.menu and assigned to the buttons attribute:</p>
 </ul>
 <p>Thus, one could rewrite the lines in Example 4 as follows, and the
 effect would be exactly the same:</p>
-<div class="highlight-python"><pre>from enthought.traits.ui.menu import OKCancelButtons
+<div class="highlight-python"><pre>from traitsui.menu import OKCancelButtons
 
              buttons = OKCancelButtons</pre>
 </div>
@@ -439,8 +439,8 @@ Action class is described in <a class="reference internal" href="handler.html#ac
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

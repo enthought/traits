@@ -104,11 +104,11 @@ code unless they need some capability of the toolkit that is not provided by
 Traits UI. However, *some* particular toolkit must be installed on the system in
 order to actually display GUI windows.
 
-Traits UI uses a separate package, enthought.etsconfig, to determine which GUI
+Traits UI uses a separate package, traits.etsconfig, to determine which GUI
 toolkit to use. This package is also used by other Enthought packages that need
 GUI capabilities, so that all such packages "agree" on a single GUI toolkit per
 application. The etsconfig package contains a singleton object, **ETSConfig**
-(importable from `enthought.etsconfig.api`), which has a string attribute,
+(importable from `traits.etsconfig.api`), which has a string attribute,
 **toolkit**, that signifies the GUI toolkit.
 
 .. index:: ETSConfig.toolkit
@@ -135,9 +135,9 @@ order of precedence:
 
 #. The program can explicitly set **ETSConfig.toolkit**. It must do this before
    importing from any other Enthought Tool Suite component, including
-   enthought.traits.  For example, at the beginning of a program::
+   traits.  For example, at the beginning of a program::
    
-       from enthought.etsconfig.api import ETSConfig
+       from traits.etsconfig.api import ETSConfig
        ETSConfig.toolkit = 'wx'
 
 #. The user can specify a -toolkit flag on the command line of the program. 

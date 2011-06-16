@@ -83,8 +83,8 @@ used whenever the trait is displayed, unless you specify otherwise.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># default_trait_editors.py -- Example of using default</span>
 <span class="c">#                             trait editors</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Bool</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
 
 <span class="k">class</span> <span class="nc">Adult</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -132,9 +132,9 @@ trait editor factories, which are described in
 additional editor factories are specific to the wxWidgets toolkit and are
 defined in one of the following packages:</p>
 <ul class="simple">
-<li>enthought.traits.ui.wx</li>
-<li>enthought.traits.ui.wx.extra</li>
-<li>enthought.traits.ui.wx.extra.windows (specific to Microsoft Windows)</li>
+<li>traitsui.wx</li>
+<li>traitsui.wx.extra</li>
+<li>traitsui.wx.extra.windows (specific to Microsoft Windows)</li>
 </ul>
 <p>These editor factories are described in <a class="reference internal" href="factories_advanced_extra.html#extra-trait-editor-factories"><em>&#8220;Extra&#8221; Trait Editor Factories</em></a>.</p>
 <p>For a current complete list of editor factories, refer to the <em>Traits API
@@ -332,8 +332,8 @@ example, consider the following script:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># mixed_styles.py -- Example of using editor styles at</span>
 <span class="c">#                    various levels</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span>
 
 <span class="k">class</span> <span class="nc">MixedStyles</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -458,8 +458,8 @@ Traits package and their default trait editor types.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

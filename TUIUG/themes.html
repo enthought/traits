@@ -150,8 +150,8 @@ unthemed user interface shown in Figure 8.</p>
 20
 21
 22</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># unthemed.py -- Example of a Traits UI without themes</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
 <span class="k">class</span> <span class="nc">Test</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
     <span class="n">name</span>   <span class="o">=</span> <span class="n">Str</span>
@@ -207,9 +207,9 @@ essentially the same as in Example 10, but with theme data added.</p>
 29
 30
 31</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># themed.py -- Example of a Traits UI with themes</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.themed_text_editor</span> <span class="kn">import</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Label</span>
+<span class="kn">from</span> <span class="nn">traitsui.wx.themed_text_editor</span> <span class="kn">import</span> \
     <span class="n">ThemedTextEditor</span>
 
 <span class="k">class</span> <span class="nc">Test</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
@@ -271,8 +271,8 @@ when no search path is specified.</td></tr>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[14]</a></td><td>PyFace is provided by the enthought.pyface package in the Traits GUI
-project (not to be confused with the Traits UI package, enthought.traits.ui,
+<tr><td class="label"><a class="fn-backref" href="#id3">[14]</a></td><td>PyFace is provided by the pyface package in the Traits GUI
+project (not to be confused with the Traits UI package, traitsui,
 the subject of this document.)</td></tr>
 </tbody>
 </table>
@@ -348,8 +348,8 @@ the subject of this document.)</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

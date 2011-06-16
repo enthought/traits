@@ -1,5 +1,5 @@
-from enthought.traits.api import *
-from enthought.traits.ui.api import *
+from traits.api import *
+from traitsui.api import *
 
 class Camera(HasTraits):
     """ Camera object """

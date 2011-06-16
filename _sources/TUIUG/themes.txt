@@ -101,8 +101,8 @@ unthemed user interface shown in Figure 8.
 ::
 
     # unthemed.py -- Example of a Traits UI without themes
-    from enthought.traits.api import HasTraits, Str, Range, Float, Enum
-    from enthought.traits.ui.api import View, Group, Item, Label
+    from traits.api import HasTraits, Str, Range, Float, Enum
+    from traitsui.api import View, Group, Item, Label
     class Test ( HasTraits ):
     
         name   = Str
@@ -133,9 +133,9 @@ essentially the same as in Example 10, but with theme data added.
 :: 
 
     # themed.py -- Example of a Traits UI with themes
-    from enthought.traits.api import HasTraits, Str, Range, Float, Enum
-    from enthought.traits.ui.api import View, Group, Item, Label
-    from enthought.traits.ui.wx.themed_text_editor import \
+    from traits.api import HasTraits, Str, Range, Float, Enum
+    from traitsui.api import View, Group, Item, Label
+    from traitsui.wx.themed_text_editor import \
         ThemedTextEditor
     
     class Test ( HasTraits ):
@@ -190,6 +190,6 @@ This example uses the following theme-related items:
 .. [13]  This is very similar to the way that PyFace ImageResource objects work
    when no search path is specified.
    
-.. [14] PyFace is provided by the enthought.pyface package in the Traits GUI 
-   project (not to be confused with the Traits UI package, enthought.traits.ui,
+.. [14] PyFace is provided by the pyface package in the Traits GUI 
+   project (not to be confused with the Traits UI package, traitsui,
    the subject of this document.)

@@ -342,8 +342,8 @@ overridden setattr() method and user interface notification method.
     #                        setattr(), and that has a user interface 
     #                        notification method
     
-    from enthought.traits.api import HasTraits, Bool
-    from enthought.traits.ui.api import View, Handler
+    from traits.api import HasTraits, Bool
+    from traitsui.api import View, Handler
     
     class TC_Handler(Handler):
     
@@ -460,7 +460,7 @@ except that toolbars do not contain menus; they directly contain actions.
    assumed to be in an images subdirectory of the directory where ImageResource
    is used::
 
-    From enthought.pyface.api import ImageResource
+    From pyface.api import ImageResource
     
     recalc = Action(name = "Recalculate", 
                     action = "do_recalc",

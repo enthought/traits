@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.6.1',
+        VERSION:     '3.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -101,7 +101,7 @@ additional information about how to do the delegation.</p>
 of the delegate object with the same name as the trait defined by the
 DelegatesTo object. Consider the following example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># delegate.py --- Example of trait delegation</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="n">DelegatesTo</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -129,7 +129,7 @@ DelegatesTo object. Consider the following example:</p>
 <span class="sd">  File &quot;c:\src\trunk\enthought\traits\trait_handlers.py&quot;, line</span>
 <span class="sd">163, in error</span>
 <span class="sd">    raise TraitError, ( object, name, self.info(), value )</span>
-<span class="sd">enthought.traits.trait_errors.TraitError:  The &#39;last_name&#39; trait of a</span>
+<span class="sd">traits.trait_errors.TraitError:  The &#39;last_name&#39; trait of a</span>
 <span class="sd">Parent instance must be a string, but a value of &lt;__main__.Parent object at</span>
 <span class="sd">0x014D6D80&gt; &lt;class &#39;__main__.Parent&#39;&gt; was specified.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -181,7 +181,7 @@ attribute name when looking up the object attribute.</li>
 PrototypedFrom:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># prototype_prefix.py --- Examples of PrototypedFrom()</span>
 <span class="c">#                         prefix parameter</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> \
     <span class="n">PrototypedFrom</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -242,7 +242,7 @@ as well as on the deferred-to object. This behavior is new in Traits version
 directly changed) were notified. This behavior is shown in the following
 example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># deferring_notification.py -- Example of notification with deferring</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">PrototypedFrom</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
@@ -374,8 +374,8 @@ incongruous.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 15, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

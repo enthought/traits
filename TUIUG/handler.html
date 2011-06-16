@@ -381,8 +381,8 @@ overridden setattr() method and user interface notification method.</p>
 <span class="c">#                        setattr(), and that has a user interface</span>
 <span class="c">#                        notification method</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Bool</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Handler</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Handler</span>
 
 <span class="k">class</span> <span class="nc">TC_Handler</span><span class="p">(</span><span class="n">Handler</span><span class="p">):</span>
 
@@ -489,7 +489,7 @@ tooltip and an image to display on the toolbar. The image must be a Pyface
 ImageResource instance; if a path to the image file is not specified, it is
 assumed to be in an images subdirectory of the directory where ImageResource
 is used:</p>
-<div class="highlight-python"><pre>From enthought.pyface.api import ImageResource
+<div class="highlight-python"><pre>From pyface.api import ImageResource
 
 recalc = Action(name = "Recalculate",
                 action = "do_recalc",
@@ -622,8 +622,8 @@ and <strong>defined_when</strong> attributes of Items and Groups.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

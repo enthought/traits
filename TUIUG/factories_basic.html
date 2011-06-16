@@ -107,10 +107,10 @@ can specify the width of the text fields with the <em>width</em> parameter.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># array_editor.py -- Example of using array editors</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Array</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Array</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> \
     <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">ArrayEditor</span><span class="p">,</span> <span class="n">Item</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.menu</span> <span class="kn">import</span> <span class="n">NoButtons</span>
+<span class="kn">from</span> <span class="nn">traitsui.menu</span> <span class="kn">import</span> <span class="n">NoButtons</span>
 
 <span class="k">class</span> <span class="nc">ArrayEditorTest</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
 
@@ -486,8 +486,8 @@ with a numeric tag. The enumeration editor sorts the values based on the numeric
 tags, and then strips out the tags.</p>
 <p class="rubric" id="example-15-enumeration-editor-with-mapped-values">Example 15: Enumeration editor with mapped values</p>
 <div class="highlight-python"><pre># enum_editor.py -- Example of using an enumeration editor
-from enthought.traits.api import HasTraits, Enum
-from enthought.traits.ui.api import EnumEditor
+from traits.api import HasTraits, Enum
+from traitsui.api import EnumEditor
 
 Class EnumExample(HasTraits):
     priority = Enum('Medium', 'Highest',
@@ -721,7 +721,7 @@ defined.</p>
 locate the file. The <em>klass</em> parameter must be a reference to a class. The
 editor searches for an images subdirectory in the following locations:</p>
 <blockquote>
-<ol class="arabic simple">
+<div><ol class="arabic simple">
 <li>The directory that contains the module that defines the class.</li>
 <li>If the class was executed directly, the current working directory.</li>
 <li>If <em>path</em> and <em>klass</em> are not defined, and the <em>module</em> parameter is
@@ -729,12 +729,12 @@ defined, it is used to locate the file. The <em>module</em> parameter must be
 a reference to a module. The editor searches for an images subdirectory
 of the directory that contains the module.</li>
 <li>If <em>path</em>, <em>klass</em>, and <em>module</em> are not defined, the editor searches
-for an images subdirectory of the enthought.traits.ui.wx package.</li>
+for an images subdirectory of the traitsui.wx package.</li>
 <li>If none of the above paths are defined, the editor searches for an
 <tt class="file docutils literal"><span class="pre">images</span></tt> directory that is a sibling of the directory from which
 the application was run.</li>
 </ol>
-</blockquote>
+</div></blockquote>
 </li>
 </ol>
 </div>
@@ -795,9 +795,9 @@ pick a captain and edit that person&#8217;s information.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># instance_editor_selection.py -- Example of an instance editor</span>
 <span class="c">#                                 with instance selection</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span>    \
+<span class="kn">from</span> <span class="nn">traits.api</span>    \
     <span class="kn">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">Str</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+<span class="kn">from</span> <span class="nn">traitsui.api</span> \
     <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">InstanceEditor</span>
 
 <span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasStrictTraits</span> <span class="p">):</span>
@@ -856,7 +856,7 @@ modifying instances.</p>
 <p>You can specify what types of instances can be edited in an instance editor,
 using the <em>values</em> parameter. This parameter is a list of items describing the
 type of selectable or editable instances. These items must be instances of
-subclasses of enthought.traits.ui.api.InstanceChoiceItem. If you want to
+subclasses of traitsui.api.InstanceChoiceItem. If you want to
 generate new instances, put an InstanceFactoryChoice instance in the <em>values</em>
 list that describes the instance to create. If you want certain types of
 instances to be dropped on the editor, use an InstanceDropChoice instance in the
@@ -1391,8 +1391,8 @@ instead; see <a class="reference internal" href="factories_advanced_extra.html#t
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

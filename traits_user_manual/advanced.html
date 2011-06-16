@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.6.1',
+        VERSION:     '3.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,7 +26,6 @@
     <link rel="shortcut icon" href="../_static/et.ico"/>
     <link rel="top" title="Traits 3 User Manual" href="../index.html" />
     <link rel="up" title="Traits 3 User Manual" href="index.html" />
-    <link rel="next" title="Traits 3 Tutorials" href="../tutorials/index.html" />
     <link rel="prev" title="Custom Traits" href="custom.html" /> 
   </head>
   <body>
@@ -36,9 +35,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../tutorials/index.html" title="Traits 3 Tutorials"
-             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="custom.html" title="Custom Traits"
              accesskey="P">previous</a> |</li>
@@ -98,7 +94,7 @@ a different default value. You can specify a new default value without
 completely re-specifying the trait definition for the attribute. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># override_default.py -- Example of overriding a default value for</span>
 <span class="c">#                        a trait attribute in a subclass</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -120,7 +116,7 @@ defined independently. A trait definition only describes the characteristics of
 a trait, and not the current value of a trait attribute, so it can be used in
 the definition of any number of attributes. For example:</p>
 <div class="highlight-python"><pre># trait_reuse.py --- Example of reusing trait definitions
-from enthought.traits.api import HasTraits, Range
+from traits.api import HasTraits, Range
 
 coefficient = Range(-1.0, 1.0, 0.0))
 
@@ -153,7 +149,7 @@ associated with a particular trait definition, by including an underscore (&#821
 as a wildcard at the end of a trait attribute name. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># temp_wildcard.py --- Example of using a wildcard with a Trait</span>
 <span class="c">#                      attribute name</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">temp_</span> <span class="o">=</span> <span class="n">Any</span>
@@ -168,7 +164,7 @@ value and allows assignment of any value (because it is based on the Any trait).
 <p>You can even give all object attributes a default trait definition, by
 specifying only the wildcard character for the attribute name:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># all_wildcard.py --- Example of trait attribute wildcard rules</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
@@ -217,7 +213,7 @@ The base HasTraits class implicitly contains the attribute definition
 standard Python language semantics.</p>
 <p>These rules are demonstrated by the following example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># wildcard_rules.py -- Example of trait attribute wildcard rules</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Python</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Python</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">temp_count</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -237,7 +233,7 @@ to them before their first reference).</p>
 <p>The singleton object Disallow can be used with wildcards to disallow all
 attributes that are not explicitly defined. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># disallow.py --- Example of using Disallow with wildcards</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> \
     <span class="n">Disallow</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -326,7 +322,7 @@ add_trait() method of the HasTraits class:</p>
 
 <p id="index-14">For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># object_trait_attrs.py --- Example of per-object trait attributes</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
 
 <span class="k">class</span> <span class="nc">GUISlider</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
@@ -373,7 +369,7 @@ class, preceded by a method() signature function call, as shown in the following
 example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># type_checked_methods.py --- Example of traits-based method type</span>
 <span class="c">#                             checking</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="n">Color</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
 
@@ -429,7 +425,7 @@ kinds of objects are actually <em>intended</em> to be used in a given situation.
 <span id="index-18"></span><span id="id16"></span><h3>Defining an Interface<a class="headerlink" href="#defining-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>To define an interface, create a subclass of Interface:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># interface_definition.py -- Example of defining an interface</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Interface</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Interface</span>
 
 <span class="k">class</span> <span class="nc">IName</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
 
@@ -450,15 +446,15 @@ interfaces do not contain implementations.</p>
 <p>A class declares that it implements one or more interfaces using the
 implements() function, which has the signature:</p>
 <dl class="function">
-<dt id="enthought.traits.has_traits.implements">
-<tt class="descclassname">enthought.traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.has_traits.implements">
+<tt class="descclassname">traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-20">Interface names beyond the first one are optional. The call to implements() must
 occur at class scope within the class definition. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># interface_implementation.py -- Example of implementing an</span>
 <span class="c">#                                interface</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">implements</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">implements</span><span class="p">,</span> <span class="n">Str</span>
 <span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -486,9 +482,9 @@ a warning if they don&#8217;t.</li>
 an InterfaceError if they don&#8217;t.</li>
 </ul>
 <p>The CHECK_INTERFACES variable must be imported directly from the
-enthought.traits.has_traits module:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">enthought.traits.has_traits</span>
-<span class="n">enthought</span><span class="o">.</span><span class="n">traits</span><span class="o">.</span><span class="n">has_traits</span><span class="o">.</span><span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">1</span>
+traits.has_traits module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">traits.has_traits</span>
+<span class="n">traits</span><span class="o">.</span><span class="n">has_traits</span><span class="o">.</span><span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
 </div>
@@ -496,7 +492,7 @@ enthought.traits.has_traits module:</p>
 <span id="index-21"></span><span id="id18"></span><h3>Using Interfaces<a class="headerlink" href="#using-interfaces" title="Permalink to this headline">¶</a></h3>
 <p>You can use an interface at any place where you would normally use a class name.
 The most common way to use interfaces is with the Instance trait:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Apartment</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">renter</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
@@ -554,7 +550,7 @@ these methods are implemented using appropriate members on the adaptee object.</
 </ul>
 <p id="index-26">The following code example shows a definition of a simple adapter class:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># simple_adapter.py -- Example of adaptation using Adapter</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">implements</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">implements</span>
 <span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 <span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
 
@@ -584,8 +580,8 @@ of Adapter. The adapts() function defines the class that contains it as an
 adapter class, and declares the set of interfaces that the class implements.</p>
 <p>The signature  of the adapts() function is:</p>
 <dl class="function">
-<dt id="enthought.traits.adapter.adapts">
-<tt class="descclassname">enthought.traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>adaptee_class</em>, <em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.adapter.adapts">
+<tt class="descclassname">traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>adaptee_class</em>, <em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This signature is very similar to that of implements(), but adds the class being
@@ -597,7 +593,7 @@ be used by implementation code.</p>
 <p id="index-28">The following code shows an example of implementing an adapter without
 subclassing Adapter:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># scratch_adapter.py -- Example of writing an adapter from scratch</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">adapts</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">adapts</span>
 <span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 <span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
 
@@ -634,7 +630,7 @@ first one are optional.</p>
 <p id="index-30">The following code shows this use of the adapts() function:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># external_adapter.py -- Example of declaring a class as an</span>
 <span class="c">#                        adapter externally to the class</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">adapts</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">adapts</span>
 <span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 <span class="kn">from</span> <span class="nn">interface_implementation</span> <span class="kn">import</span> <span class="n">Person</span>
 
@@ -687,7 +683,7 @@ for the trait is assigned instead.</li>
 <p id="index-34">The following code is an example of an interface Instance trait attribute that
 uses adapt metadata:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># adapt_metadata.py -- Example of using &#39;adapt&#39; metadata</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="kn">from</span> <span class="nn">interface_definition</span> <span class="kn">import</span> <span class="n">IName</span>
 
 <span class="k">class</span> <span class="nc">Apartment</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
@@ -710,8 +706,8 @@ Trait UI view.</p>
 <span id="id27"></span><h3>Property Factory Function<a class="headerlink" href="#property-factory-function" title="Permalink to this headline">¶</a></h3>
 <p>The Property() function has the following signature:</p>
 <dl class="function">
-<dt id="enthought.traits.traits.Property">
-<tt class="descclassname">enthought.traits.traits.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#enthought.traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.traits.Property">
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>All parameters are optional, including the <em>fget</em> &#8220;getter&#8221; and <em>fset</em> &#8220;setter&#8221;
@@ -754,7 +750,7 @@ indicate that a getter method&#8217;s return value should be cached. Use
 <strong>depends_on</strong> to indicate the other attributes that the property depends on.</p>
 <p id="index-38">For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># cached_prop.py -- Example of @cached_property decorator</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
                                  <span class="n">Property</span><span class="p">,</span> <span class="n">cached_property</span>
 
 <span class="k">class</span> <span class="nc">TestScores</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
@@ -802,7 +798,7 @@ need to override __getstate__(), and that the metadata helps document the
 pickling behavior of the class.</p>
 <p id="index-42">For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># transient_metadata.py -- Example of using &#39;transient&#39; metadata</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="k">class</span> <span class="nc">DataBase</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
     <span class="c"># The name of the data base file:</span>
@@ -942,7 +938,7 @@ other class, since the class it needs to refer to has not yet been defined.</p>
 <p id="index-52">This is illustrated in the following example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># circular_definition.py --- Non-working example of mutually-</span>
 <span class="c">#                            referring classes</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">hatched_from</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Egg</span><span class="p">)</span>
@@ -959,7 +955,7 @@ definition order of the classes does not fix the problem, because then the
 following code:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># add_class_trait.py --- Example of mutually-referring classes</span>
 <span class="c">#                        using add_class_trait()</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="k">pass</span>
@@ -1103,9 +1099,6 @@ the tool is justified and appropriate.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="custom.html"
                         title="previous chapter">Custom Traits</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../tutorials/index.html"
-                        title="next chapter">Traits 3 Tutorials</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_user_manual/advanced.txt"
@@ -1135,9 +1128,6 @@ the tool is justified and appropriate.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../tutorials/index.html" title="Traits 3 Tutorials"
-             >next</a> |</li>
-        <li class="right" >
           <a href="custom.html" title="Custom Traits"
              >previous</a> |</li>
         <li><a href="../index.html">Traits 3 User Manual</a> &raquo;</li>
@@ -1150,8 +1140,8 @@ the tool is justified and appropriate.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 15, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

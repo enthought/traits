@@ -38,8 +38,8 @@ Consider the following script and the window it creates:
     # default_trait_editors.py -- Example of using default 
     #                             trait editors
     
-    from enthought.traits.api import HasTraits, Str, Range, Bool
-    from enthought.traits.ui.api import View, Item
+    from traits.api import HasTraits, Str, Range, Bool
+    from traitsui.api import View, Item
     
     class Adult(HasTraits):
         first_name = Str
@@ -92,9 +92,9 @@ trait editor factories, which are described in
 additional editor factories are specific to the wxWidgets toolkit and are
 defined in one of the following packages:
 
-- enthought.traits.ui.wx
-- enthought.traits.ui.wx.extra
-- enthought.traits.ui.wx.extra.windows (specific to Microsoft Windows)
+- traitsui.wx
+- traitsui.wx.extra
+- traitsui.wx.extra.windows (specific to Microsoft Windows)
 
 These editor factories are described in :ref:`extra-trait-editor-factories`.
 
@@ -334,8 +334,8 @@ example, consider the following script:
     # mixed_styles.py -- Example of using editor styles at 
     #                    various levels
     
-    from enthought.traits.api import HasTraits, Str, Enum
-    from enthought.traits.ui.api import View, Group, Item
+    from traits.api import HasTraits, Str, Enum
+    from traitsui.api import View, Group, Item
     
     class MixedStyles(HasTraits):
        first_name = Str

@@ -182,7 +182,7 @@ target).</p>
 <h2>KeyBindingEditor()<a class="headerlink" href="#keybindingeditor" title="Permalink to this headline">¶</a></h2>
 <p>The KeyBindingEditor() factory differs from other trait editor factories because
 it generates an editor, not for a single attribute, but for an object of a
-particular class, enthought.traits.ui.key_bindings.KeyBindings. A KeyBindings
+particular class, traitsui.key_bindings.KeyBindings. A KeyBindings
 object is a list of bindings between key codes and handler methods. You can
 specify a KeyBindings object as an attribute of a View. When the user presses a
 key while a View has input focus, the user interface searches the View for a
@@ -204,11 +204,11 @@ with associated key bindings, and a button that invokes the key binding editor.<
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># key_bindings.py -- Example of a code editor with a</span>
 <span class="c">#                    key bindings editor</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="n">Button</span><span class="p">,</span> <span class="n">Code</span><span class="p">,</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Str</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+<span class="kn">from</span> <span class="nn">traitsui.api</span> \
     <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">CodeEditor</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.key_bindings</span> \
+<span class="kn">from</span> <span class="nn">traitsui.key_bindings</span> \
     <span class="kn">import</span> <span class="n">KeyBinding</span><span class="p">,</span> <span class="n">KeyBindings</span>
 
 <span class="n">key_bindings</span> <span class="o">=</span> <span class="n">KeyBindings</span><span class="p">(</span>
@@ -282,7 +282,7 @@ with associated key bindings, and a button that invokes the key binding editor.<
 </tr>
 <tr class="field"><th class="field-name" colspan="2">Optional parameters:</th></tr>
 <tr><td>&nbsp;</td><td class="field-body">See <em>Traits API Reference</em>,
-enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.</td>
+traitsui.wx.table_editor.ToolkitEditorFactory attributes.</td>
 </tr>
 </tbody>
 </table>
@@ -315,7 +315,7 @@ described in the following sections.</p>
 You can specify this list directly, as the value of the <em>columns</em> parameter, or
 indirectly, in an extended context attribute referenced by the <em>columns_name</em>
 parameter.</p>
-<p>The items in the list must be instances of enthought.traits.ui.api.TableColumn,
+<p>The items in the list must be instances of traitsui.api.TableColumn,
 or of a subclass of TableColumn. Some subclasses of TableColumn that are
 provided by the Traits UI package include ObjectColumn, ListColumn,
 NumericColumn, and ExpressionColumn. (See the <em>Traits API Reference</em> for details
@@ -381,7 +381,7 @@ the table is sortable or reorderable).</p>
 only items that pass the filter are displayed. This feature can be very useful
 when dealing with lengthy lists. You can specify a filter to apply to the table
 either directly, or via another trait. Table filters must be instances of
-enthought.traits.ui.api.TableFilter, or of a subclass of TableFilter. Some
+traitsui.api.TableFilter, or of a subclass of TableFilter. Some
 subclasses of TableFilter that are provided by the Traits UI package include
 EvalTableFilter, RuleTableFilter, and MenuTableFilter. (See the <em>Traits API
 Reference</em> for details about these classes.) The Traits UI package also provides
@@ -534,7 +534,7 @@ whether other settings would normally create a toolbar. The default is True.</li
 <p>The TableEditor() factory supports a variety of parameters to control the visual
 formatting of the table, such as colors, fonts, and sizes for lines, cells, and
 labels. For details, refer to the <em>Traits API Reference</em>,
-enthought.traits.ui.wx.table_editor.ToolkitEditorFactory attributes.</p>
+traitsui.wx.table_editor.ToolkitEditorFactory attributes.</p>
 <p>You can also specify formatting options for individual table columns when you
 define them.</p>
 </div>
@@ -754,14 +754,14 @@ subclasses of TreeNode).</p>
 <p class="rubric" id="example-18-code-for-example-tree-editor">Example 18: Code for example tree editor</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># tree_editor.py -- Example of a tree editor</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> \
     <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Regex</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Instance</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> \
+<span class="kn">from</span> <span class="nn">traitsui.api</span> \
     <span class="kn">import</span> <span class="n">TreeEditor</span><span class="p">,</span> <span class="n">TreeNode</span><span class="p">,</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">VSplit</span><span class="p">,</span> \
            <span class="n">HGroup</span><span class="p">,</span> <span class="n">Handler</span><span class="p">,</span> <span class="n">Group</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.menu</span> \
+<span class="kn">from</span> <span class="nn">traitsui.menu</span> \
     <span class="kn">import</span> <span class="n">Menu</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Separator</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.tree_editor</span> \
+<span class="kn">from</span> <span class="nn">traitsui.wx.tree_editor</span> \
     <span class="kn">import</span> <span class="n">NewAction</span><span class="p">,</span> <span class="n">CopyAction</span><span class="p">,</span> <span class="n">CutAction</span><span class="p">,</span> \
            <span class="n">PasteAction</span><span class="p">,</span> <span class="n">DeleteAction</span><span class="p">,</span> <span class="n">RenameAction</span>
 
@@ -852,7 +852,7 @@ subclasses of TreeNode).</p>
         <span class="n">HGroup</span><span class="p">(</span> <span class="s">&#39;9&#39;</span><span class="p">,</span> <span class="s">&#39;title&#39;</span> <span class="p">),</span>
         <span class="n">HGroup</span><span class="p">(</span> <span class="s">&#39;phone&#39;</span> <span class="p">),</span>
         <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;vsplit&#39;</span> <span class="p">),</span>
-    <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;enthought.traits.doc.example.treeeditor&#39;</span><span class="p">,</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s">&#39;traits.doc.example.treeeditor&#39;</span><span class="p">,</span>
     <span class="n">dock</span> <span class="o">=</span> <span class="s">&#39;vertical&#39;</span> <span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">TreeHandler</span> <span class="p">(</span> <span class="n">Handler</span> <span class="p">):</span>
@@ -933,7 +933,7 @@ subclasses of TreeNode).</p>
                 <span class="n">show_left</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="p">),</span>
             <span class="n">title</span> <span class="o">=</span> <span class="s">&#39;Company Structure&#39;</span><span class="p">,</span>
             <span class="nb">id</span> <span class="o">=</span> \
-             <span class="s">&#39;enthought.traits.ui.tests.tree_editor_test&#39;</span><span class="p">,</span>
+             <span class="s">&#39;traitsui.tests.tree_editor_test&#39;</span><span class="p">,</span>
             <span class="n">dock</span> <span class="o">=</span> <span class="s">&#39;horizontal&#39;</span><span class="p">,</span>
             <span class="n">drop_class</span> <span class="o">=</span> <span class="n">HasTraits</span><span class="p">,</span>
             <span class="n">handler</span> <span class="o">=</span> <span class="n">TreeHandler</span><span class="p">(),</span>
@@ -1217,7 +1217,7 @@ icon.</p>
 </div>
 <div class="section" id="extra-trait-editor-factories">
 <span id="id27"></span><h1>&#8220;Extra&#8221; Trait Editor Factories<a class="headerlink" href="#extra-trait-editor-factories" title="Permalink to this headline">¶</a></h1>
-<p>The enthought.traits.ui.wx package defines a few editor factories that are
+<p>The traitsui.wx package defines a few editor factories that are
 specific to the wxWidgets toolkit, some of which are also specific to the
 Microsoft Windows platform. These editor factories are not necessarily
 implemented for other GUI toolkits or other operating system platforms.</p>
@@ -1359,7 +1359,7 @@ from the URL represented by the attribute being edited.</li>
 <p>ImageEditor() generates a read-only display of an image. The image to be
 displayed is determined by the <em>image</em> parameter, or by the value of the trait
 attribute being edited, if <em>image</em> is not specified. In either case, the value
-must be a PyFace ImageResource (enthought.pyface.api.ImageResource), or a string
+must be a PyFace ImageResource (pyface.api.ImageResource), or a string
 that can be converted to one. If <em>image</em> is specified, then the type and value
 of the trait attribute being edited are irrelevant and are ignored.</p>
 </div>
@@ -1658,8 +1658,8 @@ states of the tabs.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

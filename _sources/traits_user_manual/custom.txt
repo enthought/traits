@@ -22,7 +22,7 @@ Trait Subclassing
 -----------------
 
 Starting with Traits version 3.0, most predefined traits are defined as
-subclasses of enthought.traits.trait_handlers.TraitType. As a result, you can
+subclasses of traits.trait_handlers.TraitType. As a result, you can
 subclass one of these traits, or TraitType, to derive new traits. Refer to the
 *Traits API Reference* to see whether a particular predefined trait derives from
 TraitType.
@@ -33,7 +33,7 @@ TraitType.
 Here's an example of subclassing a predefined trait class::
 
     # trait_subclass.py -- Example of subclassing a trait class
-    from enthought.traits.api import BaseInt
+    from traits.api import BaseInt
 
     class OddInt ( BaseInt ):
 
@@ -193,7 +193,7 @@ Reference*.
 
 The most general form of the Trait() function is:
 
-.. currentmodule:: enthought.traits.traits
+.. currentmodule:: traits.traits
 .. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
 
 .. index:: compound traits
@@ -211,7 +211,7 @@ in the list.
 The following is an example of a compound trait with multiple criteria::
 
     # compound.py -- Example of multiple criteria in a trait definition
-    from enthought.traits.api import HasTraits, Trait, Range
+    from traits.api import HasTraits, Trait, Range
 
     class Die ( HasTraits ):
 
@@ -333,7 +333,7 @@ The following examples illustrates mapped traits that map color names to tuples
 representing red, green, blue, and transparency values::
 
     # mapped.py --- Example of a mapped trait
-    from enthought.traits.api import HasTraits, Trait
+    from traits.api import HasTraits, Trait
 
     standard_color = Trait ('black',
                   {'black':       (0.0, 0.0, 0.0, 1.0),
@@ -410,7 +410,7 @@ trait handler, either a predefined one or a custom one that you write.
 .. index:: TraitHandler class
 
 A trait handler is an instance of the
-enthought.traits.trait_handlers.TraitHandler class, or of a subclass, whose
+traits.trait_handlers.TraitHandler class, or of a subclass, whose
 task is to verify the correctness of values assigned to object traits. When a
 value is assigned to an object trait that has a trait handler, the trait
 handler's validate() method checks the value, and assigns that value or a
@@ -423,7 +423,7 @@ of the predefined trait handler classes are described in the following sections.
 These sections also demonstrate how to define a trait using a trait handler and
 the Trait() factory function. For a complete list and descriptions of predefined
 TraitHandler subclasses, refer to the *Traits API Reference*, in the section on
-the enthought.traits.trait_handlers module.
+the traits.trait_handlers module.
 
 .. index:: TraitPrefixList class
 
@@ -441,8 +441,8 @@ to the trait attribute is the full string that the substring matches.
 
 For example::
 
-    >>> from enthought.traits.api import HasTraits, Trait
-    >>> from enthought.traits.api import TraitPrefixList
+    >>> from traits.api import HasTraits, Trait
+    >>> from traits.api import TraitPrefixList
     >>> class Alien(HasTraits):
     ...   heads = Trait('one', TraitPrefixList(['one','two','three']))
     ...
@@ -460,7 +460,7 @@ For example::
      in validate self.error( object, name, value )
       File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
     in error value )
-    enthought.traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
+    traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
      must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't'
      <type 'str'> was specified.
 
@@ -484,7 +484,7 @@ any prefix of 'true', 'yes', 'false', or 'no', and maps them to 1 or 0.
 ::
 
     # traitprefixmap.py --- Example of using the TraitPrefixMap handler
-    from enthought.traits.api import Trait, TraitPrefixMap
+    from traits.api import Trait, TraitPrefixMap
 
     boolean_map = Trait('true', TraitPrefixMap( {
                                   'true': 1,
@@ -522,7 +522,7 @@ in :ref:`defining-a-trait-type`) using a TraitHandler subclass.
 
     # custom_traithandler.py --- Example of a custom TraitHandler
     import types
-    from enthought.traits.api import TraitHandler
+    from traits.api import TraitHandler
 
     class TraitOddInteger(TraitHandler):
         def validate(self, object, name, value):
@@ -538,7 +538,7 @@ An application could use this new trait handler to define traits such as the
 following::
 
     # use_custom_th.py --- Example of using a custom TraitHandler
-    from enthought.traits.api import HasTraits, Trait, TraitRange
+    from traits.api import HasTraits, Trait, TraitRange
     from custom_traithandler import TraitOddInteger
 
     class AnOddClass(HasTraits):

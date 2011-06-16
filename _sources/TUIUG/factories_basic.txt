@@ -64,10 +64,10 @@ The following code generates the editors shown in Figure 21.
     # array_editor.py -- Example of using array editors
     
     import numpy as np
-    from enthought.traits.api import HasPrivateTraits, Array
-    from enthought.traits.ui.api \
+    from traits.api import HasPrivateTraits, Array
+    from traitsui.api \
         import View, ArrayEditor, Item
-    from enthought.traits.ui.menu import NoButtons
+    from traitsui.menu import NoButtons
         
     class ArrayEditorTest ( HasPrivateTraits ):
             
@@ -450,8 +450,8 @@ tags, and then strips out the tags.
 ::
 
     # enum_editor.py -- Example of using an enumeration editor
-    from enthought.traits.api import HasTraits, Enum
-    from enthought.traits.ui.api import EnumEditor
+    from traits.api import HasTraits, Enum
+    from traitsui.api import EnumEditor
     
     Class EnumExample(HasTraits):
         priority = Enum('Medium', 'Highest', 
@@ -693,7 +693,7 @@ rules to locate images to use:
        a reference to a module. The editor searches for an images subdirectory 
        of the directory that contains the module.
     #. If *path*, *klass*, and *module* are not defined, the editor searches 
-       for an images subdirectory of the enthought.traits.ui.wx package.
+       for an images subdirectory of the traitsui.wx package.
     #. If none of the above paths are defined, the editor searches for an
        :file:`images` directory that is a sibling of the directory from which
        the application was run.
@@ -764,9 +764,9 @@ Example 16: Instance editor with instance selection
     # instance_editor_selection.py -- Example of an instance editor 
     #                                 with instance selection
     
-    from enthought.traits.api    \
+    from traits.api    \
         import HasStrictTraits, Int, Instance, List, Regex, Str
-    from enthought.traits.ui.api \
+    from traitsui.api \
         import View, Item, InstanceEditor
                             
     class Person ( HasStrictTraits ):
@@ -826,7 +826,7 @@ Allowing Instances
 You can specify what types of instances can be edited in an instance editor,
 using the *values* parameter. This parameter is a list of items describing the
 type of selectable or editable instances. These items must be instances of
-subclasses of enthought.traits.ui.api.InstanceChoiceItem. If you want to
+subclasses of traitsui.api.InstanceChoiceItem. If you want to
 generate new instances, put an InstanceFactoryChoice instance in the *values*
 list that describes the instance to create. If you want certain types of
 instances to be dropped on the editor, use an InstanceDropChoice instance in the

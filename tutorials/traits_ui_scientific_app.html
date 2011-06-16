@@ -65,7 +65,7 @@
 <tbody valign="top">
 <tr class="field"><th class="field-name">Author:</th><td class="field-body">Gael Varoquaux</td>
 </tr>
-<tr class="field"><th class="field-name">Date:</th><td class="field-body">2011-01-28</td>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">2011-06-14</td>
 </tr>
 <tr class="field"><th class="field-name">License:</th><td class="field-body">BSD</td>
 </tr>
@@ -94,7 +94,7 @@ camera, analysis of the retrieved data and display of the results. This
 tutorial focuses on building the general structure and flow-control of
 the application, and on the aspects specific to traitsUI programming.
 Interfacing with the hardware or processing the data is left aside. The
-tutorial progressively introduces the tools used, and in the end present
+tutorial progressively introduces the tools used, and in the end presents
 the skeleton of a real application that has been developed for real-time
 controlling of an experiment, monitoring through a camera, and processing
 the data. The tutorial goes into more and more intricate details that are
@@ -140,7 +140,7 @@ than their software implementation.</p>
 <p>Code re-use is paramount for good software development. It reduces the
 number of code-lines required to read and understand and allows to
 identify large operations in the code. Functions and procedures have been
-invented to avoid copy and pasting code, and hide the low-level details
+invented to avoid copy-and-pasting code, and hide the low-level details
 of an operation.</p>
 <p>Object-oriented programming allows yet more modularity and abstraction.</p>
 <div class="section" id="objects-attributes-and-methods">
@@ -162,7 +162,7 @@ entries are called &#8220;<cite>attributes</cite>&#8221; of the object and the p
 to be rotated.</p>
 <p>A point object could be implemented in python with:</p>
 <blockquote>
-<p><a class="reference external" href="../_static/code_block0.py">code snippet #0</a></p>
+<div><p><a class="reference external" href="../_static/code_block0.py">code snippet #0</a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span>
 
 <span class="k">class</span> <span class="nc">Point</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -179,11 +179,11 @@ to be rotated.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">ytemp</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>This code creates a <em>Point</em> class. Points objects can be created as
 <cite>instances</cite> of the Point class:</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Point</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">rotate_z</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
@@ -193,12 +193,12 @@ to be rotated.</p>
 <span class="go">1.2246467991473532e-16</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>When manipulating objects, the developer does not need to know the
 internal details of their procedures. As long as the object has a
 <em>rotate</em> method, the developer knows how to rotate it.</p>
 <blockquote>
-<p><strong>Note</strong>: Beginners often use objects as structures: entities with
+<div><p><strong>Note</strong>: Beginners often use objects as structures: entities with
 several data fields useful to pass data around in a program. Objects
 are much more then that: they have methods. They are &#8216;active&#8217; data
 structures that know how to modify themselves. Part of the point of
@@ -207,7 +207,7 @@ modifying itself through its methods. The object therefore takes care
 of its internal logic and the consistency between its attributes.</p>
 <p>In python, dictionaries make great structures and are more suited
 for such a use than objects.</p>
-</blockquote>
+</div></blockquote>
 </div>
 <div class="section" id="classes-and-inheritance">
 <h4>Classes and inheritance<a class="headerlink" href="#classes-and-inheritance" title="Permalink to this headline">¶</a></h4>
@@ -217,12 +217,12 @@ of copy-and-pasting the <em>Point</em> class and adding a color attribute, you c
 define a new class <em>ColoredPoint</em> that inherits all of the <em>Point</em>
 class&#8217;s methods and attributes:</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ColoredPoint</span><span class="p">(</span><span class="n">Point</span><span class="p">):</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ColoredPoint</span><span class="p">(</span><span class="n">Point</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Colored 3D point &quot;&quot;&quot;</span>
     <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>You do not have to implement rotation for the <em>ColoredPoint</em> class as it
 has been inherited from the <em>Point</em> class. This is one of the huge gains
 of object-oriented programming: objects are organized in classes and
@@ -230,9 +230,9 @@ sub-classes, and method to manipulate objects are derived from the
 objects parent-ship: a <em>ColoredPoint</em> is only a special case of
 <em>Point</em>. This proves very handy on large projects.</p>
 <blockquote>
-<strong>Note</strong>: To stress the differences between classes and their
+<div><strong>Note</strong>: To stress the differences between classes and their
 instances (objects), classes are usually named with capital letters,
-and objects only with lower case letters.</blockquote>
+and objects only with lower case letters.</div></blockquote>
 </div>
 </div>
 <div class="section" id="an-object-and-its-representation">
@@ -253,9 +253,9 @@ definition.</p>
 camera interfaced to python through the ctypes <a class="footnote-reference" href="#id15" id="id6">[5]</a> module), and show how
 to open a dialog to edit its properties :</p>
 <blockquote>
-<p><a class="reference external" href="../_static/code_block1.py">code snippet #1</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p><a class="reference external" href="../_static/code_block1.py">code snippet #1</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Camera object &quot;&quot;&quot;</span>
@@ -279,12 +279,12 @@ to open a dialog to edit its properties :</p>
     <span class="n">camera</span><span class="o">.</span><span class="n">capture</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>The <em>camera.configure_traits()</em> call in the above example opens a dialog
 that allows the user to modify the camera object&#8217;s attributes:</p>
 <blockquote>
-<img alt="../_images/code_block1.png" src="../_images/code_block1.png" />
-</blockquote>
+<div><img alt="../_images/code_block1.png" src="../_images/code_block1.png" />
+</div></blockquote>
 <p>This dialog forms a graphical representation of our camera object. We
 will see that it can be embedded in GUI panels to build more complex GUIs
 that allow us to control many objects.</p>
@@ -307,9 +307,9 @@ objects we want to represent. Playing with the <cite>View</cite> attribute of th
 object, we can control how the representation generated by Traits looks
 like (see the TraitsUI manual):</p>
 <blockquote>
-<p><a class="reference external" href="../_static/container.py">code snippet #2</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p><a class="reference external" href="../_static/container.py">code snippet #2</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">gain</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">)</span>
@@ -333,13 +333,13 @@ like (see the TraitsUI manual):</p>
 <span class="n">container</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>The call to <em>configure_traits()</em> creates the following dialog, with the
 representation of the <em>Camera</em> object created is the last example on top,
 and the <em>Display</em> object below it:</p>
 <blockquote>
-<img alt="../_images/container.png" src="../_images/container.png" />
-</blockquote>
+<div><img alt="../_images/container.png" src="../_images/container.png" />
+</div></blockquote>
 <p>The <em>View</em> attribute of the <em>container</em> object has been tweaked to get
 the representation we are interested in: traitsUI is told to display the
 <em>camera</em> item with a <em>&#8216;custom&#8217;</em> style, which instructs it to display the
@@ -398,8 +398,8 @@ wxWidget toolkit by default to create its widget. They can be turned live
 and displayed by starting a wx application, and its main loop (ie event
 loop in wx speech).</p>
 <blockquote>
-<p><a class="reference external" href="../_static/event_loop.py">code snippet #3</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p><a class="reference external" href="../_static/event_loop.py">code snippet #3</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">wx</span>
 
 <span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -409,7 +409,7 @@ loop in wx speech).</p>
 <span class="n">wx</span><span class="o">.</span><span class="n">PySimpleApp</span><span class="p">()</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>The <em>Counter().edit_traits()</em> line creates a counter object and its
 representation, a dialog with one integer represented. However it does
 not display it until a wx application is created, and its main loop is
@@ -427,7 +427,7 @@ returns to the code.</p>
 <p>Interactions with objects generate events, and these events can be
 associated to callbacks, ie functions or methods processing the event. In
 a GUI, callbacks created by user-generated events are placed on an &#8220;event
-stack&#8221;. The event loop process each call on the event queue one after the
+stack&#8221;. The event loop processes each call on the event queue one after the
 other, thus emptying the event queue. The flow of the program is still
 sequential (two code blocks never run at the same time in an event loop),
 but the execution order is chosen by the user, and not by the developer.</p>
@@ -437,8 +437,8 @@ but the execution order is chosen by the user, and not by the developer.</p>
 <cite>input</cite> and <cite>output</cite>. Each time <cite>input</cite> is modified, is content is
 duplicated to output.</p>
 <blockquote>
-<p><a class="reference external" href="../_static/echo_box.py">code snippet #4</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<div><p><a class="reference external" href="../_static/echo_box.py">code snippet #4</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="k">class</span> <span class="nc">EchoBox</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="nb">input</span> <span class="o">=</span>  <span class="n">Str</span><span class="p">()</span>
@@ -450,16 +450,16 @@ duplicated to output.</p>
 <span class="n">EchoBox</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>Events that do not correspond to a modification of an attribute can be
 generated with a <em>Button</em> traits. The callback is then called
 <em>_foo_fired()</em>.
 Here is an example of an interactive <cite>traitsUI</cite> application using a
 button:</p>
 <blockquote>
-<p><a class="reference external" href="../_static/interactive.py">code snippet #5</a></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ButtonEditor</span>
+<div><p><a class="reference external" href="../_static/interactive.py">code snippet #5</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ButtonEditor</span>
 
 <span class="k">class</span> <span class="nc">Counter</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">value</span> <span class="o">=</span>  <span class="n">Int</span><span class="p">()</span>
@@ -473,13 +473,13 @@ button:</p>
 <span class="n">Counter</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>Clicking on the button adds the <em>_add_one_fired()</em> method to the event
 queue, and this method gets executed as soon as the GUI is ready to
 handle it. Most of the time that is almost immediately.</p>
 <blockquote>
-<img alt="../_images/interactive.png" src="../_images/interactive.png" />
-</blockquote>
+<div><img alt="../_images/interactive.png" src="../_images/interactive.png" />
+</div></blockquote>
 <p>This programming pattern is called <cite>reactive programming</cite>: the objects
 react to the changes made to their attributes. In complex programs where
 the order of execution is hard to figure out, and bound to change, like
@@ -503,12 +503,12 @@ operations in the same time.</p>
 <p>A standard python program executes in a sequential way. Consider the
 following code snippet :</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">do_a</span><span class="p">()</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="n">do_a</span><span class="p">()</span>
 <span class="n">do_b</span><span class="p">()</span>
 <span class="n">do_c</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p><em>do_b()</em> is not called until <em>do_a()</em> is finished. Even in event loops
 everything is sequential. In some situation this can be very limiting.
 Suppose we want to capture an image from a camera and that it is a very
@@ -534,7 +534,7 @@ threading <a class="footnote-reference" href="#id16" id="id7">[6]</a> module. To
 thread in its <em>run</em> method. You can start your thread using its <em>start</em>
 method:</p>
 <blockquote>
-<p><a class="reference external" href="../_static/thread_example.py">code snippet #6</a></p>
+<div><p><a class="reference external" href="../_static/thread_example.py">code snippet #6</a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
 
@@ -549,7 +549,7 @@ method:</p>
 <span class="k">print</span> <span class="s">&quot;Main thread done&quot;</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>The above code yields the following output:</p>
 <div class="highlight-python"><pre>Main thread done
 MyThread done</pre>
@@ -582,11 +582,11 @@ race-conditions as it might be modified by the graphical toolkit while
 you are accessing it. Here is an example of code inserting the
 modification to traits objects by hand in the event loop:</p>
 <blockquote>
-<p><a class="reference external" href="../_static/traits_thread.py">code snippet #7</a></p>
+<div><p><a class="reference external" href="../_static/traits_thread.py">code snippet #7</a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ButtonEditor</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ButtonEditor</span>
 
 <span class="k">class</span> <span class="nc">TextDisplay</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">string</span> <span class="o">=</span>  <span class="n">String</span><span class="p">()</span>
@@ -636,12 +636,12 @@ modification to traits objects by hand in the event loop:</p>
     <span class="n">MainWindow</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>This creates an application with a button that starts or stop a
 continuous camera acquisition loop.</p>
 <blockquote>
-<img alt="../_images/traits_thread.png" src="../_images/traits_thread.png" />
-</blockquote>
+<div><img alt="../_images/traits_thread.png" src="../_images/traits_thread.png" />
+</div></blockquote>
 <p>When the &#8220;Start stop capture&#8221; button is pressed the
 <em>_start_stop_capture_fired</em> method is called. It checks to see if a
 <em>CaptureThread</em> is running or not. If none is running, it starts a new
@@ -675,12 +675,12 @@ traits, in order to add new possibilities to our application.</p>
 <div class="section" id="extending-traitsui-adding-a-matplotlib-figure-to-our-application">
 <h2>Extending TraitsUI: Adding a matplotlib figure to our application<a class="headerlink" href="#extending-traitsui-adding-a-matplotlib-figure-to-our-application" title="Permalink to this headline">¶</a></h2>
 <p>This section gives a few guidelines on how to build your own traits
-editor. A traits editor is the view associated to each traits that allows
-that graphically edit its value. We can twist a bit the notion and simply
+editor. A traits editor is the view associated with a trait that allows the
+user to graphically edit its value. We can twist a bit the notion and simply
 use it to graphically represent the attribute. This section involves a
 bit of <cite>wxPython</cite> code that may be hard to understand if you do not know
-<cite>wxPython</cite>, but it will bring a lot of power and flexibility to you use
-of traits. The reason it appears in this tutorial is that I wanted to
+<cite>wxPython</cite>, but it will bring a lot of power and flexibility to how you use
+traits. The reason it appears in this tutorial is that I wanted to
 insert a matplotlib in my <cite>traitsUI</cite> application. It is not necessary to
 fully understand the code of this section to be able to read on.</p>
 <p>I should stress that there already exists a plotting module that provides
@@ -693,18 +693,18 @@ traits does not provide an editor for every need. If we want to insert a
 powerful tool for plotting we have to get our hands a bit dirty and
 create our own traits editor.</p>
 <p>This involves some <cite>wxPython</cite> coding, as we need to translate a
-<cite>wxPython</cite> object in a traits editor by providing the corresponding API
-(i.e. the standard way of building a <cite>traits</cite> editor, so that the <cite>traits</cite>
-framework can do it automatically.</p>
-<p>Traits editor are created by an editor factory that instanciates an
+<cite>wxPython</cite> object to a traits editor by providing the corresponding API
+(i.e. the standard way of building a <cite>traits</cite> editor), so that the <cite>traits</cite>
+framework will know how to create the editor.</p>
+<p>Traits editors are created by an editor factory that instantiates an
 editor class and passes it the object that the editor represents in its
-<em>value</em> attribute. It calls the editor <em>int()</em> method to create the <em>wx</em>
+<em>value</em> attribute. It calls the editor <em>init()</em> method to create the <em>wx</em>
 widget. Here we create a wx figure canvas from a matplotlib figure using
 the matplotlib wx backend. Instead of displaying this widget, we set its
 control as the <em>control</em> attribute of the editor. TraitsUI takes care of
 displaying and positioning the editor.</p>
 <blockquote>
-<p><a class="reference external" href="../_static/mpl_figure_editor.py">code snippet #8</a></p>
+<div><p><a class="reference external" href="../_static/mpl_figure_editor.py">code snippet #8</a></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">wx</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
@@ -714,9 +714,9 @@ displaying and positioning the editor.</p>
 <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
 <span class="kn">from</span> <span class="nn">matplotlib.backends.backend_wx</span> <span class="kn">import</span> <span class="n">NavigationToolbar2Wx</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Instance</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.editor</span> <span class="kn">import</span> <span class="n">Editor</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.wx.basic_editor_factory</span> <span class="kn">import</span> <span class="n">BasicEditorFactory</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">traitsui.wx.editor</span> <span class="kn">import</span> <span class="n">Editor</span>
+<span class="kn">from</span> <span class="nn">traitsui.wx.basic_editor_factory</span> <span class="kn">import</span> <span class="n">BasicEditorFactory</span>
 
 <span class="k">class</span> <span class="nc">_MPLFigureEditor</span><span class="p">(</span><span class="n">Editor</span><span class="p">):</span>
 
@@ -750,8 +750,8 @@ displaying and positioning the editor.</p>
 
 <span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c"># Create a window to demo the editor</span>
-    <span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span>
-    <span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
+    <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span>
+    <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">linspace</span><span class="p">,</span> <span class="n">pi</span>
 
     <span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -773,12 +773,12 @@ displaying and positioning the editor.</p>
     <span class="n">Test</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>This code first creates a traitsUI editor for a matplotlib figure,
 and then a small dialog to illustrate how it works:</p>
 <blockquote>
-<img alt="../_images/mpl_figure_editor.png" src="../_images/mpl_figure_editor.png" />
-</blockquote>
+<div><img alt="../_images/mpl_figure_editor.png" src="../_images/mpl_figure_editor.png" />
+</div></blockquote>
 <p>The matplotlib figure traits editor created in the above example can be
 imported in a traitsUI application and combined with the power of traits.
 This editor allows to insert a matplotlib figure in a traitsUI dialog. It
@@ -806,31 +806,33 @@ a full-blown application can be built. This code can be found in the
 <li>The camera will be built as an object. Its real attributes (exposure
 time, gain...) will be represented as the object&#8217;s attributes, and
 exposed through traitsUI.</li>
-<li>The continuous acquisition/processing/user-interaction will be dealt
-with appropriate threads, as discussed in section 2.3.</li>
+<li>The continuous acquisition/processing/user-interaction will be handled
+by appropriate threads, as discussed in section 2.3.</li>
 <li>The plotting of the results will be done through the MPLWidget object.</li>
 </ul>
 <div class="section" id="the-imports">
 <h3>The imports<a class="headerlink" href="#the-imports" title="Permalink to this headline">¶</a></h3>
 <p>The MPLFigureEditor is imported from the last example.</p>
 <blockquote>
-<div class="highlight-python"><pre>from threading import Thread
-from time import sleep
-from enthought.traits.api import *
-from enthought.traits.ui.api import View, Item, Group, HSplit, Handler
-from enthought.traits.ui.menu import NoButtons
-from mpl_figure_editor import MPLFigureEditor
-from matplotlib.figure import Figure
-from scipy import * import wx</pre>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">HSplit</span><span class="p">,</span> <span class="n">Handler</span>
+<span class="kn">from</span> <span class="nn">traitsui.menu</span> <span class="kn">import</span> <span class="n">NoButtons</span>
+<span class="kn">from</span> <span class="nn">mpl_figure_editor</span> <span class="kn">import</span> <span class="n">MPLFigureEditor</span>
+<span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">Figure</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">wx</span>
+</pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 </div>
 <div class="section" id="user-interface-objects">
 <h3>User interface objects<a class="headerlink" href="#user-interface-objects" title="Permalink to this headline">¶</a></h3>
 <p>These objects store information for the program to interact with the user
 via traitsUI.</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Experiment</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Experiment</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Object that contains the parameters that control the experiment,</span>
 <span class="sd">    modified by the user.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -851,12 +853,12 @@ via traitsUI.</p>
                <span class="p">)</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>The camera object also is a real object, and not only a data structure:
 it has a method to acquire an image (or in our case simulate acquiring),
 using its attributes as parameters for the acquisition.</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Camera</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Camera objects. Implements both the camera parameters controls, and</span>
 <span class="sd">    the picture acquisition.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -873,7 +875,7 @@ using its attributes as parameters for the acquisition.</p>
         <span class="k">return</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 </div>
 <div class="section" id="threads-and-flow-control">
 <h3>Threads and flow control<a class="headerlink" href="#threads-and-flow-control" title="Permalink to this headline">¶</a></h3>
@@ -884,17 +886,17 @@ using its attributes as parameters for the acquisition.</p>
 <li><p class="first">The acquisition thread, started through the GUI. This thread is an
 infinite loop that waits for the camera to be triggered, retrieves the
 images, displays them, and spawns the processing thread for each image
-recieved.</p>
+received.</p>
 </li>
 <li><p class="first">The processing thread, started by the acquisition thread. This thread is
-responsible for the numerical intensive work of the application. it
+responsible for the numerical intensive work of the application. It
 processes the data and displays the results. It dies when it is done. One
 processing thread runs per shot acquired on the camera, but to avoid
 accumulation of threads in the case that the processing takes longer than
 the time lapse between two images, the acquisition thread checks that the
 processing thread is done before spawning a new one.</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">results_obj</span><span class="p">):</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">results_obj</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function called to do the processing &quot;&quot;&quot;</span>
     <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">indices</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">X</span><span class="o">*</span><span class="n">image</span><span class="p">)</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -910,33 +912,33 @@ processing thread is done before spawning a new one.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">wants_abort</span> <span class="o">=</span> <span class="bp">False</span>
 
-<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Spawns the processing job. &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&quot;Processing to slow&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="k">pass</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Spawns the processing job. &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&quot;Processing too slow&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">image</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processing_job</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Runs the acquisition loop. &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;Camera started&#39;</span><span class="p">)</span>
-    <span class="n">n_img</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wants_abort</span><span class="p">:</span>
-        <span class="n">n_img</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">img</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> image captured&#39;</span> <span class="o">%</span> <span class="n">n_img</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">image_show</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;Camera stopped&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Runs the acquisition loop. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;Camera started&#39;</span><span class="p">)</span>
+        <span class="n">n_img</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">wants_abort</span><span class="p">:</span>
+            <span class="n">n_img</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">img</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;</span><span class="si">%d</span><span class="s"> image captured&#39;</span> <span class="o">%</span> <span class="n">n_img</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_show</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="s">&#39;Camera stopped&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 </li>
 </ul>
 </div>
@@ -944,16 +946,16 @@ processing thread is done before spawning a new one.</p>
 <h3>The GUI elements<a class="headerlink" href="#the-gui-elements" title="Permalink to this headline">¶</a></h3>
 <p>The GUI of this application is separated in two (and thus created by a
 sub-class of SplitApplicationWindow).</p>
-<p>On the left a plotting area, made of an MPL figure, and its editor,
+<p>On the left a plotting area, made of an MPL figure and its editor,
 displays the images acquired by the camera.</p>
 <p>On the right a panel hosts the TraitsUI representation of a ControlPanel
 object. This object is mainly a container for our other objects, but it
 also has an Button for starting or stopping the acquisition, and a string
-(represented by a textbox) to display informations on the acquisition
+(represented by a textbox) to display information on the acquisition
 process. The view attribute is tweaked to produce a pleasant and usable
-dialog. Tabs are used as it help the display to be light and clear.</p>
+dialog. Tabs are used to help the display to be light and clear.</p>
 <blockquote>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ControlPanel</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ControlPanel</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This object is the core of the traitsUI interface. Its view is</span>
 <span class="sd">    the right panel of the application, and it hosts the method for</span>
 <span class="sd">    interaction between the objects and the GUI.</span>
@@ -979,36 +981,36 @@ dialog. Tabs are used as it help the display to be light and clear.</p>
                             <span class="n">Item</span><span class="p">(</span><span class="s">&#39;results&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;custom&#39;</span><span class="p">,</span> <span class="n">show_label</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span>
                             <span class="n">label</span><span class="o">=</span><span class="s">&quot;Results&quot;</span><span class="p">,),</span>
                     <span class="n">label</span><span class="o">=</span><span class="s">&#39;Experiment&#39;</span><span class="p">,</span> <span class="n">dock</span><span class="o">=</span><span class="s">&quot;tab&quot;</span><span class="p">),</span>
-                <span class="n">Item</span><span class="p">(</span><span class="s">&#39;camera&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;custom&#39;</span><span class="p">,</span> <span class="n">show_label</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>  <span class="n">dock</span><span class="o">=</span><span class="s">&quot;tab&quot;</span><span class="p">),</span>
+                <span class="n">Item</span><span class="p">(</span><span class="s">&#39;camera&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s">&#39;custom&#39;</span><span class="p">,</span> <span class="n">show_label</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">dock</span><span class="o">=</span><span class="s">&quot;tab&quot;</span><span class="p">),</span>
                 <span class="n">layout</span><span class="o">=</span><span class="s">&#39;tabbed&#39;</span><span class="p">),</span>
                 <span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_start_stop_acquisition_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Callback of the &quot;start stop acquisition&quot; button. This starts</span>
-<span class="sd">    the acquisition thread, or kills it.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">wants_abort</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span> <span class="o">=</span> <span class="n">AcquisitionThread</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">acquire</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">acquire</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">image_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_show</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">_start_stop_acquisition_fired</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Callback of the &quot;start stop acquisition&quot; button. This starts</span>
+<span class="sd">        the acquisition thread, or kills it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">isAlive</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">wants_abort</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span> <span class="o">=</span> <span class="n">AcquisitionThread</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_line</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">acquire</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">acquire</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">experiment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">experiment</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">image_show</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_show</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">acquisition_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-<span class="k">def</span> <span class="nf">add_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Adds a line to the textbox display.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">results_string</span> <span class="o">=</span> <span class="p">(</span><span class="n">string</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_string</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1000</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">add_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a line to the textbox display.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results_string</span> <span class="o">=</span> <span class="p">(</span><span class="n">string</span> <span class="o">+</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">results_string</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1000</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">image_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Plots an image on the canvas in a thread safe way.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">images</span><span class="o">=</span><span class="p">[]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;auto&#39;</span><span class="p">)</span>
-    <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">image_show</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots an image on the canvas in a thread safe way.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">images</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">&#39;auto&#39;</span><span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">MainWindowHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">is_OK</span><span class="p">):</span>
@@ -1048,16 +1050,16 @@ dialog. Tabs are used as it help the display to be light and clear.</p>
     <span class="n">MainWindow</span><span class="p">()</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
-</blockquote>
+</div></blockquote>
 <p>When the acquisition loop is created and running, the mock camera object
 produces noisy gaussian images, and the processing code estimates the
 parameters of the gaussian.</p>
 <p>Here are screenshots of the three different tabs of the application:</p>
 <blockquote>
-<img alt="../_images/application1.png" src="../_images/application1.png" />
+<div><img alt="../_images/application1.png" src="../_images/application1.png" />
 <img alt="../_images/application2.png" src="../_images/application2.png" />
 <img alt="../_images/application3.png" src="../_images/application3.png" />
-</blockquote>
+</div></blockquote>
 <hr class="docutils" />
 <p><strong>Conclusion</strong></p>
 <p>I have summarized here all what most scientists need to learn in order to
@@ -1227,8 +1229,8 @@ helpful on the mailing lists.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

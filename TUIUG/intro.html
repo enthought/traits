@@ -131,11 +131,11 @@ Traits UI do not need to explicitly import or call any particular GUI toolkit
 code unless they need some capability of the toolkit that is not provided by
 Traits UI. However, <em>some</em> particular toolkit must be installed on the system in
 order to actually display GUI windows.</p>
-<p>Traits UI uses a separate package, enthought.etsconfig, to determine which GUI
+<p>Traits UI uses a separate package, traits.etsconfig, to determine which GUI
 toolkit to use. This package is also used by other Enthought packages that need
 GUI capabilities, so that all such packages &#8220;agree&#8221; on a single GUI toolkit per
 application. The etsconfig package contains a singleton object, <strong>ETSConfig</strong>
-(importable from <cite>enthought.etsconfig.api</cite>), which has a string attribute,
+(importable from <cite>traits.etsconfig.api</cite>), which has a string attribute,
 <strong>toolkit</strong>, that signifies the GUI toolkit.</p>
 <p id="index-5">The values of <strong>ETSConfig.toolkit</strong> that are supported by Traits UI version 3
 are:</p>
@@ -154,8 +154,8 @@ order of precedence:</p>
 <span class="target" id="index-7"></span><ol class="arabic" id="index-8">
 <li><p class="first">The program can explicitly set <strong>ETSConfig.toolkit</strong>. It must do this before
 importing from any other Enthought Tool Suite component, including
-enthought.traits.  For example, at the beginning of a program:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.etsconfig.api</span> <span class="kn">import</span> <span class="n">ETSConfig</span>
+traits.  For example, at the beginning of a program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.etsconfig.api</span> <span class="kn">import</span> <span class="n">ETSConfig</span>
 <span class="n">ETSConfig</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">=</span> <span class="s">&#39;wx&#39;</span>
 </pre></div>
 </div>
@@ -280,8 +280,8 @@ which enforces type validation.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 14, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

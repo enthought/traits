@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.6.1',
+        VERSION:     '3.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -60,7 +60,7 @@
 <span id="index-0"></span><span id="id1"></span><h1>Defining Traits: Initialization and Validation<a class="headerlink" href="#defining-traits-initialization-and-validation" title="Permalink to this headline">¶</a></h1>
 <p>Using the Traits package in a Python program involves the following steps:</p>
 <ol class="arabic simple" id="index-1">
-<li>Import the names you need from the Traits package enthought.traits.api.</li>
+<li>Import the names you need from the Traits package traits.api.</li>
 <li>Define the traits you want to use.</li>
 </ol>
 <ol class="arabic simple" id="index-2" start="3">
@@ -80,7 +80,7 @@ attribute <strong>weight</strong>, which is initialized to 150.0 and can only ta
 point values.</p>
 <div class="highlight-python" id="index-3"><div class="highlight"><pre><span class="c"># minimal.py --- Minimal example of using traits.</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">150.0</span><span class="p">)</span>
@@ -108,7 +108,7 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
   File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
 in error value )
-enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person
+traits.trait_errors.TraitError: The 'weight' trait of a Person
 instance must be a float, but a value of 'average' &lt;type 'str'&gt; was
 specified.</pre>
 </div>
@@ -138,7 +138,7 @@ pass it as an argument to the trait:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Most predefined traits are callable, <a class="footnote-reference" href="#id14" id="id3">[2]</a> and can accept a default value and
+<p>Most predefined traits are callable, <a class="footnote-reference" href="#id13" id="id3">[2]</a> and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
 keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><em>Other Predefined Traits</em></a> for information on trait
 signatures, and see <a class="reference internal" href="#trait-metadata"><em>Trait Metadata</em></a> for information on metadata
@@ -258,7 +258,7 @@ Python built-in functions for type conversion:</p>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from enthought.traits.api import HasTraits, Float, CFloat
+<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
 &gt;&gt;&gt; class Person ( HasTraits ):
 ...    weight  = Float
 ...    cweight = CFloat
@@ -271,7 +271,7 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
   File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
 in error value )
-enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person
+traits.trait_errors.TraitError: The 'weight' trait of a Person
 instance must be a float, but a value of '180' &lt;type 'str'&gt; was specified.
 &gt;&gt;&gt; bill.cweight = '180'  # OK, cast to float('180')
 &gt;&gt;&gt; print bill.cweight
@@ -285,225 +285,22 @@ instance must be a float, but a value of '180' &lt;type 'str'&gt; was specified.
 <p>The Traits package provides a number of other predefined traits besides those
 for simple types, corresponding to other commonly used data types; these
 predefined traits are listed in the following table. Refer to  the
-<em>Traits API Reference</em>, in the section for the module enthought.traits.traits,
+<em>Traits API Reference</em>, in the section for the module traits.traits,
 for details. Most can be used either as simple names, which use their built-in
 default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
 the table.</p>
 <p class="rubric" id="predefined-traits-beyond-simple-types-table"><span id="index-16"></span>Predefined traits beyond simple types</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="24%" />
-<col width="76%" />
-</colgroup>
-<thead valign="bottom">
-<tr><th class="head">Name</th>
-<th class="head">Callable Signature</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr><td>Any</td>
-<td>Any( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Array</td>
-<td>Array( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
-<em>typecode</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Button</td>
-<td>Button( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
-&#8216;button&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
-7, <em>height_padding</em> = 5, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Callable</td>
-<td>Callable( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>CArray</td>
-<td>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
-<em>typecode</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Class</td>
-<td>Class( [<em>value</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Code</td>
-<td>Code( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Color</td>
-<td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>CSet</td>
-<td>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
-**<em>metadata</em>] )</td>
-</tr>
-<tr><td>n/a</td>
-<td>Constant( <em>value*[, ***metadata</em>] )</td>
-</tr>
-<tr><td>Dict, DictStrAny,
-DictStrBool,
-DictStrFloat,
-DictStrInt,
-DictStrList,
-DictStrLong,
-DictStrStr</td>
-<td>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
-<em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )<span class="target" id="index-17"></span><span class="target" id="index-18"></span></td>
-</tr>
-<tr id="index-19"><td>Directory</td>
-<td>Directory( [<em>value</em> = &#8216;&#8217;, <em>auto_set</em> = False, <em>entries</em> =
-10, <em>exists</em> = False, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Disallow</td>
-<td>n/a</td>
-</tr>
-<tr><td>n/a</td>
-<td>Either( <em>val1*[, *val2</em>, ..., <em>valN</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Enum</td>
-<td>Enum( <em>values*[, ***metadata</em>] )</td>
-</tr>
-<tr><td>Event</td>
-<td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Expression</td>
-<td>Expression( [<em>value</em> = &#8216;0&#8217;, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>false</td>
-<td>n/a</td>
-</tr>
-<tr><td>File</td>
-<td>File( [<em>value</em> = &#8216;&#8217;, <em>filter</em> = None, <em>auto_set</em> = False,
-<em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
-</tr>
-<tr><td>Font</td>
-<td>Font( [*<em>args</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Function</td>
-<td>Function( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Generic</td>
-<td>Generic( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>generic_trait</td>
-<td>n/a</td>
-</tr>
-<tr><td>HTML</td>
-<td>HTML( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
-<em>regex</em> = &#8216;&#8217;,  **<em>metadata</em> ] )</td>
-</tr>
-<tr><td>Instance</td>
-<td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
-None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
-<em>module</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>List, ListBool,
-ListClass,
-ListComplex,
-ListFloat,
-ListFunction,
-ListInstance,
-ListInt,
-ListMethod,
-ListStr,
-ListThis,
-ListUnicode</td>
-<td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,
-<em>maxlen</em> = sys.maxint, <em>items</em> = True, **<em>metadata</em>])<span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span></td>
-</tr>
-<tr id="index-25"><td>Method</td>
-<td>Method ([**<em>metadata</em>] )</td>
-</tr>
-<tr><td>missing</td>
-<td>n/a</td>
-</tr>
-<tr><td>Module</td>
-<td>Module ( [**<em>metadata</em>] )</td>
-</tr>
-<tr><td>Password</td>
-<td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Property</td>
-<td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
-None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
-** <em>metadata</em>] )</p>
-<p class="last">See <a class="reference internal" href="advanced.html#property-traits"><em>Property Traits</em></a>, for details.</p>
-</td>
-</tr>
-<tr><td>Python</td>
-<td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>PythonValue</td>
-<td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Range</td>
-<td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
-<em>exclude_low</em> = False, <em>exclude_high</em> = False,
-*<em>metadata</em>] )</td>
-</tr>
-<tr><td>ReadOnly</td>
-<td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Regex</td>
-<td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
-</tr>
-<tr><td>RGBColor</td>
-<td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>self</td>
-<td>n/a</td>
-</tr>
-<tr><td>Set</td>
-<td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
-**<em>metadata</em>] )</td>
-</tr>
-<tr><td>String</td>
-<td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
-sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>This</td>
-<td>n/a</td>
-</tr>
-<tr><td>ToolbarButton</td>
-<td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
-&#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
-2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>true</td>
-<td>n/a</td>
-</tr>
-<tr><td>Tuple</td>
-<td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>Type</td>
-<td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
-True, **<em>metadata</em>] )</td>
-</tr>
-<tr><td>undefined</td>
-<td>n/a</td>
-</tr>
-<tr><td>UStr</td>
-<td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
-NoDefaultSpecified, ***metadata</em>])</td>
-</tr>
-<tr><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
-<td>UUID( [**<em>metadata</em>] )</td>
-</tr>
-<tr><td>WeakRef</td>
-<td>WeakRef( [<em>klass</em> = &#8216;enthought.traits.HasTraits&#8217;,
-<em>allow_none</em> = False, <em>adapt</em> = &#8216;yes&#8217;, **<em>metadata</em>])</td>
-</tr>
-</tbody>
-</table>
 <div class="section" id="this-and-self">
-<span id="index-26"></span><span id="id9"></span><h4>This and self<a class="headerlink" href="#this-and-self" title="Permalink to this headline">¶</a></h4>
+<span id="index-17"></span><span id="id8"></span><h4>This and self<a class="headerlink" href="#this-and-self" title="Permalink to this headline">¶</a></h4>
 <p>A couple of predefined traits that merit special explanation are This and
 <strong>self</strong>. They are intended for attributes whose values must be of the same
 class (or a subclass) as the enclosing class. The default value of This is
 None; the default value of <strong>self</strong> is the object containing the attribute.</p>
-<p id="index-27">The following is an example of using This:</p>
+<p id="index-18">The following is an example of using This:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># this.py --- Example of This predefined trait</span>
 
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">This</span>
@@ -514,7 +311,7 @@ attribute, which accepts only other Employee instances as its value. It might
 be more intuitive to write the following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># bad_self_ref.py --- Non-working example with self- referencing</span>
 <span class="c">#                     class definition</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span>
 </pre></div>
@@ -525,7 +322,7 @@ main reason for providing the This trait.</p>
 <p>Note that if a trait attribute is defined using This on one class and is
 referenced on an instance of a subclass, the This trait verifies values based
 on the class on which it was defined. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">manager</span> <span class="o">=</span> <span class="n">This</span>
 <span class="gp">...</span>
@@ -543,7 +340,7 @@ on the class on which it was defined. For example:</p>
 </div>
 </div>
 <div class="section" id="list-of-possible-values">
-<span id="list-of-possibl-values"></span><span id="index-28"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
+<span id="list-of-possibl-values"></span><span id="index-19"></span><h4>List of Possible Values<a class="headerlink" href="#list-of-possible-values" title="Permalink to this headline">¶</a></h4>
 <p>You can define a trait whose possible values include disparate types. To do
 this, use the predefined Enum trait, and pass it a list of all possible values.
 The values must all be of simple Python data types, such as strings, integers,
@@ -551,10 +348,10 @@ and floats, but they do not have to be all of the same type. This list of
 values can be a typical parameter list, an explicit (bracketed) list, or a
 variable whose type is list. The first item in the list is used as the default
 value.</p>
-<p id="index-29">A trait defined in this fashion can accept only values that are contained in
+<p id="index-20">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from enthought.traits.api import Enum, HasTraits, Str
+<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
 &gt;&gt;&gt; class InventoryItem(HasTraits):
 ...    name  = Str # String value, default is ''
 ...    stock = Enum(None, 0, 1, 2, 3, 'many')
@@ -575,7 +372,7 @@ Traceback (most recent call last):
   File "&lt;stdin&gt;", line 1, in &lt;module&gt;
   File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
 in error value )
-enthought.traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
 instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 &lt;type
 'int'&gt; was specified.</pre>
 </div>
@@ -588,7 +385,7 @@ class named <strong>hats</strong>, and assigns values to its attributes.</p>
 </div>
 </div>
 <div class="section" id="trait-metadata">
-<span id="index-30"></span><span id="id10"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
+<span id="index-21"></span><span id="id9"></span><h2>Trait Metadata<a class="headerlink" href="#trait-metadata" title="Permalink to this headline">¶</a></h2>
 <p>Trait objects can contain metadata attributes, which fall into three categories:</p>
 <ul class="simple">
 <li>Internal attributes, which you can query but not set.</li>
@@ -601,10 +398,10 @@ passing them as keyword arguments to callable traits. The value of each
 keyword argument becomes bound to the resulting trait object as the value
 of an attribute having the same name as the keyword.</p>
 <div class="section" id="internal-metadata-attributes">
-<span id="index-31"></span><span id="id11"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-22"></span><span id="id10"></span><h3>Internal Metadata Attributes<a class="headerlink" href="#internal-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are used internally by the Traits package,
 and can be queried:</p>
-<span class="target" id="index-32"></span><span class="target" id="index-33"></span><span class="target" id="index-34"></span><span class="target" id="index-35"></span><ul class="simple" id="index-36">
+<span class="target" id="index-23"></span><span class="target" id="index-24"></span><span class="target" id="index-25"></span><span class="target" id="index-26"></span><ul class="simple" id="index-27">
 <li><strong>array</strong>: Indicates whether the trait is an array.</li>
 <li><strong>default</strong>: Returns the default value for the trait, if known; otherwise it
 returns Undefined.</li>
@@ -643,10 +440,10 @@ derived from TraitType.</li>
 </ul>
 </div>
 <div class="section" id="recognized-metadata-attributes">
-<span id="index-37"></span><span id="id12"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<span id="index-28"></span><span id="id11"></span><h3>Recognized Metadata Attributes<a class="headerlink" href="#recognized-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p>The following metadata attributes are not predefined, but are recognized by
 HasTraits objects:</p>
-<span class="target" id="index-38"></span><span class="target" id="index-39"></span><ul class="simple" id="index-40">
+<span class="target" id="index-29"></span><span class="target" id="index-30"></span><ul class="simple" id="index-31">
 <li><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
 in exception messages and fly-over help in user interface trait editors.</li>
 <li><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
@@ -677,10 +474,10 @@ False, as doing so is likely to create unintended consequences. See
 <p>Other metadata attributes may be recognized by specific predefined traits.</p>
 </div>
 <div class="section" id="accessing-metadata-attributes">
-<span id="index-41"></span><span id="id13"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
-<p id="index-42">Here is an example of setting trait metadata using keyword arguments:</p>
+<span id="index-32"></span><span id="id12"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
+<p id="index-33">Here is an example of setting trait metadata using keyword arguments:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># keywords.py --- Example of trait keywords</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
@@ -702,7 +499,7 @@ name&#8221; when moused over.</p>
 on a HasTraits object to get a reference to a specific trait, and then access
 the metadata attribute:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># metadata.py --- Example of accessing trait metadata attributes</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> \
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> \
                                  <span class="n">Instance</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TraitType</span>
 
 <span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span> <span class="k">pass</span>
@@ -724,7 +521,7 @@ the metadata attribute:</p>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                     <span class="c"># []</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>                <span class="c"># list</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>
-         <span class="c"># (&lt;enthought.traits.traits.CTrait object at 0x01B24138&gt;,)</span>
+         <span class="c"># (&lt;traits.traits.CTrait object at 0x01B24138&gt;,)</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span> <span class="p">)</span>       <span class="c"># True</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">TraitType</span> <span class="p">)</span>  <span class="c"># True</span>
 <span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span>      <span class="c"># False</span>
@@ -744,7 +541,7 @@ the metadata attribute:</p>
 </pre></div>
 </div>
 <p class="rubric">Footnotes</p>
-<table class="docutils footnote" frame="void" id="id14" rules="none">
+<table class="docutils footnote" frame="void" id="id13" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td>Most callable predefined traits are classes, but a few are functions.
@@ -754,10 +551,10 @@ details on particular traits, and see Chapter 5 for details on extending
 existing traits.</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id15" rules="none">
+<table class="docutils footnote" frame="void" id="id14" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id8">[3]</a></td><td>Available in Python 2.5.</td></tr>
+<tr><td class="label">[3]</td><td>Available in Python 2.5.</td></tr>
 </tbody>
 </table>
 </div>
@@ -849,8 +646,8 @@ existing traits.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 15, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

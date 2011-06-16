@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.6.1',
+        VERSION:     '3.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -69,13 +69,13 @@ provides facilities for defining complex or customized traits:</p>
 <div class="section" id="trait-subclassing">
 <span id="index-1"></span><span id="id2"></span><h2>Trait Subclassing<a class="headerlink" href="#trait-subclassing" title="Permalink to this headline">¶</a></h2>
 <p>Starting with Traits version 3.0, most predefined traits are defined as
-subclasses of enthought.traits.trait_handlers.TraitType. As a result, you can
+subclasses of traits.trait_handlers.TraitType. As a result, you can
 subclass one of these traits, or TraitType, to derive new traits. Refer to the
 <em>Traits API Reference</em> to see whether a particular predefined trait derives from
 TraitType.</p>
 <p id="index-2">Here&#8217;s an example of subclassing a predefined trait class:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># trait_subclass.py -- Example of subclassing a trait class</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">BaseInt</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">BaseInt</span>
 
 <span class="k">class</span> <span class="nc">OddInt</span> <span class="p">(</span> <span class="n">BaseInt</span> <span class="p">):</span>
 
@@ -210,8 +210,8 @@ full variety of forms of the Trait() function, refer to the <em>Traits API
 Reference</em>.</p>
 <p>The most general form of the Trait() function is:</p>
 <dl class="function">
-<dt id="enthought.traits.traits.Trait">
-<tt class="descclassname">enthought.traits.traits.</tt><tt class="descname">Trait</tt><big>(</big><em>default_value</em>, <em>{type | constant_value | dictionary | class | function | trait_handler | trait }+</em><big>)</big><a class="headerlink" href="#enthought.traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.traits.Trait">
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Trait</tt><big>(</big><em>default_value</em>, <em>{type | constant_value | dictionary | class | function | trait_handler | trait }+</em><big>)</big><a class="headerlink" href="#traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-10">The notation <tt class="docutils literal"><span class="pre">{</span> <span class="pre">|</span> <span class="pre">|</span> <span class="pre">}+</span></tt> means a list of one or more of any of the items listed
@@ -222,7 +222,7 @@ value is considered valid if it meets the criteria of at least one of the items
 in the list.</p>
 <p id="index-11">The following is an example of a compound trait with multiple criteria:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># compound.py -- Example of multiple criteria in a trait definition</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">Range</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">Range</span>
 
 <span class="k">class</span> <span class="nc">Die</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
@@ -315,7 +315,7 @@ mapped to a set of internal, program-friendly values.</p>
 <p id="index-21">The following examples illustrates mapped traits that map color names to tuples
 representing red, green, blue, and transparency values:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># mapped.py --- Example of a mapped trait</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="n">standard_color</span> <span class="o">=</span> <span class="n">Trait</span> <span class="p">(</span><span class="s">&#39;black&#39;</span><span class="p">,</span>
               <span class="p">{</span><span class="s">&#39;black&#39;</span><span class="p">:</span>       <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
@@ -385,7 +385,7 @@ any predefined trait behavior, or that is related to a predefined trait that
 happens to not be derived from TraitType. The option for such cases is to use a
 trait handler, either a predefined one or a custom one that you write.</p>
 <p id="index-23">A trait handler is an instance of the
-enthought.traits.trait_handlers.TraitHandler class, or of a subclass, whose
+traits.trait_handlers.TraitHandler class, or of a subclass, whose
 task is to verify the correctness of values assigned to object traits. When a
 value is assigned to an object trait that has a trait handler, the trait
 handler&#8217;s validate() method checks the value, and assigns that value or a
@@ -397,15 +397,15 @@ of the predefined trait handler classes are described in the following sections.
 These sections also demonstrate how to define a trait using a trait handler and
 the Trait() factory function. For a complete list and descriptions of predefined
 TraitHandler subclasses, refer to the <em>Traits API Reference</em>, in the section on
-the enthought.traits.trait_handlers module.</p>
+the traits.trait_handlers module.</p>
 <div class="section" id="traitprefixlist">
 <span id="index-24"></span><span id="id13"></span><h3>TraitPrefixList<a class="headerlink" href="#traitprefixlist" title="Permalink to this headline">¶</a></h3>
 <p>The TraitPrefixList handler accepts not only a specified set of strings as
 values, but also any unique prefix substring of those values. The value assigned
 to the trait attribute is the full string that the substring matches.</p>
 <p id="index-25">For example:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from enthought.traits.api import HasTraits, Trait
-&gt;&gt;&gt; from enthought.traits.api import TraitPrefixList
+<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Trait
+&gt;&gt;&gt; from traits.api import TraitPrefixList
 &gt;&gt;&gt; class Alien(HasTraits):
 ...   heads = Trait('one', TraitPrefixList(['one','two','three']))
 ...
@@ -423,7 +423,7 @@ Traceback (most recent call last):
  in validate self.error( object, name, value )
   File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
 in error value )
-enthought.traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
+traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
  must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't'
  &lt;type 'str'&gt; was specified.</pre>
 </div>
@@ -437,7 +437,7 @@ The value assigned is the dictionary value corresponding to the matched key.</p>
 <p id="index-27">The following example uses TraitPrefixMap to define a Boolean trait that accepts
 any prefix of &#8216;true&#8217;, &#8216;yes&#8217;, &#8216;false&#8217;, or &#8216;no&#8217;, and maps them to 1 or 0.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># traitprefixmap.py --- Example of using the TraitPrefixMap handler</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitPrefixMap</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitPrefixMap</span>
 
 <span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span> <span class="p">{</span>
                               <span class="s">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -463,7 +463,7 @@ to the <em>Traits API Reference</em> for details about this function.</p>
 in <a class="reference internal" href="#defining-a-trait-type"><em>Defining a Trait Type</em></a>) using a TraitHandler subclass.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># custom_traithandler.py --- Example of a custom TraitHandler</span>
 <span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">TraitHandler</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitHandler</span>
 
 <span class="k">class</span> <span class="nc">TraitOddInteger</span><span class="p">(</span><span class="n">TraitHandler</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
@@ -479,7 +479,7 @@ in <a class="reference internal" href="#defining-a-trait-type"><em>Defining a Tr
 <p>An application could use this new trait handler to define traits such as the
 following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="c"># use_custom_th.py --- Example of using a custom TraitHandler</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitRange</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">TraitRange</span>
 <span class="kn">from</span> <span class="nn">custom_traithandler</span> <span class="kn">import</span> <span class="n">TraitOddInteger</span>
 
 <span class="k">class</span> <span class="nc">AnOddClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -494,11 +494,11 @@ than a complete sentence:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">odd_stuff</span> <span class="o">=</span> <span class="n">AnOddClass</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">odd_stuff</span><span class="o">.</span><span class="n">very_odd</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;test.py&quot;</span>, line <span class="m">25</span>, in <span class="n-Identifier">?</span>
+  File <span class="nb">&quot;test.py&quot;</span>, line <span class="m">25</span>, in <span class="n">?</span>
     <span class="n">odd_stuff</span><span class="o">.</span><span class="n">very_odd</span> <span class="o">=</span> <span class="mi">0</span>
-  File <span class="nb">&quot;C:\wrk\src\lib\enthought\traits\traits.py&quot;</span>, line <span class="m">1119</span>, in <span class="n-Identifier">validate</span>
+  File <span class="nb">&quot;C:\wrk\src\lib\enthought\traits\traits.py&quot;</span>, line <span class="m">1119</span>, in <span class="n">validate</span>
     <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">excp</span>
-<span class="nc">traits.traits.TraitError</span>: <span class="n-Identifier">The &#39;very_odd&#39; trait of an AnOddClass instance</span>
+<span class="gr">traits.traits.TraitError</span>: <span class="n">The &#39;very_odd&#39; trait of an AnOddClass instance</span>
 <span class="go">must be **a positive odd integer** or -10 &lt;= an integer &lt;= -1, but a value</span>
 <span class="go">of 0 &lt;type &#39;int&#39;&gt; was specified.</span>
 </pre></div>
@@ -607,8 +607,8 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     </div>
     <div class="footer">
         &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+      Last updated on Jun 15, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
     </div>
   </body>
 </html>

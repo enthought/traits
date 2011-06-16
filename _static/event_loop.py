@@ -1,4 +1,4 @@
-from enthought.traits.api import *
+from traits.api import *
 import wx
 
 class Counter(HasTraits):

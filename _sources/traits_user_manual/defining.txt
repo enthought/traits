@@ -8,9 +8,9 @@ Defining Traits: Initialization and Validation
 
 Using the Traits package in a Python program involves the following steps:
 
-.. index:: importing Traits names, enthought.traits.api; importing from
+.. index:: importing Traits names, traits.api; importing from
 
-1. Import the names you need from the Traits package enthought.traits.api.
+1. Import the names you need from the Traits package traits.api.
 
 2. Define the traits you want to use.
 
@@ -39,7 +39,7 @@ point values.
 
     # minimal.py --- Minimal example of using traits.
 
-    from enthought.traits.api import HasTraits, Float
+    from traits.api import HasTraits, Float
 
     class Person(HasTraits):
         weight = Float(150.0)
@@ -70,7 +70,7 @@ For example::
       File "<stdin>", line 1, in <module>
       File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
     in error value )
-    enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person
+    traits.trait_errors.TraitError: The 'weight' trait of a Person
     instance must be a float, but a value of 'average' <type 'str'> was
     specified.
 
@@ -212,7 +212,7 @@ Python built-in functions for type conversion:
 The following example illustrates the difference between coercing traits and
 casting traits::
 
-    >>> from enthought.traits.api import HasTraits, Float, CFloat
+    >>> from traits.api import HasTraits, Float, CFloat
     >>> class Person ( HasTraits ):
     ...    weight  = Float
     ...    cweight = CFloat
@@ -225,7 +225,7 @@ casting traits::
       File "<stdin>", line 1, in <module>
       File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
     in error value )
-    enthought.traits.trait_errors.TraitError: The 'weight' trait of a Person
+    traits.trait_errors.TraitError: The 'weight' trait of a Person
     instance must be a float, but a value of '180' <type 'str'> was specified.
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print bill.cweight
@@ -239,7 +239,7 @@ Other Predefined Traits
 The Traits package provides a number of other predefined traits besides those
 for simple types, corresponding to other commonly used data types; these
 predefined traits are listed in the following table. Refer to  the
-*Traits API Reference*, in the section for the module enthought.traits.traits,
+*Traits API Reference*, in the section for the module traits.traits,
 for details. Most can be used either as simple names, which use their built-in
 default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
@@ -390,7 +390,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
-| WeakRef          | WeakRef( [*klass* = 'enthought.traits.HasTraits',        |
+| WeakRef          | WeakRef( [*klass* = 'traits.HasTraits',        |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
 +------------------+----------------------------------------------------------+
 
@@ -412,7 +412,7 @@ The following is an example of using This::
 
     # this.py --- Example of This predefined trait
 
-    from enthought.traits.api import HasTraits, This
+    from traits.api import HasTraits, This
 
     class Employee(HasTraits):
         manager = This
@@ -423,7 +423,7 @@ be more intuitive to write the following::
 
     # bad_self_ref.py --- Non-working example with self- referencing
     #                     class definition
-    from enthought.traits.api import HasTraits, Instance
+    from traits.api import HasTraits, Instance
     class Employee(HasTraits):
         manager = Instance(Employee)
 
@@ -435,7 +435,7 @@ Note that if a trait attribute is defined using This on one class and is
 referenced on an instance of a subclass, the This trait verifies values based
 on the class on which it was defined. For example::
 
-    >>> from enthought.traits.api import HasTraits, This
+    >>> from traits.api import HasTraits, This
     >>> class Employee(HasTraits):
     ...    manager = This
     ...
@@ -471,7 +471,7 @@ the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.
 ::
 
-    >>> from enthought.traits.api import Enum, HasTraits, Str
+    >>> from traits.api import Enum, HasTraits, Str
     >>> class InventoryItem(HasTraits):
     ...    name  = Str # String value, default is ''
     ...    stock = Enum(None, 0, 1, 2, 3, 'many')
@@ -492,7 +492,7 @@ it is also a valid value for assignment.
       File "<stdin>", line 1, in <module>
       File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
     in error value )
-    enthought.traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+    traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
     instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type
     'int'> was specified.
 
@@ -624,7 +624,7 @@ Accessing Metadata Attributes
 Here is an example of setting trait metadata using keyword arguments::
 
     # keywords.py --- Example of trait keywords
-    from enthought.traits.api import HasTraits, Str
+    from traits.api import HasTraits, Str
 
     class Person(HasTraits):
         first_name = Str('',
@@ -647,7 +647,7 @@ on a HasTraits object to get a reference to a specific trait, and then access
 the metadata attribute::
 
     # metadata.py --- Example of accessing trait metadata attributes
-    from enthought.traits.api import HasTraits, Int, List, Float, \
+    from traits.api import HasTraits, Int, List, Float, \
                                      Instance, Any, TraitType
 
     class Foo( HasTraits ): pass
@@ -669,7 +669,7 @@ the metadata attribute::
     print t.trait( 'lf' ).default                     # []
     print t.trait( 'lf' ).default_kind                # list
     print t.trait( 'lf' ).inner_traits
-             # (<enthought.traits.traits.CTrait object at 0x01B24138>,)
+             # (<traits.traits.CTrait object at 0x01B24138>,)
     print t.trait( 'lf' ).is_trait_type( List )       # True
     print t.trait( 'lf' ).is_trait_type( TraitType )  # True
     print t.trait( 'lf' ).is_trait_type( Float )      # False

@@ -1,4 +1,4 @@
-from enthought.traits.api import *
+from traits.api import *
 
 class EchoBox(HasTraits):
     input =  Str()

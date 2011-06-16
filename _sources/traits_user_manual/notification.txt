@@ -71,7 +71,7 @@ Setting up a dynamic trait attribute change notification handler is illustrated
 in the following example::
 
     # dynamic_notification.py --- Example of dynamic notification
-    from enthought.traits.api import Float, HasTraits, Instance
+    from traits.api import Float, HasTraits, Instance
 
     class Part (HasTraits):
       cost = Float(0.0)
@@ -350,7 +350,7 @@ some aspect of the extended trait name syntax in the name specifier.
 
     # list_notifier.py -- Example of zero-parameter handlers for an object
     #                     containing a list
-    from enthought.traits.api import HasTraits, List
+    from traits.api import HasTraits, List
 
     class Employee: pass
 
@@ -494,7 +494,7 @@ illustrated in the following example::
 
     # static_notification.py --- Example of static attribute
     #                            notification
-    from enthought.traits.api import HasTraits, Float
+    from traits.api import HasTraits, Float
 
     class Person(HasTraits):
         weight_kg = Float(0.0)
@@ -627,7 +627,7 @@ There are two major differences between a normal trait and an event:
 As an example of an event, consider::
 
     # event.py --- Example of trait event
-    from enthought.traits.api import Event, HasTraits, List, Tuple
+    from traits.api import Event, HasTraits, List, Tuple
 
     point_2d = Tuple(0, 0)
 
