@@ -24,7 +24,7 @@ import pickle, unittest, os
 from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
         Property)
 
-# NOTE: There is a File class in enthought.io module, but since we want to
+# NOTE: There is a File class in apptools.io module, but since we want to
 # eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
 

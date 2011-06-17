@@ -24,7 +24,7 @@ from traitsui.api \
 from traitsui.wx.color_column \
     import ColorColumn
 
-from enthought.enable.api \
+from enable.api \
     import ColorTrait
 
 class Thingy ( HasTraits ):

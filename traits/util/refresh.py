@@ -346,7 +346,7 @@ class Refresher(object):
             # Skip new_function if it doesn't have a name...
             #
             # note: added check for __name__ because a generator
-            # (enthought.plugins.text_editor.editor.text_editor._id_generator)
+            # (envisage.plugins.text_editor.editor.text_editor._id_generator)
             # was sneaking through as new_function [ I believe because of the
             # reassignment of it].  Doesn't look like there is an intelligent
             # way to handle this...

@@ -12,7 +12,7 @@ website. Additional documentation for the Traits package is available from
 the Traits web page, including:
 
 * *Traits API Reference*
-* *Traits UI User Guide*
+* `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_
 * Traits Technical Notes
 
 What Are Traits?
@@ -32,7 +32,7 @@ attributes, giving the attributes some additional characteristics:
   trait-based attribute is evident in the code, and only values that meet a
   programmer-specified set of criteria (i.e., the trait definition) can be
   assigned to that attribute. Note that the default value need not meet the
-  criteria defined for assignment of values. Traits 3.0 also supports defining
+  criteria defined for assignment of values. Traits 4.0 also supports defining
   and using abstract interfaces, as well as adapters between interfaces.
 
 .. index:: deferral
@@ -53,7 +53,7 @@ attributes, giving the attributes some additional characteristics:
   the traits' definitions. This feature requires that a supported GUI
   toolkit be installed. However, if this feature is not used, the Traits package
   does not otherwise require GUI support. For details on the visualization
-  features of Traits, see the *Traits UI User Guide*.
+  features of Traits, see the `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_.
 
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
@@ -173,7 +173,7 @@ where the Traits package has been used, it has proven valuable for enhancing
 programmers' ability to understand code, during both concurrent
 development and maintenance.
 
-The Traits 3.0 package works with version 2.4 and later of Python, and is
+The Traits 4.0 package works with version 2.7 and later of Python, and is
 similar in some ways to the Python property language feature. Standard Python
 properties provide the similar capabilities to the Traits package, but with
 more work on the part of the programmer.

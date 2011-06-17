@@ -27,7 +27,7 @@ from traitsui.table_column \
 from traitsui.wx.numeric_editor \
     import ToolkitEditorFactory as NumericEditor
 
-from enthought.model.api \
+from blockcanvas.model.api \
     import ANumericModel, NumericArrayModel, ReductionModel, SelectionModel, \
            NumericItem, ExpressionFilter, IndexFilter
 
