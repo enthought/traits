@@ -850,7 +850,7 @@ class MetaHasTraitsObject ( object ):
                         class_traits[ name ] = value = ictrait( default_value )
                         # Make sure that the trait now has the default value
                         # has the correct initializer.
-                        value.default_value(1, default_value)
+                        value.default_value(1, value.default)
                         del class_dict[ name ]
                         override_bases = []
                         handler        = value.handler
