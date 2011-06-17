@@ -22,7 +22,7 @@ can be used to provide the correct tree node information for each type of data
 that will appear in the <b>TreeEditor</b> view.
 
 In this demo, we define an <b>ITreeNodeAdapter</b> subclass that adapts the
-<i>enthought.io.file.File</i> class to be displayed in a file explorer style
+<i>apptools.io.file.File</i> class to be displayed in a file explorer style
 tree view.
 """
 
@@ -37,7 +37,7 @@ from traits.api \
 from traitsui.api \
     import View, VGroup, Item, TreeEditor, ITreeNode, ITreeNodeAdapter
 
-from enthought.io.api \
+from apptools.io.api \
     import File
 
 #-- FileAdapter Class ----------------------------------------------------------

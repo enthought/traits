@@ -18,10 +18,10 @@
 
 import wx
 
-from enthought.kiva.traits.kiva_font_trait \
+from kiva.traits.kiva_font_trait \
     import KivaFont
 
-from enthought.enable.traits.api \
+from enable.traits.api \
     import RGBAColor
 
 from traits.api \
