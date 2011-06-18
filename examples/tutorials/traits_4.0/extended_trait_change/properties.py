@@ -51,16 +51,11 @@ Refer also to the code tabs for this lesson for a complete example using a
 reference. In particular, take a look at the **LeagueModelView Class** tab's
 *total_hits* trait definition.
 """
-
+# FIXME - the functionality demoed above belongs here, but traitsui should be
+# removed from the exampel below.
 #--<Imports>--------------------------------------------------------------------
 
 from traits.api \
-    import *
-
-from traitsui.api \
-    import *
-
-from traitsui.table_column \
     import *
 
 #--[Player Class]---------------------------------------------------------------
@@ -103,108 +98,6 @@ class League ( HasTraits ):
 
     # The teams in the league:
     teams = List( Team )
-
-#--[LeagueModelView Class]-----------------------------------------------------
-
-# Define a ModelView for a League model:
-class LeagueModelView ( ModelView ):
-
-    # The currently selected team:
-    team = Instance( Team )
-
-    # The currently selected player:
-    player = Instance( Player )
-
-    # Button to add a hit to the current player:
-    got_hit = Button( 'Got a Hit' )
-
-    # The total number of hits (note the 'depends_on' extended trait reference):
-    total_hits = Property( depends_on = 'model.teams.players.hits' )
-
-    @cached_property
-    def _get_total_hits ( self ):
-        """ Returns the total number of hits across all teams and players.
-        """
-        return reduce( add, [ reduce( add, [ p.hits for p in t.players ], 0 )
-                              for t in self.model.teams ], 0 )
-
-    view = View(
-        VGroup(
-            HGroup(
-                Item( 'total_hits', style = 'readonly' ),
-                      label       = 'League Statistics',
-                      show_border = True
-            ),
-            VGroup(
-                Item( 'model.teams',
-                      show_label = False,
-                      editor = TableEditor(
-                                columns = [ ObjectColumn( name  = 'name',
-                                                          width = 0.70 ),
-                                            ObjectColumn( name  = 'num_players',
-                                                          label = '# Players',
-                                                          editable = False,
-                                                          width = 0.29 ) ],
-                                selected     = 'object.team',
-                                auto_add     = True,
-                                row_factory  = Team,
-                                configurable = False,
-                                sortable     = False )
-                ),
-                label       = 'League Teams',
-                show_border = True
-            ),
-            VGroup(
-                Item( 'object.team.players',
-                      show_label = False,
-                      editor = TableEditor(
-                                   columns  = [ ObjectColumn( name  = 'name',
-                                                              width = 0.70 ),
-                                                ObjectColumn( name  = 'hits',
-                                                              editable = False,
-                                                              width = 0.29 ) ],
-                                   selected     = 'object.player',
-                                   auto_add     = True,
-                                   row_factory  = Player,
-                                   configurable = False,
-                                   sortable     = False )
-                ),
-                '_',
-                HGroup(
-                    Item( 'got_hit',
-                          show_label   = False,
-                          enabled_when = 'player is not None'
-                    )
-                ),
-                label       = 'Team Players',
-                show_labels = False,
-                show_border = True
-            )
-        ),
-        resizable = True
-    )
-
-    def _model_changed ( self, model ):
-        """ Handles the 'league' model being initialized.
-        """
-        if len( model.teams ) > 0:
-            self.team = model.teams[0]
-
-    def _got_hit_changed ( self ):
-        """ Handles the currently selected player making a hit.
-        """
-        self.player.hits += 1
-
-    def _team_changed ( self, team ):
-        """ Handles a new team being selected.
-        """
-        if len( team.players ) > 0:
-            self.player = team.players[0]
-        else:
-            self.player = None
-
-# Function to add two numbers (used with 'reduce'):
-add = lambda a, b: a + b
 
 #--[Example*]-------------------------------------------------------------------
 

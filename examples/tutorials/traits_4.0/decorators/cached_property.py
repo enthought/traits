@@ -65,7 +65,6 @@ Use of the *cached_property* decorator also eliminates the need to add
 *cached = True* metadata to the property declaration, as was previously required
 when using *depends_on* metadata with a cached property definition.
 """
-
 #--<Imports>--------------------------------------------------------------------
 
 from traits.api import *
@@ -80,34 +79,9 @@ class TestScores ( HasPrivateTraits ):
 
     @cached_property
     def _get_average ( self ):
+        print "...computing average:",
         s = self.scores
         return (float( reduce( lambda n1, n2: n1 + n2, s, 0 ) ) / len( s ))
-
-#--[Sample User Interface]------------------------------------------------------
-
-class TestScoresHandler ( ModelView ):
-
-    new_score = Int
-    add_score = Button( 'Add New Score' )
-
-    view = View(
-        VGroup(
-            HGroup(
-                Item( 'new_score' ),
-                Item( 'add_score', show_label = False )
-            ),
-            '_',
-            Item( 'model.average',
-                  label = 'Current average',
-                  style = 'readonly' )
-        )
-    )
-
-    def _add_score_changed ( self ):
-        """ Handles the user clicking the 'Add New Score' button by adding the
-            current 'New score' value to the current list of scores.
-        """
-        self.model.scores.append( self.new_score )
 
 #--[Example*]-------------------------------------------------------------------
 
@@ -115,16 +89,11 @@ class TestScoresHandler ( ModelView ):
 test_scores = TestScores( scores = [ 89, 93, 76, 84, 62, 96, 75, 81, 69, 90 ] )
 
 # Display the average:
-print 'First average: ', test_scores.average
+print 'First average:', test_scores.average
+print 'Check that again:', test_scores.average
 
 # Now add a few more late scores into the mix:
 test_scores.scores.extend( [ 85, 61, 70 ] )
 
 # And display the new average:
 print 'Second average:', test_scores.average
-
-#--<UI Demo>--------------------------------------------------------------------
-
-# Create the demo UI:
-demo = TestScoresHandler( model = test_scores )
-

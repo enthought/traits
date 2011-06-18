@@ -88,14 +88,12 @@ that for each case in which an explicit or implicit change is made to the *son*
 object's *last_name* trait, a corresponding call is made to the change
 notification handler.
 
-Also, please take a look at the **ChildController** class and the **Demo** tab
-for an example of using delegated traits in a Traits user interface.
 """
+# FIXME - this need to be redone without traitsui
 
 #--<Imports>--------------------------------------------------------------------
 
 from traits.api import *
-from traitsui.api import *
 
 #--[Parent Class]---------------------------------------------------------------
 
@@ -103,12 +101,6 @@ class Parent ( HasTraits ):
 
     first_name = Str
     last_name  = Str
-
-    view = View(
-        Item( 'first_name' ),
-        Item( 'last_name' ),
-        resizable = True
-    )
 
 #--[Child Class]----------------------------------------------------------------
 
@@ -119,43 +111,6 @@ class Child ( HasTraits ):
 
     first_name = Str
     last_name  = Delegate( 'father' )
-
-#--[ChildController Class]------------------------------------------------------
-
-class ChildController ( Controller ):
-
-    reset = Button( 'Reset Last Name' )
-
-    view = View(
-        VGroup(
-            VGroup(
-                Item( 'father', style = 'custom' ),
-                label       = 'Father',
-                show_labels = False,
-                show_border = True
-            ),
-            VGroup(
-                Item( 'mother', style = 'custom' ),
-                label       = 'Mother',
-                show_labels = False,
-                show_border = True
-            ),
-            VGroup(
-                Item( 'first_name' ),
-                HGroup(
-                    Item( 'last_name', springy = True ),
-                    Item( 'controller.reset', show_label = False ),
-                ),
-                label       = 'Child',
-                show_border = True
-            )
-        ),
-        resizable = True
-    )
-
-    def _reset_changed ( self ):
-        """ Reset the child's last name."""
-        del self.model.last_name
 
 #--[Example*]-------------------------------------------------------------------
 
@@ -188,8 +143,3 @@ del son.last_name
 # Now changing the father's name should affect the son again:
 print "Changing dad's last name to Simmons."
 dad.last_name = 'Simmons'
-
-#--<Demo>-----------------------------------------------------------------------
-
-demo = ChildController(
-           model = Child( mother = mom, father = dad, first_name = 'Rachel' ) )
