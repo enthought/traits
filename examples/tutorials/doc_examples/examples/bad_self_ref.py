@@ -4,7 +4,7 @@
 # bad_self_ref.py -- Non-working example with self-referencing class definition
 
 #--[Imports]--------------------------------------------------------------------
-from traits.api import HasTraits, Trait, Instance
+from traits.api import HasTraits, Instance
 
 #--[Code]-----------------------------------------------------------------------
 # Shows the incorrect way of defining a self-referencing class.

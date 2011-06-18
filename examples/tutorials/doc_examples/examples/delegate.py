@@ -4,8 +4,7 @@
 # delegate.py --- Example of trait delegation
 
 #--[Imports]--------------------------------------------------------------------
-from traits.api import DelegatesTo, HasTraits, Instance, Str
-from traits.api import TraitError
+from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
 #--[Code]-----------------------------------------------------------------------
 class Parent(HasTraits):

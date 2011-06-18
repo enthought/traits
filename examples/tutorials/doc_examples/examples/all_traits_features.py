@@ -7,7 +7,6 @@
 
 #--[Imports]--------------------------------------------------------------------
 from traits.api import Delegate, HasTraits, Instance, Int, Str
-import traitsui
 
 #--[Code]-----------------------------------------------------------------------
 # Shows the five primary features of the Traits package.

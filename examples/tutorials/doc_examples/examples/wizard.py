@@ -2,8 +2,7 @@
 #  License: BSD Style.
 
 # wizard.py ---Example of a traits-based wizard UI
-from traits.api import HasTraits, Int, Str, Trait
-import traitsui
+from traits.api import HasTraits, Int, Str
 
 class Person(HasTraits):
     name = Str
