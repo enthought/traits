@@ -2807,11 +2807,11 @@ class BaseInstance ( BaseClass ):
                 set_validate()
             else:
                 item_trait = getattr( handler, 'item_trait', None )
-                if item_trait is not None:
+                if item_trait is not None and item_trait.handler is self:
                     trait   = item_trait
                     handler = self
 
-        if handler.fast_validate is not None:
+        if handler is self and handler.fast_validate is not None:
             trait.set_validate( handler.fast_validate )
 
 class Instance ( BaseInstance ):

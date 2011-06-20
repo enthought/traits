@@ -20,9 +20,9 @@ from __future__ import absolute_import
 
 import unittest
 
-from ..api import (Any, CFloat, CInt, CLong, Float, Delegate, HasTraits,
-    Instance, Int, Long, Trait, TraitError, TraitList, TraitPrefixList,
-    TraitPrefixMap, TraitRange, Tuple)
+from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
+    Instance, Int, List, Long, Str, Trait, TraitError, TraitList,
+    TraitPrefixList, TraitPrefixMap, TraitRange, Tuple)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -534,7 +534,15 @@ class ConsumerClass(HasTraits):
 class ConsumerSubclass(ConsumerClass):
     x = FactoryClass()
 
-class InstanceFactoryTest(unittest.TestCase):
+embedded_instance_trait = Trait('', Str, Instance('traits.has_traits.HasTraits'))
+
+class Dummy(HasTraits):
+    x = embedded_instance_trait
+    xl = List(embedded_instance_trait)
+
+class RegressionTest(unittest.TestCase):
+    """ Check that fixed bugs stay fixed.
+    """
 
     def test_factory_subclass_no_segfault(self):
         """ Test that we can provide an instance as a default in the definition
@@ -544,6 +552,15 @@ class InstanceFactoryTest(unittest.TestCase):
         obj = ConsumerSubclass()
         obj.x
 
+    def test_trait_compound_instance(self):
+        """ Test that a deferred Instance() embedded in a TraitCompound handler
+        and then a list will not replace the validate method for the outermost
+        trait.
+        """
+        # Pass through an instance in order to make the instance trait resolve the class.
+        d = Dummy()
+        d.xl = [HasTraits()]
+        d.x = 'OK'
 
 #-------------------------------------------------------------------------------
 #  Trait(using a function) that must be an odd integer:
