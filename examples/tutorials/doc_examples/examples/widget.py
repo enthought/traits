@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-from traits.api import Float, HasTraits, Trait, self
+from traits.api import Float, HasTraits, Trait
 
 class Part(HasTraits):
     cost = Trait(0.0)
