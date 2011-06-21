@@ -2804,14 +2804,21 @@ class BaseInstance ( BaseClass ):
         if handler is not self:
             set_validate = getattr( handler, 'set_validate', None )
             if set_validate is not None:
+                # The outer trait is a TraitCompound. Recompute its
+                # fast_validate table now that we have updated ours.
+                # FIXME: there are probably still issues if the TraitCompound is
+                # further nested.
                 set_validate()
             else:
                 item_trait = getattr( handler, 'item_trait', None )
                 if item_trait is not None and item_trait.handler is self:
+                    # The outer trait is a List trait.
                     trait   = item_trait
                     handler = self
+                else:
+                    return
 
-        if handler is self and handler.fast_validate is not None:
+        if handler.fast_validate is not None:
             trait.set_validate( handler.fast_validate )
 
 class Instance ( BaseInstance ):
