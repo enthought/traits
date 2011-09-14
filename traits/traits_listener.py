@@ -541,6 +541,14 @@ class ListenerItem ( ListenerBase ):
         self.handle_dict( object, name, new.removed, new.added )
 
         if len( new.changed ) > 0:
+            # If 'name' refers to the '_items' trait, then remove the '_items'
+            # suffix to get the actual dictionary trait.
+            #
+            # fixme: Is there ever a case where 'name' *won't* refer to the
+            # '_items' trait?
+            if name.endswith('_items'):
+                name = name[:-len('_items')]
+                
             dict = getattr( object, name )
             unregister = self.next.unregister
             register = self.next.register
