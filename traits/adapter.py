@@ -28,7 +28,8 @@ from __future__ import absolute_import
 import weakref
 
 # Traits imports:
-from .api import HasTraits, Any, Bool, Expression
+from .has_traits import HasTraits
+from .trait_types import Any, Bool, Expression
 
 # PyProtocols imports:
 from .protocols.api import addClassAdvisor, declareAdapter, declareImplementation, Protocol
