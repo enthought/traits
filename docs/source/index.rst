@@ -2,7 +2,7 @@ Traits Documentation
 ==============================================
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
     :glob:
 
     traits_user_manual/index
