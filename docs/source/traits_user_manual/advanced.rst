@@ -489,10 +489,12 @@ Implementing an Interface
 `````````````````````````
 
 A class declares that it implements one or more interfaces using the
-implements() function, which has the signature:
+:func:`~traits.has_traits.implements` function, which has the signature:
 
 .. currentmodule:: traits.has_traits
+
 .. function:: implements( interface[, interface2 , ... , interfaceN] )
+    :noindex:
 
 .. index:: examples; interface implementation, interfaces; implementation; example
 
