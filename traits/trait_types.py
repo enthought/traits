@@ -349,8 +349,10 @@ class Title ( Str ):
         """ Returns the default traits UI editor to use for a trait.
         """
         from traitsui.api import TitleEditor
-
-        return TitleEditor()
+        if hasattr(self, 'allow_selection'):
+            return TitleEditor(allow_selection=self.allow_selection)
+        else:
+            return TitleEditor()
 
 #-------------------------------------------------------------------------------
 #  'BaseUnicode' and 'Unicode' traits:
