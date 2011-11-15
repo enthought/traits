@@ -23,7 +23,7 @@ sys.path.append(os.path.abspath('_extensions'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [ 'refactor_doc', 'sphinx.ext.viewcode']
+extensions = [ 'refactor_doc', 'sphinx.ext.viewcode', 'sphinx.ext.autosummary']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -74,6 +74,7 @@ today_fmt = '%B %d, %Y'
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+autodoc_default_flags =['members']
 
 # Options for HTML output
 # -----------------------
