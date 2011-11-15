@@ -2,6 +2,13 @@
 ===============================
 
 .. automodule:: traits.has_dynamic_views
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: DynamicViewSubElement
+
+.. autoclass:: DynamicView
+
+.. autoclass:: HasDynamicViews

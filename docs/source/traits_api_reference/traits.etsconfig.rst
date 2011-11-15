@@ -5,15 +5,12 @@ etsconfig Package
 ------------------------
 
 .. automodule:: traits.etsconfig
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
 
 :mod:`etsconfig` Module
 -----------------------
 
 .. automodule:: traits.etsconfig.etsconfig
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
 
+.. autodata:: ETSConfig

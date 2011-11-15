@@ -2,6 +2,18 @@
 ==========================
 
 .. automodule:: traits.trait_errors
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Functions
+---------
+
+.. autofunction:: repr_type
+
+Classes
+-------
+
+.. autoclass:: TraitError
+
+.. autoclass:: TraitNotificationError
+
+.. autoclass:: DelegationError

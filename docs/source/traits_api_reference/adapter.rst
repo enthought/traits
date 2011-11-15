@@ -1,7 +1,16 @@
 :mod:`adapter` Module
 =====================
 
-.. automodule:: traits.adapter
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. currentmodule:: traits.adapter
+    :no-members:
+Class
+-----
+
+.. autoclass:: Adapter
+
+.. autoclass:: DefaultAdapterFactory
+
+Function
+--------
+
+.. autofunction:: adapts

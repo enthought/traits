@@ -2,6 +2,51 @@
 ========================
 
 .. automodule:: traits.trait_base
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autodata:: Uninitialized
+
+.. autodata:: Undefined
+
+.. autodata:: Missing
+
+.. autodata:: Self
+
+Functions
+---------
+
+.. autofunction:: strx
+
+.. autofunction:: class_of
+
+.. autofunction:: add_article
+
+.. autofunction:: user_name_for
+
+.. autofunction:: traits_home
+
+.. autofunction:: verify_path
+
+.. autofunction:: get_module_name
+
+.. autofunction:: get_resource_path
+
+.. autofunction:: xgetattr
+
+.. autofunction:: xsetattr
+
+.. autofunction:: is_none
+
+.. autofunction:: not_none
+
+.. autofunction:: not_false
+
+.. autofunction:: not_event
+
+.. autofunction:: is_str
+
+
+

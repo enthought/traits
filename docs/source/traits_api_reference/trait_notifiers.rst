@@ -2,6 +2,34 @@
 =============================
 
 .. automodule:: traits.trait_notifiers
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: NotificationExceptionHandlerState
+
+.. autoclass:: NotificationExceptionHandler
+    :members: _push_handler, _pop_handler, _handle_exception, _get_handlers,
+        _check_lock, _log_exception
+
+.. autoclass:: StaticAnyTraitChangeNotifyWrapper
+
+.. autoclass:: StaticTraitChangeNotifyWrapper
+
+.. autoclass:: TraitChangeNotifyWrapper
+
+.. autoclass:: ExtendedTraitChangeNotifyWrapper
+
+.. autoclass:: FastUITraitChangeNotifyWrapper
+
+.. autoclass:: UITraitChangeNotifyWrapper
+
+.. autoclass:: DeferredTraitNotification
+
+.. autoclass:: NewTraitChangeNotifyWrapper
+
+Functions
+---------
+
+.. autofunction:: set_ui_handler

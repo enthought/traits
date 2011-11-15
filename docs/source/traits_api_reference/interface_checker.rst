@@ -2,6 +2,16 @@
 ===============================
 
 .. automodule:: traits.interface_checker
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: InterfaceError
+
+.. autoclass:: InterfaceChecker
+
+Function
+--------
+
+.. autofunction:: check_implements

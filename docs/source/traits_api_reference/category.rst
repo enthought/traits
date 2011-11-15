@@ -2,6 +2,13 @@
 ======================
 
 .. automodule:: traits.category
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: MetaCategory
+
+.. autoclass:: MetaCategoryObject
+
+.. autoclass:: Category

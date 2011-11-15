@@ -2,6 +2,20 @@
 =========================
 
 .. automodule:: traits.trait_value
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: BaseTraitValue
+
+.. autoclass:: TraitValue
+
+Functions
+---------
+
+.. autofunction:: SyncValue
+
+.. autofunction:: TypeValue
+
+.. autofunction:: DefaultValue

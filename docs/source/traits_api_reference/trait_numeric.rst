@@ -2,6 +2,19 @@
 ===========================
 
 .. automodule:: traits.trait_numeric
-    :members:
-    :undoc-members:
-    :show-inheritance:
+    :no-members:
+
+Classes
+-------
+
+.. autoclass:: AbstractArray
+
+.. autoclass:: Array
+
+.. autoclass:: CArray
+
+Function
+--------
+
+.. autofunction:: dtype2trait
+
