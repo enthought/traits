@@ -662,6 +662,7 @@ The signature  of the adapts() function is:
 
 .. currentmodule:: traits.adapter
 .. function:: adapts( adaptee_class, interface[, interface2, ... , interfaceN])
+    :noindex:
 
 This signature is very similar to that of implements(), but adds the class being
 adapted as the first parameter. Interface names beyond the first one are
@@ -823,7 +824,6 @@ Property Factory Function
 
 The Property() function has the following signature:
 
-.. currentmodule:: traits.traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
 All parameters are optional, including the *fget* "getter" and *fset* "setter"
