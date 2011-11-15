@@ -71,7 +71,7 @@ def get_indent(line):
 #------------------------------------------------------------------------------
 
 def is_variable_field(line, indent=''):
-    regex = indent + r'\w+\s:\s*'
+    regex = indent + r'\*?\*?\w+\s:\s*'
     match = re.match(regex, line)
     return match
 
@@ -82,6 +82,13 @@ def is_method_field(line, indent=''):
 
 def is_empty(line):
     return not line.strip()
+
+#------------------------------------------------------------------------------
+#  Functions to adjust strings
+#------------------------------------------------------------------------------
+
+def fix_name(name):
+    return name.replace('*','\*')
 
 #------------------------------------------------------------------------------
 #  Classes
@@ -387,17 +394,10 @@ class BaseDocstring(object):
         if self.eol:
             return False
 
-        # peek at line
         header = self.peek()
-
+        line2 = self.peek(1)
         if self.verbose:
             print 'current line is: {0} at index {1}'.format(header, self.index)
-
-        # peek at second line
-        line2 = self.peek(1)
-
-        if self.verbose:
-            print 'second line is:', header
 
         # check for underline type format
         underline = re.match(r'\s*\S+\s*\Z', line2)
@@ -607,13 +607,14 @@ class FunctionDocstring(BaseDocstring):
 
         descriptions = []
         for arg_name, arg_type, desc in parameters:
+            arg_name = arg_name.replace('*','\*')
             descriptions.append(indent + ':param {0}: {1}'.\
                                 format(arg_name, desc[0].strip()))
-            desc = add_indent(desc)
             for line in desc[1:]:
                 descriptions.append('{0}'.format(line))
-            descriptions.append(indent + ':type {0}: {1}'.\
-                                format(arg_name, arg_type))
+            if len(arg_type) > 0:
+                descriptions.append(indent + ':type {0}: {1}'.\
+                                    format(arg_name, arg_type))
         descriptions.append('')
         self.insert_lines(descriptions, index)
         self.index += len(descriptions)
