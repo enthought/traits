@@ -265,7 +265,8 @@ Uninitialized = _Uninitialized()
 Undefined = None
 
 class _Undefined(object):
-
+    """ Singleton 'Undefined' object (used as undefined trait name and/or value)
+    """
     def __new__(cls):
         if Undefined is not None:
             return Undefined
