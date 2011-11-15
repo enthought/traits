@@ -477,6 +477,7 @@ class TraitFactory ( object ):
     def __init__ ( self, maker_function = None ):
         if maker_function is not None:
             self.maker_function = maker_function
+            self.__doc__ = maker_function.__doc__
 
     #---------------------------------------------------------------------------
     #  Creates a CTrait instance:
