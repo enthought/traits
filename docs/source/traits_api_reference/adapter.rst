@@ -1,8 +1,9 @@
 :mod:`adapter` Module
 =====================
 
-.. currentmodule:: traits.adapter
+.. automodule:: traits.adapter
     :no-members:
+
 Class
 -----
 
