@@ -3175,6 +3175,11 @@ class TraitDictObject ( dict ):
                     TraitDictEvent( removed = removed ) )
 
     def update ( self, dic ):
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            dict.update( self, dic )
+            return
+
         if len( dic ) > 0:
             new_dic = self._validate_dic( dic )
 
