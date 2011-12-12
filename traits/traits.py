@@ -37,9 +37,9 @@ Visualization:
     programmer-defined) user interfaces that allow their values to be
     edited or displayed)
 
-Note: 'trait' is a synonym for 'property', but is used instead of the
-word 'property' to differentiate it from the Python language 'property'
-feature.
+.. note:: 'trait' is a synonym for 'property', but is used instead of the
+    word 'property' to differentiate it from the Python language 'property'
+    feature.
 """
 
 #-------------------------------------------------------------------------------
@@ -477,6 +477,7 @@ class TraitFactory ( object ):
     def __init__ ( self, maker_function = None ):
         if maker_function is not None:
             self.maker_function = maker_function
+            self.__doc__ = maker_function.__doc__
 
     #---------------------------------------------------------------------------
     #  Creates a CTrait instance:
@@ -665,7 +666,7 @@ def Trait ( *value_type, **metadata ):
     +-------------------+---------------+-------------------------------------+
     | Trait(*handler*)  | Trait(        | Assignment to this trait is         |
     |                   | TraitEnum )   | validated by an object derived from |
-    |                   |               | **traits.TraitHandler**.  |
+    |                   |               | **traits.TraitHandler**.            |
     +-------------------+---------------+-------------------------------------+
     | Trait(*default*,  | Trait(0.0, 0.0| This is the most general form of    |
     | { *type* |        | 'stuff',      | the function. The notation:         |

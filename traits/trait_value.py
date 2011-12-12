@@ -132,22 +132,22 @@ class BaseTraitValue ( HasPrivateTraits ):
 
 class TraitValue ( BaseTraitValue ):
 
-    # The callable used to define a default value:
+    #: The callable used to define a default value:
     default = Callable
 
-    # The positional arguments to pass to the callable default value:
+    #: The positional arguments to pass to the callable default value:
     args = Tuple
 
-    # The keyword arguments to pass to the callable default value:
+    #: The keyword arguments to pass to the callable default value:
     kw = Dict
 
-    # The trait to use as the new trait type:
+    #: The trait to use as the new trait type:
     type = Any
 
-    # The object to delegate the new value to:
+    #: The object to delegate the new value to:
     delegate = Instance( HasTraits )
 
-    # The name of the trait on the delegate object to get the new value from:
+    #: The name of the trait on the delegate object to get the new value from:
     name = Str
 
     #-- Private Methods --------------------------------------------------------
