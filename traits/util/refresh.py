@@ -69,7 +69,7 @@
 
         obj.method()
 
-    python actually calls the method othe __class__ object like so::
+    python actually calls the method of the __class__ object like so::
 
         obj.__class__.method(obj)
 
