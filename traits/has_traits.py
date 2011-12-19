@@ -133,6 +133,8 @@ any_trait = Any().as_ctrait()
 #-------------------------------------------------------------------------------
 
 def _clone_trait ( clone, metadata = None ):
+    """ Creates a clone of a specified trait.
+    """
     trait = CTrait( 0 )
     trait.clone( clone )
 
@@ -155,6 +157,8 @@ def _get_method ( cls, method ):
     return None
 
 def _get_def ( class_name, class_dict, bases, method ):
+    """ Gets the definition of a specified method (if any).
+    """
     if method[0:2] == '__':
         method = '_%s%s' % ( class_name, method )
 
@@ -317,6 +321,9 @@ def _check_method ( class_dict, name, func ):
 #-------------------------------------------------------------------------------
 
 def _check_trait ( trait ):
+    """ Returns either the original value or a valid CTrait if the value can be
+        converted to a CTrait.
+    """
     if isinstance( trait, CTrait ):
         return trait
 
@@ -336,6 +343,8 @@ def _check_trait ( trait ):
 #-------------------------------------------------------------------------------
 
 def _trait_for ( trait ):
+    """ Returns the trait corresponding to a specified value.
+    """
     trait = _check_trait( trait )
     if isinstance( trait, CTrait ):
         return trait
@@ -347,6 +356,8 @@ def _trait_for ( trait ):
 #-------------------------------------------------------------------------------
 
 def _mapped_trait_for ( trait ):
+    """ Returns the 'mapped trait' definition for a mapped trait.
+    """
     default_value = trait.default_value()[1]
     try:
         default_value = trait.handler.mapped_value( default_value )
@@ -361,6 +372,8 @@ def _mapped_trait_for ( trait ):
 #-------------------------------------------------------------------------------
 
 def _add_notifiers ( notifiers, handlers ):
+    """ Adds a list of handlers to a specified notifiers list.
+    """
     for handler in handlers:
         if not isinstance( handler, WrapperTypes ):
             handler = StaticTraitChangeNotifyWrapper( handler )
@@ -371,6 +384,8 @@ def _add_notifiers ( notifiers, handlers ):
 #-------------------------------------------------------------------------------
 
 def _add_event_handlers ( trait, cls, handlers ):
+    """ Adds any specified event handlers defined for a trait by a class.
+    """
     events = trait.event
     if events is not None:
         if isinstance(events, basestring):
@@ -385,6 +400,9 @@ def _add_event_handlers ( trait, cls, handlers ):
 #-------------------------------------------------------------------------------
 
 def _property_method ( class_dict, name ):
+    """ Returns the method associated with a particular class property
+    getter/setter.
+    """
     return class_dict.get( name )
 
 #-------------------------------------------------------------------------------
@@ -456,7 +474,8 @@ def trait_method ( func, return_type, **arg_types ):
 #-------------------------------------------------------------------------------
 
 def _add_assignment_advisor ( callback, depth = 2 ):
-
+    """ Defines a method 'decorator' for adding type checking to methods.
+    """
     frame      = sys._getframe( depth )
     old_trace  = [ frame.f_trace ]
     old_locals = frame.f_locals.copy()
@@ -3799,7 +3818,8 @@ class SingletonHasPrivateTraits ( HasPrivateTraits ):
 #-------------------------------------------------------------------------------
 
 class Vetoable ( HasStrictTraits ):
-
+    """ Defines a 'vetoable' request object and an associated event.
+    """
     # Should the request be vetoed? (Can only be set to 'True')
     veto = Bool( False )
 

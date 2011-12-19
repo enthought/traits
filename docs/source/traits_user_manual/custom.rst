@@ -195,6 +195,7 @@ The most general form of the Trait() function is:
 
 .. currentmodule:: traits.traits
 .. function:: Trait(default_value, {type | constant_value | dictionary | class | function | trait_handler | trait }+ )
+    :noindex:
 
 .. index:: compound traits
 

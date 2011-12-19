@@ -83,6 +83,8 @@ trait_from = None  # Patched by 'traits.py' when real 'trait_from' is defined
 #-------------------------------------------------------------------------------
 
 def _arg_count ( func ):
+    """ Returns the correct argument count for a specified function or method.
+    """
     if (type( func ) is MethodType) and (func.im_self is not None):
         return func.func_code.co_argcount - 1
     return func.func_code.co_argcount
