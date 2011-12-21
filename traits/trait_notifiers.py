@@ -70,6 +70,12 @@ def set_ui_handler ( handler ):
     ui_handler = handler
     ui_thread  = get_ident()
 
+def ui_dispatch( handler, *args, **kw ):
+    if get_ident() == ui_thread:
+        handler( *args, **kw )
+    else:
+        ui_handler( handler, *args, **kw )
+
 #-------------------------------------------------------------------------------
 #  'NotificationExceptionHandlerState' class:
 #-------------------------------------------------------------------------------
