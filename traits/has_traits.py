@@ -3782,6 +3782,45 @@ class HasPrivateTraits ( HasTraits ):
     # Disallow access to all other traits not explicitly defined:
     _  = Disallow
 
+
+#------------------------------------------------------------------------------
+# ABC classes with traits: (where available)
+#------------------------------------------------------------------------------
+try:
+
+    import abc
+
+
+    class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
+        """ A MetaHasTraits subclass which also inherits from 
+        abc.ABCMeta. 
+
+        """
+        # The ABCMeta class is cooperative and behaves nicely with
+        # MetaHasTraits, provided it is inherited first.
+        pass
+
+
+    class ABCHasTraits(HasTraits):
+        """ A HasTraits subclass which enables the features of Abstract
+        Base Classes (ABC). See the 'abc' module in the standard library
+        for more information.
+
+        """
+        __metaclass__ = ABCMetaHasTraits
+
+
+    class ABCHasStrictTraits(ABCHasTraits):
+        """ A HasTraits subclass which behaves like HasStrictTraits but
+        also enables the features of Abstract Base Classes (ABC). See the
+        'abc' module in the standard library for more information.
+
+        """
+        _ = Disallow
+
+except ImportError:
+    pass
+
 #-------------------------------------------------------------------------------
 #  Singleton classes with traits:
 #

@@ -58,6 +58,7 @@ from .trait_types import UUID
 
 from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
+        ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
         property_depends_on)
