@@ -58,10 +58,14 @@ from .trait_types import UUID
 
 from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
-        ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
         property_depends_on)
+
+try:
+    from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
+except ImportError:
+    pass
 
 from .trait_handlers import (BaseTraitHandler, TraitType, TraitHandler,
         TraitRange, TraitString, TraitCoerceType, TraitCastType, TraitInstance,
