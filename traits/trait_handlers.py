@@ -2658,6 +2658,9 @@ class TraitListObject ( list ):
             if self.name_items is not None:
                 self._send_trait_items_event( self.name_items,
                     TraitListEvent( index, removed ) )
+        elif len(self) == 0:
+            # Let whatever system error (ValueError) should be raised be raised.
+            list.remove(self, value)
         else:
             self.len_error( len( self ) - 1 )
 
