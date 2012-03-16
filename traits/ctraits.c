@@ -872,8 +872,11 @@ has_traits_setattro ( has_traits_object * obj,
 
 PyObject *
 has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
-
-    has_traits_object * obj = (has_traits_object *) type->tp_alloc( type, 0 );
+    
+    // Call PyBaseObject_Type.tp_new to do the actual construction.
+    // This allows things like ABCMeta machinery to work correctly
+    // which is implemented at the C level.
+    has_traits_object * obj = (has_traits_object *) PyBaseObject_Type.tp_new(type, args, kwds);
     if ( obj != NULL ) {
         if (type->tp_dict == NULL) {
             PyErr_SetString(PyExc_RuntimeError, "No tp_dict");

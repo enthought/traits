@@ -62,6 +62,11 @@ from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
         implements, traits_super, on_trait_change, cached_property,
         property_depends_on)
 
+try:
+    from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
+except ImportError:
+    pass
+
 from .trait_handlers import (BaseTraitHandler, TraitType, TraitHandler,
         TraitRange, TraitString, TraitCoerceType, TraitCastType, TraitInstance,
         ThisClass, TraitClass, TraitFunction, TraitEnum, TraitPrefixList,
