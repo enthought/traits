@@ -2,6 +2,25 @@
 """
 
 import unittest
+import warnings
+
+from ..api import HasTraits
+
+
+class TestNew(unittest.TestCase):
+    """ Test that __new__ works correctly.
+    """
+
+    def setUp(self):
+        self.old_filters = warnings.filters[:]
+        warnings.simplefilter('error', DeprecationWarning)
+
+    def tearDown(self):
+        warnings.filters[:] = self.old_filters
+
+    def test_new(self):
+        # Should not raise DeprecationWarning.
+        HasTraits(x=10)
 
 try:
     import abc
