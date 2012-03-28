@@ -34,6 +34,7 @@ static PyObject * editor_property;     /* == "editor" */
 static PyObject * class_prefix;        /* == "__prefix__" */
 static PyObject * trait_added;         /* == "trait_added" */
 static PyObject * empty_tuple;         /* == () */
+static PyObject * empty_dict;          /* == {} */
 static PyObject * Undefined;           /* Global 'Undefined' value */
 static PyObject * Uninitialized;       /* Global 'Uninitialized' value */
 static PyObject * TraitError;          /* TraitError exception */
@@ -876,7 +877,7 @@ has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
-    has_traits_object * obj = (has_traits_object *) PyBaseObject_Type.tp_new(type, args, kwds);
+    has_traits_object * obj = (has_traits_object *) PyBaseObject_Type.tp_new(type, empty_tuple, empty_dict);
     if ( obj != NULL ) {
         if (type->tp_dict == NULL) {
             PyErr_SetString(PyExc_RuntimeError, "No tp_dict");
@@ -5885,6 +5886,9 @@ initctraits ( void ) {
 
     /* Create an empty tuple: */
     empty_tuple = PyTuple_New( 0 );
+
+    /* Create an empty dict: */
+    empty_dict = PyDict_New();
 
     /* Create the 'is_callable' marker: */
     is_callable = PyInt_FromLong( -1 );
