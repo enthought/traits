@@ -46,7 +46,7 @@ The method overrides any default value specified in the trait definition.
 .. index:: get_default_value()
 
 It is also possible to define a dynamic method for the default value in a trait
-type subclass (get_default_value()). However, however, using a
+type subclass (get_default_value()). However, using a
 _\ *name*\ _default()  method avoids the overhead of subclassing a trait.
 
 .. index:: default value; overriding in a subclass
