@@ -153,6 +153,7 @@ div.sphinxsidebar input {
     font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
     font-size: 1em;
 }
+div.sphinxsidebar input[type="text"] {width: 78%}
 
 /* :::: MODULE CLOUD :::: */
 div.modulecloud {
