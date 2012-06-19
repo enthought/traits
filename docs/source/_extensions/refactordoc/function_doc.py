@@ -19,14 +19,14 @@ class FunctionDoc(BaseDoc):
 
     Methods
     -------
-    _refactor_arguments(self, header):
+    _refactor_arguments(self, header) :
         Refactor the Arguments and Parameters section to sphinx friendly format.
 
-    _refactor_as_items_list(self, header):
+    _refactor_as_items_list(self, header) :
         Refactor the Returns, Raises and Yields sections to sphinx friendly
         format.
 
-    _refactor_notes(self, header):
+    _refactor_notes(self, header) :
         Refactor the note section to use the rst ``.. note`` directive.
 
     """
