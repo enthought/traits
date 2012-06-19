@@ -60,7 +60,7 @@ class Adapter ( HasTraits ):
 
     #-- Trait Definitions ------------------------------------------------------
 
-    # The object that is being adapted.
+    #: The object that is being adapted.
     adaptee = Any
 
     #-- Constructor ------------------------------------------------------------
@@ -85,20 +85,20 @@ class DefaultAdapterFactory ( HasTraits ):
 
     #-- 'DefaultAdapterFactory' Interface --------------------------------------
 
-    # The adapter class that this factory creates instances of
+    #: The adapter class that this factory creates instances of
     klass = Any
 
-    # Does the factory generate cached adapters?
-    # If an adapter is cached then the factory will produce at most one
-    # adapter per instance.
+    #: Does the factory generate cached adapters?
+    #: If an adapter is cached then the factory will produce at most one
+    #: adapter per instance.
     cached = Bool( False )
 
-    # An expression that is used to select which instances of a particular
-    # type can be adapted by this factory.
-    #
-    # The expression is evaluated in a namespace that contains a single name
-    # 'adaptee', which is bound to the object that this factory is attempting
-    # to adapt (e.g. 'adaptee.is_folder').
+    #: An expression that is used to select which instances of a particular
+    #: type can be adapted by this factory.
+    #:
+    #: The expression is evaluated in a namespace that contains a single name
+    #: 'adaptee', which is bound to the object that this factory is attempting
+    #: to adapt (e.g. 'adaptee.is_folder').
     when = Expression
 
     #-- Private Interface ------------------------------------------------------
