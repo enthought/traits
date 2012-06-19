@@ -38,8 +38,8 @@ class ClassDoc(BaseDoc):
 
         if headers is None:
             headers = {'Attributes': 'attributes', 'Methods': 'methods',
-                       'Notes':'notes', 'Keywords': 'as_item_list',
-                       'Note':'notes'}
+                       'Notes': 'notes', 'Keywords': 'as_item_list',
+                       'Note': 'notes'}
 
         super(ClassDoc, self).__init__(lines, headers)
         return

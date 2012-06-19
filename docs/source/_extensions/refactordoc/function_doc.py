@@ -36,7 +36,8 @@ class FunctionDoc(BaseDoc):
         if headers is None:
             headers = {'Returns': 'as_item_list', 'Arguments': 'arguments',
                        'Parameters': 'arguments', 'Raises': 'as_item_list',
-                       'Yields': 'as_item_list', 'Notes':'notes'}
+                       'Yields': 'as_item_list', 'Notes':'notes',
+                       'Note': 'notes'}
 
         super(FunctionDoc, self).__init__(lines, headers)
         return
