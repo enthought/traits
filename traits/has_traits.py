@@ -3835,9 +3835,9 @@ try:
         """ A MetaHasTraits subclass which also inherits from
         abc.ABCMeta.
 
+        .. note:: The ABCMeta class is cooperative and behaves nicely
+            with MetaHasTraits, provided it is inherited first.
         """
-        # The ABCMeta class is cooperative and behaves nicely with
-        # MetaHasTraits, provided it is inherited first.
         pass
 
 
