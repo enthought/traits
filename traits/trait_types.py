@@ -105,7 +105,7 @@ class Any ( TraitType ):
     """ Defines a trait whose value can be anything.
     """
 
-    # The default value for the trait:
+    #: The default value for the trait:
     default_value = None
 
     #: A description of the type of value this trait accepts:
@@ -120,7 +120,7 @@ class Generic ( Any ):
         be redefined via assignment using a TraitValue object.
     """
 
-    # The standard metadata for the trait:
+    #: The standard metadata for the trait:
     metadata = { 'trait_value': True }
 
 #-------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ class Unicode ( BaseUnicode ):
         C-level fast validator.
     """
 
-    # The C-level fast validator to use:
+    #: The C-level fast validator to use:
     fast_validate = ( 11, unicode, None, str )
 
 #-------------------------------------------------------------------------------
@@ -2002,6 +2002,7 @@ class BaseTuple ( TraitType ):
 
         Default Value
         -------------
+
          1. If no arguments are specified, the default value is ().
          2. If a tuple is specified as the first argument, it is the default
             value.

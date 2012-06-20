@@ -207,9 +207,9 @@ class BaseTraitHandler ( object ):
             The method that encountered the error
         object : object
             The object whose method was called
-        name : string
+        name : str
             The name of the parameter corresponding to the incorrect argument
-        value
+        value :
             The value passed to the argument
 
         Description
@@ -230,11 +230,11 @@ class BaseTraitHandler ( object ):
         ----------
         method : function
             The method that encountered the error
-        arg_num : integer
+        arg_num : int
             The position of the incorrect argument in the argument list
         object : object
             The object whose method was called
-        name : string
+        name : str
             The name of the parameter corresponding to the incorrect argument
 
         Description
@@ -255,11 +255,11 @@ class BaseTraitHandler ( object ):
         ----------
         method : function
             The method that encountered the error
-        arg_num : integer
+        arg_num : int
             The position of the incorrect argument in the argument list
         object : object
             The object whose method was called
-        name : string
+        name : str
             The name of the parameter corresponding to the incorrect argument
 
         Description
@@ -282,7 +282,7 @@ class BaseTraitHandler ( object ):
             The method that encountered the error
         object : object
             The object whose method was called
-        value
+        value :
             The value returned by the method
 
         Description
@@ -302,9 +302,9 @@ class BaseTraitHandler ( object ):
         ----------
         object : object
             The object whose attribute is being assigned
-        name : string
+        name : str
             The name of the attribute being assigned
-        value
+        value :
             The proposed new value for the attribute
 
         Description
@@ -788,7 +788,7 @@ class TraitHandler ( BaseTraitHandler ):
             The object whose attribute is being assigned
         name : string
             The name of the attribute being assigned
-        value
+        value :
             The proposed new value for the attribute
 
         Returns
@@ -995,10 +995,10 @@ class TraitString ( TraitHandler ):
 
     Example
     -------
-    ::
 
-        class Person(HasTraits):
-            name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
+    class Person(HasTraits):
+        name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
+
 
     This example defines a **Person** class with a **name** attribute, which
     must be a string of between 0 and 50 characters that consist of only
@@ -1740,10 +1740,13 @@ class TraitPrefixList ( TraitHandler ):
     *s*\ :sub:`n`\ ], then the string *v* is a valid value for the trait if
     *v* == *s*\ :sub:`i[:j]` for one and only one pair of values (i, j). If *v*
     is a valid value, then the actual value assigned to the trait attribute is
-    the corresponding *s*\ :sub:`i` value that *v* matched. For example::
+    the corresponding *s*\ :sub:`i` value that *v* matched.
 
-        class Person(HasTraits):
-            married = Trait('no', TraitPrefixList('yes', 'no')
+    Example
+    -------
+
+    class Person(HasTraits):
+        married = Trait('no', TraitPrefixList('yes', 'no')
 
     The Person class has a **married** trait that accepts any of the
     strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the actual
@@ -1829,7 +1832,10 @@ class TraitMap ( TraitHandler ):
     TraitMap dictionary. The name of the shadow attribute is simply the base
     attribute name with an underscore ('_') appended. Mapped trait attributes
     can be used to allow a variety of user-friendly input values to be mapped to
-    a set of internal, program-friendly values. For example::
+    a set of internal, program-friendly values.
+
+    Example
+    -------
 
         >>>class Person(HasTraits):
         ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
@@ -2009,13 +2015,9 @@ class TraitCompound ( TraitHandler ):
 
         Parameters
         ----------
-        handlers : list or tuple of TraitHandler or trait objects
-            The trait handlers to be combined
+        *handlers :
+            list or tuple of TraitHandler or trait objects to be combined.
 
-        Description
-        -----------
-        The TraitHandler or trait objects can be provided directly as
-        arguments to the constructor.
         """
         if (len( handlers ) == 1) and (type( handlers[0] ) in SequenceTypes):
             handlers = handlers[0]
@@ -2155,7 +2157,8 @@ class TraitTuple ( TraitHandler ):
     TraitTuple is the underlying handler for the predefined trait **Tuple**,
     and the trait factory Tuple().
 
-    For example::
+    Example
+    -------
 
         rank = Range(1, 13)
         suit = Trait('Hearts', 'Diamonds', 'Spades', 'Clubs')
@@ -2172,9 +2175,9 @@ class TraitTuple ( TraitHandler ):
 
         Parameters
         ----------
-        args : list of traits
-            Each *trait*\ :sub:`i` specifies the type that the *i*\ th element of a
-            tuple must be.
+        *args :
+            A list of traits, each *trait*\ :sub:`i` specifies the type that
+            the *i*\ th element of a tuple must be.
 
         Description
         -----------
@@ -2272,12 +2275,14 @@ class TraitList ( TraitHandler ):
     constraints. TraitList is the underlying handler for the predefined
     list-based traits.
 
-    For example::
+    Example
+    -------
 
-        class Card(HasTraits):
-            pass
-        class Hand(HasTraits):
-            cards = Trait([], TraitList(Trait(Card), maxlen=52))
+    class Card(HasTraits):
+        pass
+    class Hand(HasTraits):
+        cards = Trait([], TraitList(Trait(Card), maxlen=52))
+
 
     This example defines a Hand class, which has a **cards** trait attribute,
     which is a list of Card objects and can have from 0 to 52 items in the
@@ -2985,10 +2990,12 @@ class TraitDict ( TraitHandler ):
     type constraints. TraitDict is the underlying handler for the
     dictionary-based predefined traits, and the Dict() trait factory.
 
-     For example::
+    Example
+    -------
 
-            class WorkoutClass(HasTraits):
-                member_weights = Trait({}, TraitDict(str, float))
+    class WorkoutClass(HasTraits):
+        member_weights = Trait({}, TraitDict(str, float))
+
 
     This example defines a WorkoutClass class containing a *member_weights*
     trait attribute whose value must be a dictionary containing keys that
