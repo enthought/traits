@@ -98,12 +98,12 @@ def indent ( text, first_line = True, n = 1, width = 4 ):
     ----------
     text : str
         The text to indent.
-    first_line : bool, optional
-        If False, then the first line will not be indented.
-    n : int, optional
-        The level of indentation.
-    width : int, optional
-        The number of spaces in each level of indentation.
+    first_line : bool
+        If False, then the first line will not be indented (default: True).
+    n : int
+        The level of indentation (default: 1).
+    width : int
+        The number of spaces in each level of indentation (default: 4).
 
     Returns
     -------
@@ -548,7 +548,7 @@ class ListenerItem ( ListenerBase ):
             # '_items' trait?
             if name.endswith('_items'):
                 name = name[:-len('_items')]
-                
+
             dict = getattr( object, name )
             unregister = self.next.unregister
             register = self.next.register

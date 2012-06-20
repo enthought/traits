@@ -2294,7 +2294,7 @@ class HasTraits ( CHasTraits ):
         ----------
         name : str
             Name of a view element
-        view_element : a ViewElement object
+        view_element : ViewElement
             View element to associate
 
         Returns
