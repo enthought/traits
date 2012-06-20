@@ -317,7 +317,7 @@ class ListItem(DefinitionItem):
                "{2}\n\n")
     _only_term = "**{0}**\n"
     _no_definition = "**{0}** (*{1}*)\n"
-    _no_classifier = ("**{0}** --\n\n"
+    _no_classifier = ("**{0}** --\n"
                       "{2}\n\n")
 
     def to_rst(self, prefix=None):
