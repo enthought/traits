@@ -13,7 +13,13 @@ Classes
 
 .. autoclass:: MetaInterface
 
+    .. automethod:: __init__
+
+    .. automethod:: __call__
+
 .. autoclass:: MetaHasTraitsObject
+
+    .. automethod:: __init__
 
 .. autoclass:: HasTraits
 
