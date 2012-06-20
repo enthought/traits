@@ -178,3 +178,5 @@ latex_logo = "e-logo-rev.png"
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+autodoc_member_order = 'bysource'
