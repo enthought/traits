@@ -35,6 +35,17 @@ Classes
 
 .. autoclass:: traits_super
 
+ABC classes
+-----------
+
+.. note:: These classes are only available when the abc module is present.
+
+.. autoclass:: ABCMetaHasTraits
+
+.. autoclass:: ABCHasTraits
+
+.. autoclass:: ABCHasStrictTraits
+
 Functions
 ---------
 
