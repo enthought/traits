@@ -416,12 +416,14 @@ def trait_method ( func, return_type, **arg_types ):
     ----------
     func : function
         The method to be type-checked
-    return_type : trait or a value that can be converted to a trait using Trait()
-        The return type of the method
-    arg_types : zero or more '*keyword* = *trait*' pairs
-        Argument names and types of parameters of the type-checked method. The
-        *trait* portion of each pair must be a trait or a value that can be
-        converted to a trait using Trait().
+    return_type :
+        The return type of the method, a trait or value that can be converted
+        to a trait using Trait().
+    **arg_types :
+        zero or more '*keyword* = *trait*' pairs, the argument names and types
+        of parameters of the type-checked method. The *trait* portion of each
+        pair must be a trait or a value that can be converted to a trait using
+        Trait().
     """
     # Make the sure the first argument is a function:
     if type( func ) is not FunctionType:
@@ -523,14 +525,15 @@ def method ( return_type = Any, *arg_types, **kwarg_types ):
         or a value that can be converted to a trait using the Trait()
         function. The default of Any means that the return value is not
         type-checked.
-    arg_types : zero or more types
-        The types of positional parameters of the type-checked method. Each
-        value must either a trait or a value that can be converted to a trait
-        using the Trait()  function.
-    kwarg_types : zero or more *keyword* = *type* pairs
-        Type names and types of keyword parameters of the type-checked method.
-        The *type* portion of the parameter must be either a trait or a value
-        that can be converted to a trait using the Trait() function.
+    *arg_types :
+        zero or more types of positional parameters of the type-checked method.
+        Each value must either a trait or a value that can be converted to a
+        trait using the Trait()  function.
+    **kwarg_types :
+        zero or more *keyword* = *type* pairs, the type names and types of
+        keyword parameters of the type-checked method. The *type* portion of
+        the parameter must be either a trait or a value that can be converted
+        to a trait using the Trait() function.
 
     Description
     -----------
@@ -1167,12 +1170,8 @@ def implements ( *interfaces ):
 
     Parameters
     ----------
-    interfaces : A list of interface classes
-        Classes that the containing class implements.
-
-    Returns
-    -------
-    Nothing
+    *interfaces :
+        A list of interface classes that the containing class implements.
 
     Description
     -----------
@@ -1531,9 +1530,10 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the attribute to add
-        trait : a trait or a value that can be converted to a trait using Trait()
+        *trait :
+            a trait or a value that can be converted to a trait using Trait()
             Trait definition of the attribute. It can be a single value or
             a list equivalent to an argument list for the Trait() function
 
@@ -1772,7 +1772,8 @@ class HasTraits ( CHasTraits ):
 
            Parameters
            ----------
-           interfaces : one or more traits Interface (sub)classes.
+           *interfaces :
+                one or more traits Interface (sub)classes.
 
            Description
            -----------
@@ -1867,13 +1868,14 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        names : list of trait attribute names
-            Trait attributes whose values are requested
+        names : list
+            A list of trait attribute names whose values are requested
 
         Returns
         -------
-        A dictionary whose keys are the names passed as arguments and whose
-        values are the corresponding trait values
+        result : dict
+            A dictionary whose keys are the names passed as arguments and whose
+            values are the corresponding trait values
 
         Description
         -----------
@@ -1912,16 +1914,17 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        trait_change_notify : Boolean
+        trait_change_notify : bool
             If **True** (the default), then each value assigned may generate a
             trait change notification. If **False**, then no trait change
             notifications will be generated. (see also: trait_setq)
-        traits : list of key/value pairs
-            Trait attributes and their values to be set
+        **traits :
+            Key/value pairs, the trait attributes and their values to be
+            set
 
         Returns
         -------
-        self
+        self :
             The method returns this object, after setting attributes.
 
         Description
@@ -1961,14 +1964,14 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        traits : list of key/value pairs
-            Trait attributes and their values to be set. No trait change
-            notifications will be generated for any values assigned (see also:
-            trait_set).
+        **traits :
+            Key/value pairs, the trait attributes and their values to be set.
+            No trait change notifications will be generated for any values
+            assigned (see also: trait_set).
 
         Returns
         -------
-        self
+        self :
             The method returns this object, after setting attributes.
 
         Description
@@ -1999,13 +2002,14 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        traits : list of strings
+        traits : list
             Names of trait attributes to reset
 
         Returns
         -------
-        A list of attributes that the method was unable to reset, which is empty
-        if all the attributes were successfully reset.
+        unresetable : list
+            A list of attributes that the method was unable to reset, which is
+            empty if all the attributes were successfully reset.
 
         Description
         -----------
@@ -2064,21 +2068,23 @@ class HasTraits ( CHasTraits ):
         ----------
         other : object
             The object whose trait attribute values should be copied.
-        traits : list of strings
+        traits : list
             A list of names of trait attributes to copy. If None or
             unspecified, the set of names returned by trait_names() is used.
             If 'all' or an empty list, the set of names returned by
             all_trait_names() is used.
-        memo : dictionary
+        memo : dict
             A dictionary of objects that have already been copied.
-        copy : None | 'deep' | 'shallow'
-            The type of copy to perform on any trait that does not have explicit
-            'copy' metadata. A value of None means 'copy reference'.
+        copy : str
+            The type of copy ``deep`` or ``shallow`` to perform on any trait
+            that does not have explicit 'copy' metadata. A value of None means
+            'copy reference'.
 
         Returns
         -------
-        A list of attributes that the method was unable to copy,
-        which is empty if all the attributes were successfully copied.
+        unassignable : list
+            A list of attributes that the method was unable to copy, which is
+            empty if all the attributes were successfully copied.
 
         """
 
@@ -2157,17 +2163,19 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        traits : list of strings
-            The names of the trait attributes to copy.
-        memo : dictionary
+        traits : list
+            The list of names of the trait attributes to copy.
+        memo : dict
             A dictionary of objects that have already been copied.
-        copy : None | 'deep' | 'shallow'
-            The type of copy to perform on any trait that does not have explicit
-            'copy' metadata. A value of None means 'copy reference'.
+        copy : str
+            The type of copy ``deep`` or ``shallow`` to perform on any trait
+            that does not have explicit 'copy' metadata. A value of None means
+            'copy reference'.
 
         Returns
         -------
-        The newly cloned object.
+        new :
+            The newly cloned object.
 
         Description
         -----------
@@ -2227,16 +2235,16 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        view : view or string
+        view : View or string
             A View object (or its name) that defines a user interface for
             editing trait attribute values of the current object. If the view is
             defined as an attribute on this class, use the name of the attribute.
             Otherwise, use a reference to the view object. If this attribute is
             not specified, the View object returned by trait_view() is used.
-        parent : window handle
-            A user interface component to use as the parent window for the
-            object's UI window.
-        kind : string
+        parent : handle
+            The window handlec of a user interface component to use as the parent
+            window for the object's UI window.
+        kind : str
             The type of user interface window to create. See the
             **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
@@ -2245,10 +2253,10 @@ class HasTraits ( CHasTraits ):
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object is
             used.
-        handler : Handler object
+        handler : Handler
             A handler object used for event handling in the dialog box. If
             None, the default handler for Traits UI is used.
-        id : string
+        id : str
             A unique ID for persisting preferences about this user interface,
             such as size and position. If not specified, no user preferences
             are saved.
@@ -2284,7 +2292,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of a view element
         view_element : a ViewElement object
             View element to associate
@@ -2430,7 +2438,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        klass : a class
+        klass : class
             A class, such that all returned names must correspond to instances
             of this class. Possible values include:
 
@@ -2485,7 +2493,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        filename : string
+        filename : str
             The name (including path) of a file that contains a pickled
             representation of the current object. When this parameter is
             specified, the method reads the corresponding file (if it exists)
@@ -2494,13 +2502,13 @@ class HasTraits ( CHasTraits ):
             the new values are written to the file. If this parameter is not
             specified, the values are loaded from the in-memory object, and are
             not persisted when the dialog box is closed.
-        view : view or string
+        view : View or str
             A View object (or its name) that defines a user interface for
             editing trait attribute values of the current object. If the view is
             defined as an attribute on this class, use the name of the attribute.
             Otherwise, use a reference to the view object. If this attribute is
             not specified, the View object returned by trait_view() is used.
-        kind : string
+        kind : str
             The type of user interface window to create. See the
             **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
@@ -2514,14 +2522,14 @@ class HasTraits ( CHasTraits ):
             A single object or a dictionary of string/object pairs, whose trait
             attributes are to be edited. If not specified, the current object is
             used
-        handler : Handler object
+        handler : Handler
             A handler object used for event handling in the dialog box. If
             None, the default handler for Traits UI is used.
-        id : string
+        id : str
             A unique ID for persisting preferences about this user interface,
             such as size and position. If not specified, no user preferences
             are saved.
-        scrollable : Boolean
+        scrollable : bool
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
@@ -2658,10 +2666,10 @@ class HasTraits ( CHasTraits ):
         ----------
         handler : function
             A trait notification function for the attribute specified by *name*.
-        name : string
+        name : str
             Specifies the trait attribute whose value changes trigger the
             notification.
-        remove : Boolean
+        remove : bool
             If True, removes the previously-set association between
             *handler* and *name*; if False (the default), creates the
             association.
@@ -2736,24 +2744,28 @@ class HasTraits ( CHasTraits ):
         handler : function
             A trait notification function for the *name* trait attribute, with
             one of the signatures described below.
-        name : string
+        name : str
             The name of the trait attribute whose value changes trigger the
             notification. The *name* can specify complex patterns of trait
             changes using an extended *name* syntax, which is described below.
-        remove : Boolean
+        remove : bool
             If True, removes the previously-set association between
             *handler* and *name*; if False (the default), creates the
             association.
-        dispatch : string
+        dispatch : str
             A string indicating the thread on which notifications must be run.
             Possible values are:
 
-                * 'same': Run notifications on the same thread as this one.
-                * 'ui': Run notifications on the UI thread, and allow them to
-                  be queued and deferred.
-                * 'fast_ui': Run notifications on the UI thread, and process
-                  them immediately.
-                * 'new': Run notifications in a new thread.
+            =========== =======================================================
+            value       dispatch
+            =========== =======================================================
+            ``same``    Run notifications on the same thread as this one.
+            ``ui``      Run notifications on the UI thread, and allow them to
+                        be queued and deferred.
+            ``fast_ui`` Run notifications on the UI thread, and process
+                        them immediately.
+            ``new``     Run notifications in a new thread.
+            =========== =======================================================
 
         Description
         -----------
@@ -2778,61 +2790,88 @@ class HasTraits ( CHasTraits ):
         A *name* is any valid Python attribute name. The semantic meaning of
         this notation is as follows:
 
-        - ``item1.item2`` means *item1* is a trait containing an object (or objects
-          if *item1* is a list or dict) with a trait called *item2*. Changes to
-          either *item1* or *item2* cause a notification to be generated.
-        - ``item1:item2`` means *item1* is a trait containing an object (or objects
-          if *item1* is a list or dict) with a trait called *item2*. Changes to
-          *item2* cause a notification to be generated, while changes to
-          *item1* do not (i.e., the ':' indicates that changes to the *link*
-          object should not be reported).
-        - ``[ item1, item2, ..., itemN ]``: A list which matches any of the
-          specified items. Note that at the topmost level, the surrounding
-          square brackets are optional.
-        - ``name?``: If the current object does not have an attribute called
-          *name*, the reference can be ignored. If the '?' character is
-          omitted, the current object must have a trait called *name*,
-          otherwise an exception will be raised.
-        - ``prefix+``: Matches any trait on the object whose name
-          begins with *prefix*.
-        - ``+metadata_name``: Matches any trait on the object having
-          *metadata_name* metadata.
-        - ``-metadata_name``: Matches any trait on the object which
-          does not have *metadata_name* metadata.
-        - ``prefix+metadata_name``: Matches any trait on the object
-          whose name begins with *prefix* and which has *metadata_name*
-          metadata.
-        - ``prefix-metadata_name``: Matches any trait on the object
-          whose name begins with *prefix* and which does not have
-          *metadata_name* metadata.
-        - ``+``: Matches all traits on the object.
-        - ``pattern*``: Matches object graphs where *pattern* occurs one or
-          more times (useful for setting up listeners on recursive data
-          structures like trees or linked lists).
+        ================================ ======================================
+        expression                       meaning
+        ================================ ======================================
+        ``item1.item2``                  means *item1* is a trait containing an
+                                         object (or objects if *item1* is a
+                                         list or dict) with a trait called
+                                         *item2*. Changes to either *item1* or
+                                         *item2* cause a notification to be
+                                         generated.
+        ``item1:item2``                  means *item1* is a trait containing an
+                                         object (or objects if *item1* is a
+                                         list or dict) with a trait called
+                                         *item2*. Changes to *item2* cause a
+                                         notification to be generated, while
+                                         changes to *item1* do not (i.e., the
+                                         ':' indicates that changes to the
+                                         *link* object should not be reported).
+        ``[ item1, item2, ..., itemN ]`` A list which matches any of the
+                                         specified items. Note that at the
+                                         topmost level, the surrounding square
+                                         brackets are optional.
+        ``name?``                        If the current object does not have an
+                                         attribute called *name*, the reference
+                                         can be ignored. If the '?' character
+                                         is omitted, the current object must
+                                         have a trait called *name*, otherwise
+                                         an exception will be raised.
+        ``prefix+``                      Matches any trait on the object whose
+                                         name begins with *prefix*.
+        ``+metadata_name``               Matches any trait on the object having
+                                         *metadata_name* metadata.
+        ``-metadata_name``               Matches any trait on the object which
+                                         does not have *metadata_name*
+                                         metadata.
+        ``prefix+metadata_name``         Matches any trait on the object whose
+                                         name begins with *prefix* and which
+                                         has *metadata_name* metadata.
+        ``prefix-metadata_name``         Matches any trait on the object
+                                         whose name begins with *prefix* and
+                                         which does not have *metadata_name*
+                                         metadata.
+        ``+``                            Matches all traits on the object.
+        ``pattern*``                     Matches object graphs where *pattern*
+                                         occurs one or more times (useful for
+                                         setting up listeners on recursive data
+                                         structures like trees or linked
+                                         lists).
+        ================================ ======================================
 
         Some examples of valid names and their meaning are as follows:
 
-        - 'foo,bar,baz': Listen for trait changes to *object.foo*, *object.bar*,
-          and *object.baz*.
-        - ['foo','bar','baz']: Equivalent to 'foo,bar,baz', but may be more
-          useful in cases where the individual items are computed.
-        - 'foo.bar.baz': Listen for trait changes to *object.foo.bar.baz* and
-          report changes to *object.foo*, *object.foo.bar* or
-          *object.foo.bar.baz*.
-        - 'foo:bar:baz': Listen for changes to *object.foo.bar.baz*, and only
-          report changes to *object.foo.bar.baz*.
-        - 'foo.[bar,baz]': Listen for trait changes to *object.foo.bar* and
-          *object.foo.baz*.
-        - '[left,right]*.name': Listen for trait changes to the *name*
-          trait of each node of a tree having *left* and *right* links to
-          other tree nodes, and where *object* the method is applied to
-          the root node of the tree.
-        - +dirty: Listen for trait changes on any trait in the *object* which
-          has the 'dirty' metadata set.
-        - 'foo.+dirty': Listen for trait changes on any trait in
-          *object.foo* which has the 'dirty' metadata set.
-        - 'foo.[bar,-dirty]': Listen for trait changes on *object.foo.bar* or
-          any trait on *object.foo* which does not have 'dirty' metadata set.
+        ======================= ===============================================
+        example                 meaning
+        ======================= ===============================================
+        ``foo,bar,baz``         Listen for trait changes to *object.foo*,
+                                *object.bar*, and *object.baz*.
+        ``['foo','bar','baz']`` Equivalent to 'foo,bar,baz', but may be more
+                                useful in cases where the individual items are
+                                computed.
+        ``foo.bar.baz``         Listen for trait changes to
+                                *object.foo.bar.baz* and report changes to
+                                *object.foo*, *object.foo.bar* or
+                                *object.foo.bar.baz*.
+        ``foo:bar:baz``         Listen for changes to *object.foo.bar.baz*, and
+                                only report changes to *object.foo.bar.baz*.
+        ``foo.[bar,baz]``       Listen for trait changes to *object.foo.bar*
+                                and *object.foo.baz*.
+        ``[left,right]*.name``  Listen for trait changes to the *name* trait of
+                                each node of a tree having *left* and *right*
+                                links to other tree nodes, and where *object*
+                                the method is applied to the root node of the
+                                tree.
+        ``+dirty``              Listen for trait changes on any trait in the
+                                *object* which has the 'dirty' metadata set.
+        ``foo.+dirty``          Listen for trait changes on any trait in
+                                *object.foo* which has the 'dirty' metadata
+                                set.
+        ``foo.[bar,-dirty]``    Listen for trait changes on *object.foo.bar* or
+                                any trait on *object.foo* which does not have
+                                'dirty' metadata set.
+        ======================= ===============================================
+
 
         Note that any of the intermediate (i.e., non-final) links in a
         pattern can be traits of type Instance, List or Dict. In the case
@@ -2878,7 +2917,7 @@ class HasTraits ( CHasTraits ):
         - name:   bar_items
         - old:    Undefined
         - new:    TraitListEvent whose *added* trait contains the new item
-          added to *bar*.
+                  added to *bar*.
 
         For signatures 2 and 3, the *handler* does not receive enough
         information to discern between a change to the final trait being
@@ -2972,17 +3011,17 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the trait attribute on this object
         object : object
             The object with which to synchronize
-        alias : string
+        alias : str
             Name of the trait attribute on *other*; if None or omitted, same
             as *name*.
-        mutual : Boolean or integer
+        mutual : Bool or int
             Indicates whether synchronization is mutual (True or non-zero)
             or one-way (False or zero)
-        remove : Boolean or integer
+        remove : Bool or int
             Indicates whether sychronization is being added (False or zero)
             or removed (True or non-zero)
 
@@ -3103,9 +3142,10 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the attribute to add
-        trait : trait or a value that can be converted to a trait by Trait()
+        *trait :
+            trait or a value that can be converted to a trait by Trait()
             Trait definition for *name*. If more than one value is specified,
             it is equivalent to passing the entire list of values to Trait().
 
@@ -3177,7 +3217,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the attribute to remove
         """
         # Get the trait definition:
@@ -3215,7 +3255,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the attribute whose trait definition is to be returned
         force : Boolean
             Indicates whether to return a trait definition if *name* is
@@ -3253,7 +3293,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        name : string
+        name : str
             Name of the attribute whose trait definition is returned.
 
         Description
@@ -3288,7 +3328,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        metadata : dictionary
+        **metadata :
             Criteria for selecting trait attributes
 
         Description
@@ -3348,7 +3388,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        metadata : dictionary
+        **metadata :
             Criteria for selecting trait attributes
 
         Description
@@ -3404,7 +3444,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        metadata : dictionary
+        **metadata :
             Criteria for selecting trait attributes
 
         Description
@@ -3420,7 +3460,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        metadata : dictionary
+        **metadata :
             Criteria for selecting trait attributes
 
         Description
@@ -3792,8 +3832,8 @@ try:
 
 
     class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
-        """ A MetaHasTraits subclass which also inherits from 
-        abc.ABCMeta. 
+        """ A MetaHasTraits subclass which also inherits from
+        abc.ABCMeta.
 
         """
         # The ABCMeta class is cooperative and behaves nicely with
