@@ -32,6 +32,9 @@ class ClassDoc(BaseDoc):
     _refactor_notes(self, header) :
         Refactor the note section to use the rst ``.. note`` directive.
 
+    _refactor_example(self, header) :
+        Refactor the example section to sphinx friendly format.
+
     """
 
     def __init__(self, lines, headers=None):
@@ -39,7 +42,8 @@ class ClassDoc(BaseDoc):
         if headers is None:
             headers = {'Attributes': 'attributes', 'Methods': 'methods',
                        'Notes': 'notes', 'Keywords': 'as_item_list',
-                       'Note': 'notes'}
+                       'Note': 'notes', 'Example': 'example',
+                       'Examples': 'example'}
 
         super(ClassDoc, self).__init__(lines, headers)
         return
@@ -96,6 +100,20 @@ class ClassDoc(BaseDoc):
         prefix = None if len(items) == 1 else '-'
         for item in items:
             lines += add_indent(item.to_rst(prefix))
+        return lines
+
+    def _refactor_example(self, header) :
+        """ Refactor the example section to sphinx friendly format.
+
+        Arguments
+        ---------
+        header : str
+            The header name that is used for the fields (i.e. ``:<header>:``).
+
+        """
+        paragraph = self.get_next_paragraph()
+        lines = ['.. rubric:: {0}'.format(header), '', '::', '']
+        lines += add_indent(paragraph)
         return lines
 
 
