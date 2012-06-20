@@ -352,9 +352,10 @@ class BaseTraitHandler ( object ):
     def repr ( self, value ):
         """ Returns a printable representation of a value along with its type.
 
-        DEPRECATED: This functionality was only used to provide readable error
-        messages. This functionality has been incorporated into TraitError
-        itself.
+        .. deprecated :: 3.0.3
+            This functionality was only used to provide readable error
+            messages. This functionality has been incorporated into
+            TraitError itself.
 
         Parameters
         ----------
@@ -372,7 +373,7 @@ class BaseTraitHandler ( object ):
 
         Parameters
         ----------
-        trait : trait
+        trait : Trait
             The trait to be edited
 
         Description
@@ -434,12 +435,10 @@ class TraitType ( BaseTraitHandler ):
 
           This is the getter method of a trait that behaves like a property.
 
-          *Parameters*
+          :Parameters:
+            **object** (*object*) -- The object that the property applies to.
 
-          object : an object
-              The object that the property applies to.
-          name : string
-              The name of the property on *object* property.
+            **name** (str) -- The name of the property on *object* property.
 
           *Description*
 
@@ -453,14 +452,12 @@ class TraitType ( BaseTraitHandler ):
 
           This is the setter method of a trait that behaves like a property.
 
-          *Parameters*
+          :Parameters:
+            **object** (*object*) -- The object that the property applies to.
 
-          object : instance
-              The object that the property applies to.
-          name : string
-              The name of the property on *object*.
-          value : any
-              The value being assigned as the value of the property.
+            **name** (str) -- The name of the property on *object*.
+
+            **value** -- The value being assigned as the value of the property.
 
           *Description*
 
@@ -846,9 +843,9 @@ class TraitRange ( TraitHandler ):
             The minimum value that the trait can accept
         high : number
             The maximum value that the trait can accept
-        exclude_low : Boolean
+        exclude_low : bool
             Should the *low* value be exclusive (or inclusive)
-        exclude_high : Boolean
+        exclude_high : bool
             Should the *high* value be exclusive (or inclusive)
 
         Description
@@ -1009,11 +1006,11 @@ class TraitString ( TraitHandler ):
 
         Parameters
         ----------
-        minlen : integer
+        minlen : int
             The minimum length allowed for the string
-        maxlen : integer
+        maxlen : int
             The maximum length allowed for the string
-        regex : string
+        regex : str
             A Python regular expression that the string must match
 
         """
@@ -1296,7 +1293,7 @@ class ThisClass ( TraitHandler ):
 
         Parameters
         ----------
-        allow_none : Boolean
+        allow_none : bool
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0)
         """
@@ -1376,10 +1373,10 @@ class TraitInstance ( ThisClass ):
         ----------
         aClass : class or type
             A Python class, an instance of a Python class, or a Python type
-        allow_none : boolean
+        allow_none : bool
             Flag indicating whether None is accepted as a valid value
             (True or non-zero) or not (False or 0)
-        adapt : string
+        adapt : str
             Value indicating how adaptation should be handled:
 
             - 'no' (-1): Adaptation is not allowed.
@@ -1859,7 +1856,7 @@ class TraitMap ( TraitHandler ):
 
         Parameters
         ----------
-        map : dictionary
+        map : dict
             A dictionary whose keys are valid values for the trait attribute,
             and whose corresponding values are the values for the shadow
             trait attribute.
@@ -1915,13 +1912,9 @@ class TraitPrefixMap ( TraitMap ):
 
     Example
     -------
-    ::
 
-        boolean_map = Trait('true', TraitPrefixMap( {
-                                        'true': 1,
-                                        'yes': 1,
-                                        'false': 0,
-                                        'no': 0 } ))
+        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
+        boolean_map = Trait('true', TraitPrefixMap(mapping))
 
     This example defines a Boolean trait that accepts any prefix of 'true',
     'yes', 'false', or 'no', and maps them to 1 or 0.
@@ -1931,7 +1924,7 @@ class TraitPrefixMap ( TraitMap ):
 
         Parameters
         ----------
-        map : dictionary
+        map : dict
             A dictionary whose keys are strings that are valid values for the
             trait attribute, and whose corresponding values are the values for
             the shadow trait attribute.
@@ -2298,13 +2291,13 @@ class TraitList ( TraitHandler ):
 
         Parameters
         ----------
-        trait : trait
+        trait : Trait
             The type of items the list can contain
-        minlen : integer
+        minlen : int
             The minimum length of the list
-        maxlen : integer
+        maxlen : int
             The maximum length of the list
-        has_items : boolean
+        has_items : bool
             Flag indicating whether the list contains elements
 
         Description
@@ -2955,11 +2948,11 @@ class TraitDictEvent ( object ):
         """
         Parameters
         ----------
-        added : dictionary
+        added : dict
             New keys and values
-        changed : dictionary
+        changed : dict
             Updated keys and their previous values
-        removed : dictionary
+        removed : dict
             Old keys and values that were just removed
         """
         # Construct new empty dicts every time instead of using a default value
@@ -3016,7 +3009,7 @@ class TraitDict ( TraitHandler ):
             The type for the dictionary keys
         value_trait : trait
             The type for the dictionary values
-        has_items : boolean
+        has_items : bool
             Flag indicating whether the dictionary contains entries
 
         Description
