@@ -53,9 +53,14 @@ class FunctionDoc(BaseDoc):
         """
         items = self.extract_items(item_class=ListItem)
         lines = [':{0}:'.format(header.lower())]
-        prefix = None if len(items) == 1 else '-'
-        for item in items:
-            lines += add_indent(item.to_rst(prefix))
+        if len(items) > 0:
+            prefix = None if len(items) == 1 else '-'
+            for item in items:
+                lines += add_indent(item.to_rst(prefix))
+        else:
+            paragraph = self.get_next_paragraph()
+            lines += add_indent(paragraph)
+
         return lines
 
     def _refactor_arguments(self, header):
