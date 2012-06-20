@@ -1441,12 +1441,12 @@ class HasTraits ( CHasTraits ):
 
     #-- Trait Prefix Rules -----------------------------------------------------
 
-    # Make traits 'property cache' values private with no type checking:
+    #: Make traits 'property cache' values private with no type checking:
     _traits_cache__ = Any( private = True, transient = True )
 
     #-- Class Variables --------------------------------------------------------
 
-    # Mapping from dispatch type to notification wrapper class type
+    #: Mapping from dispatch type to notification wrapper class type
     wrappers = {
         'same':     TraitChangeNotifyWrapper,
         'extended': ExtendedTraitChangeNotifyWrapper,
@@ -1462,11 +1462,11 @@ class HasTraits ( CHasTraits ):
 
     #-- Trait Definitions ------------------------------------------------------
 
-    # An event fired when a new trait is dynamically added to the object
+    #: An event fired when a new trait is dynamically added to the object
     trait_added = Event( basestring )
 
-    # An event that can be fired to indicate that the state of the object has
-    # been modified
+    #: An event that can be fired to indicate that the state of the object has
+    #: been modified
     trait_modified = Event
 
     #---------------------------------------------------------------------------
