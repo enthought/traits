@@ -112,16 +112,16 @@ class DynamicViewSubElement ( ViewSubElement ):
 
     #-- Public 'DynamicViewSubElement' Interface -------------------------------
 
-    # Keyword arguments passed in during construction of the actual
-    # ViewSubElement instance.
+    #: Keyword arguments passed in during construction of the actual
+    #: ViewSubElement instance.
     keywords = Dict
 
-    # The class of the actual ViewSubElement we are dynamically creating.
     # FIXME: Should be the 'Class' trait but I couldn't get that to work.
+    #: The class of the actual ViewSubElement we are dynamically creating.
     klass = Any
 
-    # The name of this dynamic sub-element.  This controls the metadata
-    # names identifying the sub-elements that compose this element.
+    #: The name of this dynamic sub-element.  This controls the metadata
+    #: names identifying the sub-elements that compose this element.
     name = Str
 
 #-------------------------------------------------------------------------------
@@ -139,20 +139,20 @@ class DynamicView ( HasTraits ):
 
     #-- Public 'DynamicView' Interface -----------------------------------------
 
-    # The ID of the view.  This is the ID that the view's preferences will be
-    # saved under.
+    #: The ID of the view.  This is the ID that the view's preferences will be
+    #: saved under.
     id = Str
 
-    # The name of the view.  This is the name that should be requested when
-    # calling edit_traits() or configure_traits().
+    #: The name of the view.  This is the name that should be requested when
+    #: calling edit_traits() or configure_traits().
     name = Str
 
-    # Keyword arguments passed in during construction of the actual view
-    # instance.
+    #: Keyword arguments passed in during construction of the actual view
+    #: instance.
     keywords = Dict
 
-    # Indicates whether this view should be the default traits view for objects
-    # it is contributed to.
+    #: Indicates whether this view should be the default traits view for objects
+    #: it is contributed to.
     use_as_default = Bool( False )
 
 
@@ -172,8 +172,8 @@ class HasDynamicViews ( HasTraits ):
 
     #-- Protected 'HasDynamicViews' Interface ----------------------------------
 
-    # The registry of dynamic views.  The key is the view name and the value
-    # is the declaration of the dynamic view.
+    #: The registry of dynamic views.  The key is the view name and the value
+    #: is the declaration of the dynamic view.
     _dynamic_view_registry = Dict( Str, Instance( DynamicView ) )
 
     #---------------------------------------------------------------------------
