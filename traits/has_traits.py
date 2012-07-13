@@ -1813,6 +1813,9 @@ class HasTraits ( CHasTraits ):
                              for name in self.trait_names( type = 'delegate',
                                                            transient = False )
                              if name in dic ] ) )
+        # Add all instance traits
+        inst_traits = self._instance_traits()
+        result['__instance_traits__'] = inst_traits
 
         # If this object implements ISerializable, make sure that all
         # contained HasTraits objects in its persisted state also implement
@@ -1852,9 +1855,12 @@ class HasTraits ( CHasTraits ):
         else:
             # Otherwise, apply the Traits 3.0 restore logic:
             self._init_trait_listeners()
+            inst_traits = state.pop('__instance_traits__', {})
             self.trait_set( trait_change_notify = trait_change_notify, **state )
             self._post_init_trait_listeners()
             self.traits_init()
+            for attr, trait in inst_traits.iteritems():
+                self.add_trait(attr, trait)
 
         self.traits_inited( True )
 
@@ -2191,6 +2197,9 @@ class HasTraits ( CHasTraits ):
         new = self.__new__( self.__class__ )
         memo[ id( self ) ] = new
         new._init_trait_listeners()
+        inst_traits = self._instance_traits()
+        for attr, trait in inst_traits.iteritems():
+            new.add_trait(attr, trait)
         new.copy_traits( self, traits, memo, copy, **metadata )
         new._post_init_trait_listeners()
         new.traits_init()
