@@ -176,3 +176,11 @@ latex_logo = "e-logo-rev.png"
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+
+texinfo_documents = [
+  (master_doc, 'traits', 'Traits 4 User Manual',
+   'Enthought, Inc.',
+   'Traits', 'explicitly typed attributes for Python',
+   1),
+]
