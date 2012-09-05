@@ -225,6 +225,7 @@ class NotificationExceptionHandler ( object ):
         # message. Make sure that it goes to the console at a minimum:
         excp_class, excp = sys.exc_info()[:2]
         if ((excp_class is RuntimeError) and
+            (len(excp.args) > 0) and
             (excp.args[0] == 'maximum recursion depth exceeded')):
             sys.__stderr__.write( 'Exception occurred in traits notification '
                 'handler for object: %s, trait: %s, old value: %s, '

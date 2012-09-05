@@ -33,9 +33,9 @@ import unittest
 
 from nose import SkipTest
 
-from ..api import (HasTraits, List, Dict, Int, Str, Any, Instance, Undefined,
-        TraitError, TraitListEvent, TraitDictEvent, push_exception_handler,
-        on_trait_change, Property, cached_property)
+from ..api import (Any, Dict, HasTraits, Instance, Int, List, Property, Str,
+    TraitDictEvent, TraitError, TraitListEvent, Undefined, cached_property,
+    on_trait_change, pop_exception_handler, push_exception_handler)
 
 from ..trait_handlers import TraitListObject, TraitDictObject
 
@@ -374,6 +374,14 @@ class PropertyDependsOn ( HasTraits ):
 #-------------------------------------------------------------------------------
 
 class OnTraitChangeTest ( unittest.TestCase ):
+
+    def setUp(self):
+        def ignore ( *args ):
+            pass
+        push_exception_handler(handler=ignore, reraise_exceptions=True)
+
+    def tearDown(self):
+        pop_exception_handler()
 
     #-- Unit Test Methods ------------------------------------------------------
 
@@ -748,10 +756,6 @@ class OnTraitChangeTest ( unittest.TestCase ):
         return link
 
 # Run the unit tests (if invoked from the command line):
-def ignore ( *args ):
-    pass
-
-push_exception_handler( handler = ignore, reraise_exceptions = True )
 if __name__ == '__main__':
     unittest.main()
 
