@@ -91,16 +91,14 @@ doctest:
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
 texinfo:
-	mkdir -p _build/texinfo
-	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) _build/texinfo
+	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
 	@echo
-	@echo "Build finished. The Texinfo files are in build/texinfo."
+	@echo "Build finished. The Texinfo files are in $(BUILDDIR)/texinfo."
 	@echo "Run \`make' in that directory to run these through makeinfo" \
 	      "(use \`make info' here to do that automatically)."
 
 info:
-	mkdir -p _build/texinfo
-	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) _build/texinfo
+	$(SPHINXBUILD) -b texinfo $(ALLSPHINXOPTS) $(BUILDDIR)/texinfo
 	@echo "Running Texinfo files through makeinfo..."
-	make -C _build/texinfo info
-	@echo "makeinfo finished; the Info files are in build/texinfo."
+	make -C $(BUILDDIR)/texinfo info
+	@echo "makeinfo finished; the Info files are in $(BUILDDIR)/texinfo."
