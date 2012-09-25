@@ -178,9 +178,10 @@ latex_logo = "e-logo-rev.png"
 #latex_use_modindex = True
 
 
+# Options for Texinfo output
+# --------------------------
+
 texinfo_documents = [
-  (master_doc, 'traits', 'Traits 4 User Manual',
-   'Enthought, Inc.',
-   'Traits', 'explicitly typed attributes for Python',
-   1),
+  (master_doc, 'traits', 'Traits 4 User Manual', 'Enthought, Inc.',
+   'Traits', 'Explicitly typed attributes for Python.', 'Python'),
 ]
