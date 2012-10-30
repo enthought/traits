@@ -8,7 +8,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #------------------------------------------------------------------------------
-""" Trait assert mixing class to simplify test implementation for Trait
+""" Trait assert mixin class to simplify test implementation for Trait
 Classes.
 
 """
@@ -73,7 +73,7 @@ def reverse_assertion(context, msg):
 
 
 class TraitAssertTools(object):
-    """ Mixing class to augment the unittest.TestCase class with useful trait
+    """ Mixin class to augment the unittest.TestCase class with useful trait
     related traits methods.
 
     See Also
@@ -145,7 +145,7 @@ class TraitAssertTools(object):
         with context:
             callableObj(*args, **kwargs)
 
-    def assertTraitDoesNotChange(self, obj, trait, callableObj=None,
+    def assertTraitDoesNotChange(self, obj, xname, callableObj=None,
                            *args, **kwargs):
         """ Assert that no trait event is fired.
 
@@ -175,11 +175,6 @@ class TraitAssertTools(object):
         callableObj : callable
             A callable object where the trait change should not happen.
 
-        count : int
-            The expected number of times the event should be fired. When
-            None (default value) there is no check for the number of times
-            the change event was fired.
-
         *args :
             List of positional arguments for ``callableObj``
 
@@ -192,8 +187,8 @@ class TraitAssertTools(object):
           the class is not implemented yet.
 
         """
-        msg = 'A change event was fired for: {0}'.format(trait)
-        context = _AssertTraitChangesContext(obj, trait, None, self)
+        msg = 'A change event was fired for: {0}'.format(xname)
+        context = _AssertTraitChangesContext(obj, xname, None, self)
         if callableObj is None:
             return reverse_assertion(context, msg)
         with reverse_assertion(context, msg):
