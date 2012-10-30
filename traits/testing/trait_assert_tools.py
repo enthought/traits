@@ -87,16 +87,16 @@ class TraitAssertTools(object):
         """ Assert that the class trait changes exactly n times during
         execution of the provided function.
 
-        Method can also be used in a with statement to assert that the
-        a class trait has changed during the execution of the code inside
-        the with context block (similar to the assertRaises method).
+        Method can also be used in a with statement to assert that a class
+        trait has changed during the execution of the code inside the with
+        context block (similar to the assertRaises method).
 
-        Please note that in that case the context manager returns itself and
-        the user can introspect the information of:
-            - The last event fired by accessing the ``event`` attribute of the
-              returned object.
-            - All the fired events by accessing the ``events`` attribute of
-              the return object.
+        Please note that the context manager returns itself and the user can
+        introspect the information of:
+        - The last event fired by accessing the ``event`` attribute of the
+          returned object.
+        - All the fired events by accessing the ``events`` attribute of the
+          return object.
 
         Example
         -------
@@ -149,9 +149,9 @@ class TraitAssertTools(object):
                            *args, **kwargs):
         """ Assert that no trait event is fired.
 
-        Method can also be used in a with statement to assert that the
-        a class trait has not changed during the execution of the code
-        inside the with statement block.
+        Method can also be used in a with statement to assert that a class
+        trait has not changed during the execution of the code inside the
+        with statement block.
 
         Example
         -------
