@@ -73,7 +73,7 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.assertSequenceEqual(expected, result.event)
 
         # Change event should BE detected exactly 3 times
-        with self.assertTraitChanges(my_class, 'number') as result:
+        with self.assertTraitChanges(my_class, 'number', count=3) as result:
             my_class.flag = True
             my_class.add_to_number(10.0)
             my_class.add_to_number(10.0)
@@ -129,6 +129,7 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
                     (my_class, 'number', 2.0, -3.0)]
         self.assertEqual(result.events, expected)
 
+
     def test_change_on_failure(self):
         """ Check behaviour when assertion should be raised for trait change.
         """
@@ -137,6 +138,19 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
             with self.assertTraitChanges(my_class, 'number') as result:
                 my_class.flag = True
         self.assertEqual(result.events, [])
+
+        # Change event will not be fired 3 times
+        with self.assertRaises(AssertionError):
+            with self.assertTraitChanges(my_class, 'number', count=3) as \
+                    result:
+                my_class.flag = True
+                my_class.add_to_number(10.0)
+                my_class.add_to_number(10.0)
+
+        expected = [(my_class, 'number', 2.0, 12.0),
+                    (my_class, 'number', 12.0, 22.0)]
+        self.assertSequenceEqual(expected, result.events)
+        self.assertSequenceEqual(expected[-1], result.event)
 
     def test_asserts_in_context_block(self):
         """ Make sure that the traits context manager does not stop
