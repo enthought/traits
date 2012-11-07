@@ -18,9 +18,60 @@ import contextlib
 class _AssertTraitChangesContext(object):
     """ A context manager used to implement the trait change assert methods.
 
+    Attributes
+    ----------
+    obj : HasTraits
+        The HasTraits class instance who's class trait will change.
+
+    xname : str
+        The extended trait name of trait changes to listen too.
+
+    count : int, optional
+        The expected number of times the event should be fired. When None
+        (default value) there is no check for the number of times the
+        change event was fired.
+
+    event : tuple of arguments
+        The arguments of the last trait change event for `xname`.
+
+    events : tuple of events
+        The list of all the arguments for the trait change events for `xname`
+        that where recorded inside the context statement block.
+
+    Raises
+    ------
+    AssertionError :
+          When the desired number of trait changed did not take place or when
+          `count = None` and no trait change took place.
+
     """
 
     def __init__(self, obj, xname, count, test_case):
+        """ Initialize the trait change assertion context manager.
+
+        Parameters
+        ----------
+        obj : HasTraits
+            The HasTraits class instance who's class trait will change.
+
+        xname : str
+            The extended trait name of trait changes to listen too.
+
+        count : int, optional
+            The expected number of times the event should be fired. When None
+            (default value) there is no check for the number of times the
+            change event was fired.
+
+        test_case : TestCase
+            A unittest TestCase where to raise the failureException if
+            necessary.
+
+        Notes
+        -----
+        - Checking if the provided xname corresponds to valid traits in
+          the class is not implemented yet.
+
+        """
         self.obj = obj
         self.xname = xname
         self.count = count
@@ -42,9 +93,10 @@ class _AssertTraitChangesContext(object):
 
     def __exit__(self, exc_type, exc_value, tb):
         """ Remove the trait listener
+
         """
         if exc_type is not None:
-            return False
+            return
 
         self.obj.on_trait_change(self._listener, self.xname, remove=True)
         if self.event is None:
@@ -89,11 +141,7 @@ def reverse_assertion(context, msg):
 
 class TraitAssertTools(object):
     """ Mixin class to augment the unittest.TestCase class with useful trait
-    related traits methods.
-
-    See Also
-    --------
-    TraitAssertToolsTestCase
+    related assert methods.
 
     """
 
@@ -106,20 +154,22 @@ class TraitAssertTools(object):
 
         Please note that the context manager returns itself and the user can
         introspect the information of:
+
         - The last event fired by accessing the ``event`` attribute of the
           returned object.
+
         - All the fired events by accessing the ``events`` attribute of the
           return object.
 
-        Examples
-        --------
-        class MyClass(HasTraits):
-            number = Float(2.0)
+        **Example**::
 
-        my_class = MyClass()
+            class MyClass(HasTraits):
+               number = Float(2.0)
 
-        with self.assertTraitChanges(my_class, 'number', count=1):
-            my_class.number = 3.0
+            my_class = MyClass()
+
+            with self.assertTraitChanges(my_class, 'number', count=1):
+               my_class.number = 3.0
 
         Parameters
         ----------
@@ -148,16 +198,16 @@ class TraitAssertTools(object):
         Used in a with statement to assert that a class trait has not changed
         during the execution of the code inside the with statement block.
 
-        Examples
-        --------
-        class MyClass(HasTraits):
-            number = Float(2.0)
-            name = String
+        **Example**::
 
-        my_class = MyClass()
+            class MyClass(HasTraits):
+                number = Float(2.0)
+                name = String
 
-        with self.assertTraitDoesNotChange(my_class, 'name'):
-             my_class.number = 3.0
+            my_class = MyClass()
+
+            with self.assertTraitDoesNotChange(my_class, 'name'):
+                 my_class.number = 3.0
 
         Parameters
         ----------
