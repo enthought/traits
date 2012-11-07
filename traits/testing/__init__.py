@@ -1,10 +1,9 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005 by Enthought, Inc.
+# Copyright (c) 2005-2013 by Enthought, Inc.
 # All rights reserved.
 #------------------------------------------------------------------------------
-""" Scripts and assert tools related to running unit tests, based on testoob.
-    Part of the ETSDevTools project of the Enthought Tool Suite.
-
-    These scripts also allow running test suites in separate processes and
-    aggregating the results.
+""" Scripts and assert tools related to running unit tests.
+ 
+These scripts also allow running test suites in separate processes and
+aggregating the results.
 """
