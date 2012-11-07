@@ -99,13 +99,13 @@ class _AssertTraitChangesContext(object):
             return
 
         self.obj.on_trait_change(self._listener, self.xname, remove=True)
-        if self.event is None:
-            msg = 'A change event was not fired for: {0}'.format(self.xname)
-            raise self.failureException(msg)
-        elif self.count is not None and len(self.events) != self.count:
+        if self.count is not None and len(self.events) != self.count:
             msg = 'Change event for {0} was fired {1} times instead of {2}'
             items = self.xname, len(self.events), self.count
             raise self.failureException(msg.format(*items))
+        elif self.event is None and self.count is None:
+            msg = 'A change event was not fired for: {0}'.format(self.xname)
+            raise self.failureException(msg)
 
 
 @contextlib.contextmanager

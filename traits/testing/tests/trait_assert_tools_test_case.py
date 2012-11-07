@@ -41,6 +41,8 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         with self.assertTraitDoesNotChange(my_class, 'number') as result:
             my_class.flag = True
             my_class.number = 2.0
+        self.assertIsNone(result.event)
+        self.assertEqual(result.events, [])
 
         msg = 'The assertion result is not None: {0}'.format(result.event)
         self.assertIsNone(result.event, msg=msg)
@@ -164,6 +166,14 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         with self.assertRaisesRegexp(AssertionError, '16\.0 != 12\.0'):
             with self.assertTraitDoesNotChange(my_class, 'number'):
                 self.assertEqual(my_class.number, 12.0)
+
+    def test_special_case_for_count(self):
+        """ Count equal to 0 should be valid but it is discouraged.
+        """
+        my_class = MyClass(number=16.0)
+
+        with self.assertTraitChanges(my_class, 'number', count=0):
+            my_class.flag = True
 
 
 if __name__ == '__main__':
