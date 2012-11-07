@@ -137,7 +137,7 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
                 my_class.flag = True
         self.assertEqual(result.events, [])
 
-    def test_failing_assert_in_context_block(self):
+    def test_asserts_in_context_block(self):
         """ Make sure that the traits context manager does not stop
         regular assertions inside the managed code block from happening.
         """
@@ -146,7 +146,7 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         with self.assertTraitDoesNotChange(my_class, 'number'):
             self.assertEqual(my_class.number, 16.0)
 
-        with self.assertRaisesRegexp(AssertionError, '16.0 != 12.0'):
+        with self.assertRaisesRegexp(AssertionError, '16\.0 != 12\.0'):
             with self.assertTraitDoesNotChange(my_class, 'number'):
                 self.assertEqual(my_class.number, 12.0)
 
