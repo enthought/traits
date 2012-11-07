@@ -131,7 +131,6 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
                     (my_class, 'number', 2.0, -3.0)]
         self.assertEqual(result.events, expected)
 
-
     def test_change_on_failure(self):
         """ Check behaviour when assertion should be raised for trait change.
         """
