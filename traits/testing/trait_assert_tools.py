@@ -74,7 +74,6 @@ def reverse_assertion(context, msg):
         The message to use if there was no AssertionError originating from
         the wrapped context manager.
 
-
     """
     context.__enter__()
     try:
@@ -142,7 +141,6 @@ class TraitAssertTools(object):
 
         """
         return _AssertTraitChangesContext(obj, trait, count, self)
-
 
     def assertTraitDoesNotChange(self, obj, xname):
         """ Assert that no trait event is fired.
