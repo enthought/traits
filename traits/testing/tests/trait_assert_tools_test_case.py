@@ -83,17 +83,6 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.assertSequenceEqual(expected, result.events)
         self.assertSequenceEqual(expected[-1], result.event)
 
-    def test_when_using_functions(self):
-        my_class = self.my_class
-
-        # Change event should BE detected
-        self.assertTraitChanges(my_class, 'number', 1,
-                                my_class.add_to_number, 13.0)
-
-        # Change event should NOT BE detected
-        self.assertTraitDoesNotChange(my_class, 'flag',
-                                      my_class.add_to_number, 13.0)
-
     def test_indirect_events(self):
         my_class = self.my_class
 
