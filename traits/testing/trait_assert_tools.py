@@ -55,11 +55,27 @@ class _AssertTraitChangesContext(object):
             items = self.xname, len(self.events), self.count
             raise self.failureException(msg.format(*items))
 
-        return False
-
 
 @contextlib.contextmanager
 def reverse_assertion(context, msg):
+    """ Reverse the assertion logic of a context manager.
+
+    Wraps context managers that conditionally raise an AssertionError and
+    reverse the logic. So if the wrapped context manager raises an
+    AssertionError it will ignore it, but if there was no AssertionError then
+    it will raise one of its own.
+
+    Parameters
+    ----------
+    context : context manager
+        The context manager that might raise an assertion
+
+    msg : string
+        The message to use if there was no AssertionError originating from
+        the wrapped context manager.
+
+
+    """
     context.__enter__()
     try:
         yield context
@@ -96,8 +112,8 @@ class TraitAssertTools(object):
         - All the fired events by accessing the ``events`` attribute of the
           return object.
 
-        Example
-        -------
+        Examples
+        --------
         class MyClass(HasTraits):
             number = Float(2.0)
 
@@ -114,12 +130,13 @@ class TraitAssertTools(object):
         xname : str
             The extended trait name of trait changes to listen too.
 
-        count : int
+        count : int, optional
             The expected number of times the event should be fired. When None
             (default value) there is no check for the number of times the
             change event was fired.
 
-        ----
+        Notes
+        -----
         - Checking if the provided xname corresponds to valid traits in
           the class is not implemented yet.
 
@@ -133,7 +150,8 @@ class TraitAssertTools(object):
         Used in a with statement to assert that a class trait has not changed
         during the execution of the code inside the with statement block.
 
-        -------
+        Examples
+        --------
         class MyClass(HasTraits):
             number = Float(2.0)
             name = String
@@ -151,7 +169,8 @@ class TraitAssertTools(object):
         xname : str
             The extended trait name of trait changes to listen too.
 
-        ----
+        Notes
+        -----
         - Checking if the provided xname corresponds to valid traits in
           the class is not implemented yet.
 
