@@ -95,14 +95,12 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         expected = (my_class, 'list_of_numbers_items', [], [-3.0])
         self.assertSequenceEqual(expected, result.event)
 
-    def test_exception_in_context(self):
+    def test_exception_inside_context(self):
         my_class = self.my_class
 
         with self.assertRaises(AttributeError):
             with self.assertTraitChanges(my_class, 'number'):
                 my_class.i_do_exist
-
-        my_class = self.my_class
 
         with self.assertRaises(AttributeError):
             with self.assertTraitDoesNotChange(my_class, 'number'):
