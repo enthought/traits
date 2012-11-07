@@ -82,14 +82,12 @@ class TraitAssertTools(object):
 
     """
 
-    def assertTraitChanges(self, obj, trait, count=None, callableObj=None,
-                           *args, **kwargs):
-        """ Assert that the class trait changes exactly n times during
-        execution of the provided function.
+    def assertTraitChanges(self, obj, trait, count=None):
+        """ Assert that the class trait changes exactly n times.
 
-        Method can also be used in a with statement to assert that a class
-        trait has changed during the execution of the code inside the with
-        context block (similar to the assertRaises method).
+        Used in a with statement to assert that a class trait has changed
+        during the execution of the code inside the with context block
+        (similar to the assertRaises method).
 
         Please note that the context manager returns itself and the user can
         introspect the information of:
@@ -116,44 +114,25 @@ class TraitAssertTools(object):
         xname : str
             The extended trait name of trait changes to listen too.
 
-        callableObj : callable
-            A callable object where the trait change is expected to happen.
-
         count : int
             The expected number of times the event should be fired. When None
             (default value) there is no check for the number of times the
             change event was fired.
 
-        *args :
-            List of positional arguments for ``callableObj``
-
-        **kwargs :
-            Dict of keyword value pairs to be passed to the ``callableObj``
-
-
-        Note
         ----
         - Checking if the provided xname corresponds to valid traits in
           the class is not implemented yet.
-        - Using the functional version of the assert method requires the
-          `count` argument to be given even it is None.
 
         """
-        context = _AssertTraitChangesContext(obj, trait, count, self)
-        if callableObj is None:
-            return context
-        with context:
-            callableObj(*args, **kwargs)
+        return _AssertTraitChangesContext(obj, trait, count, self)
 
-    def assertTraitDoesNotChange(self, obj, xname, callableObj=None,
-                           *args, **kwargs):
+
+    def assertTraitDoesNotChange(self, obj, xname):
         """ Assert that no trait event is fired.
 
-        Method can also be used in a with statement to assert that a class
-        trait has not changed during the execution of the code inside the
-        with statement block.
+        Used in a with statement to assert that a class trait has not changed
+        during the execution of the code inside the with statement block.
 
-        Example
         -------
         class MyClass(HasTraits):
             number = Float(2.0)
@@ -172,16 +151,6 @@ class TraitAssertTools(object):
         xname : str
             The extended trait name of trait changes to listen too.
 
-        callableObj : callable
-            A callable object where the trait change should not happen.
-
-        *args :
-            List of positional arguments for ``callableObj``
-
-        **kwargs :
-            Dict of keyword value pairs to be passed to the ``callableObj``
-
-        Note
         ----
         - Checking if the provided xname corresponds to valid traits in
           the class is not implemented yet.
@@ -189,8 +158,4 @@ class TraitAssertTools(object):
         """
         msg = 'A change event was fired for: {0}'.format(xname)
         context = _AssertTraitChangesContext(obj, xname, None, self)
-        if callableObj is None:
-            return reverse_assertion(context, msg)
-        with reverse_assertion(context, msg):
-            callableObj(*args, **kwargs)
-        return
+        return reverse_assertion(context, msg)
