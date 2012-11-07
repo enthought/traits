@@ -223,6 +223,6 @@ class TraitAssertTools(object):
           the class is not implemented yet.
 
         """
-        msg = 'A change event was fired for: {0}'.format(xname)
+        msg = 'A change event was unexpectedly fired for: {0}'.format(xname)
         context = _AssertTraitChangesContext(obj, xname, None, self)
         return reverse_assertion(context, msg)
