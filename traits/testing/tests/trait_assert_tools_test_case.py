@@ -33,6 +33,8 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.my_class = MyClass()
 
     def test_when_using_with(self):
+        """ Check normal use cases as a context manager.
+        """
         my_class = self.my_class
 
         # Change event should NOT BE detected
@@ -84,6 +86,8 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.assertSequenceEqual(expected[-1], result.event)
 
     def test_indirect_events(self):
+        """ Check catching indirect change events.
+        """
         my_class = self.my_class
 
         # Change event should BE detected
@@ -96,6 +100,10 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.assertSequenceEqual(expected, result.event)
 
     def test_exception_inside_context(self):
+        """ Check that exception inside the context statement block are
+        propagated.
+
+        """
         my_class = self.my_class
 
         with self.assertRaises(AttributeError):
@@ -107,6 +115,10 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
                 my_class.i_do_exist
 
     def test_non_change_on_failure(self):
+        """ Check behaviour when assertion should be raised for non trait
+        change.
+
+        """
         my_class = self.my_class
         traits = 'flag, number'
         with self.assertRaises(AssertionError):
@@ -118,6 +130,8 @@ class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
         self.assertEqual(result.events, expected)
 
     def test_change_on_failure(self):
+        """ Check behaviour when assertion should be raised for trait change.
+        """
         my_class = self.my_class
         with self.assertRaises(AssertionError):
             with self.assertTraitChanges(my_class, 'number') as result:
