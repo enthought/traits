@@ -11,6 +11,7 @@ Traits 4 User Manual
     deferring.rst
     custom.rst
     advanced.rst
+    testing.rst
 
 Indices and tables
 ==================
