@@ -12,7 +12,6 @@
 Classes.
 
 """
-import contextlib
 
 
 class _AssertTraitChangesContext(object):
