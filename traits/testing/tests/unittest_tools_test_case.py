@@ -27,7 +27,7 @@ class MyClass(HasTraits):
         self.number += value
 
 
-class TraitAssertToolsTestCase(unittest.TestCase, UnittestTools):
+class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
     def setUp(self):
         self.my_class = MyClass()
