@@ -103,7 +103,7 @@ class _AssertTraitChangesContext(object):
             msg = 'Change event for {0} was fired {1} times instead of {2}'
             items = self.xname, len(self.events), self.count
             raise self.failureException(msg.format(*items))
-        elif self.event is None and self.count is None:
+        elif self.count is None and self.event is None:
             msg = 'A change event was not fired for: {0}'.format(self.xname)
             raise self.failureException(msg)
 
