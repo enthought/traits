@@ -30,12 +30,9 @@ class _AssertTraitChangesContext(object):
         (default value) there is no check for the number of times the
         change event was fired.
 
-    event : tuple of arguments
-        The arguments of the last trait change event for `xname`.
-
-    events : tuple of events
-        The list of all the arguments for the trait change events for `xname`
-        that where recorded inside the context statement block.
+    events : list of tuples
+        A list with tuple elements containing the arguments of an
+        `on_trait_change` event signature (<object>, <name>, <old>, <new>).
 
     Raises
     ------
@@ -74,7 +71,6 @@ class _AssertTraitChangesContext(object):
         self.obj = obj
         self.xname = xname
         self.count = count
-        self.event = None
         self.events = []
         self.failureException = test_case.failureException
 
@@ -102,7 +98,7 @@ class _AssertTraitChangesContext(object):
             msg = 'Change event for {0} was fired {1} times instead of {2}'
             items = self.xname, len(self.events), self.count
             raise self.failureException(msg.format(*items))
-        elif self.count is None and self.event is None:
+        elif self.count is None and not self.events:
             msg = 'A change event was not fired for: {0}'.format(self.xname)
             raise self.failureException(msg)
 
@@ -120,13 +116,10 @@ class UnittestTools(object):
         (similar to the assertRaises method).
 
         Please note that the context manager returns itself and the user can
-        introspect the information of:
-
-        - The last event fired by accessing the ``event`` attribute of the
-          returned object.
-
-        - All the fired events by accessing the ``events`` attribute of the
-          return object.
+        introspect the information of the fired events by accessing the
+        ``events`` attribute of the context object. The attribute is a list
+        with tuple elements containing the arguments of an `on_trait_change`
+        event signature (<object>, <name>, <old>, <new>).
 
         **Example**::
 
@@ -135,8 +128,10 @@ class UnittestTools(object):
 
             my_class = MyClass()
 
-            with self.assertTraitChanges(my_class, 'number', count=1):
+            with self.assertTraitChanges(my_class, 'number') as ctx:
                my_class.number = 3.0
+
+            self.assert(ctx.events, [(my_class, 'number', 2.0, 3.0)]
 
         Parameters
         ----------
@@ -174,7 +169,7 @@ class UnittestTools(object):
             my_class = MyClass()
 
             with self.assertTraitDoesNotChange(my_class, 'name'):
-                 my_class.number = 3.0
+                 my_class.number = 2.0
 
         Parameters
         ----------

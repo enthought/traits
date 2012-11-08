@@ -41,11 +41,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(my_class, 'number') as result:
             my_class.flag = True
             my_class.number = 2.0
-        self.assertIsNone(result.event)
         self.assertEqual(result.events, [])
-
-        msg = 'The assertion result is not None: {0}'.format(result.event)
-        self.assertIsNone(result.event, msg=msg)
 
         # Change event should BE detected
         with self.assertTraitChanges(my_class, 'number') as result:
@@ -151,7 +147,6 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         expected = [(my_class, 'number', 2.0, 12.0),
                     (my_class, 'number', 12.0, 22.0)]
         self.assertSequenceEqual(expected, result.events)
-        self.assertSequenceEqual(expected[-1], result.event)
 
     def test_asserts_in_context_block(self):
         """ Make sure that the traits context manager does not stop

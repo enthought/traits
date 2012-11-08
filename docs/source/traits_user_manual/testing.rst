@@ -61,7 +61,7 @@ TestCase::
 
             # Inspecting the last recorded event
             expected = (my_class, 'number', 2.0, 5.0)
-            self.assertSequenceEqual(expected, result.event)
+            self.assertSequenceEqual(result.events, [expected])
 
             # Checking for specific number of events
             with self.assertTraitChanges(my_class, 'number', count=3) as result:
@@ -73,7 +73,7 @@ TestCase::
             expected = [(my_class, 'number', 5.0, 15.0),
                         (my_class, 'number', 15.0, 25.0),
                         (my_class, 'number', 25.0, 35.0)]
-            self.assertSequenceEqual(expected, result.events)
+            self.assertSequenceEqual(result.events, expected)
 
             # Check using extended names
             with self.assertTraitChanges(my_class, 'list_of_numbers[]'):
