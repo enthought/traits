@@ -12,12 +12,14 @@ and :meth:`~traits.testing.api.UnittestTools.assertTraitDoesChange` are
 available when the :class:`~traits.testing.api.UnittestTools` is added as
 a mixin class in the developers TestCase.
 
-The methods behave as a context manager and allow the developer to assert
-that specific events have been fired and inspect the arguments that are passed
-to the notification handlers at each event.
+The methods behave as a context manager which at entry hooks and traits
+listener on the class for the desired events and records the arguments pass
+to the listener at every fired events. This way the developer can easily
+assert that specific events have been fired. Further analysis and checking
+can be performed by inspecting the list of recorded events arguments.
 
 Both normal and extended trait names are supported. However, no check is
-performed regarding the validity of the trait name, thus case is required to
+performed regarding the validity of the trait name, thus care is required to
 safeguard against spelling mistakes in the names of the traits that we need
 to assert the behaviour.
 
