@@ -107,38 +107,6 @@ class _AssertTraitChangesContext(object):
             msg = 'A change event was not fired for: {0}'.format(self.xname)
             raise self.failureException(msg)
 
-
-@contextlib.contextmanager
-def reverse_assertion(context, msg):
-    """ Reverse the assertion logic of a context manager.
-
-    Wraps context managers that conditionally raise an AssertionError and
-    reverse the logic. So if the wrapped context manager raises an
-    AssertionError it will ignore it, but if there was no AssertionError then
-    it will raise one of its own.
-
-    Parameters
-    ----------
-    context : context manager
-        The context manager that might raise an assertion
-
-    msg : string
-        The message to use if there was no AssertionError originating from
-        the wrapped context manager.
-
-    """
-    context.__enter__()
-    try:
-        yield context
-    finally:
-        try:
-            context.__exit__(None, None, None)
-        except AssertionError:
-            pass
-        else:
-            raise context.failureException(msg)
-
-
 class UnittestTools(object):
     """ Mixin class to augment the unittest.TestCase class with useful trait
     related assert methods.
@@ -223,6 +191,4 @@ class UnittestTools(object):
           the class is not implemented yet.
 
         """
-        msg = 'A change event was unexpectedly fired for: {0}'.format(xname)
-        context = _AssertTraitChangesContext(obj, xname, None, self)
-        return reverse_assertion(context, msg)
+        return _AssertTraitChangesContext(obj, xname, 0, self)
