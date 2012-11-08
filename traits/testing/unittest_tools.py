@@ -139,7 +139,7 @@ def reverse_assertion(context, msg):
             raise context.failureException(msg)
 
 
-class TraitAssertTools(object):
+class UnittestTools(object):
     """ Mixin class to augment the unittest.TestCase class with useful trait
     related assert methods.
 

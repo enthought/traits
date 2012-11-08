@@ -10,7 +10,7 @@
 #------------------------------------------------------------------------------
 import unittest
 from traits.api import HasTraits, Float, List, Bool, on_trait_change
-from traits.testing.api import TraitAssertTools
+from traits.testing.api import UnittestTools
 
 
 class MyClass(HasTraits):
@@ -27,7 +27,7 @@ class MyClass(HasTraits):
         self.number += value
 
 
-class TraitAssertToolsTestCase(unittest.TestCase, TraitAssertTools):
+class TraitAssertToolsTestCase(unittest.TestCase, UnittestTools):
 
     def setUp(self):
         self.my_class = MyClass()

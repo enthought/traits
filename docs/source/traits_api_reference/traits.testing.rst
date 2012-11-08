@@ -28,7 +28,7 @@ testing Package
 :mod:`trait_assert_tools` Module
 --------------------------------
 
-.. automodule:: traits.testing.trait_assert_tools
+.. automodule:: traits.testing.unittest_tools
     :members:
     :undoc-members:
     :show-inheritance:
