@@ -77,8 +77,7 @@ class _AssertTraitChangesContext(object):
     def _listener(self, obj, name, old, new):
         """ Dummy trait listener
         """
-        self.event = (obj, name, old, new)
-        self.events.append(self.event)
+        self.events.append((obj, name, old, new))
 
     def __enter__(self):
         """ Bind the trait listener

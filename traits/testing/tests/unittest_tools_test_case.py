@@ -48,8 +48,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             my_class.flag = False
             my_class.number = 5.0
 
-        expected = (my_class, 'number', 2.0, 5.0)
-        self.assertSequenceEqual(expected, result.event)
+        expected = [(my_class, 'number', 2.0, 5.0)]
+        self.assertSequenceEqual(result.events, expected)
 
         # Change event should BE detected exactly 2 times
         with self.assertTraitChanges(my_class, 'number', count=2) as result:
@@ -59,16 +59,15 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         expected = [(my_class, 'number', 5.0, 4.0),
                     (my_class, 'number', 4.0, 3.0)]
-        self.assertSequenceEqual(expected, result.events)
-        self.assertSequenceEqual(expected[-1], result.event)
+        self.assertSequenceEqual(result.events, expected)
 
         # Change event should BE detected
         with self.assertTraitChanges(my_class, 'number') as result:
             my_class.flag = True
             my_class.add_to_number(10.0)
 
-        expected = (my_class, 'number', 3.0, 13.0)
-        self.assertSequenceEqual(expected, result.event)
+        expected = [(my_class, 'number', 3.0, 13.0)]
+        self.assertSequenceEqual(result.events, expected)
 
         # Change event should BE detected exactly 3 times
         with self.assertTraitChanges(my_class, 'number', count=3) as result:
@@ -81,7 +80,6 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                     (my_class, 'number', 23.0, 33.0),
                     (my_class, 'number', 33.0, 43.0)]
         self.assertSequenceEqual(expected, result.events)
-        self.assertSequenceEqual(expected[-1], result.event)
 
     def test_indirect_events(self):
         """ Check catching indirect change events.
@@ -94,8 +92,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             my_class.flag = True
             my_class.number = -3.0
 
-        expected = (my_class, 'list_of_numbers_items', [], [-3.0])
-        self.assertSequenceEqual(expected, result.event)
+        expected = [(my_class, 'list_of_numbers_items', [], [-3.0])]
+        self.assertSequenceEqual(result.events, expected)
 
     def test_exception_inside_context(self):
         """ Check that exception inside the context statement block are
