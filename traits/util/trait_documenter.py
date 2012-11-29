@@ -32,8 +32,16 @@ def _is_class_trait(name, cls):
 class TraitDocumenter(ClassLevelDocumenter):
     """ Specialized Documenter subclass for trait attributes.
 
-    The class defines a new documenter that recovers the trait
-    definition signature of module level and class level traits.
+    The class defines a new documenter that recovers the trait definition
+    signature of module level and class level traits.
+
+    To use the documenter, append the module path in the extension
+    attribute of the `conf.py`.
+
+    .. warning::
+
+        Using the TraitDocumenter in conjunction with TraitsDoc is not
+        advised.
 
     """
 
