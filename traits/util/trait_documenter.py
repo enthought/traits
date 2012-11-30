@@ -8,7 +8,6 @@
 """
 import traceback
 import sys
-import collections
 import inspect
 import tokenize
 import token
@@ -18,9 +17,6 @@ from sphinx.ext.autodoc import ClassLevelDocumenter
 
 from ..trait_handlers import TraitType
 from ..has_traits import MetaHasTraits
-
-token_fields = ['type', 'token']
-TokenRecord = collections.namedtuple('TokenRecord', token_fields)
 
 
 def _is_class_trait(name, cls):
@@ -84,10 +80,6 @@ class TraitDocumenter(ClassLevelDocumenter):
             current = self.module = sys.modules[self.modname]
             for part in self.objpath[:-1]:
                 current = self.get_attr(current, part)
-            if isinstance(current, MetaHasTraits):
-                self._is_class_trait = True
-            else:
-                self._is_class_trait = False
             name = self.objpath[-1]
             self.object_name = name
             self.object = None
