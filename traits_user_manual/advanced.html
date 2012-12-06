@@ -4,17 +4,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Advanced Topics &mdash; Traits 4 User Manual</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.0.0',
+        VERSION:     '4.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,6 +29,7 @@
     <link rel="shortcut icon" href="../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="Traits 4 User Manual" href="index.html" />
+    <link rel="next" title="Testing Traits Classes" href="testing.html" />
     <link rel="prev" title="Custom Traits" href="custom.html" /> 
   </head>
   <body>
@@ -35,6 +39,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="testing.html" title="Testing Traits Classes"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="custom.html" title="Custom Traits"
              accesskey="P">previous</a> |</li>
@@ -84,7 +91,7 @@ the name of the trait attribute:</p>
 <p>This method initializes the <em>name</em> trait attribute, returning its initial value.
 The method overrides any default value specified in the trait definition.</p>
 <p id="index-2">It is also possible to define a dynamic method for the default value in a trait
-type subclass (get_default_value()). However, however, using a
+type subclass (get_default_value()). However, using a
 _<em>name</em>_default()  method avoids the overhead of subclassing a trait.</p>
 <span class="target" id="index-3"></span></div>
 <div class="section" id="overriding-default-values-in-a-subclass">
@@ -444,10 +451,10 @@ interfaces do not contain implementations.</p>
 <div class="section" id="implementing-an-interface">
 <span id="index-19"></span><span id="id17"></span><h3>Implementing an Interface<a class="headerlink" href="#implementing-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>A class declares that it implements one or more interfaces using the
-implements() function, which has the signature:</p>
+<tt class="xref py py-func docutils literal"><span class="pre">implements()</span></tt> function, which has the signature:</p>
 <dl class="function">
-<dt id="traits.has_traits.implements">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descclassname">traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big></dt>
 <dd></dd></dl>
 
 <p id="index-20">Interface names beyond the first one are optional. The call to implements() must
@@ -580,8 +587,8 @@ of Adapter. The adapts() function defines the class that contains it as an
 adapter class, and declares the set of interfaces that the class implements.</p>
 <p>The signature  of the adapts() function is:</p>
 <dl class="function">
-<dt id="traits.adapter.adapts">
-<tt class="descclassname">traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>adaptee_class</em>, <em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
+<dt>
+<tt class="descclassname">traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>adaptee_class</em>, <em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big></dt>
 <dd></dd></dl>
 
 <p>This signature is very similar to that of implements(), but adds the class being
@@ -706,8 +713,8 @@ TraitUI view.</p>
 <span id="id27"></span><h3>Property Factory Function<a class="headerlink" href="#property-factory-function" title="Permalink to this headline">¶</a></h3>
 <p>The Property() function has the following signature:</p>
 <dl class="function">
-<dt id="traits.traits.Property">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<dt id="traits.adapter.Property">
+<tt class="descclassname">traits.adapter.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.adapter.Property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>All parameters are optional, including the <em>fget</em> &#8220;getter&#8221; and <em>fset</em> &#8220;setter&#8221;
@@ -1099,6 +1106,9 @@ the tool is justified and appropriate.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="custom.html"
                         title="previous chapter">Custom Traits</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="testing.html"
+                        title="next chapter">Testing Traits Classes</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_user_manual/advanced.txt"
@@ -1107,7 +1117,7 @@ the tool is justified and appropriate.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -1128,6 +1138,9 @@ the tool is justified and appropriate.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="testing.html" title="Testing Traits Classes"
+             >next</a> |</li>
+        <li class="right" >
           <a href="custom.html" title="Custom Traits"
              >previous</a> |</li>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
@@ -1140,8 +1153,8 @@ the tool is justified and appropriate.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Jun 16, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

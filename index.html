@@ -4,17 +4,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Traits Documentation &mdash; Traits 4 User Manual</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '4.0.0',
+        VERSION:     '4.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -50,24 +53,98 @@
             
   <div class="section" id="traits-documentation">
 <h1>Traits Documentation<a class="headerlink" href="#traits-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="user-reference">
+<h2>User Reference<a class="headerlink" href="#user-reference" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="traits_user_manual/index.html">Traits 4 User Manual</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="traits_user_manual/front.html">Traits 4 User Manual</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/intro.html">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/defining.html">Defining Traits: Initialization and Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/notification.html">Trait Notification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/deferring.html">Deferring Trait Definitions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/custom.html">Custom Traits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/advanced.html">Advanced Topics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/intro.html">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/intro.html#what-are-traits">What Are Traits?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/intro.html#background">Background</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/defining.html">Defining Traits: Initialization and Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/defining.html#predefined-traits">Predefined Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/defining.html#trait-metadata">Trait Metadata</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/notification.html">Trait Notification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/notification.html#dynamic-notification">Dynamic Notification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/notification.html#static-notification">Static Notification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/notification.html#trait-events">Trait Events</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/deferring.html">Deferring Trait Definitions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/deferring.html#delegatesto">DelegatesTo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/deferring.html#prototypedfrom">PrototypedFrom</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/deferring.html#keyword-parameters">Keyword Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/deferring.html#notification-with-deferring">Notification with Deferring</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/custom.html">Custom Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/custom.html#trait-subclassing">Trait Subclassing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/custom.html#the-trait-factory-function">The Trait() Factory Function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/custom.html#trait-handlers">Trait Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/custom.html#custom-trait-handlers">Custom Trait Handlers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/advanced.html">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#initialization-and-validation-revisited">Initialization and Validation Revisited</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#interfaces">Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#adaptation">Adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#property-traits">Property Traits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#persistence">Persistence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#useful-methods-on-hastraits">Useful Methods on HasTraits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#performance-considerations-of-traits">Performance Considerations of Traits</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/testing.html">Testing Traits Classes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="traits_user_manual/index.html#indices-and-tables">Indices and tables</a></li>
 </ul>
 </div>
+</div>
+<div class="section" id="developer-reference">
+<h2>Developer Reference<a class="headerlink" href="#developer-reference" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="traits_api_reference/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="traits_api_reference/index.html#traits-core">Traits core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.html"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/adapter.html"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/category.html"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_traits.html"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_dynamic_views.html"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/interface_checker.html"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_base.html"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_errors.html"><tt class="docutils literal"><span class="pre">trait_errors</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_handlers.html"><tt class="docutils literal"><span class="pre">trait_handlers</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_numeric.html"><tt class="docutils literal"><span class="pre">trait_numeric</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_types.html"><tt class="docutils literal"><span class="pre">trait_types</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_value.html"><tt class="docutils literal"><span class="pre">trait_value</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits_listener.html"><tt class="docutils literal"><span class="pre">traits_listener</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_notifiers.html"><tt class="docutils literal"><span class="pre">trait_notifiers</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/ustr_trait.html"><tt class="docutils literal"><span class="pre">ustr_trait</span></tt> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_api_reference/index.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.etsconfig.html">etsconfig Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.protocols.html">protocols Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.testing.html">testing Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.util.html">util Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="traits_api_reference/index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
 <ul class="simple">
 <li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
+</div>
 </div>
 
 
@@ -79,6 +156,19 @@
             <p class="logo"><a href="#">
               <img class="logo" src="_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Traits Documentation</a><ul>
+<li><a class="reference internal" href="#user-reference">User Reference</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#developer-reference">Developer Reference</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Next topic</h4>
   <p class="topless"><a href="traits_user_manual/index.html"
                         title="next chapter">Traits 4 User Manual</a></p>
@@ -90,7 +180,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -120,8 +210,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Jun 16, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
