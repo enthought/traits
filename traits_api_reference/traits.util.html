@@ -1,0 +1,573 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>util Package &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="prev" title="testing Package" href="traits.testing.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="traits.testing.html" title="testing Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+  
+    <li><a href="#">util Package</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="util-package">
+<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-traits.util"></span><p>Utility functions, part of the Traits project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">2003-2011 Enthought, Inc.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="module-traits.util.camel_case">
+<span id="camel-case-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">camel_case</span></tt> Module<a class="headerlink" href="#module-traits.util.camel_case" title="Permalink to this headline">¶</a></h2>
+<p>Defines utility functions for operating on camel case names.</p>
+<dl class="class">
+<dt id="traits.util.camel_case.CamelCaseToPython">
+<em class="property">class </em><tt class="descclassname">traits.util.camel_case.</tt><tt class="descname">CamelCaseToPython</tt><a class="reference internal" href="../_modules/traits/util/camel_case.html#CamelCaseToPython"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.CamelCaseToPython" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple functor class to convert names from camel case to idiomatic
+Python variable names.</p>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span> <span class="o">=</span> <span class="n">CamelCaseToPython</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">camel2python</span><span class="p">(</span><span class="s">&#39;XMLActor2DToSGML&#39;</span><span class="p">)</span>
+<span class="go">&#39;xml_actor2d_to_sgml&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.camel_case.camel_case_to_words">
+<tt class="descclassname">traits.util.camel_case.</tt><tt class="descname">camel_case_to_words</tt><big>(</big><em>s</em><big>)</big><a class="reference internal" href="../_modules/traits/util/camel_case.html#camel_case_to_words"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.camel_case.camel_case_to_words" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a camel case string into words separated by spaces.</p>
+<dl class="docutils">
+<dt>For example::</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">camel_case_to_words</span><span class="p">(</span><span class="s">&#39;CamelCase&#39;</span><span class="p">)</span>
+<span class="go">&#39;Camel Case&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.clean_strings">
+<span id="clean-strings-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">clean_strings</span></tt> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
+<p>Provides functions that munge strings to avoid characters that would be
+problematic in certain situations.</p>
+<dl class="function">
+<dt id="traits.util.clean_strings.clean_filename">
+<tt class="descclassname">traits.util.clean_strings.</tt><tt class="descname">clean_filename</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/util/clean_strings.html#clean_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.clean_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Munge a string to avoid characters that might be problematic as
+a filename in some filesystems.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.clean_strings.clean_timestamp">
+<tt class="descclassname">traits.util.clean_strings.</tt><tt class="descname">clean_timestamp</tt><big>(</big><em>dt=None</em>, <em>microseconds=False</em><big>)</big><a class="reference internal" href="../_modules/traits/util/clean_strings.html#clean_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.clean_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a timestamp that has been cleansed of characters that might
+cause problems in filenames, namely colons.  If no datetime object
+is provided, then uses the current time.</p>
+<p class="rubric">Description</p>
+<p>The timestamp is in ISO-8601 format with the following exceptions:</p>
+<ul class="simple">
+<li>Colons &#8216;:&#8217; are replaced by underscores &#8216;_&#8217;.</li>
+<li>Microseconds are not displayed if the &#8216;microseconds&#8217; parameter is
+False.</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dt</strong> (<em>None or datetime.datetime object</em>) &#8211; </li>
+<li><strong>microseconds</strong> (<em>bool</em>) &#8211; Display microseconds or not.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>A string timestamp.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.clean_strings.python_name">
+<tt class="descclassname">traits.util.clean_strings.</tt><tt class="descname">python_name</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/util/clean_strings.html#python_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.clean_strings.python_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempt to make a valid Python identifier out of a name.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.deprecated">
+<span id="deprecated-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">deprecated</span></tt> Module<a class="headerlink" href="#module-traits.util.deprecated" title="Permalink to this headline">¶</a></h2>
+<p>A decorator for marking methods/functions as deprecated.</p>
+<dl class="function">
+<dt id="traits.util.deprecated.deprecated">
+<tt class="descclassname">traits.util.deprecated.</tt><tt class="descname">deprecated</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/traits/util/deprecated.html#deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.deprecated.deprecated" title="Permalink to this definition">¶</a></dt>
+<dd><p>A factory for decorators for marking methods/functions as deprecated.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.home_directory">
+<span id="home-directory-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">home_directory</span></tt> Module<a class="headerlink" href="#module-traits.util.home_directory" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.util.home_directory.get_home_directory">
+<tt class="descclassname">traits.util.home_directory.</tt><tt class="descname">get_home_directory</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/home_directory.html#get_home_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.home_directory.get_home_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the user&#8217;s home directory.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.refresh">
+<span id="refresh-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">refresh</span></tt> Module<a class="headerlink" href="#module-traits.util.refresh" title="Permalink to this headline">¶</a></h2>
+<p>Live updating of objects in system from module reloads.</p>
+<p>The main function exposed by this module is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">refresh</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Check for edited python files for modules that are live in the
+system.  If one or more are found, reload the module in such
+a way that its new class and function definitions are used
+by all pre-existing objects in the system.  This differs from
+a simple reload(module) which makes no attempt to provide the
+freshly loaded implementations of classes to objects created
+with a previous (outdated) version of the class.</p>
+<p>This feature allows you to make edits to a module
+while a program is running and not have to restart the
+program to get the new behavior in the system.  It is
+particularly handy when working on large GUI applications
+where you want to update the core code in the system
+without a lengthy restart.</p>
+<p>Example:</p>
+<div class="highlight-python"><pre># foo.py
+class Foo:
+    def method(self):
+        print "hello"
+
+$ python
+&gt;&gt;&gt; from foo import Foo
+&gt;&gt;&gt; obj = Foo()
+&gt;&gt;&gt; obj.method()
+hello
+#&lt;edit file&gt;
+# foo.py
+class Foo:
+    def method(self):
+        print "goodbye"
+#&lt;end edit&gt;
+&gt;&gt;&gt; import refresh
+&gt;&gt;&gt; refresh.refresh()
+# obj will now have the behavior of the updated Foo classes.
+&gt;&gt;&gt; obj.method()
+goodbye</pre>
+</div>
+<div class="section" id="how-it-works">
+<h3>How It works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h3>
+<p>In python, classes and functions are mutable objects.  Importing
+a module instantiates an instance of all the classes and functions
+defined in the module.</p>
+<p>Any objects instantiated from the classes have a obj.__class__
+attribute the points to the class they are based upon.  When
+you call a method on the object in your code like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>python actually calls the method of the __class__ object like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with obj passed in as the &#8220;self&#8221; argument.  This indirection allows
+us to dynamically change the implementation of method().</p>
+<p>When you edit a python module and then reload it in a python session,
+any classes within the module are reinstantiated within that module
+and any newly created objects created with a call to module.class()
+will have the behavior and methods of your freshly edited code.  But
+what about objects that are already &#8220;live&#8221; in the system that were
+created with a previous version of module.class?  Their __class__
+attribute is still pointing at the old version of the class, and so
+they will have the old behavior.  The quickest way to fix this is
+to find the old class object in the system and replace its attributes
+and methods with those of the freshly imported class.  This will
+instantly give all old objects in the system the new behavior.</p>
+<p>Functions are updated in a similar way.  All old versions of
+functions have their internals (func_code, etc.) replaced with
+those of the freshly loaded implementation.</p>
+</div>
+<div class="section" id="caveats">
+<h3>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h3>
+<p>Their are multiple issues with trying insert a new class definition
+back into classes.  Doing this clobbers and class scope variables that
+were set at runtime.  Also, this implementation cleans out old classes
+completely before inserting new method/attributes.  That means that
+any methods dynamically added to a class are also clobbered.  There
+are ways to potentially get around this, but it isn&#8217;t clear that
+it is worth the effort (at least for Enthought applications) as such
+tricks are not used very often in classes that are often edited.  When
+you do (or anytime you notice suspicious behavior), restart your
+application.</p>
+<p>Enthought people: While refresh() can save you time for working with
+applications, ALWAYS do a fresh restart and check that everything is
+working properly before checking edited code in.</p>
+</div>
+<div class="section" id="questions">
+<h3>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Check out why traits classes aren&#8217;t cleaned up correctly.</p>
+</li>
+<li><p class="first">Should we get rid of functions/classes that were in old version of module
+but aren&#8217;t in new one?  This could prevent problems with stale functions
+left around that really weren&#8217;t meant to be, but it might also delete
+functions that &#8220;hooked&#8221; into a module...</p>
+<p>fix me: I think we should to prevent refactor errors.</p>
+</li>
+</ul>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2005, Enthought, Inc.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Eric Jones</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">BSD</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="traits.util.refresh.Refresher">
+<em class="property">class </em><tt class="descclassname">traits.util.refresh.</tt><tt class="descname">Refresher</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#Refresher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.Refresher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Implementation of refresh().  See referesher.refresh() function for
+more information.</p>
+<dl class="method">
+<dt id="traits.util.refresh.Refresher.refresh">
+<tt class="descname">refresh</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#Refresher.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.Refresher.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all out-of-date modules and reload functions and classes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.filter_classes">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all class objects (not instances mind you)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.filter_functions">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all function objects (not instances mind you)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.filter_functions_and_classes">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions_and_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions_and_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions_and_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all class and functions objects.</p>
+<p>Returns two lists: (functions, classes)</p>
+<p>This function is faster than calling filter_functions
+and filter_classes separately because it only traverses
+the entire list once to create a sub-list containing
+both functions and classes.  This (usually much shorter)
+sublist is then traversed again to divide it into functions
+and classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.function_and_class_names_in_file">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_file</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the names of classes contained within a file.</p>
+<p>fix me: This currently only finds top level classes.  Nested
+classes are ignored. ?? Does this really matter much ??</p>
+<p>Example:</p>
+<div class="highlight-python"><pre># foo.py
+class Foo:
+    pass
+
+class Bar:
+    pass
+
+&gt;&gt;&gt; import traits.util.refresh
+&gt;&gt;&gt; refresh.function_and_class_names_in_file('foo.py')
+[], ['Foo', 'Bar']</pre>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.function_and_class_names_in_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_module</tt><big>(</big><em>mod</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse .py file associated with module for class names (full path).</p>
+<p>The returned list contains class names without their module name
+prefix.  For example if the foo module contains a Bar class, this
+method would return [&#8216;Bar&#8217;]</p>
+<p>Nested classes are not currently supported.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.new_functions_and_classes_for_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">new_functions_and_classes_for_module</tt><big>(</big><em>mod</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#new_functions_and_classes_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.new_functions_and_classes_for_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the new class within a module</p>
+<p>Note that this reloads the module in the process.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.out_of_date_modules">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">out_of_date_modules</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#out_of_date_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.out_of_date_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find loaded modules that have been modified since they were loaded.</p>
+<p>Searches the modules in sys.modules looks for py files that have
+a newer timestamp than the associated pyc file.  Extension modules
+are ignored.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.refresh">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">refresh</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload edited modules &amp; update existing objects to new versions</p>
+<p>Check for edited python files for modules that are live in the
+system.  If one or more are found, reload the module in such a way
+that its new class and function definitions are used by all
+pre-existing objects in the system.  This differs from a simple
+reload(module) which makes no attempt to provide the freshly loaded
+implementations of classes to objects created with a
+previous (outdated) version of the class.</p>
+<p>This feature allows you to make edits to a module while a program is
+running and not have to restart the program to get the new behavior in
+the system.  It is particularly handy when working on large GUI
+applications where you want to update the core code in the system
+without a lengthy restart.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.source_file_for_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">source_file_for_module</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#source_file_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.source_file_for_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the .py file that cooresponds to the module.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-traits.util.resource">
+<span id="resource-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">resource</span></tt> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for managing and finding resources (ie. images/files etc).</p>
+<p>get_path :           Returns the absolute path of a class or instance</p>
+<dl class="docutils">
+<dt>create_unique_name <span class="classifier-delimiter">:</span> <span class="classifier">Creates a name with a given prefix that is not in a</span></dt>
+<dd>given list of existing names. The separator between the
+prefix and the rest of the name can also be specified
+(default is a &#8216;_&#8217;)</dd>
+<dt>find_resource:       Given a setuptools project specification string</dt>
+<dd>(&#8216;MyProject&gt;=2.1&#8217;) and a partial path leading from the
+projects base directory to the desired resource, will
+return either an opened file object or, if specified, a
+full path to the resource.</dd>
+</dl>
+<dl class="function">
+<dt id="traits.util.resource.create_unique_name">
+<tt class="descclassname">traits.util.resource.</tt><tt class="descname">create_unique_name</tt><big>(</big><em>prefix</em>, <em>names</em>, <em>separator='_'</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#create_unique_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.create_unique_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a name starting with &#8216;prefix&#8217; that is not in &#8216;names&#8217;.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.find_resource">
+<tt class="descclassname">traits.util.resource.</tt><tt class="descname">find_resource</tt><big>(</big><em>project</em>, <em>resource_path</em>, <em>alt_path=None</em>, <em>return_path=False</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#find_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.find_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a file object or file path pointing to the desired resource.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>project</strong> (<em>string</em>) &#8211; The name of the project to look for the resource in. Can be the name or</li>
+<li><strong>resource_path</strong> (<em>string</em>) &#8211; The path to the file from inside the package. If the file desired is</li>
+<li><strong>alt_path</strong> (<em>string</em>) &#8211; The path to the resource relative to the location of the application&#8217;s
+top-level script (the one with __main__). If this function is called in
+code/scripts/myscript.py and the resource is code/data/image.jpg, the
+alt_path would be &#8216;../data/image.jpg&#8217;. This path is only used if the</li>
+<li><strong>return_path</strong> (<em>bool</em>) &#8211; Determines whether the function should return a file object or a full
+path to the resource.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (file object or file path) - A file object containing the resource. If return_path is True, &#8216;file&#8217; will be the full path to the resource. If the file is not found or cannot be opened, None is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Description</p>
+<p>This function will find a desired resource file and return an opened file
+object. The main method of finding the resource uses the pkg_resources
+resource_stream method, which searches your working set for the installed
+project specified and appends the resource_path given to the project
+path, leading it to the file. If setuptools is not installed or it cannot
+find/open the resource, find_resource will use the sys.path[0] to find the
+resource if alt_path is defined.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.get_path">
+<tt class="descclassname">traits.util.resource.</tt><tt class="descname">get_path</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an absolute path for the specified path.</p>
+<p>&#8216;path&#8217; can be a string, class or instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.resource.store_resource">
+<tt class="descclassname">traits.util.resource.</tt><tt class="descname">store_resource</tt><big>(</big><em>project</em>, <em>resource_path</em>, <em>filename</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#store_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.store_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the content of a resource, given by the name of the projet
+and the path (relative to the root of the project), into a newly
+created file.</p>
+<p>The first two arguments (project and resource_path) are the same
+as for the function find_resource in this module.  The third
+argument (filename) is the name of the file which will be created,
+or overwritten if it already exists.
+The return value in always None.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.toposort">
+<span id="toposort-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">toposort</span></tt> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
+<p>A simple topological sort on a dictionary graph.</p>
+<dl class="exception">
+<dt id="traits.util.toposort.CyclicGraph">
+<em class="property">exception </em><tt class="descclassname">traits.util.toposort.</tt><tt class="descname">CyclicGraph</tt><a class="reference internal" href="../_modules/traits/util/toposort.html#CyclicGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.CyclicGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<p>Exception for cyclic graphs.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.toposort.topological_sort">
+<tt class="descclassname">traits.util.toposort.</tt><tt class="descname">topological_sort</tt><big>(</big><em>graph</em><big>)</big><a class="reference internal" href="../_modules/traits/util/toposort.html#topological_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.topological_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the nodes in the graph in topological order.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">util Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-traits.util.camel_case"><tt class="docutils literal"><span class="pre">camel_case</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.clean_strings"><tt class="docutils literal"><span class="pre">clean_strings</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.deprecated"><tt class="docutils literal"><span class="pre">deprecated</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.home_directory"><tt class="docutils literal"><span class="pre">home_directory</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.refresh"><tt class="docutils literal"><span class="pre">refresh</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#how-it-works">How It works</a></li>
+<li><a class="reference internal" href="#caveats">Caveats</a></li>
+<li><a class="reference internal" href="#questions">Questions</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-traits.util.resource"><tt class="docutils literal"><span class="pre">resource</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.toposort"><tt class="docutils literal"><span class="pre">toposort</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="traits.testing.html"
+                        title="previous chapter">testing Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/traits_api_reference/traits.util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="traits.testing.html" title="testing Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >API Reference</a> &raquo;</li>
+  
+    <li><a href="#">util Package</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

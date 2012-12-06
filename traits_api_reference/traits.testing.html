@@ -1,0 +1,308 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>testing Package &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
+    <link rel="up" title="API Reference" href="index.html" />
+    <link rel="next" title="util Package" href="traits.util.html" />
+    <link rel="prev" title="protocols Package" href="traits.protocols.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="traits.util.html" title="util Package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="traits.protocols.html" title="protocols Package"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+  
+    <li><a href="#">testing Package</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="testing-package">
+<h1>testing Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">testing</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-traits.testing"></span><p>Scripts and assert tools related to running unit tests.</p>
+<p>These scripts also allow running test suites in separate processes and
+aggregating the results.</p>
+</div>
+<div class="section" id="module-traits.testing.doctest_tools">
+<span id="doctest-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">doctest_tools</span></tt> Module<a class="headerlink" href="#module-traits.testing.doctest_tools" title="Permalink to this headline">¶</a></h2>
+<p>Tools for having doctest and unittest work together more nicely.</p>
+<p>Eclipse&#8217;s PyDev plugin will run your unittest files for you very nicely.
+The doctest_for_module function allows you to easily run the doctest for a
+module along side your standard unit tests within Eclipse.</p>
+<dl class="function">
+<dt id="traits.testing.doctest_tools.doctest_for_module">
+<tt class="descclassname">traits.testing.doctest_tools.</tt><tt class="descname">doctest_for_module</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/doctest_tools.html#doctest_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.doctest_tools.doctest_for_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a TestCase from a module&#8217;s doctests that will be run by the
+standard unittest.main().</p>
+<p>Example tests/test_foo.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">foo</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="kn">import</span> <span class="n">doctest_for_module</span>
+
+<span class="k">class</span> <span class="nc">FooTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">FooDocTest</span><span class="p">(</span><span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)):</span>
+    <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c"># This will run and report both FooTestCase and the doctests in</span>
+    <span class="c"># module foo.</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Alternatively, you can say:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">FooDocTest</span> <span class="o">=</span> <span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>instead of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">FooDocTest</span><span class="p">(</span><span class="n">doctest_for_module</span><span class="p">(</span><span class="n">foo</span><span class="p">)):</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.testing.nose_tools">
+<span id="nose-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">nose_tools</span></tt> Module<a class="headerlink" href="#module-traits.testing.nose_tools" title="Permalink to this headline">¶</a></h2>
+<p>Non-standard functions for the &#8216;nose&#8217; testing framework.</p>
+<dl class="function">
+<dt id="traits.testing.nose_tools.deprecated">
+<tt class="descclassname">traits.testing.nose_tools.</tt><tt class="descname">deprecated</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#deprecated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.deprecated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to indicate a test is deprecated.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.testing.nose_tools.performance">
+<tt class="descclassname">traits.testing.nose_tools.</tt><tt class="descname">performance</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#performance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.performance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to add an attribute to the test to mark it as
+a performance-measuring test.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.testing.nose_tools.skip">
+<tt class="descclassname">traits.testing.nose_tools.</tt><tt class="descname">skip</tt><big>(</big><em>f</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/nose_tools.html#skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.nose_tools.skip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to indicate a test should be skipped.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.testing.unittest_tools">
+<span id="trait-assert-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">trait_assert_tools</span></tt> Module<a class="headerlink" href="#module-traits.testing.unittest_tools" title="Permalink to this headline">¶</a></h2>
+<p>Trait assert mixin class to simplify test implementation for Trait
+Classes.</p>
+<dl class="class">
+<dt id="traits.testing.unittest_tools.UnittestTools">
+<em class="property">class </em><tt class="descclassname">traits.testing.unittest_tools.</tt><tt class="descname">UnittestTools</tt><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>Mixin class to augment the unittest.TestCase class with useful trait
+related assert methods.</p>
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChanges">
+<tt class="descname">assertTraitChanges</tt><big>(</big><em>obj</em>, <em>trait</em>, <em>count=None</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert that the class trait changes exactly n times.</p>
+<p>Used in a with statement to assert that a class trait has changed
+during the execution of the code inside the with context block
+(similar to the assertRaises method).</p>
+<p>Please note that the context manager returns itself and the user can
+introspect the information of the fired events by accessing the
+<tt class="docutils literal"><span class="pre">events</span></tt> attribute of the context object. The attribute is a list
+with tuple elements containing the arguments of an <cite>on_trait_change</cite>
+event signature (&lt;object&gt;, &lt;name&gt;, &lt;old&gt;, &lt;new&gt;).</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><pre>class MyClass(HasTraits):
+   number = Float(2.0)
+
+my_class = MyClass()
+
+with self.assertTraitChanges(my_class, 'number') as ctx:
+   my_class.number = 3.0
+
+self.assert(ctx.events, [(my_class, 'number', 2.0, 3.0)]</pre>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance who&#8217;s class trait will change.</li>
+<li><strong>xname</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen too.</li>
+<li><strong>count</strong> (<em>int, optional</em>) &#8211; The expected number of times the event should be fired. When None
+(default value) there is no check for the number of times the
+change event was fired.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>Checking if the provided xname corresponds to valid traits in
+the class is not implemented yet.</li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">
+<tt class="descname">assertTraitDoesNotChange</tt><big>(</big><em>obj</em>, <em>xname</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitDoesNotChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert that no trait event is fired.</p>
+<p>Used in a with statement to assert that a class trait has not changed
+during the execution of the code inside the with statement block.</p>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">String</span>
+
+<span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">):</span>
+     <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance who&#8217;s class trait will change.</li>
+<li><strong>xname</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen too.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>Checking if the provided xname corresponds to valid traits in
+the class is not implemented yet.</li>
+</ul>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">testing Package</a><ul>
+<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></li>
+<li><a class="reference internal" href="#module-traits.testing.doctest_tools"><tt class="docutils literal"><span class="pre">doctest_tools</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.testing.nose_tools"><tt class="docutils literal"><span class="pre">nose_tools</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.testing.unittest_tools"><tt class="docutils literal"><span class="pre">trait_assert_tools</span></tt> Module</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="traits.protocols.html"
+                        title="previous chapter">protocols Package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="traits.util.html"
+                        title="next chapter">util Package</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/traits_api_reference/traits.testing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="traits.util.html" title="util Package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="traits.protocols.html" title="protocols Package"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >API Reference</a> &raquo;</li>
+  
+    <li><a href="#">testing Package</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

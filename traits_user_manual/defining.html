@@ -4,17 +4,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Defining Traits: Initialization and Validation &mdash; Traits 4 User Manual</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.0.0',
+        VERSION:     '4.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -160,44 +163,44 @@ in the following table.</p>
 <col width="31%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Coercing Trait</th>
+<tr class="row-odd"><th class="head">Coercing Trait</th>
 <th class="head">Casting Trait</th>
 <th class="head">Python Type</th>
 <th class="head">Built-in Default Value</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>Bool</td>
+<tr class="row-even"><td>Bool</td>
 <td>CBool</td>
 <td>Boolean</td>
 <td>False</td>
 </tr>
-<tr><td>Complex</td>
+<tr class="row-odd"><td>Complex</td>
 <td>CComplex</td>
 <td>Complex number</td>
 <td>0+0j</td>
 </tr>
-<tr><td>Float</td>
+<tr class="row-even"><td>Float</td>
 <td>CFloat</td>
 <td>Floating point number</td>
 <td>0.0</td>
 </tr>
-<tr><td>Int</td>
+<tr class="row-odd"><td>Int</td>
 <td>CInt</td>
 <td>Plain integer</td>
 <td>0</td>
 </tr>
-<tr><td>Long</td>
+<tr class="row-even"><td>Long</td>
 <td>CLong</td>
 <td>Long integer</td>
 <td>0L</td>
 </tr>
-<tr><td>Str</td>
+<tr class="row-odd"><td>Str</td>
 <td>CStr</td>
 <td>String</td>
 <td>&#8216;&#8217;</td>
 </tr>
-<tr><td>Unicode</td>
+<tr class="row-even"><td>Unicode</td>
 <td>CUnicode</td>
 <td>Unicode</td>
 <td>u&#8217;&#8216;</td>
@@ -220,21 +223,21 @@ lists traits that coerce values, and the types that each coerces.</p>
 <col width="77%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Trait</th>
+<tr class="row-odd"><th class="head">Trait</th>
 <th class="head">Coercible Types</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>Complex</td>
+<tr class="row-even"><td>Complex</td>
 <td>Floating point number, plain integer</td>
 </tr>
-<tr><td>Float</td>
+<tr class="row-odd"><td>Float</td>
 <td>Plain integer</td>
 </tr>
-<tr><td>Long</td>
+<tr class="row-even"><td>Long</td>
 <td>Plain integer</td>
 </tr>
-<tr><td>Unicode</td>
+<tr class="row-odd"><td>Unicode</td>
 <td>String</td>
 </tr>
 </tbody>
@@ -297,48 +300,48 @@ the table.</p>
 <col width="76%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Name</th>
+<tr class="row-odd"><th class="head">Name</th>
 <th class="head">Callable Signature</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td>Any</td>
+<tr class="row-even"><td>Any</td>
 <td>Any( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Array</td>
+<tr class="row-odd"><td>Array</td>
 <td>Array( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
 <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Button</td>
+<tr class="row-even"><td>Button</td>
 <td>Button( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;button&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 7, <em>height_padding</em> = 5, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Callable</td>
+<tr class="row-odd"><td>Callable</td>
 <td>Callable( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>CArray</td>
+<tr class="row-even"><td>CArray</td>
 <td>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
 <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Class</td>
+<tr class="row-odd"><td>Class</td>
 <td>Class( [<em>value</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Code</td>
+<tr class="row-even"><td>Code</td>
 <td>Code( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Color</td>
+<tr class="row-odd"><td>Color</td>
 <td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>CSet</td>
+<tr class="row-even"><td>CSet</td>
 <td>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr><td>n/a</td>
+<tr class="row-odd"><td>n/a</td>
 <td>Constant( <em>value*[, ***metadata</em>] )</td>
 </tr>
-<tr><td>Dict, DictStrAny,
+<tr class="row-even"><td>Dict, DictStrAny,
 DictStrBool,
 DictStrFloat,
 DictStrInt,
@@ -348,54 +351,54 @@ DictStrStr</td>
 <td>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
 <em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )<span class="target" id="index-17"></span><span class="target" id="index-18"></span></td>
 </tr>
-<tr id="index-19"><td>Directory</td>
+<tr class="row-odd" id="index-19"><td>Directory</td>
 <td>Directory( [<em>value</em> = &#8216;&#8217;, <em>auto_set</em> = False, <em>entries</em> =
 10, <em>exists</em> = False, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Disallow</td>
+<tr class="row-even"><td>Disallow</td>
 <td>n/a</td>
 </tr>
-<tr><td>n/a</td>
+<tr class="row-odd"><td>n/a</td>
 <td>Either( <em>val1*[, *val2</em>, ..., <em>valN</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Enum</td>
+<tr class="row-even"><td>Enum</td>
 <td>Enum( <em>values*[, ***metadata</em>] )</td>
 </tr>
-<tr><td>Event</td>
+<tr class="row-odd"><td>Event</td>
 <td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Expression</td>
+<tr class="row-even"><td>Expression</td>
 <td>Expression( [<em>value</em> = &#8216;0&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>false</td>
+<tr class="row-odd"><td>false</td>
 <td>n/a</td>
 </tr>
-<tr><td>File</td>
+<tr class="row-even"><td>File</td>
 <td>File( [<em>value</em> = &#8216;&#8217;, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
 </tr>
-<tr><td>Font</td>
+<tr class="row-odd"><td>Font</td>
 <td>Font( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Function</td>
+<tr class="row-even"><td>Function</td>
 <td>Function( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Generic</td>
+<tr class="row-odd"><td>Generic</td>
 <td>Generic( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>generic_trait</td>
+<tr class="row-even"><td>generic_trait</td>
 <td>n/a</td>
 </tr>
-<tr><td>HTML</td>
+<tr class="row-odd"><td>HTML</td>
 <td>HTML( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = &#8216;&#8217;,  **<em>metadata</em> ] )</td>
 </tr>
-<tr><td>Instance</td>
+<tr class="row-even"><td>Instance</td>
 <td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
 None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
 <em>module</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>List, ListBool,
+<tr class="row-odd"><td>List, ListBool,
 ListClass,
 ListComplex,
 ListFloat,
@@ -409,86 +412,86 @@ ListUnicode</td>
 <td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,
 <em>maxlen</em> = sys.maxint, <em>items</em> = True, **<em>metadata</em>])<span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span></td>
 </tr>
-<tr id="index-25"><td>Method</td>
+<tr class="row-even" id="index-25"><td>Method</td>
 <td>Method ([**<em>metadata</em>] )</td>
 </tr>
-<tr><td>missing</td>
+<tr class="row-odd"><td>missing</td>
 <td>n/a</td>
 </tr>
-<tr><td>Module</td>
+<tr class="row-even"><td>Module</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
-<tr><td>Password</td>
+<tr class="row-odd"><td>Password</td>
 <td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Property</td>
+<tr class="row-even"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 ** <em>metadata</em>] )</p>
 <p class="last">See <a class="reference internal" href="advanced.html#property-traits"><em>Property Traits</em></a>, for details.</p>
 </td>
 </tr>
-<tr><td>Python</td>
+<tr class="row-odd"><td>Python</td>
 <td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>PythonValue</td>
+<tr class="row-even"><td>PythonValue</td>
 <td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Range</td>
+<tr class="row-odd"><td>Range</td>
 <td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</td>
 </tr>
-<tr><td>ReadOnly</td>
+<tr class="row-even"><td>ReadOnly</td>
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Regex</td>
+<tr class="row-odd"><td>Regex</td>
 <td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
 </tr>
-<tr><td>RGBColor</td>
+<tr class="row-even"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>self</td>
+<tr class="row-odd"><td>self</td>
 <td>n/a</td>
 </tr>
-<tr><td>Set</td>
+<tr class="row-even"><td>Set</td>
 <td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr><td>String</td>
+<tr class="row-odd"><td>String</td>
 <td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>This</td>
+<tr class="row-even"><td>This</td>
 <td>n/a</td>
 </tr>
-<tr><td>ToolbarButton</td>
+<tr class="row-odd"><td>ToolbarButton</td>
 <td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>true</td>
+<tr class="row-even"><td>true</td>
 <td>n/a</td>
 </tr>
-<tr><td>Tuple</td>
+<tr class="row-odd"><td>Tuple</td>
 <td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>Type</td>
+<tr class="row-even"><td>Type</td>
 <td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</td>
 </tr>
-<tr><td>undefined</td>
+<tr class="row-odd"><td>undefined</td>
 <td>n/a</td>
 </tr>
-<tr><td>UStr</td>
+<tr class="row-even"><td>UStr</td>
 <td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
 NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
-<tr><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
+<tr class="row-odd"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
 <td>UUID( [**<em>metadata</em>] )</td>
 </tr>
-<tr><td>WeakRef</td>
+<tr class="row-even"><td>WeakRef</td>
 <td>WeakRef( [<em>klass</em> = &#8216;traits.HasTraits&#8217;,
 <em>allow_none</em> = False, <em>adapt</em> = &#8216;yes&#8217;, **<em>metadata</em>])</td>
 </tr>
@@ -812,7 +815,7 @@ existing traits.</td></tr>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -848,8 +851,8 @@ existing traits.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Jun 16, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

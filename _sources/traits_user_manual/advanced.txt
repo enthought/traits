@@ -46,7 +46,7 @@ The method overrides any default value specified in the trait definition.
 .. index:: get_default_value()
 
 It is also possible to define a dynamic method for the default value in a trait
-type subclass (get_default_value()). However, however, using a
+type subclass (get_default_value()). However, using a
 _\ *name*\ _default()  method avoids the overhead of subclassing a trait.
 
 .. index:: default value; overriding in a subclass
@@ -489,10 +489,12 @@ Implementing an Interface
 `````````````````````````
 
 A class declares that it implements one or more interfaces using the
-implements() function, which has the signature:
+:func:`~traits.has_traits.implements` function, which has the signature:
 
 .. currentmodule:: traits.has_traits
+
 .. function:: implements( interface[, interface2 , ... , interfaceN] )
+    :noindex:
 
 .. index:: examples; interface implementation, interfaces; implementation; example
 
@@ -660,6 +662,7 @@ The signature  of the adapts() function is:
 
 .. currentmodule:: traits.adapter
 .. function:: adapts( adaptee_class, interface[, interface2, ... , interfaceN])
+    :noindex:
 
 This signature is very similar to that of implements(), but adds the class being
 adapted as the first parameter. Interface names beyond the first one are
@@ -821,7 +824,6 @@ Property Factory Function
 
 The Property() function has the following signature:
 
-.. currentmodule:: traits.traits
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
 All parameters are optional, including the *fget* "getter" and *fset* "setter"
