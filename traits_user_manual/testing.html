@@ -1,0 +1,207 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Testing Traits Classes &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../index.html" />
+    <link rel="up" title="Traits 4 User Manual" href="index.html" />
+    <link rel="next" title="API Reference" href="../traits_api_reference/index.html" />
+    <link rel="prev" title="Advanced Topics" href="advanced.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../traits_api_reference/index.html" title="API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="advanced.html" title="Advanced Topics"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Traits 4 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Testing Traits Classes</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="testing-traits-classes">
+<span id="testing-trait-classes"></span><span id="index-0"></span><h1>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h1>
+<p>A mixin class is provided to facilitate writing tests for HasTraits classes.
+The methods <tt class="xref py py-meth docutils literal"><span class="pre">assertTraitChanges()</span></tt>
+and <tt class="xref py py-meth docutils literal"><span class="pre">assertTraitDoesChange()</span></tt> are
+available when the <tt class="xref py py-class docutils literal"><span class="pre">UnittestTools</span></tt> is added as
+a mixin class in the developers TestCase.</p>
+<p>The methods behave as a context manager which at entry hooks and traits
+listener on the class for the desired events and records the arguments pass
+to the listener at every fired events. This way the developer can easily
+assert that specific events have been fired. Further analysis and checking
+can be performed by inspecting the list of recorded events arguments.</p>
+<p>Both normal and extended trait names are supported. However, no check is
+performed regarding the validity of the trait name, thus care is required to
+safeguard against spelling mistakes in the names of the traits that we need
+to assert the behaviour.</p>
+<p>The following example demonstrates the basic usage of the mixin class in a
+TestCase:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="kn">import</span> <span class="n">UnittestTools</span>
+
+
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">list_of_numbers</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
+    <span class="n">flag</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s">&#39;number&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_add_number_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Append the value to the list of numbers. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_to_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add the value to `number`. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">+=</span> <span class="n">value</span>
+
+
+<span class="k">class</span> <span class="nc">MyTestCase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">,</span> <span class="n">UnittestTools</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_when_using_with</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check normal use cases as a context manager.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">my_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_class</span>
+
+        <span class="c"># Checking for change events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">5.0</span>
+
+        <span class="c"># Inspecting the last recorded event</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="p">[</span><span class="n">expected</span><span class="p">])</span>
+
+        <span class="c"># Checking for specific number of events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">[(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
+
+        <span class="c"># Check using extended names</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;list_of_numbers[]&#39;</span><span class="p">):</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.0</span>
+
+        <span class="c"># Check that event is not fired</span>
+        <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c"># The value is the same as the original</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="advanced.html"
+                        title="previous chapter">Advanced Topics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../traits_api_reference/index.html"
+                        title="next chapter">API Reference</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/traits_user_manual/testing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../traits_api_reference/index.html" title="API Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="advanced.html" title="Advanced Topics"
+             >previous</a> |</li>
+        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="index.html" >Traits 4 User Manual</a> &raquo;</li>
+  
+    <li><a href="#">Testing Traits Classes</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

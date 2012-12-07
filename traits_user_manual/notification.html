@@ -4,17 +4,20 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>Trait Notification &mdash; Traits 4 User Manual</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.0.0',
+        VERSION:     '4.2.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -180,18 +183,18 @@ trait attribute that matches the specified extended names.</li>
 <col width="61%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Pattern</th>
+<tr class="row-odd"><th class="head">Pattern</th>
 <th class="head">Meaning</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><em>item1</em>.<em>item2</em></td>
+<tr class="row-even"><td><em>item1</em>.<em>item2</em></td>
 <td>A trait named item1 contains an object (or
 objects, if <em>item1</em> is a list or dictionary),
 with a trait named <em>item2</em>. Changes to either
 <em>item1</em> or <em>item2</em> trigger a  notification.</td>
 </tr>
-<tr><td><em>item1</em>:<em>item2</em></td>
+<tr class="row-odd"><td><em>item1</em>:<em>item2</em></td>
 <td>A trait named <strong>item1</strong> contains an object (or
 objects, if <em>item1</em> is a list or dictionary),
 with a trait named <em>item2</em>. Changes to <em>item2</em>
@@ -199,51 +202,51 @@ trigger a notification, while changes to
 <em>item1</em> do not (i.e., the &#8216;:&#8217; indicates that
 changes to the link object are not reported.</td>
 </tr>
-<tr><td>[<em>item1</em>, <em>item2</em>, ...,
+<tr class="row-even"><td>[<em>item1</em>, <em>item2</em>, ...,
 <em>itemN</em>]</td>
 <td>A list that matches any of the specified
 items. Note that at the topmost level, the
 surrounding square brackets are optional.</td>
 </tr>
-<tr><td><em>item</em>[]</td>
+<tr class="row-odd"><td><em>item</em>[]</td>
 <td>A trait named <em>item</em> is a list. Changes to
 <em>item</em> or to its members triggers a
 notification.</td>
 </tr>
-<tr><td><em>name</em>?</td>
+<tr class="row-even"><td><em>name</em>?</td>
 <td>If the current object does not have an
 attribute called <em>name</em>, the reference can be
 ignored. If the &#8216;?&#8217; character is omitted, the
 current object must have a trait called
 <em>name</em>; otherwise, an exception is raised.</td>
 </tr>
-<tr><td><em>prefix</em>+</td>
+<tr class="row-odd"><td><em>prefix</em>+</td>
 <td>Matches any trait attribute on the object
 whose name begins with <em>prefix</em>.</td>
 </tr>
-<tr><td>+<em>metadata_name</em></td>
+<tr class="row-even"><td>+<em>metadata_name</em></td>
 <td>Matches any trait on the object that has a
 metadata attribute called <em>metadata_name</em>.</td>
 </tr>
-<tr><td>-<em>metadata_name</em></td>
+<tr class="row-odd"><td>-<em>metadata_name</em></td>
 <td>Matches any trait on the current object that
 does <em>not</em> have a metadata attribute called
 <em>metadata_name</em>.</td>
 </tr>
-<tr><td><em>prefix</em>+<em>metadata_name</em></td>
+<tr class="row-even"><td><em>prefix</em>+<em>metadata_name</em></td>
 <td>Matches any trait on the object whose name
 begins with <em>prefix</em> and that has a metadata
 attribute called <em>metadata_name</em>.</td>
 </tr>
-<tr><td><em>prefix</em>-<em>metadata_name</em></td>
+<tr class="row-odd"><td><em>prefix</em>-<em>metadata_name</em></td>
 <td>Matches any trait on the object whose name
 begins with <em>prefix</em> and that does <em>not</em> have
 a metadata attribute called <em>metadata_name</em>.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
 <td>Matches all traits on the object.</td>
 </tr>
-<tr><td><em>pattern</em>*</td>
+<tr class="row-odd"><td><em>pattern</em>*</td>
 <td>Matches object graphs where <em>pattern</em> occurs
 one or more times. This option is useful for
 setting up listeners on recursive data
@@ -258,31 +261,31 @@ structures like trees or linked lists.</td>
 <col width="66%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Example</th>
+<tr class="row-odd"><th class="head">Example</th>
 <th class="head">Meaning</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><tt class="docutils literal"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></tt></td>
 <td>Matches <em>object</em>.<strong>foo</strong>, <em>object</em>.<strong>bar</strong>,
 and <em>object</em>.<strong>baz</strong>.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">['foo',</span> <span class="pre">'bar',</span> <span class="pre">'baz']</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">['foo',</span> <span class="pre">'bar',</span> <span class="pre">'baz']</span></tt></td>
 <td>Equivalent to <tt class="docutils literal"><span class="pre">'foo,</span> <span class="pre">bar,</span> <span class="pre">baz'</span></tt>, but may be
 useful in cases where the individual items are
 computed.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'foo.bar.baz'</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">'foo.bar.baz'</span></tt></td>
 <td>Matches <em>object</em>.<strong>foo.bar.baz</strong></td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'foo.[bar,baz]'</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">'foo.[bar,baz]'</span></tt></td>
 <td>Matches <em>object</em>.<strong>foo.bar</strong> and
 <em>object</em>.<strong>foo.baz</strong></td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'foo[]'</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">'foo[]'</span></tt></td>
 <td>Matches a list trait on <em>object</em> named <strong>foo</strong>.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'([left,right]).name*'</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">'([left,right]).name*'</span></tt></td>
 <td>Matches the <strong>name</strong> trait of each tree node
 object that is linked from the <strong>left</strong> or
 <strong>right</strong> traits of a parent node, starting with
@@ -291,15 +294,15 @@ also matches the <strong>name</strong> trait of the current
 object, as the <strong>left</strong> and <strong>right</strong> modifiers
 are optional.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'+dirty'</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">'+dirty'</span></tt></td>
 <td>Matches any trait on the current object that has a
 metadata attribute named <strong>dirty</strong> set.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'foo.+dirty'</span></tt></td>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">'foo.+dirty'</span></tt></td>
 <td>Matches any trait on <em>object</em>.<strong>foo</strong> that has a
 metadata attribute named <strong>dirty</strong> set.</td>
 </tr>
-<tr><td><tt class="docutils literal"><span class="pre">'foo.[bar,-dirty]'</span></tt></td>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">'foo.[bar,-dirty]'</span></tt></td>
 <td>Matches <em>object</em>.<strong>foo.bar</strong> or any trait on
 <em>object</em>.<strong>foo</strong> that does not have a metadata
 attribute named <strong>dirty</strong> set.</td>
@@ -580,21 +583,21 @@ the following table.</p>
 <col width="37%" />
 </colgroup>
 <thead valign="bottom">
-<tr><th class="head">Argument</th>
+<tr class="row-odd"><th class="head">Argument</th>
 <th class="head">_<em>name</em>_changed</th>
 <th class="head">&#64;on_trait_change</th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr><td><em>arg1</em></td>
+<tr class="row-even"><td><em>arg1</em></td>
 <td><em>name</em></td>
 <td><em>object</em></td>
 </tr>
-<tr><td><em>arg2</em></td>
+<tr class="row-odd"><td><em>arg2</em></td>
 <td><em>old</em></td>
 <td><em>name</em></td>
 </tr>
-<tr><td><em>arg3</em></td>
+<tr class="row-even"><td><em>arg3</em></td>
 <td><em>new</em></td>
 <td><em>new</em></td>
 </tr>
@@ -762,7 +765,7 @@ indicate the nature of the change, and the <em>old</em> parameter is Undefined.<
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -798,8 +801,8 @@ indicate the nature of the change, and the <em>old</em> parameter is Undefined.<
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Jun 16, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Last updated on Dec 06, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
