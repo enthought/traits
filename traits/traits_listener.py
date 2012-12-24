@@ -96,13 +96,13 @@ def indent ( text, first_line = True, n = 1, width = 4 ):
 
     Parameters
     ----------
-    text : str
+    text : str, optional
         The text to indent.
     first_line : bool
         If False, then the first line will not be indented (default: True).
-    n : int
+    n : int, optional
         The level of indentation (default: 1).
-    width : int
+    width : int, optional
         The number of spaces in each level of indentation (default: 4).
 
     Returns
