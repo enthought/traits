@@ -34,7 +34,7 @@ characteristics:
 
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
-within the class. Trait attributes defined by a classs are automatically
+within the class. Trait attributes defined by a class are automatically
 inherited by any subclass derived from the class.
 
 Prerequisites

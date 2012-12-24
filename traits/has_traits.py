@@ -850,7 +850,8 @@ class MetaHasTraitsObject ( object ):
                 view_elements.content[ name ] = value
 
                 # Replace all substitutable view sub elements with 'Include'
-                # objects, and add the sustituted items to the 'ViewElements':
+                # objects, and add the substituted items to the
+                # 'ViewElements':
                 value.replace_include( view_elements )
 
                 # Remove the view element from the class definition:
@@ -1357,16 +1358,16 @@ def property_depends_on ( dependency, settable = False, flushable = False ):
     return decorator
 
 def weak_arg(arg):
-    """ Create a weak reference to arg and wrap the function so that the dereferenced
-    weakref is passed as the first argument. If arg has been deleted then the
-    funcion is not called.
+    """ Create a weak reference to arg and wrap the function so that the
+    dereferenced weakref is passed as the first argument. If arg has been
+    deleted then the function is not called.
     """
     # Create the weak reference
     weak_arg = weakref.ref(arg)
     def decorator(function):
         # We need multiple wrappers to traits can find the number of arguments.
-        # The all just deref the weak referene and the call the function if it
-        # is not None
+        # The all just dereference the weak reference and the call the
+        # function if it is not None.
         def wrapper0():
             arg = weak_arg()
             if arg is not None:
@@ -1413,7 +1414,7 @@ def weak_arg(arg):
 #-------------------------------------------------------------------------------
 
 class HasTraits ( CHasTraits ):
-    """ Enables any Python class derived from it to have trait atttributes.
+    """ Enables any Python class derived from it to have trait attributes.
 
     Most of the methods of HasTraits operated by default only on the trait
     attributes explicitly defined in the class definition. They do not operate
@@ -1586,7 +1587,7 @@ class HasTraits ( CHasTraits ):
         if class_traits.get( name ) is not None:
             if is_subclass:
                 return
-            raise TraitError( "The '%s' trait is aleady defined." % name )
+            raise TraitError( "The '%s' trait is already defined." % name )
 
         # Check to see if the trait has additional sub-traits that need to be
         # defined also:
@@ -2013,12 +2014,12 @@ class HasTraits ( CHasTraits ):
 
         Description
         -----------
-        Resets each of the traits whose names are specified in the *traits* list
-        to their default values. If *traits* is None or omitted, the method
-        resets all explicitly-defined object trait attributes to their default
-        values. Note that this does not affect wildcard trait attraibutes or
-        trait attributes added via add_trait(), unless they are explicitly
-        named in *traits*.
+        Resets each of the traits whose names are specified in the *traits*
+        list to their default values. If *traits* is None or omitted, the
+        method resets all explicitly-defined object trait attributes to their
+        default values. Note that this does not affect wildcard trait
+        attributes or trait attributes added via add_trait(), unless they are
+        explicitly named in *traits*.
 
         """
         unresetable = []
@@ -2487,7 +2488,7 @@ class HasTraits ( CHasTraits ):
                                  context  = None, handler    = None,
                                  id       = '',   scrollable = None, **args ):
         ### JMS: Is it correct to assume that non-modal options for 'kind'
-        ###      behave modally when called from this method?
+        ###      behave modaly when called from this method?
         """Creates and displays a dialog box for editing values of trait
         attributes, as if it were a complete, self-contained GUI application.
 
@@ -3022,7 +3023,7 @@ class HasTraits ( CHasTraits ):
             Indicates whether synchronization is mutual (True or non-zero)
             or one-way (False or zero)
         remove : Bool or int
-            Indicates whether sychronization is being added (False or zero)
+            Indicates whether synchronization is being added (False or zero)
             or removed (True or non-zero)
 
         Description

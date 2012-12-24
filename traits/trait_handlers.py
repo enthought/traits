@@ -123,7 +123,7 @@ class BaseTraitHandler ( object ):
     object:
 
         * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parameterized types*.
+          them to create *parametrized types*.
         * Trait handlers can have multiple methods, whereas validator functions
           can have only one callable interface. This feature allows more
           flexibility in their implementation, and allows them to handle a
@@ -766,7 +766,7 @@ class TraitHandler ( BaseTraitHandler ):
     object:
 
         * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parameterized types*.
+          them to create *parametrized types*.
         * Trait handlers can have multiple methods, whereas validator functions
           can have only one callable interface. This feature allows more
           flexibility in their implementation, and allows them to handle a
@@ -1100,7 +1100,7 @@ class TraitCoerceType ( TraitHandler ):
 
     TraitCoerceType is the underlying handler for the predefined traits and
     factories for Python simple types. The TraitCoerceType class is also an
-    example of a parameterized type, because the single TraitCoerceType class
+    example of a parametrized type, because the single TraitCoerceType class
     allows creating instances that check for totally different sets of values.
     For example::
 
@@ -1634,7 +1634,7 @@ class TraitFunction ( TraitHandler ):
         The signature of the function passed as an argument must be of the
         form *function* ( *object*, *name*, *value* ). The function must
         verify that *value* is a legal value for the *name* trait attribute
-        of *object*. If it is, the value returned by the fucntion is the
+        of *object*. If it is, the value returned by the function is the
         actual value assigned to the trait attribute. If it is not, the
         function must raise a TraitError exception.
         """

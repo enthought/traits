@@ -274,7 +274,7 @@ class CTrait ( cTrait ):
                 from traitsui.api import TextEditor
                 editor = TextEditor
 
-        # If the result is not an EditoryFactory:
+        # If the result is not an EditorFactory:
         if not isinstance( editor, EditorFactory ):
             # Then it should be a factory for creating them:
             args   = ()
@@ -1015,7 +1015,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     fvalidate : function
         The validation function for the property
     force : Boolean
-        Indicates whether to use only the function definitions spedficied by
+        Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function
         A trait handler function for the trait

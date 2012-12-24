@@ -5,7 +5,7 @@
 #
 #-----------------------------------------------------------------------------
 
-""" Provides functions that munge strings to avoid characters that would be
+""" Provides functions that mange strings to avoid characters that would be
     problematic in certain situations.
 """
 

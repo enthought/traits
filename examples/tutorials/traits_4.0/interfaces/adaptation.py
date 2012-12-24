@@ -56,7 +56,7 @@ are:
 - A declaration for the *adaptee* trait (usually as an **Instance** of a
   particular class).
 
-- The actual implementions of the interfaces declared in the **adapts**
+- The actual implementations of the interfaces declared in the **adapts**
   call. Usually the implementation code will be written in terms of the
   adapter class's *adaptee* trait assigned by the class constructor.
 

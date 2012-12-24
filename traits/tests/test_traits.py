@@ -53,7 +53,7 @@ class BaseTest(object):
                 self.assertEqual(obj.value_, self._mapped_values[i])
 
         # NOTE:
-        #     There is/was some intercation between nosetests and coverage
+        #     There is/was some interaction between nosetests and coverage
         #     which causes problems with raising exceptions in Traits
         #     with Python 2.4.  However, I am no longer able to reproduce
         #     the behavior, see:
