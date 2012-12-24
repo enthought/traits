@@ -2076,10 +2076,9 @@ class HasTraits ( CHasTraits ):
             all_trait_names() is used.
         memo : dict
             A dictionary of objects that have already been copied.
-        copy : str
-            The type of copy ``deep`` or ``shallow`` to perform on any trait
-            that does not have explicit 'copy' metadata. A value of None means
-            'copy reference'.
+        copy : None | 'deep' | 'shallow'
+            The type of copy to perform on any trait that does not have
+            explicit 'copy' metadata. A value of None means 'copy reference'.
 
         Returns
         -------
