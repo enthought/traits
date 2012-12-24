@@ -154,7 +154,7 @@ class BaseTraitHandler ( object ):
         ----------
         object : object
             The object whose attribute is being assigned.
-        name : string
+        name : str
             The name of the attribute being assigned.
         value : object
             The proposed new value for the attribute.
@@ -181,7 +181,7 @@ class BaseTraitHandler ( object ):
             The position of the incorrect argument in the argument list.
         object : object
             The object whose method was called.
-        name : string
+        name : str
             The name of the parameter corresponding to the incorrect argument.
         value : object
             The value passed to the argument.
@@ -783,7 +783,7 @@ class TraitHandler ( BaseTraitHandler ):
         ----------
         object : object
             The object whose attribute is being assigned.
-        name : string
+        name : str
             The name of the attribute being assigned.
         value :
             The proposed new value for the attribute.

@@ -678,13 +678,13 @@ class String ( TraitType ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value for the string.
         minlen : integer
             The minimum length allowed for the string.
         maxlen : integer
             The maximum length allowed for the string.
-        regex : string
+        regex : str
             A Python regular expression that the string must match.
 
         """
@@ -815,9 +815,9 @@ class Regex ( String ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value of the trait.
-        regex : string
+        regex : str
             The regular expression that the trait value must match.
 
         Default Value
@@ -1191,10 +1191,10 @@ class DelegatesTo ( Delegate ):
 
             Parameters
             ----------
-            delegate : string
+            delegate : str
                 Name of the attribute on the current object which references
                 the object that is the trait's delegate.
-            prefix : string
+            prefix : str
                 A prefix or substitution applied to the original attribute when
                 looking up the delegated attribute.
             listenable : bool
@@ -1249,10 +1249,10 @@ class PrototypedFrom ( Delegate ):
 
             Parameters
             ----------
-            prototype : string
+            prototype : str
                 Name of the attribute on the current object which references the
                 object that is the trait's prototype.
-            prefix : string
+            prefix : str
                 A prefix or substitution applied to the original attribute when
                 looking up the prototyped attribute.
             listenable : bool
@@ -1368,9 +1368,9 @@ class BaseFile ( BaseStr ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value for the trait.
-        filter : string
+        filter : str
             A wildcard string to filter filenames in the file dialog box used by
             the attribute trait editor.
         auto_set : bool
@@ -1425,9 +1425,9 @@ class File ( BaseFile ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value for the trait.
-        filter : string
+        filter : str
             A wildcard string to filter filenames in the file dialog box used
             by the attribute trait editor.
         auto_set : bool
@@ -1465,7 +1465,7 @@ class BaseDirectory ( BaseStr ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value for the trait.
         auto_set : bool
             Indicates whether the directory editor updates the trait value
@@ -1517,7 +1517,7 @@ class Directory ( BaseDirectory ):
 
         Parameters
         ----------
-        value : string
+        value : str
             The default value for the trait.
         auto_set : bool
             Indicates whether the directory editor updates the trait value
@@ -2603,7 +2603,7 @@ class BaseInstance ( BaseClass ):
             Keyword arguments for generating the default value.
         allow_none : bool
             Indicates whether None is allowed as a value.
-        adapt : string
+        adapt : str
             A string specifying how adaptation should be applied. The possible
             values are:
 
@@ -3028,13 +3028,13 @@ class Button ( Event ):
 
             Parameters
             ----------
-            label : string
+            label : str
                 The label for the button.
             image : pyface.ImageResource
                 An image to display on the button.
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display.
-            values_trait : string
+            values_trait : str
                 For a "button" or "toolbar" style, the name of an enum
                 trait whose values will populate a drop-down menu on the button.
                 The selected value will replace the label on the button.
@@ -3093,13 +3093,13 @@ class ToolbarButton ( Button ):
 
             Parameters
             ----------
-            label : string
+            label : str
                 The label for the button
             image : pyface.ImageResource
                 An image to display on the button
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display
-            orientation : one of: 'horizontal', 'vertical'
+            orientation : one of ['horizontal', 'vertical']
                 The orientation of the label relative to the image
             width_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the left and right sides of
