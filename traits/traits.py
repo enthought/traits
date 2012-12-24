@@ -307,7 +307,7 @@ class CTrait ( cTrait ):
 
         Parameters
         ----------
-        full : Boolean
+        full : bool
             Indicates whether to return the value of the *help* attribute of
             the trait itself.
 
@@ -1014,7 +1014,7 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
         The "setter" function for the property
     fvalidate : function
         The validation function for the property
-    force : Boolean
+    force : bool
         Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function

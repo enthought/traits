@@ -159,7 +159,7 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
         any callable that takes a single argument which is the object to
         be adapted. The factory should return an adapter if it can
         perform the adaptation and **None** if it cannot.
-    cached : Boolean
+    cached : bool
         Should the adapters be cached? If an adapter is cached, then the
         factory will produce at most one adapter per instance.
     when : str

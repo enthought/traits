@@ -1498,7 +1498,7 @@ class HasTraits ( CHasTraits ):
         ----------
         handler : function
             The function to add or remove as a monitor.
-        remove : boolean
+        remove : bool
             Flag indicating whether to remove (True) or add the specified
             handler as a monitor for this class.
 
@@ -1744,7 +1744,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        all : Boolean
+        all : bool
             Indicates whether to return all subclasses of this class. If
             False, only immediate subclasses are returned.
 
@@ -2261,7 +2261,7 @@ class HasTraits ( CHasTraits ):
             A unique ID for persisting preferences about this user interface,
             such as size and position. If not specified, no user preferences
             are saved.
-        scrollable : Boolean
+        scrollable : bool
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
@@ -2514,7 +2514,7 @@ class HasTraits ( CHasTraits ):
             **traitsui.view.kind_trait** trait for values and
             their meanings. If *kind* is unspecified or None, the **kind**
             attribute of the View object is used.
-        edit : Boolean
+        edit : bool
             Indicates whether to display a user interface. If *filename*
             specifies an existing file, setting *edit* to False loads the
             saved values from that file into the object without requiring
@@ -2615,7 +2615,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        show_help : Boolean
+        show_help : bool
             Indicates whether to display additional descriptive information.
         """
 
@@ -3258,10 +3258,10 @@ class HasTraits ( CHasTraits ):
         ----------
         name : str
             Name of the attribute whose trait definition is to be returned
-        force : Boolean
+        force : bool
             Indicates whether to return a trait definition if *name* is
             not explicitly defined
-        copy : Boolean
+        copy : bool
             Indicates whether to return the original trait definition or a copy
 
         Description

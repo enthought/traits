@@ -1197,7 +1197,7 @@ class DelegatesTo ( Delegate ):
             prefix : string
                 A prefix or substitution applied to the original attribute when
                 looking up the delegated attribute
-            listenable : Boolean
+            listenable : bool
                 Indicates whether a listener can be attached to this attribute
                 such that changes to the delagate attribute will trigger it
 
@@ -1255,7 +1255,7 @@ class PrototypedFrom ( Delegate ):
             prefix : string
                 A prefix or substitution applied to the original attribute when
                 looking up the prototyped attribute
-            listenable : Boolean
+            listenable : bool
                 Indicates whether a listener can be attached to this attribute
                 such that changes to the corresponding attribute on the
                 prototype object will trigger it
@@ -1373,10 +1373,10 @@ class BaseFile ( BaseStr ):
         filter : string
             A wildcard string to filter filenames in the file dialog box used by
             the attribute trait editor.
-        auto_set : boolean
+        auto_set : bool
             Indicates whether the file editor updates the trait value after
             every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing file or
             not.
 
@@ -1430,10 +1430,10 @@ class File ( BaseFile ):
         filter : string
             A wildcard string to filter filenames in the file dialog box used by
             the attribute trait editor.
-        auto_set : boolean
+        auto_set : bool
             Indicates whether the file editor updates the trait value after
             every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing file or
             not.
 
@@ -1467,10 +1467,10 @@ class BaseDirectory ( BaseStr ):
         ----------
         value : string
             The default value for the trait
-        auto_set : boolean
+        auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing directory or
             not.
 
@@ -1519,10 +1519,10 @@ class Directory ( BaseDirectory ):
         ----------
         value : string
             The default value for the trait
-        auto_set : boolean
+        auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing directory or
             not.
 
@@ -1559,9 +1559,9 @@ class BaseRange ( TraitType ):
             The high end of the range.
         value : integer, float or string (i.e. extended trait name)
             The default value of the trait
-        exclude_low : Boolean
+        exclude_low : bool
             Indicates whether the low end of the range is exclusive.
-        exclude_high : Boolean
+        exclude_high : bool
             Indicates whether the high end of the range is exclusive.
 
         The *low*, *high*, and *value* arguments must be of the same type
@@ -2431,7 +2431,7 @@ class Dict ( TraitType ):
             values can be used as dictionary values.
         value : a dictionary
             The default value for the returned trait
-        items : Boolean
+        items : bool
             Indicates whether the value contains items
 
         Default Value
@@ -2602,7 +2602,7 @@ class BaseInstance ( BaseClass ):
             Positional arguments for generating the default value.
         kw : dictionary
             Keyword arguments for generating the default value.
-        allow_none : boolean
+        allow_none : bool
             Indicates whether None is allowed as a value.
         adapt : string
             A string specifying how adaptation should be applied. The possible
@@ -2892,7 +2892,7 @@ class Type ( BaseClass ):
 
         klass : class or None
 
-        allow_none : boolean
+        allow_none : bool
             Indicates whether None is allowed as an assignable value. Even if
             **False**, the default *value* may be **None**.
 
@@ -3399,8 +3399,8 @@ DictStrLong = Dict( str, long )
 #: with float values can be inserted. The default value is {}.
 DictStrFloat = Dict( str, float )
 
-#: Only a dictionary of string:Boolean values can be assigned; only string keys
-#: with Boolean values can be inserted. The default value is {}.
+#: Only a dictionary of string:bool values can be assigned; only string keys
+#: with boolean values can be inserted. The default value is {}.
 DictStrBool = Dict( str, bool )
 
 #: Only a dictionary of string:list values can be assigned; only string keys

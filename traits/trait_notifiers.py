@@ -115,12 +115,12 @@ class NotificationExceptionHandler ( object ):
                 notification exception handler is used. If *handler* is not
                 None, then it must be a callable which can accept four
                 arguments: object, trait_name, old_value, new_value.
-            reraise_exceptions : Boolean
+            reraise_exceptions : bool
                 Indicates whether exceptions should be reraised after the
                 exception handler has executed. If True, exceptions will be
                 re-raised after the specified handler has been executed.
                 The default value is False.
-            main : Boolean
+            main : bool
                 Indicates whether the caller represents the main application
                 thread. If True, then the caller's exception handler is
                 made the default handler for any other threads that are
@@ -129,7 +129,7 @@ class NotificationExceptionHandler ( object ):
                 make it easier to set a global application policy without
                 having to explicitly set it for each thread. The default
                 value is False.
-            locked : Boolean
+            locked : bool
                 Indicates whether further changes to the Traits notification
                 exception handler state should be allowed. If True, then
                 any subsequent calls to _push_handler() or _pop_handler() for
