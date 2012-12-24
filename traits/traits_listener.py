@@ -96,9 +96,9 @@ def indent ( text, first_line = True, n = 1, width = 4 ):
 
     Parameters
     ----------
-    text : str, optional
+    text : str
         The text to indent.
-    first_line : bool
+    first_line : bool, optional
         If False, then the first line will not be indented (default: True).
     n : int, optional
         The level of indentation (default: 1).
