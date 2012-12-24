@@ -1869,7 +1869,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        names : list
+        names : list of strings
             A list of trait attribute names whose values are requested.
 
         Returns
@@ -2003,12 +2003,12 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        traits : list
+        traits : list of strings
             Names of trait attributes to reset.
 
         Returns
         -------
-        unresetable : list
+        unresetable : list of strings
             A list of attributes that the method was unable to reset, which is
             empty if all the attributes were successfully reset.
 
@@ -2069,7 +2069,7 @@ class HasTraits ( CHasTraits ):
         ----------
         other : object
             The object whose trait attribute values should be copied.
-        traits : list
+        traits : list of strings
             A list of names of trait attributes to copy. If None or
             unspecified, the set of names returned by trait_names() is used.
             If 'all' or an empty list, the set of names returned by
@@ -2083,7 +2083,7 @@ class HasTraits ( CHasTraits ):
 
         Returns
         -------
-        unassignable : list
+        unassignable : list of strings
             A list of attributes that the method was unable to copy, which is
             empty if all the attributes were successfully copied.
 
@@ -2164,7 +2164,7 @@ class HasTraits ( CHasTraits ):
 
         Parameters
         ----------
-        traits : list
+        traits : list of strings
             The list of names of the trait attributes to copy.
         memo : dict
             A dictionary of objects that have already been copied.
