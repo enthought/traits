@@ -679,13 +679,13 @@ class String ( TraitType ):
         Parameters
         ----------
         value : string
-            The default value for the string
+            The default value for the string.
         minlen : integer
-            The minimum length allowed for the string
+            The minimum length allowed for the string.
         maxlen : integer
-            The maximum length allowed for the string
+            The maximum length allowed for the string.
         regex : string
-            A Python regular expression that the string must match
+            A Python regular expression that the string must match.
 
         """
         super( String, self ).__init__( value, **metadata )
@@ -816,7 +816,7 @@ class Regex ( String ):
         Parameters
         ----------
         value : string
-            The default value of the trait
+            The default value of the trait.
         regex : string
             The regular expression that the trait value must match.
 
@@ -1108,7 +1108,7 @@ class Constant ( TraitType ):
             Parameters
             ----------
             value : any type except a list or dictionary
-                The default value for the trait
+                The default value for the trait.
 
             Default Value
             -------------
@@ -1192,14 +1192,14 @@ class DelegatesTo ( Delegate ):
             Parameters
             ----------
             delegate : string
-                Name of the attribute on the current object which references the
-                object that is the trait's delegate
+                Name of the attribute on the current object which references
+                the object that is the trait's delegate.
             prefix : string
                 A prefix or substitution applied to the original attribute when
-                looking up the delegated attribute
+                looking up the delegated attribute.
             listenable : bool
                 Indicates whether a listener can be attached to this attribute
-                such that changes to the delagate attribute will trigger it
+                such that changes to the delagate attribute will trigger it.
 
             Description
             -----------
@@ -1251,14 +1251,14 @@ class PrototypedFrom ( Delegate ):
             ----------
             prototype : string
                 Name of the attribute on the current object which references the
-                object that is the trait's prototype
+                object that is the trait's prototype.
             prefix : string
                 A prefix or substitution applied to the original attribute when
-                looking up the prototyped attribute
+                looking up the prototyped attribute.
             listenable : bool
                 Indicates whether a listener can be attached to this attribute
                 such that changes to the corresponding attribute on the
-                prototype object will trigger it
+                prototype object will trigger it.
 
             Description
             -----------
@@ -1369,7 +1369,7 @@ class BaseFile ( BaseStr ):
         Parameters
         ----------
         value : string
-            The default value for the trait
+            The default value for the trait.
         filter : string
             A wildcard string to filter filenames in the file dialog box used by
             the attribute trait editor.
@@ -1426,10 +1426,10 @@ class File ( BaseFile ):
         Parameters
         ----------
         value : string
-            The default value for the trait
+            The default value for the trait.
         filter : string
-            A wildcard string to filter filenames in the file dialog box used by
-            the attribute trait editor.
+            A wildcard string to filter filenames in the file dialog box used
+            by the attribute trait editor.
         auto_set : bool
             Indicates whether the file editor updates the trait value after
             every key stroke.
@@ -1466,7 +1466,7 @@ class BaseDirectory ( BaseStr ):
         Parameters
         ----------
         value : string
-            The default value for the trait
+            The default value for the trait.
         auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
@@ -1518,7 +1518,7 @@ class Directory ( BaseDirectory ):
         Parameters
         ----------
         value : string
-            The default value for the trait
+            The default value for the trait.
         auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
@@ -1558,7 +1558,7 @@ class BaseRange ( TraitType ):
         high : integer, float or string (i.e. extended trait name)
             The high end of the range.
         value : integer, float or string (i.e. extended trait name)
-            The default value of the trait
+            The default value of the trait.
         exclude_low : bool
             Indicates whether the low end of the range is exclusive.
         exclude_high : bool
@@ -2002,7 +2002,6 @@ class BaseTuple ( TraitType ):
 
         Default Value
         -------------
-
          1. If no arguments are specified, the default value is ().
          2. If a tuple is specified as the first argument, it is the default
             value.
@@ -2144,8 +2143,8 @@ class List ( TraitType ):
         trait : a trait or value that can be converted to a trait using Trait()
             The type of item that the list contains. If not specified, the list
             can contain items of any type.
-        value :
-            Default value for the list
+        value : list
+            Default value for the list.
         minlen : integer
             The minimum length of a list that can be assigned to the trait.
         maxlen : integer
@@ -2287,8 +2286,8 @@ class Set ( TraitType ):
         trait : a trait or value that can be converted to a trait using Trait()
             The type of item that the list contains. If not specified, the list
             can contain items of any type.
-        value :
-            Default value for the set
+        value : set
+            Default value for the set.
 
         Default Value
         -------------
@@ -2429,10 +2428,10 @@ class Dict ( TraitType ):
         value_trait : a trait or value that can convert to a trait using Trait()
             The trait type for values in the dictionary; if not specified, any
             values can be used as dictionary values.
-        value : a dictionary
-            The default value for the returned trait
+        value : dict
+            The default value for the returned trait.
         items : bool
-            Indicates whether the value contains items
+            Indicates whether the value contains items.
 
         Default Value
         -------------
@@ -3030,23 +3029,23 @@ class Button ( Event ):
             Parameters
             ----------
             label : string
-                The label for the button
+                The label for the button.
             image : pyface.ImageResource
-                An image to display on the button
+                An image to display on the button.
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
-                The style of button to display
+                The style of button to display.
             values_trait : string
                 For a "button" or "toolbar" style, the name of an enum
                 trait whose values will populate a drop-down menu on the button.
                 The selected value will replace the label on the button.
             orientation : one of: 'horizontal', 'vertical'
-                The orientation of the label relative to the image
+                The orientation of the label relative to the image.
             width_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the left and right sides of
-                the button
+                the button.
             height_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the top and bottom of the
-                button
+                button.
 
             Default Value
             -------------
@@ -3264,7 +3263,7 @@ class WeakRef ( Instance ):
             The object that forms the basis for the trait. If *klass* is
             omitted, then values must be an instance of HasTraits.
         allow_none : boolean
-            Indicates whether None can be assigned
+            Indicates whether None can be assigned.
 
         Default Value
         -------------

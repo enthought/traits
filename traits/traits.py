@@ -1009,19 +1009,19 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     Parameters
     ----------
     fget : function
-        The "getter" function for the property
+        The "getter" function for the property.
     fset : function
-        The "setter" function for the property
+        The "setter" function for the property.
     fvalidate : function
-        The validation function for the property
+        The validation function for the property.
     force : bool
         Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function
-        A trait handler function for the trait
+        A trait handler function for the trait.
     trait : Trait or value
         A trait definition or a value that can be converted to a trait that
-        constrains the values of the property trait
+        constrains the values of the property trait.
 
     Description
     -----------

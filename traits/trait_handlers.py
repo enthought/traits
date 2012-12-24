@@ -153,11 +153,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
+            The object whose attribute is being assigned.
         name : string
-            The name of the attribute being assigned
+            The name of the attribute being assigned.
         value : object
-            The proposed new value for the attribute
+            The proposed new value for the attribute.
 
         Description
         -----------
@@ -176,15 +176,15 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         arg_num : integer
-            The position of the incorrect argument in the argument list
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
+            The object whose method was called.
         name : string
-            The name of the parameter corresponding to the incorrect argument
+            The name of the parameter corresponding to the incorrect argument.
         value : object
-            The value passed to the argument
+            The value passed to the argument.
 
         Description
         -----------
@@ -204,13 +204,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         object : object
-            The object whose method was called
+            The object whose method was called.
         name : str
-            The name of the parameter corresponding to the incorrect argument
+            The name of the parameter corresponding to the incorrect argument.
         value :
-            The value passed to the argument
+            The value passed to the argument.
 
         Description
         -----------
@@ -229,13 +229,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         arg_num : int
-            The position of the incorrect argument in the argument list
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
+            The object whose method was called.
         name : str
-            The name of the parameter corresponding to the incorrect argument
+            The name of the parameter corresponding to the incorrect argument.
 
         Description
         -----------
@@ -254,13 +254,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         arg_num : int
-            The position of the incorrect argument in the argument list
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
+            The object whose method was called.
         name : str
-            The name of the parameter corresponding to the incorrect argument
+            The name of the parameter corresponding to the incorrect argument.
 
         Description
         -----------
@@ -279,11 +279,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         object : object
-            The object whose method was called
+            The object whose method was called.
         value :
-            The value returned by the method
+            The value returned by the method.
 
         Description
         -----------
@@ -301,11 +301,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
+            The object whose attribute is being assigned.
         name : str
-            The name of the attribute being assigned
+            The name of the attribute being assigned.
         value :
-            The proposed new value for the attribute
+            The proposed new value for the attribute.
 
         Description
         -----------
@@ -374,7 +374,7 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         trait : Trait
-            The trait to be edited
+            The trait to be edited.
 
         Description
         -----------
@@ -782,11 +782,11 @@ class TraitHandler ( BaseTraitHandler ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
+            The object whose attribute is being assigned.
         name : string
-            The name of the attribute being assigned
+            The name of the attribute being assigned.
         value :
-            The proposed new value for the attribute
+            The proposed new value for the attribute.
 
         Returns
         -------
@@ -840,13 +840,13 @@ class TraitRange ( TraitHandler ):
         Parameters
         ----------
         low : number
-            The minimum value that the trait can accept
+            The minimum value that the trait can accept.
         high : number
-            The maximum value that the trait can accept
+            The maximum value that the trait can accept.
         exclude_low : bool
-            Should the *low* value be exclusive (or inclusive)
+            Should the *low* value be exclusive (or inclusive).
         exclude_high : bool
-            Should the *high* value be exclusive (or inclusive)
+            Should the *high* value be exclusive (or inclusive).
 
         Description
         -----------
@@ -1007,11 +1007,11 @@ class TraitString ( TraitHandler ):
         Parameters
         ----------
         minlen : int
-            The minimum length allowed for the string
+            The minimum length allowed for the string.
         maxlen : int
-            The maximum length allowed for the string
+            The maximum length allowed for the string.
         regex : str
-            A Python regular expression that the string must match
+            A Python regular expression that the string must match.
 
         """
         self.minlen = max( 0, minlen )
@@ -1144,7 +1144,7 @@ class TraitCoerceType ( TraitHandler ):
         ----------
         aType : type
             Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., 'cat')
+            Python value (e.g., 'cat').
 
         Description
         -----------
@@ -1251,7 +1251,7 @@ class TraitCastType ( TraitCoerceType ):
         ----------
         aType : type
             Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., ``'cat``)
+            Python value (e.g., ``'cat``).
 
         Description
         -----------
@@ -1295,7 +1295,7 @@ class ThisClass ( TraitHandler ):
         ----------
         allow_none : bool
             Flag indicating whether None is accepted as a valid value
-            (True or non-zero) or not (False or 0)
+            (True or non-zero) or not (False or 0).
         """
         if allow_none:
             self.validate      = self.validate_none
@@ -1372,9 +1372,9 @@ class TraitInstance ( ThisClass ):
         Parameters
         ----------
         aClass : class or type
-            A Python class, an instance of a Python class, or a Python type
+            A Python class, an instance of a Python class, or a Python type.
         allow_none : bool
-            Flag indicating whether None is accepted as a valid value
+            Flag indicating whether None is accepted as a valid value.
             (True or non-zero) or not (False or 0)
         adapt : str
             Value indicating how adaptation should be handled:
@@ -1572,7 +1572,7 @@ class TraitClass ( TraitHandler ):
         Parameters
         ----------
         aClass : class
-            A Python class
+            A Python class.
 
         Description
         -----------
@@ -1627,7 +1627,7 @@ class TraitFunction ( TraitHandler ):
         Parameters
         ----------
         aFunc : function
-            A function to validate trait attribute values
+            A function to validate trait attribute values.
 
         Description
         -----------
@@ -1674,7 +1674,7 @@ class TraitEnum ( TraitHandler ):
         Parameters
         ----------
         values : list or tuple
-            Enumeration of all legal values for a trait
+            Enumeration of all legal values for a trait.
 
         Description
         -----------
@@ -1762,7 +1762,7 @@ class TraitPrefixList ( TraitHandler ):
         Parameters
         ----------
         values : list or tuple of strings
-            Enumeration of all legal values for a trait
+            Enumeration of all legal values for a trait.
 
         Description
         -----------
@@ -2292,13 +2292,13 @@ class TraitList ( TraitHandler ):
         Parameters
         ----------
         trait : Trait
-            The type of items the list can contain
+            The type of items the list can contain.
         minlen : int
-            The minimum length of the list
+            The minimum length of the list.
         maxlen : int
-            The maximum length of the list
+            The maximum length of the list.
         has_items : bool
-            Flag indicating whether the list contains elements
+            Flag indicating whether the list contains elements.
 
         Description
         -----------
@@ -2949,11 +2949,11 @@ class TraitDictEvent ( object ):
         Parameters
         ----------
         added : dict
-            New keys and values
+            New keys and values.
         changed : dict
-            Updated keys and their previous values
+            Updated keys and their previous values.
         removed : dict
-            Old keys and values that were just removed
+            Old keys and values that were just removed.
         """
         # Construct new empty dicts every time instead of using a default value
         # in the method argument, just in case someone gets the bright idea of
@@ -3006,11 +3006,11 @@ class TraitDict ( TraitHandler ):
         Parameters
         ----------
         key_trait : trait
-            The type for the dictionary keys
+            The type for the dictionary keys.
         value_trait : trait
-            The type for the dictionary values
+            The type for the dictionary values.
         has_items : bool
-            Flag indicating whether the dictionary contains entries
+            Flag indicating whether the dictionary contains entries.
 
         Description
         -----------

@@ -415,12 +415,12 @@ def trait_method ( func, return_type, **arg_types ):
     Parameters
     ----------
     func : function
-        The method to be type-checked
+        The method to be type-checked.
     return_type :
         The return type of the method, a trait or value that can be converted
         to a trait using Trait().
     **arg_types :
-        zero or more '*keyword* = *trait*' pairs, the argument names and types
+        Zero or more '*keyword* = *trait*' pairs, the argument names and types
         of parameters of the type-checked method. The *trait* portion of each
         pair must be a trait or a value that can be converted to a trait using
         Trait().
@@ -526,11 +526,11 @@ def method ( return_type = Any, *arg_types, **kwarg_types ):
         function. The default of Any means that the return value is not
         type-checked.
     *arg_types :
-        zero or more types of positional parameters of the type-checked method.
+        Zero or more types of positional parameters of the type-checked method.
         Each value must either a trait or a value that can be converted to a
-        trait using the Trait()  function.
+        trait using the Trait() function.
     **kwarg_types :
-        zero or more *keyword* = *type* pairs, the type names and types of
+        Zero or more *keyword* = *type* pairs, the type names and types of
         keyword parameters of the type-checked method. The *type* portion of
         the parameter must be either a trait or a value that can be converted
         to a trait using the Trait() function.
@@ -1532,11 +1532,11 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         name : str
-            Name of the attribute to add
+            Name of the attribute to add.
         *trait :
-            a trait or a value that can be converted to a trait using Trait()
+            A trait or a value that can be converted to a trait using Trait()
             Trait definition of the attribute. It can be a single value or
-            a list equivalent to an argument list for the Trait() function
+            a list equivalent to an argument list for the Trait() function.
 
         """
 
@@ -1774,7 +1774,7 @@ class HasTraits ( CHasTraits ):
            Parameters
            ----------
            *interfaces :
-                one or more traits Interface (sub)classes.
+                One or more traits Interface (sub)classes.
 
            Description
            -----------
@@ -1870,13 +1870,13 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         names : list
-            A list of trait attribute names whose values are requested
+            A list of trait attribute names whose values are requested.
 
         Returns
         -------
         result : dict
             A dictionary whose keys are the names passed as arguments and whose
-            values are the corresponding trait values
+            values are the corresponding trait values.
 
         Description
         -----------
@@ -2004,7 +2004,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         traits : list
-            Names of trait attributes to reset
+            Names of trait attributes to reset.
 
         Returns
         -------
@@ -3013,9 +3013,9 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         name : str
-            Name of the trait attribute on this object
+            Name of the trait attribute on this object.
         object : object
-            The object with which to synchronize
+            The object with which to synchronize.
         alias : str
             Name of the trait attribute on *other*; if None or omitted, same
             as *name*.
@@ -3144,9 +3144,9 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         name : str
-            Name of the attribute to add
+            Name of the attribute to add.
         *trait :
-            trait or a value that can be converted to a trait by Trait()
+            Trait or a value that can be converted to a trait by Trait().
             Trait definition for *name*. If more than one value is specified,
             it is equivalent to passing the entire list of values to Trait().
 
@@ -3219,7 +3219,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         name : str
-            Name of the attribute to remove
+            Name of the attribute to remove.
         """
         # Get the trait definition:
         trait = self._trait( name, 0 )
@@ -3257,12 +3257,13 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         name : str
-            Name of the attribute whose trait definition is to be returned
+            Name of the attribute whose trait definition is to be returned.
         force : bool
             Indicates whether to return a trait definition if *name* is
-            not explicitly defined
+            not explicitly defined.
         copy : bool
-            Indicates whether to return the original trait definition or a copy
+            Indicates whether to return the original trait definition or a
+            copy.
 
         Description
         -----------
@@ -3330,7 +3331,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         **metadata :
-            Criteria for selecting trait attributes
+            Criteria for selecting trait attributes.
 
         Description
         -----------
@@ -3390,7 +3391,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         **metadata :
-            Criteria for selecting trait attributes
+            Criteria for selecting trait attributes.
 
         Description
         -----------
@@ -3446,7 +3447,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         **metadata :
-            Criteria for selecting trait attributes
+            Criteria for selecting trait attributes.
 
         Description
         -----------
@@ -3462,7 +3463,7 @@ class HasTraits ( CHasTraits ):
         Parameters
         ----------
         **metadata :
-            Criteria for selecting trait attributes
+            Criteria for selecting trait attributes.
 
         Description
         -----------

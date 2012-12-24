@@ -48,7 +48,7 @@ def clean_timestamp(dt=None, microseconds=False):
 
         Parameters
         ----------
-        dt : None or datetime.datetime object
+        dt : None or datetime.datetime
             If None, then the current time is used.
         microseconds : bool
             Display microseconds or not.
