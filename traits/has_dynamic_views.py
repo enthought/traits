@@ -304,7 +304,8 @@ class HasDynamicViews ( HasTraits ):
 
     def _get_dynamic_elements ( self, name ):
         """ Returns a list of the current elements meant to go into the
-            composition of a dynamic view or sublement with the specified name.
+            composition of a dynamic view or subelement with the specified
+            name.
         """
 
         # Determine the metadata names used to find the sub-elements included

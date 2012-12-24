@@ -175,7 +175,7 @@ class BaseDocstring(object):
             {'Methods': 'method'}).
 
         verbose : bool
-            When set the class prints a lot of info about the proccess
+            When set the class prints a lot of info about the process
             during runtime.
 
         """
@@ -220,7 +220,7 @@ class BaseDocstring(object):
     def _refactor(self, header):
         """Call the heading refactor method.
 
-        The name of the refctoring method is constructed using the form
+        The name of the refactoring method is constructed using the form
         _refactor_<header>. Where <header> is the value corresponding to
         ``self.headers[header]``. If there is no custom method for the
         section then the self._refactor_header() is called with the
@@ -745,7 +745,7 @@ class ClassDocstring(BaseDocstring):
 
     # FIXME: I do not like this function.
     def max_lengths(self, parameters):
-        """ Find the max lenght of the name and discription in the
+        """ Find the max length of the name and description in the
         parameters.
 
         Arguments

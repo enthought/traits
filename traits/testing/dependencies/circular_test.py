@@ -10,7 +10,7 @@ def usage():
     print "usage: %s [--chart] [-p] input" % sys.argv[0]
 
 def generate_dot(parent, dependents):
-    # omit standardy python modules
+    # omit standard python modules
     import distutils.sysconfig
     dirs_to_omit = [ os.path.realpath(os.path.join(distutils.sysconfig.get_python_lib(), '..')) ]
     if 'win32' == sys.platform:

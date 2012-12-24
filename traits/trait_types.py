@@ -2610,7 +2610,7 @@ class BaseInstance ( BaseClass ):
                 - 'no': Adaptation is not allowed.
                 - 'yes': Adaptation is allowed. If adaptation fails, an
                     exception should be raised.
-                - 'default': Adapation is allowed. If adaptation fails, the
+                - 'default': Adaptation is allowed. If adaptation fails, the
                     default value for the trait should be used.
 
         Default Value

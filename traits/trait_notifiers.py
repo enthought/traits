@@ -124,11 +124,11 @@ class NotificationExceptionHandler ( object ):
                 Indicates whether the caller represents the main application
                 thread. If True, then the caller's exception handler is
                 made the default handler for any other threads that are
-                created. Note that a thread can explictly set its own exception
-                handler if desired. The *main* flag is provided to make it
-                easier to set a global application policy without having to
-                explicitly set it for each thread. The default value is
-                False.
+                created. Note that a thread can explicitly set its own
+                exception handler if desired. The *main* flag is provided to
+                make it easier to set a global application policy without
+                having to explicitly set it for each thread. The default
+                value is False.
             locked : Boolean
                 Indicates whether further changes to the Traits notification
                 exception handler state should be allowed. If True, then

@@ -169,7 +169,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
 
 def store_resource(project, resource_path, filename):
-    """ Store the content of a resource, given by the name of the projet
+    """ Store the content of a resource, given by the name of the project
         and the path (relative to the root of the project), into a newly
         created file.
 
