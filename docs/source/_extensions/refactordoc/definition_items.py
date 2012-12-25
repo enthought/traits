@@ -16,19 +16,8 @@ from line_functions import (add_indent, fix_star, trim_indent, NEW_LINE,
 header_regex = re.compile(r'\s:\s?')
 definition_regex = re.compile(r"""
 \*{0,2}            #  no, one or two stars
-\w+\s:             #  a word followed by a semicolumn and optionally a space
-(
-        \s         # just a space
-    |              # OR
-        \s[\w.]+   # dot separated words
-        (\(.*\))?  # with maybe a signature
-    |
-        \s[\w.]+   # dot separated words
-        (\(.*\))?
-        \sor       # with an or in between
-        \s[\w.]+
-        (\(.*\))?
-)?
+\w+\s:             #  a word followed by a space and a semicolumn
+(.+)?              #  a definition
 $                  # match at the end of the line
 """, re.VERBOSE)
 function_regex = re.compile(r'\w+\(.*\)\s*')
