@@ -22,7 +22,8 @@ import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
     Instance, Int, List, Long, Str, Trait, TraitError, TraitList,
-    TraitPrefixList, TraitPrefixMap, TraitRange, Tuple)
+    TraitPrefixList, TraitPrefixMap, TraitRange, Tuple, pop_exception_handler,
+    push_exception_handler)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -706,6 +707,24 @@ class NotifierTests(unittest.TestCase):
         obj.value2 = 4
         self.assertEqual(obj.value1_count, 12)
         self.assertEqual(obj.value2_count, 12)
+
+class RaisesArgumentlessRuntimeError(HasTraits):
+    x = Int(0)
+
+    def _x_changed(self):
+        raise RuntimeError
+
+class TestRuntimeError(unittest.TestCase):
+
+    def setUp(self):
+        push_exception_handler(lambda *args: None, reraise_exceptions=True)
+
+    def tearDown(self):
+        pop_exception_handler()
+
+    def test_runtime_error(self):
+        f = RaisesArgumentlessRuntimeError()
+        self.assertRaises(RuntimeError, setattr, f, 'x', 5)
 
 #-------------------------------------------------------------------------------
 #  Trait that uses delegation:

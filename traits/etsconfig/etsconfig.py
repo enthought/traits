@@ -441,14 +441,26 @@ class ETSConfig(object):
 
 
         if sys.platform == 'win32':
-            # Check if the usr_dir is C:\\John Doe\\Documents and Settings.
-            # If yes, then we should modify the usr_dir to be 'My Documents'.
-            # If no, then the user must have modified the os.environ
-            # variables and the directory chosen is a desirable one.
-            desired_dir = os.path.join(parent_directory, 'My Documents')
+            try:
+                from win32com.shell import shell, shellcon
 
-            if os.path.exists(desired_dir):
-                parent_directory = desired_dir
+                # Due to the fact that the user's My Documents directory can
+                # be in some pretty strange places, it's safest to just ask
+                # Windows where it is.
+                MY_DOCS = shellcon.CSIDL_PERSONAL
+                parent_directory = shell.SHGetFolderPath(0, MY_DOCS, 0, 0)
+            except ImportError:
+                # But if they don't have pywin32 installed, just do it the
+                # naive way...
+
+                # Check if the usr_dir is C:\\John Doe\\Documents and Settings.
+                # If yes, then we should modify the usr_dir to be 'My Documents'.
+                # If no, then the user must have modified the os.environ
+                # variables and the directory chosen is a desirable one.
+                desired_dir = os.path.join(parent_directory, 'My Documents')
+
+                if os.path.exists(desired_dir):
+                    parent_directory = desired_dir
 
         else:
             directory_name = directory_name.lower()

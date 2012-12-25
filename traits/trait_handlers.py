@@ -528,7 +528,7 @@ class TraitType ( BaseTraitHandler ):
             else:
                 self._metadata = metadata
         else:
-            self._metadata = self.metadata
+            self._metadata = self.metadata.copy()
 
         self.init()
 
