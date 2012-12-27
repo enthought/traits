@@ -59,7 +59,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         return check
 
     def document_members(self, all_members=False):
-        """ Trait attribute has no members """
+        """ Trait attributes have no members """
         pass
 
     def add_content(self, more_content, no_docstring=False):
