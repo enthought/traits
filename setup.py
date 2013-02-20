@@ -3,6 +3,7 @@
 
 from os.path import join
 from setuptools import setup, Extension, find_packages
+from Cython.Distutils import build_ext
 
 
 d = {}
@@ -11,9 +12,9 @@ execfile(join('traits', '__init__.py'), d)
 
 ctraits = Extension(
     'traits.ctraits',
-    sources = ['traits/ctraits.c'],
+    sources = ['traits/ctraits.pyx'],
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
-    )
+)
 
 
 speedups = Extension(
@@ -60,4 +61,5 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    cmdclass = {'build_ext': build_ext},
 )
