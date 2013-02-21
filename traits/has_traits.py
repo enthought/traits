@@ -2487,7 +2487,7 @@ class HasTraits ( CHasTraits ):
                                  context  = None, handler    = None,
                                  id       = '',   scrollable = None, **args ):
         ### JMS: Is it correct to assume that non-modal options for 'kind'
-        ###      behave modaly when called from this method?
+        ###      behave modally when called from this method?
         """Creates and displays a dialog box for editing values of trait
         attributes, as if it were a complete, self-contained GUI application.
 
@@ -3018,10 +3018,10 @@ class HasTraits ( CHasTraits ):
         alias : str
             Name of the trait attribute on *other*; if None or omitted, same
             as *name*.
-        mutual : Bool or int
+        mutual : bool or int
             Indicates whether synchronization is mutual (True or non-zero)
             or one-way (False or zero)
-        remove : Bool or int
+        remove : bool or int
             Indicates whether synchronization is being added (False or zero)
             or removed (True or non-zero)
 

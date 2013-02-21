@@ -177,7 +177,7 @@ class BaseTraitHandler ( object ):
         ----------
         method : function
             The method that encountered the error.
-        arg_num : integer
+        arg_num : int
             The position of the incorrect argument in the argument list.
         object : object
             The object whose method was called.
