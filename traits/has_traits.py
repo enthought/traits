@@ -2241,8 +2241,8 @@ class HasTraits ( CHasTraits ):
             defined as an attribute on this class, use the name of the attribute.
             Otherwise, use a reference to the view object. If this attribute is
             not specified, the View object returned by trait_view() is used.
-        parent : handle
-            The window handle of a user interface component to use as the parent
+        parent : toolkit control
+            The reference to a user interface component to use as the parent
             window for the object's UI window.
         kind : str
             The type of user interface window to create. See the
