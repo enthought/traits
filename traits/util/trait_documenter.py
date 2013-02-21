@@ -52,14 +52,14 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     @classmethod
     def can_document_member(cls, member, membername, isattr, parent):
-        """ Check that the document member is a trait instance.
+        """ Check that the documented member is a trait instance.
         """
         check = (isattr and issubclass(type(member), TraitType) or
                  _is_class_trait(membername, parent.object))
         return check
 
     def document_members(self, all_members=False):
-        """ Trait attributes has no members """
+        """ Trait attributes have no members """
         pass
 
     def add_content(self, more_content, no_docstring=False):

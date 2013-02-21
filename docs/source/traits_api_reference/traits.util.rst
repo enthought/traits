@@ -65,3 +65,10 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`trait_documenter` Module
+------------------------------
+
+.. automodule:: traits.util.trait_documenter
+    :members:
+    :undoc-members:
+    :show-inheritance:
