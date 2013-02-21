@@ -274,7 +274,7 @@ class CTrait ( cTrait ):
                 from traitsui.api import TextEditor
                 editor = TextEditor
 
-        # If the result is not an EditoryFactory:
+        # If the result is not an EditorFactory:
         if not isinstance( editor, EditorFactory ):
             # Then it should be a factory for creating them:
             args   = ()
@@ -307,7 +307,7 @@ class CTrait ( cTrait ):
 
         Parameters
         ----------
-        full : Boolean
+        full : bool
             Indicates whether to return the value of the *help* attribute of
             the trait itself.
 
@@ -688,16 +688,19 @@ def Trait ( *value_type, **metadata ):
 
     The following predefined keywords are accepted:
 
-    desc : string
+    Keywords
+    --------
+    desc : str
         Describes the intended meaning of the trait. It is used in
         exception messages and fly-over help in user interfaces.
-    label : string
+    label : str
         Provides a human-readable name for the trait. It is used to label user
         interface editors for traits.
-    editor : instance of a subclass of traits.api.Editor
-        Object to use when creating a user interface editor for the trait. See
-        the "Traits UI User Guide" for more information on trait editors.
-    comparison_mode : integer
+    editor : traits.api.Editor
+        Instance of a subclass Editor object to use when creating a user
+        interface editor for the trait. See the "Traits UI User Guide" for
+        more information on trait editors.
+    comparison_mode : int
         Indicates when trait change notifications should be generated based upon
         the result of comparing the old and new values of a trait assignment:
 
@@ -709,13 +712,17 @@ def Trait ( *value_type, **metadata ):
           old and new values are not equal using Python's
           'rich comparison' operator. This is the default.
 
-    rich_compare : Boolean (DEPRECATED: Use comparison_mode instead)
+    rich_compare : bool
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple
         object identity (False). This attribute can be useful in cases
         where a detailed comparison of two objects is very expensive, or where
         you do not care whether the details of an object change, as long as the
         same object is used.
+
+            .. deprecated:: 3.0.3
+                Use ``comparison_mode`` instead
+
 
     """
     return _TraitMaker( *value_type, **metadata ).as_ctrait()
@@ -1002,18 +1009,19 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     Parameters
     ----------
     fget : function
-        The "getter" function for the property
+        The "getter" function for the property.
     fset : function
-        The "setter" function for the property
+        The "setter" function for the property.
     fvalidate : function
-        The validation function for the property
-    force : Boolean
-        Indicates whether to use only the function definitions spedficied by
+        The validation function for the property.
+    force : bool
+        Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function
-        A trait handler function for the trait
-    trait : a trait definition or value that can be converted to a trait
-        A trait definition that constrains the values of the property trait
+        A trait handler function for the trait.
+    trait : Trait or value
+        A trait definition or a value that can be converted to a trait that
+        constrains the values of the property trait.
 
     Description
     -----------
