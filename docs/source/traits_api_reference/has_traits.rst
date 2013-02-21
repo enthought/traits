@@ -23,10 +23,6 @@ Classes
 
 .. autoclass:: HasTraits
 
-    .. autoattribute:: wrappers
-    .. autotraitattribute:: trait_added
-    .. autotraitattribute:: trait_modified
-
 .. autoclass:: HasStrictTraits
 
 .. autoclass:: HasPrivateTraits

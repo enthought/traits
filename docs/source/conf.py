@@ -17,15 +17,17 @@ import sys, os
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 sys.path.append(os.path.abspath('_extensions'))
+sys.path.append(os.path.abspath('../../'))
 
-# General configuration
+    # General configuration
 # ---------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [ 'refactordoc',
                'sphinx.ext.viewcode',
-               'sphinx.ext.autosummary']
+               'sphinx.ext.autosummary',
+               'traits.util.trait_documenter']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
