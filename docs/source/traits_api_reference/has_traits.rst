@@ -22,6 +22,18 @@ Classes
     .. automethod:: __init__
 
 .. autoclass:: HasTraits
+    :exclude-members: wrappers
+
+    .. attribute:: wrappers
+        :annotation: =
+
+            | {'same': TraitChangeNotifyWrapper,
+            |     'extended': ExtendedTraitChangeNotifyWrapper,
+            |     'new': NewTraitChangeNotifyWrapper,
+            |     'fast_ui': FastUITraitChangeNotifyWrapper,
+            |     'ui': FastUITraitChangeNotifyWrapper}
+
+        Mapping from dispatch type to notification wrapper class type
 
 .. autoclass:: HasStrictTraits
 
