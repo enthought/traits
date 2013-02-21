@@ -184,6 +184,8 @@ cdef class CHasTraits:
 
     cdef int setattr_value(self, cTrait trait, str name, object value):
 
+        print 'setattr value ', trait, name, value
+
         cdef cTrait trait_new = trait.as_ctrait(trait)
         if trait_new is not None and isinstance(trait, cTrait):
             raise TraitError("Result of 'as_ctrait' method was not a 'CTraits' instance.")
@@ -209,6 +211,7 @@ cdef class CHasTraits:
             trait_property_changed(self, name, value_old, None)
 
     def __getattr__(self, name): # has_traits_getattro(self, name):
+        print 'CHASTRAITS GETATTR ', name
         cdef object value
         cdef cTrait trait
 
@@ -223,6 +226,7 @@ cdef class CHasTraits:
             trait = <object>PyDict_GetItem(self.ctrait_dict, name)
 
         if trait is not None:
+            print 'TRAIT GETATTR'
             value = trait.getattr(trait, self, name)
         else:
             value = <object>PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
@@ -234,6 +238,7 @@ cdef class CHasTraits:
         return value
 
     def __setattr__(self, name, value):
+        print 'CHASTRAITS __setattr__ ', name, value
         trait = getattr(self.itrait_dict, name, None)
         if trait is None:
             trait = getattr(self.ctrait_dict, name, None)
@@ -353,7 +358,6 @@ setattr_property_handlers[3] = setattr_property3
 setattr_property_handlers[4] = <trait_setattr> post_setattr_trait_python
 
 
-
 cdef object setattr_validate0(cTrait trait, CHasTraits obj, object name, object value):
     cdef args = tuple()
     return PyObject_Call(trait.py_validate, args, None)
@@ -370,11 +374,116 @@ cdef object setattr_validate3(cTrait trait, CHasTraits obj, object name, object 
     cdef args = (obj, name, value,)
     return PyObject_Call(trait.py_validate, args, None)
 
+cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
+    raise NotImplementedError()
+
+
+cdef bint has_notifiers(object tnotifiers, object onotifiers):
+    if (tnotifiers is not None and len(tnotifiers) > 0) or \
+        (onotifiers is not None and len(onotifiers) > 0):
+        return 1
+    else: return 0
+
+cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object name, object old_value, object new_value):
+
+    cdef int i, n, new_value_has_traits
+    cdef object result, item, temp
+    cdef int rc = 0
+
+    new_value_has_traits = PyObject_TypeCheck(new_value, <PyTypeObject*>CHasTraits)
+
+    cdef object arg_temp = None
+    cdef object user_args = None
+    cdef object args = (obj, name, old_value, new_value)
+
+    # Do nothing if the user has explicitely requested no traits notifications
+    # to be sent.
+    if obj.flags & HASTRAITS_NO_NOTIFY:
+        return rc
+    else:
+        if _trait_notification_handler != None:
+            user_args = (arg_temp, args)
+
+        for notifiers in [tnotifiers, onotifiers]:
+            if notifiers is not None:
+                n = len(notifiers)
+                temp = notifiers[:]
+                for i in xrange(n):
+                    if new_value_has_traits and ((<CHasTraits>new_value).flags & HASTRAITS_VETO_NOTIFY):
+                        return rc
+                    if _trait_notification_handler != None and user_args is not None:
+                        arg_temp = temp[i]
+                        user_args[0] = arg_temp
+                        result = PyObject_Call(_trait_notification_handler, user_args, None)
+                    else:
+                        result = PyObject_Call(temp[i], args, None)
+
+
+
+cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    print 'SETATTR TRAIT'
+    cdef object object_dict = obj.obj_dict
+    cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
+
+    if value is None:
+        if dict is None:
+            return 0
+        if isinstance(name ,str):
+            old_value = object_dict[name]
+            if old_value is None:
+                return 0
+
+            del object_dict[name]
+
+            rc = 0
+            if obj.flags & HASTRAITS_NO_NOTIFY == 0:
+                tnotifiers = traito.notifiers
+                onotifiers = obj.notifiers
+                if tnotifiers is not None or onotifiers is not None:
+                    value = traito.getattr(traito, obj, name)
+                    if value is None:
+                        return -1
+
+                    if not changed:
+                        changed = old_value != value
+                        if changed and (traitd.flags & TRAIT_OBJECT_IDENTITY == 0):
+                            changed = old_value == value
+
+                    if changed:
+                        if traitd.post_setattr is not NULL:
+                            rc = traitd.post_setattr(traitd, obj, name, value)
+                        if rc ==0 and has_notifiers(tnotifiers, onotifiers):
+                            rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
+
+            return rc
+
+        # FIXME: add support for unicode 
+
 cdef trait_validate setattr_validate_handlers[4]
 setattr_validate_handlers[0] = setattr_validate0
 setattr_validate_handlers[1] = setattr_validate1
 setattr_validate_handlers[2] = setattr_validate2
 setattr_validate_handlers[3] = setattr_validate3
+
+cdef trait_getattr getattr_handlers[13]
+getattr_handlers[0] = getattr_trait
+#getattr_python,    getattr_event,  getattr_delegate,
+#    getattr_event,     getattr_disallow,  getattr_trait,  getattr_constant,
+#    getattr_generic,
+#/*  The following entries are used by the __getstate__ method: */
+#    getattr_property0, getattr_property1, getattr_property2,
+#    getattr_property3,
+#/*  End of __getstate__ method entries */
+
+cdef trait_setattr setattr_handlers[13]
+setattr_handlers[0] = setattr_trait
+#setattr_python,    setattr_event,     setattr_delegate,
+#    setattr_event,     setattr_disallow,  setattr_readonly,  setattr_constant,
+#    setattr_generic,
+#/*  The following entries are used by the __getstate__ method: */
+#    setattr_property0, setattr_property1, setattr_property2, setattr_property3,
+#/*  End of __setstate__ method entries */
 
 cdef class cTrait:
 
@@ -398,9 +507,12 @@ cdef class cTrait:
     cdef public object on_trait_change # ADDED BY DP
     cdef public object event # ADDED BY DP
 
-    def __cinit__(self):
+    def __init__(self, int kind):
 
-        self._notifiers = []
+        if kind >= 0 and kind <= 8:
+            print 'KIND ', kind
+            self.getattr = getattr_handlers[kind]
+            self.setattr = setattr_handlers[kind]
 
     def value_allowed(self, int value_allowed):
         if value_allowed:
@@ -465,6 +577,12 @@ cdef class cTrait:
                 elif kind == 5: # Enumerated item check:
                     if n == 2:
                         if PyTuple_CheckExact(validate[1]):
+                            pass
+                        else:
+                            raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 6:  # Mapped item check
+                    if  n == 2 :
+                        if PyDict_Check(validate[1]):
                             pass
                         else:
                             raise ValueError('The argument must be a tuple or callable.')
@@ -579,6 +697,12 @@ cdef class cTrait:
             self.flags &= ~TRAIT_SETATTR_ORIGINAL_VALUE
 
         return self
+
+    def __getattr__(self, name):
+        print 'GETATTR cTRAIT ', name
+        cdef PyObject* value = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
+        if value is not NULL:
+            return <object>value
 
 cdef class CTraitMethod:
     pass
