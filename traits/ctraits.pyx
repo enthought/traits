@@ -2,23 +2,26 @@
 define the core performance oriented portions of the Traits package.
 
 """
-from cpython.dict cimport PyDict_GetItem
-from cpython.object cimport PyCallable_Check, PyObject_TypeCheck
-from cpython.ref cimport PyTypeObject, PyObject
+from cpython.dict cimport PyDict_GetItem, PyDict_Check
+from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call
+from cpython.ref cimport PyObject, Py_TYPE
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM
 from cpython.type cimport PyType_Check
 
 cdef extern from 'Python.h':
     PyObject* PyObject_GenericGetAttr(PyObject*, PyObject*)
 
+    ctypedef struct PyTypeObject:
+        PyObject* tp_dict
+
 # Constants
-cdef object class_traits        # == "__class_traits__" */
-cdef object listener_traits     # == "__listener_traits__" */
-cdef object editor_property     # == "editor" */
-cdef object class_prefix        # == "__prefix__" */
-cdef object trait_added         # == "trait_added" */
-cdef object empty_tuple         # == () */
-cdef object empty_dict          # == {} */
+cdef object class_traits = "__class_traits__"
+cdef object listener_traits = "__listener_traits__"
+cdef object editor_property = "editor"
+cdef object class_prefix = "__prefix__"
+cdef object trait_added = "trait_added"
+cdef object empty_tuple = tuple()
+cdef object empty_dict = {}
 cdef object Undefined           # Global 'Undefined' value */
 cdef object Uninitialized       # Global 'Uninitialized' value */
 cdef object TraitError          # TraitError exception */
@@ -105,7 +108,7 @@ cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, objec
         trait.handler.error(obj, name, value)
 
 cdef trait_validate validate_handlers[20]
-validate_handlers[1] = validate_trait_type
+validate_handlers[0] = validate_trait_type
 #    validate_trait_instance,
 #    validate_trait_self_type,
 #    validate_trait_int,
@@ -146,11 +149,16 @@ cdef void trait_property_changed( CHasTraits obj, str name, object value_old, ob
 cdef class CHasTraits:
 
     cdef dict ctrait_dict  # Class traits dictionary
-    cdef dict itrait_dic   # Instance traits dictionary
-    cdef list _notifiers    # List of any trait changed notification handler
+    cdef dict itrait_dict   # Instance traits dictionary
+    cdef list notifiers    # List of any trait changed notification handler
+    cdef int flags         # Behavior modification flags
+    cdef dict obj_dict     # Object attribute dictionary ('__dict__')
 
     def __cinit__(self):
-        self.ctrait_dict = type(self).class_traits
+        cdef  PyTypeObject* pytype = Py_TYPE(self)
+        cdef PyObject* class_traits_dict = PyDict_GetItem(<object>pytype.tp_dict, class_traits)
+        # FIXME: add checks from has_traits_new !!!
+        self.ctrait_dict = <dict>class_traits_dict
 
 
     def __dealloc__(self):
@@ -237,6 +245,137 @@ cdef class CHasTraits:
             else:
                 trait.setattr(trait, trait, self, name, value)
 
+    def _notifiers(self, force_create):
+        """ Returns (and optionally creates) the anytrait 'notifiers' list """
+        if self.notifiers is None and force_create:
+            self.notifiers = []
+
+        return self.notifiers
+
+# Assigns a value to a specified property trait attribute 
+cdef object getattr_property0(cTrait trait, CHasTraits obj, object name):
+    return PyObject_Call(trait.delegate_name, tuple(), None)
+
+cdef object getattr_property1(cTrait trait, CHasTraits obj, object name):
+    cdef object args = (obj,)
+    PyObject_Call(trait.delegate_name, args, None)
+
+cdef object getattr_property2(cTrait trait, CHasTraits obj, object name):
+    cdef object args = (obj, name)
+    PyObject_Call(trait.delegate_name, args, None)
+
+cdef object getattr_property3(cTrait trait, CHasTraits obj, object name):
+    cdef object args = (obj, name, trait)
+    PyObject_Call(trait.delegate_name, args, None)
+
+cdef trait_getattr getattr_property_handlers[4]
+getattr_property_handlers[0] = getattr_property0
+getattr_property_handlers[1] = getattr_property1
+getattr_property_handlers[2] = getattr_property2
+getattr_property_handlers[3] = getattr_property3
+
+cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    cdef int result
+    cdef object validated = traitd.validate(traitd, obj, name, value)
+    if validated is not None:
+        result = (<trait_setattr> traitd.post_setattr)(traito, traitd, obj, name, validated)
+    return result
+
+cdef void raise_delete_property_error(object obj, object name):
+    raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (obj, name))
+
+cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    if value is None:
+        raise_delete_property_error(obj, name)
+
+    cdef object args = tuple()
+    result = PyObject_Call(traitd.delegate_prefix, args, None)
+    if result is None:
+        return -1
+    else:
+        return 0
+
+cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    if value is None:
+        raise_delete_property_error(obj, name)
+
+    cdef object args = (value)
+    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
+    if result is None:
+        return -1
+    else:
+        return 0
+
+cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    if value is None:
+        raise_delete_property_error(obj, name)
+
+    cdef object args = (obj, value)
+    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
+    if result is None:
+        return -1
+    else:
+        return 0
+
+cdef int setattr_property3(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+
+    if value is None:
+        raise_delete_property_error(obj, name)
+
+    cdef object args = (obj, name, value)
+    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
+    if result is None:
+        return -1
+    else:
+        return 0
+
+# Calls a Python-based trait post_setattr handler
+cdef int post_setattr_trait_python(cTrait trait, CHasTraits obj, object name, object value):
+
+    cdef object args = (obj, name, value)
+    cdef object result = PyObject_Call(trait.py_post_setattr, args, None)
+    if result is None:
+        return -1
+    else:
+        return 0
+
+#  Sets the 'property' value fields of a CTrait instance:
+cdef trait_setattr setattr_property_handlers[5]
+setattr_property_handlers[0] = setattr_property0
+setattr_property_handlers[1] = setattr_property1
+setattr_property_handlers[2] = setattr_property2
+setattr_property_handlers[3] = setattr_property3
+#  The following entries are used by the __getstate__ method__: */
+setattr_property_handlers[4] = <trait_setattr> post_setattr_trait_python
+
+
+
+cdef object setattr_validate0(cTrait trait, CHasTraits obj, object name, object value):
+    cdef args = tuple()
+    return PyObject_Call(trait.py_validate, args, None)
+
+cdef object setattr_validate1(cTrait trait, CHasTraits obj, object name, object value):
+    cdef args = (value,)
+    return PyObject_Call(trait.py_validate, args, None)
+
+cdef object setattr_validate2(cTrait trait, CHasTraits obj, object name, object value):
+    cdef args = (obj, value,)
+    return PyObject_Call(trait.py_validate, args, None)
+
+cdef object setattr_validate3(cTrait trait, CHasTraits obj, object name, object value):
+    cdef args = (obj, name, value,)
+    return PyObject_Call(trait.py_validate, args, None)
+
+cdef trait_validate setattr_validate_handlers[4]
+setattr_validate_handlers[0] = setattr_validate0
+setattr_validate_handlers[1] = setattr_validate1
+setattr_validate_handlers[2] = setattr_validate2
+setattr_validate_handlers[3] = setattr_validate3
+
 cdef class cTrait:
 
     cdef int flags # Flags bits
@@ -258,6 +397,10 @@ cdef class cTrait:
     cdef public str instance_handler # ADDED BY DP
     cdef public object on_trait_change # ADDED BY DP
     cdef public object event # ADDED BY DP
+
+    def __cinit__(self):
+
+        self._notifiers = []
 
     def value_allowed(self, int value_allowed):
         if value_allowed:
@@ -299,7 +442,7 @@ cdef class cTrait:
                     else:
                         raise ValueError('The argument must be a tuple or callable.')
                 elif kind == 1: # Instance check
-                    if n == 2 and validate[1]  == None:
+                    if n <=3 and (n == 2 or  validate[1]  == None):
                         pass
                     else:
                         raise ValueError('The argument must be a tuple or callable.')
@@ -319,6 +462,19 @@ cdef class cTrait:
                             pass
                         else:
                             raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 5: # Enumerated item check:
+                    if n == 2:
+                        if PyTuple_CheckExact(validate[1]):
+                            pass
+                        else:
+                            raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 10: # Prefix map item check
+                    if n == 3:
+                        if PyDict_Check(validate[1]):
+                            pass
+                        else:
+                            raise ValueError('The argument must be a tuple or callable.')
+
                 elif kind == 11: # Coercable type check
                     if n >= 2:
                         pass
@@ -367,6 +523,63 @@ cdef class cTrait:
         self.delegate_attr_name = trait.delegate_attr_name
         self.handler = trait.handler
 
+    def _notifiers(self, force_create):
+        """ Returns (and optionally creates) the anytrait 'notifiers' list """
+
+        if self.notifiers is None and force_create == 1:
+            self.notifiers = []
+
+        return self.notifiers
+
+    def property(self, *args):
+
+        if len(args) == 0:
+            if self.flags & TRAIT_PROPERTY:
+                result = (self.delegate_name, self.delegate_prefix, self.py_validate)
+                return result
+        else:
+            get, get_n, set_, set_n, validate, validate_n = args
+            if not PyCallable_Check(get) or not PyCallable_Check(set_) or \
+                (validate is not None and not PyCallable_Check(validate)) or \
+                get_n < 0 or get_n > 3 or set_n < 0 or set_n > 3 or \
+                validate_n < 0 or validate_n > 3:
+                raise ValueError('Invalid arguments')
+
+            self.flags |= TRAIT_PROPERTY
+            self.getattr = getattr_property_handlers[get_n]
+            if (validate is not None):
+                self.setattr = setattr_validate_property
+                self.post_setattr = <trait_post_setattr> setattr_property_handlers[set_n]
+                self.validate = setattr_validate_handlers[validate_n]
+            else:
+                self.setattr = setattr_property_handlers[set_n]
+
+            self.delegate_name = get
+            self.delegate_prefix = set
+            self.py_validate = validate
+
+    def is_mapped(self, int is_mapped):
+        """ Sets the value of the 'is_mapped' flag of a CTrait instance (used in the
+            processing of the default value of a trait with a 'post_settattr' handler).
+
+        """
+
+        if is_mapped != 0:
+            self.flags |= TRAIT_IS_MAPPED
+        else:
+            self.flags &= ~TRAIT_IS_MAPPED
+
+        return self
+
+    def setattr_original_value(self, int original_value):
+        """ Sets the value of the 'setattr_original_value' flag of a CTrait instance. """
+        if original_value != 0:
+            self.flags |= TRAIT_SETATTR_ORIGINAL_VALUE
+        else:
+            self.flags &= ~TRAIT_SETATTR_ORIGINAL_VALUE
+
+        return self
+
 cdef class CTraitMethod:
     pass
 
@@ -388,7 +601,6 @@ def _list_classes(TraitListObject_, TraitSetObject_, TraitDictObject_):
     classes.
 
     """
-
 
     global TraitListObject, TraitSetObject, TraitDictObject
     TraitListObject = TraitListObject_
@@ -412,6 +624,10 @@ def _validate_implements(validate_implements_):
     """
     global validate_implements
     validate_implements = validate_implements_
+
+def _value_class(TraitValue_):
+    global TraitValue
+    TraitValue = TraitValue_
 
 cdef void trait_clone(cTrait trait1, cTrait trait2):
     pass
