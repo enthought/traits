@@ -67,7 +67,7 @@ is called::
     print "Changing dad's last name to Jones."
     dad.last_name = 'Jones'
 
-    # This change override's the father's last name for the son:
+    # This change overrides the father's last name for the son:
     print "Changing son's last name to Thomas."
     son.last_name = 'Thomas'
 
@@ -75,7 +75,7 @@ is called::
     print "Changing dad's last name to Riley."
     dad.last_name = 'Riley'
 
-    # Son decide's to revert his name back to his father's name:
+    # Son decides to revert his name back to his father's name:
     print "Reverting son's last name."
     del son.last_name
 
@@ -128,7 +128,7 @@ son.on_trait_change( name_changed, 'last_name' )
 print "Changing dad's last name to Jones."
 dad.last_name = 'Jones'
 
-# This change override's the father's last name for the son:
+# This change overrides the father's last name for the son:
 print "Changing son's last name to Thomas."
 son.last_name = 'Thomas'
 
@@ -136,7 +136,7 @@ son.last_name = 'Thomas'
 print "Changing dad's last name to Riley."
 dad.last_name = 'Riley'
 
-# Son decide's to revert his name back to his father's name:
+# Son decides to revert his name back to his father's name:
 print "Reverting son's last name."
 del son.last_name
 

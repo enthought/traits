@@ -158,7 +158,7 @@ class CopyTraitsSharedCopyNone:
         # Second hand Instance that was shared is a different object and
         # not the same object as the source and
         # not the same object as the new first hand instance that was the same.
-        # I.e. There are now (at least) two copies of one orginal object.
+        # I.e. There are now (at least) two copies of one original object.
 
         self.failIf( self.baz2.bar.shared is None )
         self.failIf( self.baz2.bar.shared is self.shared2 )
@@ -169,7 +169,7 @@ class CopyTraitsSharedCopyNone:
         # Third hand Instance that was shared is a different object and
         # not the same object as the source and
         # not the same object as the new first hand instance that was the same.
-        # I.e. There are now (at least) two copies of one orginal object.
+        # I.e. There are now (at least) two copies of one original object.
 
         self.failIf( self.baz2.bar.foo.shared is None )
         self.failIf( self.baz2.bar.foo.shared is self.shared2 )
@@ -275,7 +275,7 @@ class TestCopyTraitsSharedCopyRef( CopyTraits,
         self.set_shared_copy('ref')
         return
 
-# The next three tests demostrate that a 'ref' trait is always copied as a
+# The next three tests demonstrate that a 'ref' trait is always copied as a
 # reference regardless of the copy argument to copy_traits.  That is, shallow
 # and deep are indistinguishable.
 

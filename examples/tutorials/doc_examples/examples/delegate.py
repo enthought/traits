@@ -33,7 +33,7 @@ print tony.last_name
 #Output: Cooper
 
 # Validation is still controlled by the father's 'last_name' trait
-print 'Attemping to assign a Parent object to a Str trait...\n'
+print 'Attempting to assign a Parent object to a Str trait...\n'
 try:
     sally.last_name = sally.mother # ERR: string expected
 except TraitError, c:
