@@ -485,6 +485,51 @@ setattr_handlers[0] = setattr_trait
 #    setattr_property0, setattr_property1, setattr_property2, setattr_property3,
 #/*  End of __setstate__ method entries */
 
+cdef object call_class(object class_, cTrait trait, CHasTraits obj, object name, object value):
+
+    cdef object result
+    cdef object args = (trait.handler, obj, name, value)
+    result = PyObject_Call(class_, args, None)
+    return result
+
+cdef int has_value_for(CHasTraits obj, str name):
+    """ Returns whether an object's '__dict__' value is defined or not. """
+    if obj.obj_dict.has_key(name):
+        return 1
+    else:
+        return 0
+
+
+cdef internal_default_valuefor(cTrait trait, CHasTraits obj, object name):
+    cdef object resul, value, dv, kw, tuple_
+
+    value_type = trait.internal_default_valuetype
+    if value_type == 0 or value_type == 1:
+        result = trait.internal_default_value
+    elif value_type == 2 :
+        result = obj
+    elif value_type == 3:
+        result = list(trait.internal_default_value)
+    elif value_type == 4:
+        return trait.internal_default_value.copy()
+    elif value_type == 5:
+        return call_class(TraitListObject, trait, obj, name, trait.internal_default_value)
+    elif value_type == 6:
+        return call_class(TraitDictObject, trait, obj, name, trait.internal_default_value)
+    elif value_type == 7:
+        dv = trait.internal_default_value
+        return PyObject_Call(dv[0], dv[1], dv[2])
+    elif value_type == 8:
+        tuple_ = (obj, )
+        result  = PyObject_Call(trait.internal_default_value, tuple_, None)
+        if result is not None and trait.validate is not NULL:
+            value = trait.validate(trait, obj, name, result)
+            return value
+    elif value_type ==9:
+        return call_class(TraitSetObject, trait, obj, name, trait.internal_default_value)
+
+    return result
+
 cdef class cTrait:
 
     cdef int flags # Flags bits
@@ -494,8 +539,8 @@ cdef class cTrait:
     cdef object py_post_setattr # Pyton=based post 'setattr' handler
     cdef trait_validate validate
     cdef object py_validate # Python-based validat value handler
-    cdef int default_value_type # Type of default value: see the default_value_for function
-    cdef object default_value # Default value for Trait
+    cdef int internal_default_valuetype # Type of default value: see the internal_default_valuefor function
+    cdef object internal_default_value # Default value for Trait
     cdef object delegate_name # Optional delegate name (also used for property get)
     cdef object delegate_prefix # Optional delate prefix (also usef for property set)
     cdef delegate_attr_name_func delegate_attr_name # Optional routirne to return the computed delegate attribute name
@@ -531,12 +576,15 @@ cdef class cTrait:
             The default value
         """
         if value_type is None and value is None:
-            return (self.default_value_type, self.default_value)
+            if self.internal_default_value is None:
+                return None
+            else:
+                return (self.internal_default_valuetype, self.internal_default_value)
         if value_type < 0 and value_type > 9:
             raise ValueError('The default value type must be 0..9 but %s was'
                              ' specified' % value_type)
         self.value_type = value_type
-        self.default_value = value
+        self.internal_default_value = value
 
     def set_validate(self, validate):
         cdef int n, kind
@@ -572,6 +620,17 @@ cdef class cTrait:
                            (v2 is None or isinstance(v2, int)) and \
                            isinstance(v3, int):
                             pass
+                        else:
+                            raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 4: # Floating point range check
+                    if n ==4:
+                        v1 = validate[1]
+                        v2 = validate[2]
+                        v3 = validate[3]
+                        if (v1 is None or isinstance(v1, float)) and \
+                           (v2 is None or isinstance(v2, float)) and \
+                           isinstance(v3, int):
+                               pass
                         else:
                             raise ValueError('The argument must be a tuple or callable.')
                 elif kind == 5: # Enumerated item check:
@@ -634,8 +693,8 @@ cdef class cTrait:
         self.py_post_setattr = trait.py_post_setattr
         self.validate = trait.validate
         self.py_validate = trait.py_validate
-        self.default_value_type = trait.default_value_type
-        self.default_value = trait.default_value
+        self.internal_default_valuetype = trait.internal_default_valuetype
+        self.internal_default_value = trait.internal_default_value
         self.delegate_name = trait.delegate_name
         self.delegate_prefix = trait.delegate_prefix
         self.delegate_attr_name = trait.delegate_attr_name
@@ -703,6 +762,18 @@ cdef class cTrait:
         cdef PyObject* value = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
         if value is not NULL:
             return <object>value
+
+    def internal_default_valuefor(self, CHasTraits obj, object name):
+        """ Gets the default value of a CTrait instance for a specified object and trait
+            name
+
+        """
+
+        if self.flags & TRAIT_PROPERTY and has_value_for(<CHasTraits>obj, name):
+            return internal_default_valuefor(self, obj, name)
+
+        return self.getattr(self, obj, name)
+
 
 cdef class CTraitMethod:
     pass
