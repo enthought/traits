@@ -1,0 +1,633 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.trait_base &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.trait_base</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.trait_base</h1><div class="highlight"><pre>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="c">#</span>
+<span class="c">#  Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c">#  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c">#</span>
+<span class="c">#  Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c">#  Author: David C. Morrill</span>
+<span class="c">#  Date:   06/21/2002</span>
+<span class="c">#</span>
+<span class="c">#  Refactored into a separate module: 07/04/2003</span>
+<span class="c">#</span>
+<span class="c">#------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines common, low-level capabilities needed by the Traits package.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Imports:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">getcwd</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">exists</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">lowercase</span><span class="p">,</span> <span class="n">uppercase</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ListType</span><span class="p">,</span> <span class="n">TupleType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">UnicodeType</span><span class="p">,</span>
+    <span class="n">IntType</span><span class="p">,</span> <span class="n">LongType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span> <span class="n">ComplexType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">TypeType</span><span class="p">)</span>
+
+
+<span class="c"># Set the Python version being used:</span>
+<span class="n">vi</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
+<span class="n">python_version</span> <span class="o">=</span> <span class="n">vi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="n">vi</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">traits.etsconfig.api</span> <span class="kn">import</span> <span class="n">ETSConfig</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c"># If the ETSConfig package is not available, fake it:</span>
+    <span class="k">class</span> <span class="nc">ETSConfig</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+
+        <span class="c">#-----------------------------------------------------------------------</span>
+        <span class="c">#  &#39;object&#39; interface:</span>
+        <span class="c">#-----------------------------------------------------------------------</span>
+
+        <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Constructor.</span>
+
+<span class="sd">                Note that this constructor can only ever be called from within</span>
+<span class="sd">                this module, since we don&#39;t expose the class.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c"># Shadow attributes for properties:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span>          <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">return</span>
+
+        <span class="c">#-----------------------------------------------------------------------</span>
+        <span class="c">#  &#39;ETSConfig&#39; interface:</span>
+        <span class="c">#-----------------------------------------------------------------------</span>
+
+        <span class="c">#-- Property Implementations -------------------------------------------</span>
+
+        <span class="k">def</span> <span class="nf">_get_application_data</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Property getter.</span>
+
+<span class="sd">                This is a directory that applications and packages can safely</span>
+<span class="sd">                write non-user accessible data to i.e. configuration</span>
+<span class="sd">                information, preferences etc.</span>
+
+<span class="sd">                Do not put anything in here that the user might want to navigate</span>
+<span class="sd">                to (e.g. projects, user data files, etc).</span>
+
+<span class="sd">                The actual location differs between operating systems.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_application_data</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span>
+
+        <span class="k">def</span> <span class="nf">_set_application_data</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">application_data</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Property setter.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="n">application_data</span>
+
+        <span class="n">application_data</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span> <span class="n">_get_application_data</span><span class="p">,</span>
+                                     <span class="n">_set_application_data</span> <span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_get_toolkit</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Property getter for the GUI toolkit.  The value returned is, in</span>
+<span class="sd">            order of preference: the value set by the application; the value</span>
+<span class="sd">            passed on the command line using the &#39;-toolkit&#39; option; the value</span>
+<span class="sd">            specified by the &#39;ETS_TOOLKIT&#39; environment variable; otherwise the</span>
+<span class="sd">            empty string.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_toolkit</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span>
+
+        <span class="k">def</span> <span class="nf">_set_toolkit</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Property setter for the GUI toolkit.  The toolkit can be set more</span>
+<span class="sd">            than once, but only if it is the same one each time.  An application</span>
+<span class="sd">            that is written for a particular toolkit can explicitly set it</span>
+<span class="sd">            before any other module that gets the value is imported.</span>
+
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">!=</span> <span class="n">toolkit</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s">&#39;Cannot set toolkit to </span><span class="si">%s</span><span class="s"> because it has &#39;</span>
+                         <span class="s">&#39;already been set to </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">toolkit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="p">)</span> <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
+
+            <span class="k">return</span>
+
+        <span class="n">toolkit</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span> <span class="n">_get_toolkit</span><span class="p">,</span> <span class="n">_set_toolkit</span> <span class="p">)</span>
+
+        <span class="c">#-- Private Methods ----------------------------------------------------</span>
+
+        <span class="k">def</span> <span class="nf">_initialize_application_data</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Initializes the (default) application data directory.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&#39;win32&#39;</span><span class="p">:</span>
+                <span class="n">environment_variable</span> <span class="o">=</span> <span class="s">&#39;APPDATA&#39;</span>
+                <span class="n">directory_name</span>       <span class="o">=</span> <span class="s">&#39;Enthought&#39;</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">environment_variable</span> <span class="o">=</span> <span class="s">&#39;HOME&#39;</span>
+                <span class="n">directory_name</span>       <span class="o">=</span> <span class="s">&#39;.enthought&#39;</span>
+
+            <span class="c"># Lookup the environment variable:</span>
+            <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">environment_variable</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">parent_directory</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s">&#39;Environment variable &quot;</span><span class="si">%s</span><span class="s">&quot; not set&#39;</span> <span class="o">%</span>
+                                  <span class="n">environment_variable</span> <span class="p">)</span>
+
+            <span class="n">application_data</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">parent_directory</span><span class="p">,</span> <span class="n">directory_name</span> <span class="p">)</span>
+
+            <span class="c"># If a file already exists with this name then make sure that it is</span>
+            <span class="c"># a directory!</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span> <span class="n">application_data</span> <span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span> <span class="n">application_data</span> <span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s">&#39;File &quot;</span><span class="si">%s</span><span class="s">&quot; already exists&#39;</span> <span class="o">%</span>
+                                      <span class="n">application_data</span> <span class="p">)</span>
+
+            <span class="c"># Otherwise, create the directory:</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span> <span class="n">application_data</span> <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">application_data</span>
+
+        <span class="k">def</span> <span class="nf">_initialize_toolkit</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Initializes the toolkit.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c"># We handle the command line option even though it doesn&#39;t have the</span>
+            <span class="c"># highest precedence because we always want to remove it from the</span>
+            <span class="c"># command line:</span>
+            <span class="k">if</span> <span class="s">&#39;-toolkit&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span>
+                <span class="n">opt_idx</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="s">&#39;-toolkit&#39;</span> <span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">opt_toolkit</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span> <span class="n">opt_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">]</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span> <span class="s">&#39;The -toolkit command line argument must &#39;</span>
+                                      <span class="s">&#39;be followed by a toolkit name&#39;</span> <span class="p">)</span>
+
+                <span class="c"># Remove the option:</span>
+                <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span> <span class="n">opt_idx</span><span class="p">:</span> <span class="n">opt_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">opt_toolkit</span> <span class="o">=</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">toolkit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span>
+            <span class="k">elif</span> <span class="n">opt_toolkit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">toolkit</span> <span class="o">=</span> <span class="n">opt_toolkit</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">toolkit</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s">&#39;ETS_TOOLKIT&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span> <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">toolkit</span>
+
+    <span class="n">ETSConfig</span> <span class="o">=</span> <span class="n">ETSConfig</span><span class="p">()</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Provide Python 2.3+ compatible definitions (if necessary):</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">BooleanType</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">BooleanType</span> <span class="o">=</span> <span class="n">IntType</span>
+
+<span class="k">def</span> <span class="nf">_enumerate</span> <span class="p">(</span> <span class="n">seq</span> <span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">seq</span><span class="p">)</span> <span class="p">):</span>
+        <span class="k">yield</span> <span class="n">i</span><span class="p">,</span> <span class="n">seq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="nb">enumerate</span> <span class="o">=</span> <span class="nb">enumerate</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">enumerate</span> <span class="o">=</span> <span class="n">_enumerate</span>
+<span class="k">del</span> <span class="n">_enumerate</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Constants:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="n">ClassTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">TypeType</span> <span class="p">)</span>
+
+<span class="n">SequenceTypes</span> <span class="o">=</span> <span class="p">(</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">TupleType</span> <span class="p">)</span>
+
+<span class="n">ComplexTypes</span>  <span class="o">=</span> <span class="p">(</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span>
+
+<span class="n">TypeTypes</span>     <span class="o">=</span> <span class="p">(</span> <span class="n">StringType</span><span class="p">,</span>  <span class="n">UnicodeType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span>   <span class="n">LongType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span>
+                  <span class="n">ComplexType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span>    <span class="n">TupleType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">BooleanType</span> <span class="p">)</span>
+
+<span class="n">TraitNotifier</span> <span class="o">=</span> <span class="s">&#39;__trait_notifier__&#39;</span>
+
+<span class="c"># The standard Traits property cache prefix:</span>
+<span class="n">TraitsCache</span> <span class="o">=</span> <span class="s">&#39;_traits_cache_&#39;</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Singleton &#39;Uninitialized&#39; object:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="n">Uninitialized</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">class</span> <span class="nc">_Uninitialized</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The singleton value of this class represents the uninitialized state</span>
+<span class="sd">        of a trait and is specified as the &#39;old&#39; value in the trait change</span>
+<span class="sd">        notification that occurs when the value of a trait is read before being</span>
+<span class="sd">        set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">Uninitialized</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Uninitialized</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;uninitialized&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_Uninitialized</span><span class="p">,</span> <span class="p">())</span>
+
+<span class="c">#: When the first reference to a trait is a &#39;get&#39; reference, the default value of</span>
+<span class="c">#: the trait is implicitly assigned and returned as the value of the trait.</span>
+<span class="c">#: Because of this implicit assignment, a trait change notification is</span>
+<span class="c">#: generated with the Uninitialized object as the &#39;old&#39; value of the trait, and</span>
+<span class="c">#: the default trait value as the &#39;new&#39; value. This allows other parts of the</span>
+<span class="c">#: traits package to recognize the assignment as the implicit default value</span>
+<span class="c">#: assignment, and treat it specially.</span>
+<span class="n">Uninitialized</span> <span class="o">=</span> <span class="n">_Uninitialized</span><span class="p">()</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Singleton &#39;Undefined&#39; object (used as undefined trait name and/or value):</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="n">Undefined</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">class</span> <span class="nc">_Undefined</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Singleton &#39;Undefined&#39; object (used as undefined trait name and/or value)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">Undefined</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Undefined</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;undefined&gt;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_Undefined</span><span class="p">,</span> <span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+<span class="c">#: Singleton object that indicates that a trait attribute has not yet had a</span>
+<span class="c">#: value set (i.e., its value is undefined). This object is used instead of</span>
+<span class="c">#: None, because None often has other meanings, such as that a value is not</span>
+<span class="c">#: used. When a trait attribute is first assigned a value, and its associated</span>
+<span class="c">#: trait notification handlers are called, Undefined is passed as the *old*</span>
+<span class="c">#: parameter, to indicate that the attribute previously had no value.</span>
+<span class="n">Undefined</span> <span class="o">=</span> <span class="n">_Undefined</span><span class="p">()</span>
+
+<span class="c"># Tell the C-base code about singleton &#39;Undefined&#39; and &#39;Uninitialized&#39; objects:</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ctraits</span>
+<span class="n">ctraits</span><span class="o">.</span><span class="n">_undefined</span><span class="p">(</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">Uninitialized</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Singleton &#39;Missing&#39; object (used as missing method argument marker):</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Missing"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.Missing">[docs]</a><span class="k">class</span> <span class="nc">Missing</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Singleton &#39;Missing&#39; object (used as missing method argument marker).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__repr__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;missing&gt;&#39;</span>
+
+<span class="c">#: Singleton object that indicates that a method argument is missing from a</span>
+<span class="c">#: type-checked method signature.</span></div>
+<span class="n">Missing</span> <span class="o">=</span> <span class="n">Missing</span><span class="p">()</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Singleton &#39;Self&#39; object (used as object reference to current &#39;object&#39;):</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Self"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.Self">[docs]</a><span class="k">class</span> <span class="nc">Self</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Singleton &#39;Self&#39; object (used as object reference to current &#39;object&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__repr__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;&lt;self&gt;&#39;</span>
+
+<span class="c">#: Singleton object that references the current &#39;object&#39;.</span></div>
+<span class="n">Self</span> <span class="o">=</span> <span class="n">Self</span><span class="p">()</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Define a special &#39;string&#39; coercion function:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="strx"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.strx">[docs]</a><span class="k">def</span> <span class="nf">strx</span> <span class="p">(</span> <span class="n">arg</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Wraps the built-in str() function to raise a TypeError if the</span>
+<span class="sd">    argument is not of a type in StringTypes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">arg</span> <span class="p">)</span> <span class="ow">in</span> <span class="n">StringTypes</span><span class="p">:</span>
+       <span class="k">return</span> <span class="nb">str</span><span class="p">(</span> <span class="n">arg</span> <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Constants:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="n">StringTypes</span> <span class="o">=</span> <span class="p">(</span> <span class="n">StringType</span><span class="p">,</span> <span class="n">UnicodeType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">LongType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span>
+                <span class="n">ComplexType</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Define a mapping of coercable types:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="c"># Mapping of coercable types.</span>
+<span class="n">CoercableTypes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">LongType</span><span class="p">:</span>    <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="nb">int</span> <span class="p">),</span>
+    <span class="n">FloatType</span><span class="p">:</span>   <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="p">),</span>
+    <span class="n">ComplexType</span><span class="p">:</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span> <span class="p">),</span>
+    <span class="n">UnicodeType</span><span class="p">:</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">,</span> <span class="nb">str</span> <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Return a string containing the class name of an object with the correct</span>
+<span class="c">#  article (a or an) preceding it (e.g. &#39;an Image&#39;, &#39;a PlotValue&#39;):</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="class_of"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.class_of">[docs]</a><span class="k">def</span> <span class="nf">class_of</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a string containing the class name of an object with the</span>
+<span class="sd">    correct indefinite article (&#39;a&#39; or &#39;an&#39;) preceding it (e.g., &#39;an Image&#39;,</span>
+<span class="sd">    &#39;a PlotValue&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="nb">basestring</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="n">add_article</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">add_article</span><span class="p">(</span> <span class="nb">object</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Return a string containing the right article (i.e. &#39;a&#39; or &#39;an&#39;) prefixed to</span>
+<span class="c">#  a specified string:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="add_article"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.add_article">[docs]</a><span class="k">def</span> <span class="nf">add_article</span> <span class="p">(</span> <span class="n">name</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a string containing the correct indefinite article (&#39;a&#39; or &#39;an&#39;)</span>
+<span class="sd">    prefixed to the specified string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="s">&#39;aeiou&#39;</span><span class="p">:</span>
+       <span class="k">return</span> <span class="s">&#39;an &#39;</span> <span class="o">+</span> <span class="n">name</span>
+
+    <span class="k">return</span> <span class="s">&#39;a &#39;</span> <span class="o">+</span> <span class="n">name</span>
+
+<span class="c">#----------------------------------------------------------------------------</span>
+<span class="c">#  Return a &#39;user-friendly&#39; name for a specified trait:</span>
+<span class="c">#----------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="user_name_for"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.user_name_for">[docs]</a><span class="k">def</span> <span class="nf">user_name_for</span> <span class="p">(</span> <span class="n">name</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a &quot;user-friendly&quot; version of a string, with the first letter</span>
+<span class="sd">    capitalized and with underscore characters replaced by spaces. For example,</span>
+<span class="sd">    ``user_name_for(&#39;user_name_for&#39;)`` returns ``&#39;User name for&#39;``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span>       <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&#39;_&#39;</span><span class="p">,</span> <span class="s">&#39; &#39;</span> <span class="p">)</span>
+    <span class="n">result</span>     <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">last_lower</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">uppercase</span><span class="p">)</span> <span class="ow">and</span> <span class="n">last_lower</span><span class="p">:</span>
+           <span class="n">result</span> <span class="o">+=</span> <span class="s">&#39; &#39;</span>
+        <span class="n">last_lower</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="ow">in</span> <span class="n">lowercase</span><span class="p">)</span>
+        <span class="n">result</span>    <span class="o">+=</span> <span class="n">c</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Gets the path to the traits home directory:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="n">_traits_home</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="traits_home"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.traits_home">[docs]</a><span class="k">def</span> <span class="nf">traits_home</span> <span class="p">(</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Gets the path to the Traits home directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_traits_home</span>
+
+    <span class="k">if</span> <span class="n">_traits_home</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">_traits_home</span> <span class="o">=</span> <span class="n">verify_path</span><span class="p">(</span> <span class="n">join</span><span class="p">(</span> <span class="n">ETSConfig</span><span class="o">.</span><span class="n">application_data</span><span class="p">,</span>
+                                          <span class="s">&#39;traits&#39;</span> <span class="p">)</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_traits_home</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Verify that a specified path exists, and try to create it if it doesn&#39;t:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="verify_path"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.verify_path">[docs]</a><span class="k">def</span> <span class="nf">verify_path</span> <span class="p">(</span> <span class="n">path</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Verify that a specified path exists, and try to create it if it</span>
+<span class="sd">        does not exist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">exists</span><span class="p">(</span> <span class="n">path</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span> <span class="n">path</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">path</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Returns the name of the module the caller&#39;s caller is located in:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="get_module_name"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.get_module_name">[docs]</a><span class="k">def</span> <span class="nf">get_module_name</span> <span class="p">(</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns the name of the module that the caller&#39;s caller is located in.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span> <span class="n">level</span> <span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s">&#39;__name__&#39;</span><span class="p">,</span> <span class="s">&#39;__main__&#39;</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Returns a resource path calculated from the caller&#39;s stack:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="get_resource_path"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.get_resource_path">[docs]</a><span class="k">def</span> <span class="nf">get_resource_path</span> <span class="p">(</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns a resource path calculated from the caller&#39;s stack.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span> <span class="n">level</span> <span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s">&#39;__name__&#39;</span><span class="p">,</span> <span class="s">&#39;__main__&#39;</span> <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">module</span> <span class="o">!=</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+        <span class="c"># Return the path to the module:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dirname</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">module</span> <span class="p">),</span> <span class="s">&#39;__file__&#39;</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c"># Apparently &#39;module&#39; is not a registered module...treat it like</span>
+            <span class="c"># &#39;__main__&#39;:</span>
+            <span class="k">pass</span>
+
+    <span class="c"># &#39;__main__&#39; is not a real module, so we need a work around:</span>
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">dirname</span><span class="p">(</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">),</span> <span class="n">getcwd</span><span class="p">()</span> <span class="p">]:</span>
+        <span class="k">if</span> <span class="n">exists</span><span class="p">(</span> <span class="n">path</span> <span class="p">):</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">path</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Returns the value of an extended object attribute name of the form:</span>
+<span class="c">#  name[.name2[.name3...]]:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="xgetattr"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.xgetattr">[docs]</a><span class="k">def</span> <span class="nf">xgetattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">default</span> <span class="o">=</span> <span class="n">Undefined</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns the value of an extended object attribute name of the form:</span>
+<span class="sd">        name[.name2[.name3...]].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">xname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+            <span class="nb">object</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">object</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">default</span>
+
+    <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">default</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Sets the value of an extended object attribute name of the form:</span>
+<span class="c">#  name[.name2[.name3...]]:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="xsetattr"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.xsetattr">[docs]</a><span class="k">def</span> <span class="nf">xsetattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sets the value of an extended object attribute name of the form:</span>
+<span class="sd">        name[.name2[.name3...]].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="n">xname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;.&#39;</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+
+    <span class="nb">setattr</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">value</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Traits metadata selection functions:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="is_none"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.is_none">[docs]</a><span class="k">def</span> <span class="nf">is_none</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="not_none"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.not_none">[docs]</a><span class="k">def</span> <span class="nf">not_none</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="not_false"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.not_false">[docs]</a><span class="k">def</span> <span class="nf">not_false</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">False</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="not_event"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.not_event">[docs]</a><span class="k">def</span> <span class="nf">not_event</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="o">!=</span> <span class="s">&#39;event&#39;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="is_str"><a class="viewcode-back" href="../../traits_api_reference/trait_base.html#traits.trait_base.is_str">[docs]</a><span class="k">def</span> <span class="nf">is_str</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">basestring</span> <span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.trait_base</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Feb 22, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

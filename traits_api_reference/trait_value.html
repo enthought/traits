@@ -59,13 +59,82 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="trait-value-module">
-<h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_value</span></tt> Module<a class="headerlink" href="#trait-value-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-traits.trait_value">
+<span id="trait-value-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_value</span></tt> Module<a class="headerlink" href="#module-traits.trait_value" title="Permalink to this headline">¶</a></h1>
+<p>Defines the TraitValue class, used for creating special, dynamic trait
+values.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_value.BaseTraitValue">
+<em class="property">class </em><tt class="descclassname">traits.trait_value.</tt><tt class="descname">BaseTraitValue</tt><a class="reference internal" href="../_modules/traits/trait_value.html#BaseTraitValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.BaseTraitValue" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="traits.trait_value.BaseTraitValue.as_ctrait">
+<tt class="descname">as_ctrait</tt><big>(</big><em>original_trait</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_value.html#BaseTraitValue.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.BaseTraitValue.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the low-level C-based trait for this TraitValue.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_value.TraitValue">
+<em class="property">class </em><tt class="descclassname">traits.trait_value.</tt><tt class="descname">TraitValue</tt><a class="reference internal" href="../_modules/traits/trait_value.html#TraitValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.TraitValue" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="traits.trait_value.TraitValue.default">
+<tt class="descname">default</tt><em class="property"> = Callable</em><a class="headerlink" href="#traits.trait_value.TraitValue.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>The callable used to define a default value:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_value.TraitValue.args">
+<tt class="descname">args</tt><em class="property"> = Tuple</em><a class="headerlink" href="#traits.trait_value.TraitValue.args" title="Permalink to this definition">¶</a></dt>
+<dd><p>The positional arguments to pass to the callable default value:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_value.TraitValue.kw">
+<tt class="descname">kw</tt><em class="property"> = Dict</em><a class="headerlink" href="#traits.trait_value.TraitValue.kw" title="Permalink to this definition">¶</a></dt>
+<dd><p>The keyword arguments to pass to the callable default value:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_value.TraitValue.type">
+<tt class="descname">type</tt><em class="property"> = Any</em><a class="headerlink" href="#traits.trait_value.TraitValue.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trait to use as the new trait type:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_value.TraitValue.delegate">
+<tt class="descname">delegate</tt><em class="property"> = Instance( HasTraits )</em><a class="headerlink" href="#traits.trait_value.TraitValue.delegate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The object to delegate the new value to:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.trait_value.TraitValue.name">
+<tt class="descname">name</tt><em class="property"> = Str</em><a class="headerlink" href="#traits.trait_value.TraitValue.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the trait on the delegate object to get the new value from:</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_value.SyncValue">
+<tt class="descclassname">traits.trait_value.</tt><tt class="descname">SyncValue</tt><big>(</big><em>delegate</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_value.html#SyncValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.SyncValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_value.TypeValue">
+<tt class="descclassname">traits.trait_value.</tt><tt class="descname">TypeValue</tt><big>(</big><em>type</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_value.html#TypeValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.TypeValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="traits.trait_value.DefaultValue">
+<tt class="descclassname">traits.trait_value.</tt><tt class="descname">DefaultValue</tt><big>(</big><em>default</em>, <em>args=()</em>, <em>kw={}</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_value.html#DefaultValue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_value.DefaultValue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 </div>
 
@@ -137,7 +206,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Dec 06, 2012.
+      Last updated on Feb 22, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

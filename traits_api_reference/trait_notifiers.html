@@ -59,13 +59,71 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="trait-notifiers-module">
-<h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_notifiers</span></tt> Module<a class="headerlink" href="#trait-notifiers-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-traits.trait_notifiers">
+<span id="trait-notifiers-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_notifiers</span></tt> Module<a class="headerlink" href="#module-traits.trait_notifiers" title="Permalink to this headline">¶</a></h1>
+<p>Defines the classes needed to implement and support the Traits change
+notification mechanism.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_notifiers.NotificationExceptionHandlerState">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">NotificationExceptionHandlerState</tt><big>(</big><em>handler</em>, <em>reraise_exceptions</em>, <em>locked</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandlerState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandlerState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.NotificationExceptionHandler">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">NotificationExceptionHandler</tt><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NotificationExceptionHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NotificationExceptionHandler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">StaticAnyTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticAnyTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.StaticTraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">StaticTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#StaticTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.StaticTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.TraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">TraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">ExtendedTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#ExtendedTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.FastUITraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">FastUITraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.UITraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">UITraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#UITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.UITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.DeferredTraitNotification">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">DeferredTraitNotification</tt><big>(</big><em>object</em>, <em>trait_name</em>, <em>old</em>, <em>new</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#DeferredTraitNotification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.DeferredTraitNotification" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_notifiers.NewTraitChangeNotifyWrapper">
+<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">NewTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_notifiers.set_ui_handler">
+<tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">set_ui_handler</tt><big>(</big><em>handler</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#set_ui_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.set_ui_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the user interface thread handler.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -137,7 +195,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Dec 06, 2012.
+      Last updated on Feb 22, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

@@ -59,13 +59,71 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="trait-numeric-module">
-<h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_numeric</span></tt> Module<a class="headerlink" href="#trait-numeric-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-traits.trait_numeric">
+<span id="trait-numeric-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_numeric</span></tt> Module<a class="headerlink" href="#module-traits.trait_numeric" title="Permalink to this headline">¶</a></h1>
+<p>Trait definitions related to the numpy library.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.trait_numeric.AbstractArray">
+<em class="property">class </em><tt class="descclassname">traits.trait_numeric.</tt><tt class="descname">AbstractArray</tt><big>(</big><em>dtype=None</em>, <em>shape=None</em>, <em>value=None</em>, <em>coerce=False</em>, <em>typecode=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract base class for defining numpy-based arrays.</p>
+<dl class="method">
+<dt id="traits.trait_numeric.AbstractArray.validate">
+<tt class="descname">validate</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the value is a valid array.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_numeric.AbstractArray.info">
+<tt class="descname">info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns descriptive information about the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_numeric.AbstractArray.get_editor">
+<tt class="descname">get_editor</tt><big>(</big><em>trait=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.get_editor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default UI editor for the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_numeric.AbstractArray.get_default_value">
+<tt class="descname">get_default_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.get_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the default value constructor for the type (called from the
+trait factory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.trait_numeric.AbstractArray.copy_default_value">
+<tt class="descname">copy_default_value</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#AbstractArray.copy_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.AbstractArray.copy_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the default value (called from the C code on
+first reference to a trait with no current value).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_numeric.Array">
+<em class="property">class </em><tt class="descclassname">traits.trait_numeric.</tt><tt class="descname">Array</tt><big>(</big><em>dtype=None</em>, <em>shape=None</em>, <em>value=None</em>, <em>typecode=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#Array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.Array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a numpy array.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="traits.trait_numeric.CArray">
+<em class="property">class </em><tt class="descclassname">traits.trait_numeric.</tt><tt class="descname">CArray</tt><big>(</big><em>dtype=None</em>, <em>shape=None</em>, <em>value=None</em>, <em>typecode=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#CArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.CArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a trait whose value must be a numpy array, with casting
+allowed.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="function">
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="traits.trait_numeric.dtype2trait">
+<tt class="descclassname">traits.trait_numeric.</tt><tt class="descname">dtype2trait</tt><big>(</big><em>dtype</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_numeric.html#dtype2trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_numeric.dtype2trait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the corresponding trait for a numpy dtype.</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -137,7 +195,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Dec 06, 2012.
+      Last updated on Feb 22, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
