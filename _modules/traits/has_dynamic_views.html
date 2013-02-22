@@ -1,0 +1,471 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.has_dynamic_views &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.has_dynamic_views</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.has_dynamic_views</h1><div class="highlight"><pre>
+<span class="c">#-----------------------------------------------------------------------------</span>
+<span class="c">#</span>
+<span class="c">#  Copyright (c) 2006, Enthought, Inc.</span>
+<span class="c">#  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c">#</span>
+<span class="c">#  Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c">#  Author: Dave Peterson &lt;dpeterson@enthought.com&gt;</span>
+<span class="c">#</span>
+<span class="c">#-----------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provides a framework that assembles Traits UI Views at run time,</span>
+<span class="sd">when the view is requested, rather than at the time a class is written.</span>
+
+<span class="sd">This capability is particularly useful when the object being &#39;viewed&#39; with a</span>
+<span class="sd">Traits UI is part of a plug-in application -- such as Envisage.  In general,</span>
+<span class="sd">this capability allows:</span>
+
+<span class="sd">*  The GUI for an object can be extendable by contributions</span>
+<span class="sd">   other than from the original code writer.</span>
+<span class="sd">*  The view can be dynamic in that the elements it is composed</span>
+<span class="sd">   of can change each time it is requested.</span>
+<span class="sd">*  Registration of a handler can be associated with the view contributions.</span>
+
+<span class="sd">Either the original object writer, or a contributor, can use this framework to</span>
+<span class="sd">declare one or more dynamic views that are composed of sub-elements that only</span>
+<span class="sd">need to exist at the time the view is requested.</span>
+
+<span class="sd">Users of this framework create a dynamic view by registering a DynamicView</span>
+<span class="sd">declaration.  That declaration includes a name that forms the basis for the</span>
+<span class="sd">metadata attributes that are used to identify and order the desired view</span>
+<span class="sd">sub-elements into the view&#39;s composition.  In addition, the declaration</span>
+<span class="sd">includes any data to be passed into the constructor of the dynamic view and</span>
+<span class="sd">the id that should be used to persist the user&#39;s customization of the view.</span>
+
+<span class="sd">Additionally, this framework allows sub-elements themselves to also be</span>
+<span class="sd">dynamically composed of further sub-elements.</span>
+
+<span class="sd">For example, a dynamic view could be composed of two sub-elements:</span>
+
+<span class="sd">1. The first is a dynamically composed HFlow, which represents a toolbar</span>
+<span class="sd">   that can be extended through contributions of toolbar buttons.</span>
+<span class="sd">2. The second could be a dynamic tabset where each page is also a</span>
+<span class="sd">   contribution.</span>
+
+<span class="sd">Programmers include dynamic sub-elements within their dynamic views by</span>
+<span class="sd">contributing a DynamicViewSubElement into that view.  When the framework comes</span>
+<span class="sd">across this contribution while building the view, it replaces that</span>
+<span class="sd">DynamicViewSubElement with a fully initialized Traits ViewSubElement composed</span>
+<span class="sd">in a manner similar to how the elements of the View itself were composed.</span>
+
+<span class="sd">Each contribution to a dynamic view or sub-element must be an instance of a</span>
+<span class="sd">Traits ViewSubElement and must have associated metadata like the following for</span>
+<span class="sd">each dynamic view or sub-element it will display in:</span>
+
+<span class="sd">_&lt;dynamic name&gt;_order : A float value.</span>
+<span class="sd">    The framework uses only ViewSubElements with this metadata</span>
+<span class="sd">    instantiated when building the dynamic view or sub-element with</span>
+<span class="sd">    the specified name.  The elements are sorted by ascending</span>
+<span class="sd">    order of this value using the standard list sort function.</span>
+<span class="sd">_&lt;dynamic name&gt;_priority : A float value.</span>
+<span class="sd">    The framework resolves any overloading of an order value by</span>
+<span class="sd">    picking the first element encountered that has the highest</span>
+<span class="sd">    priority value. The other elements with the same view order are</span>
+<span class="sd">    not displayed at all.</span>
+
+<span class="sd">In addition, dynamic view contributions can also provide a &#39;handler&#39;, which</span>
+<span class="sd">behaves like a normal Traits Handler.  That is, it can contain methods that</span>
+<span class="sd">are called when model values change and can access  the Traits UIInfo</span>
+<span class="sd">object representing the actual UI instances.  To provide a handler, append the</span>
+<span class="sd">following metadata to your view sub-element:</span>
+
+<span class="sd">_&lt;dynamic_name&gt;_handler : A HasTraits instance.</span>
+<span class="sd">    The framework will connect listeners to call the handler methods as</span>
+<span class="sd">    part of the handler for the dynamic view.</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="c"># Enthought library imports:</span>
+<span class="kn">from</span> <span class="nn">traitsui.delegating_handler</span> <span class="kn">import</span> <span class="n">DelegatingHandler</span>
+
+<span class="c"># Local imports:</span>
+<span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Str</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">View</span><span class="p">,</span> <span class="n">ViewSubElement</span><span class="p">,</span> <span class="n">ViewElement</span>
+
+<span class="c"># Set up a logger:</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span> <span class="n">__name__</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;DynamicViewSubElement&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="DynamicViewSubElement"><a class="viewcode-back" href="../../traits_api_reference/has_dynamic_views.html#traits.has_dynamic_views.DynamicViewSubElement">[docs]</a><span class="k">class</span> <span class="nc">DynamicViewSubElement</span> <span class="p">(</span> <span class="n">ViewSubElement</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Declares a dynamic sub-element of a dynamic view.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  Trait definitions:</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="c">#-- Public &#39;DynamicViewSubElement&#39; Interface -------------------------------</span>
+
+    <span class="c">#: Keyword arguments passed in during construction of the actual</span>
+    <span class="c">#: ViewSubElement instance.</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c"># FIXME: Should be the &#39;Class&#39; trait but I couldn&#39;t get that to work.</span>
+    <span class="c">#: The class of the actual ViewSubElement we are dynamically creating.</span>
+    <span class="n">klass</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c">#: The name of this dynamic sub-element.  This controls the metadata</span>
+    <span class="c">#: names identifying the sub-elements that compose this element.</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;DynamicView&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="DynamicView"><a class="viewcode-back" href="../../traits_api_reference/has_dynamic_views.html#traits.has_dynamic_views.DynamicView">[docs]</a><span class="k">class</span> <span class="nc">DynamicView</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Declares a dynamic view.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  Trait definitions:</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="c">#-- Public &#39;DynamicView&#39; Interface -----------------------------------------</span>
+
+    <span class="c">#: The ID of the view.  This is the ID that the view&#39;s preferences will be</span>
+    <span class="c">#: saved under.</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c">#: The name of the view.  This is the name that should be requested when</span>
+    <span class="c">#: calling edit_traits() or configure_traits().</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c">#: Keyword arguments passed in during construction of the actual view</span>
+    <span class="c">#: instance.</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c">#: Indicates whether this view should be the default traits view for objects</span>
+    <span class="c">#: it is contributed to.</span>
+    <span class="n">use_as_default</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span> <span class="bp">False</span> <span class="p">)</span>
+
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;HasDynamicViews&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="HasDynamicViews"><a class="viewcode-back" href="../../traits_api_reference/has_dynamic_views.html#traits.has_dynamic_views.HasDynamicViews">[docs]</a><span class="k">class</span> <span class="nc">HasDynamicViews</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides of a framework that builds Traits UI Views at run time,</span>
+<span class="sd">    when the view is requested, rather than at the time a class is written.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  Trait definitions:</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="c">#-- Protected &#39;HasDynamicViews&#39; Interface ----------------------------------</span>
+
+    <span class="c">#: The registry of dynamic views.  The key is the view name and the value</span>
+    <span class="c">#: is the declaration of the dynamic view.</span>
+    <span class="n">_dynamic_view_registry</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">DynamicView</span> <span class="p">)</span> <span class="p">)</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  &#39;HasTraits&#39; interface:</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="c">#-- Public Interface -------------------------------------------------------</span>
+
+<div class="viewcode-block" id="HasDynamicViews.trait_view"><a class="viewcode-back" href="../../traits_api_reference/has_dynamic_views.html#traits.has_dynamic_views.HasDynamicViews.trait_view">[docs]</a>    <span class="k">def</span> <span class="nf">trait_view</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">view_element</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets or sets a ViewElement associated with an object&#39;s class.</span>
+
+<span class="sd">            Extended here to build dynamic views and sub-elements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># If a view element was passed instead of a name or None, do not handle</span>
+        <span class="c"># this as a request for a dynamic view and let the standard Traits</span>
+        <span class="c"># trait_view method be called with it.  Otherwise, compose the dynamic</span>
+        <span class="c"># view here.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">ViewElement</span> <span class="p">):</span>
+
+            <span class="c"># If this is a request for the default view, see if one of our</span>
+            <span class="c"># dynamic views should be the default view:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">view_element</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">dname</span><span class="p">,</span> <span class="n">declaration</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_view_registry</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">declaration</span><span class="o">.</span><span class="n">use_as_default</span><span class="p">:</span>
+                        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compose_dynamic_view</span><span class="p">(</span> <span class="n">dname</span> <span class="p">)</span>
+                        <span class="k">break</span>
+
+            <span class="c"># Otherwise, handle if this is a request for a dynamic view:</span>
+            <span class="k">elif</span> <span class="p">((</span><span class="n">view_element</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
+                  <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_view_registry</span><span class="p">)):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compose_dynamic_view</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c"># If we haven&#39;t created a dynamic view so far, then do the standard</span>
+        <span class="c"># traits thing to retrieve the UI element:</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span> <span class="n">HasDynamicViews</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">trait_view</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span>
+                                                                <span class="n">view_element</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  &#39;HasDynamicViews&#39; interface:</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="c">#-- Public Interface -------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="HasDynamicViews.declare_dynamic_view"><a class="viewcode-back" href="../../traits_api_reference/has_dynamic_views.html#traits.has_dynamic_views.HasDynamicViews.declare_dynamic_view">[docs]</a>    <span class="k">def</span> <span class="nf">declare_dynamic_view</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">declaration</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; A convenience method to add a new dynamic view declaration to this</span>
+<span class="sd">            instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_view_registry</span><span class="p">[</span> <span class="n">declaration</span><span class="o">.</span><span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">declaration</span>
+
+    <span class="c">#-- Protected Interface ----------------------------------------------------</span>
+</div>
+    <span class="k">def</span> <span class="nf">_build_dynamic_sub_element</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">definition</span><span class="p">,</span> <span class="n">sub_elements</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the fully composed ViewSubElement from the sub-element</span>
+<span class="sd">            contributions to the dynamic sub-element identified by the</span>
+<span class="sd">            definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">Building dynamic sub-element [</span><span class="si">%s</span><span class="s">] with elements [</span><span class="si">%s</span><span class="s">]&#39;</span><span class="p">,</span>
+                      <span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sub_elements</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">definition</span><span class="o">.</span><span class="n">klass</span><span class="p">(</span> <span class="o">*</span><span class="n">sub_elements</span><span class="p">,</span> <span class="o">**</span><span class="n">definition</span><span class="o">.</span><span class="n">keywords</span> <span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_build_dynamic_view</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">declaration</span><span class="p">,</span> <span class="n">sub_elements</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a Traits View representing the specified dynamic view</span>
+<span class="sd">            composed out of the provided view sub-elements.</span>
+
+<span class="sd">            Implemented as a separate method to allow implementors to override</span>
+<span class="sd">            the way in which the instantiated view is configured.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">Building dynamic view [</span><span class="si">%s</span><span class="s">] with elements [</span><span class="si">%s</span><span class="s">]&#39;</span><span class="p">,</span>
+                      <span class="n">declaration</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sub_elements</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">View</span><span class="p">(</span>
+            <span class="c"># The view id allows the user&#39;s customization of this view, if any,</span>
+            <span class="c"># to be persisted when the view is closed and then that persisted</span>
+            <span class="c"># configuration to be applied when the view is next shown:</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">declaration</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+
+            <span class="c"># Include the specified handler:</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span><span class="p">,</span>
+
+            <span class="c"># Build the view out of the sub-elements:</span>
+            <span class="o">*</span><span class="n">sub_elements</span><span class="p">,</span>
+
+            <span class="c"># Include the declaration&#39;s keywords.</span>
+            <span class="o">**</span><span class="n">declaration</span><span class="o">.</span><span class="n">keywords</span>
+        <span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_compose_dynamic_sub_element</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">definition</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a dynamic UI element composed from its contributed parts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span> <span class="s">&#39;Composing dynamic sub-element named [</span><span class="si">%s</span><span class="s">] for [</span><span class="si">%s</span><span class="s">]&#39;</span><span class="p">,</span>
+                      <span class="n">definition</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span>
+
+        <span class="c"># Retrieve the set of elements that make up this sub-element:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dynamic_elements</span><span class="p">(</span> <span class="n">definition</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+
+        <span class="c"># Build the sub-element:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_dynamic_sub_element</span><span class="p">(</span> <span class="n">definition</span><span class="p">,</span> <span class="n">elements</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compose_dynamic_view</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a dynamic view composed from its contributed parts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span> <span class="s">&#39;Composing dynamic view [</span><span class="si">%s</span><span class="s">] for [</span><span class="si">%s</span><span class="s">]&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span>
+
+        <span class="c"># Retrieve the declaration of this dynamic view:</span>
+        <span class="n">declaration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dynamic_view_registry</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
+
+        <span class="c"># Retrieve the set of elements that make up the view:</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dynamic_elements</span><span class="p">(</span> <span class="n">declaration</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+
+        <span class="c"># Build a handler that delegates to the contribution handlers if any</span>
+        <span class="c"># exist:</span>
+        <span class="n">handler</span>  <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dynamic_handlers</span><span class="p">(</span> <span class="n">declaration</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">elements</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">handlers</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">DelegatingHandler</span><span class="p">(</span> <span class="n">sub_handlers</span> <span class="o">=</span> <span class="n">handlers</span> <span class="p">)</span>
+
+        <span class="c"># Build the view:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_dynamic_view</span><span class="p">(</span> <span class="n">declaration</span><span class="p">,</span> <span class="n">elements</span><span class="p">,</span> <span class="n">handler</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_dynamic_elements</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of the current elements meant to go into the</span>
+<span class="sd">            composition of a dynamic view or subelement with the specified</span>
+<span class="sd">            name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># Determine the metadata names used to find the sub-elements included</span>
+        <span class="c"># within this dynamic element:</span>
+        <span class="n">name</span>                <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;_&#39;</span><span class="p">)</span>
+        <span class="n">order_trait_name</span>    <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s</span><span class="s">_order&#39;</span> <span class="o">%</span> <span class="n">name</span>
+        <span class="n">priority_trait_name</span> <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s</span><span class="s">_priority&#39;</span> <span class="o">%</span> <span class="n">name</span>
+
+        <span class="c"># Now find all of the current sub-elements that we will use when</span>
+        <span class="c"># composing our element:</span>
+        <span class="n">all_elements</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_view</span><span class="p">(</span> <span class="n">g</span> <span class="p">)</span>
+                         <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_views</span><span class="p">(</span> <span class="n">klass</span> <span class="o">=</span> <span class="n">ViewSubElement</span> <span class="p">)</span> <span class="p">]</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">all_elements</span>
+                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">order_trait_name</span> <span class="p">)</span> <span class="ow">and</span>
+                        <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">order_trait_name</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="p">]</span>
+
+        <span class="c"># Filter out any overridden elements.  This means taking out the</span>
+        <span class="c"># element with the lower priority whenever two elements have the</span>
+        <span class="c"># same order value:</span>
+        <span class="n">filtered</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elements</span><span class="p">:</span>
+            <span class="n">order</span>    <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">order_trait_name</span> <span class="p">)</span>
+            <span class="n">priority</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">priority_trait_name</span> <span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span>
+            <span class="n">current</span>  <span class="o">=</span> <span class="n">filtered</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span> <span class="n">order</span><span class="p">,</span> <span class="n">e</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">current</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">current_priority</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">current</span><span class="p">,</span> <span class="n">priority_trait_name</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="n">current_priority</span> <span class="o">&lt;</span> <span class="n">priority</span><span class="p">:</span>
+                    <span class="n">filtered</span><span class="p">[</span> <span class="n">order</span> <span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+
+        <span class="c"># Sort the contributed elements by their display ordering values:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="n">filtered</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">ordering</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+        <span class="n">elements</span> <span class="o">=</span> <span class="p">[</span> <span class="n">filtered</span><span class="p">[</span> <span class="n">order</span> <span class="p">]</span> <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">ordering</span> <span class="p">]</span>
+
+        <span class="c"># Replace any dynamic sub-element with their full composition.</span>
+        <span class="c"># NOTE: We can&#39;t do this in the override of &#39;trait_view&#39; because</span>
+        <span class="c"># then we get into infinite loops when a dynamic view subelement is</span>
+        <span class="c"># found as a child:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="n">elements</span> <span class="p">)</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">elements</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">DynamicViewSubElement</span> <span class="p">):</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">elements</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span> <span class="n">i</span> <span class="p">)</span>
+                <span class="n">composed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compose_dynamic_sub_element</span><span class="p">(</span> <span class="n">e</span> <span class="p">)</span>
+                <span class="n">elements</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">composed</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">elements</span>
+
+    <span class="k">def</span> <span class="nf">_get_dynamic_handlers</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">elements</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a list of the handlers associated with the current elements</span>
+<span class="sd">            meant to go into the dynamic view of the specified name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># Determine the metadata name used to declare a handler:</span>
+        <span class="n">name</span>         <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;_&#39;</span><span class="p">)</span>
+        <span class="n">handler_name</span> <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s</span><span class="s">_handler&#39;</span> <span class="o">%</span> <span class="n">name</span>
+
+        <span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">handler_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">elements</span>
+                     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">handler_name</span> <span class="p">)</span> <span class="ow">and</span>
+                        <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">e</span><span class="p">,</span> <span class="n">handler_name</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span> <span class="s">&#39;</span><span class="se">\t</span><span class="s">Found sub-handlers: </span><span class="si">%s</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">handlers</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.has_dynamic_views</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Feb 22, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

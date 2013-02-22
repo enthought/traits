@@ -105,7 +105,7 @@ Python variable names.</p>
 </div>
 <div class="section" id="module-traits.util.clean_strings">
 <span id="clean-strings-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">clean_strings</span></tt> Module<a class="headerlink" href="#module-traits.util.clean_strings" title="Permalink to this headline">¶</a></h2>
-<p>Provides functions that munge strings to avoid characters that would be
+<p>Provides functions that mange strings to avoid characters that would be
 problematic in certain situations.</p>
 <dl class="function">
 <dt id="traits.util.clean_strings.clean_filename">
@@ -132,17 +132,16 @@ False.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dt</strong> (<em>None or datetime.datetime object</em>) &#8211; </li>
+<li><strong>dt</strong> (<em>None or datetime.datetime</em>) &#8211; If None, then the current time is used.</li>
 <li><strong>microseconds</strong> (<em>bool</em>) &#8211; Display microseconds or not.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A string timestamp.</p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>A string timestamp.</p>
 </dd></dl>
 
 <dl class="function">
@@ -232,7 +231,7 @@ you call a method on the object in your code like so:</p>
 <p>with obj passed in as the &#8220;self&#8221; argument.  This indirection allows
 us to dynamically change the implementation of method().</p>
 <p>When you edit a python module and then reload it in a python session,
-any classes within the module are reinstantiated within that module
+any classes within the module are re-instantiated within that module
 and any newly created objects created with a call to module.class()
 will have the behavior and methods of your freshly edited code.  But
 what about objects that are already &#8220;live&#8221; in the system that were
@@ -286,6 +285,24 @@ functions that &#8220;hooked&#8221; into a module...</p>
 </tr>
 </tbody>
 </table>
+<dl class="function">
+<dt id="traits.util.refresh.refresh">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">refresh</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload edited modules &amp; update existing objects to new versions</p>
+<p>Check for edited python files for modules that are live in the
+system.  If one or more are found, reload the module in such a way
+that its new class and function definitions are used by all
+pre-existing objects in the system.  This differs from a simple
+reload(module) which makes no attempt to provide the freshly loaded
+implementations of classes to objects created with a
+previous (outdated) version of the class.</p>
+<p>This feature allows you to make edits to a module while a program is
+running and not have to restart the program to get the new behavior in
+the system.  It is particularly handy when working on large GUI
+applications where you want to update the core code in the system
+without a lengthy restart.</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="traits.util.refresh.Refresher">
 <em class="property">class </em><tt class="descclassname">traits.util.refresh.</tt><tt class="descname">Refresher</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#Refresher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.Refresher" title="Permalink to this definition">¶</a></dt>
@@ -301,28 +318,20 @@ more information.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.util.refresh.filter_classes">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all class objects (not instances mind you)</p>
+<dt id="traits.util.refresh.new_functions_and_classes_for_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">new_functions_and_classes_for_module</tt><big>(</big><em>mod</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#new_functions_and_classes_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.new_functions_and_classes_for_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of the new class within a module</p>
+<p>Note that this reloads the module in the process.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.util.refresh.filter_functions">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all function objects (not instances mind you)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.filter_functions_and_classes">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions_and_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions_and_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions_and_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all class and functions objects.</p>
-<p>Returns two lists: (functions, classes)</p>
-<p>This function is faster than calling filter_functions
-and filter_classes separately because it only traverses
-the entire list once to create a sub-list containing
-both functions and classes.  This (usually much shorter)
-sublist is then traversed again to divide it into functions
-and classes</p>
+<dt id="traits.util.refresh.function_and_class_names_in_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_module</tt><big>(</big><em>mod</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse .py file associated with module for class names (full path).</p>
+<p>The returned list contains class names without their module name
+prefix.  For example if the foo module contains a Bar class, this
+method would return [&#8216;Bar&#8217;]</p>
+<p>Nested classes are not currently supported.</p>
 </dd></dl>
 
 <dl class="function">
@@ -346,20 +355,34 @@ class Bar:
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.util.refresh.function_and_class_names_in_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_module</tt><big>(</big><em>mod</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse .py file associated with module for class names (full path).</p>
-<p>The returned list contains class names without their module name
-prefix.  For example if the foo module contains a Bar class, this
-method would return [&#8216;Bar&#8217;]</p>
-<p>Nested classes are not currently supported.</p>
+<dt id="traits.util.refresh.source_file_for_module">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">source_file_for_module</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#source_file_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.source_file_for_module" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the .py file that corresponds to the module.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.util.refresh.new_functions_and_classes_for_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">new_functions_and_classes_for_module</tt><big>(</big><em>mod</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#new_functions_and_classes_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.new_functions_and_classes_for_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the new class within a module</p>
-<p>Note that this reloads the module in the process.</p>
+<dt id="traits.util.refresh.filter_functions_and_classes">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions_and_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions_and_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions_and_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all class and functions objects.</p>
+<p>Returns two lists: (functions, classes)</p>
+<p>This function is faster than calling filter_functions
+and filter_classes separately because it only traverses
+the entire list once to create a sub-list containing
+both functions and classes.  This (usually much shorter)
+sublist is then traversed again to divide it into functions
+and classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.filter_functions">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all function objects (not instances mind you)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.refresh.filter_classes">
+<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter items for all class objects (not instances mind you)</p>
 </dd></dl>
 
 <dl class="function">
@@ -369,30 +392,6 @@ method would return [&#8216;Bar&#8217;]</p>
 <p>Searches the modules in sys.modules looks for py files that have
 a newer timestamp than the associated pyc file.  Extension modules
 are ignored.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.refresh">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">refresh</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.refresh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reload edited modules &amp; update existing objects to new versions</p>
-<p>Check for edited python files for modules that are live in the
-system.  If one or more are found, reload the module in such a way
-that its new class and function definitions are used by all
-pre-existing objects in the system.  This differs from a simple
-reload(module) which makes no attempt to provide the freshly loaded
-implementations of classes to objects created with a
-previous (outdated) version of the class.</p>
-<p>This feature allows you to make edits to a module while a program is
-running and not have to restart the program to get the new behavior in
-the system.  It is particularly handy when working on large GUI
-applications where you want to update the core code in the system
-without a lengthy restart.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.source_file_for_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">source_file_for_module</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#source_file_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.source_file_for_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the .py file that cooresponds to the module.</p>
 </dd></dl>
 
 </div>
@@ -413,6 +412,13 @@ return either an opened file object or, if specified, a
 full path to the resource.</dd>
 </dl>
 <dl class="function">
+<dt id="traits.util.resource.get_path">
+<tt class="descclassname">traits.util.resource.</tt><tt class="descname">get_path</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.get_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an absolute path for the specified path.</p>
+<p>&#8216;path&#8217; can be a string, class or instance.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="traits.util.resource.create_unique_name">
 <tt class="descclassname">traits.util.resource.</tt><tt class="descname">create_unique_name</tt><big>(</big><em>prefix</em>, <em>names</em>, <em>separator='_'</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#create_unique_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.create_unique_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a name starting with &#8216;prefix&#8217; that is not in &#8216;names&#8217;.</p>
@@ -427,18 +433,24 @@ full path to the resource.</dd>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>project</strong> (<em>string</em>) &#8211; The name of the project to look for the resource in. Can be the name or</li>
-<li><strong>resource_path</strong> (<em>string</em>) &#8211; The path to the file from inside the package. If the file desired is</li>
-<li><strong>alt_path</strong> (<em>string</em>) &#8211; The path to the resource relative to the location of the application&#8217;s
+<li><strong>project</strong> (<em>str</em>) &#8211; The name of the project to look for the resource in. Can be the name or
+a requirement string. Ex: &#8216;MyProject&#8217;, &#8216;MyProject&gt;1.0&#8217;, &#8216;MyProject==1.1&#8217;</li>
+<li><strong>resource_path</strong> (<em>str</em>) &#8211; The path to the file from inside the package. If the file desired is
+MyProject/data/image.jpg, resource_path would be &#8216;data/image.jpg&#8217;.</li>
+<li><strong>alt_path</strong> (<em>str</em>) &#8211; The path to the resource relative to the location of the application&#8217;s
 top-level script (the one with __main__). If this function is called in
 code/scripts/myscript.py and the resource is code/data/image.jpg, the
-alt_path would be &#8216;../data/image.jpg&#8217;. This path is only used if the</li>
+alt_path would be &#8216;../data/image.jpg&#8217;. This path is only used if the
+resource cannot be found using setuptools.</li>
 <li><strong>return_path</strong> (<em>bool</em>) &#8211; Determines whether the function should return a file object or a full
 path to the resource.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (file object or file path) - A file object containing the resource. If return_path is True, &#8216;file&#8217; will be the full path to the resource. If the file is not found or cannot be opened, None is returned.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>file</strong> (<em>file object or file path</em>) &#8211;
+A file object containing the resource. If return_path is True, &#8216;file&#8217;
+will be the full path to the resource. If the file is not found or
+cannot be opened, None is returned.</p>
 </td>
 </tr>
 </tbody>
@@ -454,16 +466,9 @@ resource if alt_path is defined.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.util.resource.get_path">
-<tt class="descclassname">traits.util.resource.</tt><tt class="descname">get_path</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#get_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.get_path" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an absolute path for the specified path.</p>
-<p>&#8216;path&#8217; can be a string, class or instance.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="traits.util.resource.store_resource">
 <tt class="descclassname">traits.util.resource.</tt><tt class="descname">store_resource</tt><big>(</big><em>project</em>, <em>resource_path</em>, <em>filename</em><big>)</big><a class="reference internal" href="../_modules/traits/util/resource.html#store_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.resource.store_resource" title="Permalink to this definition">¶</a></dt>
-<dd><p>Store the content of a resource, given by the name of the projet
+<dd><p>Store the content of a resource, given by the name of the project
 and the path (relative to the root of the project), into a newly
 created file.</p>
 <p>The first two arguments (project and resource_path) are the same
@@ -488,6 +493,96 @@ The return value in always None.</p>
 <dt id="traits.util.toposort.topological_sort">
 <tt class="descclassname">traits.util.toposort.</tt><tt class="descname">topological_sort</tt><big>(</big><em>graph</em><big>)</big><a class="reference internal" href="../_modules/traits/util/toposort.html#topological_sort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.toposort.topological_sort" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the nodes in the graph in topological order.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-traits.util.trait_documenter">
+<span id="trait-documenter-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">trait_documenter</span></tt> Module<a class="headerlink" href="#module-traits.util.trait_documenter" title="Permalink to this headline">¶</a></h2>
+<p>A Trait Documenter
+(Subclassed from the autodoc ClassLevelDocumenter)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">Copyright 2012 by Enthought, Inc</td>
+</tr>
+</tbody>
+</table>
+<dl class="class">
+<dt id="traits.util.trait_documenter.TraitDocumenter">
+<em class="property">class </em><tt class="descclassname">traits.util.trait_documenter.</tt><tt class="descname">TraitDocumenter</tt><big>(</big><em>directive</em>, <em>name</em>, <em>indent=u''</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">sphinx.ext.autodoc.ClassLevelDocumenter</span></tt></p>
+<p>Specialized Documenter subclass for trait attributes.</p>
+<p>The class defines a new documenter that recovers the trait definition
+signature of module level and class level traits.</p>
+<p>To use the documenter, append the module path in the extension
+attribute of the <cite>conf.py</cite>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Using the TraitDocumenter in conjunction with TraitsDoc is not
+advised.</p>
+</div>
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.objtype">
+<tt class="descname">objtype</tt><em class="property"> = 'traitattribute'</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.objtype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.directivetype">
+<tt class="descname">directivetype</tt><em class="property"> = 'attribute'</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.directivetype" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.member_order">
+<tt class="descname">member_order</tt><em class="property"> = 60</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.member_order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.util.trait_documenter.TraitDocumenter.priority">
+<tt class="descname">priority</tt><em class="property"> = 12</em><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.priority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="traits.util.trait_documenter.TraitDocumenter.can_document_member">
+<em class="property">classmethod </em><tt class="descname">can_document_member</tt><big>(</big><em>member</em>, <em>membername</em>, <em>isattr</em>, <em>parent</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.can_document_member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.can_document_member" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the documented member is a trait instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.document_members">
+<tt class="descname">document_members</tt><big>(</big><em>all_members=False</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.document_members"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.document_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trait attributes have no members</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.add_content">
+<tt class="descname">add_content</tt><big>(</big><em>more_content</em>, <em>no_docstring=False</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.add_content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.add_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Never try to get a docstring from the trait.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.import_object">
+<tt class="descname">import_object</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.import_object"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.import_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the Trait object.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Code adapted from autodoc.Documenter.import_object.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.util.trait_documenter.TraitDocumenter.add_directive_header">
+<tt class="descname">add_directive_header</tt><big>(</big><em>sig</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#TraitDocumenter.add_directive_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.TraitDocumenter.add_directive_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the directive header &#8216;attribute&#8217; with the annotation
+option set to the trait definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.util.trait_documenter.setup">
+<tt class="descclassname">traits.util.trait_documenter.</tt><tt class="descname">setup</tt><big>(</big><em>app</em><big>)</big><a class="reference internal" href="../_modules/traits/util/trait_documenter.html#setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.trait_documenter.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the TraitDocumenter in the current sphinx autodoc instance.</p>
 </dd></dl>
 
 </div>
@@ -518,6 +613,7 @@ The return value in always None.</p>
 </li>
 <li><a class="reference internal" href="#module-traits.util.resource"><tt class="docutils literal"><span class="pre">resource</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.toposort"><tt class="docutils literal"><span class="pre">toposort</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.trait_documenter"><tt class="docutils literal"><span class="pre">trait_documenter</span></tt> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -566,7 +662,7 @@ The return value in always None.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Dec 06, 2012.
+      Last updated on Feb 22, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

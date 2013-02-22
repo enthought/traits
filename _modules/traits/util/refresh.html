@@ -1,0 +1,714 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.util.refresh &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.util.refresh</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.util.refresh</h1><div class="highlight"><pre>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="c"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c"># All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c"># Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c"># Author: Enthought, Inc.</span>
+<span class="c"># Description: &lt;Enthought util package component&gt;</span>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; Live updating of objects in system from module reloads.</span>
+
+<span class="sd">    The main function exposed by this module is::</span>
+
+<span class="sd">      refresh(logger=None)</span>
+
+<span class="sd">    Check for edited python files for modules that are live in the</span>
+<span class="sd">    system.  If one or more are found, reload the module in such</span>
+<span class="sd">    a way that its new class and function definitions are used</span>
+<span class="sd">    by all pre-existing objects in the system.  This differs from</span>
+<span class="sd">    a simple reload(module) which makes no attempt to provide the</span>
+<span class="sd">    freshly loaded implementations of classes to objects created</span>
+<span class="sd">    with a previous (outdated) version of the class.</span>
+
+<span class="sd">    This feature allows you to make edits to a module</span>
+<span class="sd">    while a program is running and not have to restart the</span>
+<span class="sd">    program to get the new behavior in the system.  It is</span>
+<span class="sd">    particularly handy when working on large GUI applications</span>
+<span class="sd">    where you want to update the core code in the system</span>
+<span class="sd">    without a lengthy restart.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">        # foo.py</span>
+<span class="sd">        class Foo:</span>
+<span class="sd">            def method(self):</span>
+<span class="sd">                print &quot;hello&quot;</span>
+
+<span class="sd">        $ python</span>
+<span class="sd">        &gt;&gt;&gt; from foo import Foo</span>
+<span class="sd">        &gt;&gt;&gt; obj = Foo()</span>
+<span class="sd">        &gt;&gt;&gt; obj.method()</span>
+<span class="sd">        hello</span>
+<span class="sd">        #&lt;edit file&gt;</span>
+<span class="sd">        # foo.py</span>
+<span class="sd">        class Foo:</span>
+<span class="sd">            def method(self):</span>
+<span class="sd">                print &quot;goodbye&quot;</span>
+<span class="sd">        #&lt;end edit&gt;</span>
+<span class="sd">        &gt;&gt;&gt; import refresh</span>
+<span class="sd">        &gt;&gt;&gt; refresh.refresh()</span>
+<span class="sd">        # obj will now have the behavior of the updated Foo classes.</span>
+<span class="sd">        &gt;&gt;&gt; obj.method()</span>
+<span class="sd">        goodbye</span>
+
+<span class="sd">    How It works</span>
+<span class="sd">    ------------</span>
+
+<span class="sd">    In python, classes and functions are mutable objects.  Importing</span>
+<span class="sd">    a module instantiates an instance of all the classes and functions</span>
+<span class="sd">    defined in the module.</span>
+
+<span class="sd">    Any objects instantiated from the classes have a obj.__class__</span>
+<span class="sd">    attribute the points to the class they are based upon.  When</span>
+<span class="sd">    you call a method on the object in your code like so::</span>
+
+<span class="sd">        obj.method()</span>
+
+<span class="sd">    python actually calls the method of the __class__ object like so::</span>
+
+<span class="sd">        obj.__class__.method(obj)</span>
+
+<span class="sd">    with obj passed in as the &quot;self&quot; argument.  This indirection allows</span>
+<span class="sd">    us to dynamically change the implementation of method().</span>
+
+<span class="sd">    When you edit a python module and then reload it in a python session,</span>
+<span class="sd">    any classes within the module are re-instantiated within that module</span>
+<span class="sd">    and any newly created objects created with a call to module.class()</span>
+<span class="sd">    will have the behavior and methods of your freshly edited code.  But</span>
+<span class="sd">    what about objects that are already &quot;live&quot; in the system that were</span>
+<span class="sd">    created with a previous version of module.class?  Their __class__</span>
+<span class="sd">    attribute is still pointing at the old version of the class, and so</span>
+<span class="sd">    they will have the old behavior.  The quickest way to fix this is</span>
+<span class="sd">    to find the old class object in the system and replace its attributes</span>
+<span class="sd">    and methods with those of the freshly imported class.  This will</span>
+<span class="sd">    instantly give all old objects in the system the new behavior.</span>
+
+<span class="sd">    Functions are updated in a similar way.  All old versions of</span>
+<span class="sd">    functions have their internals (func_code, etc.) replaced with</span>
+<span class="sd">    those of the freshly loaded implementation.</span>
+
+<span class="sd">    Caveats</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    Their are multiple issues with trying insert a new class definition</span>
+<span class="sd">    back into classes.  Doing this clobbers and class scope variables that</span>
+<span class="sd">    were set at runtime.  Also, this implementation cleans out old classes</span>
+<span class="sd">    completely before inserting new method/attributes.  That means that</span>
+<span class="sd">    any methods dynamically added to a class are also clobbered.  There</span>
+<span class="sd">    are ways to potentially get around this, but it isn&#39;t clear that</span>
+<span class="sd">    it is worth the effort (at least for Enthought applications) as such</span>
+<span class="sd">    tricks are not used very often in classes that are often edited.  When</span>
+<span class="sd">    you do (or anytime you notice suspicious behavior), restart your</span>
+<span class="sd">    application.</span>
+
+<span class="sd">    Enthought people: While refresh() can save you time for working with</span>
+<span class="sd">    applications, ALWAYS do a fresh restart and check that everything is</span>
+<span class="sd">    working properly before checking edited code in.</span>
+
+<span class="sd">    Questions</span>
+<span class="sd">    ---------</span>
+<span class="sd">    * Check out why traits classes aren&#39;t cleaned up correctly.</span>
+
+<span class="sd">    * Should we get rid of functions/classes that were in old version of module</span>
+<span class="sd">      but aren&#39;t in new one?  This could prevent problems with stale functions</span>
+<span class="sd">      left around that really weren&#39;t meant to be, but it might also delete</span>
+<span class="sd">      functions that &quot;hooked&quot; into a module...</span>
+
+<span class="sd">      fix me: I think we should to prevent refactor errors.</span>
+
+<span class="sd">    :copyright: 2005, Enthought, Inc.</span>
+<span class="sd">    :author:    Eric Jones</span>
+<span class="sd">    :license:   BSD</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c"># General Imports</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">gc</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">compiler</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">UnboundMethodType</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">ClassType</span>
+<span class="kn">import</span> <span class="nn">linecache</span>
+
+
+<span class="c">#############################################################################</span>
+<span class="c"># Public functions</span>
+<span class="c">#############################################################################</span>
+
+<div class="viewcode-block" id="refresh"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.refresh">[docs]</a><span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Reload edited modules &amp; update existing objects to new versions</span>
+
+<span class="sd">        Check for edited python files for modules that are live in the</span>
+<span class="sd">        system.  If one or more are found, reload the module in such a way</span>
+<span class="sd">        that its new class and function definitions are used by all</span>
+<span class="sd">        pre-existing objects in the system.  This differs from a simple</span>
+<span class="sd">        reload(module) which makes no attempt to provide the freshly loaded</span>
+<span class="sd">        implementations of classes to objects created with a</span>
+<span class="sd">        previous (outdated) version of the class.</span>
+
+<span class="sd">        This feature allows you to make edits to a module while a program is</span>
+<span class="sd">        running and not have to restart the program to get the new behavior in</span>
+<span class="sd">        the system.  It is particularly handy when working on large GUI</span>
+<span class="sd">        applications where you want to update the core code in the system</span>
+<span class="sd">        without a lengthy restart.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">refresher</span> <span class="o">=</span> <span class="n">Refresher</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+    <span class="n">refresher</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+<span class="c">#############################################################################</span>
+<span class="c"># Public classes</span>
+<span class="c">#############################################################################</span>
+</div>
+<div class="viewcode-block" id="Refresher"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.Refresher">[docs]</a><span class="k">class</span> <span class="nc">Refresher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Implementation of refresh().  See referesher.refresh() function for</span>
+<span class="sd">        more information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a Refesher class. If logger is None, logging.root is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+
+    <span class="c">#########################################################################</span>
+    <span class="c"># Public Refresh interface</span>
+    <span class="c">#########################################################################</span>
+
+<div class="viewcode-block" id="Refresher.refresh"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.Refresher.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Find all out-of-date modules and reload functions and classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># 1. Find outdated modules in sys.modules with out_of_date_modules()</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="n">out_of_date_modules</span><span class="p">()</span>
+
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">modules</span><span class="p">:</span>
+            <span class="c"># If there aren&#39;t any out of date modules, don&#39;t do anything...</span>
+            <span class="k">return</span>
+
+        <span class="c"># 2. find all the functions and clases in the system</span>
+        <span class="c">#    Note: Do this before you do any reloads!  Some of the</span>
+        <span class="c">#          sub-functions rely on reloaded functions not being</span>
+        <span class="c">#          in this list.</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_objects</span><span class="p">()</span>
+        <span class="n">all_functions</span><span class="p">,</span> <span class="n">all_classes</span> <span class="o">=</span> <span class="n">filter_functions_and_classes</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+
+            <span class="c"># 3. Find classes and functions that need to be updated.</span>
+            <span class="c">#    Note: This causes a reload of the module.</span>
+            <span class="n">updated_functions</span><span class="p">,</span> <span class="n">updated_classes</span> <span class="o">=</span> \
+                     <span class="n">new_functions_and_classes_for_module</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">updated_functions</span> <span class="ow">or</span> <span class="n">updated_classes</span><span class="p">:</span>
+                <span class="c"># 4. now update the functions and classes affected by the refresh</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s">&quot;Refresh module: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">module</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Refresh file: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">module</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_functions</span><span class="p">(</span><span class="n">all_functions</span><span class="p">,</span> <span class="n">updated_functions</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_classes</span><span class="p">(</span><span class="n">all_classes</span><span class="p">,</span> <span class="n">updated_classes</span><span class="p">)</span>
+
+            <span class="c"># 5. Clear out the linecache used by some shells (pycrust, idle)</span>
+            <span class="c">#    because we just updated some modules, and they will report</span>
+            <span class="c">#    the wrong line numbers on exceptions.</span>
+            <span class="n">linecache</span><span class="o">.</span><span class="n">clearcache</span><span class="p">()</span>
+
+    <span class="c">#########################################################################</span>
+    <span class="c"># Private interface</span>
+    <span class="c">#########################################################################</span>
+</div>
+    <span class="k">def</span> <span class="nf">_refresh_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_classes</span><span class="p">,</span> <span class="n">updated_classes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Replace classes from all_classes with implementation found in</span>
+<span class="sd">            updated_classes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">new_class</span> <span class="ow">in</span> <span class="n">updated_classes</span><span class="p">:</span>
+            <span class="c"># are their any classes with the same name and module?</span>
+            <span class="n">matched_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">klass</span> <span class="k">for</span> <span class="n">klass</span> <span class="ow">in</span> <span class="n">all_classes</span> <span class="k">if</span>
+                                    <span class="n">klass</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="n">new_class</span><span class="o">.</span><span class="n">__name__</span>
+                                <span class="ow">and</span> <span class="n">klass</span><span class="o">.</span><span class="n">__module__</span> <span class="o">==</span> <span class="n">new_class</span><span class="o">.</span><span class="n">__module__</span><span class="p">]</span>
+
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matched_classes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c"># if no old versions are found, don&#39;t do anything...</span>
+                <span class="k">pass</span>
+
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">matched_classes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+
+                <span class="c"># plug reloaded methods/attrs from new class into old class</span>
+                <span class="k">for</span> <span class="n">old_class</span> <span class="ow">in</span> <span class="n">matched_classes</span><span class="p">:</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;    </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">old_class</span><span class="p">)</span>
+
+                    <span class="c"># We delete everything previously defined in the class.</span>
+                    <span class="c"># While this could delete static class scope variables</span>
+                    <span class="c"># set at runtime or methods dynamically attached to the</span>
+                    <span class="c"># class at runtime, it also cleans out any</span>
+                    <span class="c"># methods/attributes from previous class definitions.</span>
+                    <span class="c"># This prevents the chance of external code erroneously</span>
+                    <span class="c"># calling a method from the old class definition that</span>
+                    <span class="c"># isn&#39;t defined in the reloaded class.</span>
+                    <span class="c">#</span>
+                    <span class="c"># fixme: Revisit this, as there are ways to check the old</span>
+                    <span class="c">#        pyc files for methods that were defined in the</span>
+                    <span class="c">#        class and comparing that to the actual old class</span>
+                    <span class="c">#        to identify dynamically attached methods that</span>
+                    <span class="c">#        might need to remain attached.</span>
+
+                    <span class="n">new_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_class</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="n">old_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">old_class</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+                    <span class="c"># attributes in old_class that aren&#39;t in new class.</span>
+                    <span class="c"># and get rid of them.</span>
+                    <span class="n">clobber_attrs</span> <span class="o">=</span> <span class="n">old_attrs</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="n">new_attrs</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">clobber_attrs</span><span class="p">:</span>
+                        <span class="nb">delattr</span><span class="p">(</span><span class="n">old_class</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
+                    <span class="c"># some class __dict__ objects are dictproxy objects that</span>
+                    <span class="c"># don&#39;t support update and del correctly.  The following</span>
+                    <span class="c"># won&#39;t work.</span>
+                    <span class="c"># old_class.__dict__.update(new_class.__dict__)</span>
+
+                    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">new_attrs</span><span class="p">:</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">old_class</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span> <span class="ow">and</span>
+                            <span class="n">attr</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&quot;__dict__&quot;</span><span class="p">,</span> <span class="s">&quot;__doc__&quot;</span><span class="p">]):</span>
+                            <span class="c"># new style classes return __dict__ as an attr</span>
+                            <span class="c"># and it can&#39;t be updated.</span>
+                            <span class="k">continue</span>
+
+                        <span class="n">new_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">new_class</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                        <span class="n">old_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">old_class</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">old_value</span><span class="p">,</span> <span class="n">UnboundMethodType</span><span class="p">)</span> <span class="ow">and</span>
+                            <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_value</span><span class="p">,</span> <span class="n">UnboundMethodType</span><span class="p">)):</span>
+
+                            <span class="c"># ensure that old_value is a method defined on</span>
+                            <span class="c"># old_class and not one of its base classes before</span>
+                            <span class="c"># we change it.</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">old_value</span><span class="o">.</span><span class="n">im_class</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span>
+                                <span class="n">old_class</span><span class="o">.</span><span class="n">__name__</span> <span class="ow">and</span>
+                                <span class="n">old_value</span><span class="o">.</span><span class="n">im_class</span><span class="o">.</span><span class="n">__module__</span> <span class="o">==</span>
+                                <span class="n">old_class</span><span class="o">.</span><span class="n">__module__</span><span class="p">):</span>
+
+                                <span class="c"># when replacing a method with a new method,</span>
+                                <span class="c"># update the old methods innards instead of</span>
+                                <span class="c"># replacing it directly in the dict.  This</span>
+                                <span class="c"># helps lets trait properties (and probably</span>
+                                <span class="c"># other things) work correctly.</span>
+
+                                <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;        </span><span class="si">%s</span><span class="s"> method updated&quot;</span> <span class="o">%</span> <span class="n">attr</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                                <span class="c"># update the functions innards.</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">(</span><span class="n">old_value</span><span class="o">.</span><span class="n">im_func</span><span class="p">,</span>
+                                                      <span class="n">new_value</span><span class="o">.</span><span class="n">im_func</span><span class="p">)</span>
+
+                            <span class="k">else</span><span class="p">:</span>
+
+                                <span class="c"># The old_class.attr method was on a base</span>
+                                <span class="c"># class.  Don&#39;t replace its innards.  Instead</span>
+                                <span class="c"># overwrite it in the dict.</span>
+                                <span class="n">msg</span> <span class="o">=</span> <span class="s">&quot;        </span><span class="si">%s</span><span class="s"> updated&quot;</span> <span class="o">%</span> <span class="n">attr</span>
+                                <span class="nb">setattr</span><span class="p">(</span><span class="n">old_class</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;        </span><span class="si">%s</span><span class="s"> updated&quot;</span> <span class="o">%</span> <span class="n">attr</span><span class="p">)</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">old_class</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+
+                    <span class="c"># The old class is now equivalent to the new class</span>
+                    <span class="c"># definition.  Overwrite the new class definition with</span>
+                    <span class="c"># the old one so that the new one becomes unused and can</span>
+                    <span class="c"># be garbage collected.  While not entirely necessary, it</span>
+                    <span class="c"># does keep things tidier.</span>
+                    <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">new_class</span><span class="o">.</span><span class="n">__module__</span><span class="p">]</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">new_class</span><span class="o">.</span><span class="n">__name__</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old_class</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_refresh_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_functions</span><span class="p">,</span> <span class="n">updated_functions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Replace functions from all_functions with implementation found in</span>
+<span class="sd">            updated_functions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">new_function</span> <span class="ow">in</span> <span class="n">updated_functions</span><span class="p">:</span>
+
+            <span class="c"># Skip new_function if it doesn&#39;t have a name...</span>
+            <span class="c">#</span>
+            <span class="c"># note: added check for __name__ because a generator</span>
+            <span class="c"># (envisage.plugins.text_editor.editor.text_editor._id_generator)</span>
+            <span class="c"># was sneaking through as new_function [ I believe because of the</span>
+            <span class="c"># reassignment of it].  Doesn&#39;t look like there is an intelligent</span>
+            <span class="c"># way to handle this...</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">new_function</span><span class="p">,</span><span class="s">&#39;__name__&#39;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="c"># are their any functions with the same name and module?</span>
+            <span class="n">matched_functions</span> <span class="o">=</span> <span class="p">[</span><span class="n">func</span> <span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">all_functions</span> <span class="k">if</span>
+                                   <span class="n">func</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="n">new_function</span><span class="o">.</span><span class="n">__name__</span> <span class="ow">and</span>
+                                   <span class="n">func</span><span class="o">.</span><span class="n">__module__</span> <span class="o">==</span> <span class="n">new_function</span><span class="o">.</span><span class="n">__module__</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">old_function</span> <span class="ow">in</span> <span class="n">matched_functions</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;    </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">old_function</span><span class="p">)</span>
+
+                <span class="c"># replace old function contents with new function contents</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">(</span><span class="n">old_function</span><span class="p">,</span> <span class="n">new_function</span><span class="p">)</span>
+
+                <span class="c"># The old function is now equivalent to the new function</span>
+                <span class="c"># definition.  Overwrite the new definition with the old</span>
+                <span class="c"># one so that the new one becomes unused and can</span>
+                <span class="c"># be garbage collected.  While not entirely necessary, it</span>
+                <span class="c"># does keep things tidier.</span>
+                <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">new_function</span><span class="o">.</span><span class="n">__module__</span><span class="p">]</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">new_function</span><span class="o">.</span><span class="n">__name__</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old_function</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_function</span><span class="p">,</span> <span class="n">new_function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Update the old_function to have the same implementation</span>
+<span class="sd">            code as new_function.  old_function is modified inplace !</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c"># fix me: Does this handle closures correctly? Can we?</span>
+        <span class="c">#         readonly: func_closure, func_globals</span>
+        <span class="n">old_function</span><span class="o">.</span><span class="n">func_code</span> <span class="o">=</span> <span class="n">new_function</span><span class="o">.</span><span class="n">func_code</span>
+        <span class="n">old_function</span><span class="o">.</span><span class="n">func_defaults</span> <span class="o">=</span> <span class="n">new_function</span><span class="o">.</span><span class="n">func_defaults</span>
+        <span class="n">old_function</span><span class="o">.</span><span class="n">func_dict</span> <span class="o">=</span> <span class="n">new_function</span><span class="o">.</span><span class="n">func_dict</span>
+        <span class="n">old_function</span><span class="o">.</span><span class="n">func_doc</span> <span class="o">=</span> <span class="n">new_function</span><span class="o">.</span><span class="n">func_doc</span>
+
+
+<span class="c">#############################################################################</span>
+<span class="c"># Functions for finding class and function definitions within a module.</span>
+<span class="c">#############################################################################</span>
+</div>
+<div class="viewcode-block" id="new_functions_and_classes_for_module"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.new_functions_and_classes_for_module">[docs]</a><span class="k">def</span> <span class="nf">new_functions_and_classes_for_module</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return a list of the new class within a module</span>
+
+<span class="sd">        Note that this reloads the module in the process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># fix me: Is it really valuable to use this parsing technique</span>
+    <span class="c">#         instead of just searching the modules namespace for</span>
+    <span class="c">#         classes?  Perhaps so to prevent getting old classes...</span>
+    <span class="n">function_names</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">function_and_class_names_in_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+
+    <span class="c"># fixme: The try/except here was added because something strange</span>
+    <span class="c">#        is happening with Envisage *plugin_definition.py files.</span>
+    <span class="c">#        Python reports that they are not in sys.modules when you</span>
+    <span class="c">#        try to reload() them, but if you look in sys.modules, they</span>
+    <span class="c">#        are there.  I&#39;m guessing that this has something to do</span>
+    <span class="c">#        with Martin&#39;s special import hook for loading modules, but</span>
+    <span class="c">#        I am not sure.  I&#39;ll talk with Martin and try to fix this</span>
+    <span class="c">#        correctly instead of handling it with this hack.</span>
+
+    <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span>
+
+    <span class="n">ignore_as_plugin</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">ignore_as_instance</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">fnmatch</span><span class="o">,</span> <span class="nn">types</span>
+        <span class="k">if</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="s">&quot;*plugin_definition*&quot;</span><span class="p">):</span>
+            <span class="c"># fixme: This is soo ugly I feel good blaming it on Martin...</span>
+            <span class="c"># fixme: this really should be logged.</span>
+            <span class="c">#print &quot;ignoring plugin definition: &quot;, mod.__name__</span>
+            <span class="n">ignore_as_plugin</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span> <span class="ow">is</span> <span class="n">types</span><span class="o">.</span><span class="n">InstanceType</span><span class="p">):</span>
+            <span class="c"># this is added to get around scipy&#39;s delayed import.</span>
+            <span class="c"># fixme: this really should be logged.</span>
+            <span class="c">#print &#39;not reloading because it is instance type:&#39;, mod</span>
+            <span class="n">ignore_as_instance</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">reload</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c"># ignore plugin_definition failures.  Report all others, but</span>
+        <span class="c"># continue.</span>
+        <span class="kn">import</span> <span class="nn">fnmatch</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">fnmatch</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="s">&quot;*plugin_definition*&quot;</span><span class="p">):</span>
+            <span class="c">#print &quot;unexpected reload error.  Module: %s&quot;, mod.__name__</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ignore_as_plugin</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="c"># logging</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ignore_as_plugin</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Refresh ignoring plugin (ok): </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">mod</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ignore_as_instance</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s">&quot;Refresh ignoring Instance (ok): </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">mod</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">ignore_as_plugin</span> <span class="ow">or</span> <span class="n">ignore_as_instance</span><span class="p">):</span>
+        <span class="n">function_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">function_names</span><span class="p">]</span>
+        <span class="n">class_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">function_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">class_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">return</span> <span class="n">function_list</span><span class="p">,</span> <span class="n">class_list</span>
+
+</div>
+<div class="viewcode-block" id="function_and_class_names_in_module"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.function_and_class_names_in_module">[docs]</a><span class="k">def</span> <span class="nf">function_and_class_names_in_module</span><span class="p">(</span><span class="n">mod</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Parse .py file associated with module for class names (full path).</span>
+
+<span class="sd">        The returned list contains class names without their module name</span>
+<span class="sd">        prefix.  For example if the foo module contains a Bar class, this</span>
+<span class="sd">        method would return [&#39;Bar&#39;]</span>
+
+<span class="sd">        Nested classes are not currently supported.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">functions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">source_file_for_module</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">file_name</span><span class="p">:</span>
+        <span class="n">functions</span><span class="p">,</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">function_and_class_names_in_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">functions</span><span class="p">,</span> <span class="n">classes</span>
+</div>
+<div class="viewcode-block" id="function_and_class_names_in_file"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.function_and_class_names_in_file">[docs]</a><span class="k">def</span> <span class="nf">function_and_class_names_in_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find the names of classes contained within a file.</span>
+
+<span class="sd">        fix me: This currently only finds top level classes.  Nested</span>
+<span class="sd">        classes are ignored. ?? Does this really matter much ??</span>
+
+<span class="sd">        Example::</span>
+
+<span class="sd">            # foo.py</span>
+<span class="sd">            class Foo:</span>
+<span class="sd">                pass</span>
+
+<span class="sd">            class Bar:</span>
+<span class="sd">                pass</span>
+
+<span class="sd">            &gt;&gt;&gt; import traits.util.refresh</span>
+<span class="sd">            &gt;&gt;&gt; refresh.function_and_class_names_in_file(&#39;foo.py&#39;)</span>
+<span class="sd">            [], [&#39;Foo&#39;, &#39;Bar&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mod_ast</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">parseFile</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="n">class_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">function_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">mod_ast</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">__class__</span> <span class="ow">is</span> <span class="n">compiler</span><span class="o">.</span><span class="n">ast</span><span class="o">.</span><span class="n">Class</span><span class="p">:</span>
+            <span class="n">class_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">node</span><span class="o">.</span><span class="n">__class__</span> <span class="ow">is</span> <span class="n">compiler</span><span class="o">.</span><span class="n">ast</span><span class="o">.</span><span class="n">Function</span><span class="p">:</span>
+            <span class="n">function_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">function_names</span><span class="p">,</span> <span class="n">class_names</span>
+</div>
+<div class="viewcode-block" id="source_file_for_module"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.source_file_for_module">[docs]</a><span class="k">def</span> <span class="nf">source_file_for_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Find the .py file that corresponds to the module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">module</span><span class="p">,</span><span class="s">&#39;__file__&#39;</span><span class="p">):</span>
+        <span class="n">base</span><span class="p">,</span><span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="n">base</span><span class="o">+</span><span class="s">&#39;.py&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">file_name</span>
+
+<span class="c">#############################################################################</span>
+<span class="c"># Functions for filtering function and class objects out of a list.</span>
+<span class="c">#############################################################################</span>
+</div>
+<div class="viewcode-block" id="filter_functions_and_classes"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.filter_functions_and_classes">[docs]</a><span class="k">def</span> <span class="nf">filter_functions_and_classes</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Filter items for all class and functions objects.</span>
+
+<span class="sd">        Returns two lists: (functions, classes)</span>
+
+<span class="sd">        This function is faster than calling filter_functions</span>
+<span class="sd">        and filter_classes separately because it only traverses</span>
+<span class="sd">        the entire list once to create a sub-list containing</span>
+<span class="sd">        both functions and classes.  This (usually much shorter)</span>
+<span class="sd">        sublist is then traversed again to divide it into functions</span>
+<span class="sd">        and classes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># fix me: inspect.isclass checks for __bases__.  Do we need</span>
+    <span class="c">#         to do this for python classes, or is this only</span>
+    <span class="c">#         needed for classes declared in C?  Adding bases</span>
+    <span class="c">#         finds about 6000 classes compared to 2000 from</span>
+    <span class="c">#         the envisage interpreter.</span>
+    <span class="n">sub_items</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span>
+                    <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">FunctionType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="nb">type</span><span class="p">))</span>
+                    <span class="c">#or hasattr(item,&#39;__bases__&#39;)</span>
+                <span class="p">]</span>
+
+    <span class="n">functions</span> <span class="o">=</span> <span class="n">filter_functions</span><span class="p">(</span><span class="n">sub_items</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">filter_classes</span><span class="p">(</span><span class="n">sub_items</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">functions</span><span class="p">,</span> <span class="n">classes</span>
+</div>
+<div class="viewcode-block" id="filter_functions"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.filter_functions">[docs]</a><span class="k">def</span> <span class="nf">filter_functions</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Filter items for all function objects (not instances mind you)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">)]</span>
+</div>
+<div class="viewcode-block" id="filter_classes"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.filter_classes">[docs]</a><span class="k">def</span> <span class="nf">filter_classes</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Filter items for all class objects (not instances mind you)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="n">ClassType</span><span class="p">,</span> <span class="nb">type</span><span class="p">))]</span>
+
+<span class="c">#############################################################################</span>
+<span class="c"># Functions for searching for modules that have been updated on disk.</span>
+<span class="c">#############################################################################</span>
+</div>
+<div class="viewcode-block" id="out_of_date_modules"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.refresh.out_of_date_modules">[docs]</a><span class="k">def</span> <span class="nf">out_of_date_modules</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Find loaded modules that have been modified since they were loaded.</span>
+
+<span class="sd">        Searches the modules in sys.modules looks for py files that have</span>
+<span class="sd">        a newer timestamp than the associated pyc file.  Extension modules</span>
+<span class="sd">        are ignored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">out_of_date</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">mod_name</span><span class="p">,</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">mod_name</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span><span class="s">&#39;__file__&#39;</span><span class="p">):</span>
+            <span class="n">base</span><span class="p">,</span><span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># fixme: why would this happen...</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c"># pyd, dll, and so files are all ignored</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;.pyc&#39;</span><span class="p">,</span><span class="s">&#39;.py&#39;</span><span class="p">]:</span>
+            <span class="n">py_time</span> <span class="o">=</span> <span class="n">_timestamp</span><span class="p">(</span><span class="n">base</span><span class="o">+</span><span class="s">&#39;.py&#39;</span><span class="p">)</span>
+            <span class="n">pyc_time</span> <span class="o">=</span> <span class="n">_timestamp</span><span class="p">(</span><span class="n">base</span><span class="o">+</span><span class="s">&#39;.pyc&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">py_time</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># strange case where someone has deleted the py file.</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">pyc_time</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="c"># case where pyc file has been deleted.</span>
+                    <span class="n">out_of_date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">pyc_time</span> <span class="o">&lt;=</span> <span class="n">py_time</span><span class="p">:</span>
+                    <span class="c"># module out of date</span>
+                    <span class="n">out_of_date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out_of_date</span>
+</div>
+<span class="k">def</span> <span class="nf">_timestamp</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the file modification time as a Long.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="nb">long</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">st_mtime</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.util.refresh</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Feb 22, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -59,10 +59,46 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="category-module">
-<h1><tt class="xref py py-mod docutils literal"><span class="pre">category</span></tt> Module<a class="headerlink" href="#category-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-traits.category">
+<span id="category-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">category</span></tt> Module<a class="headerlink" href="#module-traits.category" title="Permalink to this headline">¶</a></h1>
+<p>Adds a &#8220;category&#8221; capability to Traits-based classes, similar to that
+provided by the Cocoa (Objective-C) environment for the Macintosh.</p>
+<p>You can use categories to extend an existing HasTraits class, as an
+alternative to subclassing. An advantage of categories over subclassing is
+that you can access the added members on instances of the original class,
+without having to change them to instances of a subclass. Unlike
+subclassing, categories do not allow overriding trait attributes.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="traits.category.MetaCategory">
+<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">MetaCategory</tt><a class="reference internal" href="../_modules/traits/category.html#MetaCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.category.MetaCategoryObject">
+<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">MetaCategoryObject</tt><big>(</big><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><big>)</big><a class="reference internal" href="../_modules/traits/category.html#MetaCategoryObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategoryObject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="traits.category.Category">
+<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">Category</tt><a class="reference internal" href="../_modules/traits/category.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for defining &#8220;category&#8221; extensions to existing classes.</p>
+<p>To define a class as a category, specify &#8220;Category,&#8221; followed by the name
+of the base class name in the base class list.</p>
+<p>The following example demonstrates defining a category:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Category</span>
+
+<span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;Base x&quot;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;Base y&quot;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">BaseExtra</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;BaseExtra z&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 </div>
 
@@ -133,7 +169,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Dec 06, 2012.
+      Last updated on Feb 22, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
