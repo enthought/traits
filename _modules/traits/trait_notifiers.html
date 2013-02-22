@@ -1,0 +1,943 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.trait_notifiers &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.trait_notifiers</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.trait_notifiers</h1><div class="highlight"><pre>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="c">#</span>
+<span class="c">#  Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c">#  All rights reserved.</span>
+<span class="c">#</span>
+<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c">#</span>
+<span class="c">#  Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c">#  Author:        David C. Morrill</span>
+<span class="c">#  Original Date: 06/21/2002</span>
+<span class="c">#</span>
+<span class="c">#  Refactored into a separate module: 07/04/2003</span>
+<span class="c">#</span>
+<span class="c">#------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines the classes needed to implement and support the Traits change</span>
+<span class="sd">    notification mechanism.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Imports:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">weakref</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span> <span class="k">as</span> <span class="n">thread_local</span>
+
+<span class="kn">from</span> <span class="nn">threading</span> \
+    <span class="kn">import</span> <span class="n">Thread</span>
+
+<span class="kn">from</span> <span class="nn">thread</span> \
+    <span class="kn">import</span> <span class="n">get_ident</span>
+
+<span class="kn">from</span> <span class="nn">types</span> \
+    <span class="kn">import</span> <span class="n">MethodType</span>
+
+<span class="kn">from</span> <span class="nn">.trait_base</span> \
+    <span class="kn">import</span> <span class="n">Uninitialized</span>
+
+<span class="kn">from</span> <span class="nn">.trait_errors</span> \
+    <span class="kn">import</span> <span class="n">TraitNotificationError</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Global Data:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<span class="c"># The thread ID for the user interface thread</span>
+<span class="n">ui_thread</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="c"># The handler for notifications that must be run on the UI thread</span>
+<span class="n">ui_handler</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Sets up the user interface thread handler:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="set_ui_handler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.set_ui_handler">[docs]</a><span class="k">def</span> <span class="nf">set_ui_handler</span> <span class="p">(</span> <span class="n">handler</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sets up the user interface thread handler.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">ui_handler</span><span class="p">,</span> <span class="n">ui_thread</span>
+
+    <span class="n">ui_handler</span> <span class="o">=</span> <span class="n">handler</span>
+    <span class="n">ui_thread</span>  <span class="o">=</span> <span class="n">get_ident</span><span class="p">()</span>
+</div>
+<span class="k">def</span> <span class="nf">ui_dispatch</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="n">get_ident</span><span class="p">()</span> <span class="o">==</span> <span class="n">ui_thread</span><span class="p">:</span>
+        <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ui_handler</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;NotificationExceptionHandlerState&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="NotificationExceptionHandlerState"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandlerState">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandlerState</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">reraise_exceptions</span><span class="p">,</span> <span class="n">locked</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>            <span class="o">=</span> <span class="n">handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reraise_exceptions</span> <span class="o">=</span> <span class="n">reraise_exceptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locked</span>             <span class="o">=</span> <span class="n">locked</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;NotificationExceptionHandler&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="NotificationExceptionHandler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandler">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandler</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span>   <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span>  <span class="o">=</span> <span class="n">thread_local</span><span class="p">()</span>
+
+<span class="c">#-- Private Methods ------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_push_handler</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">reraise_exceptions</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+                              <span class="n">main</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">locked</span> <span class="o">=</span> <span class="bp">False</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pushes a new traits notification exception handler onto the stack,</span>
+<span class="sd">            making it the new exception handler. Returns a</span>
+<span class="sd">            NotificationExceptionHandlerState object describing the previous</span>
+<span class="sd">            exception handler.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            handler : handler</span>
+<span class="sd">                The new exception handler, which should be a callable or</span>
+<span class="sd">                None. If None (the default), then the default traits</span>
+<span class="sd">                notification exception handler is used. If *handler* is not</span>
+<span class="sd">                None, then it must be a callable which can accept four</span>
+<span class="sd">                arguments: object, trait_name, old_value, new_value.</span>
+<span class="sd">            reraise_exceptions : bool</span>
+<span class="sd">                Indicates whether exceptions should be reraised after the</span>
+<span class="sd">                exception handler has executed. If True, exceptions will be</span>
+<span class="sd">                re-raised after the specified handler has been executed.</span>
+<span class="sd">                The default value is False.</span>
+<span class="sd">            main : bool</span>
+<span class="sd">                Indicates whether the caller represents the main application</span>
+<span class="sd">                thread. If True, then the caller&#39;s exception handler is</span>
+<span class="sd">                made the default handler for any other threads that are</span>
+<span class="sd">                created. Note that a thread can explicitly set its own</span>
+<span class="sd">                exception handler if desired. The *main* flag is provided to</span>
+<span class="sd">                make it easier to set a global application policy without</span>
+<span class="sd">                having to explicitly set it for each thread. The default</span>
+<span class="sd">                value is False.</span>
+<span class="sd">            locked : bool</span>
+<span class="sd">                Indicates whether further changes to the Traits notification</span>
+<span class="sd">                exception handler state should be allowed. If True, then</span>
+<span class="sd">                any subsequent calls to _push_handler() or _pop_handler() for</span>
+<span class="sd">                that thread will raise a TraitNotificationError. The default</span>
+<span class="sd">                value is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handlers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_lock</span><span class="p">(</span> <span class="n">handlers</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span>
+        <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">NotificationExceptionHandlerState</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span>
+                                                  <span class="n">reraise_exceptions</span><span class="p">,</span> <span class="n">locked</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">main</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span> <span class="o">=</span> <span class="n">handlers</span>
+
+        <span class="k">return</span> <span class="n">handlers</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_pop_handler</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pops the traits notification exception handler stack, restoring</span>
+<span class="sd">            the exception handler in effect prior to the most recent</span>
+<span class="sd">            _push_handler() call. If the stack is empty or locked, a</span>
+<span class="sd">            TraitNotificationError exception is raised.</span>
+
+<span class="sd">            Note that each thread has its own independent stack. See the</span>
+<span class="sd">            description of the _push_handler() method for more information on</span>
+<span class="sd">            this.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">handlers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handlers</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_lock</span><span class="p">(</span> <span class="n">handlers</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">handlers</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">handlers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                      <span class="s">&#39;Attempted to pop an empty traits notification exception &#39;</span>
+                      <span class="s">&#39;handler stack.&#39;</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_handle_exception</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span>  <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles a traits notification exception using the handler defined</span>
+<span class="sd">            by the topmost stack entry for the corresponding thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">excp_class</span><span class="p">,</span> <span class="n">excp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">handler_info</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_handlers</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">handler_info</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">handler_info</span><span class="o">.</span><span class="n">reraise_exceptions</span> <span class="ow">or</span>
+            <span class="nb">isinstance</span><span class="p">(</span> <span class="n">excp</span><span class="p">,</span> <span class="n">TraitNotificationError</span> <span class="p">)):</span>
+            <span class="k">raise</span>
+
+    <span class="k">def</span> <span class="nf">_get_handlers</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the handler stack associated with the currently executing</span>
+<span class="sd">            thread.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thread_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">thread_local</span><span class="p">,</span> <span class="nb">dict</span> <span class="p">):</span>
+            <span class="nb">id</span>       <span class="o">=</span> <span class="n">get_ident</span><span class="p">()</span>
+            <span class="n">handlers</span> <span class="o">=</span> <span class="n">thread_local</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="nb">id</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">handlers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">thread_local</span><span class="p">,</span> <span class="s">&#39;handlers&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">handlers</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">handler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">handler</span> <span class="o">=</span> <span class="n">NotificationExceptionHandlerState</span><span class="p">(</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">_log_exception</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span> <span class="p">)</span>
+            <span class="n">handlers</span> <span class="o">=</span> <span class="p">[</span> <span class="n">handler</span> <span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">thread_local</span><span class="p">,</span> <span class="nb">dict</span> <span class="p">):</span>
+                <span class="n">thread_local</span><span class="p">[</span> <span class="nb">id</span> <span class="p">]</span> <span class="o">=</span> <span class="n">handlers</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">thread_local</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="n">handlers</span>
+
+        <span class="k">return</span> <span class="n">handlers</span>
+
+    <span class="k">def</span> <span class="nf">_check_lock</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Raises an exception if the specified handler stack is locked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">handlers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                      <span class="s">&#39;The traits notification exception handler is locked. &#39;</span>
+                      <span class="s">&#39;No changes are allowed.&#39;</span> <span class="p">)</span>
+
+    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c">#  This method defines the default notification exception handling</span>
+    <span class="c">#  behavior of traits. However, it can be completely overridden by pushing</span>
+    <span class="c">#  a new handler using the &#39;_push_handler&#39; method.</span>
+    <span class="c">#</span>
+    <span class="c">#  It logs any exceptions generated in a trait notification handler.</span>
+    <span class="c">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_log_exception</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Logs any exceptions generated in a trait notification handler.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># When the stack depth is too great, the logger can&#39;t always log the</span>
+        <span class="c"># message. Make sure that it goes to the console at a minimum:</span>
+        <span class="n">excp_class</span><span class="p">,</span> <span class="n">excp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">excp_class</span> <span class="ow">is</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">excp</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="n">excp</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;maximum recursion depth exceeded&#39;</span><span class="p">)):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">__stderr__</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s">&#39;Exception occurred in traits notification &#39;</span>
+                <span class="s">&#39;handler for object: </span><span class="si">%s</span><span class="s">, trait: </span><span class="si">%s</span><span class="s">, old value: </span><span class="si">%s</span><span class="s">, &#39;</span>
+                <span class="s">&#39;new value: </span><span class="si">%s</span><span class="s">.</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span> <span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span>
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">logging</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
+                                                  <span class="s">&#39;traits&#39;</span> <span class="p">)</span>
+            <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span> <span class="s">&#39;</span><span class="si">%(message)s</span><span class="s">&#39;</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span>
+            <span class="k">print</span> <span class="p">(</span><span class="s">&#39;Exception occurred in traits notification handler.</span><span class="se">\n</span><span class="s">&#39;</span>
+                   <span class="s">&#39;Please check the log file for details.&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                <span class="s">&#39;Exception occurred in traits notification handler for &#39;</span>
+                <span class="s">&#39;object: </span><span class="si">%s</span><span class="s">, trait: </span><span class="si">%s</span><span class="s">, old value: </span><span class="si">%s</span><span class="s">, new value: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                <span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c"># Ignore anything we can&#39;t log the above way:</span>
+            <span class="k">pass</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Traits global notification exception handler:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="n">notification_exception_handler</span> <span class="o">=</span> <span class="n">NotificationExceptionHandler</span><span class="p">()</span>
+
+<span class="n">push_exception_handler</span> <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_push_handler</span>
+<span class="n">pop_exception_handler</span>  <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_pop_handler</span>
+<span class="n">handle_exception</span>       <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_handle_exception</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;StaticAnyTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="StaticAnyTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticAnyTraitChangeNotifyWrapper</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the static anytrait change &#39;</span>
+                 <span class="s">&#39;notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 arguments is &#39;</span>
+                 <span class="s">&#39;allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">n</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>  <span class="o">=</span> <span class="n">handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span> <span class="o">=</span> <span class="s">&#39;call_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">n</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dispatch to the appropriate method.</span>
+
+<span class="sd">        We do explicit dispatch instead of assigning to the .__call__ instance</span>
+<span class="sd">        attribute to avoid reference cycles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span><span class="p">)(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">equals</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;StaticTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="StaticTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticTraitChangeNotifyWrapper</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the static trait change &#39;</span>
+                 <span class="s">&#39;notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 arguments is &#39;</span>
+                 <span class="s">&#39;allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">n</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>  <span class="o">=</span> <span class="n">handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span> <span class="o">=</span> <span class="s">&#39;call_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">n</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dispatch to the appropriate method.</span>
+
+<span class="sd">        We do explicit dispatch instead of assigning to the .__call__ instance</span>
+<span class="sd">        attribute to avoid reference cycles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span><span class="p">)(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">equals</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;TraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="TraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">TraitChangeNotifyWrapper</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
+        <span class="c"># If target is not None and handler is a function</span>
+        <span class="c"># then the handler will be removed when target</span>
+        <span class="c"># is deleted.</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">handler</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">:</span>
+            <span class="n">func</span>   <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">im_func</span>
+            <span class="nb">object</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">im_self</span>
+            <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_deleted</span> <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span>   <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">owner</span>  <span class="o">=</span> <span class="n">owner</span>
+                <span class="n">arg_count</span>   <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                        <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the dynamic trait &#39;</span>
+                         <span class="s">&#39;change notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 &#39;</span>
+                         <span class="s">&#39;arguments is allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
+                        <span class="p">(</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span> <span class="o">=</span> <span class="s">&#39;rebind_call_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">arg_count</span>
+
+                <span class="k">return</span> <span class="n">arg_count</span>
+        <span class="k">elif</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># Set up so the handler will be removed when the target</span>
+            <span class="c"># is deleted</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_deleted</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
+
+        <span class="n">arg_count</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
+        <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the dynamic trait change &#39;</span>
+                 <span class="s">&#39;notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 arguments is &#39;</span>
+                 <span class="s">&#39;allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
+                <span class="p">(</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>  <span class="o">=</span> <span class="n">handler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span> <span class="o">=</span> <span class="s">&#39;call_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">arg_count</span>
+
+        <span class="k">return</span> <span class="n">arg_count</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dispatch to the appropriate method.</span>
+
+<span class="sd">        We do explicit dispatch instead of assigning to the .__call__ instance</span>
+<span class="sd">        attribute to avoid reference cycles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_method</span><span class="p">)(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+
+    <span class="c"># NOTE: This method is normally the only one that needs to be overridden in</span>
+    <span class="c"># a subclass to implement the subclass&#39;s dispatch mechanism:</span>
+    <span class="k">def</span> <span class="nf">dispatch</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+        <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">equals</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">((</span><span class="n">handler</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()))</span>
+
+        <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">handler</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">listener_deleted</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">dispose</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;ExtendedTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="ExtendedTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">ExtendedTraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">),</span>
+                               <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;FastUITraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="FastUITraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.FastUITraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">FastUITraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">dispatch</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">get_ident</span><span class="p">()</span> <span class="o">==</span> <span class="n">ui_thread</span><span class="p">:</span>
+            <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ui_handler</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;UITraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="UITraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.UITraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">UITraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span>
+                                                       <span class="n">new</span> <span class="p">)</span>
+            <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dispatch_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                              <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">dispatch_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                              <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">dispatch_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                              <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="n">deferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">object</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">dispatch_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                              <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="n">deferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">object</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch_4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">dispatch_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span>
+                          <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                              <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span>
+                                                       <span class="n">new</span> <span class="p">)</span>
+            <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebind_dispatch_0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_dispatch_0</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)()</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                  <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebind_dispatch_1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">rebind_dispatch_1</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                  <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebind_dispatch_2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">rebind_dispatch_2</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                                            <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                  <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="n">deferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">object</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebind_dispatch_3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">rebind_dispatch_3</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>
+                         <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                  <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">rebind_call_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
+            <span class="n">deferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">deferred</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">!=</span> <span class="n">trait_name</span><span class="p">)</span> <span class="ow">or</span>
+                <span class="p">(</span><span class="n">deferred</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">object</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="n">DeferredTraitNotification</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span>
+                                                           <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+                <span class="n">ui_handler</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">rebind_dispatch_4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">rebind_dispatch_4</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">deferred</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deferred</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span>
+                         <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">handle_exception</span><span class="p">(</span> <span class="n">deferred</span><span class="o">.</span><span class="n">object</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">trait_name</span><span class="p">,</span>
+                                  <span class="n">deferred</span><span class="o">.</span><span class="n">old</span><span class="p">,</span> <span class="n">deferred</span><span class="o">.</span><span class="n">new</span> <span class="p">)</span>
+</div>
+<div class="viewcode-block" id="DeferredTraitNotification"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.DeferredTraitNotification">[docs]</a><span class="k">class</span> <span class="nc">DeferredTraitNotification</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span>     <span class="o">=</span> <span class="nb">object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trait_name</span> <span class="o">=</span> <span class="n">trait_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old</span>        <span class="o">=</span> <span class="n">old</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new</span>        <span class="o">=</span> <span class="n">new</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;NewTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="NewTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NewTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">NewTraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">dispatch</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
+        <span class="n">Thread</span><span class="p">(</span> <span class="n">target</span> <span class="o">=</span> <span class="n">handler</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">args</span> <span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.trait_notifiers</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Feb 22, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,979 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.protocols.protocols &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.protocols.protocols</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.protocols.protocols</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Basic Adapters and Adapter Operations&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">generators</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;NO_ADAPTER_NEEDED&#39;</span><span class="p">,</span><span class="s">&#39;DOES_NOT_SUPPORT&#39;</span><span class="p">,</span> <span class="s">&#39;Adapter&#39;</span><span class="p">,</span>
+    <span class="s">&#39;minimumAdapter&#39;</span><span class="p">,</span> <span class="s">&#39;composeAdapters&#39;</span><span class="p">,</span> <span class="s">&#39;updateWithSimplestAdapter&#39;</span><span class="p">,</span>
+    <span class="s">&#39;StickyAdapter&#39;</span><span class="p">,</span> <span class="s">&#39;AdaptationFailure&#39;</span><span class="p">,</span> <span class="s">&#39;bindAdapter&#39;</span><span class="p">,</span>
+    <span class="s">&#39;adapt&#39;</span><span class="p">,</span> <span class="s">&#39;declareAdapterForType&#39;</span><span class="p">,</span> <span class="s">&#39;declareAdapterForProtocol&#39;</span><span class="p">,</span>
+    <span class="s">&#39;declareAdapterForObject&#39;</span><span class="p">,</span> <span class="s">&#39;advise&#39;</span><span class="p">,</span> <span class="s">&#39;declareImplementation&#39;</span><span class="p">,</span>
+    <span class="s">&#39;declareAdapter&#39;</span><span class="p">,</span> <span class="s">&#39;adviseObject&#39;</span><span class="p">,</span>
+    <span class="s">&#39;Protocol&#39;</span><span class="p">,</span> <span class="s">&#39;InterfaceClass&#39;</span><span class="p">,</span> <span class="s">&#39;Interface&#39;</span><span class="p">,</span> <span class="s">&#39;AbstractBase&#39;</span><span class="p">,</span>
+    <span class="s">&#39;AbstractBaseMeta&#39;</span><span class="p">,</span> <span class="s">&#39;IAdapterFactory&#39;</span><span class="p">,</span> <span class="s">&#39;IProtocol&#39;</span><span class="p">,</span>
+    <span class="s">&#39;IAdaptingProtocol&#39;</span><span class="p">,</span> <span class="s">&#39;IOpenProtocol&#39;</span><span class="p">,</span> <span class="s">&#39;IOpenProvider&#39;</span><span class="p">,</span>
+    <span class="s">&#39;IOpenImplementor&#39;</span><span class="p">,</span> <span class="s">&#39;IImplicationListener&#39;</span><span class="p">,</span> <span class="s">&#39;Attribute&#39;</span><span class="p">,</span> <span class="s">&#39;Variation&#39;</span>
+<span class="p">]</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">MethodType</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="ne">PendingDeprecationWarning</span>
+<span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+    <span class="k">class</span> <span class="nc">PendingDeprecationWarning</span><span class="p">(</span><span class="ne">Warning</span><span class="p">):</span>
+        <span class="s">&#39;Base class for warnings about features which will be deprecated in the future.&#39;</span>
+
+<div class="viewcode-block" id="AdaptationFailure"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.AdaptationFailure">[docs]</a><span class="k">class</span> <span class="nc">AdaptationFailure</span><span class="p">(</span><span class="ne">NotImplementedError</span><span class="p">,</span><span class="ne">TypeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A suitable implementation/adapter could not be found&quot;&quot;&quot;</span>
+</div>
+<span class="n">_marker</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+
+<span class="c"># Fundamental Adapters</span>
+
+<div class="viewcode-block" id="NO_ADAPTER_NEEDED"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.NO_ADAPTER_NEEDED">[docs]</a><span class="k">def</span> <span class="nf">NO_ADAPTER_NEEDED</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assume &#39;obj&#39; implements &#39;protocol&#39; directly&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">obj</span>
+</div>
+<div class="viewcode-block" id="DOES_NOT_SUPPORT"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.DOES_NOT_SUPPORT">[docs]</a><span class="k">def</span> <span class="nf">DOES_NOT_SUPPORT</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prevent &#39;obj&#39; from supporting &#39;protocol&#39;&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">None</span>
+
+</div>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">._speedups</span> <span class="kn">import</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">DOES_NOT_SUPPORT</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="k">def</span> <span class="nf">_getProto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+    <span class="n">warn</span><span class="p">(</span><span class="s">&quot;The &#39;protocol&#39; attribute of Adapter subclass </span><span class="si">%s</span><span class="s"> is being used&quot;</span>
+        <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="p">,),</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;protocol&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">_setProto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">proto</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;protocol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">proto</span>
+
+
+<div class="viewcode-block" id="Adapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Adapter">[docs]</a><span class="k">class</span> <span class="nc">Adapter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenient base class for adapters&quot;&quot;&quot;</span>
+
+    <span class="n">protocol</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_getProto</span><span class="p">,</span><span class="n">_setProto</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">ob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">proto</span>
+
+</div>
+<div class="viewcode-block" id="StickyAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.StickyAdapter">[docs]</a><span class="k">class</span> <span class="nc">StickyAdapter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Adapter that attaches itself to its subject for repeated use&quot;&quot;&quot;</span>
+
+    <span class="n">attachForProtocols</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">protocol</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_getProto</span><span class="p">,</span><span class="n">_setProto</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">ob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">proto</span>
+
+        <span class="c"># Declare this instance as a per-instance adaptation for the</span>
+        <span class="c"># given protocol</span>
+
+        <span class="n">provides</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">attachForProtocols</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">proto</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">proto</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">provides</span><span class="p">:</span>
+            <span class="n">provides</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+
+<span class="c">#        from protocols.api import declareAdapter</span>
+        <span class="n">declareAdapter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">forObjects</span><span class="o">=</span><span class="p">[</span><span class="n">ob</span><span class="p">])</span>
+
+
+<span class="c"># Adapter &quot;arithmetic&quot;</span>
+</div>
+<div class="viewcode-block" id="minimumAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.minimumAdapter">[docs]</a><span class="k">def</span> <span class="nf">minimumAdapter</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="n">a2</span><span class="p">,</span><span class="n">d1</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">d2</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Shortest route to implementation, &#39;a1&#39; @ depth &#39;d1&#39;, or &#39;a2&#39; @ &#39;d2&#39;?</span>
+
+<span class="sd">    Assuming both a1 and a2 are interchangeable adapters (i.e. have the same</span>
+<span class="sd">    source and destination protocols), return the one which is preferable; that</span>
+<span class="sd">    is, the one with the shortest implication depth, or, if the depths are</span>
+<span class="sd">    equal, then the adapter that is composed of the fewest chained adapters.</span>
+<span class="sd">    If both are the same, then prefer &#39;NO_ADAPTER_NEEDED&#39;, followed by</span>
+<span class="sd">    anything but &#39;DOES_NOT_SUPPORT&#39;, with &#39;DOES_NOT_SUPPORT&#39; being least</span>
+<span class="sd">    preferable.  If there is no unambiguous choice, and &#39;not a1 is a2&#39;,</span>
+<span class="sd">    TypeError is raised.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">d1</span><span class="o">&lt;</span><span class="n">d2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a1</span>
+    <span class="k">elif</span> <span class="n">d2</span><span class="o">&lt;</span><span class="n">d1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a2</span>
+
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="s">&#39;__unbound_adapter__&#39;</span><span class="p">,</span><span class="n">a1</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span><span class="s">&#39;__unbound_adapter__&#39;</span><span class="p">,</span><span class="n">a2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">a1</span>   <span class="c"># don&#39;t care which</span>
+
+    <span class="n">a1ct</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">a1</span><span class="p">,</span><span class="s">&#39;__adapterCount__&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">a2ct</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">a2</span><span class="p">,</span><span class="s">&#39;__adapterCount__&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">a1ct</span><span class="o">&lt;</span><span class="n">a2ct</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a1</span>
+    <span class="k">elif</span> <span class="n">a2ct</span><span class="o">&lt;</span><span class="n">a1ct</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a2</span>
+
+    <span class="k">if</span> <span class="n">a1</span> <span class="ow">is</span> <span class="n">NO_ADAPTER_NEEDED</span> <span class="ow">or</span> <span class="n">a2</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a1</span>
+
+    <span class="k">if</span> <span class="n">a1</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span> <span class="ow">or</span> <span class="n">a2</span> <span class="ow">is</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a2</span>
+
+    <span class="c"># it&#39;s ambiguous</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&quot;Ambiguous adapter choice&quot;</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="composeAdapters"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.composeAdapters">[docs]</a><span class="k">def</span> <span class="nf">composeAdapters</span><span class="p">(</span><span class="n">baseAdapter</span><span class="p">,</span> <span class="n">baseProtocol</span><span class="p">,</span> <span class="n">extendingAdapter</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Return the composition of &#39;baseAdapter&#39;+&#39;extendingAdapter&#39;&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">baseAdapter</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span> <span class="ow">or</span> <span class="n">extendingAdapter</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">:</span>
+        <span class="c"># fuhgeddaboudit</span>
+        <span class="k">return</span> <span class="n">DOES_NOT_SUPPORT</span>
+
+    <span class="k">if</span> <span class="n">baseAdapter</span> <span class="ow">is</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extendingAdapter</span>
+
+    <span class="k">if</span> <span class="n">extendingAdapter</span> <span class="ow">is</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">baseAdapter</span>
+
+    <span class="k">def</span> <span class="nf">newAdapter</span><span class="p">(</span><span class="n">ob</span><span class="p">):</span>
+        <span class="n">ob</span> <span class="o">=</span> <span class="n">baseAdapter</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">extendingAdapter</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+
+    <span class="n">newAdapter</span><span class="o">.</span><span class="n">__adapterCount__</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">extendingAdapter</span><span class="p">,</span><span class="s">&#39;__adapterCount__&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span>
+        <span class="nb">getattr</span><span class="p">(</span><span class="n">baseAdapter</span><span class="p">,</span><span class="s">&#39;__adapterCount__&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">newAdapter</span>
+
+</div>
+<div class="viewcode-block" id="bindAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.bindAdapter">[docs]</a><span class="k">def</span> <span class="nf">bindAdapter</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="n">proto</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Backward compatibility: wrap &#39;adapter&#39; to support old 2-arg signature&quot;&quot;&quot;</span>
+
+    <span class="n">maxargs</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">f</span> <span class="o">=</span> <span class="n">adapter</span><span class="p">;</span> <span class="n">tries</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">FunctionType</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tries</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">MethodType</span><span class="p">):</span>
+            <span class="n">maxargs</span> <span class="o">+=</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">im_func</span>
+            <span class="n">tries</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,(</span><span class="n">ClassType</span><span class="p">,</span><span class="nb">type</span><span class="p">)):</span>
+            <span class="n">maxargs</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">__init__</span>
+            <span class="n">tries</span> <span class="o">-=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">__call__</span>
+            <span class="n">tries</span> <span class="o">-=</span><span class="mi">1</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">FunctionType</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">getargspec</span>
+        <span class="n">args</span><span class="p">,</span> <span class="n">varargs</span><span class="p">,</span> <span class="n">varkw</span><span class="p">,</span> <span class="n">defaults</span> <span class="o">=</span> <span class="n">getargspec</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">defaults</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">defaults</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">maxargs</span><span class="p">:</span>
+            <span class="n">newAdapter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ob</span><span class="p">:</span> <span class="n">adapter</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span><span class="n">proto</span><span class="p">)</span>
+            <span class="n">newAdapter</span><span class="o">.</span><span class="n">__adapterCount__</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">adapter</span><span class="p">,</span><span class="s">&#39;__adapterCount__&#39;</span><span class="p">,</span><span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="n">newAdapter</span><span class="o">.</span><span class="n">__unbound_adapter__</span> <span class="o">=</span> <span class="n">adapter</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Adapter</span><span class="o">.</span><span class="n">__init__</span><span class="o">.</span><span class="n">im_func</span><span class="p">,</span> <span class="n">StickyAdapter</span><span class="o">.</span><span class="n">__init__</span><span class="o">.</span><span class="n">im_func</span><span class="p">):</span>
+                <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s">&quot;Adapter </span><span class="si">%r</span><span class="s"> to protocol </span><span class="si">%r</span><span class="s"> needs multiple arguments&quot;</span>
+                    <span class="o">%</span> <span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="n">proto</span><span class="p">),</span> <span class="ne">PendingDeprecationWarning</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">newAdapter</span>
+
+    <span class="k">return</span> <span class="n">adapter</span>
+
+</div>
+<div class="viewcode-block" id="updateWithSimplestAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.updateWithSimplestAdapter">[docs]</a><span class="k">def</span> <span class="nf">updateWithSimplestAdapter</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Replace &#39;mapping[key]&#39; w/&#39;adapter&#39; @ &#39;depth&#39;, return true if changed&quot;&quot;&quot;</span>
+
+    <span class="n">new</span> <span class="o">=</span> <span class="n">adapter</span>
+    <span class="n">old</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">old</span><span class="p">,</span> <span class="n">oldDepth</span> <span class="o">=</span> <span class="n">old</span>
+        <span class="n">new</span> <span class="o">=</span> <span class="n">minimumAdapter</span><span class="p">(</span><span class="n">old</span><span class="p">,</span><span class="n">adapter</span><span class="p">,</span><span class="n">oldDepth</span><span class="p">,</span><span class="n">depth</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="n">new</span> <span class="ow">and</span> <span class="n">depth</span><span class="o">&gt;=</span><span class="n">oldDepth</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span><span class="p">,</span> <span class="n">depth</span>
+    <span class="k">return</span> <span class="bp">True</span>
+
+</div>
+<span class="sd">&quot;&quot;&quot;Implement Interfaces and define the interfaces used by the package&quot;&quot;&quot;</span>
+
+<span class="c">#import api</span>
+
+<span class="kn">from</span> <span class="nn">.advice</span> <span class="kn">import</span> <span class="n">metamethod</span><span class="p">,</span> <span class="n">classicMRO</span><span class="p">,</span> <span class="n">mkRef</span>
+
+<span class="c">#from adapters \</span>
+<span class="c">#    import composeAdapters, updateWithSimplestAdapter, NO_ADAPTER_NEEDED, \</span>
+<span class="c">#           DOES_NOT_SUPPORT</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">InstanceType</span>
+
+<span class="c"># Thread locking support:</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">thread</span> <span class="kn">import</span> <span class="n">allocate_lock</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">dummy_thread</span> <span class="kn">import</span> <span class="n">allocate_lock</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">class</span> <span class="nc">allocate_lock</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+            <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+            <span class="k">def</span> <span class="nf">acquire</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span> <span class="k">pass</span>
+            <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span> <span class="k">pass</span>
+
+<span class="c"># Trivial interface implementation:</span>
+
+<div class="viewcode-block" id="Protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol">[docs]</a><span class="k">class</span> <span class="nc">Protocol</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Generic protocol w/type-based adapter registry&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__adapters</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__implies</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span> <span class="o">=</span> <span class="n">allocate_lock</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Protocol.getImpliedProtocols"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol.getImpliedProtocols">[docs]</a>    <span class="k">def</span> <span class="nf">getImpliedProtocols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c"># This is messy so it can clean out weakrefs, but this method is only</span>
+        <span class="c"># called for declaration activities and is thus not at all</span>
+        <span class="c"># speed-critical.  It&#39;s more important that we support weak refs to</span>
+        <span class="c"># implied protocols, so that dynamically created subset protocols can</span>
+        <span class="c"># be garbage collected.</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">add</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">append</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>   <span class="c"># we might clean out dead weakrefs</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__implies</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">proto</span> <span class="o">=</span> <span class="n">k</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">proto</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__implies</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">add</span><span class="p">((</span><span class="n">proto</span><span class="p">,</span><span class="n">v</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">out</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="Protocol.addImpliedProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol.addImpliedProtocol">[docs]</a>    <span class="k">def</span> <span class="nf">addImpliedProtocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">proto</span><span class="p">,</span><span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">mkRef</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">updateWithSimplestAdapter</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__implies</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">depth</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__implies</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+        <span class="c"># Always register implied protocol with classes, because they should</span>
+        <span class="c"># know if we break the implication link between two protocols</span>
+        <span class="k">for</span> <span class="n">klass</span><span class="p">,(</span><span class="n">baseAdapter</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__adapters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="c">#            api.declareAdapterForType(</span>
+            <span class="n">declareAdapterForType</span><span class="p">(</span>
+                <span class="n">proto</span><span class="p">,</span><span class="n">composeAdapters</span><span class="p">(</span><span class="n">baseAdapter</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">adapter</span><span class="p">),</span><span class="n">klass</span><span class="p">,</span><span class="n">depth</span><span class="o">+</span><span class="n">d</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>    <span class="c"># Must use keys()!</span>
+                <span class="n">listener</span><span class="o">.</span><span class="n">newProtocolImplied</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">adapter</span>
+</div>
+    <span class="n">addImpliedProtocol</span> <span class="o">=</span> <span class="n">metamethod</span><span class="p">(</span><span class="n">addImpliedProtocol</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Protocol.registerImplementation"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol.registerImplementation">[docs]</a>    <span class="k">def</span> <span class="nf">registerImplementation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">klass</span><span class="p">,</span><span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">updateWithSimplestAdapter</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__adapters</span><span class="p">,</span><span class="n">klass</span><span class="p">,</span><span class="n">adapter</span><span class="p">,</span><span class="n">depth</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__adapters</span><span class="p">[</span><span class="n">klass</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">:</span>
+            <span class="c"># Don&#39;t register non-support with implied protocols, because</span>
+            <span class="c"># &quot;X implies Y&quot; and &quot;not X&quot; doesn&#39;t imply &quot;not Y&quot;.  In effect,</span>
+            <span class="c"># explicitly registering DOES_NOT_SUPPORT for a type is just a</span>
+            <span class="c"># way to &quot;disinherit&quot; a superclass&#39; claim to support something.</span>
+            <span class="k">return</span> <span class="n">adapter</span>
+
+        <span class="k">for</span> <span class="n">proto</span><span class="p">,</span> <span class="p">(</span><span class="n">extender</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImpliedProtocols</span><span class="p">():</span>
+<span class="c">#            api.declareAdapterForType(</span>
+            <span class="n">declareAdapterForType</span><span class="p">(</span>
+                <span class="n">proto</span><span class="p">,</span> <span class="n">composeAdapters</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">extender</span><span class="p">),</span> <span class="n">klass</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="n">d</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">adapter</span>
+</div>
+    <span class="n">registerImplementation</span> <span class="o">=</span> <span class="n">metamethod</span><span class="p">(</span><span class="n">registerImplementation</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Protocol.registerObject"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol.registerObject">[docs]</a>    <span class="k">def</span> <span class="nf">registerObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span><span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="c"># Object needs to be able to handle registration</span>
+<span class="c">#        if api.adapt(ob,IOpenProvider).declareProvides(self,adapter,depth):</span>
+        <span class="k">if</span> <span class="n">adapt</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span><span class="n">IOpenProvider</span><span class="p">)</span><span class="o">.</span><span class="n">declareProvides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">adapter</span><span class="p">,</span><span class="n">depth</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">:</span>
+                <span class="k">return</span>  <span class="c"># non-support doesn&#39;t imply non-support of implied</span>
+
+            <span class="c"># Handle implied protocols</span>
+            <span class="k">for</span> <span class="n">proto</span><span class="p">,</span> <span class="p">(</span><span class="n">extender</span><span class="p">,</span><span class="n">d</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getImpliedProtocols</span><span class="p">():</span>
+<span class="c">#                api.declareAdapterForObject(</span>
+                <span class="n">declareAdapterForObject</span><span class="p">(</span>
+                    <span class="n">proto</span><span class="p">,</span> <span class="n">composeAdapters</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">extender</span><span class="p">),</span> <span class="n">ob</span><span class="p">,</span> <span class="n">depth</span><span class="o">+</span><span class="n">d</span>
+                <span class="p">)</span>
+</div>
+    <span class="n">registerObject</span> <span class="o">=</span> <span class="n">metamethod</span><span class="p">(</span><span class="n">registerObject</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__adapt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+
+        <span class="n">get</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__adapters</span><span class="o">.</span><span class="n">get</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">typ</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">typ</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">mro</span> <span class="o">=</span> <span class="n">typ</span><span class="o">.</span><span class="n">__mro__</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="c"># Note: this adds &#39;InstanceType&#39; and &#39;object&#39; to end of MRO</span>
+            <span class="n">mro</span> <span class="o">=</span> <span class="n">classicMRO</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span><span class="n">extendedClassic</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">klass</span> <span class="ow">in</span> <span class="n">mro</span><span class="p">:</span>
+            <span class="n">factory</span><span class="o">=</span><span class="n">get</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">factory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">factory</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">._speedups</span> <span class="kn">import</span> <span class="n">Protocol__adapt__</span> <span class="k">as</span> <span class="n">__adapt__</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="n">__adapt__</span> <span class="o">=</span> <span class="n">metamethod</span><span class="p">(</span><span class="n">__adapt__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Protocol.addImplicationListener"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Protocol.addImplicationListener">[docs]</a>    <span class="k">def</span> <span class="nf">addImplicationListener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">WeakKeyDictionary</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span> <span class="o">=</span> <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__listeners</span><span class="p">[</span><span class="n">listener</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+</div>
+    <span class="n">addImplicationListener</span> <span class="o">=</span> <span class="n">metamethod</span><span class="p">(</span><span class="n">addImplicationListener</span><span class="p">)</span>
+
+<span class="c">#    def __call__(self, ob, default=api._marker):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_marker</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Adapt to this protocol&quot;&quot;&quot;</span>
+<span class="c">#        return api.adapt(ob,self,default)</span>
+        <span class="k">return</span> <span class="n">adapt</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">default</span><span class="p">)</span>
+
+
+<span class="c"># Use faster __call__ method, if possible</span>
+<span class="c"># XXX it could be even faster if the __call__ were in the tp_call slot</span>
+<span class="c"># XXX directly, but Pyrex doesn&#39;t have a way to do that AFAIK.</span>
+</div>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">._speedups</span> <span class="kn">import</span> <span class="n">Protocol__call__</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">new</span> <span class="kn">import</span> <span class="n">instancemethod</span>
+    <span class="n">Protocol</span><span class="o">.</span><span class="n">__call__</span> <span class="o">=</span> <span class="n">instancemethod</span><span class="p">(</span><span class="n">Protocol__call__</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AbstractBaseMeta"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.AbstractBaseMeta">[docs]</a><span class="k">class</span> <span class="nc">AbstractBaseMeta</span><span class="p">(</span><span class="n">Protocol</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Metaclass for &#39;AbstractBase&#39; - a protocol that&#39;s also a class</span>
+
+<span class="sd">    (Note that this should not be used as an explicit metaclass - always</span>
+<span class="sd">    subclass from &#39;AbstractBase&#39; or &#39;Interface&#39; instead.)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">__bases__</span><span class="p">,</span> <span class="n">__dict__</span><span class="p">):</span>
+
+        <span class="nb">type</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">__bases__</span><span class="p">,</span> <span class="n">__dict__</span><span class="p">)</span>
+        <span class="n">Protocol</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">__bases__</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">AbstractBaseMeta</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">__bases__</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="nb">object</span><span class="p">,):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">addImpliedProtocol</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+
+        <span class="c"># We could probably support changing __bases__, as long as we checked</span>
+        <span class="c"># that no bases are *removed*.  But it&#39;d be a pain, since we&#39;d</span>
+        <span class="c"># have to do callbacks, remove entries from our __implies registry,</span>
+        <span class="c"># etc.  So just punt for now.</span>
+
+        <span class="k">if</span> <span class="n">attr</span><span class="o">==</span><span class="s">&#39;__bases__&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;Can&#39;t change interface __bases__&quot;</span><span class="p">,</span> <span class="bp">self</span>
+            <span class="p">)</span>
+
+        <span class="nb">type</span><span class="o">.</span><span class="n">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">attr</span><span class="p">,</span><span class="n">val</span><span class="p">)</span>
+
+    <span class="n">__call__</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span>
+
+</div>
+<div class="viewcode-block" id="AbstractBase"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.AbstractBase">[docs]</a><span class="k">class</span> <span class="nc">AbstractBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for a protocol that&#39;s a class&quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AbstractBaseMeta</span>
+
+</div>
+<div class="viewcode-block" id="InterfaceClass"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.InterfaceClass">[docs]</a><span class="k">class</span> <span class="nc">InterfaceClass</span><span class="p">(</span><span class="n">AbstractBaseMeta</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Metaclass for &#39;Interface&#39; - a non-instantiable protocol</span>
+
+<span class="sd">    (Note that this should not be used as an explicit metaclass - always</span>
+<span class="sd">    subclass from &#39;AbstractBase&#39; or &#39;Interface&#39; instead.)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">__args</span><span class="p">,</span> <span class="o">**</span><span class="n">__kw</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__init__</span> <span class="ow">is</span> <span class="n">Interface</span><span class="o">.</span><span class="n">__init__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">__args</span><span class="p">,</span> <span class="o">**</span><span class="n">__kw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">__args</span><span class="p">,</span> <span class="o">**</span><span class="n">__kw</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InterfaceClass.getBases"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.InterfaceClass.getBases">[docs]</a>    <span class="k">def</span> <span class="nf">getBases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bases__</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">AbstractBaseMeta</span><span class="p">)</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">__bases__</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="nb">object</span><span class="p">,)</span>
+        <span class="p">]</span>
+
+</div></div>
+<div class="viewcode-block" id="Interface"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Interface">[docs]</a><span class="k">class</span> <span class="nc">Interface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">InterfaceClass</span>
+
+</div>
+<div class="viewcode-block" id="Variation"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Variation">[docs]</a><span class="k">class</span> <span class="nc">Variation</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A variation of a base protocol - &quot;inherits&quot; the base&#39;s adapters</span>
+
+<span class="sd">    See the &#39;LocalProtocol&#39; example in the reference manual for more info.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">baseProtocol</span><span class="p">,</span> <span class="n">context</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">baseProtocol</span> <span class="o">=</span> <span class="n">baseProtocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+
+        <span class="c"># Note: Protocol is a ``classic&#39;&#39; class, so we don&#39;t use super()</span>
+        <span class="n">Protocol</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<span class="c">#        api.declareAdapterForProtocol(self,NO_ADAPTER_NEEDED,baseProtocol)</span>
+        <span class="n">declareAdapterForProtocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span><span class="n">baseProtocol</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&quot;Variation(</span><span class="si">%r</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">baseProtocol</span>
+
+        <span class="k">return</span> <span class="s">&quot;Variation(</span><span class="si">%r</span><span class="s">,</span><span class="si">%r</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">baseProtocol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+<span class="c"># Semi-backward compatible &#39;interface.Attribute&#39;</span>
+</div>
+<div class="viewcode-block" id="Attribute"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.Attribute">[docs]</a><span class="k">class</span> <span class="nc">Attribute</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Attribute declaration; should we get rid of this?&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">doc</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ob</span><span class="p">,</span><span class="n">typ</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ob</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Abstract attribute&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ob</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ob</span><span class="p">,</span><span class="n">val</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Abstract attribute&quot;</span><span class="p">)</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+    <span class="k">def</span> <span class="nf">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ob</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Abstract attribute&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">ob</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;Attribute: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__doc__</span>
+
+
+<span class="c"># Interfaces and adapters for declaring protocol/type/object relationships</span>
+</div>
+<div class="viewcode-block" id="IAdapterFactory"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IAdapterFactory">[docs]</a><span class="k">class</span> <span class="nc">IAdapterFactory</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Callable that can adapt an object to a protocol&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="n">ob</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an implementation of protocol for &#39;ob&#39;&quot;&quot;&quot;</span>
+
+</div>
+<div class="viewcode-block" id="IProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IProtocol">[docs]</a><span class="k">class</span> <span class="nc">IProtocol</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Object usable as a protocol by &#39;adapt()&#39;&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;Protocols must be usable as dictionary keys&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Protocols must be comparable with == and !=&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Protocols must be comparable with == and !=&quot;&quot;&quot;</span>
+
+</div>
+<div class="viewcode-block" id="IAdaptingProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IAdaptingProtocol">[docs]</a><span class="k">class</span> <span class="nc">IAdaptingProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;A protocol that potentially knows how to adapt some object to itself&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__adapt__</span><span class="p">(</span><span class="n">ob</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return &#39;ob&#39; adapted to protocol, or &#39;None&#39;&quot;&quot;&quot;</span>
+
+</div>
+<span class="k">class</span> <span class="nc">IConformingObject</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;An object that potentially knows how to adapt to a protocol&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__conform__</span><span class="p">(</span><span class="n">protocol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an implementation of &#39;protocol&#39; for self, or &#39;None&#39;&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="IOpenProvider"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProvider">[docs]</a><span class="k">class</span> <span class="nc">IOpenProvider</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An object that can be told how to adapt to protocols&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IOpenProvider.declareProvides"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProvider.declareProvides">[docs]</a>    <span class="k">def</span> <span class="nf">declareProvides</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register &#39;adapter&#39; as providing &#39;protocol&#39; for this object</span>
+
+<span class="sd">        Return a true value if the provided adapter is the &quot;shortest path&quot; to</span>
+<span class="sd">        &#39;protocol&#39; for the object, or false if a shorter path already existed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+</div></div>
+<div class="viewcode-block" id="IOpenImplementor"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenImplementor">[docs]</a><span class="k">class</span> <span class="nc">IOpenImplementor</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Object/type that can be told how its instances adapt to protocols&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IOpenImplementor.declareClassImplements"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenImplementor.declareClassImplements">[docs]</a>    <span class="k">def</span> <span class="nf">declareClassImplements</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register &#39;adapter&#39; as implementing &#39;protocol&#39; for instances&quot;&quot;&quot;</span>
+
+</div></div>
+<div class="viewcode-block" id="IOpenProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProtocol">[docs]</a><span class="k">class</span> <span class="nc">IOpenProtocol</span><span class="p">(</span><span class="n">IAdaptingProtocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A protocol that be told what it implies, and what supports it</span>
+
+<span class="sd">    Note that these methods are for the use of the declaration APIs only,</span>
+<span class="sd">    and you should NEVER call them directly.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IOpenProtocol.addImpliedProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProtocol.addImpliedProtocol">[docs]</a>    <span class="k">def</span> <span class="nf">addImpliedProtocol</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&#39;adapter&#39; provides conversion from this protocol to &#39;proto&#39;&quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="IOpenProtocol.registerImplementation"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProtocol.registerImplementation">[docs]</a>    <span class="k">def</span> <span class="nf">registerImplementation</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&#39;adapter&#39; provides protocol for instances of klass&quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="IOpenProtocol.registerObject"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProtocol.registerObject">[docs]</a>    <span class="k">def</span> <span class="nf">registerObject</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">adapter</span><span class="o">=</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&#39;adapter&#39; provides protocol for &#39;ob&#39; directly&quot;&quot;&quot;</span>
+</div>
+<div class="viewcode-block" id="IOpenProtocol.addImplicationListener"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IOpenProtocol.addImplicationListener">[docs]</a>    <span class="k">def</span> <span class="nf">addImplicationListener</span><span class="p">(</span><span class="n">listener</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Notify &#39;listener&#39; whenever protocol has new implied protocol&quot;&quot;&quot;</span>
+
+</div></div>
+<div class="viewcode-block" id="IImplicationListener"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IImplicationListener">[docs]</a><span class="k">class</span> <span class="nc">IImplicationListener</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+
+<div class="viewcode-block" id="IImplicationListener.newProtocolImplied"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.IImplicationListener.newProtocolImplied">[docs]</a>    <span class="k">def</span> <span class="nf">newProtocolImplied</span><span class="p">(</span><span class="n">srcProto</span><span class="p">,</span> <span class="n">destProto</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">depth</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&#39;srcProto&#39; now implies &#39;destProto&#39; via &#39;adapter&#39; at &#39;depth&#39;&quot;&quot;&quot;</span>
+
+</div></div>
+<span class="sd">&quot;&quot;&quot;Adapter and Declaration API&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">_getframe</span><span class="p">,</span> <span class="n">exc_info</span><span class="p">,</span> <span class="n">modules</span>
+
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ClassType</span>
+
+<span class="n">ClassTypes</span> <span class="o">=</span> <span class="p">(</span> <span class="n">ClassType</span><span class="p">,</span> <span class="nb">type</span> <span class="p">)</span>
+
+<span class="c">#from adapters \</span>
+<span class="c">#    import NO_ADAPTER_NEEDED, DOES_NOT_SUPPORT, AdaptationFailure</span>
+<span class="c">#</span>
+<span class="c">#from adapters \</span>
+<span class="c">#    import bindAdapter</span>
+
+<span class="kn">from</span> <span class="nn">.advice</span> <span class="kn">import</span> <span class="n">addClassAdvisor</span><span class="p">,</span> <span class="n">getFrameInfo</span>
+
+<span class="c">#from interfaces \</span>
+<span class="c">#    import IOpenProtocol, IOpenProvider, IOpenImplementor, Protocol, \</span>
+<span class="c">#           InterfaceClass, Interface</span>
+
+
+<div class="viewcode-block" id="adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.adapt">[docs]</a><span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">_marker</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">_marker</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;PEP 246-alike: Adapt &#39;obj&#39; to &#39;protocol&#39;, return &#39;default&#39;</span>
+
+<span class="sd">    If &#39;default&#39; is not supplied and no implementation is found,</span>
+<span class="sd">    the result of &#39;factory(obj,protocol)&#39; is returned.  If &#39;factory&#39;</span>
+<span class="sd">    is also not supplied, &#39;NotImplementedError&#39; is then raised.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span><span class="n">ClassTypes</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="n">protocol</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_conform</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__conform__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">_conform</span><span class="p">(</span><span class="n">protocol</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tb_next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_adapt</span> <span class="o">=</span> <span class="n">protocol</span><span class="o">.</span><span class="n">__adapt__</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">_adapt</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">result</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tb_next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+    <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">_marker</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">factory</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_marker</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s">&quot;The &#39;factory&#39; argument to &#39;adapt()&#39; will be removed in 1.0&quot;</span><span class="p">,</span>
+                <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">factory</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="n">AdaptationFailure</span><span class="p">(</span><span class="s">&quot;Can&#39;t adapt&quot;</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">default</span>
+</div>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">._speedups</span> <span class="kn">import</span> <span class="n">adapt</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<span class="c"># Fundamental, explicit interface/adapter declaration API:</span>
+<span class="c">#   All declarations should end up passing through these three routines.</span>
+
+<div class="viewcode-block" id="declareAdapterForType"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.declareAdapterForType">[docs]</a><span class="k">def</span> <span class="nf">declareAdapterForType</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Declare that &#39;adapter&#39; adapts instances of &#39;typ&#39; to &#39;protocol&#39;&quot;&quot;&quot;</span>
+    <span class="n">adapter</span> <span class="o">=</span> <span class="n">bindAdapter</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="n">protocol</span><span class="p">)</span>
+    <span class="n">adapter</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">IOpenProtocol</span><span class="p">)</span><span class="o">.</span><span class="n">registerImplementation</span><span class="p">(</span>
+        <span class="n">typ</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">depth</span>
+    <span class="p">)</span>
+
+    <span class="n">oi</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">IOpenImplementor</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">oi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">oi</span><span class="o">.</span><span class="n">declareClassImplements</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span><span class="n">adapter</span><span class="p">,</span><span class="n">depth</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="declareAdapterForProtocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.declareAdapterForProtocol">[docs]</a><span class="k">def</span> <span class="nf">declareAdapterForProtocol</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">proto</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Declare that &#39;adapter&#39; adapts &#39;proto&#39; to &#39;protocol&#39;&quot;&quot;&quot;</span>
+    <span class="n">adapt</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">IOpenProtocol</span><span class="p">)</span>  <span class="c"># src and dest must support IOpenProtocol</span>
+    <span class="n">adapt</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">IOpenProtocol</span><span class="p">)</span><span class="o">.</span><span class="n">addImpliedProtocol</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">bindAdapter</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="n">protocol</span><span class="p">),</span> <span class="n">depth</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="declareAdapterForObject"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.declareAdapterForObject">[docs]</a><span class="k">def</span> <span class="nf">declareAdapterForObject</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="n">ob</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Declare that &#39;adapter&#39; adapts &#39;ob&#39; to &#39;protocol&#39;&quot;&quot;&quot;</span>
+    <span class="n">adapt</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span><span class="n">IOpenProtocol</span><span class="p">)</span><span class="o">.</span><span class="n">registerObject</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span><span class="n">bindAdapter</span><span class="p">(</span><span class="n">adapter</span><span class="p">,</span><span class="n">protocol</span><span class="p">),</span><span class="n">depth</span><span class="p">)</span>
+
+<span class="c"># Bootstrap APIs to work with Protocol and InterfaceClass, without needing to</span>
+<span class="c"># give Protocol a &#39;__conform__&#39; method that&#39;s hardwired to IOpenProtocol.</span>
+<span class="c"># Note that InterfaceClass has to be registered first, so that when the</span>
+<span class="c"># registration propagates to IAdaptingProtocol and IProtocol, InterfaceClass</span>
+<span class="c"># will already be recognized as an IOpenProtocol, preventing infinite regress.</span>
+</div>
+<span class="n">IOpenProtocol</span><span class="o">.</span><span class="n">registerImplementation</span><span class="p">(</span><span class="n">InterfaceClass</span><span class="p">)</span>    <span class="c"># VERY BAD!!</span>
+<span class="n">IOpenProtocol</span><span class="o">.</span><span class="n">registerImplementation</span><span class="p">(</span><span class="n">Protocol</span><span class="p">)</span>          <span class="c"># NEVER DO THIS!!</span>
+<span class="c"># From this line forward, the declaration APIs can work.  Use them instead!</span>
+
+<span class="c"># Interface and adapter declarations - convenience forms, explicit targets</span>
+
+<div class="viewcode-block" id="declareAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.declareAdapter">[docs]</a><span class="k">def</span> <span class="nf">declareAdapter</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span>
+    <span class="n">forTypes</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">forProtocols</span><span class="o">=</span><span class="p">(),</span>
+    <span class="n">forObjects</span><span class="o">=</span><span class="p">()</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&#39;factory&#39; is an IAdapterFactory providing &#39;provides&#39; protocols&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="n">provides</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">typ</span> <span class="ow">in</span> <span class="n">forTypes</span><span class="p">:</span>
+            <span class="n">declareAdapterForType</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">proto</span> <span class="ow">in</span> <span class="n">forProtocols</span><span class="p">:</span>
+            <span class="n">declareAdapterForProtocol</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">proto</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">forObjects</span><span class="p">:</span>
+            <span class="n">declareAdapterForObject</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">ob</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="declareImplementation"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.declareImplementation">[docs]</a><span class="k">def</span> <span class="nf">declareImplementation</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">instancesProvide</span><span class="o">=</span><span class="p">(),</span> <span class="n">instancesDoNotProvide</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Declare information about a class, type, or &#39;IOpenImplementor&#39;&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">proto</span> <span class="ow">in</span> <span class="n">instancesProvide</span><span class="p">:</span>
+        <span class="n">declareAdapterForType</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">proto</span> <span class="ow">in</span> <span class="n">instancesDoNotProvide</span><span class="p">:</span>
+        <span class="n">declareAdapterForType</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="adviseObject"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.adviseObject">[docs]</a><span class="k">def</span> <span class="nf">adviseObject</span><span class="p">(</span><span class="n">ob</span><span class="p">,</span> <span class="n">provides</span><span class="o">=</span><span class="p">(),</span> <span class="n">doesNotProvide</span><span class="o">=</span><span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;Tell an object what it does or doesn&#39;t provide&quot;&quot;&quot;</span>
+
+    <span class="k">for</span> <span class="n">proto</span> <span class="ow">in</span> <span class="n">provides</span><span class="p">:</span>
+        <span class="n">declareAdapterForObject</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">ob</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">proto</span> <span class="ow">in</span> <span class="n">doesNotProvide</span><span class="p">:</span>
+        <span class="n">declareAdapterForObject</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">DOES_NOT_SUPPORT</span><span class="p">,</span> <span class="n">ob</span><span class="p">)</span>
+
+
+<span class="c"># And now for the magic function...</span>
+</div>
+<div class="viewcode-block" id="advise"><a class="viewcode-back" href="../../../traits_api_reference/traits.protocols.html#traits.protocols.protocols.advise">[docs]</a><span class="k">def</span> <span class="nf">advise</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="n">kw</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_getframe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">kind</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">caller_locals</span><span class="p">,</span> <span class="n">caller_globals</span> <span class="o">=</span> <span class="n">getFrameInfo</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">kind</span><span class="o">==</span><span class="s">&quot;module&quot;</span><span class="p">:</span>
+        <span class="n">moduleProvides</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;moduleProvides&#39;</span><span class="p">,())</span>
+        <span class="k">del</span> <span class="n">kw</span><span class="p">[</span><span class="s">&#39;moduleProvides&#39;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;Invalid keyword argument for advising modules: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">k</span>
+            <span class="p">)</span>
+
+        <span class="n">adviseObject</span><span class="p">(</span><span class="n">module</span><span class="p">,</span>
+            <span class="n">provides</span><span class="o">=</span><span class="n">moduleProvides</span>
+        <span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">elif</span> <span class="n">kind</span><span class="o">!=</span><span class="s">&quot;class&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span>
+            <span class="s">&quot;protocols.advise() must be called directly in a class or&quot;</span>
+            <span class="s">&quot; module body, not in a function or exec.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">classProvides</span>         <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;classProvides&#39;</span><span class="p">,())</span>
+    <span class="n">classDoesNotProvide</span>   <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;classDoesNotProvide&#39;</span><span class="p">,())</span>
+    <span class="n">instancesProvide</span>      <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;instancesProvide&#39;</span><span class="p">,())</span>
+    <span class="n">instancesDoNotProvide</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;instancesDoNotProvide&#39;</span><span class="p">,())</span>
+    <span class="n">asAdapterForTypes</span>     <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;asAdapterForTypes&#39;</span><span class="p">,())</span>
+    <span class="n">asAdapterForProtocols</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;asAdapterForProtocols&#39;</span><span class="p">,())</span>
+    <span class="n">protocolExtends</span>       <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;protocolExtends&#39;</span><span class="p">,())</span>
+    <span class="n">protocolIsSubsetOf</span>    <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;protocolIsSubsetOf&#39;</span><span class="p">,())</span>
+    <span class="n">factoryMethod</span>         <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;factoryMethod&#39;</span><span class="p">,</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">equivalentProtocols</span>   <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&#39;equivalentProtocols&#39;</span><span class="p">,())</span>
+
+    <span class="nb">map</span><span class="p">(</span><span class="n">kw</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">,</span><span class="s">&quot;classProvides classDoesNotProvide instancesProvide&quot;</span>
+        <span class="s">&quot; instancesDoNotProvide asAdapterForTypes asAdapterForProtocols&quot;</span>
+        <span class="s">&quot; protocolExtends protocolIsSubsetOf factoryMethod equivalentProtocols&quot;</span>
+        <span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s">&quot;Invalid keyword argument for advising classes: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">k</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">classProvides</span> <span class="ow">or</span> <span class="n">classDoesNotProvide</span><span class="p">:</span>
+            <span class="n">adviseObject</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span>
+                <span class="n">provides</span><span class="o">=</span><span class="n">classProvides</span><span class="p">,</span> <span class="n">doesNotProvide</span><span class="o">=</span><span class="n">classDoesNotProvide</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">instancesProvide</span> <span class="ow">or</span> <span class="n">instancesDoNotProvide</span><span class="p">:</span>
+            <span class="n">declareImplementation</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span>
+                <span class="n">instancesProvide</span><span class="o">=</span><span class="n">instancesProvide</span><span class="p">,</span>
+                <span class="n">instancesDoNotProvide</span><span class="o">=</span><span class="n">instancesDoNotProvide</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">asAdapterForTypes</span> <span class="ow">or</span> <span class="n">asAdapterForProtocols</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">instancesProvide</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="s">&quot;When declaring an adapter, you must specify what&quot;</span>
+                    <span class="s">&quot; its instances will provide.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">factoryMethod</span><span class="p">:</span>
+                <span class="n">factory</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span><span class="n">factoryMethod</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">factory</span> <span class="o">=</span> <span class="n">klass</span>
+
+            <span class="n">declareAdapter</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">instancesProvide</span><span class="p">,</span>
+                <span class="n">forTypes</span><span class="o">=</span><span class="n">asAdapterForTypes</span><span class="p">,</span> <span class="n">forProtocols</span><span class="o">=</span><span class="n">asAdapterForProtocols</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">factoryMethod</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s">&quot;&#39;factoryMethod&#39; is only used when declaring an adapter type&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">protocolExtends</span><span class="p">:</span>
+            <span class="n">declareAdapter</span><span class="p">(</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">protocolExtends</span><span class="p">,</span>
+                <span class="n">forProtocols</span><span class="o">=</span><span class="p">[</span><span class="n">klass</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">protocolIsSubsetOf</span><span class="p">:</span>
+            <span class="n">declareAdapter</span><span class="p">(</span><span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="p">[</span><span class="n">klass</span><span class="p">],</span>
+                <span class="n">forProtocols</span><span class="o">=</span><span class="n">protocolIsSubsetOf</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">equivalentProtocols</span><span class="p">:</span>
+            <span class="n">declareAdapter</span><span class="p">(</span>
+                <span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="n">equivalentProtocols</span><span class="p">,</span> <span class="n">forProtocols</span><span class="o">=</span><span class="p">[</span><span class="n">klass</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">declareAdapter</span><span class="p">(</span>
+                <span class="n">NO_ADAPTER_NEEDED</span><span class="p">,</span> <span class="p">[</span><span class="n">klass</span><span class="p">],</span> <span class="n">forProtocols</span><span class="o">=</span><span class="n">equivalentProtocols</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">klass</span>
+
+    <span class="n">addClassAdvisor</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.protocols.protocols</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Feb 22, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
