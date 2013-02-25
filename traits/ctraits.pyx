@@ -107,30 +107,71 @@ cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, objec
     else:
         trait.handler.error(obj, name, value)
 
+cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_cast_type(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_function(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
+cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError()
+
 cdef trait_validate validate_handlers[20]
 validate_handlers[0] = validate_trait_type
-#    validate_trait_instance,
-#    validate_trait_self_type,
-#    validate_trait_int,
-#    validate_trait_float,
-#    validate_trait_enum,
-#    validate_trait_map,
-#    validate_trait_complex,
-#    NULL,
-#    validate_trait_tuple,
-#    validate_trait_prefix_map,
-#    validate_trait_coerce_type,
-#    validate_cast_type,
-#    validate_trait_function,
-#    validate_trait_python,
+validate_handlers[1] = validate_trait_instance
+validate_handlers[2] = validate_trait_self_type
+validate_handlers[3] = validate_trait_int
+validate_handlers[4] = validate_trait_float
+validate_handlers[5] = validate_trait_enum
+validate_handlers[6] = validate_trait_map
+validate_handlers[7] = validate_trait_complex
+validate_handlers[8] = NULL
+validate_handlers[9] = validate_trait_tuple
+validate_handlers[10] = validate_trait_prefix_map
+validate_handlers[11] = validate_trait_coerce_type
+validate_handlers[12] = validate_trait_cast_type
+validate_handlers[13] = validate_trait_function
+validate_handlers[14] = validate_trait_python
 #    # The following entries are used by the __getstate__ method ...
-#    setattr_validate0,
-#    setattr_validate1,
-#    setattr_validate2,
-#    setattr_validate3,
+validate_handlers[15] = setattr_validate0
+validate_handlers[16] = setattr_validate1
+validate_handlers[17] = setattr_validate2
+validate_handlers[18] = setattr_validate3
 #    # End of __getstate__ method entries
-#    validate_trait_adapt
-#}
+validate_handlers[19] = validate_trait_adapt
 
 #-----------------------------------------------------------------------------
 #  'CHasTraits' instance definition:
@@ -211,22 +252,23 @@ cdef class CHasTraits:
             trait_property_changed(self, name, value_old, None)
 
     def __getattr__(self, name): # has_traits_getattro(self, name):
-        print 'CHASTRAITS GETATTR ', name
+        cdef PyObject* obj_value
         cdef object value
         cdef cTrait trait
 
         if self.obj_dict is not None:
             # had a low level performance hack with support for unicode names
-            value = <object>PyDict_GetItem(self.obj_dict, name)
-            if value is None:
-                raise KeyError('Invalid attribute error')
+            obj_value = PyDict_GetItem(self.obj_dict, name)
+            if obj_value is NULL:
+                raise KeyError('Invalid attribute error: %s' % name)
+            else:
+                return <object>obj_value
         if self.itrait_dict is not None:
             trait = <object>PyDict_GetItem(self.itrait_dict, name)
         else:
             trait = <object>PyDict_GetItem(self.ctrait_dict, name)
 
         if trait is not None:
-            print 'TRAIT GETATTR'
             value = trait.getattr(trait, self, name)
         else:
             value = <object>PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
@@ -238,7 +280,6 @@ cdef class CHasTraits:
         return value
 
     def __setattr__(self, name, value):
-        print 'CHASTRAITS __setattr__ ', name, value
         trait = getattr(self.itrait_dict, name, None)
         if trait is None:
             trait = getattr(self.ctrait_dict, name, None)
@@ -374,8 +415,68 @@ cdef object setattr_validate3(cTrait trait, CHasTraits obj, object name, object 
     cdef args = (obj, name, value,)
     return PyObject_Call(trait.py_validate, args, None)
 
+cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
+    cdef object result, value, dv, kw, tuple_
+
+    cdef int vtype = trait.default_value_type
+
+    if vtype == 0 or vtype == 1:
+        result = trait.default_value
+    elif vtype == 2:
+        result = obj
+    elif vtype == 3:
+        return trait.default_value[:]
+    elif vtype == 4:
+        return trait.default_value.copy()
+    elif vtype == 5:
+        return call_class(TraitListObject, trait, obj, name,
+                          trait.default_value)
+    elif vtype == 6:
+        return call_class(TraitDictObject, trait, obj, name,
+                          trait.default_value)
+    elif vtype == 7:
+        dv = trait.default_value
+        return PyObject_Call(dv[0], dv[1], dv[2])
+    elif vtype == 8:
+        tuple_ = (obj,)
+        result = PyObject_Call(trait.default_value, tuple, None)
+        if result is not None and trait.validate is not NULL:
+            value = trait.validate(trait, obj, name, result)
+            return value
+    elif vtype == 9:
+        return call_class(TraitSetObject, trait, obj, name,
+                          trait.default_value)
+
+    return result
+
+
 cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError()
+    """ Returns the value assigned to a standard trait. """
+
+    cdef int rc
+    cdef object result
+    cdef list tnotifiers, onotifiers
+
+    if obj.obj_dict is None:
+        obj.obj_dict = dict()
+
+    if isinstance(name, str):
+        result = default_value_for(trait, obj, name)
+        if result is not None:
+            obj.obj_dict[name] = result
+            rc = 0
+            if trait.post_setattr is not NULL and \
+                (trait.flags & TRAIT_IS_MAPPED == 0):
+                rc = trait.post_setattr(trait, obj, name, result)
+            if rc == 0:
+                tnotifiers = trait.notifiers
+                onotifiers = obj.notifiers
+                if has_notifiers(tnotifiers, onotifiers):
+                    rc = call_notifiers(tnotifiers, onotifiers, obj, name,
+                                        Uninitialized, result)
+            if rc == 0:
+                return result
+
 
 
 cdef bint has_notifiers(object tnotifiers, object onotifiers):
@@ -503,7 +604,7 @@ cdef int has_value_for(CHasTraits obj, str name):
 cdef internal_default_valuefor(cTrait trait, CHasTraits obj, object name):
     cdef object resul, value, dv, kw, tuple_
 
-    value_type = trait.internal_default_valuetype
+    value_type = trait.default_value_type
     if value_type == 0 or value_type == 1:
         result = trait.internal_default_value
     elif value_type == 2 :
@@ -539,7 +640,7 @@ cdef class cTrait:
     cdef object py_post_setattr # Pyton=based post 'setattr' handler
     cdef trait_validate validate
     cdef object py_validate # Python-based validat value handler
-    cdef int internal_default_valuetype # Type of default value: see the internal_default_valuefor function
+    cdef int default_value_type # Type of default value: see the internal_default_valuefor function
     cdef object internal_default_value # Default value for Trait
     cdef object delegate_name # Optional delegate name (also used for property get)
     cdef object delegate_prefix # Optional delate prefix (also usef for property set)
@@ -579,7 +680,7 @@ cdef class cTrait:
             if self.internal_default_value is None:
                 return None
             else:
-                return (self.internal_default_valuetype, self.internal_default_value)
+                return (self.default_value_type, self.internal_default_value)
         if value_type < 0 and value_type > 9:
             raise ValueError('The default value type must be 0..9 but %s was'
                              ' specified' % value_type)
@@ -693,7 +794,7 @@ cdef class cTrait:
         self.py_post_setattr = trait.py_post_setattr
         self.validate = trait.validate
         self.py_validate = trait.py_validate
-        self.internal_default_valuetype = trait.internal_default_valuetype
+        self.default_value_type = trait.default_value_type
         self.internal_default_value = trait.internal_default_value
         self.delegate_name = trait.delegate_name
         self.delegate_prefix = trait.delegate_prefix
@@ -773,6 +874,18 @@ cdef class cTrait:
             return internal_default_valuefor(self, obj, name)
 
         return self.getattr(self, obj, name)
+
+    property __dict__:
+        def __get__(self):
+            if self.obj_dict is None:
+                self.obj_dict = {}
+            return self.obj_dict
+
+        def __set__(self, value):
+            if not isinstance(value, dict):
+                raise ValueError('__dict__ maust be a dictionary. ')
+            self.obj_dict = value
+
 
 
 cdef class CTraitMethod:
