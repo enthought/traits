@@ -3,6 +3,8 @@ define the core performance oriented portions of the Traits package.
 
 """
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
+from cpython.int cimport PyInt_Check, PyInt_AS_LONG
+from cpython.float cimport PyFloat_Check
 from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call, PyObject_RichCompareBool, Py_NE
 from cpython.ref cimport PyObject, Py_TYPE
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM
@@ -112,17 +114,80 @@ cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, objec
         print 'Raising trait error'
         trait.handler.error(obj, name, value)
 
-cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vv')
+cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, object value):
+    """ Verifies a Python value is a float within a specified range. """
+
+    # FIXME: where defined as register in the C code
+    cdef object low, high
+    cdef long exlude_mask
+    cdef double float_value
+
+    cdef object type_info = trait.py_validate
+
+    if not PyFloat_Check(value):
+        if not PyInt_Check(value):
+            raise_trait_error(trait, obj, name, value)
+        float_value = <double> PyInt_AS_LONG(value)
+        value = float(float_value)
+    else:
+        float_value = value
+
+    low = type_info[1]
+    high = type_info[2]
+    exclude_mask = type_info[3]
+
+    if low is not None:
+        if (exclude_mask & 1) != 0:
+            if float_value <= low:
+                raise_trait_error(trait, obj, name, value)
+        elif float_value < low:
+            raise_trait_error(trait, obj, name, value)
+
+    if high is not None:
+        if exclude_mask & 2 != 0:
+            if float_value >= high:
+                raise_trait_error(trait, obj, name, value)
+        elif float_value > high:
+                raise_trait_error(trait, obj, name, value)
+
+    return value
 
 cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
     raise NotImplementedError('vt')
 
 cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vti')
+    # FIXME: where defined as register in the C code
+    cdef object low, high
+    cdef object type_info = trait.py_validate
+    cdef long int_value, exclude_mask
 
-cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtf')
+    if PyInt_Check(value):
+        int_value = PyInt_AS_LONG(value)
+        low = type_info[1]
+        high = type_info[2]
+        exclude_mask = PyInt_AS_LONG(type_info[3])
+
+        if low is not None:
+            if exclude_mask & 1 != 0:
+                if int_value <= PyInt_AS_LONG(low):
+                    raise_trait_error(trait, obj, name, value)
+            elif int_value < PyInt_AS_LONG(low):
+                raise_trait_error(trait, obj, name, value)
+
+        if high is not None:
+            if exclude_mask & 2 != 0:
+                if int_value >= PyInt_AS_LONG(high):
+                    raise_trait_error(trait, obj, name, value)
+            elif int_value > PyInt_AS_LONG(high):
+                raise_trait_error(trait, obj, name, value)
+
+        return value
+
+
+
+
+cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
+    raise NotImplementedError('vti')
 
 cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
     raise NotImplementedError('vte')
@@ -181,7 +246,51 @@ cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, obj
     raise NotImplementedError('vtp')
 
 cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vta')
+    """  Attempts to 'adapt' an object to a specified interface. """
+
+    cdef object result, args, type_
+    cdef object type_info = trait.py_validate
+    cdef long mode, rc
+
+    if value is None:
+        if type_info[3]:
+            return None
+        else:
+            raise_trait_error( trait, obj, name, value );
+
+    type_ = type_info[1]
+    mode = type_info[2]
+
+    if mode == 2:
+        args = (value, None, type_)
+    else:
+        args = (value, type_)
+
+    result = adapt(*args)
+    if result is not None:
+        if mode > 0 and result == value:
+            return result
+    else:
+        result = validate_implements(*args)
+        rc = PyInt_AS_LONG(result)
+        if rc:
+            return value
+        else:
+            result = default_value_for(trait, obj, name)
+            if result is not None:
+                return result
+            else:
+                raise_trait_error( trait, obj, name, value );
+
+    # Check implements
+    result = validate_implements(*args)
+    rc= PyInt_AS_LONG(result)
+    if rc:
+        return value
+    else:
+        raise_trait_error( trait, obj, name, value );
+
+
 
 cdef trait_validate validate_handlers[20]
 validate_handlers[0] = validate_trait_type
