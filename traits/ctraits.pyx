@@ -3,7 +3,7 @@ define the core performance oriented portions of the Traits package.
 
 """
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
-from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call
+from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call, PyObject_RichCompareBool, Py_NE
 from cpython.ref cimport PyObject, Py_TYPE
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM
 from cpython.type cimport PyType_Check
@@ -89,9 +89,13 @@ cdef class CTraitMethod
 
 ctypedef object (*trait_validate)(cTrait, CHasTraits, object, object)
 ctypedef object (*trait_getattr)(cTrait, CHasTraits, object)
-ctypedef int (*trait_setattr)(cTrait, cTrait, CHasTraits, object , object)
+ctypedef int (*trait_setattr)(cTrait, cTrait, CHasTraits, object , object) except? -1
 ctypedef int (*trait_post_setattr)(cTrait, CHasTraits, object , object)
 ctypedef object (*delegate_attr_name_func)(cTrait, CHasTraits, object)
+
+cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
+
+    cdef object result = trait.handler.error(obj, name, value)
 
 cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is of a specified type (or None). """
@@ -109,46 +113,75 @@ cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, objec
         trait.handler.error(obj, name, value)
 
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vv')
 
 cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vt')
 
 cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vti')
 
 cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtf')
 
 cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vte')
 
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtm')
 
 cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtc')
 
 cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtt')
 
 cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtpm')
 
 cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    """  Verifies a Python value is of a specified (possibly coercable) type. """
+    cdef int i, n
+    cdef object type2
+
+    cdef object type_info = trait.py_validate
+    cdef object type_     = type_info[1]
+    if isinstance(value, type_):
+        return value
+
+    n = len(type_info)
+
+    for i in range(2, n):
+        type2 = type_info[i]
+        if type2 is None:
+            break
+        else:
+            if isinstance(value, type2):
+                return value
+
+    restart = i+1
+    for i in range(restart, n):
+
+        type2 = type_info[ i]
+        if type2 is None:
+            break
+        else:
+            if isinstance(value, type2):
+                return type_(value)
+
+    raise_trait_error( trait, obj, name, value );
 
 cdef object validate_trait_cast_type(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtcastt')
 
 cdef object validate_trait_function(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtf')
 
 cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vtp')
 
 cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError()
+    raise NotImplementedError('vta')
 
 cdef trait_validate validate_handlers[20]
 validate_handlers[0] = validate_trait_type
@@ -385,7 +418,7 @@ cdef class CHasTraits:
     def __setattr__(self, name, value):
         self._internal_setattr(name, value)
 
-    cdef int _internal_setattr(self, str name, object value):
+    cdef int _internal_setattr(self, str name, object value) except? -1:
         """  Handles the 'setattr' operation on a 'CHasTraits' instance. """
 
         # Equivalent of the has_traits_settro function
@@ -453,7 +486,7 @@ getattr_property_handlers[1] = getattr_property1
 getattr_property_handlers[2] = getattr_property2
 getattr_property_handlers[3] = getattr_property3
 
-cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     cdef int result
     cdef object validated = traitd.validate(traitd, obj, name, value)
@@ -464,7 +497,7 @@ cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj,
 cdef void raise_delete_property_error(object obj, object name):
     raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (obj, name))
 
-cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     if value is None:
         raise_delete_property_error(obj, name)
@@ -476,7 +509,7 @@ cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object 
     else:
         return 0
 
-cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     if value is None:
         raise_delete_property_error(obj, name)
@@ -488,7 +521,7 @@ cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object 
     else:
         return 0
 
-cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     if value is None:
         raise_delete_property_error(obj, name)
@@ -500,7 +533,7 @@ cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object 
     else:
         return 0
 
-cdef int setattr_property3(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_property3(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     if value is None:
         raise_delete_property_error(obj, name)
@@ -611,7 +644,7 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
                 return result
 
 cdef object getattr_trait_not_implemented(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError()
+    raise NotImplementedError('GET ATTR TRAIT NOT IMPL.')
 
 
 cdef bint has_notifiers(object tnotifiers, object onotifiers):
@@ -656,7 +689,7 @@ cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object
 
 
 
-cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
+cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     print 'SETATTR TRAIT'
     cdef object object_dict = obj.obj_dict
@@ -711,6 +744,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
             # FIXME: check what invalid_attribute_error function does
             raise ValueError('Attribute must be a str.')
 
+        print 'After validate'
         if traitd.flags & TRAIT_SETATTR_ORIGINAL_VALUE:
             new_value = original_value
         else:
@@ -736,8 +770,9 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
                     changed = old_value != value
                     flag_check = (traitd.flags & TRAIT_OBJECT_IDENTITY) == 0
                     if changed and flag_check:
-                        raise NotImplementedError()
-                        #changed = PyObject_RichCompareBool(old_value, value, Py_NE)
+                        changed = PyObject_RichCompareBool(old_value, value, Py_NE)
+                        if changed == -1:
+                            pass
 
         obj.obj_dict[name] = new_value
 
@@ -753,8 +788,58 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
         return rc
 
-cdef int setattr_trait_not_implemented(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value):
-    pass
+cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    cdef int rc
+
+    if value is not None:
+        if obj.obj_dict is None:
+            obj.obj_dict = {}
+
+        obj.obj_dict[name] = value
+
+        return 0
+
+    if obj.obj_dict is not None:
+        if name not in obj.obj_dict:
+            raise AttributeError('Unknown attribute %s in %s' % (name, obj))
+
+    raise AttributeError('Unknown attribute %s in %s' % (name, obj))
+
+cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+
+    cdef int rc = 0
+    cdef list tnotifiers, onotifiers
+
+    if value is not None:
+        if traitd.validate is not NULL:
+            value = traitd.validate(traitd, obj, name, value)
+            if value is None:
+                return -1
+
+        tnotifiers = traito.notifiers
+        onotifiers = obj.notifiers
+
+        if has_notifiers(tnotifiers, onotifiers):
+            rc = call_notifiers(tnotifiers, onotifiers, obj, name,
+                                Undefined, value)
+    return rc
+
+
+cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    raise NotImplementedError('No support for delegate')
+
+cdef int setattr_dissalow(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    raise NotImplementedError('No support for dissalow')
+
+cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    raise NotImplementedError('No support for readonly')
+
+cdef int setattr_constant(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    raise NotImplementedError('No support for constant')
+
+cdef int setattr_generic(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    raise NotImplementedError('No support for generic')
+
 
 cdef trait_validate setattr_validate_handlers[4]
 setattr_validate_handlers[0] = setattr_validate0
@@ -786,25 +871,18 @@ getattr_handlers[12] = getattr_trait_not_implemented
 
 cdef trait_setattr setattr_handlers[13]
 setattr_handlers[0] = setattr_trait
-setattr_handlers[1] = setattr_trait_not_implemented
-setattr_handlers[2] = setattr_trait_not_implemented
-setattr_handlers[3] = setattr_trait_not_implemented
-setattr_handlers[4] = setattr_trait_not_implemented
-setattr_handlers[5] = setattr_trait_not_implemented
-setattr_handlers[6] = setattr_trait_not_implemented
-setattr_handlers[7] = setattr_trait_not_implemented
-setattr_handlers[8] = setattr_trait_not_implemented
-setattr_handlers[9] = setattr_trait_not_implemented
-setattr_handlers[10] = setattr_trait_not_implemented
-setattr_handlers[11] = setattr_trait_not_implemented
-setattr_handlers[12] = setattr_trait_not_implemented
-#setattr_python,    setattr_event,     setattr_delegate,
-#    setattr_event,     setattr_disallow,  setattr_readonly,  setattr_constant,
-#    setattr_generic,
-#/*  The following entries are used by the __getstate__ method: */
-#    setattr_property0, setattr_property1, setattr_property2, setattr_property3,
-#/*  End of __setstate__ method entries */
-
+setattr_handlers[1] = setattr_python
+setattr_handlers[2] = setattr_event
+setattr_handlers[3] = setattr_delegate
+setattr_handlers[4] = setattr_event
+setattr_handlers[5] = setattr_dissalow
+setattr_handlers[6] = setattr_readonly
+setattr_handlers[7] = setattr_constant
+setattr_handlers[8] = setattr_generic
+setattr_handlers[9] = setattr_property0
+setattr_handlers[10] = setattr_property1
+setattr_handlers[11] = setattr_property2
+setattr_handlers[12] = setattr_property3
 
 cdef object delegate_attr_name_name(cTrait trait, CHasTraits obj, object name):
     return name
