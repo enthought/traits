@@ -706,7 +706,8 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
                 return -1
         if obj.obj_dict is None:
             obj.obj_dict = {}
-        if not isinstance(name, types.BaseString):
+        # FIXME: support unicode
+        if not isinstance(name, str):
             # FIXME: check what invalid_attribute_error function does
             raise ValueError('Attribute must be a str.')
 
@@ -718,7 +719,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
         tnotifiers = traito.notifiers
         onotifiers = obj.notifiers
-        do_notifiers = has_notifiers(tnitifiers, onotifiers)
+        do_notifiers = has_notifiers(tnotifiers, onotifiers)
         post_setattr = traitd.post_setattr
 
         if post_setattr is not None and do_notifiers:
