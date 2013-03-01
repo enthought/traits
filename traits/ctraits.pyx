@@ -243,7 +243,8 @@ cdef object validate_trait_function(cTrait trait, CHasTraits obj, object name, o
     raise NotImplementedError('vtf')
 
 cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtp')
+    """ Calls a Python-based trait validator. """
+    return trait.py_validate(obj, name, value)
 
 cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, object value):
     """  Attempts to 'adapt' an object to a specified interface. """
