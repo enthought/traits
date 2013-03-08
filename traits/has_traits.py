@@ -106,7 +106,6 @@ ClassTraits     = '__class_traits__'
 PrefixTraits    = '__prefix_traits__'
 ListenerTraits  = '__listener_traits__'
 ViewTraits      = '__view_traits__'
-SubclassTraits  = '__subclass_traits__'
 InstanceTraits  = '__instance_traits__'
 ImplementsClass = '__implements__'
 
@@ -649,11 +648,6 @@ class MetaHasTraits ( type ):
 
         # Finish building the class using the updated class dictionary:
         klass = type.__new__( cls, class_name, bases, class_dict )
-        if _HasTraits is not None:
-            for base in bases:
-                if issubclass( base, _HasTraits ):
-                    getattr( base, SubclassTraits ).append( klass )
-        setattr( klass, SubclassTraits, [] )
 
         # Fix up all self referential traits to refer to this class:
         for trait in mhto.self_referential:
@@ -1750,13 +1744,13 @@ class HasTraits ( CHasTraits ):
 
         """
         if not all:
-            return getattr( cls, SubclassTraits )[:]
+            return cls.__subclasses__()
         return cls._trait_subclasses( [] )
 
     trait_subclasses = classmethod( trait_subclasses )
 
     def _trait_subclasses ( cls, subclasses ):
-        for subclass in getattr( cls, SubclassTraits ):
+        for subclass in cls.__subclasses__():
             if subclass not in subclasses:
                 subclasses.append( subclass )
                 subclass._trait_subclasses( subclasses )
