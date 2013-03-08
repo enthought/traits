@@ -17,6 +17,9 @@ def _create_subclass():
 class TestRegression(unittest.TestCase):
 
     def test_subclasses_weakref(self):
+        """ Make sure that dynamically created subclasses are not held
+        strongly by HasTraits.
+        """
         previous_subclasses = HasTraits.__subclasses__()
         _create_subclass()
         _create_subclass()
