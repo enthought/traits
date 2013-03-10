@@ -4,11 +4,11 @@ define the core performance oriented portions of the Traits package.
 """
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
 from cpython.int cimport PyInt_Check, PyInt_AS_LONG
-from cpython.float cimport PyFloat_Check
 from cpython.exc cimport PyErr_Clear
+from cpython.float cimport PyFloat_Check
 from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call, PyObject_RichCompareBool, Py_NE
 from cpython.ref cimport PyObject, Py_TYPE
-from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM
+from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM, PyTuple_SET_ITEM, PyTuple_New
 from cpython.type cimport PyType_Check
 
 cdef extern from 'Python.h':
@@ -189,19 +189,144 @@ cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, o
     raise NotImplementedError('vti')
 
 cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vte')
+    """ Verifies a Python value is in a specified enumeration. """
+
+    cdef object type_info = trait.py_validate
+    if value in type_info[1]:
+        return value
+    else:
+        raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtm')
+    """  Verifies a Python value is in a specified map (i.e. dictionary). """
+    cdef object type_info = trait.py_validate
+    if value in type_info[1]:
+        return value
+    else:
+        raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
+    """ Verifies a Python value satisifies a complex trait definition. """
+
     raise NotImplementedError('vtc')
 
+    cdef int i, j, k, kind
+    cdef long int_value, exclude_mask, mode, rc
+    cdef double float_value
+    cdef object low, high, result, type_info, type_, type2_, args
+    cdef object list_type_info = trait.py_validate[1]
+    cdef int n = len(list_type_info)
+
+    for i in xrange(n):
+        type_info = list_type_info[i]
+        check = type_info[0]
+
+        if check == 0: # Type check
+            kind = len(type_info)
+            if kind == 3 and value is None or issubclass(value, type_info[kind-1]):
+                return value
+        elif check == 1: # Instance check
+            kind = len(type_info)
+            if kind == 3 and value is None or isinstance(value, type_info[kind-1]):
+                return value
+        elif check == 2: # Self type check
+            if len(type_info) == 2 and value is None or issubclass(value, type(obj)):
+                return value
+        elif check == 3: # Integer range check
+            if PyInt_Check(value):
+                int_value = PyInt_AS_LONG(value)
+                low = type_info[1]
+                high = type_info[2]
+                exclude_mask = PyInt_AS_LONG(type_info[3])
+
+                if low is not None:
+                    if exclude_mask & 1 != 0:
+                        if int_value > PyInt_AS_LONG(low):
+                            return value
+                    else:
+                        if int_value >= PyInt_AS_LONG(low):
+                            return value
+                if high is not None:
+                    if exclude_mask & 2 != 0:
+                        if int_value < PyInt_AS_LONG(high):
+                            return value
+                    else:
+                        if int_value <= PyInt_AS_LONG(high):
+                            return value
+        elif check == 4: # Floating point range check
+            if not PyFloat_Check(value):
+                if PyInt_Check(value):
+                    float_value = <double> PyInt_AS_LONG(value)
+                    value = PyFloat_FromDouble(float_value)
+                else:
+                    raise_trait_error(trait, obj, name, value)
+            else:
+                float_value = PyFloat_AS_DOUBLE(value)
+
+            low = type_info[1]
+            high = type_info[2]
+            exclude_mask = PyInt_AS_LONG(type_info[3])
+
+            if low is not None:
+                if exclude_mask & 1 != 0:
+                    if float_value > PyFloat_AS_DOUBLE(low):
+                        return value
+                else:
+                    if float_value >= PyFloat_AS_DOUBLE(low):
+                        return value
+            if high is not None:
+                if exclude_mask & 2 != 0:
+                    if float_value < PyFloat_AS_DOUBLE(high):
+                        return value
+                else:
+                    if float_value <= PyFloat_AS_DOUBLE(high):
+                        return value
+        else:
+            raise NoImplementedError('Complex validation not implemented for %d' % check)
+
 cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtt')
+    "" "Verifies a Python value is a tuple of a specified type and content. """
+    cdef cTrait itrait
+    cdef object bitm, aitem
+    cdef tuple tuple_
+    cdef int i, j, n
+
+    if isinstance(trait, tuple):
+        n = len(trait)
+        if n == len(value):
+            for i in xrange(n):
+                bitem = value[i]
+                itrait = trait[i]
+                if itrait.validate is NULL:
+                    aitem = bitem
+                else:
+                    aitem = itrait.valiate(itrait, obj, name, bitem)
+                if tuple_ is not None:
+                    PyTuple_SET_ITEM(tuple_, i, aitem)
+                elif aitem != bitem:
+                    tuple_ = PyTuple_New(n)
+                    for j in xrange(i):
+                        bitem = value[j]
+                        PyTuple_SET_ITEM(tuple_, j, bitem)
+                    PyTuple_SET_ITEM(tuple_, i, aitem)
+            if tuple_ is None:
+                return tuple_
+            else:
+                return value
+
+
+
 
 cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtpm')
+    """ Verifies a Python value is in a specified prefix map (i.e. dictionary). """
+
+    cdef object type_info = trait.py_validate
+    cdef object mapped_value
+
+    if value in type_info[1]:
+        return type_info[1][value]
+
+    return trait.pyvalidate[2](obj, name, value)
 
 cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is of a specified (possibly coercable) type. """
@@ -239,7 +364,9 @@ cdef object validate_trait_cast_type(cTrait trait, CHasTraits obj, object name, 
     raise NotImplementedError('vtcastt')
 
 cdef object validate_trait_function(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vtf')
+    """ Verifies a Python value satisifies a specified function validator. """
+    cdef object result
+    result = trait.py_validate[1](obj, name, value)
 
 cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, object value):
     """ Calls a Python-based trait validator. """
