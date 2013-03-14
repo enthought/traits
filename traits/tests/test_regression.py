@@ -27,3 +27,14 @@ class TestRegression(unittest.TestCase):
         _create_subclass()
         gc.collect()
         self.assertEqual(previous_subclasses, HasTraits.__subclasses__())
+
+    def test_leaked_property_tuple(self):
+        """ the property ctrait constructor shouldn't leak a tuple. """
+        class A(HasTraits):
+            prop = Property()
+        a = A()
+        self.assertEqual(sys.getrefcount(a.trait('prop').property()), 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
