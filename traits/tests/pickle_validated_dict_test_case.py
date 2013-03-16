@@ -15,7 +15,7 @@
 from __future__ import absolute_import
 
 from cPickle import dumps, loads
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import Dict, HasTraits, Int, List
 
