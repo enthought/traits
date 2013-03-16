@@ -8,7 +8,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #------------------------------------------------------------------------------
-import unittest
+from traits.testing.unittest_tools import unittest
 from traits.api import HasTraits, Float, List, Bool, on_trait_change
 from traits.testing.api import UnittestTools
 

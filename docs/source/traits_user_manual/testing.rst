@@ -26,7 +26,7 @@ to assert the behaviour.
 The following example demonstrates the basic usage of the mixin class in a
 TestCase::
 
-    import unittest
+    from traits.testing.unittest_tools import unittest
     from traits.api import HasTraits, Float, List, Bool, on_trait_change
     from traits.testing.api import UnittestTools
 

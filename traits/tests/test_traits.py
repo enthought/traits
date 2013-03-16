@@ -18,7 +18,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
     Instance, Int, List, Long, Str, Trait, TraitError, TraitList,
