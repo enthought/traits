@@ -1,0 +1,12 @@
+language: python
+python:
+  - 2.7
+  - 2.6
+install:
+  - pip install nose
+  - python setup.py build_ext --inplace
+script:
+  - nosetests
+notifications:
+  email:
+    - pberkes@enthought.com
