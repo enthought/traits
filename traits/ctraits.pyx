@@ -451,7 +451,7 @@ cdef object validate_trait_python(cTrait trait, CHasTraits obj, object name, obj
     """ Calls a Python-based trait validator. """
 
     print 'Validate trait python'
-    return trait.py_validate[1](obj, name, value)
+    return trait.py_validate(obj, name, value)
 
 cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, object value):
     """  Attempts to 'adapt' an object to a specified interface. """
@@ -643,7 +643,7 @@ cdef class CHasTraits:
             self.itrait_dict = {}
 
         # Create a new instance trait and clone the class trait into it
-        itrait = cTrait()
+        itrait = cTrait(0)
         trait_clone(itrait, trait)
         itrait.obj_dict = trait.obj_dict
 
