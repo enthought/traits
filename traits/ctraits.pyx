@@ -94,7 +94,7 @@ cdef class CTraitMethod
 ctypedef object (*trait_validate)(cTrait, CHasTraits, object, object)
 ctypedef object (*trait_getattr)(cTrait, CHasTraits, object)
 ctypedef int (*trait_setattr)(cTrait, cTrait, CHasTraits, object , object) except? -1
-ctypedef int (*trait_post_setattr)(cTrait, CHasTraits, object , object)
+ctypedef int (*trait_post_setattr)(cTrait, CHasTraits, object , object) except? -1
 ctypedef object (*delegate_attr_name_func)(cTrait, CHasTraits, object)
 
 cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
@@ -208,7 +208,7 @@ cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     print 'Validate trait map'
     cdef object type_info = trait.py_validate
-    if value in type_info[1]:
+    if PyDict_GetItem(type_info[1], value) != NULL:
         return value
     else:
         raise_trait_error(trait, obj, name, value)
@@ -398,15 +398,19 @@ cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name
     """  Verifies a Python value is of a specified (possibly coercable) type. """
 
     print 'Validate trait coerce type'
-    cdef int i, n
+    cdef unsigned int i, n
     cdef object type2
 
     cdef object type_info = trait.py_validate
     cdef object type_     = type_info[1]
+    print value, type(value), type_
     if PyObject_TypeCheck(value, <PyTypeObject*>type_):
         return value
 
     n = len(type_info)
+
+    if n <= 2:
+        raise_trait_error( trait, obj, name, value );
 
     for i in range(2, n):
         type2 = type_info[i]
@@ -416,7 +420,10 @@ cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name
             if PyObject_TypeCheck(value, <PyTypeObject*>type2):
                 return value
 
-    restart = i
+    restart = i+1
+    if restart >=  n:
+        raise_trait_error( trait, obj, name, value );
+
     for i in range(restart, n):
 
         type2 = type_info[i]
@@ -461,8 +468,9 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     cdef object type_info = trait.py_validate
     cdef long mode, rc
 
+    print 'Type info ', type_info
     if value is None:
-        if type_info[3] == 0:
+        if type_info[3] is True:
             return value
         else:
             raise_trait_error( trait, obj, name, value );
@@ -475,11 +483,11 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     else:
         args = (value, type_)
 
-    result = adapt(*args)
-    if result is not None:
+    try:
+        result = adapt(*args)
         if mode > 0 or result == value:
             return result
-    else:
+    except:
         result = validate_implements(*args)
         rc = PyInt_AS_LONG(result)
         if rc:
@@ -698,6 +706,7 @@ cdef class CHasTraits:
         return 0
 
     def __getattr__(self, name): # has_traits_getattro(self, name):
+        print 'cTrait getattr ', name
         cdef object obj_value
         cdef object value
         cdef cTrait trait
@@ -705,15 +714,15 @@ cdef class CHasTraits:
 
         if self.obj_dict is not None:
             # had a low level performance hack with support for unicode names
-            obj_value = self.obj_dict.get( name, None)
-            if obj_value is not None:
-                return obj_value
+            if name in self.obj_dict:
+                return self.obj_dict[name]
         if self.itrait_dict is not None:
             trait = self.itrait_dict.get(name, None)
         else:
             trait = self.ctrait_dict.get(name, None)
 
         if trait is not None:
+            print 'trait getattr '
             value = trait.getattr(trait, self, name)
         else:
             res = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
@@ -978,14 +987,15 @@ cdef int setattr_property3(cTrait traito, cTrait traitd, CHasTraits obj, object 
         return 0
 
 # Calls a Python-based trait post_setattr handler
-cdef int post_setattr_trait_python(cTrait trait, CHasTraits obj, object name, object value):
+cdef int post_setattr_trait_python(cTrait trait, CHasTraits obj, object name, object value) except? -1:
 
-    cdef object args = (obj, name, value)
-    cdef object result = PyObject_Call(trait.py_post_setattr, args, None)
-    if result is None:
-        return -1
-    else:
+    print 'Post setattr trait python'
+    try:
+        trait.py_post_setattr(obj, name, value)
         return 0
+    except:
+        return -1
+
 
 #  Sets the 'property' value fields of a CTrait instance:
 cdef trait_setattr setattr_property_handlers[5]
@@ -1051,6 +1061,7 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
 cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
     """ Returns the value assigned to a standard trait. """
 
+    print 'getattr_trait'
     cdef int rc
     cdef object result
     cdef list tnotifiers, onotifiers
@@ -1166,6 +1177,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
     cdef object object_dict = obj.obj_dict
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
+    cdef int rc
 
     # This block is value == NULL in C. Do we really have calls to this
     # function with a NULL pointer?
@@ -1225,9 +1237,10 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     tnotifiers = traito.notifiers
     onotifiers = obj.notifiers
     do_notifiers = has_notifiers(tnotifiers, onotifiers)
-    post_setattr = traitd.post_setattr
 
-    if post_setattr is not None or do_notifiers:
+    cdef trait_post_setattr post_setattr = traitd._post_setattr
+
+    if post_setattr is not NULL or do_notifiers:
         old_value = obj.obj_dict.get(name, None)
         if old_value is None:
             if traitd != traito:
@@ -1242,6 +1255,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
                 if changed == -1:
                     PyErr_Clear()
 
+    print 'NEW VALUE ', new_value
     try:
         obj.obj_dict[name] = new_value
     except KeyError:
@@ -1249,15 +1263,18 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
     rc = 0
 
-    print 'Changed ? ', changed, post_setattr
+    print 'Changed ? ', changed
     if changed:
-        if post_setattr is not None:
+        if post_setattr is not NULL:
+            print 'calling post_setattr'
             flag_check = traitd.flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE
             post_value = original_value if flag_check else value
-            rc = post_setattr(obj, name, post_value)
+            rc = post_setattr(traitd, obj, name, post_value)
         if rc == 0 and do_notifiers:
+            print 'calling notifiers'
             rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, new_value)
 
+    print 'result ', rc
     return rc
 
 cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
