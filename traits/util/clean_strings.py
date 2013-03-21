@@ -5,7 +5,7 @@
 #
 #-----------------------------------------------------------------------------
 
-""" Provides functions that munge strings to avoid characters that would be
+""" Provides functions that mange strings to avoid characters that would be
     problematic in certain situations.
 """
 
@@ -48,7 +48,7 @@ def clean_timestamp(dt=None, microseconds=False):
 
         Parameters
         ----------
-        dt : None or datetime.datetime object
+        dt : None or datetime.datetime
             If None, then the current time is used.
         microseconds : bool
             Display microseconds or not.

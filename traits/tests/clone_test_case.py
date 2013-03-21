@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Instance, Str, Any, Property
 
@@ -262,7 +262,7 @@ class CloneTestCase( unittest.TestCase ) :
         # Check Bar and Bar attributes....
         bar_copy = baz_copy.other
 
-        # Chedk the Bar owned object
+        # Check the Bar owned object
         self.failIf( bar_copy.unique is bar.unique )
 
         # Since the two original 'ref' links were to a shared object,

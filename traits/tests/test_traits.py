@@ -18,11 +18,12 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
     Instance, Int, List, Long, Str, Trait, TraitError, TraitList,
-    TraitPrefixList, TraitPrefixMap, TraitRange, Tuple)
+    TraitPrefixList, TraitPrefixMap, TraitRange, Tuple, pop_exception_handler,
+    push_exception_handler)
 
 #-------------------------------------------------------------------------------
 #  Base unit test classes:
@@ -53,7 +54,7 @@ class BaseTest(object):
                 self.assertEqual(obj.value_, self._mapped_values[i])
 
         # NOTE:
-        #     There is/was some intercation between nosetests and coverage
+        #     There is/was some interaction between nosetests and coverage
         #     which causes problems with raising exceptions in Traits
         #     with Python 2.4.  However, I am no longer able to reproduce
         #     the behavior, see:
@@ -706,6 +707,24 @@ class NotifierTests(unittest.TestCase):
         obj.value2 = 4
         self.assertEqual(obj.value1_count, 12)
         self.assertEqual(obj.value2_count, 12)
+
+class RaisesArgumentlessRuntimeError(HasTraits):
+    x = Int(0)
+
+    def _x_changed(self):
+        raise RuntimeError
+
+class TestRuntimeError(unittest.TestCase):
+
+    def setUp(self):
+        push_exception_handler(lambda *args: None, reraise_exceptions=True)
+
+    def tearDown(self):
+        pop_exception_handler()
+
+    def test_runtime_error(self):
+        f = RaisesArgumentlessRuntimeError()
+        self.assertRaises(RuntimeError, setattr, f, 'x', 5)
 
 #-------------------------------------------------------------------------------
 #  Trait that uses delegation:

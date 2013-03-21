@@ -36,7 +36,7 @@ validate ( self, object, name, value )
     value, the method should either raise a **TraitError** or  call the
     *error()* method to raise a **TraitError** on its behalf.
 
-In addtion to *validate*, the subclass can also define the *post_setattr*
+In addition to *validate*, the subclass can also define the *post_setattr*
 method, which should have the following signature:
 
 post_setattr ( self, object, name, value )
@@ -132,7 +132,7 @@ Because the value of a *property* is determined by the *get* method, the
 
 However, all other values and methods, such as the *info_text* class attribute
 and *info* method apply to a *property* as well as a normal type. Please refer
-to the preceding section on defining a trait type for additional infomation
+to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 

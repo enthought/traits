@@ -17,7 +17,7 @@
 from __future__ import absolute_import
 
 # Standard library imports.
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
 from ..api import Adapter, HasTraits, Instance, Int, Interface, adapts, implements

@@ -3,7 +3,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
-#  This Str()oftware is provided without warranty under the terms of the
+#  This Software is provided without warranty under the terms of the
 #  BSD
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The
@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Str, Instance, Any
 

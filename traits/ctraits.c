@@ -4588,7 +4588,6 @@ _trait_property ( trait_object * trait, PyObject * args ) {
                 Py_INCREF( temp );
                 PyTuple_SET_ITEM( result, 2, temp = trait->py_validate );
                 Py_INCREF( temp );
-                Py_INCREF( result );
                 return result;
             }
             return NULL;

@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Category, Str
 
@@ -74,7 +74,7 @@ class CategoryTestCase( unittest.TestCase ) :
         return
 
     def test_subclass_instance_category(self) :
-        """ Category subclass instantiation not supportted.
+        """ Category subclass instantiation not supported.
         This test demonstrates that traits allows subclassing of a category
         class, that subclass can be instantiated, but the traits of the parent
         class are not inherited.

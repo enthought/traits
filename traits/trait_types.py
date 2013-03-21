@@ -105,7 +105,7 @@ class Any ( TraitType ):
     """ Defines a trait whose value can be anything.
     """
 
-    # The default value for the trait:
+    #: The default value for the trait:
     default_value = None
 
     #: A description of the type of value this trait accepts:
@@ -120,7 +120,7 @@ class Generic ( Any ):
         be redefined via assignment using a TraitValue object.
     """
 
-    # The standard metadata for the trait:
+    #: The standard metadata for the trait:
     metadata = { 'trait_value': True }
 
 #-------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ class Unicode ( BaseUnicode ):
         C-level fast validator.
     """
 
-    # The C-level fast validator to use:
+    #: The C-level fast validator to use:
     fast_validate = ( 11, unicode, None, str )
 
 #-------------------------------------------------------------------------------
@@ -678,14 +678,14 @@ class String ( TraitType ):
 
         Parameters
         ----------
-        value : string
-            The default value for the string
+        value : str
+            The default value for the string.
         minlen : integer
-            The minimum length allowed for the string
+            The minimum length allowed for the string.
         maxlen : integer
-            The maximum length allowed for the string
-        regex : string
-            A Python regular expression that the string must match
+            The maximum length allowed for the string.
+        regex : str
+            A Python regular expression that the string must match.
 
         """
         super( String, self ).__init__( value, **metadata )
@@ -815,9 +815,9 @@ class Regex ( String ):
 
         Parameters
         ----------
-        value : string
-            The default value of the trait
-        regex : string
+        value : str
+            The default value of the trait.
+        regex : str
             The regular expression that the trait value must match.
 
         Default Value
@@ -1108,7 +1108,7 @@ class Constant ( TraitType ):
             Parameters
             ----------
             value : any type except a list or dictionary
-                The default value for the trait
+                The default value for the trait.
 
             Default Value
             -------------
@@ -1191,15 +1191,15 @@ class DelegatesTo ( Delegate ):
 
             Parameters
             ----------
-            delegate : string
-                Name of the attribute on the current object which references the
-                object that is the trait's delegate
-            prefix : string
+            delegate : str
+                Name of the attribute on the current object which references
+                the object that is the trait's delegate.
+            prefix : str
                 A prefix or substitution applied to the original attribute when
-                looking up the delegated attribute
-            listenable : Boolean
+                looking up the delegated attribute.
+            listenable : bool
                 Indicates whether a listener can be attached to this attribute
-                such that changes to the delagate attribute will trigger it
+                such that changes to the delagate attribute will trigger it.
 
             Description
             -----------
@@ -1249,16 +1249,16 @@ class PrototypedFrom ( Delegate ):
 
             Parameters
             ----------
-            prototype : string
+            prototype : str
                 Name of the attribute on the current object which references the
-                object that is the trait's prototype
-            prefix : string
+                object that is the trait's prototype.
+            prefix : str
                 A prefix or substitution applied to the original attribute when
-                looking up the prototyped attribute
-            listenable : Boolean
+                looking up the prototyped attribute.
+            listenable : bool
                 Indicates whether a listener can be attached to this attribute
                 such that changes to the corresponding attribute on the
-                prototype object will trigger it
+                prototype object will trigger it.
 
             Description
             -----------
@@ -1368,15 +1368,15 @@ class BaseFile ( BaseStr ):
 
         Parameters
         ----------
-        value : string
-            The default value for the trait
-        filter : string
+        value : str
+            The default value for the trait.
+        filter : str
             A wildcard string to filter filenames in the file dialog box used by
             the attribute trait editor.
-        auto_set : boolean
+        auto_set : bool
             Indicates whether the file editor updates the trait value after
             every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing file or
             not.
 
@@ -1425,15 +1425,15 @@ class File ( BaseFile ):
 
         Parameters
         ----------
-        value : string
-            The default value for the trait
-        filter : string
-            A wildcard string to filter filenames in the file dialog box used by
-            the attribute trait editor.
-        auto_set : boolean
+        value : str
+            The default value for the trait.
+        filter : str
+            A wildcard string to filter filenames in the file dialog box used
+            by the attribute trait editor.
+        auto_set : bool
             Indicates whether the file editor updates the trait value after
             every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing file or
             not.
 
@@ -1465,12 +1465,12 @@ class BaseDirectory ( BaseStr ):
 
         Parameters
         ----------
-        value : string
-            The default value for the trait
-        auto_set : boolean
+        value : str
+            The default value for the trait.
+        auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing directory or
             not.
 
@@ -1517,12 +1517,12 @@ class Directory ( BaseDirectory ):
 
         Parameters
         ----------
-        value : string
-            The default value for the trait
-        auto_set : boolean
+        value : str
+            The default value for the trait.
+        auto_set : bool
             Indicates whether the directory editor updates the trait value
             after every key stroke.
-        exists : boolean
+        exists : bool
             Indicates whether the trait value must be an existing directory or
             not.
 
@@ -1558,10 +1558,10 @@ class BaseRange ( TraitType ):
         high : integer, float or string (i.e. extended trait name)
             The high end of the range.
         value : integer, float or string (i.e. extended trait name)
-            The default value of the trait
-        exclude_low : Boolean
+            The default value of the trait.
+        exclude_low : bool
             Indicates whether the low end of the range is exclusive.
-        exclude_high : Boolean
+        exclude_high : bool
             Indicates whether the high end of the range is exclusive.
 
         The *low*, *high*, and *value* arguments must be of the same type
@@ -2143,8 +2143,8 @@ class List ( TraitType ):
         trait : a trait or value that can be converted to a trait using Trait()
             The type of item that the list contains. If not specified, the list
             can contain items of any type.
-        value :
-            Default value for the list
+        value : list
+            Default value for the list.
         minlen : integer
             The minimum length of a list that can be assigned to the trait.
         maxlen : integer
@@ -2286,8 +2286,8 @@ class Set ( TraitType ):
         trait : a trait or value that can be converted to a trait using Trait()
             The type of item that the list contains. If not specified, the list
             can contain items of any type.
-        value :
-            Default value for the set
+        value : set
+            Default value for the set.
 
         Default Value
         -------------
@@ -2428,10 +2428,10 @@ class Dict ( TraitType ):
         value_trait : a trait or value that can convert to a trait using Trait()
             The trait type for values in the dictionary; if not specified, any
             values can be used as dictionary values.
-        value : a dictionary
-            The default value for the returned trait
-        items : Boolean
-            Indicates whether the value contains items
+        value : dict
+            The default value for the returned trait.
+        items : bool
+            Indicates whether the value contains items.
 
         Default Value
         -------------
@@ -2601,16 +2601,16 @@ class BaseInstance ( BaseClass ):
             Positional arguments for generating the default value.
         kw : dictionary
             Keyword arguments for generating the default value.
-        allow_none : boolean
+        allow_none : bool
             Indicates whether None is allowed as a value.
-        adapt : string
+        adapt : str
             A string specifying how adaptation should be applied. The possible
             values are:
 
                 - 'no': Adaptation is not allowed.
                 - 'yes': Adaptation is allowed. If adaptation fails, an
                     exception should be raised.
-                - 'default': Adapation is allowed. If adaptation fails, the
+                - 'default': Adaptation is allowed. If adaptation fails, the
                     default value for the trait should be used.
 
         Default Value
@@ -2891,7 +2891,7 @@ class Type ( BaseClass ):
 
         klass : class or None
 
-        allow_none : boolean
+        allow_none : bool
             Indicates whether None is allowed as an assignable value. Even if
             **False**, the default *value* may be **None**.
 
@@ -3028,24 +3028,24 @@ class Button ( Event ):
 
             Parameters
             ----------
-            label : string
-                The label for the button
+            label : str
+                The label for the button.
             image : pyface.ImageResource
-                An image to display on the button
+                An image to display on the button.
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
-                The style of button to display
-            values_trait : string
+                The style of button to display.
+            values_trait : str
                 For a "button" or "toolbar" style, the name of an enum
                 trait whose values will populate a drop-down menu on the button.
                 The selected value will replace the label on the button.
             orientation : one of: 'horizontal', 'vertical'
-                The orientation of the label relative to the image
+                The orientation of the label relative to the image.
             width_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the left and right sides of
-                the button
+                the button.
             height_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the top and bottom of the
-                button
+                button.
 
             Default Value
             -------------
@@ -3093,13 +3093,13 @@ class ToolbarButton ( Button ):
 
             Parameters
             ----------
-            label : string
+            label : str
                 The label for the button
             image : pyface.ImageResource
                 An image to display on the button
             style : one of: 'button', 'radio', 'toolbar', 'checkbox'
                 The style of button to display
-            orientation : one of: 'horizontal', 'vertical'
+            orientation : one of ['horizontal', 'vertical']
                 The orientation of the label relative to the image
             width_padding : integer between 0 and 31
                 Extra padding (in pixels) added to the left and right sides of
@@ -3263,7 +3263,7 @@ class WeakRef ( Instance ):
             The object that forms the basis for the trait. If *klass* is
             omitted, then values must be an instance of HasTraits.
         allow_none : boolean
-            Indicates whether None can be assigned
+            Indicates whether None can be assigned.
 
         Default Value
         -------------
@@ -3398,8 +3398,8 @@ DictStrLong = Dict( str, long )
 #: with float values can be inserted. The default value is {}.
 DictStrFloat = Dict( str, float )
 
-#: Only a dictionary of string:Boolean values can be assigned; only string keys
-#: with Boolean values can be inserted. The default value is {}.
+#: Only a dictionary of string:bool values can be assigned; only string keys
+#: with boolean values can be inserted. The default value is {}.
 DictStrBool = Dict( str, bool )
 
 #: Only a dictionary of string:list values can be assigned; only string keys

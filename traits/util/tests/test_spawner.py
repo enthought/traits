@@ -4,7 +4,7 @@
 
 import sys
 import subprocess
-import unittest
+from traits.testing.unittest_tools import unittest
 from os.path import dirname, join
 
 

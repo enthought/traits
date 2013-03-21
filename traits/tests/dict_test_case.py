@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import on_trait_change, Dict, Event, HasTraits, Str
 
@@ -90,7 +90,7 @@ class DictTestCase(unittest.TestCase):
         self.assertEqual(1, listener.called)
         self.assertEqual('modified', listener.trait_name)
         
-        # Add an item to an existing disctionary.
+        # Add an item to an existing dictionary.
         listener.initialize()
         fred = Foo(name='fred')
         bar.foos['fred'] = fred

@@ -11,7 +11,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import Delegate, HasTraits, Instance, Str
 
@@ -196,7 +196,7 @@ class DelegateTestCase( unittest.TestCase ):
         self.assertNotEqual( f.s, b.sd )
 
         # Don't expect _s_changed to be called because from Baz's perspective
-        # the triat is named 'sd'
+        # the trait is named 'sd'
         self.assertEqual( baz_s_handler_self, None )
 
         # Do expect '_sd_changed' to be called with b as self

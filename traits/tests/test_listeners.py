@@ -13,13 +13,12 @@
 #  All rights reserved.
 #
 #  This software is provided without warranty under the terms of the BSD
-#  ListenEventsicense included in /LICENSE.txt and may be redistributed
-#  only under the conditions described in the aforementioned license.  The
-#  license is also available online at http://www.enthought.com/licenses/BSD.txt
+#  License included in /LICENSE.txt and may be redistributed only under the
+#  conditions described in the aforementioned license.  The license is also
+#  available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
 #
-
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -28,7 +27,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Str, Int, Float
 

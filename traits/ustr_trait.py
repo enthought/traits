@@ -40,11 +40,11 @@ class UStr ( TraitType ):
     """ Trait type that ensures that a value assigned to a trait is unique
         within the list it belongs to.
     """
-    # The type value to assign to restore the original list item type when a
-    # list item is removed from the monitored list:
+    #: The type value to assign to restore the original list item type when a
+    #: list item is removed from the monitored list:
     str_type = TraitValue()
 
-    # The informational text describing the trait:
+    #: The informational text describing the trait:
     info_text = 'a unique string'
 
     def __init__ ( self, owner, list_name, str_name,
