@@ -1,11 +1,14 @@
-""" General regression tests for fixed bugs.
-"""
-
+""" General regression tests for a variety of bugs. """
 import gc
-from traits.testing.unittest_tools import unittest
 import sys
 
 from traits.has_traits import HasTraits, Property
+from traits.trait_types import Int
+from traits.testing.unittest_tools import unittest
+
+class Dummy(HasTraits):
+    x = Int(10)
+
 
 
 def _create_subclass():
@@ -15,6 +18,18 @@ def _create_subclass():
 
 
 class TestRegression(unittest.TestCase):
+
+    def test_default_value_for_no_cache(self):
+        """ Make sure that CTrait.default_value_for() does not cache the
+        result.
+        """
+        dummy = Dummy()
+        # Nothing in the __dict__ yet.
+        self.assertEqual(dummy.__dict__, {})
+        ctrait = dummy.trait('x')
+        default = ctrait.default_value_for(dummy, 'x')
+        self.assertEqual(default, 10)
+        self.assertEqual(dummy.__dict__, {})
 
     def test_subclasses_weakref(self):
         """ Make sure that dynamically created subclasses are not held
