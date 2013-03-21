@@ -596,7 +596,7 @@ def out_of_date_modules():
                 if pyc_time is None:
                     # case where pyc file has been deleted.
                     out_of_date.append(mod)
-                elif pyc_time <= py_time:
+                elif pyc_time < py_time:
                     # module out of date
                     out_of_date.append(mod)
 

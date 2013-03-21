@@ -2,10 +2,10 @@
 """
 
 import gc
-import unittest
+from traits.testing.unittest_tools import unittest
 import sys
 
-from traits.has_traits import HasTraits
+from traits.has_traits import HasTraits, Property
 
 
 def _create_subclass():

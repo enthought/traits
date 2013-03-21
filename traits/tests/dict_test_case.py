@@ -16,7 +16,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import on_trait_change, Dict, Event, HasTraits, Str
 

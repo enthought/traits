@@ -16,7 +16,7 @@
 # This file, `refresh.py` can not be run by nosetests directly.
 # It is run through `test_spawner.py`, see notes in there.
 
-import unittest
+from traits.testing.unittest_tools import unittest
 import gc
 import os
 import sys

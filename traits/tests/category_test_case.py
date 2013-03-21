@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Category, Str
 

@@ -18,7 +18,7 @@ Tests for Dict and List items_changed events
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Dict, List
 

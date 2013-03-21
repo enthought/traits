@@ -25,7 +25,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from traits.api import Float, TraitType
 

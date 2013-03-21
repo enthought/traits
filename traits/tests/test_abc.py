@@ -1,7 +1,7 @@
 """ Test the ABC functionality.
 """
 
-import unittest
+from traits.testing.unittest_tools import unittest
 import warnings
 
 from ..api import HasTraits

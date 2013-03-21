@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 from ..api import HasTraits, Instance, Int
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 class Bar(HasTraits):
     b = Int(3)
