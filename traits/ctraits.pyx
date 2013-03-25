@@ -395,7 +395,21 @@ cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name,
     return result
 
 cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name, object value):
-    """  Verifies a Python value is of a specified (possibly coercable) type. """
+    """ Verifies a Python value is of a specified (possibly coercible) type. """
+
+    # The py_validate tuple is of the form
+    # (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
+    #
+    # 'type1' corresponds to the main type for the trait
+    # 'None' acts as the separator between 'types' and 'ctypes' (coercible types)
+    #
+    # The validation passes if:
+    # 1) the type of 'value' is (a subtype of) one of 'type1', 'type2',  ...
+    #    in which case the value is returned as-is
+    # or
+    # 2) the type of 'value'  is (a subtype of) one of 'ctype1', 'ctype2', ...
+    #    in which case the value is returned coerced to trait type using
+    #    'return type1(value')
 
     print 'Validate trait coerce type'
     cdef int i, n
@@ -413,10 +427,12 @@ cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name
         if type2 is None:
             break
         else:
+            # Return true if the object 'value' is of type 'type2' or a
+            # subtype thereof.
             if PyObject_TypeCheck(value, <PyTypeObject*>type2):
                 return value
 
-    restart = i
+    restart = i + 1
     for i in range(restart, n):
 
         type2 = type_info[i]
@@ -1167,7 +1183,9 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef object object_dict = obj.obj_dict
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
 
-    # This block is value == NULL in C. Do we really have calls to this
+    if value is None:
+        print 'VALUE IS NONE, this was not planned.'
+    # FIXME This block is value == NULL in C. Do we really have calls to this
     # function with a NULL pointer?
     #if value is None:
     #    if object_dict is None:
