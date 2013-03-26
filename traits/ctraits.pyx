@@ -960,8 +960,14 @@ cdef class CHasTraits:
 
         return None
 
-    def traits_inited(self, flag):
-        raise NotImplementedError()
+    def traits_inited(self, traits_inited=False):
+        # _has_traits_inited fucntion in C code
+        if traits_inited:
+            self.flags != HASTRAITS_INITED
+        if self.flags & HASTRAITS_INITED:
+            return True
+        else:
+            return False
 
     def _trait(self, name, instance):
         """ Returns (and optionally creates) a specified instance or class trait
