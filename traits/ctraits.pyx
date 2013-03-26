@@ -192,7 +192,14 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
 
 
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vti')
+
+    cdef object type_info = trait.py_validate
+    cdef int kind = len(type_info)
+
+    if (kind == 3 and value is None) or isinstance(value, type_info[kind-1]):
+        return value
+
+    raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is in a specified enumeration. """
@@ -468,7 +475,7 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     cdef object type_info = trait.py_validate
     cdef long mode, rc
 
-    print 'Type info ', type_info
+    print 'Type info ', type_info, name, value
     if value is None:
         if type_info[3] is True:
             return value
@@ -486,11 +493,13 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     try:
         result = adapt(*args)
         if mode > 0 or result == value:
+            print 'Adapt result'
             return result
     except:
         result = validate_implements(*args)
         rc = PyInt_AS_LONG(result)
         if rc:
+            print 'Validate implements result'
             return value
         else:
             try:
@@ -579,7 +588,6 @@ cdef class CHasTraits:
         # FIXME: add checks from has_traits_new !!!
         self.ctrait_dict = <dict>class_traits_dict
 
-
     def __dealloc__(self):
         # see has_traits_dealloc
         # FIXME: make sure to clean up this method
@@ -590,6 +598,41 @@ cdef class CHasTraits:
         #self.ob_type.tp_free(<object>obj)
         #Py_TRASHCAN_SAFE_END(self)
 
+
+    def __init__(self, *args, **kwargs):
+
+        # Make sure no non-keyword arguments were specified 
+        if len(args) > 0:
+            raise ValueError('Do not use positional arguments in constructor.')
+
+        # Make sure all of the object's listeners have been set up
+        print getattr(type(self), listener_traits)
+        has_listeners = len(getattr(type(self), listener_traits)) > 0
+
+        if has_listeners:
+            self._init_trait_listeners()
+
+        # Set any traits specified in the constructor
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
+
+        # Make sure all post constructor argument assignment listeners have been
+        # set up
+        if has_listeners:
+            self._post_init_trait_listeners()
+
+        # Notify any interested monitors that a new object has been created:
+        for klass, handler in _HasTraits_monitors:
+            if isinstance(self, klass):
+                handler(self)
+
+        # Call the 'traits_init' method to finish up initialization
+        self.traits_init()
+
+        # Indicate that the object has finished being initialized: */
+        self.flags |= HASTRAITS_INITED
+
     cdef has_traits_clear(self):
         # FIXME: 
         # Supposed to Py_CLEAR the members ... do we really want to do that? Or
@@ -597,10 +640,22 @@ cdef class CHasTraits:
         pass
 
     cdef cTrait get_prefix_trait(self, str name, int is_set):
+        ''' Gets the definition of the matching prefix based trait for a specified 
+        name:
 
-        # __prefix_trait has been added by HasTraits subclasss
-        cdef object trait = self.__prefix_trait__(name, is_set)
-        if trait is not None:
+         * This should always return a trait definition unless a fatal Python error
+           occurs.
+         * The bulk of the work is delegated to a Python implemented method because
+         the implementation is complicated in C and does not need to be executed
+         very often relative to other operations.
+
+         '''
+
+        cdef cTrait trait
+        try:
+            # __prefix_trait has been added by HasTraits class
+            trait = getattr(self, '__prefix_trait__')(name, is_set)
+        except:
             self.ctrait_dict[name] = trait
             result = self._internal_setattr(trait_added, name)
             if result >= 0:
@@ -620,9 +675,8 @@ cdef class CHasTraits:
         # If there already is an instance specific version of the requested trait,
         # then return it
         if self.itrait_dict is not None:
-            trait = self.itrait_dict.get(name, None)
-            if trait is not None:
-                return trait
+            if name in self.itrait_dict:
+                return self.itrait_dict[name]
 
         # If only an instance trait can be returned (but not created), then
         # return None
@@ -631,13 +685,13 @@ cdef class CHasTraits:
 
         # Otherwise, get the class specific version of the trait (creating a
         # trait class version if necessary)
-        trait = self.ctrait_dict.get(name, None)
-        if trait is None:
+        if name not in self.ctrait_dict:
             if instance == 0:
                 return None
             trait = self.get_prefix_trait(name, 0)
-            if trait is None:
-                return None
+        else:
+            trait = self.ctrait_dict.get(name)
+
 
         assert(isinstance(trait, cTrait))
 
@@ -778,11 +832,13 @@ cdef class CHasTraits:
 
     property __dict__:
         def __get__(self):
+            print '__dict__ getter'
             if self.obj_dict is None:
                 self.obj_dict = {}
             return self.obj_dict
 
         def __set__(self, value):
+            print '__dict__ setter'
             if isinstance(value, dict):
                 self.obj_dict = value
 
@@ -830,7 +886,14 @@ cdef class CHasTraits:
         raise NotImplementedError()
 
     def traits_init(self):
-        raise NotImplementedError()
+        """ This method is called at the end of a HasTraits constructor and the
+        __setstate__ method to perform any final object initialization needed.
+
+        """
+
+        # _has_traits_init function in C code
+
+        return None
 
     def traits_inited(self, flag):
         raise NotImplementedError()
@@ -852,7 +915,7 @@ cdef class CHasTraits:
         cdef CHasTraits delegate = self
         cdef object daname, daname2
 
-        trait = self.get_trait(name, instance)
+        cdef cTrait trait = <cTrait>self.get_trait(name, instance)
         if instance >= -1 or trait is None:
             return trait
 
@@ -861,7 +924,7 @@ cdef class CHasTraits:
         daname = name
         cdef int i = 0
         while True:
-            if trait.delegate_attr_name is None:
+            if trait.delegate_attr_name is NULL:
                 return trait
             dict_ = delegate.obj_dict
             if dict_ is not None:
@@ -1071,7 +1134,9 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
 
     if isinstance(name, str):
         result = default_value_for(trait, obj, name)
+        print 'ADDDING TO __dict__ ', name
         obj.obj_dict[name] = result
+        print type(obj), obj.__dict__
         rc = 0
         if trait._post_setattr is not NULL and \
             (trait.flags & TRAIT_IS_MAPPED == 0):
@@ -1119,7 +1184,34 @@ cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
         raise_trait_error(trait, obj, name, None)
 
 cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError('getattr delegate NOT IMPL.')
+
+    cdef object tp, delegate_attr_name
+
+    if obj.obj_dict is not None:
+        if trait.delegate_name in obj.obj_dict:
+            delegate = obj.obj_dict[trait.delegate_name]
+        else:
+            delegate = getattr(obj, trait.delegate_name)
+    else:
+        delegate = getattr(obj, trait.delegate_name)
+
+    if PyString_Check(name):
+        delegate_attr_name = trait.delegate_attr_name(trait, obj, name)
+        tp = type(delegate)
+
+        try:
+            result = getattr(delegate, delegate_attr_name)
+            return result
+        except:
+            raise DelegationError("The '%.50s' object has no attribute "
+                    "'%.400s' because its %.50s delegate has no attribute"
+                    " '%.400s'." % (type(obj), name, tp, delegate_attr_name))
+
+    # FIXME: needs support for unicode
+
+    raise TypeError('Attribute name must be a string.')
+
+
 
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
     raise NotImplementedError('getattr disallow NOT IMPL.')
@@ -1315,7 +1407,78 @@ cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
 
 cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
-    raise NotImplementedError('No support for delegate')
+    """ Assigns a value to a specified delegate trait attribute. """
+
+    cdef dict obj_dict
+    cdef object daname, daname2, temp
+    cdef CHasTraits delegate, temp_delegate
+    cdef int i, result
+
+    print 'setattr delegate'
+
+    # Follow the delegation chain until we find a non-delegated trait
+    daname = name
+    delegate = obj
+    i = 0
+    while True:
+        print 'Running ', i
+        obj_dict = delegate.obj_dict
+        if obj_dict is not None:
+            if traitd.delegate_name in obj_dict:
+                delegate = obj_dict[traitd.delegate_name]
+            else:
+                # Handle the case when the delegate is not in the instance
+                # dictionary (could be a method that returns the real delegate):
+                delegate = getattr(delegate, traitd.delegate_name)
+
+        print 'Got ', delegate
+
+        # Verify that 'delegate' is of type 'CHasTraits'
+        if not isinstance(delegate, CHasTraits):
+            raise DelegationError(
+                "The '%.400s' attribute of a '%.50s' object has a delegate "
+                " which does not have traits." % name, type(obj)
+            )
+
+        daname2 = traitd.delegate_attr_name(traitd, obj, daname)
+        daname = daname2
+        print 'DANAME ', daname
+        if delegate.itrait_dict is not None and daname in delegate.itrait_dict:
+                traitd = delegate.itrait_dict[daname]
+        else:
+            try:
+                if daname in delegate.ctrait_dict:
+                    traitd = delegate.ctrait_dict[daname]
+                else:
+                    traitd = delegate.get_prefix_trait(daname, 1)
+            except:
+                raise DelegationError(
+                    "The '%.400s' attribute of a '%.50s' object delegates to an "
+                    " attribute which is not a defined trait." % (name, type(obj))
+                )
+
+        if not isinstance(traitd, cTrait):
+            raise TraitError('Non-trait found in trait dictionnary')
+
+        if traitd.delegate_attr_name is NULL:
+            if traito.flags & TRAIT_MODIFY_DELEGATE:
+                result = traitd.setattr(traitd, traitd, delegate, daname, value)
+            else:
+                result = traitd.setattr(traito, traitd, obj, name, value)
+                if result >= 0:
+                    try:
+                        temp = obj._remove_trait_delegate_listener(name, value)
+                    except:
+                        result = -1
+            return result
+        i += 1
+        if i >= 100:
+            raise DelegationError(
+                "Delegation recursion limit exceeded while setting the "
+                " '%.400s' attribute of a '%.50s' object." % (name, type(obj))
+            )
+
+
 
 cdef int setattr_dissalow(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     raise NotImplementedError('No support for dissalow')
