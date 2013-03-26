@@ -235,6 +235,10 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
     cdef object list_type_info = trait.py_validate[1]
     cdef int n = len(list_type_info)
 
+
+    # FIXME: check the logic of each check. At the moment check 3 and 8 are
+    # tested. The logic has been inverted from the C side.
+
     print 'N is ', n
     for i in xrange(n):
         type_info = list_type_info[i]
@@ -315,8 +319,12 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
             if value in type_info[1]:
                 return value
         elif check == 8: # Perform 'slow' validate check
-            result = type_info[1].slow_validate(obj, name, value)
-            return result
+            try:
+                result = type_info[1].slow_validate(obj, name, value)
+                return result
+            except Exception as exc:
+                print 'Exception is ', exc
+                continue
         elif check == 9: # Tuple item check
             return validate_trait_tuple_check(type_info[1], obj, name, value)
         elif check == 10: # PRefix map item check
@@ -796,13 +804,13 @@ cdef class CHasTraits:
             if name in self.obj_dict:
                 return self.obj_dict[name]
 
+        trait = None
         if self.itrait_dict is not None and name in self.itrait_dict:
                 trait = self.itrait_dict.get(name)
         elif name in self.ctrait_dict:
             trait = self.ctrait_dict.get(name)
 
-        print 'TRAIT is ', trait
-        if trait is not PY_NULL:
+        if trait is not None:
             print 'trait getattr '
             if trait.getattr is NULL:
                 raise ValueError('getattr cannot be null ...')
@@ -1339,8 +1347,6 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
     cdef int rc
 
-    if value is None:
-        print 'VALUE IS NONE, this was not planned.'
     # FIXME This block is value == NULL in C. Do we really have calls to this
     # function with a NULL pointer?
     #if value is None:
