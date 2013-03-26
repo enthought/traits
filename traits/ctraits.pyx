@@ -6,11 +6,14 @@ from cpython.dict cimport PyDict_GetItem, PyDict_Check
 from cpython.int cimport PyInt_Check, PyInt_AS_LONG
 from cpython.exc cimport PyErr_Clear
 from cpython.float cimport PyFloat_Check, PyFloat_FromDouble, PyFloat_AS_DOUBLE
-from cpython.object cimport PyCallable_Check, PyObject_TypeCheck, PyObject_Call, PyObject_RichCompareBool, Py_NE
+from cpython.object cimport (
+    PyCallable_Check, PyObject_TypeCheck,
+    PyObject_Call, PyObject_RichCompareBool, Py_NE, PyObject_GetAttr
+)
 from cpython.ref cimport PyObject, Py_TYPE, PyTypeObject
 from cpython.string cimport PyString_Check
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM, PyTuple_SET_ITEM, PyTuple_New, PyTuple_Check
-from cpython.type cimport PyType_Check
+from cpython.type cimport PyType_Check, PyType_GenericAlloc
 
 cdef extern from 'Python.h':
     PyObject* PyObject_GenericGetAttr(PyObject*, PyObject*)
@@ -41,6 +44,10 @@ cdef object _trait_notification_handler # User supplied trait */
     # notification handler (intended for use by debugging tools) */
 cdef PyTypeObject* ctrait_type  # Python-level CTrait type reference */
 
+
+# Needed to make sense out of the C NULL returns on the C side and None on the
+# Python side.
+PY_NULL = object()
 
 _HasTraits_monitors = []        # Object creation monitors. */
 
@@ -188,9 +195,6 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
     else:
         raise_trait_error(trait, obj, name, value)
 
-
-
-
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
 
     cdef object type_info = trait.py_validate
@@ -271,7 +275,7 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
                     else:
                         above_high = int_value > PyInt_AS_LONG(high)
 
-                print low, high, int_value, exclude_mask, below_low, above_high
+                print 'Check integer range', low, high, int_value, exclude_mask, below_low, above_high
                 if below_low or above_high:
                     continue
                 else:
@@ -388,12 +392,12 @@ cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name
 cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is in a specified prefix map (i.e. dictionary). """
 
-    print 'Validate trait prefix map'
     cdef object type_info = trait.py_validate
     cdef object mapped_value = type_info[1]
     cdef object result
 
-    print value, mapped_value
+    print 'Validate trait prefix map', value, mapped_value
+
     if value in mapped_value:
         result = mapped_value[value]
     else:
@@ -424,7 +428,7 @@ cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name
 
     cdef object type_info = trait.py_validate
     cdef object type_     = type_info[1]
-    print value, type(value), type_
+    print 'Trait coerce ', value, type(value), type_
     if PyObject_TypeCheck(value, <PyTypeObject*>type_):
         return value
 
@@ -509,7 +513,7 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     try:
         result = adapt(*args)
         if mode > 0 or result == value:
-            print 'Adapt result'
+            print 'Adapt result', result
             return result
     except:
         result = validate_implements(*args)
@@ -622,7 +626,6 @@ cdef class CHasTraits:
             raise ValueError('Do not use positional arguments in constructor.')
 
         # Make sure all of the object's listeners have been set up
-        print getattr(type(self), listener_traits)
         has_listeners = len(getattr(type(self), listener_traits)) > 0
 
         if has_listeners:
@@ -656,31 +659,30 @@ cdef class CHasTraits:
         pass
 
     cdef cTrait get_prefix_trait(self, str name, int is_set):
-        ''' Gets the definition of the matching prefix based trait for a specified 
-        name:
+        ''' Gets the definition of the matching prefix based trait for a
+        specified name.
 
-         * This should always return a trait definition unless a fatal Python error
-           occurs.
-         * The bulk of the work is delegated to a Python implemented method because
-         the implementation is complicated in C and does not need to be executed
-         very often relative to other operations.
+         * This should always return a trait definition unless a fatal Python
+           error occurs.
+         * The bulk of the work is delegated to a Python implemented method
+           because the implementation is complicated in C and does not need to
+           be executed very often relative to other operations.
 
          '''
 
         cdef cTrait trait
-        try:
-            # __prefix_trait has been added by HasTraits class
-            trait = getattr(self, '__prefix_trait__')(name, is_set)
-        except:
-            self.ctrait_dict[name] = trait
-            result = self._internal_setattr(trait_added, name)
-            if result >= 0:
-                trait = self.get_trait(name, 0)
+
+        # __prefix_trait has been added by HasTraits class
+        trait = getattr(self, '__prefix_trait__')(name, is_set)
+        self.ctrait_dict[name] = trait
+        result = self._internal_setattr(trait_added, name)
+        if result >= 0:
+            trait = self.get_trait(name, 0)
 
         return trait
 
     cdef cTrait get_trait(self, str name, int instance):
-        """ Returns (and optionaly creates) a specified instance or class trait. 
+        """ Returns (and optionaly creates) a specified instance or class trait.
         """
 
         cdef int i, n
@@ -692,7 +694,9 @@ cdef class CHasTraits:
         # then return it
         if self.itrait_dict is not None:
             if name in self.itrait_dict:
-                return self.itrait_dict[name]
+                trait = self.itrait_dict[name]
+                assert isinstance(trait, cTrait)
+                return trait
 
         # If only an instance trait can be returned (but not created), then
         # return None
@@ -701,27 +705,26 @@ cdef class CHasTraits:
 
         # Otherwise, get the class specific version of the trait (creating a
         # trait class version if necessary)
-        if name not in self.ctrait_dict:
-            if instance == 0:
-                return None
-            trait = self.get_prefix_trait(name, 0)
-        else:
+        if name in self.ctrait_dict:
             trait = self.ctrait_dict.get(name)
+        elif instance == 0:
+            return None
+        else:
+            trait = self.get_prefix_trait(name, 0)
 
 
-        assert(isinstance(trait, cTrait))
+        assert isinstance(trait, cTrait)
 
         # If an instance specific trait is not needed, return the class trait: */
         if instance <= 0:
             return trait
-
 
         # Otherwise, create an instance trait dictionary if it does not exist: */
         if self.itrait_dict is None:
             self.itrait_dict = {}
 
         # Create a new instance trait and clone the class trait into it
-        itrait = cTrait(0)
+        itrait = cTrait(kind=-1)
         trait_clone(itrait, trait)
         itrait.obj_dict = trait.obj_dict
 
@@ -733,6 +736,7 @@ cdef class CHasTraits:
         # the instance trait if successful
         self.itrait_dict[name] = itrait
 
+        print 'Return new itrait ', name, itrait
         return itrait
 
 
@@ -752,7 +756,7 @@ cdef class CHasTraits:
             trait_old = self.itrait_dict.get(name, None)
             if trait_old is not None and trait_old.flags & TRAIT_VALUE_PROPERTY != 0:
                 result = trait_old._unregister(self, name)
-            if trait_new is None and trait_old is not None:
+            if trait_new is None:
                 del self.itrait_dict[name]
                 return 0
         else:
@@ -775,8 +779,13 @@ cdef class CHasTraits:
 
         return 0
 
-    def __getattr__(self, name): # has_traits_getattro(self, name):
-        print 'cTrait getattr ', name
+    def __delattr__(self, name):
+        if name in self.obj_dict:
+            del self.obj_dict[name]
+
+    def __getattr__(self, name):
+        # has_traits_getattro function in C
+        print 'CHasTraits getattr ', name
         cdef object obj_value
         cdef object value
         cdef cTrait trait
@@ -786,25 +795,36 @@ cdef class CHasTraits:
             # had a low level performance hack with support for unicode names
             if name in self.obj_dict:
                 return self.obj_dict[name]
-        if self.itrait_dict is not None:
-            trait = self.itrait_dict.get(name, None)
-        else:
-            trait = self.ctrait_dict.get(name, None)
 
-        if trait is not None:
+        if self.itrait_dict is not None and name in self.itrait_dict:
+                trait = self.itrait_dict.get(name)
+        elif name in self.ctrait_dict:
+            trait = self.ctrait_dict.get(name)
+
+        print 'TRAIT is ', trait
+        if trait is not PY_NULL:
             print 'trait getattr '
+            if trait.getattr is NULL:
+                raise ValueError('getattr cannot be null ...')
             value = trait.getattr(trait, self, name)
         else:
-            res = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
-            if res is NULL:
+            result = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
+            if result is NULL:
+                PyErr_Clear()
+                print 'Generic attr failed ...'
                 trait = self.get_prefix_trait(name, 0)
+                print 'Trait is ', trait
                 if trait is not None:
                     value = trait.getattr(trait, self, name)
+            else:
+                value = <object>result
+                print 'RES is ', value
 
+        print 'Returns {} for {}'.format(value, name)
         return value
 
     def __setattr__(self, name, value):
-        print 'SETTING ATTR', name, value
+        print 'SETTING ATTR', self, name, value
         self._internal_setattr(name, value)
 
     cdef int _internal_setattr(self, str name, object value) except? -1:
@@ -832,7 +852,7 @@ cdef class CHasTraits:
             print 'setattr value'
             result = self.setattr_value(trait, name, value)
         else:
-            print 'trait setattr'
+            print 'trait setattr ', name, value
             result = trait.setattr(trait, trait, self, name, value)
 
         if result < 0:
@@ -858,8 +878,22 @@ cdef class CHasTraits:
             if isinstance(value, dict):
                 self.obj_dict = value
 
-    def trait_property_changed(self, old, value, new_value=None):
-        raise NotImplementedError('_has_traits_property_changed')
+    def trait_property_changed(self, name, old_value, new_value=None):
+        """ Calls notifiers when a trait 'property' is explicitly changed. """
+        # Merge of _has_traits_property_changed and trait_property_changed C
+        # functions
+
+        cdef cTrait trait = self.get_trait(name, -1)
+
+        tnotifiers = trait.notifiers
+        onotifiers = self.notifiers
+
+        if has_notifiers(tnotifiers, onotifiers):
+            if new_value is None:
+                new_value = getattr(self, name)
+
+            rc = call_notifiers(tnotifiers, onotifiers, self, name, old_value, new_value)
+
 
     def trait_items_event(self, name, event_object, event_trait):
         """ Handles firing a traits 'xxx_items' event. """
@@ -895,8 +929,15 @@ cdef class CHasTraits:
             if trait.setattr(trait, trait, self, name, event_object) > 0:
                 return None
 
-    def _trait_change_notify(self, notify):
-        raise NotImplementedError('_has_traits_change_notify')
+    def _trait_change_notify(self, enabled):
+        """ Enables/Disables trait change notification for the object. """
+        # _has_traits_change_notify function in the C code
+
+        if enabled:
+            self.flags &= (~HASTRAITS_NO_NOTIFY)
+        else:
+            self.flags |= HASTRAITS_NO_NOTIFY
+
 
     def _trait_veto_notify(self, notify):
         raise NotImplementedError()
@@ -928,6 +969,8 @@ cdef class CHasTraits:
         """
         # _has_traits_trait C function
 
+        print '_trait function ', name, instance
+
         cdef CHasTraits delegate = self
         cdef object daname, daname2
 
@@ -940,16 +983,16 @@ cdef class CHasTraits:
         daname = name
         cdef int i = 0
         while True:
+            print 'Count ', i
             if trait.delegate_attr_name is NULL:
                 return trait
             dict_ = delegate.obj_dict
-            if dict_ is not None:
-                temp_delegate = dict_.get(trait.delegate_name, None)
-                if temp_delegate is None:
-                    temp_delegate = getattr(delegate, trait.delegate_name)
-                    if temp_delegate:
-                        break
+            if dict_ is not None and trait.delegate_name in dict_:
+                temp_delegate = dict_.get(trait.delegate_name)
             else:
+                temp_delegate = getattr(delegate, trait.delegate_name)
+            if not temp_delegate:
+                print 'nothing found'
                 break
 
             delegate = temp_delegate
@@ -975,8 +1018,10 @@ cdef class CHasTraits:
                             name, type(self))
                     )
 
-            if not PyObject_TypeCheck(trait, ctrait_type):
-                raise TraitError('Non-trait found in a trait dictionnary.')
+            if not isinstance(trait, cTrait):
+                raise TraitError('Non-trait found in a trait dictionnary. Got '
+                    '{} with type {}'.format(trait, type(trait))
+                )
 
             i += 1
             if i >= 100:
@@ -1103,6 +1148,7 @@ cdef object setattr_validate3(cTrait trait, CHasTraits obj, object name, object 
     return PyObject_Call(trait.py_validate, args, None)
 
 cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
+    """ Returns the default value associated with a specified trait. """
     cdef object result, value, dv, kw, tuple_
 
     cdef int vtype = trait.default_value_type
@@ -1134,6 +1180,8 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
         return TraitSetObject(trait.handler, obj, name,
                           trait.internal_default_value)
 
+    print 'Default value for ', vtype, result
+
     return result
 
 
@@ -1150,12 +1198,12 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
 
     if isinstance(name, str):
         result = default_value_for(trait, obj, name)
-        print 'ADDDING TO __dict__ ', name
+        print 'ADDDING TO __dict__ ', name, result
         obj.obj_dict[name] = result
-        print type(obj), obj.__dict__
         rc = 0
         if trait._post_setattr is not NULL and \
-            (trait.flags & TRAIT_IS_MAPPED == 0):
+            ((trait.flags & TRAIT_IS_MAPPED) == 0):
+            print 'Calling post_setattr'
             rc = trait._post_setattr(trait, obj, name, result)
         if rc == 0:
             tnotifiers = trait.notifiers
@@ -1169,7 +1217,7 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
         raise TypeError('Attribute name must be a string')
 
 cdef object getattr_event(cTrait trait, CHasTraits obj, object name):
-    """  Returns the value assigned to an event trait Returns the value assigned to an event trait. """
+    """  Returns the value assigned to an event trait. """
     raise AttributeError(
         "The %.400s trait of a %.50s instance is an 'event', which is write"
         " only." % (name, type(obj))
@@ -1178,15 +1226,12 @@ cdef object getattr_event(cTrait trait, CHasTraits obj, object name):
 cdef object getattr_python(cTrait trait, CHasTraits obj, object name):
     """ Returns the value assigned to a standard Python attribute. """
 
-
-    cdef PyObject* _obj = <PyObject*>obj
-    cdef PyObject* _name = <PyObject*>name
-    if _obj is NULL or _name is NULL:
-        raise ValueError('Input cannot be null')
-    print 'Calling ', obj, name
-    cdef PyObject* result = PyObject_GenericGetAttr(_obj, _name)
-    if result is NULL:
-        raise_trait_error(trait, obj, name, None)
+    print 'GETATTR PYTHON'
+    print 'Class traits ', obj.ctrait_dict
+    print 'Instance traits ', obj.itrait_dict
+    cdef PyObject* result = PyObject_GenericGetAttr(<PyObject*>obj, <PyObject*>name)
+    if result is not NULL:
+        return <object>result
 
 cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
     """ Returns the value assigned to a generic Python attribute. """
@@ -1201,15 +1246,17 @@ cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
 
 cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 
+    print 'GETATTR DELEGATE'
+
     cdef object tp, delegate_attr_name
 
-    if obj.obj_dict is not None:
-        if trait.delegate_name in obj.obj_dict:
-            delegate = obj.obj_dict[trait.delegate_name]
-        else:
-            delegate = getattr(obj, trait.delegate_name)
+    if obj.obj_dict is not None and trait.delegate_name in obj.obj_dict:
+        delegate = obj.obj_dict[trait.delegate_name]
     else:
-        delegate = getattr(obj, trait.delegate_name)
+        delegate = obj.__getattr__(trait.delegate_name)
+
+    if delegate is None:
+        raise TraitError('Delegate cannot be None')
 
     if PyString_Check(name):
         delegate_attr_name = trait.delegate_attr_name(trait, obj, name)
@@ -1218,7 +1265,10 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
         try:
             result = getattr(delegate, delegate_attr_name)
             return result
-        except:
+        except NotImplementedError as exc:
+            raise exc
+        except Exception as exc:
+            print 'Error ', exc
             raise DelegationError("The '%.50s' object has no attribute "
                     "'%.400s' because its %.50s delegate has no attribute"
                     " '%.400s'." % (type(obj), name, tp, delegate_attr_name))
@@ -1242,7 +1292,8 @@ cdef bint has_notifiers(object tnotifiers, object onotifiers):
     else:
         return 0
 
-cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object name, object old_value, object new_value) except? -1:
+cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj,
+                        object name, object old_value, object new_value) except? -1:
 
     cdef int i, n, new_value_has_traits
     cdef object result, item, temp
@@ -1274,6 +1325,7 @@ cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object
                         user_args[0] = arg_temp
                         result = PyObject_Call(_trait_notification_handler, user_args, None)
                     else:
+                        print 'Calling ', temp[i] , args
                         result = temp[i](*args)
 
 
@@ -1747,20 +1799,8 @@ cdef class cTrait:
         if self.validate is not NULL:
             return self.py_validate
 
-    def clone(self, cTrait trait):
-        self.flags = trait.flags
-        self.getattr = trait.getattr
-        self.setattr = trait.setattr
-        self._post_setattr = trait._post_setattr
-        self.py_post_setattr = trait.py_post_setattr
-        self.validate = trait.validate
-        self.py_validate = trait.py_validate
-        self.default_value_type = trait.default_value_type
-        self.internal_default_value = trait.internal_default_value
-        self.delegate_name = trait.delegate_name
-        self.delegate_prefix = trait.delegate_prefix
-        self.delegate_attr_name = trait.delegate_attr_name
-        self._handler = trait._handler
+    def clone(self, cTrait source):
+       trait_clone(self, source) 
 
     def _notifiers(self, force_create):
         """ Returns (and optionally creates) the anytrait 'notifiers' list """
@@ -1819,17 +1859,6 @@ cdef class cTrait:
 
         return self
 
-    def __getattr__(self, name):
-        """ Handles the 'getattr' operation on a 'CHasTraits' instance . """
-        print '__getattr__ for ', name
-        cdef PyObject* value = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
-        if value is not NULL:
-            return <object>value
-        else:
-            PyErr_Clear()
-
-        return None
-
     def default_value_for(self, CHasTraits obj, object name):
         """ Gets the default value of a CTrait instance for a specified object and trait
             name.
@@ -1837,7 +1866,7 @@ cdef class cTrait:
         """
 
         print 'CTrait default value for ...'
-        if self.flags & TRAIT_PROPERTY and has_value_for(<CHasTraits>obj, name):
+        if ((self.flags & TRAIT_PROPERTY)  != 0) or has_value_for(<CHasTraits>obj, name):
             return default_value_for(self, obj, name)
 
         return self.getattr(self, obj, name)
@@ -1870,10 +1899,11 @@ cdef class cTrait:
 
     def delegate(self, str name, str prefix, int prefix_type, int modify_delegate):
 
+        print 'XXXX delegate ', name, prefix, prefix_type, modify_delegate
         if modify_delegate:
             self.flags |= TRAIT_MODIFY_DELEGATE
         else:
-            self.flags &= ~TRAIT_MODIFY_DELEGATE
+            self.flags &= (~TRAIT_MODIFY_DELEGATE)
 
         self.delegate_name = name
         self.delegate_prefix = prefix
@@ -1911,8 +1941,137 @@ cdef class cTrait:
         raise NotImplementedError('Work in progress')
 
 
+    def __getattr__(self, name):
+        """ Handles the 'getattr' operation on a 'CTrait' instance. """
+
+        print 'CTrait __getattr__ for ', name
+        cdef PyObject* result = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
+        if result is not NULL:
+            print 'Has result ?', <object>result
+            return <object>result
+        else:
+            PyErr_Clear()
+
+        return None
+
+### Trait method  object #####################################################
+
+#-----------------------------------------------------------------------------
+#  Instance method objects are used for two purposes:
+#  (a) as bound instance methods (returned by instancename.methodname)
+#  (b) as unbound methods (returned by ClassName.methodname)
+#  In case (b), tm_self is NULL
+#----------------------------------------------------------------------------*/
+
+cdef object create_trait_method (object name, object func, object self,
+                                 object traits, object class_obj):
+    """ Creates a new trait method instance. """
+
+    # FIXME: removed some optimization from the C function 
+
+    cdef CTraitMethod im = CTraitMethod()
+    im._tm_name = name
+    im._tm_func = func
+    im._tm_self = self
+    im._tm_traits = traits
+    im._tm_class = class_obj
+    return im
+
+
 cdef class CTraitMethod:
-    pass
+    """"traitmethod(function, traits)
+
+    Create a type checked instance method object.")
+
+    """
+
+    cdef object _tm_name, _tm_func, _tm_self, _tm_traits, _tm_class
+
+    def __dealloc__(self):
+        # FIXME: check trait_method_dealloc and ensure nothing is needed here
+        pass
+
+    property tm_name:
+        """ The name of the method. """
+        def __get__(self):
+            return self._tm_name
+
+    property tm_func:
+        """ The function (or other callable) implementing a method. """
+        def __get__(self):
+            return self._tm_func
+
+    property tm_self:
+        """ The instance to which a method is bound; None for unbound methods. """
+        def __get__(self):
+            raise self._tm_self
+
+    property tm_traits:
+        """ The traits associated with a method. """
+        def __get__(self):
+            raise self._tm_traits
+
+    property tm_class:
+        """ The class associated with a method. """
+        def __get__(self):
+            raise self._tm_class
+
+    # Descriptor protocol
+    def __get__(self, instance, klass):
+        return create_trait_method(
+            self._tm_name, self._tm_func, instance, self._tm_traits, klass
+        )
+
+    def __repr__(self):
+        funcname = getattr(self.tm_func, '__name__')
+        if self.tm_class is not None:
+            klassname = getattr(self.tm_class, '__name__')
+        else:
+            klassname = ''
+
+        if self.tm_self is None:
+            result = '<unbound method %s.%s>' % (klassname, funcname)
+        else:
+            result = '<bound method %s.%s of %s>' % (
+                klassname, funcname, repr(self.tm_self)
+            )
+
+        return result
+
+    def __getattr__(self, name):
+        """ Gets the value of a trait method attribute:
+
+        The getattr() implementation for trait method objects is similar to
+        PyObject_GenericGetAttr(), but instead of looking in __dict__ it
+        asks tm_self for the attribute.  Then the error handling is a bit
+        different because we want to preserve the exception raised by the
+        delegate, unless we have an alternative from our class.
+
+        """
+        # trait_method_gettro function in the C code.
+
+        print 'CTraitMethod __getattr__ for ', name
+        cdef type type_ = type(self)
+
+        descr = f = None
+        if hasattr(type_, name):
+            descr = getattr(type_, name)
+            # f is supposed to be a getter on a descriptor
+            if hasattr(descr, '__get__'):
+                f = descr.__get__
+                return f(self, type_)
+
+        try:
+            return getattr((<CTraitMethod>self).tm_func, name)
+        except Exception as e:
+            if isinstance(e, AttributeError):
+                raise e
+
+        if f is not None:
+            return f(self, type_)
+
+        if descr is not None:
+            return descr
 
 def _undefined(Undefined_, Uninitialized_):
     """ Sets the global Undefined and Uninitialized values. """
@@ -1966,8 +2125,20 @@ def _value_class(TraitValue_):
     global TraitValue
     TraitValue = TraitValue_
 
-cdef void trait_clone(cTrait trait1, cTrait trait2):
-    pass
+cdef void trait_clone(cTrait target, cTrait source):
+    target.flags = source.flags
+    target.getattr = source.getattr
+    target.setattr = source.setattr
+    target._post_setattr = source._post_setattr
+    target.py_post_setattr = source.py_post_setattr
+    target.validate = source.validate
+    target.py_validate = source.py_validate
+    target.default_value_type = source.default_value_type
+    target.internal_default_value = source.internal_default_value
+    target.delegate_name = source.delegate_name
+    target.delegate_prefix = source.delegate_prefix
+    target.delegate_attr_name = source.delegate_attr_name
+    target._handler = source._handler
 
 cdef int is_trait_property(cTrait trait):
     return trait.flags & TRAIT_VALUE_PROPERTY != 0
