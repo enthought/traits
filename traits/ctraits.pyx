@@ -208,10 +208,16 @@ cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     print 'Validate trait map'
     cdef object type_info = trait.py_validate
-    if value in type_info[1]:
-        return value
-    else:
-        raise_trait_error(trait, obj, name, value)
+
+    try:
+        if value in type_info[1]:
+            return value
+    except TypeError as exc:
+        # `value` was not hashable
+        pass
+
+    raise_trait_error(trait, obj, name, value)
+
 
 cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value satisifies a complex trait definition. """
@@ -1151,7 +1157,7 @@ cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object
     cdef object user_args = None
     cdef object args = (obj, name, old_value, new_value)
 
-    # Do nothing if the user has explicitely requested no traits notifications
+    # Do nothing if the user has explicitly requested no traits notifications
     # to be sent.
     if obj.flags & HASTRAITS_NO_NOTIFY:
         return rc
@@ -1178,7 +1184,7 @@ cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj, object
 cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     """ Assigns a value to a specified normal trait attribute. """
 
-    print 'setattr_trait'
+    print 'setattr_trait', traito, traitd, obj, name, value
 
     cdef object object_dict = obj.obj_dict
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
@@ -1228,12 +1234,16 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     if traitd.validate is not NULL and value is not Undefined:
         value = traitd.validate(traitd, obj, name, value)
         print 'value is after validate ', value
+
     if obj.obj_dict is None:
         obj.obj_dict = {}
+
     # FIXME: support unicode
     if not PyString_Check(name):
         raise ValueError('Attribute name must be a string.')
 
+    # TRAIT_SETATTR_ORIGINAL_VALUE: Make 'setattr' store the original
+    # unvalidated value
     if traitd.flags & TRAIT_SETATTR_ORIGINAL_VALUE:
         new_value = original_value
     else:
@@ -1272,8 +1282,9 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
         if post_setattr is not None:
             flag_check = traitd.flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE
             post_value = original_value if flag_check else value
-            rc = post_setattr(obj, name, post_value)
-        if rc == 0 and do_notifiers:
+            post_setattr(obj, name, post_value)
+
+        if do_notifiers:
             rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, new_value)
 
     return rc
@@ -1412,7 +1423,7 @@ cdef class cTrait:
     cdef trait_getattr getattr
     cdef trait_setattr setattr
     cdef trait_post_setattr _post_setattr
-    cdef object py_post_setattr # Pyton=based post 'setattr' handler
+    cdef object py_post_setattr # Python-based post 'setattr' handler
     cdef trait_validate validate
     cdef object py_validate # Python-based validate value handler
     cdef int default_value_type # Type of default value: see the default_value_for function
