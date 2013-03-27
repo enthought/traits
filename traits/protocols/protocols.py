@@ -802,21 +802,16 @@ def advise(**kw):
             " module body, not in a function or exec."
         )
 
-    classProvides         = kw.setdefault('classProvides',())
-    classDoesNotProvide   = kw.setdefault('classDoesNotProvide',())
-    instancesProvide      = kw.setdefault('instancesProvide',())
-    instancesDoNotProvide = kw.setdefault('instancesDoNotProvide',())
-    asAdapterForTypes     = kw.setdefault('asAdapterForTypes',())
-    asAdapterForProtocols = kw.setdefault('asAdapterForProtocols',())
-    protocolExtends       = kw.setdefault('protocolExtends',())
-    protocolIsSubsetOf    = kw.setdefault('protocolIsSubsetOf',())
-    factoryMethod         = kw.setdefault('factoryMethod',None)
-    equivalentProtocols   = kw.setdefault('equivalentProtocols',())
-
-    map(kw.__delitem__,"classProvides classDoesNotProvide instancesProvide"
-        " instancesDoNotProvide asAdapterForTypes asAdapterForProtocols"
-        " protocolExtends protocolIsSubsetOf factoryMethod equivalentProtocols"
-        .split())
+    classProvides         = kw.pop('classProvides',())
+    classDoesNotProvide   = kw.pop('classDoesNotProvide',())
+    instancesProvide      = kw.pop('instancesProvide',())
+    instancesDoNotProvide = kw.pop('instancesDoNotProvide',())
+    asAdapterForTypes     = kw.pop('asAdapterForTypes',())
+    asAdapterForProtocols = kw.pop('asAdapterForProtocols',())
+    protocolExtends       = kw.pop('protocolExtends',())
+    protocolIsSubsetOf    = kw.pop('protocolIsSubsetOf',())
+    factoryMethod         = kw.pop('factoryMethod',None)
+    equivalentProtocols   = kw.pop('equivalentProtocols',())
 
     for k in kw:
         raise TypeError(
