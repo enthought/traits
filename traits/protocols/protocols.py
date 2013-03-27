@@ -216,7 +216,12 @@ def updateWithSimplestAdapter(mapping, key, adapter, depth):
 
 #import api
 
-from .advice import metamethod, classicMRO, mkRef
+from .advice import metamethod, mkRef, getMRO
+
+try:
+    from .advice import classicMRO
+except ImportError:
+    # python 3 does not have old-style classes anymore and thus we do not 
 
 #from adapters \
 #    import composeAdapters, updateWithSimplestAdapter, NO_ADAPTER_NEEDED, \
@@ -364,6 +369,7 @@ class Protocol:
         try:
             mro = typ.__mro__
         except AttributeError:
+            # as of python 3, this should never happen, and once python 2 is not supported anymore, this should be removed.
             # Note: this adds 'InstanceType' and 'object' to end of MRO
             mro = classicMRO(typ,extendedClassic=True)
 

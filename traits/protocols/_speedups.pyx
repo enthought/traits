@@ -6,13 +6,24 @@ __all__ = [
     'Protocol__call__',
 ]
 
+from cpython.version cimport PY_MAJOR_VERSION
+
+from cpython.type cimport PyType_Check    
+from cpython.object cimport PyObject_TypeCheck,PyObject_IsInstance
+from cpython.exc cimport PyErr_ExceptionMatches
+
+# pre-python 3 specific stuff, do not know how to handle yet
 cdef extern from "Python.h":
-    int PyType_Check(object ob)
     int PyClass_Check(object ob)
     int PyInstance_Check(object ob)
-    int PyObject_TypeCheck(object ob, object tp)
-    int PyObject_IsInstance(object inst, object cls)
-    int PyErr_ExceptionMatches(void *exc)
+
+cdef extern from "Python.h":
+#    int PyType_Check(object ob)
+#    int PyClass_Check(object ob)
+#    int PyInstance_Check(object ob)
+#    int PyObject_TypeCheck(object ob, object tp)
+#    int PyObject_IsInstance(object inst, object cls)
+#    int PyErr_ExceptionMatches(void *exc)
 
     void *PyExc_AttributeError
     void *PyObject_GetAttr(object ob, object attr)
@@ -265,7 +276,7 @@ def getMRO(ob, extendedClassic=False):
     elif PyType_Check(ob):
         return ob.__mro__
 
-    elif PyObject_TypeCheck(ob,__ECType):
+    elif PyObject_TypeCheck(ob,<PyTypeObject *>__ECType):
         return extClassMRO(ob, extendedClassic)
 
     return ob,
@@ -318,7 +329,7 @@ def Protocol__adapt__(self, obj):
                 mro = getattr(cls, __mro)
             except Exception:
                 # No __mro__?  Is it an ExtensionClass?
-                if PyObject_TypeCheck(cls,__ECType):
+                if PyObject_TypeCheck(cls,<PyTypeObject *>__ECType):
                     # Yep, toss out the error and compute a reasonable MRO
                     mro = extClassMRO(cls, 1)
                 else:
