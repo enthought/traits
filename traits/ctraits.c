@@ -84,6 +84,11 @@ do { \
 #define PyHasTraits_Check(op) PyObject_TypeCheck(op, &has_traits_type)
 #define PyHasTraits_CheckExact(op) ((op)->ob_type == &has_traits_type)
 
+/* The following macro is defined from Python 2.6 and differently in Python 3 */
+#ifndef Py_TYPE
+    #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
+#endif
+
 /* Trait method related: */
 
 #define TP_DESCR_GET(t) \
@@ -367,7 +372,7 @@ bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( DelegationError,
             "The '%.400s' attribute of a '%.50s' object delegates to an attribute which is not a defined trait.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -384,7 +389,7 @@ bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( DelegationError,
             "The '%.400s' attribute of a '%.50s' object has a delegate which does not have traits.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -401,7 +406,7 @@ delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( DelegationError,
                           "Delegation recursion limit exceeded while setting the '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -414,7 +419,7 @@ delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( DelegationError,
                           "Delegation recursion limit exceeded while getting the definition of the '%.400s' trait of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -431,7 +436,7 @@ delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( TraitError,
                           "Cannot delete the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -448,7 +453,7 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( TraitError,
                           "Cannot modify the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -465,7 +470,7 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( TraitError,
                           "Cannot set the undefined '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
@@ -482,7 +487,7 @@ set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
     if ( PyString_Check( name ) ) {
         PyErr_Format( TraitError,
                 "Cannot delete the '%.400s' property of a '%.50s' object.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
+                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
         return -1;
     }
 
