@@ -6,7 +6,8 @@ from setuptools import setup, Extension, find_packages
 
 
 d = {}
-execfile(join('traits', '__init__.py'), d)
+traits_init = join('traits', '__init__.py')
+exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 
 
 ctraits = Extension(
@@ -58,4 +59,6 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    cmdclass = {'build_ext': build_ext},
+    use_2to3 = True
 )
