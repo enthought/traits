@@ -55,7 +55,7 @@ cdef extern from "Python.h":
 
     object __Pyx_GetExcValue()
 
-cdef object _marker, __conform, __adapt, __mro, __ECType
+cdef object _marker, __conform, __adapt, __mro
 from sys import exc_info, exc_clear
 # Since we can't do "from future import absolute_import", we use __import__
 # directly.  Fake the globals dictionary with just the relevant information. In
@@ -66,21 +66,12 @@ AdaptationFailure = __import__(
     fromlist=['AdaptationFailure'], level=1
 ).AdaptationFailure
 
-try:
-    from ExtensionClass import ExtensionClass
-    __ECType = ExtensionClass
-except ImportError:
-    __ECType = type
 
 _marker    = object()
 __conform  = PyString_InternFromString("__conform__")
 __adapt    = PyString_InternFromString("__adapt__")
 __class    = PyString_InternFromString("__class__")
 __mro      = PyString_InternFromString("__mro__")
-
-
-
-
 
 
 
@@ -114,15 +105,6 @@ cdef class metamethod:
 
     def __delete__(self, ob):
         raise AttributeError("Read-only attribute")
-
-
-
-
-
-
-
-
-
 
 
 
@@ -226,35 +208,6 @@ IF ONLY_PY2K:
         raise TypeError("Not a classic class", ob)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-cdef buildECMRO(object cls, PyListObject *list):
-    PyList_Append(<object> list, cls)
-    for i in cls.__bases__:
-        buildECMRO(i, list)
-
-
-def extClassMRO(ob, extendedClassic=False):
-    mro = []
-    buildECMRO(ob, <PyListObject *>mro)
-    if extendedClassic:
-        PyList_Append(mro, <object> &PyInstance_Type)
-        PyList_Append(mro, <object> &PyBaseObject_Type)
-    return mro
-
-
 IF ONLY_PY2K:
     def getMRO(ob, extendedClassic=False):
 
@@ -264,22 +217,7 @@ IF ONLY_PY2K:
         elif PyType_Check(ob):
             return ob.__mro__
 
-        elif PyObject_TypeCheck(ob,<PyTypeObject *>__ECType):
-            return extClassMRO(ob, extendedClassic)
-
         return ob,
-
-
-
-
-
-
-
-
-
-
-
-
 
 def Protocol__adapt__(self, obj):
 
@@ -321,32 +259,10 @@ def Protocol__adapt__(self, obj):
                 PyList_Append(mro, <object> &PyBaseObject_Type)
 
             else:
-                # Fallback to getting __mro__ (for e.g. security proxies/ExtensionClass)
-                try:
-                    mro = getattr(cls, __mro)
-                except Exception:
-                    # No __mro__?  Is it an ExtensionClass?
-                    if PyObject_TypeCheck(cls,<PyTypeObject *>__ECType):
-                        # Yep, toss out the error and compute a reasonable MRO
-                        mro = extClassMRO(cls, 1)
-                    else:
-                        raise
-        ELSE:
-            try:
+                # Fallback to getting __mro__ (for e.g. security proxies)
                 mro = getattr(cls, __mro)
-            except Exception:
-                # No __mro__?  Is it an ExtensionClass?
-                if PyObject_TypeCheck(cls,<PyTypeObject *>__ECType):
-                    # Yep, toss out the error and compute a reasonable MRO
-                    mro = extClassMRO(cls, 1)
-                else:
-                    raise
-
-
-
-
-
-
+        ELSE:
+            mro = getattr(cls, __mro)
 
 
     get = self._Protocol__adapters.get
@@ -374,19 +290,4 @@ def Protocol__adapt__(self, obj):
             factory=get(cls)
             if factory is not None:
                 return factory[0](obj)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

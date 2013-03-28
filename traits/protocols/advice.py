@@ -16,12 +16,7 @@ def metamethod(func):
     return property(lambda ob: func.__get__(ob,ob.__class__))
 
 
-try:
-    from ExtensionClass import ExtensionClass
-except ImportError:
-    ClassicTypes = ClassType
-else:
-    ClassicTypes = ClassType, ExtensionClass
+ClassicTypes = ClassType
 
 
 def classicMRO(ob, extendedClassic=False):
