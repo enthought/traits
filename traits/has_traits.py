@@ -51,7 +51,7 @@ from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
 from .trait_handlers import TraitType
 
 from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
-    add_article, enumerate, is_none, not_event, not_false)
+    add_article, is_none, not_event, not_false)
 
 from .trait_errors import TraitError
 
@@ -951,7 +951,7 @@ class MetaHasTraitsObject ( object ):
         # Make sure the trait prefixes are sorted longest to shortest
         # so that we can easily bind dynamic traits to the longest matching
         # prefix:
-        prefix_list.sort( lambda x, y: len( y ) - len( x ) )
+        prefix_list.sort( key = lambda x: -len(x) )
 
         # Get the list of all possible 'Instance'/'List(Instance)' handlers:
         instance_traits = _get_instance_handlers( class_dict, hastraits_bases )

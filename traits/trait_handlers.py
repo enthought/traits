@@ -37,14 +37,18 @@ import sys
 import re
 import copy
 import copy_reg
-from types import InstanceType, TypeType, FunctionType, MethodType
+from types import FunctionType, MethodType
+TypeType = type
+
 from weakref import ref
 
 from .protocols.api import adapt
 from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
-    CoercableTypes, TraitsCache, class_of, enumerate, Missing)
+    CoercableTypes, TraitsCache, class_of, Missing)
 from .trait_errors import TraitError, repr_type
+
+from . import _py2to3
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -1579,7 +1583,7 @@ class TraitClass ( TraitHandler ):
         If *aClass* is an instance, it is mapped to the class it is an instance
         of.
         """
-        if type( aClass ) is InstanceType:
+        if _py2to3.is_old_style_instance(aClass):
             aClass = aClass.__class__
         self.aClass = aClass
 
@@ -1780,7 +1784,7 @@ class TraitPrefixList ( TraitHandler ):
 
     def validate ( self, object, name, value ):
         try:
-            if not self.values_.has_key( value ):
+            if value not in self.values_:
                 match = None
                 n     = len( value )
                 for key in self.values:

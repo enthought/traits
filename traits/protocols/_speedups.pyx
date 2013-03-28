@@ -19,8 +19,8 @@ from cpython.tuple cimport PyTuple_GET_SIZE,PyTuple_Check,PyTuple_GET_ITEM
 from cpython.string cimport PyString_InternFromString
 from cpython.method cimport PyMethod_New
 
-DEF ONLY_PY2K = True
-DEF ONLY_PY3K = False
+DEF ONLY_PY2K = False
+DEF ONLY_PY3K = True
 
 IF not ONLY_PY3K:
     # pre-python 3 specific stuff, do not know how to handle yet

@@ -30,9 +30,8 @@ import os
 import sys
 from os import getcwd
 from os.path import dirname, exists, join
-from types import (ListType, TupleType, DictType, StringType, UnicodeType,
-    IntType, LongType, FloatType, ComplexType, ClassType, TypeType)
 
+from . import _py2to3
 
 # Set the Python version being used:
 vi = sys.version_info
@@ -188,35 +187,16 @@ except:
     ETSConfig = ETSConfig()
 
 #-------------------------------------------------------------------------------
-#  Provide Python 2.3+ compatible definitions (if necessary):
-#-------------------------------------------------------------------------------
-
-try:
-    from types import BooleanType
-except ImportError:
-    BooleanType = IntType
-
-def _enumerate ( seq ):
-    for i in xrange( len( seq) ):
-        yield i, seq[i]
-try:
-    enumerate = enumerate
-except:
-    enumerate = _enumerate
-del _enumerate
-
-#-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ClassTypes    = ( ClassType, TypeType )
+ClassTypes    = _py2to3.ClassTypes
 
-SequenceTypes = ( ListType, TupleType )
+SequenceTypes = ( list, tuple )
 
 ComplexTypes  = ( float, int )
 
-TypeTypes     = ( StringType,  UnicodeType, IntType,   LongType, FloatType,
-                  ComplexType, ListType,    TupleType, DictType, BooleanType )
+TypeTypes     = ( str,  unicode, int, long, float, complex, list, tuple, dict, bool )
 
 TraitNotifier = '__trait_notifier__'
 
@@ -282,6 +262,9 @@ class _Undefined(object):
     def __eq__(self, other):
         return type(self) is type(other)
 
+    def __hash__(self):
+        return hash(type(self))
+
     def __ne__(self, other):
         return type(self) is not type(other)
 
@@ -340,8 +323,7 @@ def strx ( arg ):
 #  Constants:
 #-------------------------------------------------------------------------------
 
-StringTypes = ( StringType, UnicodeType, IntType, LongType, FloatType,
-                ComplexType )
+StringTypes = ( str, unicode, int, long, float, complex )
 
 #-------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -349,10 +331,10 @@ StringTypes = ( StringType, UnicodeType, IntType, LongType, FloatType,
 
 # Mapping of coercable types.
 CoercableTypes = {
-    LongType:    ( 11, long, int ),
-    FloatType:   ( 11, float, int ),
-    ComplexType: ( 11, complex, float, int ),
-    UnicodeType: ( 11, unicode, str )
+    long:    ( 11, long, int ),
+    float:   ( 11, float, int ),
+    complex: ( 11, complex, float, int ),
+    unicode: ( 11, unicode, str )
 }
 
 #-------------------------------------------------------------------------------

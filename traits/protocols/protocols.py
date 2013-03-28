@@ -15,7 +15,7 @@ __all__ = [
     'IOpenImplementor', 'IImplicationListener', 'Attribute', 'Variation'
 ]
 
-from types import FunctionType, ClassType, MethodType
+from types import FunctionType, MethodType
 
 try:
     PendingDeprecationWarning
@@ -164,7 +164,7 @@ def bindAdapter(adapter,proto):
             maxargs += (f.im_self is not None)
             f = f.im_func
             tries = 10
-        elif isinstance(f,(ClassType,type)):
+        elif isinstance(f,ClassTypes):
             maxargs += 1
             f = f.__init__
             tries -=1
@@ -416,8 +416,8 @@ try:
 except ImportError:
     pass
 else:
-    from new import instancemethod
-    Protocol.__call__ = instancemethod(Protocol__call__, None, Protocol)
+    from types import MethodType
+    Protocol.__call__ = MethodType(Protocol__call__, None, Protocol)
 
 
 class AbstractBaseMeta(Protocol, type):
@@ -434,7 +434,7 @@ class AbstractBaseMeta(Protocol, type):
         Protocol.__init__(self)
 
         for b in __bases__:
-            if isinstance(b,AbstractBaseMeta) and b.__bases__<>(object,):
+            if isinstance(b,AbstractBaseMeta) and b.__bases__!=(object,):
                 self.addImpliedProtocol(b)
 
 
@@ -478,7 +478,7 @@ class InterfaceClass(AbstractBaseMeta):
     def getBases(self):
         return [
             b for b in self.__bases__
-                if isinstance(b,AbstractBaseMeta) and b.__bases__<>(object,)
+                if isinstance(b,AbstractBaseMeta) and b.__bases__!=(object,)
         ]
 
 
@@ -634,9 +634,7 @@ class IImplicationListener(Interface):
 
 from sys import _getframe, exc_info, modules
 
-from types import ClassType
-
-ClassTypes = ( ClassType, type )
+from .._py2to3 import ClassTypes
 
 #from adapters \
 #    import NO_ADAPTER_NEEDED, DOES_NOT_SUPPORT, AdaptationFailure
