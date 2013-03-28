@@ -30,7 +30,6 @@ import os
 import sys
 from os import getcwd
 from os.path import dirname, exists, join
-from string import lowercase, uppercase
 from types import (ListType, TupleType, DictType, StringType, UnicodeType,
     IntType, LongType, FloatType, ComplexType, ClassType, TypeType)
 
@@ -399,9 +398,9 @@ def user_name_for ( name ):
     last_lower = False
 
     for c in name:
-        if (c in uppercase) and last_lower:
+        if c.isupper() and last_lower:
            result += ' '
-        last_lower = (c in lowercase)
+        last_lower = c.islower()
         result    += c
 
     return result.capitalize()
