@@ -29,7 +29,7 @@ import re
 import datetime
 from weakref import ref
 from os.path import isfile, isdir
-from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
+from types import FunctionType, MethodType, ModuleType
 
 from . import trait_handlers
 
@@ -47,6 +47,7 @@ from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
 
 from .trait_errors import TraitError
 
+from . import _py2to3
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -947,7 +948,7 @@ class This ( BaseType ):
 
     def validate_failed ( self, object, name, value ):
         kind = type( value )
-        if kind is InstanceType:
+        if _py2to3.is_InstanceType(kind):
             msg = 'class %s' % value.__class__.__name__
         else:
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
@@ -985,16 +986,18 @@ class Method ( TraitType ):
     #: A description of the type of value this trait accepts:
     info_text = 'a method'
 
+if sys.version_info.major < 3:
+    from types import ClassType
+    
+    class Class ( TraitType ):
+        """ Defines a trait whose value must be an old-style Python class.
+        """
 
-class Class ( TraitType ):
-    """ Defines a trait whose value must be an old-style Python class.
-    """
+        #: The C-level fast validator to use:
+        fast_validate = ( 11, ClassType )
 
-    #: The C-level fast validator to use:
-    fast_validate = ( 11, ClassType )
-
-    #: A description of the type of value this trait accepts:
-    info_text = 'an old-style class'
+        #: A description of the type of value this trait accepts:
+        info_text = 'an old-style class'
 
 
 class Module ( TraitType ):
@@ -3367,11 +3370,14 @@ ListFunction = List( FunctionType )
 #: List of method values; default value is [].
 ListMethod = List( MethodType )
 
-#: List of class values; default value is [].
-ListClass = List( ClassType )
+if sys.version_info.major < 3:
+    from types import ClassType, InstanceType
+    
+    #: List of class values; default value is [].
+    ListClass = List( ClassType )
 
-#: List of instance values; default value is [].
-ListInstance = List( InstanceType )
+    #: List of instance values; default value is [].
+    ListInstance = List( InstanceType )
 
 #: List of container type values; default value is [].
 ListThis = List( ThisClass )

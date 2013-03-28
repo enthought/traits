@@ -4,7 +4,8 @@ from __future__ import absolute_import
 
 __all__ = ['ProviderMixin']
 
-from types import FunctionType, ModuleType, InstanceType, ClassType
+import sys
+from types import FunctionType, ModuleType
 
 from .protocols import (IImplicationListener, IOpenProvider,
     NO_ADAPTER_NEEDED, advise, updateWithSimplestAdapter, composeAdapters,
@@ -132,12 +133,21 @@ class MiscObjectsAsOpenProvider(object):
 
     """Supply __conform__ registry for funcs, modules, & classic instances"""
 
-    advise(
-        instancesProvide=[IOpenProvider],
-        asAdapterForTypes=[
-            FunctionType, ModuleType, InstanceType, ClassType, type, object
-        ]
-    )
+    if sys.version_info.major < 3:
+        from types import InstanceType, ClassType
+        advise(
+            instancesProvide=[IOpenProvider],
+            asAdapterForTypes=[
+                FunctionType, ModuleType, InstanceType, ClassType, type, object
+            ]
+        )
+    else:
+        advise(
+            instancesProvide=[IOpenProvider],
+            asAdapterForTypes=[
+                FunctionType, ModuleType,type, object
+            ]
+        )
 
 
     def __init__(self,ob):

@@ -228,8 +228,6 @@ except ImportError:
 #    import composeAdapters, updateWithSimplestAdapter, NO_ADAPTER_NEEDED, \
 #           DOES_NOT_SUPPORT
 
-from types import InstanceType
-
 # Thread locking support:
 
 try:

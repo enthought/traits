@@ -48,8 +48,9 @@ Visualization:
 
 from __future__ import absolute_import
 
+import sys
 from types import FunctionType, MethodType
-NoneType = type(None)
+NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
 from .ctraits import cTrait
@@ -416,11 +417,9 @@ ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
 
 PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
                      dict, FunctionType, MethodType, type, NoneType )
-try:
+
+if sys.version_info.major < 3:
     from types import InstanceType,ClassType
-except ImportError:
-    pass
-else:
     PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
 
 

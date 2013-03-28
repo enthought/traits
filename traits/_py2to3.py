@@ -7,15 +7,23 @@ import sys
 
 
 if sys.version_info.major < 3:
-    from types import InstanceType
+    from types import InstanceType,ClassType
     def is_old_style_instance(obj):
         return type(obj) is InstanceType
+    def is_old_style_class(obj):
+        return type(obj) is ClassType
     def is_InstanceType(obj):
         return obj is InstanceType
+    def is_ClassType(obj):
+        return obj is ClassType
 else:
     def is_old_style_instance(obj):
         return False
+    def is_old_style_instance(obj):
+        return False
     def is_InstanceType(obj):
+        return False
+    def is_ClassType(obj):
         return False
 
 
