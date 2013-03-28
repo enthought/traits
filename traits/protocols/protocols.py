@@ -222,6 +222,7 @@ try:
     from .advice import classicMRO
 except ImportError:
     # python 3 does not have old-style classes anymore and thus we do not 
+    pass
 
 #from adapters \
 #    import composeAdapters, updateWithSimplestAdapter, NO_ADAPTER_NEEDED, \
