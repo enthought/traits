@@ -3,7 +3,7 @@
 
 from os.path import join
 from setuptools import setup, Extension, find_packages
-
+from Cython.Distutils import build_ext
 
 d = {}
 traits_init = join('traits', '__init__.py')
