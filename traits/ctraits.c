@@ -503,7 +503,7 @@ unknown_attribute_error ( has_traits_object * obj, PyObject * name ) {
 
     PyErr_Format( PyExc_AttributeError,
                   "'%.50s' object has no attribute '%.400s'",
-                  obj->ob_type->tp_name, PyString_AS_STRING( name ) );
+                  Py_TYPE(obj)->tp_name, PyString_AS_STRING( name ) );
 }
 
 /*-----------------------------------------------------------------------------
@@ -710,9 +710,11 @@ call_class ( PyObject * class, trait_object * trait, has_traits_object * obj,
 static PyObject *
 dict_getitem ( PyDictObject * dict, PyObject *key ) {
 
-        long hash;
 
         assert( PyDict_Check( dict ) );
+
+#if PY_MAJOR_VERSION < 3
+        long hash;
 
         if ( !PyString_CheckExact( key ) ||
          ((hash = ((PyStringObject *) key)->ob_shash) == -1) ) {
@@ -722,6 +724,30 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
             return NULL;
                 }
         }
+#else
+        Py_hash_t hash;
+#ifndef Py_LIMITED_API
+        if ( PyUnicode_CheckExact( key ) ) {
+            hash = ((PyUnicodeObject *) key)->hash;
+        } else if ( PyBytes_CheckExact( key )) {
+            hash = ((PyBytesObject *) key)->ob_shash;
+        }
+        if (hash == -1) {
+                hash = PyObject_Hash( key );
+                if ( hash == -1 ) {
+                        PyErr_Clear();
+            return NULL;
+                }
+        }
+        
+#else
+                hash = PyObject_Hash( key );
+                if ( hash == -1 ) {
+                        PyErr_Clear();
+            return NULL;
+                }
+#endif
+#endif
 
         return (dict->ma_lookup)( dict, key, hash )->me_value;
 }
