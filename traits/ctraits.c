@@ -1896,9 +1896,15 @@ getattr_delegate ( trait_object      * trait,
     }
 
     PyErr_Format( DelegationError,
-        "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
-            obj->ob_type->tp_name, PyString_AS_STRING( nname ),
-        tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
+        "The '%.50s' object has no attribute '%.400"
+            Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " because its %.50s delegate has no attribute '%.400"
+            Py2to3_PYERR_ATTR_NAME_FMTCHR "'.",
+        Py_TYPE(obj)->tp_name,
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        tp->tp_name,
+        Py2to3_PYERR_PREPARE_ATTR_NAME( delegate_attr_name )
+    );
     result = NULL;
 
 done:
@@ -2577,7 +2583,7 @@ setattr_delegate ( trait_object      * traito,
             return bad_delegate_error( obj, name );
         }
 
-        if ( traitd->ob_type != ctrait_type ) {
+        if ( Py_TYPE(traitd) != ctrait_type ) {
             Py_DECREF( daname );
             return fatal_trait_error();
         }
