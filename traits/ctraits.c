@@ -24,6 +24,8 @@
 #include "Python.h"
 #include "structmember.h"
 
+#include "py2to3.h"
+
 /*-----------------------------------------------------------------------------
 |  Constants:
 +----------------------------------------------------------------------------*/
@@ -83,11 +85,6 @@ do { \
 
 #define PyHasTraits_Check(op) PyObject_TypeCheck(op, &has_traits_type)
 #define PyHasTraits_CheckExact(op) ((op)->ob_type == &has_traits_type)
-
-/* The following macro is defined from Python 2.6 and differently in Python 3 */
-#ifndef Py_TYPE
-    #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
-#endif
 
 /* Trait method related: */
 
@@ -369,14 +366,18 @@ bad_trait_value_error ( void ) {
 static int
 bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-            "The '%.400s' attribute of a '%.50s' object delegates to an attribute which is not a defined trait.",
-                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
-
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "The '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object"
+            " delegates to an attribute which is not a defined trait.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -386,14 +387,19 @@ bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 static int
 bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-            "The '%.400s' attribute of a '%.50s' object has a delegate which does not have traits.",
-                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "The '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object"
+            " has a delegate which does not have traits.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -403,27 +409,38 @@ bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-                          "Delegation recursion limit exceeded while setting the '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "Delegation recursion limit exceeded while setting"
+            " the '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 static int
 delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-                          "Delegation recursion limit exceeded while getting the definition of the '%.400s' trait of a '%.50s' object.",
-                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "Delegation recursion limit exceeded while getting"
+            " the definition of"
+            " the '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -433,14 +450,18 @@ delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot delete the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot delete the read only '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -450,14 +471,18 @@ delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot modify the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot modify the read only '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -467,14 +492,18 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot set the undefined '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot set the undefined '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -484,14 +513,18 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                "Cannot delete the '%.400s' property of a '%.50s' object.",
-                PyString_AS_STRING( name ), Py_TYPE(obj)->tp_name );
-        return -1;
+    if ( !Py2to3_TraitNameCheck( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot delete the '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'"
+            " property of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -501,9 +534,12 @@ set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 static void
 unknown_attribute_error ( has_traits_object * obj, PyObject * name ) {
 
-    PyErr_Format( PyExc_AttributeError,
-                  "'%.50s' object has no attribute '%.400s'",
-                  Py_TYPE(obj)->tp_name, PyString_AS_STRING( name ) );
+    PyErr_Format(
+        PyExc_AttributeError,
+        "'%.50s' object has no attribute '%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR "'",
+        Py_TYPE(obj)->tp_name,
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name )
+    );
 }
 
 /*-----------------------------------------------------------------------------
@@ -527,7 +563,7 @@ static PyObject *
 argument_error ( trait_object * trait, PyObject * meth, int arg,
                  PyObject * obj, PyObject * name, PyObject * value ) {
 
-    PyObject * arg_num = PyInt_FromLong( arg );
+    PyObject * arg_num = Py2to3_PyNum_FromLong( arg );
     if ( arg_num != NULL ) {
         PyObject * result = PyObject_CallMethod( trait->handler,
                      "arg_error", "(OOOOO)", meth, arg_num, obj, name, value );
@@ -561,7 +597,7 @@ static PyObject *
 dup_argument_error ( trait_object * trait, PyObject * meth, int arg,
                      PyObject * obj, PyObject * name ) {
 
-    PyObject * arg_num = PyInt_FromLong( arg );
+    PyObject * arg_num = Py2to3_PyNum_FromLong( arg );
     if ( arg_num != NULL ) {
         PyObject * result = PyObject_CallMethod( trait->handler,
                        "dup_arg_error", "(OOOO)", meth, arg_num, obj, name );
@@ -580,7 +616,7 @@ static PyObject *
 missing_argument_error ( trait_object * trait, PyObject * meth, int arg,
                          PyObject * obj, PyObject * name ) {
 
-    PyObject * arg_num = PyInt_FromLong( arg );
+    PyObject * arg_num = Py2to3_PyNum_FromLong( arg );
     if ( arg_num != NULL ) {
         PyObject * result = PyObject_CallMethod( trait->handler,
                      "missing_arg_error", "(OOOO)", meth, arg_num, obj, name );
@@ -601,18 +637,21 @@ too_may_args_error ( PyObject * name, int wanted, int received ) {
     switch ( wanted ) {
         case 0:
             PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes no arguments (%.3d given)",
-                  PyString_AS_STRING( name ), received );
+                  "%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR
+                      "() takes no arguments (%.3d given)",
+                  Py2to3_PYERR_PREPARE_ATTR_NAME( name ), received );
             break;
         case 1:
             PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes exactly 1 argument (%.3d given)",
-                  PyString_AS_STRING( name ), received );
+                  "%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR
+                      "() takes exactly 1 argument (%.3d given)",
+                  Py2to3_PYERR_PREPARE_ATTR_NAME( name ), received );
             break;
         default:
             PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes exactly %.3d arguments (%.3d given)",
-                  PyString_AS_STRING( name ), wanted, received );
+                  "%.400" Py2to3_PYERR_ATTR_NAME_FMTCHR
+                      "() takes exactly %.3d arguments (%.3d given)",
+                  Py2to3_PYERR_PREPARE_ATTR_NAME( name ), wanted, received );
             break;
     }
 
@@ -644,7 +683,7 @@ get_callable_value ( PyObject * value ) {
     else if ( PyCallable_Check( value ) )
         value = is_callable;
     else if ( PyTuple_Check( value ) &&
-              (PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+              (Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
@@ -656,7 +695,8 @@ get_callable_value ( PyObject * value ) {
             value = tuple;
         }
     }
-    Py_INCREF( value );
+    Py_INCREF( value );    //TODO: This looks like a memory leak n the tuple case to me!
+                           // PyTuple_New already returns a new reference
     return value;
 }
 
@@ -710,46 +750,15 @@ call_class ( PyObject * class, trait_object * trait, has_traits_object * obj,
 static PyObject *
 dict_getitem ( PyDictObject * dict, PyObject *key ) {
 
+    assert( PyDict_Check( dict ) );
 
-        assert( PyDict_Check( dict ) );
+    Py_hash_t hash = Py2to3_GetHash_wCache( key );
+    if ( hash == -1 ) {
+        PyErr_Clear();
+        return NULL;
+    }
 
-#if PY_MAJOR_VERSION < 3
-        long hash;
-
-        if ( !PyString_CheckExact( key ) ||
-         ((hash = ((PyStringObject *) key)->ob_shash) == -1) ) {
-                hash = PyObject_Hash( key );
-                if ( hash == -1 ) {
-                        PyErr_Clear();
-            return NULL;
-                }
-        }
-#else
-        Py_hash_t hash;
-#ifndef Py_LIMITED_API
-        if ( PyUnicode_CheckExact( key ) ) {
-            hash = ((PyUnicodeObject *) key)->hash;
-        } else if ( PyBytes_CheckExact( key )) {
-            hash = ((PyBytesObject *) key)->ob_shash;
-        }
-        if (hash == -1) {
-                hash = PyObject_Hash( key );
-                if ( hash == -1 ) {
-                        PyErr_Clear();
-            return NULL;
-                }
-        }
-        
-#else
-                hash = PyObject_Hash( key );
-                if ( hash == -1 ) {
-                        PyErr_Clear();
-            return NULL;
-                }
-#endif
-#endif
-
-        return (dict->ma_lookup)( dict, key, hash )->me_value;
+    return (dict->ma_lookup)( dict, key, hash )->me_value;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1032,7 +1041,7 @@ has_traits_dealloc ( has_traits_object * obj ) {
     PyObject_GC_UnTrack(obj);
     Py_TRASHCAN_SAFE_BEGIN(obj);
     has_traits_clear( obj );
-    obj->ob_type->tp_free( (PyObject *) obj );
+    Py_TYPE(obj)->tp_free( (PyObject *) obj );
     Py_TRASHCAN_SAFE_END(obj);
 }
 
@@ -1057,55 +1066,14 @@ has_traits_traverse ( has_traits_object * obj, visitproc visit, void * arg ) {
 
 static int
 has_value_for ( has_traits_object * obj, PyObject * name ) {
-
-    PyObject * uname;
-    long hash;
-    int  rc;
-
     PyDictObject * dict = (PyDictObject *) obj->obj_dict;
 
-        if ( dict == NULL )
-        return 0;
+    if ( dict == NULL )
+    return 0;
 
     assert( PyDict_Check( dict ) );
 
-    if ( PyString_CheckExact( name ) ) {
-         if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
-             hash = PyObject_Hash( name );
-             return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL);
-    }
-
-    if ( PyString_Check( name ) ) {
-        hash = PyObject_Hash( name );
-        if ( hash == -1 ) {
-            PyErr_Clear();
-            return 0;
-        }
-        return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL );
-    }
-#ifdef Py_USING_UNICODE
-    if ( !PyUnicode_Check( name ) )
-        return 0;
-
-    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
-    if ( uname == NULL ) {
-        PyErr_Clear();
-            return 0;
-    }
-
-        hash = PyObject_Hash( uname );
-        if ( hash == -1 ) {
-        Py_DECREF( uname );
-        PyErr_Clear();
-        return 0;
-    }
-
-    rc = ((dict->ma_lookup)( dict, uname, hash )->me_value != NULL);
-    Py_DECREF( uname );
-    return rc;
-#else
-    return 0;
-#endif
+    return Py2to3_GetAttrDictValue(dict,name,NULL) != NULL;
 }
 
 /*-----------------------------------------------------------------------------
@@ -1115,62 +1083,26 @@ has_value_for ( has_traits_object * obj, PyObject * name ) {
 static PyObject *
 has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
 
+    trait_object * trait;
+    PyObject *value;
     /* The following is a performance hack to short-circuit the normal
-       look-up when the value is in the object's dictionary. */
-        trait_object * trait;
-        PyObject     * value;
-    PyObject     * uname;
-    long hash;
-
+       look-up when the value is in the object's dictionary.
+*/
     PyDictObject * dict = (PyDictObject *) obj->obj_dict;
 
-        if ( dict != NULL ) {
-         assert( PyDict_Check( dict ) );
-         if ( PyString_CheckExact( name ) ) {
-              if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
-                  hash = PyObject_Hash( name );
-                 value = (dict->ma_lookup)( dict, name, hash )->me_value;
-             if ( value != NULL ) {
-                 Py_INCREF( value );
-                 return value;
-             }
-         } else {
-            if ( PyString_Check( name ) ) {
-                    hash = PyObject_Hash( name );
-                    if ( hash == -1 )
-                            return NULL;
-                    value = (dict->ma_lookup)( dict, name, hash )->me_value;
-                if ( value != NULL ) {
-                    Py_INCREF( value );
-                    return value;
-                }
-            } else {
-#ifdef Py_USING_UNICODE
-                if ( PyUnicode_Check( name ) ) {
-                    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
-                    if ( uname == NULL )
-                            return NULL;
-                } else {
-                    invalid_attribute_error();
-                    return NULL;
-                }
-                    hash = PyObject_Hash( uname );
-                    if ( hash == -1 ) {
-                    Py_DECREF( uname );
-                            return NULL;
-                }
-                    value = (dict->ma_lookup)( dict, uname, hash )->me_value;
-                Py_DECREF( uname );
-                if ( value != NULL ) {
-                    Py_INCREF( value );
-                    return value;
-                }
-#else
-                invalid_attribute_error();
-                return NULL;
-#endif
-            }
-         }
+    if ( dict != NULL ) {
+        assert( PyDict_Check( dict ) );
+        
+        PyObject *bad_attr_marker = name;
+        value = Py2to3_GetAttrDictValue(dict, name, bad_attr_marker);
+        // there is a slight performance-hit here:
+        // Py2to3_GetAttrDictValue cannot signal invalid attributes
+        // unambiguously, so we have to reckeck in case the marker value is
+        // returned. Make sure to pick an unlikely marker value.
+        if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
+            invalid_attribute_error();
+        }
+        return value;
     }
     /* End of performance hack */
 
@@ -1364,7 +1296,7 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
             break;
         }
 
-        if ( trait->ob_type != ctrait_type ) {
+        if ( Py_TYPE(trait) != ctrait_type ) {
             fatal_trait_error();
             break;
         }
@@ -1467,7 +1399,7 @@ _has_traits_items_event ( has_traits_object * obj, PyObject * args ) {
         return NULL;
     }
 
-    if ( !PyString_Check( name ) ) {
+    if ( !Py2to3_AttrNameCheck( name ) ) {
         invalid_attribute_error();
         return NULL;
     }
@@ -1842,8 +1774,9 @@ getattr_event ( trait_object      * trait,
                 PyObject          * name ) {
 
     PyErr_Format( PyExc_AttributeError,
-        "The %.400s trait of a %.50s instance is an 'event', which is write only.",
-        PyString_AS_STRING( name ), obj->ob_type->tp_name );
+        "The %.400" Py2to3_PYERR_ATTR_NAME_FMTCHR
+            " trait of a %.50s instance is an 'event', which is write only.",
+        Py2to3_PYERR_PREPARE_ATTR_NAME( name ), Py_TYPE(obj)->tp_name );
 
     return NULL;
 }
@@ -1863,69 +1796,38 @@ getattr_trait ( trait_object      * trait,
     PyObject * result;
     PyObject * dict = obj->obj_dict;
 
-        if ( dict == NULL ) {
-                dict = PyDict_New();
-                if ( dict == NULL )
+    if ( dict == NULL ) {
+        dict = PyDict_New();
+        if ( dict == NULL )
             return NULL;
 
-                obj->obj_dict = dict;
-        }
-
-        if ( PyString_Check( name ) ) {
-        if ( (result = default_value_for( trait, obj, name )) != NULL ) {
-            if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
-
-                rc = 0;
-                if ( (trait->post_setattr != NULL) &&
-                     ((trait->flags & TRAIT_IS_MAPPED) == 0) )
-                    rc = trait->post_setattr( trait, obj, name, result );
-
-                if (rc == 0) {
-                    tnotifiers = trait->notifiers;
-                    onotifiers = obj->notifiers;
-                    if ( has_notifiers( tnotifiers, onotifiers ) )
-                        rc = call_notifiers( tnotifiers, onotifiers, obj, name,
-                                             Uninitialized, result );
-                }
-                if ( rc == 0 )
-                    return result;
-            }
-            Py_DECREF( result );
-        }
-
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
-
-        return NULL;
+        obj->obj_dict = dict;
     }
 
-#ifdef Py_USING_UNICODE
-    if ( PyUnicode_Check( name ) ) {
-        name = PyUnicode_AsEncodedString( name, NULL, NULL );
-        if ( name == NULL )
-                    return NULL;
-    } else {
+    PyObject *nname = Py2to3_NormaliseAttrName(name);
+
+    if( nname == NULL ){
         invalid_attribute_error();
         return NULL;
     }
 
-    if ( (result = default_value_for( trait, obj, name )) != NULL ) {
-        if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
+    if ( (result = default_value_for( trait, obj, nname )) != NULL ) {
+        if ( PyDict_SetItem( dict, nname, result ) >= 0 ) {
 
             rc = 0;
             if ( (trait->post_setattr != NULL) &&
                  ((trait->flags & TRAIT_IS_MAPPED) == 0) )
-                rc = trait->post_setattr( trait, obj, name, result );
+                rc = trait->post_setattr( trait, obj, nname, result );
 
             if (rc == 0) {
                 tnotifiers = trait->notifiers;
                 onotifiers = obj->notifiers;
                 if ( has_notifiers( tnotifiers, onotifiers ) )
-                    rc = call_notifiers( tnotifiers, onotifiers, obj, name,
+                    rc = call_notifiers( tnotifiers, onotifiers, obj, nname,
                                          Uninitialized, result );
             }
-            if ( rc == 0 ) {
-                Py_DECREF( name );
+            if ( rc == 0 ){
+                Py2to3_FinishNormaliseAttrName(name,nname);
                 return result;
             }
         }
@@ -1933,14 +1835,10 @@ getattr_trait ( trait_object      * trait,
     }
 
     if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
+        PyErr_SetObject( PyExc_AttributeError, nname );
 
-    Py_DECREF( name );
+    Py2to3_FinishNormaliseAttrName(name,nname);
     return NULL;
-#else
-    invalid_attribute_error();
-    return NULL;
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -1952,7 +1850,7 @@ getattr_delegate ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-        PyTypeObject * tp;
+    PyTypeObject * tp;
     PyObject     * delegate_attr_name;
     PyObject     * delegate;
     PyObject     * result;
@@ -1969,82 +1867,45 @@ getattr_delegate ( trait_object      * trait,
         Py_INCREF( delegate );
     }
 
-        if ( PyString_Check( name ) ) {
-        delegate_attr_name = trait->delegate_attr_name( trait, obj, name );
-        tp = delegate->ob_type;
-
-        if ( tp->tp_getattro != NULL ) {
-                result = (*tp->tp_getattro)( delegate, delegate_attr_name );
-            goto done2;
-        }
-
-        if ( tp->tp_getattr != NULL ) {
-                result = (*tp->tp_getattr)( delegate,
-                                     PyString_AS_STRING( delegate_attr_name ) );
-            goto done2;
-        }
-
-        PyErr_Format( DelegationError,
-            "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
-                obj->ob_type->tp_name, PyString_AS_STRING( name ),
-            tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
-        result = NULL;
-        goto done2;
-    }
-
-#ifdef Py_USING_UNICODE
-    if ( PyUnicode_Check( name ) ) {
-        name = PyUnicode_AsEncodedString( name, NULL, NULL );
-        if ( name == NULL ) {
-            Py_DECREF( delegate );
-                    return NULL;
-        }
-    } else {
+    PyObject *nname = Py2to3_NormaliseAttrName(name);
+    
+    if( nname == NULL ){
         invalid_attribute_error();
         Py_DECREF( delegate );
-
         return NULL;
     }
 
-    delegate_attr_name = trait->delegate_attr_name( trait, obj, name );
-        tp = delegate->ob_type;
+    delegate_attr_name = trait->delegate_attr_name( trait, obj, nname );
+    tp = Py_TYPE(delegate);
 
-        if ( tp->tp_getattro != NULL ) {
-                result = (*tp->tp_getattro)( delegate, delegate_attr_name );
+    if ( tp->tp_getattro != NULL ) {
+        result = (*tp->tp_getattro)( delegate, delegate_attr_name );
         goto done;
     }
 
-        if ( tp->tp_getattr != NULL ) {
-                result = (*tp->tp_getattr)( delegate,
-                                    PyString_AS_STRING( delegate_attr_name ) );
-        goto done;
+    if ( tp->tp_getattr != NULL ) {
+        PyObject *delegate_attr_name_c_str = Py2to3_AttrNameCStr( delegate_attr_name );
+        if(delegate_attr_name_c_str == NULL){
+            result = NULL;
+        } else {
+            result = (*tp->tp_getattr)( delegate,
+                             Py2to3_AttrName_AS_STRING( delegate_attr_name_c_str ) );
+            Py2to3_FinishAttrNameCStr(delegate_attr_name_c_str);
+            goto done;
+        }
     }
 
-        PyErr_Format( DelegationError,
-            "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
-                obj->ob_type->tp_name, PyString_AS_STRING( name ),
+    PyErr_Format( DelegationError,
+        "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
+            obj->ob_type->tp_name, PyString_AS_STRING( nname ),
         tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
     result = NULL;
 
 done:
-    Py_DECREF( name );
-done2:
     Py_DECREF( delegate_attr_name );
+    Py2to3_FinishNormaliseAttrName(name,nname);
     Py_DECREF( delegate );
-
-        return result;
-#else
-    invalid_attribute_error();
-    Py_DECREF( delegate );
-
-    return NULL;
-
-done2:
-    Py_DECREF( delegate_attr_name );
-    Py_DECREF( delegate );
-
-        return result;
-#endif
+    return result;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2056,7 +1917,7 @@ getattr_disallow ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-    if ( PyString_Check( name ) )
+    if ( Py2to3_TraitNameCheck( name ) )
         unknown_attribute_error( obj, name );
     else
         invalid_attribute_error();
@@ -2233,7 +2094,7 @@ setattr_python ( trait_object      * traito,
 #endif
     }
 
-    if ( PyString_Check( name ) ) {
+    if ( Py2to3_TraitNameCheck( name ) ) {
         unknown_attribute_error( obj, name );
 
         return -1;
