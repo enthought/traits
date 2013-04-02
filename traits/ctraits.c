@@ -371,7 +371,7 @@ bad_trait_value_error ( void ) {
 static int
 bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
     PyErr_Format(
@@ -392,7 +392,7 @@ bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 static int
 bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -414,7 +414,7 @@ bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -432,7 +432,7 @@ delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -455,7 +455,7 @@ delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -476,7 +476,7 @@ delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -497,7 +497,7 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -518,7 +518,7 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleStringCheck( name ) ) {
+    if ( !Py2to3_SimpleString_Check( name ) ) {
         return invalid_attribute_error();
     }
 
@@ -1927,7 +1927,7 @@ getattr_disallow ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-    if ( Py2to3_SimpleStringCheck( name ) )
+    if ( Py2to3_SimpleString_Check( name ) )
         unknown_attribute_error( obj, name );
     else
         invalid_attribute_error();
@@ -2080,7 +2080,7 @@ setattr_python ( trait_object      * traito,
         return -1;
     }
 
-    if ( Py2to3_SimpleStringCheck( name ) ) {
+    if ( Py2to3_SimpleString_Check( name ) ) {
         unknown_attribute_error( obj, name );
 
         return -1;
@@ -2836,7 +2836,7 @@ setattr_constant ( trait_object      * traito,
                    PyObject          * name,
                    PyObject          * value ) {
 
-    if ( Py2to3_SimpleStringCheck( name ) ) {
+    if ( Py2to3_SimpleString_Check( name ) ) {
         PyErr_Format( TraitError,
             "Cannot modify the constant '%.400"
                 Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
@@ -2991,7 +2991,7 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
     if ( result == NULL ) {
         PyErr_Clear();
         info = PyObject_CallMethod( trait->handler, "info", NULL );
-        if ( (info != NULL) && Py2to3_SimpleStringCheck( info ) )
+        if ( (info != NULL) && Py2to3_SimpleString_Check( info ) )
             PyErr_Format( PyExc_ValueError,
                 "Invalid value for trait, the value should be %"
                 Py2to3_PYERR_SIMPLE_STRING_FMTCHR ".",
@@ -3656,7 +3656,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
     int    i, j, k, kind;
-    long   int_value, exclude_mask, mode, rc;
+    long   exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
 
@@ -3694,6 +3694,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 #if PY_MAJOR_VERSION < 3
             case 3:  /* Integer range check: */
                 if ( PyInt_Check( value ) ) {
+                    long int_value;
                     int_value    = PyInt_AS_LONG( value );
                     low          = PyTuple_GET_ITEM( type_info, 1 );
                     high         = PyTuple_GET_ITEM( type_info, 2 );
@@ -4246,9 +4247,9 @@ delegate_attr_name_prefix_name ( trait_object      * trait,
                                  has_traits_object * obj,
                                  PyObject          * name ) {
 
-    char * p;
 
 #if PY_MAJOR_VERSION < 3
+    char * p;
     int prefix_len    = PyString_GET_SIZE( trait->delegate_prefix );
     int name_len      = PyString_GET_SIZE( name );
     int total_len     = prefix_len + name_len;
@@ -4275,7 +4276,6 @@ delegate_attr_name_class_name ( trait_object      * trait,
                                 PyObject          * name ) {
 
     PyObject * prefix, * result;
-    char     * p;
 
     prefix = PyObject_GetAttr( (PyObject *) Py_TYPE(obj), class_prefix );
 // fixme: Should verify that prefix is a string...
@@ -4287,6 +4287,7 @@ delegate_attr_name_class_name ( trait_object      * trait,
     }
 
 #if PY_MAJOR_VERSION < 3
+    char     * p;
     int prefix_len, name_len, total_len;
     prefix_len = PyString_GET_SIZE( prefix );
     name_len   = PyString_GET_SIZE( name );
@@ -5284,6 +5285,7 @@ trait_method_richcompare ( trait_method_object * a, trait_method_object * b, int
         case Py_NE: ret = 1; break; //ret = a->tm_self != b->tm_self; break;
         case Py_GT: ret = a->tm_self > b->tm_self; break;
         case Py_GE: ret = a->tm_self >= b->tm_self; break;
+        default: ret = 0; break;
         }
         return PyBool_FromLong(ret);
     } 
@@ -5429,52 +5431,35 @@ trait_method_clear ( trait_method_object * tm ) {
 |  Returns the class name of the class:
 +----------------------------------------------------------------------------*/
 
-static void
-getclassname ( PyObject * class, char * buf, int bufsize ) {
+static PyObject *
+getclassname ( PyObject * class ) {
 
-        PyObject * name;
-
-        assert( bufsize > 1 );
-        strcpy( buf, "?" ); /* Default outcome */
-        if ( class == NULL )
-                return;
-        name = PyObject_GetAttrString( class, "__name__" );
-        if ( name == NULL ) {
-                /* This function cannot return an exception: */
-                PyErr_Clear();
-                return;
-        }
-        if ( PyString_Check( name ) ) {
-                strncpy( buf, PyString_AS_STRING( name ), bufsize );
-                buf[ bufsize - 1 ] = '\0';
-        }
-        Py_DECREF( name );
+        return PyObject_GetAttrString( class, "__name__" );
 }
 
 /*-----------------------------------------------------------------------------
 |  Returns the class name of an instance:
 +----------------------------------------------------------------------------*/
 
-static void
-getinstclassname ( PyObject * inst, char * buf, int bufsize ) {
+static PyObject *
+getinstclassname ( PyObject * inst ) {
 
         PyObject *class;
 
         if ( inst == NULL ) {
-                assert( (bufsize > 0) && ((size_t) bufsize > strlen( "nothing" )) );
-                strcpy( buf, "nothing" );
-                return;
+                return Py2to3_SimpleString_FromString( "nothing" );
         }
 
         class = PyObject_GetAttrString( inst, "__class__" );
         if ( class == NULL ) {
                 /* This function cannot return an exception */
                 PyErr_Clear();
-                class = (PyObject *)(inst->ob_type);
+                class = (PyObject *)Py_TYPE(inst);
                 Py_INCREF( class );
         }
-        getclassname( class, buf, bufsize );
+        PyObject *ret = getclassname( class );
         Py_XDECREF( class );
+        return ret;
 }
 
 /*-----------------------------------------------------------------------------
@@ -5493,18 +5478,19 @@ trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
 
     /* Determine if this is an 'unbound' method call: */
     if ( (self = trait_method_GET_SELF( meth )) == NULL ) {
-                char clsbuf[256];
-                char instbuf[256];
-                int  ok;
+        int  ok;
 
         /* Unbound methods must be called with an instance of the class
            (or a derived class) as first argument: */
         from = 1;
         class = trait_method_GET_CLASS( meth );
         if (class == NULL) {
-            PyErr_Format(PyExc_TypeError,
-                         "unable to determine the class for the method %s",
-                         PyString_AS_STRING(trait_method_GET_NAME(meth)));
+            PyErr_Format(
+                PyExc_TypeError,
+                "unable to determine the class for the method %"
+                    Py2to3_PYERR_SIMPLE_STRING_FMTCHR,
+                Py2to3_PYERR_PREPARE_SIMPLE_STRING(trait_method_GET_NAME(meth))
+            );
             return NULL;
         }
         if ( nargs >= 1 ) {
@@ -5519,15 +5505,26 @@ trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
                 return NULL;
         }
         func = trait_method_GET_FUNCTION( meth );
-        getclassname( class, clsbuf, sizeof( clsbuf ) );
-        getinstclassname( self, instbuf, sizeof( instbuf ) );
-        PyErr_Format( PyExc_TypeError,
-                     "unbound method %s%s must be called with "
-                     "%s instance as first argument "
-                     "(got %s%s instead)",
-         PyString_AS_STRING( trait_method_GET_NAME( meth ) ),
-                     PyEval_GetFuncDesc( func ),
-                     clsbuf, instbuf, (self == NULL)? "" : " instance" );
+        PyObject *clsname = getclassname( class );
+        PyObject *instname = getinstclassname( self );
+        PyErr_Format(
+            PyExc_TypeError,
+            "unbound method %" Py2to3_PYERR_SIMPLE_STRING_FMTCHR
+                "%s must be called with %"
+                Py2to3_PYERR_SIMPLE_STRING_FMTCHR
+                " instance as first argument "
+                "(got %" Py2to3_PYERR_SIMPLE_STRING_FMTCHR
+                "%s instead)",
+            Py2to3_PYERR_PREPARE_SIMPLE_STRING( trait_method_GET_NAME( meth ) ),
+            PyEval_GetFuncDesc( func ),
+            clsname ?
+                Py2to3_PYERR_PREPARE_SIMPLE_STRING(clsname)
+                : Py2to3_SimpleString_FromString(""),
+            instname ?
+                Py2to3_PYERR_PREPARE_SIMPLE_STRING(instname)
+                : Py2to3_SimpleString_FromString(""),
+            (self == NULL)? "" : " instance"
+        );
         return NULL;
         }
     from    = 0;
@@ -5767,7 +5764,7 @@ static PyTypeObject trait_method_type = {
         0,                                                               /* tp_iter */
         0,                                                               /* tp_iternext */
         0,                                                               /* tp_methods */
-    trait_method_memberlist,                         /* tp_members */
+        trait_method_memberlist,                         /* tp_members */
         0,                                                               /* tp_getset */
         0,                                                               /* tp_base */
         0,                                                               /* tp_dict */
@@ -5783,75 +5780,81 @@ static PyTypeObject trait_method_type = {
 |  Performs module and type initialization:
 +----------------------------------------------------------------------------*/
 
-PyMODINIT_FUNC
-initctraits ( void ) {
 
-        PyObject * tmp;
+Py2to3_MOD_INIT(ctraits) {
+    PyObject * tmp;
 
-        /* Create the 'ctraits' module: */
-        PyObject * module = Py_InitModule3( "ctraits", ctraits_methods,
-                                        ctraits__doc__ );
-        if ( module == NULL )
-                return;
+    /* Create the 'ctraits' module: */
+    PyObject * module;
+    
+    Py2to3_MOD_DEF(
+        module,
+        "ctraits",
+        ctraits__doc__,
+        ctraits_methods
+    );
 
-        /* Create the 'CHasTraits' type: */
-        has_traits_type.tp_base  = &PyBaseObject_Type;
-        has_traits_type.tp_alloc = PyType_GenericAlloc;
-        if ( PyType_Ready( &has_traits_type ) < 0 )
-                return;
+    if ( module == NULL )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &has_traits_type );
-        if ( PyModule_AddObject( module, "CHasTraits",
-                             (PyObject *) &has_traits_type ) < 0 )
-        return;
+    /* Create the 'CHasTraits' type: */
+    has_traits_type.tp_base  = &PyBaseObject_Type;
+    has_traits_type.tp_alloc = PyType_GenericAlloc;
+    if ( PyType_Ready( &has_traits_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        /* Create the 'CTrait' type: */
-        trait_type.tp_base  = &PyBaseObject_Type;
-        trait_type.tp_alloc = PyType_GenericAlloc;
-        trait_type.tp_new   = PyType_GenericNew;
-        if ( PyType_Ready( &trait_type ) < 0 )
-                return;
+    Py_INCREF( &has_traits_type );
+    if ( PyModule_AddObject( module, "CHasTraits",
+                         (PyObject *) &has_traits_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &trait_type );
-        if ( PyModule_AddObject( module, "cTrait",
-                             (PyObject *) &trait_type ) < 0 )
-        return;
+    /* Create the 'CTrait' type: */
+    trait_type.tp_base  = &PyBaseObject_Type;
+    trait_type.tp_alloc = PyType_GenericAlloc;
+    trait_type.tp_new   = PyType_GenericNew;
+    if ( PyType_Ready( &trait_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        /* Create the 'CTraitMethod' type: */
-        trait_method_type.tp_base     = &PyBaseObject_Type;
-        trait_method_type.tp_setattro = PyObject_GenericSetAttr;
-        if ( PyType_Ready( &trait_method_type ) < 0 )
-                return;
+    Py_INCREF( &trait_type );
+    if ( PyModule_AddObject( module, "cTrait",
+                         (PyObject *) &trait_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &trait_method_type );
-        if ( PyModule_AddObject( module, "CTraitMethod",
-                             (PyObject *) &trait_method_type ) < 0 )
-        return;
+    /* Create the 'CTraitMethod' type: */
+    trait_method_type.tp_base     = &PyBaseObject_Type;
+    trait_method_type.tp_setattro = PyObject_GenericSetAttr;
+    if ( PyType_Ready( &trait_method_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        /* Create the 'HasTraitsMonitor' list: */
-        tmp = PyList_New( 0 );
-        Py_INCREF( tmp );
-        if ( PyModule_AddObject( module, "_HasTraits_monitors",
-                                 (PyObject*) tmp) < 0 ) {
-            return;
-        }
+    Py_INCREF( &trait_method_type );
+    if ( PyModule_AddObject( module, "CTraitMethod",
+                         (PyObject *) &trait_method_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        _HasTraits_monitors = tmp;
+    /* Create the 'HasTraitsMonitor' list: */
+    tmp = PyList_New( 0 );
+    Py_INCREF( tmp );
+    if ( PyModule_AddObject( module, "_HasTraits_monitors",
+                             (PyObject*) tmp) < 0 ) {
+       return Py2to3_MOD_ERROR_VAL;
+    }
+
+    _HasTraits_monitors = tmp;
 
     /* Predefine a Python string == "__class_traits__": */
-    class_traits = PyString_FromString( "__class_traits__" );
+    class_traits = Py2to3_SimpleString_FromString( "__class_traits__" );
 
     /* Predefine a Python string == "__listener_traits__": */
-    listener_traits = PyString_FromString( "__listener_traits__" );
+    listener_traits = Py2to3_SimpleString_FromString( "__listener_traits__" );
 
     /* Predefine a Python string == "editor": */
-    editor_property = PyString_FromString( "editor" );
+    editor_property = Py2to3_SimpleString_FromString( "editor" );
 
     /* Predefine a Python string == "__prefix__": */
-    class_prefix = PyString_FromString( "__prefix__" );
+    class_prefix = Py2to3_SimpleString_FromString( "__prefix__" );
 
     /* Predefine a Python string == "trait_added": */
-    trait_added = PyString_FromString( "trait_added" );
+    trait_added = Py2to3_SimpleString_FromString( "trait_added" );
 
     /* Create an empty tuple: */
     empty_tuple = PyTuple_New( 0 );
@@ -5860,6 +5863,8 @@ initctraits ( void ) {
     empty_dict = PyDict_New();
 
     /* Create the 'is_callable' marker: */
-    is_callable = PyInt_FromLong( -1 );
+    is_callable = Py2to3_PyNum_FromLong( -1 );
+
+    return Py2to3_MOD_SUCCESS_VAL(module);
 }
 

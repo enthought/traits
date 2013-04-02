@@ -64,19 +64,21 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
 */
 #if PY_MAJOR_VERSION >= 3
 
-#define Py2to3_SimpleStringCheck(name) PyUnicode_Check(name)
+#define Py2to3_SimpleString_Check(name) PyUnicode_Check(name)
 #define Py2to3_SimpleString_GET_SIZE(name) PyUnicode_GET_SIZE(name)
 #define Py2to3_SimpleString_Type PyUnicode_Type
 #define Py2to3_PYERR_SIMPLE_STRING_FMTCHR "U"
 #define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) name
+#define Py2to3_SimpleString_FromString(string) PyUnicode_FromString(string)
 
 #else
 
-#define Py2to3_SimpleStringCheck(name) PyString_Check(name)
+#define Py2to3_SimpleString_Check(name) PyString_Check(name)
 #define Py2to3_SimpleString_GET_SIZE(name) PyString_GET_SIZE(name)
 #define Py2to3_SimpleString_Type PyString_Type
 #define Py2to3_PYERR_SIMPLE_STRING_FMTCHR "s"
 #define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) PyString_AS_STRING(name)
+#define Py2to3_SimpleString_FromString(string) PyString_FromString(string)
 
 #endif
 
@@ -118,7 +120,7 @@ long Py2to3_GetHash_wCache(PyObject *obj){
 #else
 Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){
 #ifndef Py_LIMITED_API
-    Py_hash_t hash;
+    Py_hash_t hash = -1;
     if ( PyUnicode_CheckExact( obj ) ) {
         hash = ((PyUnicodeObject *) obj)->hash;
 //    } else if ( PyBytes_CheckExact( key )) {
@@ -223,4 +225,22 @@ double Py2to3_PyNum_AsDouble(PyObject *value) {
 #ifndef PyVarObject_HEAD_INIT
     #define PyVarObject_HEAD_INIT(type, size) \
         PyObject_HEAD_INIT(type) size,
+#endif
+
+
+
+#if PY_MAJOR_VERSION >= 3
+  #define Py2to3_MOD_ERROR_VAL NULL
+  #define Py2to3_MOD_SUCCESS_VAL(val) val
+  #define Py2to3_MOD_INIT(name) PyMODINIT_FUNC PyInit_##name(void)
+  #define Py2to3_MOD_DEF(ob, name, doc, methods) \
+          static struct PyModuleDef moduledef = { \
+            PyModuleDef_HEAD_INIT, name, doc, -1, methods, }; \
+          ob = PyModule_Create(&moduledef);
+#else
+  #define Py2to3_MOD_ERROR_VAL
+  #define Py2to3_MOD_SUCCESS_VAL(val)
+  #define Py2to3_MOD_INIT(name) void init##name(void)
+  #define Py2to3_MOD_DEF(ob, name, doc, methods) \
+          ob = Py_InitModule3(name, methods, doc);
 #endif
