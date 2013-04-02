@@ -1090,7 +1090,7 @@ class ListenerParser ( HasPrivateTraits ):
             items.append( self.parse_item( terminator ) )
 
             c = self.skip_ws
-            if c is terminator:
+            if c == terminator:
                 break
 
             if c != ',':
