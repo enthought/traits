@@ -1106,11 +1106,12 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
         // returned. Make sure to pick an unlikely marker value.
         if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
             invalid_attribute_error();
+            return NULL;
         }
         if( value != NULL ){
             Py_INCREF( value );
+            return value;
         }
-        return value;
     }
     /* End of performance hack */
 
