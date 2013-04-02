@@ -683,11 +683,13 @@ invalid_result_error ( trait_object * trait, PyObject * meth, PyObject * obj,
 static PyObject *
 get_callable_value ( PyObject * value ) {
     PyObject * tuple, * temp;
-    if ( value == NULL )
+    if ( value == NULL ) {
         value = Py_None;
-    else if ( PyCallable_Check( value ) )
+        Py_INCREF( value );
+    } else if ( PyCallable_Check( value ) ) {
         value = is_callable;
-    else if ( PyTuple_Check( value ) &&
+        Py_INCREF( value );
+    } else if ( PyTuple_Check( value ) &&
               (Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
@@ -699,9 +701,9 @@ get_callable_value ( PyObject * value ) {
             Py_INCREF( is_callable );
             value = tuple;
         }
+    } else {
+        Py_INCREF( value );
     }
-    Py_INCREF( value );    //TODO: This looks like a memory leak n the tuple case to me!
-                           // PyTuple_New already returns a new reference
     return value;
 }
 
