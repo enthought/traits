@@ -52,7 +52,7 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
 
 
 /*
-    Formatting of attribute names in exceptions:
+    Simple strings for PyErr formatting:
     * Python 2:
       - Attributes are ASCII
       - PyErr_Format uses PyString_FromFormat
@@ -60,18 +60,23 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
       - Attributes are Unicode
       - PyErr_Format uses PyUnicode_FromFormat
 
+    Thus SimpleString == PyString if Python < 3 else PyUnicode
 */
 #if PY_MAJOR_VERSION >= 3
 
-#define Py2to3_TraitNameCheck(name) PyUnicode_Check(name)
-#define Py2to3_PYERR_ATTR_NAME_FMTCHR "U"
-#define Py2to3_PYERR_PREPARE_ATTR_NAME(name) name
+#define Py2to3_SimpleStringCheck(name) PyUnicode_Check(name)
+#define Py2to3_SimpleString_GET_SIZE(name) PyUnicode_GET_SIZE(name)
+#define Py2to3_SimpleString_Type PyUnicode_Type
+#define Py2to3_PYERR_SIMPLE_STRING_FMTCHR "U"
+#define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) name
 
 #else
 
-#define Py2to3_TraitNameCheck(name) PyString_Check(name)
-#define Py2to3_PYERR_ATTR_NAME_FMTCHR "s"
-#define Py2to3_PYERR_PREPARE_ATTR_NAME(name) PyString_AS_STRING(name)
+#define Py2to3_SimpleStringCheck(name) PyString_Check(name)
+#define Py2to3_SimpleString_GET_SIZE(name) PyString_GET_SIZE(name)
+#define Py2to3_SimpleString_Type PyString_Type
+#define Py2to3_PYERR_SIMPLE_STRING_FMTCHR "s"
+#define Py2to3_PYERR_PREPARE_SIMPLE_STRING(name) PyString_AS_STRING(name)
 
 #endif
 
@@ -84,9 +89,11 @@ void Py2to3_FinishAttrNameCStr(PyObject *nname){
 
 /* In Python 3, all ints are longs */
 #if PY_MAJOR_VERSION >= 3
+    #define Py2to3_PyNum_Check PyLong_Check
     #define Py2to3_PyNum_FromLong PyLong_FromLong
     #define Py2to3_PyNum_AsLong PyLong_AsLong
 #else
+    #define Py2to3_PyNum_Check PyInt_Check
     #define Py2to3_PyNum_FromLong PyInt_FromLong
     #define Py2to3_PyNum_AsLong PyInt_AsLong
 #endif
@@ -195,4 +202,25 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
 #endif // #if PY_MAJOR_VERSION < 3
 
 
+/*
+*/
 
+double Py2to3_PyNum_AsDouble(PyObject *value) {
+#if PY_MAJOR_VERSION < 3
+    if ( PyInt_Check( value ) ) {
+        return (double) PyInt_AS_LONG( value );
+    } else if( !PyLong_Check(value) ){
+#else
+    if ( !PyLong_Check( value ) ) {
+#endif  // #if PY_MAJOR_VERSION < 3
+        PyErr_SetNone( PyExc_TypeError );
+        return -1.;
+    }
+    return PyLong_AsDouble( value );
+}
+
+
+#ifndef PyVarObject_HEAD_INIT
+    #define PyVarObject_HEAD_INIT(type, size) \
+        PyObject_HEAD_INIT(type) size,
+#endif
