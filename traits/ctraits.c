@@ -1107,6 +1107,9 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
         if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
             invalid_attribute_error();
         }
+        if( value != NULL ){
+            Py_INCREF( value );
+        }
         return value;
     }
     /* End of performance hack */
