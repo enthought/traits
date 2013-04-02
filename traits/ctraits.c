@@ -652,6 +652,8 @@ get_callable_value ( PyObject * value ) {
             Py_INCREF( is_callable );
             value = tuple;
         }
+    } else {
+        Py_INCREF( value );
     }
     return value;
 }
