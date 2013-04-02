@@ -2954,6 +2954,7 @@ setattr_readonly ( trait_object      * traito,
 
     PyObject * dict;
     PyObject * result;
+    int rc;
 
     if ( value == NULL )
         return delete_readonly_error( obj, name );
@@ -2981,11 +2982,13 @@ setattr_readonly ( trait_object      * traito,
         Py_INCREF( name );
 
     result = PyDict_GetItem( dict, name );
-    Py_DECREF( name );
     if ( (result == NULL) || (result == Undefined) )
-        return setattr_python( traito, traitd, obj, name, value );
+        rc = setattr_python( traito, traitd, obj, name, value );
+    else
+        rc = set_readonly_error( obj, name );
 
-    return set_readonly_error( obj, name );
+    Py_DECREF( name );
+    return rc;
 }
 
 /*-----------------------------------------------------------------------------
