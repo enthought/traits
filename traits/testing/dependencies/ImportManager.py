@@ -110,7 +110,7 @@ class ImportManager(object):
             # Update list of files of imported modules
             moduleNames = []
             for modname in sys.modules:
-                if not self._moduleFiles.has_key(modname):
+                if not modname in self._moduleFiles:
                     moduleNames.append(modname)
             if moduleNames:
                 self.recordModules(moduleNames)
@@ -140,13 +140,13 @@ class ImportManager(object):
     def recordModule(self, mod, isfile=os.path.isfile):
         """Record a module."""
         modname = getattr(mod, '__name__', None)
-        if not modname or not sys.modules.has_key(modname):
+        if not modname or not modname in sys.modules:
             return
         fileList = self._fileList
         # __orig_file__ is used for PSP, Kid and Cheetah templates; we want
         # to record the source filenames, not the auto-generated modules:
         f = getattr(mod, '__orig_file__', None)
-        if f and not fileList.has_key(f):
+        if f and not f in fileList:
             try:
                 if isfile(f):
                     self.watchFile(f, modname)
@@ -154,7 +154,7 @@ class ImportManager(object):
                 pass
         else:
             f = getattr(mod, '__file__', None)
-            if f and not fileList.has_key(f):
+            if f and not f in fileList:
                 # record the .py file corresponding to each .pyc or .pyo
                 if f[-4:].lower() in ['.pyc', '.pyo']:
                     f = f[:-1]

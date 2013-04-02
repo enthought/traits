@@ -1795,7 +1795,7 @@ class HasTraits ( CHasTraits ):
             def __getstate__(self):
                 state = super(X,self).__getstate__()
                 for key in ['foo', 'bar']:
-                    if state.has_key(key):
+                    if key in state:
                         del state[key]
                 return state
         """

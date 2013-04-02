@@ -9,7 +9,7 @@ dependent_pickle_name = "dependents.pickle"
 def get_dependent(module_name):
    if os.path.exists(dependent_pickle_name):
       dep_map = pickle.load(open(dependent_pickle_name, "r"))
-      if dep_map.has_key(module_name):
+      if module_name in dep_map:
          return dep_map[module_name]
 
    return None
