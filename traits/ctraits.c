@@ -5517,12 +5517,14 @@ trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
                 "%s instead)",
             Py2to3_PYERR_PREPARE_SIMPLE_STRING( trait_method_GET_NAME( meth ) ),
             PyEval_GetFuncDesc( func ),
-            clsname ?
-                Py2to3_PYERR_PREPARE_SIMPLE_STRING(clsname)
-                : Py2to3_SimpleString_FromString(""),
-            instname ?
-                Py2to3_PYERR_PREPARE_SIMPLE_STRING(instname)
-                : Py2to3_SimpleString_FromString(""),
+            Py2to3_PYERR_PREPARE_SIMPLE_STRING(clsname ?
+                clsname
+                : Py2to3_SimpleString_FromString("")
+            ),
+            Py2to3_PYERR_PREPARE_SIMPLE_STRING(instname ?
+                instname
+                : Py2to3_SimpleString_FromString("")
+            ),
             (self == NULL)? "" : " instance"
         );
         return NULL;
