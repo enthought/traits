@@ -634,11 +634,13 @@ invalid_result_error ( trait_object * trait, PyObject * meth, PyObject * obj,
 static PyObject *
 get_callable_value ( PyObject * value ) {
     PyObject * tuple, * temp;
-    if ( value == NULL )
+    if ( value == NULL ) {
         value = Py_None;
-    else if ( PyCallable_Check( value ) )
+        Py_INCREF( value );
+    } else if ( PyCallable_Check( value ) ) {
         value = is_callable;
-    else if ( PyTuple_Check( value ) &&
+        Py_INCREF( value );
+    } else if ( PyTuple_Check( value ) &&
               (PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
@@ -651,7 +653,6 @@ get_callable_value ( PyObject * value ) {
             value = tuple;
         }
     }
-    Py_INCREF( value );
     return value;
 }
 
