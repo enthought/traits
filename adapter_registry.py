@@ -49,7 +49,7 @@ class AdapterRegistry(HasTraits):
 
     #### Methods ##############################################################
 
-    def adapt(self, adaptee, to_protocol, *args, **kw):
+    def adapt(self, adaptee, to_protocol):
         """ Returns an adapter that adapts an object to a given protocol.
 
         'adaptee'     is the object that we want to adapt.
@@ -72,7 +72,7 @@ class AdapterRegistry(HasTraits):
         # is an adapter factory registered that can adapt the object to the
         # target class.
         else:
-            result = self._adapt_type(adaptee, to_protocol, *args, **kw)
+            result = self._adapt_type(adaptee, to_protocol)
 
         return result
 
@@ -85,7 +85,7 @@ class AdapterRegistry(HasTraits):
 
     #### Private protocol ######################################################
 
-    def _adapt_type(self, adaptee, target_class, *args, **kw):
+    def _adapt_type(self, adaptee, target_class):
         """ Returns an adapter that adapts an object to the target class.
 
         Returns None if no such adapter exists.

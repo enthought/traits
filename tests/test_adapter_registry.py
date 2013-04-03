@@ -87,7 +87,29 @@ class TestAdapterRegistry(unittest.TestCase):
 
         return
 
-    def test_adapter_available_on_type_of_adaptee_with_abcs(self):
+    def test_no_adapter_available_with_interfaces(self):
+
+        from apptools.adaptation.tests.interface_examples import (
+            Bar, IBar, Foo
+        )
+
+        f = Foo()
+
+        # Try to adapt it to a concrete type.
+        bar = self.adapter_registry.adapt(f, Bar)
+
+        # There should be no way to adapt a Foo to a Bar.
+        self.assertEqual(bar, None)
+
+        # Try to adapt it to an Interface.
+        bar = self.adapter_registry.adapt(f, IBar)
+
+        # There should be no way to adapt a Foo to a Bar.
+        self.assertEqual(bar, None)
+
+        return
+
+    def test_one_step_adaptation_with_abcs(self):
 
         from apptools.adaptation.adapter_factory import AdapterFactory
 
@@ -102,7 +124,7 @@ class TestAdapterRegistry(unittest.TestCase):
         # FooABC->BarABC.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                adapter_class = FooABCToBarABCAdapter,
+                factory       = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
                 to_protocol   = BarABC
             )
@@ -114,6 +136,40 @@ class TestAdapterRegistry(unittest.TestCase):
         bar = self.adapter_registry.adapt(f, BarABC)
         self.assertIsNotNone(bar)
         self.assertIsInstance(bar, FooABCToBarABCAdapter)
+
+        # We shouldn't be able to adapt it to a *concrete* 'Bar' though.
+        bar = self.adapter_registry.adapt(f, Bar)
+        self.assertIsNone(bar)
+
+        return
+
+    def test_one_step_adaptation_with_interfaces(self):
+
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        from apptools.adaptation.tests.interface_examples import (
+            IFooToIBarAdapter,
+            IFoo,
+            IBar,
+            Foo,
+            Bar
+        )
+
+        # FooABC->BarABC.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = IFooToIBarAdapter,
+                from_protocol = IFoo,
+                to_protocol   = IBar
+            )
+        )
+
+        f = Foo()
+
+        # Adapt it to an ABC.
+        bar = self.adapter_registry.adapt(f, IBar)
+        self.assertIsNotNone(bar)
+        self.assertIsInstance(bar, IFooToIBarAdapter)
 
         # We shouldn't be able to adapt it to a *concrete* 'Bar' though.
         bar = self.adapter_registry.adapt(f, Bar)
@@ -137,7 +193,7 @@ class TestAdapterRegistry(unittest.TestCase):
         # FooABC->BarABC.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                adapter_class = FooABCToBarABCAdapter,
+                factory       = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
                 to_protocol   = BarABC
             )
@@ -146,7 +202,7 @@ class TestAdapterRegistry(unittest.TestCase):
         # BarABC->BazABC.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                adapter_class = BarABCToBazABCAdapter,
+                factory       = BarABCToBazABCAdapter,
                 from_protocol = BarABC,
                 to_protocol   = BazABC
             )
@@ -179,7 +235,7 @@ class TestAdapterRegistry(unittest.TestCase):
         # IFoo->IBar.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                adapter_class = IFooToIBarAdapter,
+                factory       = IFooToIBarAdapter,
                 from_protocol = IFoo,
                 to_protocol   = IBar
             )
@@ -188,7 +244,7 @@ class TestAdapterRegistry(unittest.TestCase):
         # IBar->IBaz.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                adapter_class = IBarToIBazAdapter,
+                factory       = IBarToIBazAdapter,
                 from_protocol = IBar,
                 to_protocol   = IBaz
             )
