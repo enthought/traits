@@ -4,6 +4,8 @@
 from traits.api import Any, Enum, HasTraits, implements, Interface
 
 
+#### 'Power plugs' metaphor ###################################################
+
 #### Protocols ################################################################
 
 class UKStandard(Interface):
@@ -40,26 +42,50 @@ class TravelPlug(HasTraits):
 
 class Adapter(HasTraits):
     adaptee = Any
-    
-class UKStandardToEUStandard(HasTraits):
+
+class UKStandardToEUStandard(Adapter):
     implements(EUStandard)
 
-class EUStandardToJapanStandard(HasTraits):
+class EUStandardToJapanStandard(Adapter):
     implements(JapanStandard)
 
-class JapanStandardToIraqStandard(HasTraits):
+class JapanStandardToIraqStandard(Adapter):
     implements(IraqStandard)
 
-class EUStandardToIraqStandard(HasTraits):
+class EUStandardToIraqStandard(Adapter):
     implements(IraqStandard)
 
-class UKStandardToJapanStandard(HasTraits):
+class UKStandardToJapanStandard(Adapter):
     implements(JapanStandard)
 
-class TravelPlugToJapanStandard(HasTraits):
+class TravelPlugToJapanStandard(Adapter):
     implements(JapanStandard)
 
-class TravelPlugToEUStandard(HasTraits):
+class TravelPlugToEUStandard(Adapter):
     implements(EUStandard)
 
-#### EOF #####################################################################
+
+#### 'File, Editor, Printable' metaphor #######################################
+
+class FileType(HasTraits):
+    pass
+
+class IEditor(Interface):
+    pass
+
+class ITextEditor(Interface):
+    pass
+
+class IPrintable(Interface):
+    pass
+
+class TextEditor(HasTraits):
+    implements(ITextEditor)
+
+class FileTypeToIEditor(Adapter, TextEditor):
+    implements(IEditor)
+
+class ITextEditorToIPrintable(Adapter):
+    implements(IPrintable)
+
+#### EOF ######################################################################

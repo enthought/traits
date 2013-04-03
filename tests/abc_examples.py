@@ -4,6 +4,8 @@
 from abc import ABCMeta
 
 
+#### 'Power plugs' metaphor ###################################################
+
 #### Protocols #################################################################
 
 class UKStandard(object):
@@ -92,5 +94,38 @@ class TravelPlugToEUStandard(Adapter):
     pass
 
 EUStandard.register(TravelPlugToEUStandard)
+
+
+#### 'File, Editor, Printable' metaphor #######################################
+
+class FileType(object):
+    pass
+
+class IEditor(object):
+    __metaclass__ = ABCMeta
+
+class ITextEditor(object):
+    __metaclass__ = ABCMeta
+
+class IPrintable(object):
+    __metaclass__ = ABCMeta
+
+
+class TextEditor(object):
+    pass
+
+ITextEditor.register(TextEditor)
+
+
+class FileTypeToIEditor(Adapter, TextEditor):
+    pass
+
+IEditor.register(FileTypeToIEditor)
+
+
+class ITextEditorToIPrintable(Adapter):
+    pass
+
+IPrintable.register(ITextEditorToIPrintable)
 
 #### EOF ######################################################################

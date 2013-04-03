@@ -26,7 +26,7 @@ class AdapterFactory(HasTraits):
 
         if to_protocol is not self.to_protocol:
             return None
-        
+
         return self.factory(adaptee=obj)
 
     #### 'object' protocol ####################################################
