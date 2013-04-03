@@ -651,6 +651,8 @@ get_callable_value ( PyObject * value ) {
             PyTuple_SET_ITEM( tuple, 2, is_callable );
             Py_INCREF( is_callable );
             value = tuple;
+        } else {
+            value = NULL;
         }
     } else {
         Py_INCREF( value );
