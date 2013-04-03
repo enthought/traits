@@ -25,4 +25,15 @@ class AdapterFactory(HasTraits):
         
         return self.adapter_class(adaptee=obj)
 
-#### EOF #######################################################################
+
+    #### 'object' protocol ####################################################
+
+    def __repr__(self):
+        template = "Adapter factory: '{from_}' -> '{to}'"
+        repr = template.format(
+            from_ = self.from_protocol.__name__,
+            to    = self.to_protocol.__name__
+        )
+        return repr
+
+#### EOF ######################################################################
