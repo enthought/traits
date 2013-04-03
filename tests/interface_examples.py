@@ -32,9 +32,9 @@ class Adapter(HasTraits):
     adaptee = Any
     
 class IFooToIBarAdapter(HasTraits):
-    pass
+    implements(IBar)
 
 class IBarToIBazAdapter(HasTraits):
-    pass
+    implements(IBaz)
 
 #### EOF ######################################################################

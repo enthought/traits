@@ -45,6 +45,26 @@ class TestAdapterRegistry(unittest.TestCase):
 
         return
 
+    def test_no_adapter_required_with_interfaces(self):
+
+        from apptools.adaptation.tests.interface_examples import Foo, IFoo
+
+        f = Foo()
+
+        # Try to adapt it to its own concrete type.
+        foo = self.adapter_registry.adapt(f, Foo)
+
+        # The adapter  manager should simply return the same object.
+        self.assert_(foo is f)
+
+        # Try to adapt it to an ABC that is registered for its type.
+        foo = self.adapter_registry.adapt(f, IFoo)
+
+        # The adapter  manager should simply return the same object.
+        self.assert_(foo is f)
+
+        return
+
     def test_no_adapter_available_with_abcs(self):
 
         from apptools.adaptation.tests.abc_examples import (
@@ -80,7 +100,7 @@ class TestAdapterRegistry(unittest.TestCase):
         )
 
         # FooABC->BarABC.
-        self.adapter_registry.register_type_adapters(
+        self.adapter_registry.register_adapter_factory(
             AdapterFactory(
                 adapter_class = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
@@ -115,7 +135,7 @@ class TestAdapterRegistry(unittest.TestCase):
         )
 
         # FooABC->BarABC.
-        self.adapter_registry.register_type_adapters(
+        self.adapter_registry.register_adapter_factory(
             AdapterFactory(
                 adapter_class = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
@@ -124,7 +144,7 @@ class TestAdapterRegistry(unittest.TestCase):
         )
 
         # BarABC->BazABC.
-        self.adapter_registry.register_type_adapters(
+        self.adapter_registry.register_adapter_factory(
             AdapterFactory(
                 adapter_class = BarABCToBazABCAdapter,
                 from_protocol = BarABC,
@@ -157,7 +177,7 @@ class TestAdapterRegistry(unittest.TestCase):
         )
 
         # IFoo->IBar.
-        self.adapter_registry.register_type_adapters(
+        self.adapter_registry.register_adapter_factory(
             AdapterFactory(
                 adapter_class = IFooToIBarAdapter,
                 from_protocol = IFoo,
@@ -166,7 +186,7 @@ class TestAdapterRegistry(unittest.TestCase):
         )
 
         # IBar->IBaz.
-        self.adapter_registry.register_type_adapters(
+        self.adapter_registry.register_adapter_factory(
             AdapterFactory(
                 adapter_class = IBarToIBazAdapter,
                 from_protocol = IBar,

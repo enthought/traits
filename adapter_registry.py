@@ -2,53 +2,50 @@
 
 
 from heapq import heappop, heappush
-import inspect
 
-from traits.api import Dict, HasTraits, Property
-
-def type_distance(from_, to):
-    if not issubclass(from_ ,to):
-        return None
-
-    distance = 0
-    for t in inspect.getmro(from_):
-        if not issubclass(t, to):
-            return distance
-        distance += 1
-
-    print 'You should not be here'
-    return distance
+from traits.api import HasTraits, Interface, List, Property
 
 
 class AdapterRegistry(HasTraits):
     """ A manager for adapter factories. """
 
+
+    #### 'AdapterRegistry' class protocol #####################################
+
+    @staticmethod
+    def provides_protocol(obj, protocol):
+        """ Does object implement a given protocol?
+
+        'protocol' is either an Interface or a class.
+
+        Return True if the object implements the interface, or is an instance
+        of the class.
+        """
+
+        if issubclass(protocol, Interface):
+            provides_protocol = protocol(obj, None) is not None
+
+        else:
+            # 'protocol' is a class
+            provides_protocol = isinstance(obj, protocol)
+
+        return provides_protocol
+
     #### 'AdapterRegistry' protocol ###########################################
 
-    # All registered type-scope factories by the type of object that they
-    # adapt.
-    #
-    # The dictionary is keyed by the *name* of the class rather than the class
-    # itself to allow for adapter factory proxies to register themselves
-    # without having to load and create the factories themselves (i.e., to
-    # allow us to lazily load adapter factories contributed by plugins). This
-    # is a slight compromise as it is obviously geared towards use in Envisage,
-    # but it doesn't affect the API other than allowing a class OR a string to
-    # be passed to 'register_adapters'.
-    #
-    # { String adaptee_class_name : List(AdapterFactory) factories }
-    type_factories = Property(Dict)
+    # List of registered adapter factories.
+    adapter_factories = Property(List)
 
-    def _get_type_factories(self):
-        """ Returns all registered type-scope factories. """
+    def _get_adapter_factories(self):
+        """ Trait property getter. """
 
-        return self._type_factories.copy()
+        return list(self._adapter_factories)
 
     #### Private interface ####################################################
 
     # All registered type-scope factories by the type of object that they
     # adapt.
-    _type_factories = Dict
+    _adapter_factories = List
 
     #### Methods ##############################################################
 
@@ -66,9 +63,9 @@ class AdapterRegistry(HasTraits):
 
         """
 
-        # If the object is already provides the given protocol then it is
+        # If the object already provides the given protocol then it is
         # simply returned.
-        if isinstance(adaptee, to_protocol):
+        if self.provides_protocol(adaptee, to_protocol):
             result = adaptee
 
         # Otherwise, look at each class in the adaptee's MRO to see if there
@@ -79,26 +76,10 @@ class AdapterRegistry(HasTraits):
 
         return result
 
-    def register_type_adapters(self, factory):
-        """ Registers a type-scope adapter factory.
+    def register_adapter_factory(self, factory):
+        """ Registers an adapter factory. """
 
-        'adaptee_class' can be either a class object or the name of a class.
-
-        A factory can be in exactly one manager (as it uses the manager's type
-        system).
-
-        """
-
-        from_protocol = factory.from_protocol
-        
-        if isinstance(from_protocol, basestring):
-            from_protocol_name = from_protocol
-
-        else:
-            from_protocol_name = self._get_class_name(from_protocol)
-
-        factories = self._type_factories.setdefault(from_protocol_name, [])
-        factories.append(factory)
+        self._adapter_factories.append(factory)
 
         return
 
@@ -111,16 +92,13 @@ class AdapterRegistry(HasTraits):
 
         """
 
-        print '------------------------ adapy type', adaptee, target_class
-        print 'type facvtories', self._type_factories
-        
-        factories_queue = []
-        for factories in self._type_factories.values():
-            for factory in factories:
-                distance = type_distance(type(adaptee), factory.from_protocol)
+        print '------------------------ adapt type', adaptee, target_class
+        print 'type factories', self._adapter_factories
 
-                if distance is not None:
-                    heappush(factories_queue, (distance, adaptee, factory))
+        factories_queue = []
+        for factory in self._adapter_factories:
+            if self.provides_protocol(adaptee, factory.from_protocol):
+                heappush(factories_queue, (1, adaptee, factory))
 
         print 'adaptee', adaptee, type(adaptee)
         print '-----------factories', factories_queue
@@ -132,15 +110,12 @@ class AdapterRegistry(HasTraits):
 
             adapter = factory.adapt(obj, factory.to_protocol)
             print 'ADAPTER?', adapter
-            if isinstance(adapter, target_class):
+            if self.provides_protocol(adapter, target_class):
                 break
 
-            for factories in self._type_factories.values():
-                for factory in factories:
-                    extra_distance = type_distance(type(adapter), factory.from_protocol)
-
-                    if extra_distance is not None:
-                        heappush(factories_queue, (distance+extra_distance, adapter, factory))
+            for factory in self._adapter_factories:
+                if self.provides_protocol(adapter, factory.from_protocol):
+                    heappush(factories_queue, (distance+1, adapter, factory))
 
         else:
             adapter = None

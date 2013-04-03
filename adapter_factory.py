@@ -3,6 +3,8 @@
 
 from traits.api import Any, HasTraits
 
+from apptools.adaptation.adapter_registry import AdapterRegistry
+
 
 class AdapterFactory(HasTraits):
     """ The abstract base class for adapter factories. """
@@ -17,7 +19,8 @@ class AdapterFactory(HasTraits):
     to_protocol = Any
     
     def adapt(self, obj, to_protocol):
-        if not isinstance(obj, self.from_protocol):
+
+        if not AdapterRegistry.provides_protocol(obj, self.from_protocol):
             return None
 
         if to_protocol is not self.to_protocol:
