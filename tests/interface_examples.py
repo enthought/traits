@@ -4,37 +4,37 @@
 from traits.api import Any, HasTraits, implements, Interface
 
 
-#### Protocols #################################################################
+#### Protocols ################################################################
 
-class IFoo(Interface):
+class UKStandard(Interface):
     pass
 
-class IBar(Interface):
+class EUStandard(Interface):
     pass
 
-class IBaz(Interface):
+class JapanStandard(Interface):
     pass
 
-#### Implementations ###########################################################
+#### Implementations ##########################################################
 
-class Foo(HasTraits):
-    implements(IFoo)
+class UKPlug(HasTraits):
+    implements(UKStandard)
 
-class Bar(HasTraits):
-    implements(IBar)
+class EUPlug(HasTraits):
+    implements(EUStandard)
 
-class Baz(HasTraits):
-    implements(IBaz)
+class JapanPlug(HasTraits):
+    implements(JapanStandard)
 
-#### Adapters ##################################################################
+#### Adapters #################################################################
 
 class Adapter(HasTraits):
     adaptee = Any
     
-class IFooToIBarAdapter(HasTraits):
-    implements(IBar)
+class UKStandardToEUStandard(HasTraits):
+    implements(EUStandard)
 
-class IBarToIBazAdapter(HasTraits):
-    implements(IBaz)
+class EUStandardToJapanStandard(HasTraits):
+    implements(JapanStandard)
 
-#### EOF ######################################################################
+#### EOF #####################################################################

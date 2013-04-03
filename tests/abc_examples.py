@@ -6,31 +6,31 @@ from abc import ABCMeta
 
 #### Protocols #################################################################
 
-class FooABC(object):
+class UKStandard(object):
     __metaclass__ = ABCMeta
 
-class BarABC(object):
+class EUStandard(object):
     __metaclass__ = ABCMeta
 
-class BazABC(object):
+class JapanStandard(object):
     __metaclass__ = ABCMeta
 
 #### Implementations ###########################################################
 
-class Foo(object):
+class UKPlug(object):
     pass
 
-FooABC.register(Foo)
+UKStandard.register(UKPlug)
 
-class Bar(object):
+class EUPlug(object):
     pass
 
-BarABC.register(Bar)
+EUStandard.register(EUPlug)
 
-class Baz(object):
+class JapanPlug(object):
     pass
 
-BazABC.register(Baz)
+JapanStandard.register(JapanPlug)
 
 #### Adapters ##################################################################
 
@@ -38,14 +38,14 @@ class Adapter(object):
     def __init__(self, adaptee):
         self.adaptee = adaptee
     
-class FooABCToBarABCAdapter(Adapter):
+class UKStandardToEUStandard(Adapter):
     pass
 
-BarABC.register(FooABCToBarABCAdapter)
+EUStandard.register(UKStandardToEUStandard)
 
-class BarABCToBazABCAdapter(Adapter):
+class EUStandardToJapanStandard(Adapter):
     pass
 
-BazABC.register(BarABCToBazABCAdapter)
+JapanStandard.register(EUStandardToJapanStandard)
 
 #### EOF ######################################################################

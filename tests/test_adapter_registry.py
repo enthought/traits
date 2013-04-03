@@ -4,10 +4,15 @@
 import unittest
 
 from apptools.adaptation.adapter_registry import AdapterRegistry
+import apptools.adaptation.tests.abc_examples
+import apptools.adaptation.tests.interface_examples
 
 
-class TestAdapterRegistry(unittest.TestCase):
+class _TestAdapterRegistry(unittest.TestCase):
     """ Test the adapter registry. """
+
+    #: Class attribute pointing at the module containing the example data
+    examples = None
 
     #### 'TestCase' protocol ##################################################
 
@@ -25,240 +30,119 @@ class TestAdapterRegistry(unittest.TestCase):
 
     #### Tests ################################################################
 
-    def test_no_adapter_required_with_abcs(self):
+    def test_no_adapter_required(self):
 
-        from apptools.adaptation.tests.abc_examples import Foo, FooABC
+        ex = self.examples
 
-        f = Foo()
+        plug = ex.UKPlug()
 
         # Try to adapt it to its own concrete type.
-        foo = self.adapter_registry.adapt(f, Foo)
+        uk_plug = self.adapter_registry.adapt(plug, ex.UKPlug)
 
-        # The adapter  manager should simply return the same object.
-        self.assert_(foo is f)
+        # The adapter registry should simply return the same object.
+        self.assert_(uk_plug is plug)
 
         # Try to adapt it to an ABC that is registered for its type.
-        foo = self.adapter_registry.adapt(f, FooABC)
+        uk_plug = self.adapter_registry.adapt(plug, ex.UKStandard)
 
-        # The adapter  manager should simply return the same object.
-        self.assert_(foo is f)
+        # The adapter registry should simply return the same object.
+        self.assert_(uk_plug is plug)
 
         return
 
-    def test_no_adapter_required_with_interfaces(self):
+    def test_no_adapter_available(self):
 
-        from apptools.adaptation.tests.interface_examples import Foo, IFoo
+        ex = self.examples
 
-        f = Foo()
-
-        # Try to adapt it to its own concrete type.
-        foo = self.adapter_registry.adapt(f, Foo)
-
-        # The adapter  manager should simply return the same object.
-        self.assert_(foo is f)
-
-        # Try to adapt it to an ABC that is registered for its type.
-        foo = self.adapter_registry.adapt(f, IFoo)
-
-        # The adapter  manager should simply return the same object.
-        self.assert_(foo is f)
-
-        return
-
-    def test_no_adapter_available_with_abcs(self):
-
-        from apptools.adaptation.tests.abc_examples import (
-            Bar, BarABC, Foo
-        )
-
-        f = Foo()
+        plug = ex.UKPlug()
 
         # Try to adapt it to a concrete type.
-        bar = self.adapter_registry.adapt(f, Bar)
+        eu_plug = self.adapter_registry.adapt(plug, ex.EUPlug)
 
-        # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        # There should be no way to adapt a UKPlug to a EUPlug.
+        self.assertEqual(eu_plug, None)
 
         # Try to adapt it to an ABC.
-        bar = self.adapter_registry.adapt(f, BarABC)
+        eu_plug = self.adapter_registry.adapt(plug, ex.EUStandard)
 
-        # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
-
-        return
-
-    def test_no_adapter_available_with_interfaces(self):
-
-        from apptools.adaptation.tests.interface_examples import (
-            Bar, IBar, Foo
-        )
-
-        f = Foo()
-
-        # Try to adapt it to a concrete type.
-        bar = self.adapter_registry.adapt(f, Bar)
-
-        # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
-
-        # Try to adapt it to an Interface.
-        bar = self.adapter_registry.adapt(f, IBar)
-
-        # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        # There should be no way to adapt a UKPlug to a EUPlug.
+        self.assertEqual(eu_plug, None)
 
         return
 
-    def test_one_step_adaptation_with_abcs(self):
+    def test_one_step_adaptation(self):
 
         from apptools.adaptation.adapter_factory import AdapterFactory
 
-        from apptools.adaptation.tests.abc_examples import (
-            FooABCToBarABCAdapter,
-            FooABC,
-            BarABC,
-            Foo,
-            Bar
-        )
+        ex = self.examples
 
-        # FooABC->BarABC.
+        # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                factory       = FooABCToBarABCAdapter,
-                from_protocol = FooABC,
-                to_protocol   = BarABC
+                factory       = ex.UKStandardToEUStandard,
+                from_protocol = ex.UKStandard,
+                to_protocol   = ex.EUStandard
             )
         )
 
-        f = Foo()
+        plug = ex.UKPlug()
 
         # Adapt it to an ABC.
-        bar = self.adapter_registry.adapt(f, BarABC)
-        self.assertIsNotNone(bar)
-        self.assertIsInstance(bar, FooABCToBarABCAdapter)
+        eu_plug = self.adapter_registry.adapt(plug, ex.EUStandard)
+        self.assertIsNotNone(eu_plug)
+        self.assertIsInstance(eu_plug, ex.UKStandardToEUStandard)
 
-        # We shouldn't be able to adapt it to a *concrete* 'Bar' though.
-        bar = self.adapter_registry.adapt(f, Bar)
-        self.assertIsNone(bar)
-
-        return
-
-    def test_one_step_adaptation_with_interfaces(self):
-
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
-        from apptools.adaptation.tests.interface_examples import (
-            IFooToIBarAdapter,
-            IFoo,
-            IBar,
-            Foo,
-            Bar
-        )
-
-        # FooABC->BarABC.
-        self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = IFooToIBarAdapter,
-                from_protocol = IFoo,
-                to_protocol   = IBar
-            )
-        )
-
-        f = Foo()
-
-        # Adapt it to an ABC.
-        bar = self.adapter_registry.adapt(f, IBar)
-        self.assertIsNotNone(bar)
-        self.assertIsInstance(bar, IFooToIBarAdapter)
-
-        # We shouldn't be able to adapt it to a *concrete* 'Bar' though.
-        bar = self.adapter_registry.adapt(f, Bar)
-        self.assertIsNone(bar)
+        # We shouldn't be able to adapt it to a *concrete* 'EUPlug' though.
+        eu_plug = self.adapter_registry.adapt(plug, ex.EUPlug)
+        self.assertIsNone(eu_plug)
 
         return
 
-    def test_adapter_chaining_with_abcs(self):
+    def test_adapter_chaining(self):
 
         from apptools.adaptation.adapter_factory import AdapterFactory
 
-        from apptools.adaptation.tests.abc_examples import (
-            FooABCToBarABCAdapter,
-            BarABCToBazABCAdapter,
-            FooABC,
-            BarABC,
-            BazABC,
-            Foo
-        )
+        ex = self.examples
 
-        # FooABC->BarABC.
+        # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                factory       = FooABCToBarABCAdapter,
-                from_protocol = FooABC,
-                to_protocol   = BarABC
+                factory       = ex.UKStandardToEUStandard,
+                from_protocol = ex.UKStandard,
+                to_protocol   = ex.EUStandard
             )
         )
 
-        # BarABC->BazABC.
+        # EUStandard->JapanStandard.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                factory       = BarABCToBazABCAdapter,
-                from_protocol = BarABC,
-                to_protocol   = BazABC
+                factory       = ex.EUStandardToJapanStandard,
+                from_protocol = ex.EUStandard,
+                to_protocol   = ex.JapanStandard
             )
         )
 
-        # Create a Foo.
-        foo = Foo()
+        # Create a UKPlug.
+        uk_plug = ex.UKPlug()
 
-        # Adapt it to a BazABC via the chain.
-        baz = self.adapter_registry.adapt(foo, BazABC)
-        self.assertIsNotNone(baz)
-        self.assertIsInstance(baz, BarABCToBazABCAdapter)
-        self.assert_(baz.adaptee.adaptee is foo)
+        # Adapt it to a JapanStandard via the chain.
+        japan_plug = self.adapter_registry.adapt(uk_plug, ex.JapanStandard)
+        self.assertIsNotNone(japan_plug)
+        self.assertIsInstance(japan_plug, ex.EUStandardToJapanStandard)
+        self.assert_(japan_plug.adaptee.adaptee is uk_plug)
         
         return
 
-    def test_adapter_chaining_with_interfaces(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
+class TestAdapterRegistryWithABCs(_TestAdapterRegistry):
+    """ Test the adapter registry with ABCs. """
 
-        from apptools.adaptation.tests.interface_examples import (
-            IFooToIBarAdapter,
-            IBarToIBazAdapter,
-            IFoo,
-            IBar,
-            IBaz,
-            Foo
-        )
+    examples = apptools.adaptation.tests.abc_examples
 
-        # IFoo->IBar.
-        self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = IFooToIBarAdapter,
-                from_protocol = IFoo,
-                to_protocol   = IBar
-            )
-        )
 
-        # IBar->IBaz.
-        self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = IBarToIBazAdapter,
-                from_protocol = IBar,
-                to_protocol   = IBaz
-            )
-        )
+class TestAdapterRegistryWithInterfaces(_TestAdapterRegistry):
+    """ Test the adapter registry with Interfaces. """
 
-        # Create a Foo.
-        foo = Foo()
-
-        # Adapt it to an IBaz via the chain.
-        baz = self.adapter_registry.adapt(foo, IBaz)
-        self.assertIsNotNone(baz)
-        self.assertIsInstance(baz, IBarToIBazAdapter)
-        self.assert_(baz.adaptee.adaptee is foo)
-        
-        return
+    examples = apptools.adaptation.tests.interface_examples
 
 #### EOF ######################################################################
