@@ -133,6 +133,154 @@ class _TestAdapterRegistry(unittest.TestCase):
         
         return
 
+    def test_multiple_paths_unambiguous(self):
+
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        ex = self.examples
+
+        # UKStandard->EUStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.UKStandardToEUStandard,
+                from_protocol = ex.UKStandard,
+                to_protocol   = ex.EUStandard
+            )
+        )
+
+        # EUStandard->JapanStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.EUStandardToJapanStandard,
+                from_protocol = ex.EUStandard,
+                to_protocol   = ex.JapanStandard
+            )
+        )
+
+        # JapanStandard->IraqStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.JapanStandardToIraqStandard,
+                from_protocol = ex.JapanStandard,
+                to_protocol   = ex.IraqStandard
+            )
+        )
+
+        # EUStandard->IraqStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.EUStandardToIraqStandard,
+                from_protocol = ex.EUStandard,
+                to_protocol   = ex.IraqStandard
+            )
+        )
+
+        # Create a UKPlug.
+        uk_plug = ex.UKPlug()
+
+        # Adapt it to a IraqStandard via the chain.
+        iraq_plug = self.adapter_registry.adapt(uk_plug, ex.IraqStandard)
+        self.assertIsNotNone(iraq_plug)
+        self.assertIsInstance(iraq_plug, ex.EUStandardToIraqStandard)
+        self.assert_(iraq_plug.adaptee.adaptee is uk_plug)
+
+        return
+
+    def test_multiple_paths_ambiguous(self):
+
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        ex = self.examples
+
+        # UKStandard->EUStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.UKStandardToEUStandard,
+                from_protocol = ex.UKStandard,
+                to_protocol   = ex.EUStandard
+            )
+        )
+
+        # UKStandard->JapanStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.UKStandardToJapanStandard,
+                from_protocol = ex.UKStandard,
+                to_protocol   = ex.JapanStandard
+            )
+        )
+
+        # JapanStandard->IraqStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.JapanStandardToIraqStandard,
+                from_protocol = ex.JapanStandard,
+                to_protocol   = ex.IraqStandard
+            )
+        )
+
+        # EUStandard->IraqStandard.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.EUStandardToIraqStandard,
+                from_protocol = ex.EUStandard,
+                to_protocol   = ex.IraqStandard
+            )
+        )
+
+        # Create a UKPlug.
+        uk_plug = ex.UKPlug()
+
+        # Adapt it to a IraqStandard via the chain.
+        iraq_plug = self.adapter_registry.adapt(uk_plug, ex.IraqStandard)
+        self.assertIsNotNone(iraq_plug)
+        self.assertIn(
+            type(iraq_plug),
+            [ex.EUStandardToIraqStandard, ex.JapanStandardToIraqStandard]
+        )
+        self.assert_(iraq_plug.adaptee.adaptee is uk_plug)
+
+        return
+
+    def test_conditional_adaptation(self):
+
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        ex = self.examples
+
+        # TravelPlug->EUStandard.
+        def travel_plug_to_eu_standard(adaptee):
+            if adaptee.mode == 'Europe':
+                return ex.TravelPlugToEUStandard(adaptee=adaptee)
+
+            else:
+                return None
+
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = travel_plug_to_eu_standard,
+                from_protocol = ex.TravelPlug,
+                to_protocol   = ex.EUStandard
+            )
+        )
+
+        # Create a TravelPlug.
+        travel_plug = ex.TravelPlug(mode='Europe')
+
+        # Adapt it to a EUStandard.
+        eu_plug = self.adapter_registry.adapt(travel_plug, ex.EUStandard)
+        self.assertIsNotNone(eu_plug)
+        self.assertIsInstance(eu_plug, ex.TravelPlugToEUStandard)
+
+        # Create a TravelPlug.
+        travel_plug = ex.TravelPlug(mode='Asia')
+
+        # Adapt it to a EUStandard.
+        eu_plug = self.adapter_registry.adapt(travel_plug, ex.EUStandard)
+        self.assertIsNone(eu_plug)
+
+        return
+
 
 class TestAdapterRegistryWithABCs(_TestAdapterRegistry):
     """ Test the adapter registry with ABCs. """
