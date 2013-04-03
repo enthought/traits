@@ -8,7 +8,7 @@ import apptools.adaptation.tests.abc_examples
 import apptools.adaptation.tests.interface_examples
 
 
-class _TestAdapterRegistry(unittest.TestCase):
+class _TestAdapterRegistry(object):
     """ Test the adapter registry. """
 
     #: Class attribute pointing at the module containing the example data
@@ -282,13 +282,13 @@ class _TestAdapterRegistry(unittest.TestCase):
         return
 
 
-class TestAdapterRegistryWithABCs(_TestAdapterRegistry):
+class TestAdapterRegistryWithABCs(_TestAdapterRegistry, unittest.TestCase):
     """ Test the adapter registry with ABCs. """
 
     examples = apptools.adaptation.tests.abc_examples
 
 
-class TestAdapterRegistryWithInterfaces(_TestAdapterRegistry):
+class TestAdapterRegistryWithInterfaces(_TestAdapterRegistry,unittest.TestCase):
     """ Test the adapter registry with Interfaces. """
 
     examples = apptools.adaptation.tests.interface_examples
