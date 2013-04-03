@@ -1,4 +1,4 @@
-""" Test the protocol manager. """
+""" Test the adapter registry. """
 
 
 import unittest
@@ -6,15 +6,15 @@ import unittest
 from apptools.adaptation.adapter_registry import AdapterRegistry
 
 
-class TestProtocolManager(unittest.TestCase):
-    """ Test the protocol manager. """
+class TestAdapterRegistry(unittest.TestCase):
+    """ Test the adapter registry. """
 
     #### 'TestCase' protocol ##################################################
 
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.protocol_manager = AdapterRegistry()
+        self.adapter_registry = AdapterRegistry()
 
         return
 
@@ -32,13 +32,13 @@ class TestProtocolManager(unittest.TestCase):
         f = Foo()
 
         # Try to adapt it to its own concrete type.
-        foo = self.protocol_manager.adapt(f, Foo)
+        foo = self.adapter_registry.adapt(f, Foo)
 
         # The adapter  manager should simply return the same object.
         self.assert_(foo is f)
 
         # Try to adapt it to an ABC that is registered for its type.
-        foo = self.protocol_manager.adapt(f, FooABC)
+        foo = self.adapter_registry.adapt(f, FooABC)
 
         # The adapter  manager should simply return the same object.
         self.assert_(foo is f)
@@ -54,13 +54,13 @@ class TestProtocolManager(unittest.TestCase):
         f = Foo()
 
         # Try to adapt it to a concrete type.
-        bar = self.protocol_manager.adapt(f, Bar)
+        bar = self.adapter_registry.adapt(f, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
         self.assertEqual(bar, None)
 
         # Try to adapt it to an ABC.
-        bar = self.protocol_manager.adapt(f, BarABC)
+        bar = self.adapter_registry.adapt(f, BarABC)
 
         # There should be no way to adapt a Foo to a Bar.
         self.assertEqual(bar, None)
@@ -80,7 +80,7 @@ class TestProtocolManager(unittest.TestCase):
         )
 
         # FooABC->BarABC.
-        self.protocol_manager.register_type_adapters(
+        self.adapter_registry.register_type_adapters(
             AdapterFactory(
                 adapter_class = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
@@ -91,12 +91,12 @@ class TestProtocolManager(unittest.TestCase):
         f = Foo()
 
         # Adapt it to an ABC.
-        bar = self.protocol_manager.adapt(f, BarABC)
+        bar = self.adapter_registry.adapt(f, BarABC)
         self.assertIsNotNone(bar)
         self.assertIsInstance(bar, FooABCToBarABCAdapter)
 
         # We shouldn't be able to adapt it to a *concrete* 'Bar' though.
-        bar = self.protocol_manager.adapt(f, Bar)
+        bar = self.adapter_registry.adapt(f, Bar)
         self.assertIsNone(bar)
 
         return
@@ -115,7 +115,7 @@ class TestProtocolManager(unittest.TestCase):
         )
 
         # FooABC->BarABC.
-        self.protocol_manager.register_type_adapters(
+        self.adapter_registry.register_type_adapters(
             AdapterFactory(
                 adapter_class = FooABCToBarABCAdapter,
                 from_protocol = FooABC,
@@ -124,7 +124,7 @@ class TestProtocolManager(unittest.TestCase):
         )
 
         # BarABC->BazABC.
-        self.protocol_manager.register_type_adapters(
+        self.adapter_registry.register_type_adapters(
             AdapterFactory(
                 adapter_class = BarABCToBazABCAdapter,
                 from_protocol = BarABC,
@@ -136,7 +136,7 @@ class TestProtocolManager(unittest.TestCase):
         foo = Foo()
 
         # Adapt it to a BazABC via the chain.
-        baz = self.protocol_manager.adapt(foo, BazABC)
+        baz = self.adapter_registry.adapt(foo, BazABC)
         self.assertIsNotNone(baz)
         self.assertIsInstance(baz, BarABCToBazABCAdapter)
         self.assert_(baz.adaptee.adaptee is foo)
@@ -157,7 +157,7 @@ class TestProtocolManager(unittest.TestCase):
         )
 
         # IFoo->IBar.
-        self.protocol_manager.register_type_adapters(
+        self.adapter_registry.register_type_adapters(
             AdapterFactory(
                 adapter_class = IFooToIBarAdapter,
                 from_protocol = IFoo,
@@ -166,7 +166,7 @@ class TestProtocolManager(unittest.TestCase):
         )
 
         # IBar->IBaz.
-        self.protocol_manager.register_type_adapters(
+        self.adapter_registry.register_type_adapters(
             AdapterFactory(
                 adapter_class = IBarToIBazAdapter,
                 from_protocol = IBar,
@@ -178,7 +178,7 @@ class TestProtocolManager(unittest.TestCase):
         foo = Foo()
 
         # Adapt it to an IBaz via the chain.
-        baz = self.protocol_manager.adapt(foo, IBaz)
+        baz = self.adapter_registry.adapt(foo, IBaz)
         self.assertIsNotNone(baz)
         self.assertIsInstance(baz, IBarToIBazAdapter)
         self.assert_(baz.adaptee.adaptee is foo)
