@@ -9,7 +9,6 @@ from traits.api import HasTraits, Interface, List, Property
 class AdapterRegistry(HasTraits):
     """ A manager for adapter factories. """
 
-
     #### 'AdapterRegistry' class protocol #####################################
 
     @staticmethod
@@ -23,7 +22,11 @@ class AdapterRegistry(HasTraits):
         """
 
         if issubclass(protocol, Interface):
-            provides_protocol = protocol(obj, None) is not None
+            # support for traits' Interfaces
+            if hasattr(obj, '__implements__'):
+                provides_protocol = issubclass(obj.__implements__, protocol)
+            else:
+                provides_protocol = False
 
         else:
             # 'protocol' is a class
