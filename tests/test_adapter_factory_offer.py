@@ -12,7 +12,7 @@ class TestAdapterFactoryOffer(unittest.TestCase):
     def test_lazy_loading(self):
 
         LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
-        lazy_factory = AdapterFactoryOffer(
+        offer = AdapterFactoryOffer(
             factory       =(LAZY_EXAMPLES + '.IBarToIFoo'),
             from_protocol =(LAZY_EXAMPLES + '.IBar'),
             to_protocol   =(LAZY_EXAMPLES + '.IFoo'),
@@ -20,9 +20,7 @@ class TestAdapterFactoryOffer(unittest.TestCase):
 
         self.assertNotIn(LAZY_EXAMPLES, sys.modules)
 
-        factory = lazy_factory.factory
-        print 'FACTORY', type(factory)
-        print 'KEYS', sorted(sys.modules.keys())
+        factory = offer.factory
 
         self.assertIn(LAZY_EXAMPLES, sys.modules)
 
@@ -32,7 +30,7 @@ class TestAdapterFactoryOffer(unittest.TestCase):
 
         del sys.modules[LAZY_EXAMPLES]
 
-        from_protocol = lazy_factory.from_protocol
+        from_protocol = offer.from_protocol
 
         from apptools.adaptation.tests.lazy_examples import IBar
         self.assertIs(from_protocol, IBar)
@@ -40,7 +38,7 @@ class TestAdapterFactoryOffer(unittest.TestCase):
 
         del sys.modules[LAZY_EXAMPLES]
 
-        to_protocol = lazy_factory.to_protocol
+        to_protocol = offer.to_protocol
 
         from apptools.adaptation.tests.lazy_examples import IFoo
         self.assertIs(to_protocol, IFoo)
