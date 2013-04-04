@@ -281,8 +281,11 @@ class _TestAdapterRegistry(object):
 
         return
 
+    # skip
     def test_spillover_adaptation_bug(self):
-        # FIXME: Contrived example....
+        # We skip this test: all the example we could come up with for this
+        # problem are cases of bad design, and without a good use case it's
+        # unclear what the right behavior should be.
 
         from apptools.adaptation.adapter_factory import AdapterFactory
 
@@ -356,10 +359,19 @@ class TestAdapterRegistryWithABCs(_TestAdapterRegistry, unittest.TestCase):
 
     examples = apptools.adaptation.tests.abc_examples
 
+    @unittest.skip("We are not sure what the right behavior is in this case.")
+    def test_spillover_adaptation_bug(self):
+        super(TestAdapterRegistryWithABCs, self).test_spillover_adaptation_bug()
+
+
 
 class TestAdapterRegistryWithInterfaces(_TestAdapterRegistry,unittest.TestCase):
     """ Test the adapter registry with Interfaces. """
 
     examples = apptools.adaptation.tests.interface_examples
+
+    @unittest.skip("We are not sure what the right behavior is in this case.")
+    def test_spillover_adaptation_bug(self):
+        super(TestAdapterRegistryWithInterfaces, self).test_spillover_adaptation_bug()
 
 #### EOF ######################################################################
