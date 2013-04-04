@@ -297,12 +297,13 @@ class _TestAdapterRegistry(object):
             )
         )
 
-        # ITextEditor->IPrintable.
+        # Meanwhile, in a plugin far, far away ...
+        # IScriptable->IPrintable.
         self.adapter_registry.register_adapter_factory(
             AdapterFactory(
-                factory       = ex.ITextEditorToIPrintable,
-                from_protocol = ex.ITextEditor,
-                to_protocol   = ex.IPrintable
+                factory       = ex.IScriptableToIUndoable,
+                from_protocol = ex.IScriptable,
+                to_protocol   = ex.IUndoable
             )
         )
 
@@ -311,10 +312,43 @@ class _TestAdapterRegistry(object):
 
         # Try to adapt to IPrintable: since we did not define an adapter
         # chain that goes from FileType to IPrintable, this should fail.
-        printable = self.adapter_registry.adapt(file_type, ex.IPrintable)
+        printable = self.adapter_registry.adapt(file_type, ex.IUndoable)
         self.assertIsNone(printable)
 
         return
+
+    def test_adaptation_prefers_subclasses(self):
+
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        ex = self.examples
+
+        # BarChild->IFoo.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.TextEditorToIPrintable,
+                from_protocol = ex.TextEditor,
+                to_protocol   = ex.IPrintable
+            )
+        )
+
+        # Bar->IFoo.
+        self.adapter_registry.register_adapter_factory(
+            AdapterFactory(
+                factory       = ex.EditorToIPrintable,
+                from_protocol = ex.Editor,
+                to_protocol   = ex.IPrintable
+            )
+        )
+
+        # Create a text editor.
+        text_editor = ex.TextEditor()
+
+        # Adapt to IFoo: we should get the BarChildToIFoo adapter, not the
+        # BarToIFoo one.
+        foo = self.adapter_registry.adapt(text_editor, ex.IPrintable)
+        self.assertIsNotNone(foo)
+        self.assertIs(type(foo), ex.TextEditorToIPrintable)
 
 
 class TestAdapterRegistryWithABCs(_TestAdapterRegistry, unittest.TestCase):

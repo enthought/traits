@@ -21,7 +21,7 @@ class AdapterFactory(HasTraits):
 
     def adapt(self, obj, to_protocol):
 
-        if not AdapterRegistry.provides_protocol(obj, self.from_protocol):
+        if not AdapterRegistry.provides_protocol(type(obj),self.from_protocol):
             return None
 
         if to_protocol is not self.to_protocol:

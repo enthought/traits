@@ -104,28 +104,44 @@ class FileType(object):
 class IEditor(object):
     __metaclass__ = ABCMeta
 
-class ITextEditor(object):
+class IScriptable(object):
     __metaclass__ = ABCMeta
+
+class IUndoable(object):
+    __metaclass__ = ABCMeta
+
+
+class FileTypeToIEditor(Adapter):
+    pass
+
+IEditor.register(FileTypeToIEditor)
+IScriptable.register(FileTypeToIEditor)
+
+class IScriptableToIUndoable(Adapter):
+    pass
+
+IUndoable.register(IScriptableToIUndoable)
+
+
+#### Hierarchy example ########################################################
 
 class IPrintable(object):
     __metaclass__ = ABCMeta
 
-
-class TextEditor(object):
+class Editor(object):
     pass
 
-ITextEditor.register(TextEditor)
-
-
-class FileTypeToIEditor(Adapter, TextEditor):
+class TextEditor(Editor):
     pass
 
-IEditor.register(FileTypeToIEditor)
-
-
-class ITextEditorToIPrintable(Adapter):
+class EditorToIPrintable(Adapter):
     pass
 
-IPrintable.register(ITextEditorToIPrintable)
+IPrintable.register(EditorToIPrintable)
+
+class TextEditorToIPrintable(Adapter):
+    pass
+
+IPrintable.register(TextEditorToIPrintable)
 
 #### EOF ######################################################################

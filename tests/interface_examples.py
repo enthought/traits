@@ -73,19 +73,35 @@ class FileType(HasTraits):
 class IEditor(Interface):
     pass
 
-class ITextEditor(Interface):
+class IScriptable(Interface):
     pass
+
+class IUndoable(Interface):
+    pass
+
+class FileTypeToIEditor(Adapter):
+    implements(IEditor)
+    implements(IScriptable)
+
+class IScriptableToIUndoable(Adapter):
+    implements(IUndoable)
+
+
+#### Hierarchy example ########################################################
 
 class IPrintable(Interface):
     pass
 
-class TextEditor(HasTraits):
-    implements(ITextEditor)
+class Editor(HasTraits):
+    pass
 
-class FileTypeToIEditor(Adapter, TextEditor):
-    implements(IEditor)
+class TextEditor(Editor):
+    pass
 
-class ITextEditorToIPrintable(Adapter):
+class EditorToIPrintable(Adapter):
+    implements(IPrintable)
+
+class TextEditorToIPrintable(Adapter):
     implements(IPrintable)
 
 #### EOF ######################################################################
