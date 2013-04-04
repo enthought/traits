@@ -209,6 +209,11 @@ class AdaptationManager(HasTraits):
 adaptation_manager = AdaptationManager()
 
 
+def adapt(adaptee, to_protocol):
+
+    return adaptation_manager.adapt(adaptee, to_protocol)
+
+
 def register_adapter_offer(offer):
 
     adaptation_manager.register_adapter_offer(offer)
