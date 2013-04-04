@@ -1,4 +1,4 @@
-""" A manager for adapter factories. """
+""" Keeps a registry of available adaptation paths and handles adaptation. """
 
 
 from heapq import heappop, heappush
@@ -7,21 +7,23 @@ import inspect
 from traits.api import HasTraits, Interface, List, Property
 
 
-class AdapterRegistry(HasTraits):
-    """ A manager for adapter factories. """
+class AdaptationManager(HasTraits):
+    """ Keeps a registry of available adaptation paths and handles adaptation.
+    """
 
-    #### 'AdapterRegistry' class protocol #####################################
+    #### 'AdaptationManager' class protocol ###################################
 
     @staticmethod
     def mro_distance_to_protocol(from_type, to_protocol):
         """ If `from_type` provides `to_protocol`, returns the distance between
         `from_type` and the super-most class in the MRO hierarchy providing
-        `to_protocol` (that's where the protocol was provided in the first place).
+        `to_protocol` (that's where the protocol was provided in the first
+        place).
 
         If `from_type` does not provide `to_protocol`, return None.
         """
 
-        if not AdapterRegistry.provides_protocol(from_type ,to_protocol):
+        if not AdaptationManager.provides_protocol(from_type ,to_protocol):
             return None
 
         # We walk up the MRO hierarchy until the point where the `to_protocol`
@@ -30,7 +32,7 @@ class AdapterRegistry(HasTraits):
         # interface).
         distance = 0
         for t in inspect.getmro(from_type):
-            if not AdapterRegistry.provides_protocol(t, to_protocol):
+            if not AdaptationManager.provides_protocol(t, to_protocol):
                 break
             distance += 1
 
@@ -59,21 +61,21 @@ class AdapterRegistry(HasTraits):
 
         return provides_protocol
 
-    #### 'AdapterRegistry' protocol ###########################################
+    #### 'AdaptationManager' protocol ###########################################
 
     # List of registered adapter factories.
-    adapter_factories = Property(List)
+    adapter_offers = Property(List)
 
-    def _get_adapter_factories(self):
+    def _get_adapter_offers(self):
         """ Trait property getter. """
 
-        return list(self._adapter_factories)
+        return list(self._adapter_offers)
 
     #### Private interface ####################################################
 
     # All registered type-scope factories by the type of object that they
     # adapt.
-    _adapter_factories = List
+    _adapter_offers = List
 
     #### Methods ##############################################################
 
@@ -105,17 +107,18 @@ class AdapterRegistry(HasTraits):
         return result
 
     def register_adapter_offer(self, offer):
+        """ Register an adapter offer. """
 
-        self._adapter_factories.append(offer)
+        self._adapter_offers.append(offer)
 
         return
 
     def register_adapter_factory(self, factory, from_protocol, to_protocol):
-        """ Registers an adapter factory. """
+        """ Register an adapter factory. """
 
-        from apptools.adaptation.adapter_factory_offer import AdapterFactoryOffer
+        from apptools.adaptation.adapter_offer import AdapterOffer
 
-        offer = AdapterFactoryOffer(
+        offer = AdapterOffer(
             factory       = factory,
             from_protocol = from_protocol,
             to_protocol   = to_protocol
@@ -137,7 +140,7 @@ class AdapterRegistry(HasTraits):
         SUBCLASS_WEIGHT = 1e-9
 
         print '------------------------ adapt type', adaptee, target_class
-        print 'type factories', self._adapter_factories
+        print 'type factories', self._adapter_offers
 
 
         # `factories_queue` is a priority queue. The values in the queue are
@@ -159,7 +162,7 @@ class AdapterRegistry(HasTraits):
         # or a billion objects to weight as much as one adaptation step.
 
         factories_queue = []
-        for factory in self._adapter_factories:
+        for factory in self._adapter_offers:
             distance = self.mro_distance_to_protocol(
                 type(adaptee), factory.from_protocol
             )
@@ -181,7 +184,7 @@ class AdapterRegistry(HasTraits):
             if self.provides_protocol(type(adapter), target_class):
                 break
 
-            for factory in self._adapter_factories:
+            for factory in self._adapter_offers:
                 distance = self.mro_distance_to_protocol(
                     type(adapter), factory.from_protocol
                 )
@@ -203,12 +206,19 @@ class AdapterRegistry(HasTraits):
         return "%s.%s" % (klass.__module__, klass.__name__)
 
 
-adapter_registry = AdapterRegistry()
+adaptation_manager = AdaptationManager()
+
+
+def register_adapter_offer(offer):
+
+    adaptation_manager.register_adapter_offer(offer)
+
+    return
 
 
 def register_adapter_factory(factory, from_protocol, to_protocol):
 
-    adapter_registry.register_adapter_factory(
+    adaptation_manager.register_adapter_factory(
         factory, from_protocol, to_protocol
     )
 

@@ -3,11 +3,11 @@
 
 from traits.api import Any, HasTraits, Property
 
-from apptools.adaptation.adapter_registry import AdapterRegistry
+from apptools.adaptation.adapter_manager import AdaptationManager
 from apptools.naming.initial_context import _import_symbol
 
 
-class AdapterFactoryOffer(HasTraits):
+class AdapterOffer(HasTraits):
 
     #### 'AdapterFactoryOffer' protocol #######################################
 
@@ -74,7 +74,7 @@ class AdapterFactoryOffer(HasTraits):
 
     def adapt(self, obj, to_protocol):
 
-        if not AdapterRegistry.provides_protocol(type(obj),self.from_protocol):
+        if not AdaptationManager.provides_protocol(type(obj),self.from_protocol):
             return None
 
         if to_protocol is not self.to_protocol:

@@ -1,15 +1,15 @@
-""" Test the adapter registry. """
+""" Test the adapter manager. """
 
 
 import unittest
 
-from apptools.adaptation.adapter_registry import AdapterRegistry
+from apptools.adaptation.adapter_manager import AdaptationManager
 import apptools.adaptation.tests.abc_examples
 import apptools.adaptation.tests.interface_examples
 
 
-class _TestAdapterRegistry(object):
-    """ Test the adapter registry. """
+class _TestAdapterManager(object):
+    """ Test the adapter manager. """
 
     #: Class attribute pointing at the module containing the example data
     examples = None
@@ -19,7 +19,7 @@ class _TestAdapterRegistry(object):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.adapter_registry = AdapterRegistry()
+        self.adaptation_manager = AdaptationManager()
 
         return
 
@@ -37,15 +37,15 @@ class _TestAdapterRegistry(object):
         plug = ex.UKPlug()
 
         # Try to adapt it to its own concrete type.
-        uk_plug = self.adapter_registry.adapt(plug, ex.UKPlug)
+        uk_plug = self.adaptation_manager.adapt(plug, ex.UKPlug)
 
-        # The adapter registry should simply return the same object.
+        # The adaptation manager should simply return the same object.
         self.assert_(uk_plug is plug)
 
         # Try to adapt it to an ABC that is registered for its type.
-        uk_plug = self.adapter_registry.adapt(plug, ex.UKStandard)
+        uk_plug = self.adaptation_manager.adapt(plug, ex.UKStandard)
 
-        # The adapter registry should simply return the same object.
+        # The adaptation manager should simply return the same object.
         self.assert_(uk_plug is plug)
 
         return
@@ -57,13 +57,13 @@ class _TestAdapterRegistry(object):
         plug = ex.UKPlug()
 
         # Try to adapt it to a concrete type.
-        eu_plug = self.adapter_registry.adapt(plug, ex.EUPlug)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug)
 
         # There should be no way to adapt a UKPlug to a EUPlug.
         self.assertEqual(eu_plug, None)
 
         # Try to adapt it to an ABC.
-        eu_plug = self.adapter_registry.adapt(plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUStandard)
 
         # There should be no way to adapt a UKPlug to a EUPlug.
         self.assertEqual(eu_plug, None)
@@ -75,7 +75,7 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
@@ -84,12 +84,12 @@ class _TestAdapterRegistry(object):
         plug = ex.UKPlug()
 
         # Adapt it to an ABC.
-        eu_plug = self.adapter_registry.adapt(plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUStandard)
         self.assertIsNotNone(eu_plug)
         self.assertIsInstance(eu_plug, ex.UKStandardToEUStandard)
 
         # We shouldn't be able to adapt it to a *concrete* 'EUPlug' though.
-        eu_plug = self.adapter_registry.adapt(plug, ex.EUPlug)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug)
         self.assertIsNone(eu_plug)
 
         return
@@ -99,14 +99,14 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.EUStandardToJapanStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.JapanStandard
@@ -116,7 +116,7 @@ class _TestAdapterRegistry(object):
         uk_plug = ex.UKPlug()
 
         # Adapt it to a JapanStandard via the chain.
-        japan_plug = self.adapter_registry.adapt(uk_plug, ex.JapanStandard)
+        japan_plug = self.adaptation_manager.adapt(uk_plug, ex.JapanStandard)
         self.assertIsNotNone(japan_plug)
         self.assertIsInstance(japan_plug, ex.EUStandardToJapanStandard)
         self.assert_(japan_plug.adaptee.adaptee is uk_plug)
@@ -128,28 +128,28 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.EUStandardToJapanStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.JapanStandardToIraqStandard,
             from_protocol = ex.JapanStandard,
             to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.EUStandardToIraqStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.IraqStandard
@@ -159,7 +159,7 @@ class _TestAdapterRegistry(object):
         uk_plug = ex.UKPlug()
 
         # Adapt it to a IraqStandard via the chain.
-        iraq_plug = self.adapter_registry.adapt(uk_plug, ex.IraqStandard)
+        iraq_plug = self.adaptation_manager.adapt(uk_plug, ex.IraqStandard)
         self.assertIsNotNone(iraq_plug)
         self.assertIsInstance(iraq_plug, ex.EUStandardToIraqStandard)
         self.assert_(iraq_plug.adaptee.adaptee is uk_plug)
@@ -171,28 +171,28 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # UKStandard->JapanStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.UKStandardToJapanStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.JapanStandardToIraqStandard,
             from_protocol = ex.JapanStandard,
             to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.EUStandardToIraqStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.IraqStandard
@@ -202,7 +202,7 @@ class _TestAdapterRegistry(object):
         uk_plug = ex.UKPlug()
 
         # Adapt it to a IraqStandard via the chain.
-        iraq_plug = self.adapter_registry.adapt(uk_plug, ex.IraqStandard)
+        iraq_plug = self.adaptation_manager.adapt(uk_plug, ex.IraqStandard)
         self.assertIsNotNone(iraq_plug)
         self.assertIn(
             type(iraq_plug),
@@ -224,7 +224,7 @@ class _TestAdapterRegistry(object):
             else:
                 return None
 
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = travel_plug_to_eu_standard,
             from_protocol = ex.TravelPlug,
             to_protocol   = ex.EUStandard
@@ -234,7 +234,7 @@ class _TestAdapterRegistry(object):
         travel_plug = ex.TravelPlug(mode='Europe')
 
         # Adapt it to a EUStandard.
-        eu_plug = self.adapter_registry.adapt(travel_plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(travel_plug, ex.EUStandard)
         self.assertIsNotNone(eu_plug)
         self.assertIsInstance(eu_plug, ex.TravelPlugToEUStandard)
 
@@ -242,7 +242,7 @@ class _TestAdapterRegistry(object):
         travel_plug = ex.TravelPlug(mode='Asia')
 
         # Adapt it to a EUStandard.
-        eu_plug = self.adapter_registry.adapt(travel_plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(travel_plug, ex.EUStandard)
         self.assertIsNone(eu_plug)
 
         return
@@ -256,7 +256,7 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # FileType->IEditor.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.FileTypeToIEditor,
             from_protocol = ex.FileType,
             to_protocol   = ex.IEditor
@@ -264,7 +264,7 @@ class _TestAdapterRegistry(object):
 
         # Meanwhile, in a plugin far, far away ...
         # IScriptable->IPrintable.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.IScriptableToIUndoable,
             from_protocol = ex.IScriptable,
             to_protocol   = ex.IUndoable
@@ -275,7 +275,7 @@ class _TestAdapterRegistry(object):
 
         # Try to adapt to IPrintable: since we did not define an adapter
         # chain that goes from FileType to IPrintable, this should fail.
-        printable = self.adapter_registry.adapt(file_type, ex.IUndoable)
+        printable = self.adaptation_manager.adapt(file_type, ex.IUndoable)
         self.assertIsNone(printable)
 
         return
@@ -285,14 +285,14 @@ class _TestAdapterRegistry(object):
         ex = self.examples
 
         # BarChild->IFoo.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.TextEditorToIPrintable,
             from_protocol = ex.TextEditor,
             to_protocol   = ex.IPrintable
         )
 
         # Bar->IFoo.
-        self.adapter_registry.register_adapter_factory(
+        self.adaptation_manager.register_adapter_factory(
             factory       = ex.EditorToIPrintable,
             from_protocol = ex.Editor,
             to_protocol   = ex.IPrintable
@@ -303,29 +303,29 @@ class _TestAdapterRegistry(object):
 
         # Adapt to IFoo: we should get the BarChildToIFoo adapter, not the
         # BarToIFoo one.
-        foo = self.adapter_registry.adapt(text_editor, ex.IPrintable)
+        foo = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
         self.assertIsNotNone(foo)
         self.assertIs(type(foo), ex.TextEditorToIPrintable)
 
 
-class TestAdapterRegistryWithABCs(_TestAdapterRegistry, unittest.TestCase):
-    """ Test the adapter registry with ABCs. """
+class TestAdapterManagerWithABCs(_TestAdapterManager, unittest.TestCase):
+    """ Test the adaptation manager with ABCs. """
 
     examples = apptools.adaptation.tests.abc_examples
 
     @unittest.skip("We are not sure what the right behavior is in this case.")
     def test_spillover_adaptation_bug(self):
-        super(TestAdapterRegistryWithABCs, self).test_spillover_adaptation_bug()
+        super(TestAdapterManagerWithABCs, self).test_spillover_adaptation_bug()
 
 
 
-class TestAdapterRegistryWithInterfaces(_TestAdapterRegistry,unittest.TestCase):
-    """ Test the adapter registry with Interfaces. """
+class TestAdapterManagerWithInterfaces(_TestAdapterManager,unittest.TestCase):
+    """ Test the adaptation manager with Interfaces. """
 
     examples = apptools.adaptation.tests.interface_examples
 
     @unittest.skip("We are not sure what the right behavior is in this case.")
     def test_spillover_adaptation_bug(self):
-        super(TestAdapterRegistryWithInterfaces, self).test_spillover_adaptation_bug()
+        super(TestAdapterManagerWithInterfaces, self).test_spillover_adaptation_bug()
 
 #### EOF ######################################################################

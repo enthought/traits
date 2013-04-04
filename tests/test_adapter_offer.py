@@ -4,15 +4,15 @@
 import sys
 import unittest
 
-from apptools.adaptation.adapter_factory_offer import AdapterFactoryOffer
+from apptools.adaptation.adapter_offer import AdapterOffer
 
 
-class TestAdapterFactoryOffer(unittest.TestCase):
+class TestAdapterOffer(unittest.TestCase):
 
     def test_lazy_loading(self):
 
         LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
-        offer = AdapterFactoryOffer(
+        offer = AdapterOffer(
             factory       =(LAZY_EXAMPLES + '.IBarToIFoo'),
             from_protocol =(LAZY_EXAMPLES + '.IBar'),
             to_protocol   =(LAZY_EXAMPLES + '.IFoo'),
