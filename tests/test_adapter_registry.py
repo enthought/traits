@@ -72,17 +72,13 @@ class _TestAdapterRegistry(object):
 
     def test_one_step_adaptation(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.UKStandardToEUStandard,
-                from_protocol = ex.UKStandard,
-                to_protocol   = ex.EUStandard
-            )
+            factory       = ex.UKStandardToEUStandard,
+            from_protocol = ex.UKStandard,
+            to_protocol   = ex.EUStandard
         )
 
         plug = ex.UKPlug()
@@ -100,26 +96,20 @@ class _TestAdapterRegistry(object):
 
     def test_adapter_chaining(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.UKStandardToEUStandard,
-                from_protocol = ex.UKStandard,
-                to_protocol   = ex.EUStandard
-            )
+            factory       = ex.UKStandardToEUStandard,
+            from_protocol = ex.UKStandard,
+            to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.EUStandardToJapanStandard,
-                from_protocol = ex.EUStandard,
-                to_protocol   = ex.JapanStandard
-            )
+            factory       = ex.EUStandardToJapanStandard,
+            from_protocol = ex.EUStandard,
+            to_protocol   = ex.JapanStandard
         )
 
         # Create a UKPlug.
@@ -135,44 +125,34 @@ class _TestAdapterRegistry(object):
 
     def test_multiple_paths_unambiguous(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.UKStandardToEUStandard,
-                from_protocol = ex.UKStandard,
-                to_protocol   = ex.EUStandard
-            )
+            factory       = ex.UKStandardToEUStandard,
+            from_protocol = ex.UKStandard,
+            to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.EUStandardToJapanStandard,
-                from_protocol = ex.EUStandard,
-                to_protocol   = ex.JapanStandard
-            )
+            factory       = ex.EUStandardToJapanStandard,
+            from_protocol = ex.EUStandard,
+            to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.JapanStandardToIraqStandard,
-                from_protocol = ex.JapanStandard,
-                to_protocol   = ex.IraqStandard
-            )
+            factory       = ex.JapanStandardToIraqStandard,
+            from_protocol = ex.JapanStandard,
+            to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.EUStandardToIraqStandard,
-                from_protocol = ex.EUStandard,
-                to_protocol   = ex.IraqStandard
-            )
+            factory       = ex.EUStandardToIraqStandard,
+            from_protocol = ex.EUStandard,
+            to_protocol   = ex.IraqStandard
         )
 
         # Create a UKPlug.
@@ -188,44 +168,34 @@ class _TestAdapterRegistry(object):
 
     def test_multiple_paths_ambiguous(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # UKStandard->EUStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.UKStandardToEUStandard,
-                from_protocol = ex.UKStandard,
-                to_protocol   = ex.EUStandard
-            )
+            factory       = ex.UKStandardToEUStandard,
+            from_protocol = ex.UKStandard,
+            to_protocol   = ex.EUStandard
         )
 
         # UKStandard->JapanStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.UKStandardToJapanStandard,
-                from_protocol = ex.UKStandard,
-                to_protocol   = ex.JapanStandard
-            )
+            factory       = ex.UKStandardToJapanStandard,
+            from_protocol = ex.UKStandard,
+            to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.JapanStandardToIraqStandard,
-                from_protocol = ex.JapanStandard,
-                to_protocol   = ex.IraqStandard
-            )
+            factory       = ex.JapanStandardToIraqStandard,
+            from_protocol = ex.JapanStandard,
+            to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.EUStandardToIraqStandard,
-                from_protocol = ex.EUStandard,
-                to_protocol   = ex.IraqStandard
-            )
+            factory       = ex.EUStandardToIraqStandard,
+            from_protocol = ex.EUStandard,
+            to_protocol   = ex.IraqStandard
         )
 
         # Create a UKPlug.
@@ -244,8 +214,6 @@ class _TestAdapterRegistry(object):
 
     def test_conditional_adaptation(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # TravelPlug->EUStandard.
@@ -257,11 +225,9 @@ class _TestAdapterRegistry(object):
                 return None
 
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = travel_plug_to_eu_standard,
-                from_protocol = ex.TravelPlug,
-                to_protocol   = ex.EUStandard
-            )
+            factory       = travel_plug_to_eu_standard,
+            from_protocol = ex.TravelPlug,
+            to_protocol   = ex.EUStandard
         )
 
         # Create a TravelPlug.
@@ -287,27 +253,21 @@ class _TestAdapterRegistry(object):
         # problem are cases of bad design, and without a good use case it's
         # unclear what the right behavior should be.
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # FileType->IEditor.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.FileTypeToIEditor,
-                from_protocol = ex.FileType,
-                to_protocol   = ex.IEditor
-            )
+            factory       = ex.FileTypeToIEditor,
+            from_protocol = ex.FileType,
+            to_protocol   = ex.IEditor
         )
 
         # Meanwhile, in a plugin far, far away ...
         # IScriptable->IPrintable.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.IScriptableToIUndoable,
-                from_protocol = ex.IScriptable,
-                to_protocol   = ex.IUndoable
-            )
+            factory       = ex.IScriptableToIUndoable,
+            from_protocol = ex.IScriptable,
+            to_protocol   = ex.IUndoable
         )
 
         # Create a file type.
@@ -322,26 +282,20 @@ class _TestAdapterRegistry(object):
 
     def test_adaptation_prefers_subclasses(self):
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
-
         ex = self.examples
 
         # BarChild->IFoo.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.TextEditorToIPrintable,
-                from_protocol = ex.TextEditor,
-                to_protocol   = ex.IPrintable
-            )
+            factory       = ex.TextEditorToIPrintable,
+            from_protocol = ex.TextEditor,
+            to_protocol   = ex.IPrintable
         )
 
         # Bar->IFoo.
         self.adapter_registry.register_adapter_factory(
-            AdapterFactory(
-                factory       = ex.EditorToIPrintable,
-                from_protocol = ex.Editor,
-                to_protocol   = ex.IPrintable
-            )
+            factory       = ex.EditorToIPrintable,
+            from_protocol = ex.Editor,
+            to_protocol   = ex.IPrintable
         )
 
         # Create a text editor.

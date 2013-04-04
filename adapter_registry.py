@@ -26,7 +26,8 @@ class AdapterRegistry(HasTraits):
 
         # We walk up the MRO hierarchy until the point where the `to_protocol`
         # is no longer provided. That's where the protocol was provided in
-        # the first place (e.g., the first super-class implementing an interface).
+        # the first place (e.g., the first super-class implementing an
+        # interface).
         distance = 0
         for t in inspect.getmro(from_type):
             if not AdapterRegistry.provides_protocol(t, to_protocol):
@@ -103,18 +104,24 @@ class AdapterRegistry(HasTraits):
 
         return result
 
+    def register_adapter_offer(self, offer):
+
+        self._adapter_factories.append(offer)
+
+        return
+
     def register_adapter_factory(self, factory, from_protocol, to_protocol):
         """ Registers an adapter factory. """
 
-        from apptools.adaptation.adapter_factory import AdapterFactory
+        from apptools.adaptation.adapter_factory_offer import AdapterFactoryOffer
 
-        offer = AdapterFactory(
+        offer = AdapterFactoryOffer(
             factory       = factory,
             from_protocol = from_protocol,
             to_protocol   = to_protocol
         )
 
-        self._adapter_factories.append(offer)
+        self.register_adapter_offer(offer)
 
         return
 
@@ -126,7 +133,6 @@ class AdapterRegistry(HasTraits):
         Returns None if no such adapter exists.
 
         """
-
 
         SUBCLASS_WEIGHT = 1e-9
 
