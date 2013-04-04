@@ -103,10 +103,18 @@ class AdapterRegistry(HasTraits):
 
         return result
 
-    def register_adapter_factory(self, factory):
+    def register_adapter_factory(self, factory, from_protocol, to_protocol):
         """ Registers an adapter factory. """
 
-        self._adapter_factories.append(factory)
+        from apptools.adaptation.adapter_factory import AdapterFactory
+
+        offer = AdapterFactory(
+            factory       = factory,
+            from_protocol = from_protocol,
+            to_protocol   = to_protocol
+        )
+
+        self._adapter_factories.append(offer)
 
         return
 
@@ -187,5 +195,17 @@ class AdapterRegistry(HasTraits):
         """ Returns the full class name for a class. """
 
         return "%s.%s" % (klass.__module__, klass.__name__)
+
+
+adapter_registry = AdapterRegistry()
+
+
+def register_adapter_factory(factory, from_protocol, to_protocol):
+
+    adapter_registry.register_adapter_factory(
+        factory, from_protocol, to_protocol
+    )
+
+    return
 
 #### EOF ######################################################################
