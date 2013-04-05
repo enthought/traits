@@ -6,7 +6,7 @@ from abc import ABCMeta
 
 #### 'Power plugs' metaphor ###################################################
 
-#### Protocols #################################################################
+#### Protocols ################################################################
 
 class UKStandard(object):
     __metaclass__ = ABCMeta
@@ -20,7 +20,7 @@ class JapanStandard(object):
 class IraqStandard(object):
     __metaclass__ = ABCMeta
 
-#### Implementations ###########################################################
+#### Implementations ##########################################################
 
 class UKPlug(object):
     pass
@@ -47,7 +47,7 @@ class TravelPlug(object):
     def __init__(self, mode):
         self.mode = mode
 
-#### Adapters ##################################################################
+#### Adapters #################################################################
 
 class Adapter(object):
     def __init__(self, adaptee):
@@ -96,7 +96,7 @@ class TravelPlugToEUStandard(Adapter):
 EUStandard.register(TravelPlugToEUStandard)
 
 
-#### 'File, Editor, Printable' metaphor #######################################
+#### 'Editor, Scriptable, Undoable' metaphor ##################################
 
 class FileType(object):
     pass

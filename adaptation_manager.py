@@ -170,7 +170,7 @@ class AdaptationManager(HasTraits):
         # to `to_protocol` is the shortest weighted path in this graph.
 
         # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
-        # of a billion objects to weight as much as one adaptation step. :-)
+        # a billion classes deep to weigh as much as one adaptation step. :-)
 
         visited = set()
         offer_queue = []

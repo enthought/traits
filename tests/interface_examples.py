@@ -65,7 +65,7 @@ class TravelPlugToEUStandard(Adapter):
     implements(EUStandard)
 
 
-#### 'File, Editor, Printable' metaphor #######################################
+#### 'Editor, Scriptable, Undoable' metaphor ##################################
 
 class FileType(HasTraits):
     pass
