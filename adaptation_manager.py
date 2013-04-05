@@ -35,7 +35,8 @@ class AdaptationManager(HasTraits):
         # the first place (e.g., the first super-class implementing an
         # interface).
         distance = 0
-        for t in inspect.getmro(from_type):
+        supertypes = inspect.getmro(from_type)[1:]
+        for t in supertypes:
             if not AdaptationManager.provides_protocol(t, to_protocol):
                 break
             distance += 1
@@ -143,83 +144,69 @@ class AdaptationManager(HasTraits):
 
     #### Private protocol #####################################################
 
-    def _adapt(self, adaptee, target_class):
+    _SUBCLASS_WEIGHT = 1e-9
+
+    def _adapt(self, adaptee, to_protocol):
         """ Returns an adapter that adapts an object to the target class.
 
         Returns None if no such adapter exists.
 
         """
 
-        SUBCLASS_WEIGHT = 1e-9
-
-        print '------------------------ adapt type', adaptee, target_class
-
-
-        # `factories_queue` is a priority queue. The values in the queue are
-        # tuples (adapter, factory). `factory` is the factory used to get
+        # `offer_queue` is a priority queue. The values in the queue are
+        # tuples (adapter, offer). `offer` is the adaptation offer used to get
         # from `adaptee` to `adapter` along the chain.
         # The priority in the priority queue corresponds to
         # the number of steps that it took to go from `adaptee` to `adapter`.
         # In order to prefer adaptation paths that do start at the most
         # specific classes along the chain, we add a small factor
-        # (SUBCLASS_WEIGHT) for each step up the MRO hierarchy that we need
+        # (SUBCLASS_WEIGHT) for each step up the type hierarchy that we need
         # to take.
 
         # In other words, we are considering a weighted graph of all classes.
         # Parent and child classes are connected with edges with a small weight
         # SUBCLASS_WEIGHT, classes related by adaptation are connected
         # with edges of weight 1.0 . The adaptation path from `adaptee`
-        # to `target_class` is the shortest weighted path in this graph.
+        # to `to_protocol` is the shortest weighted path in this graph.
 
         # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
-        # or a billion objects to weight as much as one adaptation step.
+        # of a billion objects to weight as much as one adaptation step. :-)
 
         visited = set()
+        offer_queue = []
 
-        factories_queue = []
+        self._get_outgoing_edges(offer_queue, visited, adaptee, 0.0)
 
-        for factory in self._adaptation_offers:
-            distance = self.mro_distance_to_protocol(
-                type(adaptee), factory.from_protocol
-            )
-            if distance is not None:
-                weight = distance * SUBCLASS_WEIGHT + 1.0
-                heappush(factories_queue, (weight, adaptee, factory))
-
-        while len(factories_queue) > 0:
-            weight, obj, factory = heappop(factories_queue)
-            print 'CONSIDERING', factory, 'WEIGHT', weight
-
-            adapter = factory.adapt(obj, factory.to_protocol)
+        while len(offer_queue) > 0:
+            # Get the most specific candidate path for adaptation.
+            weight, obj, factory = heappop(offer_queue)
             visited.add(factory)
 
-            print 'ADAPTER?', adapter
-            if self.provides_protocol(type(adapter), target_class):
+            adapter = factory.adapt(obj, factory.to_protocol)
+            # Check if we arrived at the target protocol.
+            if self.provides_protocol(type(adapter), to_protocol):
                 break
 
-            for factory in self._adaptation_offers:
-                if factory in visited:
-                    continue
-
-                distance = self.mro_distance_to_protocol(
-                    type(adapter), factory.from_protocol
-                )
-                if distance is not None:
-                    total_weight = weight + 1.0 + distance * SUBCLASS_WEIGHT
-                    heappush(
-                        factories_queue,
-                        (total_weight, adapter, factory)
-                    )
+            self._get_outgoing_edges(offer_queue, visited, adapter, weight+1.0)
 
         else:
             adapter = None
 
         return adapter
 
-    def _get_class_name(self, klass):
-        """ Returns the full class name for a class. """
+    def _get_outgoing_edges(self, queue, visited, obj, current_weight):
 
-        return "%s.%s" % (klass.__module__, klass.__name__)
+        for offer in self._adaptation_offers:
+            if offer in visited:
+                continue
+
+            distance = self.mro_distance_to_protocol(
+                type(obj), offer.from_protocol
+            )
+
+            if distance is not None:
+                weight = distance * self._SUBCLASS_WEIGHT + current_weight
+                heappush(queue, (weight, obj, offer))
 
 
 adaptation_manager = AdaptationManager()
