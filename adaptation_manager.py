@@ -116,9 +116,9 @@ class AdaptationManager(HasTraits):
     def register_adapter_factory(self, factory, from_protocol, to_protocol):
         """ Register an adapter factory. """
 
-        from apptools.adaptation.adapter_offer import AdapterOffer
+        from apptools.adaptation.adaptation_offer import AdaptationOffer
 
-        offer = AdapterOffer(
+        offer = AdaptationOffer(
             factory       = factory,
             from_protocol = from_protocol,
             to_protocol   = to_protocol

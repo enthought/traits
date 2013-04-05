@@ -1,4 +1,4 @@
-""" The abstract base class for adapter factories. """
+""" An offer to create adapters from one protocol to another. """
 
 
 from traits.api import Any, HasTraits, Property
@@ -7,15 +7,25 @@ from apptools.adaptation.adaptation_manager import AdaptationManager
 from apptools.naming.initial_context import _import_symbol
 
 
-class AdapterOffer(HasTraits):
+class AdaptationOffer(HasTraits):
+    """ An offer to create adapters from one protocol to another.
 
-    #### 'AdapterFactoryOffer' protocol #######################################
+    An adaptation offer consists of a factory for an adapter, and the
+    definition of the protocols from and to which an object can be adapted.
 
-    #: A callable that takes as only argument the adaptee and returns
-    #: an adapter instance.
-    #: It can be a string in the form 'foo.bar.baz' which is turned
-    #: into an import statement 'from foo.bar import baz' and imported when
-    #: this trait is first requested.
+    """
+
+    #### 'AdaptationOffer' protocol ###########################################
+
+    #: A factory for adapters.
+    #:
+    #: The factory takes one argument, the object to be adapted, and returns
+    #: an adapter from `from_protocol` to `to_protocol`.
+    #:
+    #: The factory can be specified as a callable object, or a string in the
+    #: form 'foo.bar.baz' which is turned into an import statement
+    #: 'from foo.bar import baz' and imported when this trait is first
+    #: requested.
     factory = Property(Any)
 
     #: Shadow attribute storing the value for the corresponding property.
@@ -74,7 +84,7 @@ class AdapterOffer(HasTraits):
 
     def adapt(self, obj, to_protocol):
 
-        if not AdaptationManager.provides_protocol(type(obj),self.from_protocol):
+        if not AdaptationManager.provides_protocol(type(obj), self.from_protocol):
             return None
 
         if to_protocol is not self.to_protocol:

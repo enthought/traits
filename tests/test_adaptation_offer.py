@@ -1,18 +1,19 @@
-""" Test the adapter factories. """
+""" Test the adaptation offers. """
 
 
 import sys
 import unittest
 
-from apptools.adaptation.adapter_offer import AdapterOffer
+from apptools.adaptation.adaptation_offer import AdaptationOffer
 
 
-class TestAdapterOffer(unittest.TestCase):
+class TestAdaptationOffer(unittest.TestCase):
+    """ Test the adaptation offers. """
 
     def test_lazy_loading(self):
 
         LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
-        offer = AdapterOffer(
+        offer = AdaptationOffer(
             factory       =(LAZY_EXAMPLES + '.IBarToIFoo'),
             from_protocol =(LAZY_EXAMPLES + '.IBar'),
             to_protocol   =(LAZY_EXAMPLES + '.IFoo'),
