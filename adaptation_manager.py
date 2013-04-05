@@ -4,7 +4,7 @@
 from heapq import heappop, heappush
 import inspect
 
-from traits.api import HasTraits, Interface, List, Property
+from traits.api import HasTraits, Instance, Interface, List
 
 
 class AdaptationManager(HasTraits):
@@ -61,21 +61,10 @@ class AdaptationManager(HasTraits):
 
         return provides_protocol
 
-    #### 'AdaptationManager' protocol ###########################################
-
-    # List of registered adapter factories.
-    adapter_offers = Property(List)
-
-    def _get_adapter_offers(self):
-        """ Trait property getter. """
-
-        return list(self._adapter_offers)
-
     #### Private interface ####################################################
 
-    # All registered type-scope factories by the type of object that they
-    # adapt.
-    _adapter_offers = List
+    #: All registered adaptation offers.
+    _adaptation_offers = List(Instance('apptools.adaptation.adaptation_offer.AdaptationOffer'))
 
     #### Methods ##############################################################
 
@@ -98,23 +87,26 @@ class AdaptationManager(HasTraits):
         if self.provides_protocol(type(adaptee), to_protocol):
             result = adaptee
 
-        # Otherwise, look at each class in the adaptee's MRO to see if there
-        # is an adapter factory registered that can adapt the object to the
-        # target class.
+        # Otherwise, try adapting the object.
         else:
-            result = self._adapt_type(adaptee, to_protocol)
+            result = self._adapt(adaptee, to_protocol)
 
         return result
 
-    def register_adapter_offer(self, offer):
-        """ Register an adapter offer. """
+    def register_adaptation_offer(self, offer):
+        """ Register an adaptation offer. """
 
-        self._adapter_offers.append(offer)
+        self._adaptation_offers.append(offer)
 
         return
 
     def register_adapter_factory(self, factory, from_protocol, to_protocol):
-        """ Register an adapter factory. """
+        """ Register an adapter factory.
+
+        This is a convenience method that creates an AdaptationOffer instance
+        from the given arguments and registers it.
+
+        """
 
         from apptools.adaptation.adaptation_offer import AdaptationOffer
 
@@ -124,13 +116,13 @@ class AdaptationManager(HasTraits):
             to_protocol   = to_protocol
         )
 
-        self.register_adapter_offer(offer)
+        self.register_adaptation_offer(offer)
 
         return
 
-    #### Private protocol ######################################################
+    #### Private protocol #####################################################
 
-    def _adapt_type(self, adaptee, target_class):
+    def _adapt(self, adaptee, target_class):
         """ Returns an adapter that adapts an object to the target class.
 
         Returns None if no such adapter exists.
@@ -140,7 +132,7 @@ class AdaptationManager(HasTraits):
         SUBCLASS_WEIGHT = 1e-9
 
         print '------------------------ adapt type', adaptee, target_class
-        print 'type factories', self._adapter_offers
+        print 'type factories', self._adaptation_offers
 
 
         # `factories_queue` is a priority queue. The values in the queue are
@@ -164,7 +156,7 @@ class AdaptationManager(HasTraits):
         visited = set()
 
         factories_queue = []
-        for factory in self._adapter_offers:
+        for factory in self._adaptation_offers:
             distance = self.mro_distance_to_protocol(
                 type(adaptee), factory.from_protocol
             )
@@ -188,7 +180,7 @@ class AdaptationManager(HasTraits):
             if self.provides_protocol(type(adapter), target_class):
                 break
 
-            for factory in self._adapter_offers:
+            for factory in self._adaptation_offers:
                 if factory in visited:
                     continue
 
@@ -221,9 +213,9 @@ def adapt(adaptee, to_protocol):
     return adaptation_manager.adapt(adaptee, to_protocol)
 
 
-def register_adapter_offer(offer):
+def register_adaptation_offer(offer):
 
-    adaptation_manager.register_adapter_offer(offer)
+    adaptation_manager.register_adaptation_offer(offer)
 
     return
 
