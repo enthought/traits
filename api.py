@@ -1,3 +1,5 @@
+from .adapter import Adapter, HasTraitsAdapter
+
 from .adaptation_manager import adapt, AdaptationError, \
     register_adapter_factory, register_adaptation_offer, supports_protocol
 
