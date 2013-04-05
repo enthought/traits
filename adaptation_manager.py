@@ -131,6 +131,16 @@ class AdaptationManager(HasTraits):
 
         return
 
+    def supports_protocol(self, obj, protocol):
+        """ Does object support a given protocol?
+
+        An object "supports" a protocol if either it "provides" it, or if
+        can be adapted to it.
+
+        """
+
+        return self.adapt(obj, protocol, None) is not None
+
     #### Private protocol #####################################################
 
     def _adapt(self, adaptee, target_class):
@@ -143,7 +153,6 @@ class AdaptationManager(HasTraits):
         SUBCLASS_WEIGHT = 1e-9
 
         print '------------------------ adapt type', adaptee, target_class
-        print 'type factories', self._adaptation_offers
 
 
         # `factories_queue` is a priority queue. The values in the queue are
@@ -159,7 +168,8 @@ class AdaptationManager(HasTraits):
         # In other words, we are considering a weighted graph of all classes.
         # Parent and child classes are connected with edges with a small weight
         # SUBCLASS_WEIGHT, classes related by adaptation are connected
-        # with edges of weight 1.0 .
+        # with edges of weight 1.0 . The adaptation path from `adaptee`
+        # to `target_class` is the shortest weighted path in this graph.
 
         # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
         # or a billion objects to weight as much as one adaptation step.
@@ -167,6 +177,7 @@ class AdaptationManager(HasTraits):
         visited = set()
 
         factories_queue = []
+
         for factory in self._adaptation_offers:
             distance = self.mro_distance_to_protocol(
                 type(adaptee), factory.from_protocol
@@ -176,7 +187,6 @@ class AdaptationManager(HasTraits):
                 heappush(factories_queue, (weight, adaptee, factory))
 
         while len(factories_queue) > 0:
-            print factories_queue
             weight, obj, factory = heappop(factories_queue)
             print 'CONSIDERING', factory, 'WEIGHT', weight
 
@@ -215,9 +225,9 @@ class AdaptationManager(HasTraits):
 adaptation_manager = AdaptationManager()
 
 
-def adapt(adaptee, to_protocol):
+def adapt(adaptee, to_protocol, default=AdaptationError):
 
-    return adaptation_manager.adapt(adaptee, to_protocol)
+    return adaptation_manager.adapt(adaptee, to_protocol, default=default)
 
 
 def register_adaptation_offer(offer):
@@ -234,5 +244,10 @@ def register_adapter_factory(factory, from_protocol, to_protocol):
     )
 
     return
+
+
+def supports_protocol(obj, protocol):
+
+    return adaptation_manager.supports_protocol(obj, protocol)
 
 #### EOF ######################################################################
