@@ -209,8 +209,11 @@ class AdaptationManager(HasTraits):
                 heappush(queue, (weight, obj, offer))
 
 
+#: Default global adaptation manager.
 adaptation_manager = AdaptationManager()
 
+
+# Convenience functions acting on the default adaptation manager.
 
 def adapt(adaptee, to_protocol, default=AdaptationError):
 
