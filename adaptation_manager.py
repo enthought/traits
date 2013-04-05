@@ -7,6 +7,10 @@ import inspect
 from traits.api import HasTraits, Instance, Interface, List
 
 
+class AdaptationError(TypeError):
+    pass
+
+
 class AdaptationManager(HasTraits):
     """ Keeps a registry of available adaptation paths and handles adaptation.
     """
@@ -68,17 +72,18 @@ class AdaptationManager(HasTraits):
 
     #### Methods ##############################################################
 
-    def adapt(self, adaptee, to_protocol):
+    def adapt(self, adaptee, to_protocol, default=AdaptationError):
         """ Returns an adapter that adapts an object to a given protocol.
 
-        'adaptee'     is the object that we want to adapt.
-        'to_protocol' is the protocol that the adaptee should be adapted to.
+        `adaptee`     is the object that we want to adapt.
+        `to_protocol` is the protocol that the adaptee should be adapted to.
 
-        If 'adaptee' already provides the given protocol then it is simply
-        returned unchanged.
+        If `adaptee` already provides the given protocol then it is simply
+        returned unchanged. Otherwise, we try to build a chain of adapters
+        that adapt `adaptee` to `to_protocol`.
 
-        Returns None if 'adaptee' does NOT provide the given protocol and no
-        adapter (or chain of adapters) exists to adapt it.
+        If no such chain exists, an AdaptationError is raised unless a
+        `default` return value is specified.
 
         """
 
@@ -90,6 +95,12 @@ class AdaptationManager(HasTraits):
         # Otherwise, try adapting the object.
         else:
             result = self._adapt(adaptee, to_protocol)
+
+        if result is None:
+            if default is AdaptationError:
+                raise AdaptationError
+            else:
+                result = default
 
         return result
 
@@ -160,13 +171,9 @@ class AdaptationManager(HasTraits):
             distance = self.mro_distance_to_protocol(
                 type(adaptee), factory.from_protocol
             )
-            print 'TYPE DIST', distance
             if distance is not None:
                 weight = distance * SUBCLASS_WEIGHT + 1.0
                 heappush(factories_queue, (weight, adaptee, factory))
-
-        print 'adaptee', adaptee, type(adaptee)
-        print '-----------factories', factories_queue
 
         while len(factories_queue) > 0:
             print factories_queue

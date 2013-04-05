@@ -57,13 +57,13 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         plug = ex.UKPlug()
 
         # Try to adapt it to a concrete type.
-        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug, None)
 
         # There should be no way to adapt a UKPlug to a EUPlug.
         self.assertEqual(eu_plug, None)
 
         # Try to adapt it to an ABC.
-        eu_plug = self.adaptation_manager.adapt(plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUStandard, None)
 
         # There should be no way to adapt a UKPlug to a EUPlug.
         self.assertEqual(eu_plug, None)
@@ -89,7 +89,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsInstance(eu_plug, ex.UKStandardToEUStandard)
 
         # We shouldn't be able to adapt it to a *concrete* 'EUPlug' though.
-        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug)
+        eu_plug = self.adaptation_manager.adapt(plug, ex.EUPlug, None)
         self.assertIsNone(eu_plug)
 
         return
@@ -242,7 +242,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         travel_plug = ex.TravelPlug(mode='Asia')
 
         # Adapt it to a EUStandard.
-        eu_plug = self.adaptation_manager.adapt(travel_plug, ex.EUStandard)
+        eu_plug = self.adaptation_manager.adapt(travel_plug, ex.EUStandard, None)
         self.assertIsNone(eu_plug)
 
         return
@@ -275,7 +275,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         # Try to adapt to IPrintable: since we did not define an adapter
         # chain that goes from FileType to IPrintable, this should fail.
-        printable = self.adaptation_manager.adapt(file_type, ex.IUndoable)
+        printable = self.adaptation_manager.adapt(file_type, ex.IUndoable, None)
         self.assertIsNone(printable)
 
         return
@@ -335,8 +335,23 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         obj = []
 
         # Try to adapt to an unreachable target.
-        bar = self.adaptation_manager.adapt(obj, Bar)
+        bar = self.adaptation_manager.adapt(obj, Bar, None)
         self.assertIsNone(bar)
+
+    def test_default_argument_in_adapt(self):
+
+        from apptools.adaptation.adaptation_manager import AdaptationError
+
+        # Without a default argument, a failed adaptation raises an error.
+        with self.assertRaises(AdaptationError):
+            self.adaptation_manager.adapt('string', int)
+
+        # With a default argument, a failed adaptation returns the default.
+        default = 'default'
+        result = self.adaptation_manager.adapt('string', int, default=default)
+        self.assertIs(result, default)
+
+        return
 
 
 class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
