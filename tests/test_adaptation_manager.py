@@ -3,16 +3,16 @@
 
 import unittest
 
-from apptools.adaptation.adapter_manager import AdaptationManager
+from apptools.adaptation.adaptation_manager import AdaptationManager
 import apptools.adaptation.tests.abc_examples
 import apptools.adaptation.tests.interface_examples
 
 
-class _TestAdapterManager(object):
+class TestAdaptationManagerWithABC(unittest.TestCase):
     """ Test the adapter manager. """
 
     #: Class attribute pointing at the module containing the example data
-    examples = None
+    examples = apptools.adaptation.tests.abc_examples
 
     #### 'TestCase' protocol ##################################################
 
@@ -120,7 +120,7 @@ class _TestAdapterManager(object):
         self.assertIsNotNone(japan_plug)
         self.assertIsInstance(japan_plug, ex.EUStandardToJapanStandard)
         self.assert_(japan_plug.adaptee.adaptee is uk_plug)
-        
+
         return
 
     def test_multiple_paths_unambiguous(self):
@@ -247,7 +247,7 @@ class _TestAdapterManager(object):
 
         return
 
-    # skip
+    @unittest.skip("We are not sure what the right behavior is in this case.")
     def test_spillover_adaptation_bug(self):
         # We skip this test: all the example we could come up with for this
         # problem are cases of bad design, and without a good use case it's
@@ -284,14 +284,14 @@ class _TestAdapterManager(object):
 
         ex = self.examples
 
-        # BarChild->IFoo.
+        # TextEditor->IPrintable.
         self.adaptation_manager.register_adapter_factory(
             factory       = ex.TextEditorToIPrintable,
             from_protocol = ex.TextEditor,
             to_protocol   = ex.IPrintable
         )
 
-        # Bar->IFoo.
+        # Editor->IPrintable.
         self.adaptation_manager.register_adapter_factory(
             factory       = ex.EditorToIPrintable,
             from_protocol = ex.Editor,
@@ -301,31 +301,48 @@ class _TestAdapterManager(object):
         # Create a text editor.
         text_editor = ex.TextEditor()
 
-        # Adapt to IFoo: we should get the BarChildToIFoo adapter, not the
-        # BarToIFoo one.
-        foo = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
-        self.assertIsNotNone(foo)
-        self.assertIs(type(foo), ex.TextEditorToIPrintable)
+        # Adapt to IPrintable: we should get the TextEditorToIPrintable
+        # adapter, not the EditorToIPrintable one.
+        printable = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
+        self.assertIsNotNone(printable)
+        self.assertIs(type(printable), ex.TextEditorToIPrintable)
+
+    def test_circular_adaptation(self):
+        # Circles in the adaptation graph should not lead to infinite loops
+        # when it is impossible to reach the target.
+
+        class Foo(object):
+            pass
+
+        class Bar(object):
+            pass
+
+        # object->Foo
+        self.adaptation_manager.register_adapter_factory(
+            factory = lambda adaptee: Foo(),
+            from_protocol = object,
+            to_protocol   = Foo
+        )
+
+        # Foo->object
+        self.adaptation_manager.register_adapter_factory(
+            factory = lambda adaptee: [],
+            from_protocol = Foo,
+            to_protocol   = object
+        )
+
+        # Create an object.
+        obj = []
+
+        # Try to adapt to an unreachable target.
+        bar = self.adaptation_manager.adapt(obj, Bar)
+        self.assertIsNone(bar)
 
 
-class TestAdapterManagerWithABCs(_TestAdapterManager, unittest.TestCase):
-    """ Test the adaptation manager with ABCs. """
-
-    examples = apptools.adaptation.tests.abc_examples
-
-    @unittest.skip("We are not sure what the right behavior is in this case.")
-    def test_spillover_adaptation_bug(self):
-        super(TestAdapterManagerWithABCs, self).test_spillover_adaptation_bug()
-
-
-
-class TestAdapterManagerWithInterfaces(_TestAdapterManager,unittest.TestCase):
+class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     """ Test the adaptation manager with Interfaces. """
 
     examples = apptools.adaptation.tests.interface_examples
 
-    @unittest.skip("We are not sure what the right behavior is in this case.")
-    def test_spillover_adaptation_bug(self):
-        super(TestAdapterManagerWithInterfaces, self).test_spillover_adaptation_bug()
 
 #### EOF ######################################################################

@@ -161,6 +161,8 @@ class AdaptationManager(HasTraits):
         # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
         # or a billion objects to weight as much as one adaptation step.
 
+        visited = set()
+
         factories_queue = []
         for factory in self._adapter_offers:
             distance = self.mro_distance_to_protocol(
@@ -173,18 +175,23 @@ class AdaptationManager(HasTraits):
 
         print 'adaptee', adaptee, type(adaptee)
         print '-----------factories', factories_queue
-        
+
         while len(factories_queue) > 0:
             print factories_queue
             weight, obj, factory = heappop(factories_queue)
             print 'CONSIDERING', factory, 'WEIGHT', weight
 
             adapter = factory.adapt(obj, factory.to_protocol)
+            visited.add(factory)
+
             print 'ADAPTER?', adapter
             if self.provides_protocol(type(adapter), target_class):
                 break
 
             for factory in self._adapter_offers:
+                if factory in visited:
+                    continue
+
                 distance = self.mro_distance_to_protocol(
                     type(adapter), factory.from_protocol
                 )
@@ -199,7 +206,7 @@ class AdaptationManager(HasTraits):
             adapter = None
 
         return adapter
-        
+
     def _get_class_name(self, klass):
         """ Returns the full class name for a class. """
 

@@ -3,7 +3,7 @@
 
 from traits.api import Any, HasTraits, Property
 
-from apptools.adaptation.adapter_manager import AdaptationManager
+from apptools.adaptation.adaptation_manager import AdaptationManager
 from apptools.naming.initial_context import _import_symbol
 
 
