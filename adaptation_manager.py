@@ -160,23 +160,24 @@ class AdaptationManager(HasTraits):
         # the number of steps that it took to go from `adaptee` to `adapter`.
         # In order to prefer adaptation paths that do start at the most
         # specific classes along the chain, we add a small factor
-        # (SUBCLASS_WEIGHT) for each step up the type hierarchy that we need
+        # (_SUBCLASS_WEIGHT) for each step up the type hierarchy that we need
         # to take.
 
         # In other words, we are considering a weighted graph of all classes.
         # Parent and child classes are connected with edges with a small weight
-        # SUBCLASS_WEIGHT, classes related by adaptation are connected
+        # _SUBCLASS_WEIGHT, classes related by adaptation are connected
         # with edges of weight 1.0 . The adaptation path from `adaptee`
         # to `to_protocol` is the shortest weighted path in this graph.
 
-        # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
+        # _SUBCLASS_WEIGHT is small enough that it would take a hierarchy
         # a billion classes deep to weigh as much as one adaptation step. :-)
 
         # Warning: The criterion for an outgoing edge being already visited
         # is that the adaptation offer (adapter factory, from, to protocol)
-        # has been already used once. In a very strange adaptation graph,
-        # the application of an adaptation offer might succeed at a later
-        # point in time (e.g., if the adapters have side effects on creation).
+        # has been already used sucessfully once. In a very strange adaptation
+        # graph, the application of an adaptation offer might lead to the
+        # target protocol at a later point in time (e.g., if the adapters have
+        # side effects on creation).
         # All the examples we considered for this case turn out to be
         # exceptionally bad designs of adapters, so we think these cases
         # can be safely regarded as irrelevant.
@@ -222,8 +223,9 @@ class AdaptationManager(HasTraits):
 
             if distance is not None:
                 adapter = offer.adapt(current, offer.to_protocol)
-                visited.add(offer)
-                yield adapter, distance * self._SUBCLASS_WEIGHT
+                if adapter is not None:
+                    visited.add(offer)
+                    yield adapter, distance * self._SUBCLASS_WEIGHT
 
 
 #: Default global adaptation manager.
