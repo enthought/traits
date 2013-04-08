@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2012 by Enthought, Inc.
+# Copyright (c) 2008-2013 by Enthought, Inc.
 # All rights reserved.
 
 from os.path import join
