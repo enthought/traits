@@ -1,10 +1,18 @@
 """ Helper module, providing a common API for tasks that require a different implementation in python 2 and 3.
 """
 
-from __future__ import print_function,with_statement,division
+from __future__ import division, absolute_import
 
 import sys
 
+
+if sys.version_info.major < 3:
+    import string
+    str_find = string.find
+    str_rfind = string.rfind
+else:
+    str_find = str.find
+    str_rfind = str.rfind
 
 if sys.version_info.major < 3:
     from types import InstanceType,ClassType
