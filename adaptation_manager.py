@@ -172,41 +172,58 @@ class AdaptationManager(HasTraits):
         # SUBCLASS_WEIGHT is small enough that it would take a hierarchy
         # a billion classes deep to weigh as much as one adaptation step. :-)
 
-        visited = set()
-        offer_queue = []
+        # Warning: The criterion for an outgoing edge being already visited
+        # is that the adaptation offer (adapter factory, from, to protocol)
+        # has been already used once. In a very strange adaptation graph,
+        # the application of an adaptation offer might succeed at a later
+        # point in time (e.g., if the adapters have side effects on creation).
+        # All the examples we considered for this case turn out to be
+        # exceptionally bad designs of adapters, so we think these cases
+        # can be safely regarded as irrelevant.
 
-        self._get_outgoing_edges(offer_queue, visited, adaptee, 0.0)
+        visited = set()
+        offer_queue = [(0.0, adaptee)]
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            weight, obj, factory = heappop(offer_queue)
-            visited.add(factory)
+            path_weight, obj = heappop(offer_queue)
 
-            adapter = factory.adapt(obj, factory.to_protocol)
-            # Check if we arrived at the target protocol.
-            if self.provides_protocol(type(adapter), to_protocol):
-                break
+            for adapter, edge_weight in self._outgoing_edges(obj, visited):
+                # Check if we arrived at the target protocol.
+                if self.provides_protocol(type(adapter), to_protocol):
+                    return adapter
 
-            self._get_outgoing_edges(offer_queue, visited, adapter, weight+1.0)
+                # Otherwise, push the new path on the priority queue.
+                total_weight = edge_weight  + path_weight + 1.0
+                heappush(offer_queue, (total_weight, adapter))
 
-        else:
-            adapter = None
+        return None
 
-        return adapter
+    def _outgoing_edges(self, current, visited):
+        """ Generator over outgoing edges in the adaptation graph.
 
-    def _get_outgoing_edges(self, queue, visited, obj, current_weight):
+        Given the current object in the adaptation graph, and a reference
+        to the set of visited nodes (i.e., adapters), return a generator
+        over outgoing edges, represented as a tuple (node, weight), where
+        'node' is the child adapter, and weight is the weight of the outgoing
+        edge connecting `current` to 'node'.
+
+        Please node that the generator has a side effect, as it modifies
+        the `visited` set, which is used in future iterations.
+        """
 
         for offer in self._adaptation_offers:
             if offer in visited:
                 continue
 
             distance = self.mro_distance_to_protocol(
-                type(obj), offer.from_protocol
+                type(current), offer.from_protocol
             )
 
             if distance is not None:
-                weight = distance * self._SUBCLASS_WEIGHT + current_weight
-                heappush(queue, (weight, obj, offer))
+                adapter = offer.adapt(current, offer.to_protocol)
+                visited.add(offer)
+                yield adapter, distance * self._SUBCLASS_WEIGHT
 
 
 #: Default global adaptation manager.
