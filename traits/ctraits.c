@@ -690,7 +690,8 @@ get_callable_value ( PyObject * value ) {
         value = is_callable;
         Py_INCREF( value );
     } else if ( PyTuple_Check( value ) &&
-              (Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+              ( PyTuple_GET_SIZE( value ) >= 3 ) &&
+              ( Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
@@ -700,6 +701,8 @@ get_callable_value ( PyObject * value ) {
             PyTuple_SET_ITEM( tuple, 2, is_callable );
             Py_INCREF( is_callable );
             value = tuple;
+        } else {
+            value = NULL;
         }
     } else {
         Py_INCREF( value );
