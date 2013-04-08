@@ -217,7 +217,7 @@ class AbstractArray ( TraitType ):
 
         return 'an array%s%s' % ( dtype, shape )
 
-    def get_editor ( self, trait = None ):
+    def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         editor = None
