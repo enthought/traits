@@ -217,6 +217,9 @@ class AdaptationManager(HasTraits):
             if offer in visited:
                 continue
 
+            # TODO: This method could be safely cached on each adaptation
+            # attempt (NOT across adaptations), which could result in big
+            # speed-ups for wide adaptation graphs.
             distance = self.mro_distance_to_protocol(
                 type(current), offer.from_protocol
             )
