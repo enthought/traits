@@ -641,7 +641,8 @@ get_callable_value ( PyObject * value ) {
         value = is_callable;
         Py_INCREF( value );
     } else if ( PyTuple_Check( value ) &&
-              (PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+              ( PyTuple_GET_SIZE( value ) >= 3 ) &&
+              ( PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
