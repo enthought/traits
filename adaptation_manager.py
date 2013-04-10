@@ -183,35 +183,28 @@ class AdaptationManager(HasTraits):
         # can be safely regarded as irrelevant.
 
         visited = set()
-        offer_queue = [(0.0, adaptee)]
+        offer_queue = []
+
+        self._get_outgoing_edges(offer_queue, visited, adaptee, 0.0)
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            path_weight, obj = heappop(offer_queue)
+            weight, obj, factory = heappop(offer_queue)
+            visited.add(factory)
 
-            for adapter, edge_weight in self._outgoing_edges(obj, visited):
-                # Check if we arrived at the target protocol.
-                if self.provides_protocol(type(adapter), to_protocol):
-                    return adapter
+            adapter = factory.adapt(obj, factory.to_protocol)
+            # Check if we arrived at the target protocol.
+            if self.provides_protocol(type(adapter), to_protocol):
+                break
 
-                # Otherwise, push the new path on the priority queue.
-                total_weight = edge_weight  + path_weight + 1.0
-                heappush(offer_queue, (total_weight, adapter))
+            self._get_outgoing_edges(offer_queue, visited, adapter, weight+1.0)
 
-        return None
+        else:
+            adapter = None
 
-    def _outgoing_edges(self, current, visited):
-        """ Generator over outgoing edges in the adaptation graph.
+        return adapter
 
-        Given the current object in the adaptation graph, and a reference
-        to the set of visited nodes (i.e., adapters), return a generator
-        over outgoing edges, represented as a tuple (node, weight), where
-        'node' is the child adapter, and weight is the weight of the outgoing
-        edge connecting `current` to 'node'.
-
-        Please node that the generator has a side effect, as it modifies
-        the `visited` set, which is used in future iterations.
-        """
+    def _get_outgoing_edges(self, queue, visited, obj, current_weight):
 
         for offer in self._adaptation_offers:
             if offer in visited:
@@ -221,14 +214,12 @@ class AdaptationManager(HasTraits):
             # attempt (NOT across adaptations), which could result in big
             # speed-ups for wide adaptation graphs.
             distance = self.mro_distance_to_protocol(
-                type(current), offer.from_protocol
+                type(obj), offer.from_protocol
             )
 
             if distance is not None:
-                adapter = offer.adapt(current, offer.to_protocol)
-                if adapter is not None:
-                    visited.add(offer)
-                    yield adapter, distance * self._SUBCLASS_WEIGHT
+                weight = distance * self._SUBCLASS_WEIGHT + current_weight
+                heappush(queue, (weight, obj, offer))
 
 
 #: Default global adaptation manager.
