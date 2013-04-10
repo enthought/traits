@@ -307,6 +307,36 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(printable)
         self.assertIs(type(printable), ex.TextEditorToIPrintable)
 
+    def test_adaptation_prefers_subclasses_other_registration_order(self):
+        # This test is identical to `test_adaptation_prefers_subclasses`
+        # with adapters registered in the opposite order. Both of them
+        # should pass
+
+        ex = self.examples
+
+        # Editor->IPrintable.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.EditorToIPrintable,
+            from_protocol = ex.Editor,
+            to_protocol   = ex.IPrintable
+        )
+
+        # TextEditor->IPrintable.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.TextEditorToIPrintable,
+            from_protocol = ex.TextEditor,
+            to_protocol   = ex.IPrintable
+        )
+
+        # Create a text editor.
+        text_editor = ex.TextEditor()
+
+        # Adapt to IPrintable: we should get the TextEditorToIPrintable
+        # adapter, not the EditorToIPrintable one.
+        printable = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
+        self.assertIsNotNone(printable)
+        self.assertIs(type(printable), ex.TextEditorToIPrintable)
+
     def test_circular_adaptation(self):
         # Circles in the adaptation graph should not lead to infinite loops
         # when it is impossible to reach the target.
