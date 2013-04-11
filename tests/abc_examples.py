@@ -147,11 +147,14 @@ IPrintable.register(TextEditorToIPrintable)
 
 #### Interface hierarchy example ##############################################
 
-class IFather(object):
+class IHuman(object):
     __metaclass__ = ABCMeta
 
-class IChild(IFather):
+class IChild(IHuman):
     pass
+
+class IIntermediate(object):
+    __metaclass__ = ABCMeta
 
 class ITarget(object):
     __metaclass__ = ABCMeta
@@ -161,14 +164,19 @@ class Source(object):
 
 IChild.register(Source)
 
-class IChildToITarget(Adapter):
+class IChildToIIntermediate(Adapter):
     pass
 
-ITarget.register(IChildToITarget)
+IIntermediate.register(IChildToIIntermediate)
 
-class IFatherToITarget(Adapter):
+class IFatherToIIntermediate(Adapter):
     pass
 
-ITarget.register(IFatherToITarget)
+IIntermediate.register(IFatherToIIntermediate)
+
+class IIntermediateToITarget(Adapter):
+    pass
+
+ITarget.register(IIntermediateToITarget)
 
 #### EOF ######################################################################

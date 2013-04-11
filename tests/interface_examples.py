@@ -107,10 +107,13 @@ class TextEditorToIPrintable(Adapter):
 
 #### Interface hierarchy example ##############################################
 
-class IFather(Interface):
+class IHuman(Interface):
     pass
 
-class IChild(IFather):
+class IChild(IHuman):
+    pass
+
+class IIntermediate(Interface):
     pass
 
 class ITarget(Interface):
@@ -119,10 +122,13 @@ class ITarget(Interface):
 class Source(HasTraits):
     implements(IChild)
 
-class IChildToITarget(Adapter):
-    implements(ITarget)
+class IChildToIIntermediate(Adapter):
+    implements(IIntermediate)
 
-class IFatherToITarget(Adapter):
+class IFatherToIIntermediate(Adapter):
+    implements(IIntermediate)
+
+class IIntermediateToITarget(Adapter):
     implements(ITarget)
 
 #### EOF ######################################################################

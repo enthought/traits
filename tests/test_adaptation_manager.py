@@ -393,28 +393,35 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         ex = self.examples
 
-        # IFather -> ITarget.
+        # IIntermediate -> ITarget.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IFatherToITarget,
-            from_protocol = ex.IFather,
+            factory       = ex.IIntermediateToITarget,
+            from_protocol = ex.IIntermediate,
             to_protocol   = ex.ITarget
         )
 
-        # IChild -> ITarget.
+        # IHuman -> IIntermediate.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IChildToITarget,
+            factory       = ex.IFatherToIIntermediate,
+            from_protocol = ex.IHuman,
+            to_protocol   = ex.IIntermediate
+        )
+
+        # IChild -> IIntermediate.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IChildToIIntermediate,
             from_protocol = ex.IChild,
-            to_protocol   = ex.ITarget
+            to_protocol   = ex.IIntermediate
         )
 
         # Create a source.
         source = ex.Source()
 
         # Adapt to ITarget: we should get the adapter for the most specific
-        # interface, i.s. IChildToITarget.
+        # interface, i.e. IChildToITarget.
         target = self.adaptation_manager.adapt(source, ex.ITarget)
         self.assertIsNotNone(target)
-        self.assertIs(type(target), ex.IChildToITarget)
+        self.assertIs(type(target.adaptee), ex.IChildToIIntermediate)
 
         return
 
@@ -424,17 +431,24 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         ex = self.examples
 
-        # IChild -> ITarget.
+        # IChild -> IIntermediate.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IChildToITarget,
+            factory       = ex.IChildToIIntermediate,
             from_protocol = ex.IChild,
-            to_protocol   = ex.ITarget
+            to_protocol   = ex.IIntermediate
         )
 
-        # IFather -> ITarget.
+        # IHuman -> IIntermediate.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IFatherToITarget,
-            from_protocol = ex.IFather,
+            factory       = ex.IFatherToIIntermediate,
+            from_protocol = ex.IHuman,
+            to_protocol   = ex.IIntermediate
+        )
+
+        # IIntermediate -> ITarget.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IIntermediateToITarget,
+            from_protocol = ex.IIntermediate,
             to_protocol   = ex.ITarget
         )
 
@@ -442,10 +456,10 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         source = ex.Source()
 
         # Adapt to ITarget: we should get the adapter for the most specific
-        # interface, i.s. IChildToITarget.
+        # interface, i.e. IChildToITarget.
         target = self.adaptation_manager.adapt(source, ex.ITarget)
         self.assertIsNotNone(target)
-        self.assertIs(type(target), ex.IChildToITarget)
+        self.assertIs(type(target.adaptee), ex.IChildToIIntermediate)
 
         return
 
