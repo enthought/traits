@@ -307,6 +307,8 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         self.assertIsNotNone(printable)
         self.assertIs(type(printable), ex.TextEditorToIPrintable)
 
+        return
+
     def test_adaptation_prefers_subclasses_other_registration_order(self):
         # This test is identical to `test_adaptation_prefers_subclasses`
         # with adapters registered in the opposite order. Both of them
@@ -336,6 +338,8 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         printable = self.adaptation_manager.adapt(text_editor, ex.IPrintable)
         self.assertIsNotNone(printable)
         self.assertIs(type(printable), ex.TextEditorToIPrintable)
+
+        return
 
     def test_circular_adaptation(self):
         # Circles in the adaptation graph should not lead to infinite loops
@@ -368,6 +372,8 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         bar = self.adaptation_manager.adapt(obj, Bar, None)
         self.assertIsNone(bar)
 
+        return
+
     def test_default_argument_in_adapt(self):
 
         from apptools.adaptation.adaptation_manager import AdaptationError
@@ -380,6 +386,66 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         default = 'default'
         result = self.adaptation_manager.adapt('string', int, default=default)
         self.assertIs(result, default)
+
+        return
+
+    def test_prefer_specific_interfaces(self):
+
+        ex = self.examples
+
+        # IFather -> ITarget.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IFatherToITarget,
+            from_protocol = ex.IFather,
+            to_protocol   = ex.ITarget
+        )
+
+        # IChild -> ITarget.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IChildToITarget,
+            from_protocol = ex.IChild,
+            to_protocol   = ex.ITarget
+        )
+
+        # Create a source.
+        source = ex.Source()
+
+        # Adapt to ITarget: we should get the adapter for the most specific
+        # interface, i.s. IChildToITarget.
+        target = self.adaptation_manager.adapt(source, ex.ITarget)
+        self.assertIsNotNone(target)
+        self.assertIs(type(target), ex.IChildToITarget)
+
+        return
+
+    def test_prefer_specific_interfaces_other_registration_order(self):
+        # Same as `test_prefer_specific_interfaces` inverting the
+        # registration order for the adaptation offers. Both tests should pass.
+
+        ex = self.examples
+
+        # IChild -> ITarget.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IChildToITarget,
+            from_protocol = ex.IChild,
+            to_protocol   = ex.ITarget
+        )
+
+        # IFather -> ITarget.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IFatherToITarget,
+            from_protocol = ex.IFather,
+            to_protocol   = ex.ITarget
+        )
+
+        # Create a source.
+        source = ex.Source()
+
+        # Adapt to ITarget: we should get the adapter for the most specific
+        # interface, i.s. IChildToITarget.
+        target = self.adaptation_manager.adapt(source, ex.ITarget)
+        self.assertIsNotNone(target)
+        self.assertIs(type(target), ex.IChildToITarget)
 
         return
 

@@ -144,4 +144,31 @@ class TextEditorToIPrintable(Adapter):
 
 IPrintable.register(TextEditorToIPrintable)
 
+
+#### Interface hierarchy example ##############################################
+
+class IFather(object):
+    __metaclass__ = ABCMeta
+
+class IChild(IFather):
+    pass
+
+class ITarget(object):
+    __metaclass__ = ABCMeta
+
+class Source(object):
+    pass
+
+IChild.register(Source)
+
+class IChildToITarget(Adapter):
+    pass
+
+ITarget.register(IChildToITarget)
+
+class IFatherToITarget(Adapter):
+    pass
+
+ITarget.register(IFatherToITarget)
+
 #### EOF ######################################################################

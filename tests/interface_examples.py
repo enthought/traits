@@ -104,4 +104,25 @@ class EditorToIPrintable(Adapter):
 class TextEditorToIPrintable(Adapter):
     implements(IPrintable)
 
+
+#### Interface hierarchy example ##############################################
+
+class IFather(Interface):
+    pass
+
+class IChild(IFather):
+    pass
+
+class ITarget(Interface):
+    pass
+
+class Source(HasTraits):
+    implements(IChild)
+
+class IChildToITarget(Adapter):
+    implements(ITarget)
+
+class IFatherToITarget(Adapter):
+    implements(ITarget)
+
 #### EOF ######################################################################

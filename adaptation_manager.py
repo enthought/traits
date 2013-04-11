@@ -3,6 +3,7 @@
 
 from heapq import heappop, heappush
 import inspect
+import itertools
 
 from traits.api import HasTraits, Instance, Interface, List
 
@@ -174,7 +175,7 @@ class AdaptationManager(HasTraits):
 
         # Warning: The criterion for an outgoing edge being already visited
         # is that the adaptation offer (adapter factory, from, to protocol)
-        # has been already used sucessfully once. In a very strange adaptation
+        # has been already used successfully once. In a very strange adaptation
         # graph, the application of an adaptation offer might lead to the
         # target protocol at a later point in time (e.g., if the adapters have
         # side effects on creation).
@@ -182,29 +183,65 @@ class AdaptationManager(HasTraits):
         # exceptionally bad designs of adapters, so we think these cases
         # can be safely regarded as irrelevant.
 
-        visited = set()
-        offer_queue = []
+        def cmp_weight_then_from_protocol_specificity(x, y):
+            # x and y are edges, i.e., (weight, offer)
 
-        self._get_outgoing_edges(offer_queue, visited, adaptee, 0.0)
+            x_weight, x_offer = x
+            y_weight, y_offer = y
+
+            if x_weight < y_weight:
+                return -1
+            elif x_weight > y_weight:
+                return 1
+
+            # The weight is equal.
+            if issubclass(x_offer.from_protocol, y_offer.from_protocol):
+                return -1
+            elif issubclass(x_offer.from_protocol, y_offer.from_protocol):
+                return 1
+
+            return 0
+
+        # Unique sequence counter to make the priority list stable
+        # w.r.t the sequence of insertion.
+        counter = itertools.count()
+
+        visited = set()
+        offer_queue = [(0.0, counter.next(), adaptee)]
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            weight, obj, factory = heappop(offer_queue)
-            visited.add(factory)
+            weight, count, obj = heappop(offer_queue)
 
-            adapter = factory.adapt(obj, factory.to_protocol)
-            # Check if we arrived at the target protocol.
-            if self.provides_protocol(type(adapter), to_protocol):
-                break
+            edges = self._get_outgoing_edges(obj, weight, visited)
 
-            self._get_outgoing_edges(offer_queue, visited, adapter, weight+1.0)
+            # Sort by weight first, then by from_protocol hierarchy.
+            edges.sort(cmp=cmp_weight_then_from_protocol_specificity)
 
-        else:
-            adapter = None
+            # At this point, the first edges are the shortest ones. Within
+            # edges with the same distance, interfaces which are subclasses
+            # of other interfaces in that group come first. The rest of
+            # the order is unspecified.
 
-        return adapter
+            for weight, offer in edges:
+                adapter = offer.adapt(obj, offer.to_protocol)
+                if adapter is not None:
+                    visited.add(offer)
 
-    def _get_outgoing_edges(self, queue, visited, obj, current_weight):
+                    # Check if we arrived at the target protocol.
+                    if self.provides_protocol(type(adapter), to_protocol):
+                        return adapter
+
+                    # Otherwise, push the new path on the priority queue.
+                    total_weight = weight  + 1.0
+                    count = next(counter)
+                    heappush(offer_queue, (total_weight, count, adapter))
+
+        return None
+
+    def _get_outgoing_edges(self, current_obj, current_weight, visited):
+
+        edges = []
 
         for offer in self._adaptation_offers:
             if offer in visited:
@@ -214,12 +251,14 @@ class AdaptationManager(HasTraits):
             # attempt (NOT across adaptations), which could result in big
             # speed-ups for wide adaptation graphs.
             distance = self.mro_distance_to_protocol(
-                type(obj), offer.from_protocol
+                type(current_obj), offer.from_protocol
             )
 
             if distance is not None:
                 weight = distance * self._SUBCLASS_WEIGHT + current_weight
-                heappush(queue, (weight, obj, offer))
+                edges.append((weight, offer))
+
+        return edges
 
 
 #: Default global adaptation manager.
