@@ -157,21 +157,17 @@ class AdaptationManager(HasTraits):
         # `offer_queue` is a priority queue. The values in the queue are
         # tuples (adapter, offer). `offer` is the adaptation offer used to get
         # from `adaptee` to `adapter` along the chain.
-        # The priority in the priority queue corresponds to
+        # The priority in the priority queue is a tuple: the first element is
         # the number of steps that it took to go from `adaptee` to `adapter`.
-        # In order to prefer adaptation paths that do start at the most
-        # specific classes along the chain, we add a small factor
-        # (_SUBCLASS_WEIGHT) for each step up the type hierarchy that we need
-        # to take.
+        # The second number is the number of step the type hierarchy that we
+        # need to take, so that more specific adapters are always preferred.
 
         # In other words, we are considering a weighted graph of all classes.
-        # Parent and child classes are connected with edges with a small weight
-        # _SUBCLASS_WEIGHT, classes related by adaptation are connected
-        # with edges of weight 1.0 . The adaptation path from `adaptee`
-        # to `to_protocol` is the shortest weighted path in this graph.
-
-        # _SUBCLASS_WEIGHT is small enough that it would take a hierarchy
-        # a billion classes deep to weigh as much as one adaptation step. :-)
+        # The adaptation path from `adaptee` to `to_protocol` is the shortest
+        # weighted path in this graph.
+        # The weights are 1 for each adapter we have to apply; parent and
+        # child classes are connected with edges with a very small weight
+        # (infinitesimally small).
 
         # Warning: The criterion for an outgoing edge being already visited
         # is that the adaptation offer (adapter factory, from, to protocol)
@@ -183,47 +179,33 @@ class AdaptationManager(HasTraits):
         # exceptionally bad designs of adapters, so we think these cases
         # can be safely regarded as irrelevant.
 
-        def cmp_weight_then_from_protocol_specificity(x, y):
-            # x and y are edges, i.e., (weight, offer)
-
-            x_weight, x_offer = x
-            y_weight, y_offer = y
-
-            if x_weight < y_weight:
-                return -1
-            elif x_weight > y_weight:
-                return 1
-
-            # The weight is equal.
-            if issubclass(x_offer.from_protocol, y_offer.from_protocol):
-                return -1
-            elif issubclass(x_offer.from_protocol, y_offer.from_protocol):
-                return 1
-
-            return 0
-
         # Unique sequence counter to make the priority list stable
         # w.r.t the sequence of insertion.
         counter = itertools.count()
 
+        # The priority queue containing entries of the form
+        # (cumulative weight, counter, object) describing the path
+        # from `adaptee` to `adapter`.
+        offer_queue = [((0, 0), counter.next(), adaptee)]
+
+        # The set of visited adaptation offers.
         visited = set()
-        offer_queue = [(0.0, counter.next(), adaptee)]
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            weight, count, obj = heappop(offer_queue)
+            path_weight, count, obj = heappop(offer_queue)
 
-            edges = self._get_outgoing_edges(obj, weight, visited)
+            edges = self._get_outgoing_edges(obj, visited)
 
             # Sort by weight first, then by from_protocol hierarchy.
-            edges.sort(cmp=cmp_weight_then_from_protocol_specificity)
+            edges.sort(cmp=_cmp_weight_then_from_protocol_specificity)
 
             # At this point, the first edges are the shortest ones. Within
             # edges with the same distance, interfaces which are subclasses
             # of other interfaces in that group come first. The rest of
             # the order is unspecified.
 
-            for weight, offer in edges:
+            for mro_distance, offer in edges:
                 adapter = offer.adapt(obj, offer.to_protocol)
                 if adapter is not None:
                     visited.add(offer)
@@ -233,13 +215,15 @@ class AdaptationManager(HasTraits):
                         return adapter
 
                     # Otherwise, push the new path on the priority queue.
-                    total_weight = weight  + 1.0
+                    path_adapter_weight, path_mro_weight = path_weight
+                    total_weight = (path_adapter_weight + 1,
+                                    path_mro_weight + mro_distance)
                     count = next(counter)
                     heappush(offer_queue, (total_weight, count, adapter))
 
         return None
 
-    def _get_outgoing_edges(self, current_obj, current_weight, visited):
+    def _get_outgoing_edges(self, current_obj, visited):
 
         edges = []
 
@@ -250,15 +234,35 @@ class AdaptationManager(HasTraits):
             # TODO: This method could be safely cached on each adaptation
             # attempt (NOT across adaptations), which could result in big
             # speed-ups for wide adaptation graphs.
-            distance = self.mro_distance_to_protocol(
+            mro_distance = self.mro_distance_to_protocol(
                 type(current_obj), offer.from_protocol
             )
 
-            if distance is not None:
-                weight = distance * self._SUBCLASS_WEIGHT + current_weight
-                edges.append((weight, offer))
+            if mro_distance is not None:
+                edges.append((mro_distance, offer))
 
         return edges
+
+
+def _cmp_weight_then_from_protocol_specificity(edge_1, edge_2):
+    # edge_1 and edge_2 are edges, of the form (mro_distance, offer)
+
+    edge_1_mro_distance, edge_1_offer = edge_1
+    edge_2_mro_distance, edge_2_offer = edge_2
+
+    # First, compare the MRO distance.
+    if edge_1_mro_distance < edge_2_mro_distance:
+        return -1
+    elif edge_1_mro_distance > edge_2_mro_distance:
+        return 1
+
+    # The distance is equal, prefer more specific 'from_protocol's
+    if issubclass(edge_1_offer.from_protocol, edge_2_offer.from_protocol):
+        return -1
+    elif issubclass(edge_1_offer.from_protocol, edge_2_offer.from_protocol):
+        return 1
+
+    return 0
 
 
 #: Default global adaptation manager.
