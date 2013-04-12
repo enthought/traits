@@ -98,10 +98,11 @@ class AdaptationOffer(HasTraits):
         template = "AdapterFactoryOffer: '{from_}' -> '{to}'"
 
         from_name = getattr(
-            self.from_protocol, __name__, str(self.from_protocol)
+            self._from_protocol, '__name__', str(self._from_protocol)
         )
+
         to_name = getattr(
-            self.to_protocol, __name__, str(self.to_protocol)
+            self._to_protocol, '__name__', str(self._to_protocol)
         )
 
         repr = template.format(from_=from_name, to=to_name)
