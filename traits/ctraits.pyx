@@ -44,6 +44,7 @@ cdef object _trait_notification_handler # User supplied trait */
     # notification handler (intended for use by debugging tools) */
 cdef PyTypeObject* ctrait_type  # Python-level CTrait type reference */
 
+cdef object NullObject = object()
 
 # Needed to make sense out of the C NULL returns on the C side and None on the
 # Python side.
@@ -107,6 +108,29 @@ ctypedef object (*delegate_attr_name_func)(cTrait, CHasTraits, object)
 cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
 
     cdef object result = trait.handler.error(obj, name, value)
+
+cdef object delete_readonly_error(obj, name):
+    """" Raise an attempt to delete read-only attribute error. """
+
+    raise TraitError(
+        "Cannot delete the read only '%.400s' attribute of a '%.50s' "
+        "object.".format(name, type(obj))
+    )
+
+cdef object set_readonly_error(obj, name):
+    """ Raise an attempt to set a read-only attribute error. """
+
+    raise TraitError(
+        "Cannot modify the read only '%.400s' attribute of a '%.50s' "
+        "object.".format(name, type(obj))
+    )
+
+cdef object invalid_attribute_error():
+    """ Raise an "attribute is not a string" error. """
+
+    raise TypeError('Attribute name must be a string.')
+
+
 
 cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is of a specified type (or None). """
@@ -1186,7 +1210,7 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
         return PyObject_Call(dv[0], dv[1], dv[2])
     elif vtype == 8:
         tuple_ = (obj,)
-        result = PyObject_Call(trait.internal_default_value, tuple, None)
+        result = PyObject_Call(trait.internal_default_value, tuple_, None)
         if result is not None and trait.validate is not NULL:
             value = trait.validate(trait, obj, name, result)
             return value
@@ -1333,14 +1357,14 @@ cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj,
                 temp = notifiers[:]
                 for i in xrange(n):
                     if new_value_has_traits and ((<CHasTraits>new_value).flags & HASTRAITS_VETO_NOTIFY):
-                        return rc
+                        break
                     if _trait_notification_handler != None and user_args is not None:
-                        arg_temp = temp[i]
-                        user_args[0] = arg_temp
+                        user_args[0] = temp[i]
+                        print 'Calling (through handler)', temp[i] , args
                         result = PyObject_Call(_trait_notification_handler, user_args, None)
                     else:
                         print 'Calling ', temp[i] , args
-                        result = temp[i](*args)
+                        result = PyObject_Call(temp[i], args, None)
 
 
 
@@ -1410,30 +1434,31 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
         new_value = original_value
     else:
         new_value = value
-    old_value = None
 
     tnotifiers = traito.notifiers
     onotifiers = obj.notifiers
     do_notifiers = has_notifiers(tnotifiers, onotifiers)
+    old_value = NullObject
 
     cdef trait_post_setattr post_setattr = traitd._post_setattr
 
     if post_setattr is not NULL or do_notifiers:
-        old_value = obj.obj_dict.get(name, None)
-        if old_value is None:
+        old_value = obj.obj_dict.get(name, NullObject)
+        if old_value is NullObject:
             if traitd != traito:
                 old_value = traito.getattr(traito, obj, name)
             else:
                 old_value = default_value_for(traitd, obj, name)
         if not changed:
-            changed = old_value != value
+            # This is a C pointer comparison and not a Python comparison!
+            changed = <PyObject*>old_value != <PyObject*>value
             flag_check = (traitd.flags & TRAIT_OBJECT_IDENTITY) == 0
             if changed and flag_check:
                 changed = PyObject_RichCompareBool(old_value, value, Py_NE)
                 if changed == -1:
                     PyErr_Clear()
 
-    print 'NEW VALUE ', new_value
+    print 'NEW VALUE ', new_value, old_value
     try:
         obj.obj_dict[name] = new_value
     except KeyError:
@@ -1570,7 +1595,29 @@ cdef int setattr_dissalow(cTrait traito, cTrait traitd, CHasTraits obj, object n
     raise NotImplementedError('No support for dissalow')
 
 cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
-    raise NotImplementedError('No support for readonly')
+    """ Assigns a value to a specified read-only trait attribute. """
+
+    print 'SETATTR readonly '
+    # A NULL pointer in the C code mean deletion ...
+    if value == NullObject:
+        return delete_readonly_error(obj, name)
+
+    if traitd.internal_default_value != Undefined:
+        return set_readonly_error(obj, name)
+
+    if obj.obj_dict is None:
+        return setattr_python(traito, traitd, obj, name, value)
+
+    # FIXME: add support for Unicode
+    if not PyString_Check(name):
+        raise invalid_attribute_error()
+
+    cdef PyObject* result = PyDict_GetItem(obj.obj_dict, name)
+    if result is NULL or result == <PyObject*>Undefined:
+        return setattr_python(traito, traitd, obj, name, value)
+    else:
+        return set_readonly_error(obj, name)
+
 
 cdef int setattr_constant(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     raise NotImplementedError('No support for constant')
@@ -1934,11 +1981,26 @@ cdef class cTrait:
     def get_validate(self):
         raise NotImplementedError('Work in progress')
 
-    def rich_comparison(self, rich_comparison_boolean):
-        raise NotImplementedError('Work in progress')
+    def rich_comparison(self, int compare_type):
+        """ Sets the value of the 'comparison' mode of a CTrait instance. """
 
-    def comparison_mode(self, comparison_mode_enum):
-        raise NotImplementedError('Work in progress')
+        self.flags &= (not (TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY))
+        if compare_type == 0:
+            self.flags |= TRAIT_OBJECT_IDENTITY
+
+
+    def comparison_mode(self, int comparison_mode):
+        """ Sets the appropriate value comparison mode flags of a CTrait
+        instance.
+
+        """
+
+        self.flags &= (not (TRAIT_NO_VALUE_TEST | TRAIT_OBJECT_IDENTITY))
+        if comparison_mode == 0:
+            self.flags |= TRAIT_NO_VALUE_TEST
+        elif comparison_mode == 1:
+            self.flags |= TRAIT_OBJECT_IDENTITY
+
 
     def value_allowed(self, value_allowed_boolean):
         raise NotImplementedError('Work in progress')
