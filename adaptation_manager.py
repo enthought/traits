@@ -1,91 +1,101 @@
-""" Keeps a registry of available adaptation paths and handles adaptation. """
+""" Manages all registered adaptations. """
 
 
 from heapq import heappop, heappush
 import inspect
 import itertools
 
-from traits.api import HasTraits, Instance, Interface, List
+from traits.api import Any, HasTraits, Instance, Interface, List
 
 
 class AdaptationError(TypeError):
+    """ Exception raised when a requested adaptation is not possible. """
+
     pass
 
 
 class AdaptationManager(HasTraits):
-    """ Keeps a registry of available adaptation paths and handles adaptation.
-    """
+    """ Manages all registered adaptations. """
 
     #### 'AdaptationManager' class protocol ###################################
 
     @staticmethod
     def mro_distance_to_protocol(from_type, to_protocol):
-        """ If `from_type` provides `to_protocol`, returns the distance between
+        """ Return the distance in the MRO from 'from_type' to 'to_protocol'.
+
+        If `from_type` provides `to_protocol`, returns the distance between
         `from_type` and the super-most class in the MRO hierarchy providing
         `to_protocol` (that's where the protocol was provided in the first
         place).
 
         If `from_type` does not provide `to_protocol`, return None.
+
         """
 
         if not AdaptationManager.provides_protocol(from_type ,to_protocol):
             return None
 
         # We walk up the MRO hierarchy until the point where the `to_protocol`
-        # is no longer provided. That's where the protocol was provided in
+        # is *no longer* provided. When we reach that point we know that the
+        # previous class in the MRO is the one that provided tyhe protocol in
         # the first place (e.g., the first super-class implementing an
         # interface).
-        distance = 0
         supertypes = inspect.getmro(from_type)[1:]
+
+        distance = 0
         for t in supertypes:
-            if not AdaptationManager.provides_protocol(t, to_protocol):
+            if AdaptationManager.provides_protocol(t, to_protocol):
+                distance += 1
+
+            # We have reached the point in the MRO where the protocol is no
+            # longer provided.
+            else:
                 break
-            distance += 1
 
         return distance
 
     @staticmethod
     def provides_protocol(type_, protocol):
-        """ Does object implement a given protocol?
+        """ Does the given type provide (i.e implement) a given protocol?
 
-        'protocol' is either an Interface or a class.
+        'type_'    is a Python 'type'.
+        'protocol' is either a regular Python class or a traits Interface.
 
-        Return True if the object implements the interface, or is an instance
-        of the class.
+        Return True if the object provides the protocol, otherwise False.
+
         """
 
+        # Support for traits Interfaces
         if issubclass(protocol, Interface):
-            # support for traits' Interfaces
             if hasattr(type_, '__implements__'):
                 provides_protocol = issubclass(type_.__implements__, protocol)
+
             else:
                 provides_protocol = False
 
+        # Support for regular ol' Python types (including ABCs).
         else:
-            # 'protocol' is a class
             provides_protocol = issubclass(type_, protocol)
 
         return provides_protocol
 
-    #### Private interface ####################################################
-
-    #: All registered adaptation offers.
-    _adaptation_offers = List(Instance('apptools.adaptation.adaptation_offer.AdaptationOffer'))
-
-    #### Methods ##############################################################
+    #### 'AdaptationManager' protocol ##########################################
 
     def adapt(self, adaptee, to_protocol, default=AdaptationError):
-        """ Returns an adapter that adapts an object to a given protocol.
+        """ Attempt to adapt an object to a given protocol.
 
         `adaptee`     is the object that we want to adapt.
-        `to_protocol` is the protocol that the adaptee should be adapted to.
+        `to_protocol` is the protocol that the want to adapt the object to.
 
-        If `adaptee` already provides the given protocol then it is simply
-        returned unchanged. Otherwise, we try to build a chain of adapters
-        that adapt `adaptee` to `to_protocol`.
+        If `adaptee` already provides (i.e. implements) the given protocol
+        then it is simply returned unchanged.
 
-        If no such chain exists, an AdaptationError is raised unless a
-        `default` return value is specified.
+        Otherwise, we try to build a chain of adapters that adapt `adaptee`
+        to `to_protocol`.
+
+        If no such adaptation is possible then either an AdaptationError is
+        raised (if default=Adaptation error), or `default` is returned (as
+        in the default value passed to 'getattr' etc).
 
         """
 
@@ -107,7 +117,7 @@ class AdaptationManager(HasTraits):
         return result
 
     def register_adaptation_offer(self, offer):
-        """ Register an adaptation offer. """
+        """ Register an offer to adapt from one protocol to another. """
 
         self._adaptation_offers.append(offer)
 
@@ -116,28 +126,28 @@ class AdaptationManager(HasTraits):
     def register_adapter_factory(self, factory, from_protocol, to_protocol):
         """ Register an adapter factory.
 
-        This is a convenience method that creates an AdaptationOffer instance
-        from the given arguments and registers it.
+        This is a simply a convenience method that creates and registers an
+        'AdaptationOffer' from the given arguments.
 
         """
 
         from apptools.adaptation.adaptation_offer import AdaptationOffer
 
-        offer = AdaptationOffer(
-            factory       = factory,
-            from_protocol = from_protocol,
-            to_protocol   = to_protocol
+        self.register_adaptation_offer(
+            AdaptationOffer(
+                factory       = factory,
+                from_protocol = from_protocol,
+                to_protocol   = to_protocol
+            )
         )
-
-        self.register_adaptation_offer(offer)
 
         return
 
     def supports_protocol(self, obj, protocol):
         """ Does object support a given protocol?
 
-        An object "supports" a protocol if either it "provides" it, or if
-        can be adapted to it.
+        An object "supports" a protocol if either it "provides" it directly,
+        or it can be adapted to it.
 
         """
 
@@ -145,7 +155,10 @@ class AdaptationManager(HasTraits):
 
     #### Private protocol #####################################################
 
-    _SUBCLASS_WEIGHT = 1e-9
+    #: All registered adaptation offers.
+    _adaptation_offers = List(
+        Instance('apptools.adaptation.adaptation_offer.AdaptationOffer')
+    )
 
     def _adapt(self, adaptee, to_protocol):
         """ Returns an adapter that adapts an object to the target class.
@@ -265,25 +278,47 @@ def _cmp_weight_then_from_protocol_specificity(edge_1, edge_2):
     return 0
 
 
-#: Default global adaptation manager.
+#: The default global adaptation manager.
 adaptation_manager = AdaptationManager()
 
-
 # Convenience functions acting on the default adaptation manager.
-
+#
+# If you add a public method to the adaptation manager protocol then don't
+# forget to add a convenience function here!
 def adapt(adaptee, to_protocol, default=AdaptationError):
+    """ Attempt to adapt an object to a given protocol.
+
+    `adaptee`     is the object that we want to adapt.
+    `to_protocol` is the protocol that the want to adapt the object to.
+
+    If `adaptee` already provides (i.e. implements) the given protocol
+    then it is simply returned unchanged.
+
+    Otherwise, we try to build a chain of adapters that adapt `adaptee`
+    to `to_protocol`.
+
+    If no such adaptation is possible then either an AdaptationError is
+    raised (if default=AdaptationError), or `default` is returned (as
+    in the default value passed to 'getattr' etc).
+
+    """
 
     return adaptation_manager.adapt(adaptee, to_protocol, default=default)
 
-
 def register_adaptation_offer(offer):
+    """ Register an offer to adapt from one protocol to another. """
 
     adaptation_manager.register_adaptation_offer(offer)
 
     return
 
-
 def register_adapter_factory(factory, from_protocol, to_protocol):
+    """ Register an adapter factory.
+
+    This is a simply a convenience method that creates and registers an
+    'AdaptationOffer' from the given arguments.
+
+    """
 
     adaptation_manager.register_adapter_factory(
         factory, from_protocol, to_protocol
@@ -291,8 +326,13 @@ def register_adapter_factory(factory, from_protocol, to_protocol):
 
     return
 
-
 def supports_protocol(obj, protocol):
+    """ Does object support a given protocol?
+
+    An object "supports" a protocol if either it "provides" it directly,
+    or it can be adapted to it.
+
+    """
 
     return adaptation_manager.supports_protocol(obj, protocol)
 
