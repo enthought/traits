@@ -2151,7 +2151,7 @@ def _undefined(Undefined_, Uninitialized_):
     """ Sets the global Undefined and Uninitialized values. """
     global Undefined, Uninitialized
     Undefined = Undefined_
-    Unitialized = Uninitialized_
+    Uninitialized = Uninitialized_
 
 def _exceptions(TraitError_, DelegationError_):
     """ Sets the global TraitError and DelegationError exception types. """
