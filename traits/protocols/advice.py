@@ -18,7 +18,7 @@ def metamethod(func):
     return property(lambda ob: func.__get__(ob,ob.__class__))
 
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import ClassType, InstanceType
     
     ClassicTypes = ClassType

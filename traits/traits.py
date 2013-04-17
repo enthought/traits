@@ -418,7 +418,7 @@ ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
 PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
                      dict, FunctionType, MethodType, type, NoneType )
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import InstanceType,ClassType
     PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
 

@@ -2505,7 +2505,7 @@ class TraitListObject ( list ):
             excp.set_prefix( 'Each element of the' )
             raise excp
 
-    if sys.version_info.major < 3:
+    if sys.version_info[0] < 3:
         def __setslice__ ( self, i, j, values ):
             self.__setitem__(slice(i,j),values)
         
@@ -2539,7 +2539,7 @@ class TraitListObject ( list ):
             self._send_trait_items_event( self.name_items,
                 TraitListEvent( startidx, removed ) )
 
-    if sys.version_info.major < 3:
+    if sys.version_info[0] < 3:
         def __delslice__ ( self, i, j ):
             self.__delitem__(slice(i,j))
 

@@ -6,7 +6,7 @@ from __future__ import division, absolute_import
 import sys
 
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     import string
     str_find = string.find
     str_rfind = string.rfind
@@ -14,7 +14,7 @@ else:
     str_find = str.find
     str_rfind = str.rfind
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import InstanceType,ClassType
     def is_old_style_instance(obj):
         return type(obj) is InstanceType
@@ -35,7 +35,7 @@ else:
         return False
 
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import InstanceType
     def type_w_old_style(obj):
         the_type = type(obj)
@@ -46,7 +46,7 @@ if sys.version_info.major < 3:
 else:
     type_w_old_style = type
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import ClassType
     ClassTypes    = ( ClassType, type )
 else:

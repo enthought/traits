@@ -986,7 +986,7 @@ class Method ( TraitType ):
     #: A description of the type of value this trait accepts:
     info_text = 'a method'
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import ClassType
     
     class Class ( TraitType ):
@@ -3370,7 +3370,7 @@ ListFunction = List( FunctionType )
 #: List of method values; default value is [].
 ListMethod = List( MethodType )
 
-if sys.version_info.major < 3:
+if sys.version_info[0] < 3:
     from types import ClassType, InstanceType
     
     #: List of class values; default value is [].

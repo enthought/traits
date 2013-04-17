@@ -133,7 +133,7 @@ class MiscObjectsAsOpenProvider(object):
 
     """Supply __conform__ registry for funcs, modules, & classic instances"""
 
-    if sys.version_info.major < 3:
+    if sys.version_info[0] < 3:
         from types import InstanceType, ClassType
         advise(
             instancesProvide=[IOpenProvider],
