@@ -5,11 +5,12 @@ python:
   - 2.6
 install:
   - pip install nose
-  - pip install unittest2
+  - pip install Cython
+  - if python --version 2>&1 | grep -v "Python 3." >/dev/null; then pip install unittest2 ; fi
   - python setup.py build_ext --inplace
   - python setup.py develop
 script:
   - nosetests
 notifications:
   email:
-    - pberkes@enthought.com
+    - hack@delley.net
