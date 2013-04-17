@@ -186,6 +186,7 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     return value
 
 cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
+    print 'Validate trait self type'
     raise NotImplementedError('vt')
 
 cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
@@ -221,6 +222,7 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
 
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
 
+    print 'Validate trait instance'
     cdef object type_info = trait.py_validate
     cdef int kind = len(type_info)
 
@@ -424,6 +426,7 @@ cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name
 cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is in a specified prefix map (i.e. dictionary). """
 
+    print 'Validate trait prefix map'
     cdef object type_info = trait.py_validate
     cdef object mapped_value = type_info[1]
     cdef object result
@@ -1102,51 +1105,61 @@ cdef void raise_delete_property_error(object obj, object name):
 
 cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
+    print 'setattr property0'
     if value is None:
         raise_delete_property_error(obj, name)
 
     cdef object args = tuple()
-    result = PyObject_Call(traitd.delegate_prefix, args, None)
-    if result is None:
-        return -1
-    else:
-        return 0
+    try:
+        PyObject_Call(traitd.delegate_prefix, args, None)
+        res =  0
+    except Exception:
+        res = -1
+    return res
+
 
 cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
+    print 'setattr property1'
     if value is None:
         raise_delete_property_error(obj, name)
 
     cdef object args = (value)
-    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
-    if result is None:
-        return -1
-    else:
-        return 0
+    try:
+        PyObject_Call(traitd.delegate_prefix, args, None)
+        res =  0
+    except Exception:
+        res = -1
+    return res
+
 
 cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
+    print 'setattr property2'
     if value is None:
         raise_delete_property_error(obj, name)
 
     cdef object args = (obj, value)
-    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
-    if result is None:
-        return -1
-    else:
-        return 0
+    try:
+        PyObject_Call(traitd.delegate_prefix, args, None)
+        res =  0
+    except Exception:
+        res = -1
+    return res
 
 cdef int setattr_property3(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    print 'setattr property3' , traitd.delegate_prefix
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = (obj, name, value)
-    cdef object result = PyObject_Call(traitd.delegate_prefix, args, None)
-    if result is None:
-        return -1
-    else:
-        return 0
+    try:
+        PyObject_Call(traitd.delegate_prefix, args, None)
+        res =  0
+    except Exception:
+        res = -1
+    return res
 
 # Calls a Python-based trait post_setattr handler
 cdef int post_setattr_trait_python(cTrait trait, CHasTraits obj, object name, object value) except? -1:
@@ -1454,9 +1467,10 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
             changed = <PyObject*>old_value != <PyObject*>value
             flag_check = (traitd.flags & TRAIT_OBJECT_IDENTITY) == 0
             if changed and flag_check:
-                changed = PyObject_RichCompareBool(old_value, value, Py_NE)
-                if changed == -1:
-                    PyErr_Clear()
+                try:
+                    changed = PyObject_RichCompareBool(old_value, value, Py_NE)
+                except:
+                    changed = -1
 
     print 'NEW VALUE ', new_value, old_value
     try:
@@ -1481,6 +1495,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     return rc
 
 cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    print 'setattr python'
     cdef int rc
 
     if value is not None:
@@ -1499,6 +1514,7 @@ cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object nam
 
 cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
+    print 'setattr event'
     cdef int rc = 0
     cdef list tnotifiers, onotifiers
 
@@ -1520,12 +1536,11 @@ cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name
 cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     """ Assigns a value to a specified delegate trait attribute. """
 
+    print 'setattr delegate'
     cdef dict obj_dict
     cdef object daname, daname2, temp
     cdef CHasTraits delegate, temp_delegate
     cdef int i, result
-
-    print 'setattr delegate'
 
     # Follow the delegation chain until we find a non-delegated trait
     daname = name
@@ -1592,6 +1607,7 @@ cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object n
 
 
 cdef int setattr_dissalow(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    print 'setattr dissalow'
     raise NotImplementedError('No support for dissalow')
 
 cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
@@ -1620,9 +1636,11 @@ cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object n
 
 
 cdef int setattr_constant(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    print 'setattr constant'
     raise NotImplementedError('No support for constant')
 
 cdef int setattr_generic(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    print 'setattr generic'
     raise NotImplementedError('No support for generic')
 
 
