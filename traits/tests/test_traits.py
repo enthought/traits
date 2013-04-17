@@ -801,7 +801,10 @@ class DelegateTests(unittest.TestCase):
 # Make a TraitCompound handler that does not have a fast_validate so we can
 # check for a particular regression.
 slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
-del slow.handler.fast_validate
+try:
+    del slow.handler.fast_validate
+except AttributeError:
+    pass
 
 class complex_value(HasTraits):
 
