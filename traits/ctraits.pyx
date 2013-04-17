@@ -17,6 +17,7 @@ from cpython.type cimport PyType_Check, PyType_GenericAlloc
 
 cdef extern from 'Python.h':
     PyObject* PyObject_GenericGetAttr(PyObject*, PyObject*)
+    PyObject* PyObject_GenericSetAttr(PyObject*, PyObject*, PyObject*)
 
     ctypedef struct PyTypeObject:
         PyObject* tp_dict
@@ -868,6 +869,7 @@ cdef class CHasTraits:
         # Equivalent of the has_traits_settro function
 
         cdef cTrait trait
+        cdef int result
 
         if self.itrait_dict is not None:
             trait = self.itrait_dict.get(name, None)
@@ -883,6 +885,7 @@ cdef class CHasTraits:
                 else:
                     trait = prefix_trait
 
+
         if (trait.flags & TRAIT_VALUE_ALLOWED != 0) and isinstance(value, TraitValue):
             print 'setattr value'
             result = self.setattr_value(trait, name, value)
@@ -892,7 +895,6 @@ cdef class CHasTraits:
 
         if result < 0:
             raise_trait_error(trait, self, name, value)
-
 
     def _notifiers(self, force_create):
         """ Returns (and optionally creates) the anytrait 'notifiers' list """
@@ -1016,6 +1018,7 @@ cdef class CHasTraits:
         cdef object daname, daname2
 
         cdef cTrait trait = <cTrait>self.get_trait(name, instance)
+        print 'Got trait', trait
         if instance >= -1 or trait is None:
             return trait
 
@@ -1498,7 +1501,7 @@ cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object nam
     print 'setattr python'
     cdef int rc
 
-    if value is not None:
+    if value is not NullObject:
         if obj.obj_dict is None:
             obj.obj_dict = {}
 
@@ -1640,9 +1643,12 @@ cdef int setattr_constant(cTrait traito, cTrait traitd, CHasTraits obj, object n
     raise NotImplementedError('No support for constant')
 
 cdef int setattr_generic(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
-    print 'setattr generic'
-    raise NotImplementedError('No support for generic')
+    """Assigns a value to a specified generic Python attribute . """
 
+    print 'setattr generic'
+    cdef PyObject* result
+    result = PyObject_GenericSetAttr(<PyObject*>obj, <PyObject*>name, <PyObject*>value)
+    return <object> result
 
 cdef trait_validate setattr_validate_handlers[4]
 setattr_validate_handlers[0] = setattr_validate0
