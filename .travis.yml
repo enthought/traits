@@ -7,9 +7,10 @@ install:
   - pip install nose
   - pip install Cython
   - if python --version 2>&1 | grep -v "Python 3." >/dev/null; then pip install unittest2 ; fi
-  - python setup.py install
+  - python setup.py build
+  - python setup.py develop
 script:
-  - nosetests traits --exe
+  - nosetests
 notifications:
   email:
     - hack@delley.net
