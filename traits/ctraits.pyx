@@ -2005,11 +2005,21 @@ cdef class cTrait:
     def value_allowed(self, value_allowed_boolean):
         raise NotImplementedError('Work in progress')
 
-    def value_property(value_trait_boolean):
+    def value_property(self, value_trait_boolean):
         raise NotImplementedError('Work in progress')
 
-    def post_setattr_original_value(original_value_boolean):
-        raise NotImplementedError('Work in progress')
+    def post_setattr_original_value(self, int original_value):
+        """ Sets the value of the 'post_setattr_original_value' flag of a
+        CTrait instance (used in the processing of 'post_settattr' calls).
+
+        """
+
+        if original_value != 0:
+            self.flags |= TRAIT_POST_SETATTR_ORIGINAL_VALUE
+        else:
+            self.flags &= (~TRAIT_POST_SETATTR_ORIGINAL_VALUE)
+
+        return self
 
     def cast(self, value):
         raise NotImplementedError('Work in progress')
