@@ -25,7 +25,7 @@ class IFoo(Interface):
 class Foo(HasTraits):
     implements(IFoo)
 
-# An interface with explcitly no relation to 'Foo' or 'IFoo'!
+# An interface with explicitly no relation to 'Foo' or 'IFoo'!
 class IBar(Interface):
     pass
 
@@ -33,7 +33,7 @@ class IBar(Interface):
 foo = Foo()    
 
 
-# Create a lot of other interfacs!
+# Create a lot of other interfaces!
 for i in range(N_PROTOCOLS):
     exec 'class I%d(Interface): pass' % i
 
@@ -86,7 +86,10 @@ adaptation_manager.register_adapter_factory(
 
 """
 
-for i in range(N_PROTOCOLS):
+# We register the adapters in reversed order, so that looking for the one
+# with index 0 will need traversing the whole list.
+# I.e., we're considering the worst case scenario.
+for i in reversed(range(N_PROTOCOLS)):
     exec register_ifoo_to_ix % (i, i)
     exec register_ibar_to_ix % (i, i)
     
@@ -107,7 +110,7 @@ class Foo(object):
 
 FooABC.register(Foo)
 
-# An ABCe with explcitly no relation to 'Foo' or 'FooABC'!
+# An ABCe with explicitly no relation to 'Foo' or 'FooABC'!
 class BarABC(object):
     __metaclass__ = abc.ABCMeta
 
@@ -160,7 +163,10 @@ adaptation_manager.register_adapter_factory(
 
 """
 
-for i in range(N_PROTOCOLS):
+# We register the adapters in reversed order, so that looking for the one
+# with index 0 will need traversing the whole list.
+# I.e., we're considering the worst case scenario.
+for i in reversed(range(N_PROTOCOLS)):
     exec register_fooabc_to_abcx % (i, i)
     exec register_barabc_to_abcx % (i, i)
 

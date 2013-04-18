@@ -1,7 +1,7 @@
 """ An offer to provide adapters from one protocol to another. """
 
 
-from traits.api import Any, HasTraits, Property
+from traits.api import Any, Bool, HasTraits, Property
 
 from apptools.adaptation.adaptation_manager import AdaptationManager
 from apptools.naming.initial_context import _import_symbol
@@ -82,12 +82,16 @@ class AdaptationOffer(HasTraits):
 
     #: Shadow trait for the corresponding property.
     _factory = Any
+    _factory_loaded = Bool(False)
 
     def _get_factory(self):
         """ Trait property getter. """
 
-        if isinstance(self._factory, basestring):
-            self._factory = _import_symbol(self._factory)
+        if not self._factory_loaded:
+            if isinstance(self._factory, basestring):
+                self._factory = _import_symbol(self._factory)
+
+            self._factory_loaded = True
 
         return self._factory
 
@@ -100,12 +104,16 @@ class AdaptationOffer(HasTraits):
 
     #: Shadow trait for the corresponding property.
     _from_protocol = Any
+    _from_protocol_loaded = Bool(False)
 
     def _get_from_protocol(self):
         """ Trait property getter. """
 
-        if isinstance(self._from_protocol, basestring):
-            self._from_protocol = _import_symbol(self._from_protocol)
+        if not self._from_protocol_loaded:
+            if isinstance(self._from_protocol, basestring):
+                self._from_protocol = _import_symbol(self._from_protocol)
+
+            self._from_protocol_loaded = True
 
         return self._from_protocol
 
@@ -118,12 +126,16 @@ class AdaptationOffer(HasTraits):
 
     #: Shadow trait for the corresponding property.
     _to_protocol = Any
+    _to_protocol_loaded = Bool(False)
 
     def _get_to_protocol(self):
         """ Trait property getter. """
 
-        if isinstance(self._to_protocol, basestring):
-            self._to_protocol = _import_symbol(self._to_protocol)
+        if not self._to_protocol_loaded:
+            if isinstance(self._to_protocol, basestring):
+                self._to_protocol = _import_symbol(self._to_protocol)
+
+            self._to_protocol_loaded = True
 
         return self._to_protocol
 

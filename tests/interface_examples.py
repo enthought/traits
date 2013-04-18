@@ -107,7 +107,10 @@ class TextEditorToIPrintable(Adapter):
 
 #### Interface hierarchy example ##############################################
 
-class IHuman(Interface):
+class IPrimate(Interface):
+    pass
+
+class IHuman(IPrimate):
     pass
 
 class IChild(IHuman):
@@ -125,7 +128,10 @@ class Source(HasTraits):
 class IChildToIIntermediate(Adapter):
     implements(IIntermediate)
 
-class IFatherToIIntermediate(Adapter):
+class IHumanToIIntermediate(Adapter):
+    implements(IIntermediate)
+
+class IPrimateToIIntermediate(Adapter):
     implements(IIntermediate)
 
 class IIntermediateToITarget(Adapter):

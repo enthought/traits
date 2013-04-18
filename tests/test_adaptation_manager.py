@@ -402,7 +402,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         # IHuman -> IIntermediate.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IFatherToIIntermediate,
+            factory       = ex.IHumanToIIntermediate,
             from_protocol = ex.IHuman,
             to_protocol   = ex.IIntermediate
         )
@@ -414,42 +414,11 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
             to_protocol   = ex.IIntermediate
         )
 
-        # Create a source.
-        source = ex.Source()
-
-        # Adapt to ITarget: we should get the adapter for the most specific
-        # interface, i.e. IChildToITarget.
-        target = self.adaptation_manager.adapt(source, ex.ITarget)
-        self.assertIsNotNone(target)
-        self.assertIs(type(target.adaptee), ex.IChildToIIntermediate)
-
-        return
-
-    def test_prefer_specific_interfaces_other_registration_order(self):
-        # Same as `test_prefer_specific_interfaces` inverting the
-        # registration order for the adaptation offers. Both tests should pass.
-
-        ex = self.examples
-
-        # IChild -> IIntermediate.
+        # IPrimate -> IIntermediate.
         self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IChildToIIntermediate,
-            from_protocol = ex.IChild,
+            factory       = ex.IPrimateToIIntermediate,
+            from_protocol = ex.IPrimate,
             to_protocol   = ex.IIntermediate
-        )
-
-        # IHuman -> IIntermediate.
-        self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IFatherToIIntermediate,
-            from_protocol = ex.IHuman,
-            to_protocol   = ex.IIntermediate
-        )
-
-        # IIntermediate -> ITarget.
-        self.adaptation_manager.register_adapter_factory(
-            factory       = ex.IIntermediateToITarget,
-            from_protocol = ex.IIntermediate,
-            to_protocol   = ex.ITarget
         )
 
         # Create a source.

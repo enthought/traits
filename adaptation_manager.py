@@ -5,7 +5,7 @@ from heapq import heappop, heappush
 import inspect
 import itertools
 
-from traits.api import Any, HasTraits, Instance, Interface, List
+from traits.api import Dict, HasTraits, Interface, List, Str
 
 
 class AdaptationError(TypeError):
@@ -32,12 +32,12 @@ class AdaptationManager(HasTraits):
 
         """
 
-        if not AdaptationManager.provides_protocol(from_type ,to_protocol):
+        if not AdaptationManager.provides_protocol(from_type, to_protocol):
             return None
 
         # We walk up the MRO hierarchy until the point where the `to_protocol`
         # is *no longer* provided. When we reach that point we know that the
-        # previous class in the MRO is the one that provided tyhe protocol in
+        # previous class in the MRO is the one that provided the protocol in
         # the first place (e.g., the first super-class implementing an
         # interface).
         supertypes = inspect.getmro(from_type)[1:]
@@ -64,6 +64,9 @@ class AdaptationManager(HasTraits):
         Return True if the object provides the protocol, otherwise False.
 
         """
+
+        if type_ is protocol:
+            return True
 
         # Support for traits Interfaces
         if issubclass(protocol, Interface):
@@ -119,7 +122,10 @@ class AdaptationManager(HasTraits):
     def register_adaptation_offer(self, offer):
         """ Register an offer to adapt from one protocol to another. """
 
-        self._adaptation_offers.append(offer)
+        from_protocol_name = self._get_type_name(offer.from_protocol)
+
+        offers = self._adaptation_offers.setdefault(from_protocol_name, [])
+        offers.append(offer)
 
         return
 
@@ -156,9 +162,9 @@ class AdaptationManager(HasTraits):
     #### Private protocol #####################################################
 
     #: All registered adaptation offers.
-    _adaptation_offers = List(
-        Instance('apptools.adaptation.adaptation_offer.AdaptationOffer')
-    )
+    #: Keys are the type name of the offer's from_protocol; values are a
+    #: list of adaptation offers.
+    _adaptation_offers = Dict(Str, List)
 
     def _adapt(self, adaptee, to_protocol):
         """ Returns an adapter that adapts an object to the target class.
@@ -236,23 +242,44 @@ class AdaptationManager(HasTraits):
 
         return None
 
+    def _get_type_name(self, type_or_type_name):
+        """ Returns the full dotted path for a type.
+
+        For example:
+        from traits.api import HasTraits
+        _get_type_name(HasTraits) == 'traits.has_traits.HasTraits'
+
+        If the type is given as a string (e.g., for lazy loading), it is just
+        returned.
+
+        """
+
+        if isinstance(type_or_type_name, basestring):
+            type_name = type_or_type_name
+
+        else:
+            type_name = "{}.{}".format(
+                type_or_type_name.__module__, type_or_type_name.__name__
+            )
+
+        return type_name
+
     def _get_outgoing_edges(self, current_obj, visited):
 
         edges = []
+        type_current_obj = type(current_obj)
 
-        for offer in self._adaptation_offers:
-            if offer in visited:
-                continue
-
-            # TODO: This method could be safely cached on each adaptation
-            # attempt (NOT across adaptations), which could result in big
-            # speed-ups for wide adaptation graphs.
+        for from_protocol_name, offers in self._adaptation_offers.items():
+            from_protocol = offers[0].from_protocol
             mro_distance = self.mro_distance_to_protocol(
-                type(current_obj), offer.from_protocol
+                type_current_obj, from_protocol
             )
 
             if mro_distance is not None:
-                edges.append((mro_distance, offer))
+
+                for offer in offers:
+                    if offer not in visited:
+                        edges.append((mro_distance, offer))
 
         return edges
 
@@ -270,9 +297,12 @@ def _cmp_weight_then_from_protocol_specificity(edge_1, edge_2):
         return 1
 
     # The distance is equal, prefer more specific 'from_protocol's
+    if edge_1_offer.from_protocol is edge_2_offer.from_protocol:
+        return 0
+
     if issubclass(edge_1_offer.from_protocol, edge_2_offer.from_protocol):
         return -1
-    elif issubclass(edge_1_offer.from_protocol, edge_2_offer.from_protocol):
+    elif issubclass(edge_2_offer.from_protocol, edge_1_offer.from_protocol):
         return 1
 
     return 0
