@@ -137,4 +137,28 @@ class IPrimateToIIntermediate(Adapter):
 class IIntermediateToITarget(Adapter):
     implements(ITarget)
 
+
+#### Non-trivial chaining example #############################################
+
+class IStart(Interface):
+    pass
+
+class IGeneric(Interface):
+    pass
+
+class ISpecific(IGeneric):
+    pass
+
+class IEnd(Interface):
+    pass
+
+class Start(HasTraits):
+    implements(IStart)
+
+class IStartToISpecific(Adapter):
+    implements(ISpecific)
+
+class IGenericToIEnd(Adapter):
+    implements(IEnd)
+
 #### EOF ######################################################################

@@ -187,4 +187,34 @@ class IIntermediateToITarget(Adapter):
 
 ITarget.register(IIntermediateToITarget)
 
+
+#### Non-trivial chaining example #############################################
+
+class IStart(object):
+    __metaclass__ = ABCMeta
+
+class IGeneric(object):
+    __metaclass__ = ABCMeta
+
+class ISpecific(IGeneric):
+    pass
+
+class IEnd(object):
+    __metaclass__ = ABCMeta
+
+class Start(object):
+    pass
+
+IStart.register(Start)
+
+class IStartToISpecific(Adapter):
+    pass
+
+ISpecific.register(IStartToISpecific)
+
+class IGenericToIEnd(Adapter):
+    pass
+
+IEnd.register(IGenericToIEnd)
+
 #### EOF ######################################################################
