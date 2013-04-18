@@ -247,7 +247,8 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         return
 
-    @unittest.skip("We are not sure what the right behavior is in this case.")
+
+    #@unittest.skip("We are not sure what the right behavior is in this case.")
     def test_spillover_adaptation_behavior(self):
         # We skip this test: all the example we could come up with for this
         # problem are cases of bad design, and without a good use case it's
