@@ -432,11 +432,92 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         return
 
+    def test_chaining_with_intermediate_mro_climbing(self):
+
+        ex = self.examples
+
+        # IStart -> ISpecific.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IStartToISpecific,
+            from_protocol = ex.IStart,
+            to_protocol   = ex.ISpecific
+        )
+
+        # IGeneric -> IEnd.
+        self.adaptation_manager.register_adapter_factory(
+            factory       = ex.IGenericToIEnd,
+            from_protocol = ex.IGeneric,
+            to_protocol   = ex.IEnd
+        )
+
+        # Create a start.
+        start = ex.Start()
+
+        # Adapt to IEnd; this should succeed going from IStart to ISpecific,
+        # climbing up the MRO to IGeneric, then crossing to IEnd.
+        end = self.adaptation_manager.adapt(start, ex.IEnd)
+        self.assertIsNotNone(end)
+        self.assertIs(type(end), ex.IGenericToIEnd)
+
+        return
+
+    def test_conditional_recycling(self):
+        # Test that an offer that has been considered but failed if considered
+        # again at a later time, when it might succeed because of conditional
+        # adaptation.
+
+        # C -- A -fails- B
+        # C -- D -- A -succeeds- B
+
+        class A(object):
+            def __init__(self, allow_adaptation):
+                self.allow_adaptation = allow_adaptation
+
+        class B(object):
+            pass
+
+        class C(object):
+            pass
+
+        class D(object):
+            pass
+
+        self.adaptation_manager.register_adapter_factory(
+            factory=lambda adaptee: A(False), from_protocol=C, to_protocol=A
+        )
+        self.adaptation_manager.register_adapter_factory(
+            factory=lambda adaptee: A(True),  from_protocol=D, to_protocol=A
+        )
+        self.adaptation_manager.register_adapter_factory(
+            factory=lambda adaptee: D(),      from_protocol=C, to_protocol=D
+        )
+
+        # Conditional adapter
+        def a_to_b_adapter(adaptee):
+            if adaptee.allow_adaptation:
+                b = B()
+                b.marker = True
+            else:
+                b = None
+            return b
+
+        self.adaptation_manager.register_adapter_factory(
+            factory=a_to_b_adapter, from_protocol=A, to_protocol=B
+        )
+
+        # Create a A
+        c = C()
+
+        # Adaptation to B should succeed through D
+        b = self.adaptation_manager.adapt(c, B)
+        self.assertIsNotNone(b)
+        self.assert_(hasattr(b, 'marker'))
+
+        return
 
 class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     """ Test the adaptation manager with Interfaces. """
 
     examples = apptools.adaptation.tests.interface_examples
-
 
 #### EOF ######################################################################
