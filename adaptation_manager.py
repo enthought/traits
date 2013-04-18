@@ -6,6 +6,7 @@ import inspect
 import itertools
 
 from traits.api import Dict, HasTraits, Interface, List, Str
+from traits.has_traits import __NoInterface__
 
 
 class AdaptationError(TypeError):
@@ -70,11 +71,12 @@ class AdaptationManager(HasTraits):
 
         # Support for traits Interfaces
         if issubclass(protocol, Interface):
-            if hasattr(type_, '__implements__'):
+            if (hasattr(type_, '__implements__')
+                and type_.__implements__ is not __NoInterface__):
                 provides_protocol = issubclass(type_.__implements__, protocol)
 
             else:
-                provides_protocol = False
+                provides_protocol = issubclass(type_, protocol)
 
         # Support for regular ol' Python types (including ABCs).
         else:
@@ -219,7 +221,7 @@ class AdaptationManager(HasTraits):
             else:
                 type_obj = path[-1].to_protocol
 
-            edges = self._get_outgoing_edges(type_obj, visited)
+            edges = self._get_outgoing_edges(type_obj, path)
 
             # Sort by weight first, then by from_protocol hierarchy.
             edges.sort(cmp=_cmp_weight_then_from_protocol_specificity)
@@ -234,10 +236,8 @@ class AdaptationManager(HasTraits):
 
                 #adapter = offer.adapt(obj, offer.to_protocol)
                 #if adapter is not None:
-                if not offer.can_adapt(lazy_path):
-                    continue
 
-                visited.add(offer) # ???????
+                #visited.add(offer) # ???????
                 # ???? This is broken, e.g.
                 #C -y- A -x- B
                 #C -k- D -j- A -x- B
@@ -292,7 +292,7 @@ class AdaptationManager(HasTraits):
 
         return type_name
 
-    def _get_outgoing_edges(self, type_current_obj, visited):
+    def _get_outgoing_edges(self, type_current_obj, path):
 
         edges = []
         #type_current_obj = type(current_obj)
@@ -306,7 +306,7 @@ class AdaptationManager(HasTraits):
             if mro_distance is not None:
 
                 for offer in offers:
-                    if offer not in visited:
+                    if offer not in path:
                         edges.append((mro_distance, offer))
 
         return edges

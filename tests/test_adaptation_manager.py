@@ -516,6 +516,18 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         return
 
+    def test_provides_protocol_for_interface_subclass(self):
+
+        from traits.api import Interface
+
+        class IA(Interface):
+            pass
+
+        class IB(IA):
+            pass
+
+        self.assert_(self.adaptation_manager.provides_protocol(IB, IA))
+
 class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     """ Test the adaptation manager with Interfaces. """
 
