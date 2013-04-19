@@ -7,6 +7,7 @@ install:
   - pip install nose
   - pip install Cython
   - if python --version 2>&1 | grep -v "Python 3." >/dev/null; then pip install unittest2 ; fi
+  - if python --version 2>&1 | grep "Python 3." >/dev/null; then pip install numpy ; fi
   - python setup.py install
 before_script:
   - cd ../..
