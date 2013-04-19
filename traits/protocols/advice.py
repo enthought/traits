@@ -167,7 +167,18 @@ def addClassAdvisor(callback, depth=2):
     place of the '__metaclass__' of the containing class.  Therefore, only
     callbacks *after* the last '__metaclass__' assignment in the containing
     class will be executed.  Be sure that classes using "advising" functions
-    declare any '__metaclass__' *first*, to ensure all callbacks are run."""
+    declare any '__metaclass__' *first*, to ensure all callbacks are run.
+
+    Moreover, since starting from Python 3, metaclasses are specified
+    differently, this function does not work anymore. Worse, as the metaclass
+    is selected even before running the class's body, there is no way to
+    fix this in a general way. As long as the metaclass provides some hooks
+    to run code at class creation time, we can use them, but standard "type"
+    does not.    
+    """
+    if sys.version_info[0] >= 3:
+        raise NotImplementedError("Class advisors are not possible in python 3.")
+
 
     frame = sys._getframe(depth)
     kind, module, caller_locals, caller_globals = getFrameInfo(frame)

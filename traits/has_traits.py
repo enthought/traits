@@ -1687,7 +1687,7 @@ class HasTraits ( CHasTraits ):
 
             # Resort the list from longest to shortest (if necessary):
             if changed:
-                subclass_list.sort( lambda x, y: len( y ) - len( x ) )
+                subclass_list.sort( key = lambda x: -len( x ) )
 
             # Merge the 'listeners':
             subclass_traits = getattr( subclass, ListenerTraits )

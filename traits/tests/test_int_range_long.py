@@ -14,6 +14,8 @@
 
 from __future__ import absolute_import
 
+import sys
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Long, TraitError
@@ -27,6 +29,13 @@ class A(HasTraits):
 class TraitIntRangeLong(unittest.TestCase):
     def test_int(self):
         "Test to make sure it is illegal to set an Int trait to a long value"
+        if sys.version_info[0] >= 3:
+            import nose
+            raise nose.SkipTest("""
+                Under Python 3, there is no more distinction between int and
+                long. For backwards compatibility, both still exist, but are
+                behaving the same.
+            """)
         a = A()
         a.i = 1
         self.assertRaises(TraitError, a.set, i=10L)
