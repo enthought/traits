@@ -207,17 +207,18 @@ class AdaptationManager(HasTraits):
         # The priority queue containing entries of the form
         # (cumulative weight, path, current protocol) describing the path
         # from `adaptee` to `adapter`.
-        # 'cumulative weight' is of the form ''
+        # 'cumulative weight' is of the form
+        # (number of traversed adapters, , )
         offer_queue = [((0, 0, next(counter)), [], type(adaptee))]
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            path_weight, path, current_protocol = heappop(offer_queue)
+            weight, path, current_protocol = heappop(offer_queue)
 
-            edges = self._get_outgoing_edges(current_protocol, path)
+            edges = self._get_applicable_offers(current_protocol, path)
 
             # Sort by weight first, then by from_protocol hierarchy.
-            edges.sort(cmp=_cmp_weight_then_from_protocol_specificity)
+            edges.sort(cmp=_by_weight_then_from_protocol_specificity)
 
             # At this point, the first edges are the shortest ones. Within
             # edges with the same distance, interfaces which are subclasses
@@ -234,18 +235,23 @@ class AdaptationManager(HasTraits):
                     for offer in new_path:
                         adapter = offer.factory(adaptee=adapter)
                         if adapter is None:
+                            # This adaptation step failed (e.g. because of
+                            # conditional adaptation)
+                            # Discard this path and continue.
                             break
                     else:
                         return adapter
 
-                    continue
-
-                # Otherwise, push the new path on the priority queue.
-                path_adapter_weight, path_mro_weight, path_count = path_weight
-                total_weight = (path_adapter_weight + 1,
-                                path_mro_weight + mro_distance,
-                                next(counter))
-                heappush(offer_queue, (total_weight, new_path, offer.to_protocol))
+                else:
+                    # Push the new path on the priority queue.
+                    adapter_weight, mro_weight, _ = weight
+                    total_weight = (adapter_weight + 1,
+                                    mro_weight + mro_distance,
+                                    next(counter))
+                    heappush(
+                        offer_queue,
+                        (total_weight, new_path, offer.to_protocol)
+                    )
 
         return None
 
@@ -271,44 +277,68 @@ class AdaptationManager(HasTraits):
 
         return type_name
 
-    def _get_outgoing_edges(self, type_current_obj, path):
+    def _get_applicable_offers(self, current_protocol, path):
+        """ Find all adaptation offers that can be applied to a protocol.
+
+        Return all the applicable offers together with the number of steps
+        up the MRO hierarchy that need to be taken from the protocol
+        to the offer's from_protocol.
+        The returned object is a list of tuples (mro_distance, offer) .
+
+        In terms of our graph algorithm, we're looking for all outgoing edges
+        from the current node.
+        """
 
         edges = []
 
         for from_protocol_name, offers in self._adaptation_offers.items():
             from_protocol = offers[0].from_protocol
             mro_distance = self.mro_distance_to_protocol(
-                type_current_obj, from_protocol
+                current_protocol, from_protocol
             )
 
             if mro_distance is not None:
 
                 for offer in offers:
+                    # Avoid cycles by checking that we did not consider this
+                    # offer in this path.
                     if offer not in path:
                         edges.append((mro_distance, offer))
 
         return edges
 
 
-def _cmp_weight_then_from_protocol_specificity(edge_1, edge_2):
+def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
+    """ Comparison function for graph edges.
+
+    Each edge is of the form (mro distance, adaptation offer).
+
+    Comparison is done by mro distance first, and by offer's from_protocol
+    issubclass next.
+
+    If two edges have the same mro distance, and the from_protocols of the
+    two edges are not subclasses of one another, they are considered "equal".
+
+    """
+
     # edge_1 and edge_2 are edges, of the form (mro_distance, offer)
 
-    edge_1_mro_distance, edge_1_offer = edge_1
-    edge_2_mro_distance, edge_2_offer = edge_2
+    mro_distance_1, offer_1 = edge_1
+    mro_distance_2, offer_2 = edge_2
 
     # First, compare the MRO distance.
-    if edge_1_mro_distance < edge_2_mro_distance:
+    if mro_distance_1 < mro_distance_2:
         return -1
-    elif edge_1_mro_distance > edge_2_mro_distance:
+    elif mro_distance_1 > mro_distance_2:
         return 1
 
     # The distance is equal, prefer more specific 'from_protocol's
-    if edge_1_offer.from_protocol is edge_2_offer.from_protocol:
+    if offer_1.from_protocol is offer_2.from_protocol:
         return 0
 
-    if issubclass(edge_1_offer.from_protocol, edge_2_offer.from_protocol):
+    if issubclass(offer_1.from_protocol, offer_2.from_protocol):
         return -1
-    elif issubclass(edge_2_offer.from_protocol, edge_1_offer.from_protocol):
+    elif issubclass(offer_2.from_protocol, offer_1.from_protocol):
         return 1
 
     return 0
