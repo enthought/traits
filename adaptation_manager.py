@@ -175,30 +175,40 @@ class AdaptationManager(HasTraits):
 
         """
 
-        # `offer_queue` is a priority queue. The values in the queue are
-        # tuples (adapter, offer). `offer` is the adaptation offer used to get
-        # from `adaptee` to `adapter` along the chain.
-        # The priority in the priority queue is a tuple: the first element is
-        # the number of steps that it took to go from `adaptee` to `adapter`.
-        # The second number is the number of step the type hierarchy that we
-        # need to take, so that more specific adapters are always preferred.
+        # The algorithm for finding a sequence of adapters adapting 'adaptee'
+        # to 'to_protocol' is based on a weighted graph.
 
-        # In other words, we are considering a weighted graph of all classes.
-        # The adaptation path from `adaptee` to `to_protocol` is the shortest
-        # weighted path in this graph.
-        # The weights are 1 for each adapter we have to apply; parent and
-        # child classes are connected with edges with a very small weight
-        # (infinitesimally small).
+        # Nodes on the graphs are protocols (types or interfaces).
+        # Edges are adaptation offers that connect a offer.from_protocol to a
+        # offer.to_protocol.
+        # Edges connect protocol A to protocol B and are weighted by two
+        # numbers in this priority:
+        # 1) a unit weight (1) representing the fact that we use 1 adaptation
+        #    offer to go from A to B
+        # 2) the number of steps up the type hierarchy that we need to take
+        #    to go from A to offer.from_protocol, so that more specific
+        #    adapters are always preferred
 
-        # Warning: The criterion for an outgoing edge being already visited
-        # is that the adaptation offer (adapter factory, from, to protocol)
-        # has been already used successfully once. In a very strange adaptation
-        # graph, the application of an adaptation offer might lead to the
-        # target protocol at a later point in time (e.g., if the adapters have
-        # side effects on creation).
-        # All the examples we considered for this case turn out to be
-        # exceptionally bad designs of adapters, so we think these cases
-        # can be safely regarded as irrelevant.
+        # The algorithm finds the shortest weighted path between 'adaptee'
+        # and 'to_protocol'. Once a candidate path is found, it tries to
+        # create the adapters using the factories in the adaptation offers
+        # that compose the path. If this fails because of conditional
+        # adaptation (i.e., an adapter factory returns None), the path
+        # is discarded and the algorithm looks for the next shortest path.
+
+        # Cycles in adaptation are avoided by only considering path were
+        # every adaptation offer is used at most once.
+
+        # The implementation of the algorithm is based on a priority queue,
+        # 'offer_queue'.
+        #
+        # Each value in the queue has got two parts,
+        # one is the adaptation path, i.e., the sequence of adaptation offers
+        # followed so far; the second value is the protocol of the last
+        # visited node.
+        #
+        # The priority in the queue is the sum of all the weights for the
+        # edges traversed in the path.
 
         # Unique sequence counter to make the priority list stable
         # w.r.t the sequence of insertion.
@@ -213,6 +223,7 @@ class AdaptationManager(HasTraits):
         # (number of traversed adapters,
         #  number of steps up protocol hierarchies,
         #  counter)
+        #
         # The counter is an increasing number, and is used to make the
         # priority queue stable w.r.t insertion time
         # (see http://bit.ly/13VxILn).
@@ -224,7 +235,7 @@ class AdaptationManager(HasTraits):
 
             edges = self._get_applicable_offers(current_protocol, path)
 
-            # Sort by weight first, then by from_protocol hierarchy.
+            # Sort by weight first, then by from_protocol type.
             edges.sort(cmp=_by_weight_then_from_protocol_specificity)
 
             # At this point, the first edges are the shortest ones. Within
@@ -242,22 +253,24 @@ class AdaptationManager(HasTraits):
                     for offer in new_path:
                         adapter = offer.factory(adaptee=adapter)
                         if adapter is None:
-                            # This adaptation step failed (e.g. because of
-                            # conditional adaptation)
+                            # This adaptation attempt failed (e.g. because of
+                            # conditional adaptation).
                             # Discard this path and continue.
                             break
+
                     else:
+                        # We're done!
                         return adapter
 
                 else:
                     # Push the new path on the priority queue.
                     adapter_weight, mro_weight, _ = weight
-                    total_weight = (adapter_weight + 1,
-                                    mro_weight + mro_distance,
-                                    next(counter))
+                    new_weight = (adapter_weight + 1,
+                                  mro_weight + mro_distance,
+                                  next(counter))
                     heappush(
                         offer_queue,
-                        (total_weight, new_path, offer.to_protocol)
+                        (new_weight, new_path, offer.to_protocol)
                     )
 
         return None
