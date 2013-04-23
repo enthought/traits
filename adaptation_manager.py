@@ -205,23 +205,15 @@ class AdaptationManager(HasTraits):
         counter = itertools.count()
 
         # The priority queue containing entries of the form
-        # (cumulative weight, counter, object) describing the path
+        # (cumulative weight, path, current_protocol) describing the path
         # from `adaptee` to `adapter`.
-        offer_queue = [((0, 0), counter.next(), [])]
-
-        # The set of visited adaptation offers.
-        visited = set()
+        offer_queue = [((0, 0, next(counter)), [], type(adaptee))]
 
         while len(offer_queue) > 0:
             # Get the most specific candidate path for adaptation.
-            path_weight, count, path = heappop(offer_queue)
+            path_weight, path, current_protocol = heappop(offer_queue)
 
-            if len(path) == 0:
-                type_obj = type(adaptee)
-            else:
-                type_obj = path[-1].to_protocol
-
-            edges = self._get_outgoing_edges(type_obj, path)
+            edges = self._get_outgoing_edges(current_protocol, path)
 
             # Sort by weight first, then by from_protocol hierarchy.
             edges.sort(cmp=_cmp_weight_then_from_protocol_specificity)
@@ -233,20 +225,6 @@ class AdaptationManager(HasTraits):
 
             for mro_distance, offer in edges:
                 new_path = path + [offer]
-
-                #adapter = offer.adapt(obj, offer.to_protocol)
-                #if adapter is not None:
-
-                #visited.add(offer) # ???????
-                # ???? This is broken, e.g.
-                #C -y- A -x- B
-                #C -k- D -j- A -x- B
-                # A-x-B may fail when the adapter is built, and this prevents
-                # C from getting to B through D and A
-
-                #A -- IChild(IHuman)
-                #IHuman -- C
-
 
                 # Check if we arrived at the target protocol.
                 if self.provides_protocol(offer.to_protocol, to_protocol):
@@ -262,11 +240,11 @@ class AdaptationManager(HasTraits):
                     continue
 
                 # Otherwise, push the new path on the priority queue.
-                path_adapter_weight, path_mro_weight = path_weight
+                path_adapter_weight, path_mro_weight, path_count = path_weight
                 total_weight = (path_adapter_weight + 1,
-                                path_mro_weight + mro_distance)
-                count = next(counter)
-                heappush(offer_queue, (total_weight, count, new_path))
+                                path_mro_weight + mro_distance,
+                                next(counter))
+                heappush(offer_queue, (total_weight, new_path, offer.to_protocol))
 
         return None
 
@@ -295,7 +273,6 @@ class AdaptationManager(HasTraits):
     def _get_outgoing_edges(self, type_current_obj, path):
 
         edges = []
-        #type_current_obj = type(current_obj)
 
         for from_protocol_name, offers in self._adaptation_offers.items():
             from_protocol = offers[0].from_protocol
