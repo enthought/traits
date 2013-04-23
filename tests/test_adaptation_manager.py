@@ -75,7 +75,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
@@ -99,14 +99,14 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EUStandardToJapanStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.JapanStandard
@@ -128,28 +128,28 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # EUStandard->JapanStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EUStandardToJapanStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.JapanStandardToIraqStandard,
             from_protocol = ex.JapanStandard,
             to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EUStandardToIraqStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.IraqStandard
@@ -171,28 +171,28 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # UKStandard->EUStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.EUStandard
         )
 
         # UKStandard->JapanStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.UKStandardToJapanStandard,
             from_protocol = ex.UKStandard,
             to_protocol   = ex.JapanStandard
         )
 
         # JapanStandard->IraqStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.JapanStandardToIraqStandard,
             from_protocol = ex.JapanStandard,
             to_protocol   = ex.IraqStandard
         )
 
         # EUStandard->IraqStandard.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EUStandardToIraqStandard,
             from_protocol = ex.EUStandard,
             to_protocol   = ex.IraqStandard
@@ -224,7 +224,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
             else:
                 return None
 
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = travel_plug_to_eu_standard,
             from_protocol = ex.TravelPlug,
             to_protocol   = ex.EUStandard
@@ -247,8 +247,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         return
 
-
-    #@unittest.skip("We are not sure what the right behavior is in this case.")
     def test_spillover_adaptation_behavior(self):
         # We skip this test: all the example we could come up with for this
         # problem are cases of bad design, and without a good use case it's
@@ -257,7 +255,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # FileType->IEditor.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.FileTypeToIEditor,
             from_protocol = ex.FileType,
             to_protocol   = ex.IEditor
@@ -265,7 +263,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         # Meanwhile, in a plugin far, far away ...
         # IScriptable->IPrintable.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IScriptableToIUndoable,
             from_protocol = ex.IScriptable,
             to_protocol   = ex.IUndoable
@@ -286,14 +284,14 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # TextEditor->IPrintable.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.TextEditorToIPrintable,
             from_protocol = ex.TextEditor,
             to_protocol   = ex.IPrintable
         )
 
         # Editor->IPrintable.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EditorToIPrintable,
             from_protocol = ex.Editor,
             to_protocol   = ex.IPrintable
@@ -318,14 +316,14 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # Editor->IPrintable.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.EditorToIPrintable,
             from_protocol = ex.Editor,
             to_protocol   = ex.IPrintable
         )
 
         # TextEditor->IPrintable.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.TextEditorToIPrintable,
             from_protocol = ex.TextEditor,
             to_protocol   = ex.IPrintable
@@ -353,14 +351,14 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
             pass
 
         # object->Foo
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory = lambda adaptee: Foo(),
             from_protocol = object,
             to_protocol   = Foo
         )
 
         # Foo->object
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory = lambda adaptee: [],
             from_protocol = Foo,
             to_protocol   = object
@@ -395,28 +393,28 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # IIntermediate -> ITarget.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IIntermediateToITarget,
             from_protocol = ex.IIntermediate,
             to_protocol   = ex.ITarget
         )
 
         # IHuman -> IIntermediate.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IHumanToIIntermediate,
             from_protocol = ex.IHuman,
             to_protocol   = ex.IIntermediate
         )
 
         # IChild -> IIntermediate.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IChildToIIntermediate,
             from_protocol = ex.IChild,
             to_protocol   = ex.IIntermediate
         )
 
         # IPrimate -> IIntermediate.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IPrimateToIIntermediate,
             from_protocol = ex.IPrimate,
             to_protocol   = ex.IIntermediate
@@ -438,14 +436,14 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         ex = self.examples
 
         # IStart -> ISpecific.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IStartToISpecific,
             from_protocol = ex.IStart,
             to_protocol   = ex.ISpecific
         )
 
         # IGeneric -> IEnd.
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = ex.IGenericToIEnd,
             from_protocol = ex.IGeneric,
             to_protocol   = ex.IEnd
@@ -483,13 +481,13 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         class D(object):
             pass
 
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory=lambda adaptee: A(False), from_protocol=C, to_protocol=A
         )
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory=lambda adaptee: A(True),  from_protocol=D, to_protocol=A
         )
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory=lambda adaptee: D(),      from_protocol=C, to_protocol=D
         )
 
@@ -502,7 +500,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
                 b = None
             return b
 
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory=a_to_b_adapter, from_protocol=A, to_protocol=B
         )
 

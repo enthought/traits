@@ -65,7 +65,7 @@ adaptation_manager = AdaptationManager()
 
 register_ifoox_to_ix = """
 
-adaptation_manager.register_adapter_factory(
+adaptation_manager.register_factory(
     factory       = IFoo{source}ToI{target},
     from_protocol = IFoo{source},
     to_protocol   = I{target}
@@ -119,7 +119,7 @@ for source in range(N_SOURCES):
 adaptation_manager = AdaptationManager()
 
 register_fooxabc_to_abcx = """
-adaptation_manager.register_adapter_factory(
+adaptation_manager.register_factory(
     factory       = FooABC{source}ToABC{target},
     from_protocol = FooABC{source},
     to_protocol   = ABC{target}

@@ -36,7 +36,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         factory = CachedAdapterFactory(factory=ex.EditorToIPrintable)
 
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = factory,
             from_protocol = ex.Editor,
             to_protocol   = ex.IPrintable
@@ -70,7 +70,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         factory = CachedAdapterFactory(factory=LAZY_EXAMPLES + '.IBarToIFoo')
 
-        self.adaptation_manager.register_adapter_factory(
+        self.adaptation_manager.register_factory(
             factory       = factory,
             from_protocol = LAZY_EXAMPLES + '.IBar',
             to_protocol   = LAZY_EXAMPLES + '.IFoo',

@@ -121,7 +121,7 @@ class AdaptationManager(HasTraits):
 
         return result
 
-    def register_adaptation_offer(self, offer):
+    def register_offer(self, offer):
         """ Register an offer to adapt from one protocol to another. """
 
         offers = self._adaptation_offers.setdefault(
@@ -131,7 +131,7 @@ class AdaptationManager(HasTraits):
 
         return
 
-    def register_adapter_factory(self, factory, from_protocol, to_protocol):
+    def register_factory(self, factory, from_protocol, to_protocol):
         """ Register an adapter factory.
 
         This is a simply a convenience method that creates and registers an
@@ -141,7 +141,7 @@ class AdaptationManager(HasTraits):
 
         from apptools.adaptation.adaptation_offer import AdaptationOffer
 
-        self.register_adaptation_offer(
+        self.register_offer(
             AdaptationOffer(
                 factory       = factory,
                 from_protocol = from_protocol,
@@ -205,10 +205,17 @@ class AdaptationManager(HasTraits):
         counter = itertools.count()
 
         # The priority queue containing entries of the form
-        # (cumulative weight, path, current protocol) describing the path
-        # from `adaptee` to `adapter`.
-        # 'cumulative weight' is of the form
-        # (number of traversed adapters, , )
+        # (cumulative weight, path, current protocol) describing an
+        # adaptation path starting at `adaptee`, following a sequence
+        # of adaptation offers, `path`, and having weight `cumulative_weight`.
+        #
+        # 'cumulative weight' is a tuple of the form
+        # (number of traversed adapters,
+        #  number of steps up protocol hierarchies,
+        #  counter)
+        # The counter is an increasing number, and is used to make the
+        # priority queue stable w.r.t insertion time
+        # (see http://bit.ly/13VxILn).
         offer_queue = [((0, 0, next(counter)), [], type(adaptee))]
 
         while len(offer_queue) > 0:
@@ -324,59 +331,15 @@ def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
 #: The default global adaptation manager.
 adaptation_manager = AdaptationManager()
 
-# Convenience functions acting on the default adaptation manager.
+
+# Convenience references to methods on the default adaptation manager.
 #
 # If you add a public method to the adaptation manager protocol then don't
 # forget to add a convenience function here!
-def adapt(adaptee, to_protocol, default=AdaptationError):
-    """ Attempt to adapt an object to a given protocol.
 
-    `adaptee`     is the object that we want to adapt.
-    `to_protocol` is the protocol that the want to adapt the object to.
-
-    If `adaptee` already provides (i.e. implements) the given protocol
-    then it is simply returned unchanged.
-
-    Otherwise, we try to build a chain of adapters that adapt `adaptee`
-    to `to_protocol`.
-
-    If no such adaptation is possible then either an AdaptationError is
-    raised (if default=AdaptationError), or `default` is returned (as
-    in the default value passed to 'getattr' etc).
-
-    """
-
-    return adaptation_manager.adapt(adaptee, to_protocol, default=default)
-
-def register_adaptation_offer(offer):
-    """ Register an offer to adapt from one protocol to another. """
-
-    adaptation_manager.register_adaptation_offer(offer)
-
-    return
-
-def register_adapter_factory(factory, from_protocol, to_protocol):
-    """ Register an adapter factory.
-
-    This is a simply a convenience method that creates and registers an
-    'AdaptationOffer' from the given arguments.
-
-    """
-
-    adaptation_manager.register_adapter_factory(
-        factory, from_protocol, to_protocol
-    )
-
-    return
-
-def supports_protocol(obj, protocol):
-    """ Does object support a given protocol?
-
-    An object "supports" a protocol if either it "provides" it directly,
-    or it can be adapted to it.
-
-    """
-
-    return adaptation_manager.supports_protocol(obj, protocol)
+adapt             = adaptation_manager.adapt
+register_factory  = adaptation_manager.register_factory
+register_offer    = adaptation_manager.register_offer
+supports_protocol = adaptation_manager.supports_protocol
 
 #### EOF ######################################################################
