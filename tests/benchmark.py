@@ -7,6 +7,7 @@ any performance criteria - but in the future we might be ;^).
 
 
 import abc
+from pprint import pprint
 import time
 
 from apptools.adaptation.api import HasTraitsAdapter
@@ -14,47 +15,44 @@ from apptools.adaptation.adaptation_manager import AdaptationManager
 from traits.api import HasTraits, implements, Interface
 
 
-N_ITERATIONS = 1 #10000
-N_PROTOCOLS  = 1
+N_SOURCES    = 3
+N_ITERATIONS = 100
+N_PROTOCOLS  = 5
 
 
-# A class implementing a single Interface.
-class IFoo(Interface):
-    pass
-
-class Foo(HasTraits):
-    implements(IFoo)
-
-# An interface with explicitly no relation to 'Foo' or 'IFoo'!
-class IBar(Interface):
-    pass
+# Create some classes to adapt.
+for i in range(N_SOURCES):
+    exec 'class IFoo{i}(Interface): pass'.format(i=i)
+    exec 'class Foo{i}(HasTraits): implements(IFoo{i})'.format(i=i)
 
 # The object that we will try to adapt!
-foo = Foo()    
+foo = Foo1()
 
-
-# Create a lot of other interfaces!
+# Create a lot of other interfaces that we will adapt to.
 for i in range(N_PROTOCOLS):
-    exec 'class I%d(Interface): pass' % i
+    exec 'class I{i}(Interface): pass'.format(i=i)
 
-#  Create adapters from 'IFoo' to all of the interfaces.
-for i in range(N_PROTOCOLS):
-    exec 'class IFooToI%d(HasTraitsAdapter): implements(I%d)' % (i, i)
+create_traits_adapter_class = """
+class IFoo{source}ToI{target}(HasTraitsAdapter):
+    implements(I{source})
+"""
 
-#  Create adapters from 'IBar' to all of the interfaces.
-for i in range(N_PROTOCOLS):
-    exec 'class IBarToI%d(HasTraitsAdapter): implements(I%d)' % (i, i)
+#  Create adapters from each 'IFooX' to all of the interfaces.
+for source in range(N_SOURCES):
+    for target in range(N_PROTOCOLS):
+        exec create_traits_adapter_class.format(source=source, target=target)
 
 #### PyProtocols ###############################################################
 
 from traits.api import adapts as traits_register
 
-register_ifoo_to_ix = 'traits_register(IFooToI%d, IFoo, I%d)'
-register_ibar_to_ix = 'traits_register(IBarToI%d, IBar, I%d)'
+register_ifoox_to_ix = """
+traits_register(IFoo{source}ToI{target}, IFoo{source}, I{target})
+"""
 
-for i in range(N_PROTOCOLS):
-    exec register_ifoo_to_ix % (i, i)
-    exec register_ibar_to_ix % (i, i)
+for source in range(N_SOURCES):
+    for target in range(N_PROTOCOLS):
+        exec register_ifoox_to_ix.format(source=source, target=target)
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
@@ -66,22 +64,12 @@ print 'traits.protocol: %f msec per iteration' % time_per_iter
 
 adaptation_manager = AdaptationManager()
 
-register_ifoo_to_ix = """
+register_ifoox_to_ix = """
 
 adaptation_manager.register_adapter_factory(
-    factory       = IFooToI%d,
-    from_protocol = IFoo,
-    to_protocol   = I%d
-)
-
-"""
-
-register_ibar_to_ix = """
-
-adaptation_manager.register_adapter_factory(
-    factory       = IBarToI%d,
-    from_protocol = IBar,
-    to_protocol   = I%d
+    factory       = IFoo{source}ToI{target},
+    from_protocol = IFoo{source},
+    to_protocol   = I{target}
 )
 
 """
@@ -89,87 +77,67 @@ adaptation_manager.register_adapter_factory(
 # We register the adapters in reversed order, so that looking for the one
 # with index 0 will need traversing the whole list.
 # I.e., we're considering the worst case scenario.
-for i in reversed(range(N_PROTOCOLS)):
-    exec register_ifoo_to_ix % (i, i)
-    exec register_ibar_to_ix % (i, i)
-    
+for source in range(N_SOURCES):
+    for target in reversed(range(N_PROTOCOLS)):
+        exec register_ifoox_to_ix.format(source=source, target=target)
+
 start_time = time.time()
 for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, I0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print 'apptools using Interfaces: %.3f msec per iteration' % time_per_iter
 
+
 #### apptools.adaptation with ABCs #############################################
 
-# A class implementing a single ABC.
-class FooABC(object):
-    __metaclass__ = abc.ABCMeta
-
-class Foo(object):
-    pass
-
-FooABC.register(Foo)
-
-# An ABCe with explicitly no relation to 'Foo' or 'FooABC'!
-class BarABC(object):
-    __metaclass__ = abc.ABCMeta
+# Create some classes to adapt (using ABCs!).
+for i in range(N_SOURCES):
+    exec 'class FooABC{i}(object): __metaclass__ = abc.ABCMeta'.format(i=i)
+    exec 'class Foo{i}(object): pass'.format(i=i)
+    exec 'FooABC{i}.register(Foo{i})'.format(i=i)
 
 # The object that we will try to adapt!
-foo = Foo()
-
+foo = Foo0()
 
 # Create a lot of other ABCs!
 for i in range(N_PROTOCOLS):
-    exec 'class ABC%d(object): __metaclass__ = abc.ABCMeta' % i
+    exec 'class ABC{i}(object): __metaclass__ = abc.ABCMeta'.format(i=i)
 
 #  Create adapters from 'FooABC' to all of the ABCs.
-for i in range(N_PROTOCOLS):
-    exec """
-class FooABCToABC%d(object):
+create_abc_adapter_class = """
+class FooABC{source}ToABC{target}(object):
     def __init__(self, adaptee):
         pass
+"""
 
-""" % i
-    exec 'ABC%d.register(FooABCToABC%d)' % (i, i)
+register_abc_adapter_class = """
+ABC{target}.register(FooABC{source}ToABC{target})
+"""
 
-    exec """
-class BarABCToABC%d(object):
-    def __init__(self, adaptee):
-        pass
-
-""" % i
-    exec 'ABC%d.register(BarABCToABC%d)' % (i, i)
+for source in range(N_SOURCES):
+    for target in range(N_PROTOCOLS):
+        exec create_abc_adapter_class.format(source=source, target=target)
+        exec register_abc_adapter_class.format(source=source, target=target)
 
 # Register all of the adapters.
 adaptation_manager = AdaptationManager()
 
-register_fooabc_to_abcx = """
-
+register_fooxabc_to_abcx = """
 adaptation_manager.register_adapter_factory(
-    factory       = FooABCToABC%d,
-    from_protocol = FooABC,
-    to_protocol   = ABC%d
+    factory       = FooABC{source}ToABC{target},
+    from_protocol = FooABC{source},
+    to_protocol   = ABC{target}
 )
-
-"""
-
-register_barabc_to_abcx = """
-
-adaptation_manager.register_adapter_factory(
-    factory       = BarABCToABC%d,
-    from_protocol = BarABC,
-    to_protocol   = ABC%d
-)
-
 """
 
 # We register the adapters in reversed order, so that looking for the one
 # with index 0 will need traversing the whole list.
 # I.e., we're considering the worst case scenario.
-for i in reversed(range(N_PROTOCOLS)):
-    exec register_fooabc_to_abcx % (i, i)
-    exec register_barabc_to_abcx % (i, i)
+for source in range(N_SOURCES):
+    for target in reversed(range(N_PROTOCOLS)):
+        exec register_fooxabc_to_abcx.format(source=source, target=target)
 
+pprint(adaptation_manager._adaptation_offers)
 start_time = time.time()
 for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, ABC0)
