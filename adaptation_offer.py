@@ -52,6 +52,9 @@ class AdaptationOffer(HasTraits):
     #: statement 'from foo.bar import baz' and imported when the trait is
     #: accessed.
     from_protocol = Property(Any)
+    from_protocol_name = Property(Any)
+    def _get_from_protocol_name(self):
+        return self._get_type_name(self._from_protocol)
 
     #: Adapters created by the factory adapt *to* this protocol.
     #:
@@ -128,5 +131,27 @@ class AdaptationOffer(HasTraits):
         self._to_protocol = to_protocol
 
         return
+
+    def _get_type_name(self, type_or_type_name):
+        """ Returns the full dotted path for a type.
+
+        For example:
+        from traits.api import HasTraits
+        _get_type_name(HasTraits) == 'traits.has_traits.HasTraits'
+
+        If the type is given as a string (e.g., for lazy loading), it is just
+        returned.
+
+        """
+
+        if isinstance(type_or_type_name, basestring):
+            type_name = type_or_type_name
+
+        else:
+            type_name = "{}.{}".format(
+                type_or_type_name.__module__, type_or_type_name.__name__
+            )
+
+        return type_name
 
 #### EOF ######################################################################

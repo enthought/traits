@@ -124,9 +124,9 @@ class AdaptationManager(HasTraits):
     def register_adaptation_offer(self, offer):
         """ Register an offer to adapt from one protocol to another. """
 
-        from_protocol_name = self._get_type_name(offer.from_protocol)
-
-        offers = self._adaptation_offers.setdefault(from_protocol_name, [])
+        offers = self._adaptation_offers.setdefault(
+            offer.from_protocol_name, []
+        )
         offers.append(offer)
 
         return
@@ -255,28 +255,6 @@ class AdaptationManager(HasTraits):
 
         return None
 
-    def _get_type_name(self, type_or_type_name):
-        """ Returns the full dotted path for a type.
-
-        For example:
-        from traits.api import HasTraits
-        _get_type_name(HasTraits) == 'traits.has_traits.HasTraits'
-
-        If the type is given as a string (e.g., for lazy loading), it is just
-        returned.
-
-        """
-
-        if isinstance(type_or_type_name, basestring):
-            type_name = type_or_type_name
-
-        else:
-            type_name = "{}.{}".format(
-                type_or_type_name.__module__, type_or_type_name.__name__
-            )
-
-        return type_name
-
     def _get_applicable_offers(self, current_protocol, path):
         """ Find all adaptation offers that can be applied to a protocol.
 
@@ -306,7 +284,6 @@ class AdaptationManager(HasTraits):
                         edges.append((mro_distance, offer))
 
         return edges
-
 
 def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
     """ Comparison function for graph edges.
