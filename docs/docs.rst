@@ -102,6 +102,15 @@ We also would like to consider porting the code using the
 `apptools.type_manager` package to `adaptation` and delete the former.
 
 
+Notes for potential optimizations
+---------------------------------
+
+* In some applications, a small number of adapters are used a lot more often
+  than others. These adapters should be considered first, so that the
+  search on the adaptation graph can quit early on average.
+  It should be relatively easy to collect usage statistics, and periodically
+  re-arrange the internal order of the adapters.
+
 Changelog
 ---------
 
