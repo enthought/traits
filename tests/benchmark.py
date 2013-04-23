@@ -19,7 +19,6 @@ N_SOURCES    = 3
 N_ITERATIONS = 100
 N_PROTOCOLS  = 5
 
-
 # Create some classes to adapt.
 for i in range(N_SOURCES):
     exec 'class IFoo{i}(Interface): pass'.format(i=i)
@@ -103,21 +102,18 @@ foo = Foo0()
 for i in range(N_PROTOCOLS):
     exec 'class ABC{i}(object): __metaclass__ = abc.ABCMeta'.format(i=i)
 
-#  Create adapters from 'FooABC' to all of the ABCs.
+# Create adapters from 'FooABC' to all of the ABCs.
 create_abc_adapter_class = """
 class FooABC{source}ToABC{target}(object):
     def __init__(self, adaptee):
         pass
-"""
 
-register_abc_adapter_class = """
 ABC{target}.register(FooABC{source}ToABC{target})
 """
 
 for source in range(N_SOURCES):
     for target in range(N_PROTOCOLS):
         exec create_abc_adapter_class.format(source=source, target=target)
-        exec register_abc_adapter_class.format(source=source, target=target)
 
 # Register all of the adapters.
 adaptation_manager = AdaptationManager()
@@ -137,7 +133,6 @@ for source in range(N_SOURCES):
     for target in reversed(range(N_PROTOCOLS)):
         exec register_fooxabc_to_abcx.format(source=source, target=target)
 
-pprint(adaptation_manager._adaptation_offers)
 start_time = time.time()
 for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, ABC0)
