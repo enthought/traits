@@ -13,6 +13,9 @@ class TestAdaptationOffer(unittest.TestCase):
     def test_lazy_loading(self):
 
         LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
+        if LAZY_EXAMPLES in sys.modules:
+            del sys.modules[LAZY_EXAMPLES]
+
         offer = AdaptationOffer(
             factory       =(LAZY_EXAMPLES + '.IBarToIFoo'),
             from_protocol =(LAZY_EXAMPLES + '.IBar'),

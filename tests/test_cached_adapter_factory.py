@@ -65,17 +65,15 @@ class TestCachedAdapterFactory(unittest.TestCase):
     def test_cached_adapters_with_lazy_loaded_factory(self):
 
         LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
-
-        from apptools.adaptation.tests.lazy_examples import IBar, IFoo
-
-        del sys.modules[LAZY_EXAMPLES]
+        if LAZY_EXAMPLES in sys.modules:
+            del sys.modules[LAZY_EXAMPLES]
 
         factory = CachedAdapterFactory(factory=LAZY_EXAMPLES + '.IBarToIFoo')
 
         self.adaptation_manager.register_adapter_factory(
             factory       = factory,
-            from_protocol = IBar,
-            to_protocol   = IFoo,
+            from_protocol = LAZY_EXAMPLES + '.IBar',
+            to_protocol   = LAZY_EXAMPLES + '.IFoo',
         )
 
         self.assertNotIn(LAZY_EXAMPLES, sys.modules)
