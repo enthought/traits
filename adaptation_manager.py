@@ -205,8 +205,9 @@ class AdaptationManager(HasTraits):
         counter = itertools.count()
 
         # The priority queue containing entries of the form
-        # (cumulative weight, path, current_protocol) describing the path
+        # (cumulative weight, path, current protocol) describing the path
         # from `adaptee` to `adapter`.
+        # 'cumulative weight' is of the form ''
         offer_queue = [((0, 0, next(counter)), [], type(adaptee))]
 
         while len(offer_queue) > 0:
@@ -231,7 +232,7 @@ class AdaptationManager(HasTraits):
                     # Walk path and create adapters
                     adapter = adaptee
                     for offer in new_path:
-                        adapter = offer.adapt(adapter, offer.to_protocol)
+                        adapter = offer.factory(adaptee=adapter)
                         if adapter is None:
                             break
                     else:

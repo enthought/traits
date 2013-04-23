@@ -61,23 +61,6 @@ class AdaptationOffer(HasTraits):
     #: accessed.
     to_protocol = Property(Any)
 
-    def adapt(self, obj, to_protocol):
-        """ Adapt the object to the given protocol.
-
-        Return None if the object cannot be adapted to the given protocol.
-
-        """
-
-        if not AdaptationManager.provides_protocol(
-            type(obj), self.from_protocol
-        ):
-            return None
-
-        if to_protocol is not self.to_protocol:
-            return None
-
-        return self.factory(adaptee=obj)
-
     #### Private protocol ######################################################
 
     #: Shadow trait for the corresponding property.
