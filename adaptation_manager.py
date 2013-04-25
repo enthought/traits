@@ -102,7 +102,7 @@ class AdaptationManager(HasTraits):
 
         # If the object already provides the given protocol then it is
         # simply returned.
-        if self.provides_protocol(type(adaptee), to_protocol):
+        if self.provides_protocol(adaptee.__class__, to_protocol):
             result = adaptee
 
         # Otherwise, try adapting the object.
