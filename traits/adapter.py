@@ -32,7 +32,7 @@ from .has_traits import HasTraits
 from .trait_types import Any, Bool, Expression
 
 # PyProtocols imports:
-from .protocols.api import addClassAdvisor, declareAdapter, declareImplementation, Protocol
+from .protocols.advice import addClassAdvisor
 
 #-------------------------------------------------------------------------------
 #  'Adapter' class:
@@ -107,9 +107,9 @@ class DefaultAdapterFactory ( HasTraits ):
     # the adapters keyed by weak references to the adapted objects.
     _adapters = Any
 
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #  'IAdapterFactory' interface:
-    #-------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
 
     def __call__ ( self, object ):
         """ Creates an adapter for the specified object.
@@ -183,56 +183,55 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
     def callback ( klass ):
         """ Called when the class has been created. """
 
-        # What the adapter adapts from:
-        if type( from_ ) is not list:
-            for_items = [ from_ ]
-        else:
-            for_items = from_
+        # At this point:-
+        #
+        # klass is the callable (usually a class) that takes one argument (the
+        # adaptee) and returns an appropriate adapter (or None if the adaptation
+        # is not possible).
 
-        # The things we adapt from have to be split into two lists for
-        # PyProtocols, one containing Python types (i.e. classes) and one
-        # containing protocols (i.e. interfaces):
-        for_types     = []
-        for_protocols = []
-        for item in for_items:
-            if isinstance( item, Protocol ):
-                for_protocols.append( item )
+        # What the adapters created by the factory will adapt from.
+        if type(from_) is not list:
+            from_protocols = [from_]
+
+        else:
+            from_protocols = from_
+
+        # What the adapters created by the factory will adapt to.
+        if type(to) is not list:
+            to_protocols = [to]
+
+        else:
+            to_protocols = to
+
+        if factory is None:
+            # If the adapter is cached or has a 'when' expression then create a
+            # default factory:
+            if cached or (when != ''):
+                adapter_factory = DefaultAdapterFactory(
+                    klass=klass, cached=cached, when=when or 'True'
+                )
+
+            # Otherwise, just use the adapter class itself.
             else:
-                for_types.append( item )
+                adapter_factory = klass
 
-        # What the adapter adapts to:
-        if type( to ) is not list:
-            provides = [ to ]
         else:
-            provides = to
+            adapter_factory = factory
 
-        # Tell PyProtocols that the adapter class implements the protocols that
-        # it adapts to:
-        declareImplementation( klass, instancesProvide = provides )
+        # FIXME: Temporary import from apptools!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        from apptools.adaptation.api import register_factory
 
-        # If a factory was specified then use it:
-        if factory is not None:
-            f = factory
 
-        # If the adapter is cached or has a 'when' expression then create a
-        # default factory:
-        elif cached or (when != ''):
-            f = DefaultAdapterFactory( klass  = klass,
-                                       cached = cached,
-                                       when   = when or 'True' )
-
-        # Otherwise, just use the adapter class itself:
-        else:
-            f = klass
-
-        # Tell PyProtocols about the factory:
-        declareAdapter( f, provides, forProtocols = for_protocols,
-                                     forTypes     = for_types )
+        for from_protocol in from_protocols:
+            for to_protocol in to_protocols:
+                register_factory(adapter_factory, from_protocol, to_protocol)
 
         return klass
 
     if adapter is not None:
-        callback( adapter )
-    else:
-        addClassAdvisor( callback )
+        callback(adapter)
 
+    else:
+        addClassAdvisor(callback)
+
+#### EOF ######################################################################

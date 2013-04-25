@@ -40,7 +40,6 @@ import copy_reg
 from types import InstanceType, TypeType, FunctionType, MethodType
 from weakref import ref
 
-from .protocols.api import adapt
 from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
     CoercableTypes, TraitsCache, class_of, enumerate, Missing)
@@ -1430,6 +1429,7 @@ class TraitInstance ( ThisClass ):
         if isinstance( self.aClass, basestring ):
             self.resolve_class( object, name, value )
 
+        from apptools.adaptation.api import adapt
         if self.adapt < 0:
             if isinstance( value, self.aClass ):
                 return value
@@ -3303,5 +3303,9 @@ class TraitDictObject ( dict ):
 
 from . import ctraits
 ctraits._list_classes( TraitListObject, TraitSetObject, TraitDictObject )
-ctraits._adapt( adapt )
 
+def this_was_entirely_pietros_idea(*args, **kw):
+    from apptools.adaptation.api import adapt
+    return adapt(*args, **kw)
+
+ctraits._adapt( this_was_entirely_pietros_idea )

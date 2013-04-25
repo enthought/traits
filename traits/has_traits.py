@@ -55,8 +55,7 @@ from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
 
 from .trait_errors import TraitError
 
-from .protocols.api import (InterfaceClass, Protocol, addClassAdvisor,
-    declareImplementation)
+from .protocols.advice import addClassAdvisor
 
 #-------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
@@ -685,28 +684,15 @@ class MetaHasTraits ( type ):
 #  'MetaInterface' class:
 #-------------------------------------------------------------------------------
 
-class MetaInterface ( MetaHasTraits, InterfaceClass ):
+# FIMXE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+from apptools.adaptation.adaptation_error import AdaptationError
+
+class MetaInterface ( MetaHasTraits ):
     """ Meta class for interfaces.
 
-        This combines trait and PyProtocols functionality.
     """
 
-    def __init__ ( self, __name__, __bases__, __dict__ ):
-        """ This method is copied over from PyProtocols 'AbstractBaseMets'.
-
-            It is needed here to make sure that we don't add any implied
-            protocols for *our* 'Interface' class (since PyProtocols doesn't
-            know about it.
-        """
-
-        type.__init__( self, __name__, __bases__, __dict__ )
-        Protocol.__init__( self )
-
-        for base in __bases__:
-            if isinstance( base, InterfaceClass ) and (base is not Interface):
-                self.addImpliedProtocol( base )
-
-    def __call__ ( self, *args, **kw ):
+    def __call__ ( self, adaptee, default=AdaptationError ):
         """ This method is copied over from the PyProtocols 'InterfaceClass'
             (and cleaned up a little). It is needed here because:
 
@@ -715,17 +701,10 @@ class MetaInterface ( MetaHasTraits, InterfaceClass ):
             b) the reference to 'Interface' now needs to reference *our*
                Interface.
         """
-        if self.__init__ is Interface.__init__:
-            return Protocol.__call__( self, *args, **kw )
 
-        return type.__call__( self, *args, **kw )
+        from apptools.adaptation.api import adapt
 
-    def getBases ( self ):
-        """ Overridden to make sure we don't return our 'Interface' class. """
-
-        return [ base for base in self.__bases__
-                 if isinstance( base, InterfaceClass ) and
-                    (base is not Interface) ]
+        return adapt(adaptee, self, default=default)
 
 #-------------------------------------------------------------------------------
 #  'MetaHasTraitsObject' class:
@@ -1213,9 +1192,6 @@ def implements ( *interfaces ):
 
                 if issubclass( subclass, Interface ):
                     closure.add( subclass )
-
-        # Tell PyProtocols that the class implements its interfaces:
-        declareImplementation( target, instancesProvide = list( closure ) )
 
         # Make sure the class actually does implement the interfaces it claims
         # to:

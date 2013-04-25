@@ -33,8 +33,6 @@ from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
 from . import trait_handlers
 
-from .protocols.api import adapt
-
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
         ClassTypes, Undefined, Missing, TraitsCache, python_version)
 
@@ -2560,12 +2558,9 @@ def validate_implements ( value, klass, unused = None ):
     """
     from .has_traits        import Interface
     from .interface_checker import check_implements
-    from .protocols.api     import declareImplementation
 
     rc = (issubclass( klass, Interface) and
           check_implements( value.__class__, klass ))
-    if rc:
-        declareImplementation( value.__class__, instancesProvide = [ klass ] )
 
     return rc
 
@@ -2685,6 +2680,8 @@ class BaseInstance ( BaseClass ):
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
         """
+        from apptools.adaptation.api import adapt
+
         if value is None:
             if self._allow_none:
                 return value
