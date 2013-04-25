@@ -3,6 +3,7 @@
 
 from traits.api import Any, Enum, HasTraits, implements, Interface
 
+from apptools.adaptation.api import HasTraitsAdapter as Adapter
 
 #### 'Power plugs' metaphor ###################################################
 
@@ -39,9 +40,6 @@ class TravelPlug(HasTraits):
     mode = Enum(['Europe', 'Asia'])
 
 #### Adapters #################################################################
-
-class Adapter(HasTraits):
-    adaptee = Any
 
 class UKStandardToEUStandard(Adapter):
     implements(EUStandard)

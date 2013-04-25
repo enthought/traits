@@ -8,11 +8,7 @@ import itertools
 from traits.api import Dict, HasTraits, Interface, List, Str
 from traits.has_traits import __NoInterface__
 
-
-class AdaptationError(TypeError):
-    """ Exception raised when a requested adaptation is not possible. """
-
-    pass
+from apptools.adaptation.adaptation_error import AdaptationError
 
 
 class AdaptationManager(HasTraits):
@@ -251,7 +247,7 @@ class AdaptationManager(HasTraits):
                     # Walk path and create adapters
                     adapter = adaptee
                     for offer in new_path:
-                        adapter = offer.factory(adaptee=adapter)
+                        adapter = offer.factory(adapter)
                         if adapter is None:
                             # This adaptation attempt failed (e.g. because of
                             # conditional adaptation).

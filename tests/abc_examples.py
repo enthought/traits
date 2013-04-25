@@ -3,6 +3,8 @@
 
 from abc import ABCMeta
 
+from apptools.adaptation.api import Adapter
+
 
 #### 'Power plugs' metaphor ###################################################
 
@@ -48,10 +50,6 @@ class TravelPlug(object):
         self.mode = mode
 
 #### Adapters #################################################################
-
-class Adapter(object):
-    def __init__(self, adaptee):
-        self.adaptee = adaptee
 
 # UK->EU
 class UKStandardToEUStandard(Adapter):
