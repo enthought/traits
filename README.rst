@@ -4,6 +4,10 @@ traits: explicitly typed attributes for Python
 
 http://github.enthought.com/traits
 
+.. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
+   :target: https://api.travis-ci.org/enthought/traits
+   :alt: Build status
+
 The Traits project is at the center of all Enthought Tool Suite development
 and has changed the mental model used at Enthought for programming in the
 already extremely efficient Python programming language. We encourage everyone
@@ -37,10 +41,10 @@ or can opt to allow the use of only a fixed or open set of trait attributes
 within the class. Trait attributes defined by a class are automatically
 inherited by any subclass derived from the class.
 
-Prerequisites
--------------
-You must have the following libraries installed before building or installing
-Traits:
+Dependencies
+------------
+
+Traits has the following optional dependencies:
 
 * `Numpy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
