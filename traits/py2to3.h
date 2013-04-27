@@ -189,9 +189,8 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
 #define Py2to3_AttrNameCheck(name) (PyUnicode_Check(name))
 
 PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject *bad_attr) {
-
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3) && 0 // this does not work as intended! don't use it!
     Py_hash_t hash;
-#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
     if( PyUnicode_CheckExact( name ) ) {
 #if PY_MINOR_VERSION < 3
         hash = ((PyUnicodeObject *) dict)->hash;
