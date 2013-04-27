@@ -3518,6 +3518,8 @@ validate_trait_cast_type ( trait_object * trait, has_traits_object * obj,
     if ( (result = type_converter( type, value )) != NULL )
         return result;
 
+    PyErr_Clear();
+
     return raise_trait_error( trait, obj, name, value );
 }
 
