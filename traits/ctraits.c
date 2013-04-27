@@ -762,6 +762,7 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
 
     assert( PyDict_Check( dict ) );
 
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
     Py_hash_t hash = Py2to3_GetHash_wCache( key );
     if ( hash == -1 ) {
         PyErr_Clear();
@@ -769,6 +770,9 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
     }
 
     return (dict->ma_lookup)( dict, key, hash )->me_value;
+#else
+    return PyDict_GetItem(dict,key);
+#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -4337,11 +4341,30 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     int prefix_type;
     int modify_delegate;
 
-    if ( !PyArg_ParseTuple( args, "O!O!ii",
-                            &Py2to3_SimpleString_Type, &delegate_name,
-                            &Py2to3_SimpleString_Type, &delegate_prefix,
+#if PY_MAJOR_VERSION < 3
+    {
+        const char *delegate_name_str;
+        const char *delegate_prefix_str;
+        if ( !PyArg_ParseTuple( args, "ssii",
+                                &delegate_name_str, &delegate_prefix_str,
+                                &prefix_type,   &modify_delegate ) )
+            return NULL;
+        delegate_name = PyString_FromString(delegate_name_str);
+        delegate_prefix = PyString_FromString(delegate_prefix_str);
+        if(!delegate_name || !delegate_prefix){
+            Py_XDECREF(delegate_name);
+            Py_XDECREF(delegate_prefix);
+            return NULL;
+        }
+    }
+#else
+    if ( !PyArg_ParseTuple( args, "UUii",
+                            &delegate_name, &delegate_prefix,
                             &prefix_type,   &modify_delegate ) )
         return NULL;
+    Py_INCREF( delegate_name );
+    Py_INCREF( delegate_prefix );
+#endif
 
     if ( modify_delegate ) {
         trait->flags |= TRAIT_MODIFY_DELEGATE;
@@ -4351,8 +4374,6 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
 
     trait->delegate_name   = delegate_name;
     trait->delegate_prefix = delegate_prefix;
-    Py_INCREF( delegate_name );
-    Py_INCREF( delegate_prefix );
     if ( (prefix_type < 0) || (prefix_type > 3) )
         prefix_type = 0;
 

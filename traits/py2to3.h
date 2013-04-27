@@ -122,7 +122,11 @@ Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){
 #ifndef Py_LIMITED_API
     Py_hash_t hash = -1;
     if ( PyUnicode_CheckExact( obj ) ) {
+#if PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3
         hash = ((PyUnicodeObject *) obj)->hash;
+#else
+        hash = ((PyUnicodeObject *) obj)->_base._base.hash;
+#endif
 //    } else if ( PyBytes_CheckExact( key )) {
 //        hash = ((PyBytesObject *) key)->ob_shash;
     }
@@ -187,9 +191,15 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
 PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject *bad_attr) {
 
     Py_hash_t hash;
-#ifndef Py_LIMITED_API
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
     if( PyUnicode_CheckExact( name ) ) {
-        if( (hash = ((PyUnicodeObject *) name)->hash) == -1)
+#if PY_MINOR_VERSION < 3
+        hash = ((PyUnicodeObject *) dict)->hash;
+#else
+        // currently not usable, as dict->ma_lookup does not exist either
+        hash = ((PyUnicodeObject *) dict)->_base._base.hash;
+#endif
+        if( hash == -1)
            hash = PyObject_Hash( name );
         return (dict->ma_lookup)( dict, name, hash )->me_value;
     }
@@ -197,8 +207,7 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
     if( !PyUnicode_Check(name) )
         return bad_attr;
 
-    hash = PyObject_Hash( name );
-    return (dict->ma_lookup)( dict, name, hash )->me_value;
+    return PyDict_GetItem(dict, name);
 }
 
 #endif // #if PY_MAJOR_VERSION < 3

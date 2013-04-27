@@ -13,7 +13,7 @@ exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 ctraits = Extension(
     'traits.ctraits',
     sources = ['traits/ctraits.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3'],
+    extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
 
 
