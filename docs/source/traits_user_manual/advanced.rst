@@ -570,7 +570,8 @@ Adaptation
 ----------
 
 *The adaptation features of Traits have been rewritten in v. 4.4.0 . See
-the `migration`_ guide below for details regarding changes in API.*
+the* :ref:`migration guide <migration>` *below for details regarding changes
+in API.*
 
 Adaptation is the process of transforming an object that does not implement a
 specific interface needed by a client into an object that does. In the adapter
@@ -779,15 +780,75 @@ adaptee object.
 Conditional adaptation
 ::::::::::::::::::::::
 
-return None if not possible
+A common use of adapter factories is to allow adaptation only if the
+state of the adaptee object allows it. The factory returns an adapter object
+if adaptation is possible, or None if it is not.
 
-return different adapters in different situations
+In the following example, a ``numpy.ndarray`` object can be adapted to provide
+an ``IImage`` protocol only if the number of dimensions is 2.
+::
+
+    import abc
+    import numpy
+    from traits.api import Array, HasTraits
+    from traits.adaptation.api import adapt, HasTraitsAdapter, register_factory
+
+    class ImageABC(object):
+        __metaclass__ = abc.ABCMeta
+
+    class NDArrayToImage(HasTraitsAdapter):
+        adaptee = Array
+
+    # Declare that NDArrayToImage implements ImageABC.
+    ImageABC.register(NDArrayToImage)
+
+    def ndarray_to_i_image(adaptee):
+        if adaptee.ndim == 2:
+            return NDArrayToImage(adaptee=adaptee)
+        return None
+
+    register_factory(ndarray_to_i_image, numpy.ndarray, ImageABC)
+
+    # This adaptation fails, as the array is 1D
+    image = adapt(numpy.ndarray([1,2,3]), ImageABC, default=None)
+    assert image == None
+
+    # This succeeds.
+    image = adapt(numpy.array([[1,2],[3,4]]), ImageABC)
+    assert isinstance(image, NDArrayToImage)
 
 Caching
 :::::::
 
-CachedAdapterFactory
+Adapter factories are also used to cache the result of adaptation, which
+can be useful when creating the adapter is time consuming, or when the
+adapter should preserve some state across adaptations.
 
+The Traits adaptation package provide a class for this common case,
+:class:`~traits.adaptation.cached_adapter_factory.CachedAdapterFactory`.
+The class defines one trait, a ``factory`` that actually creates the adapters.
+Caching is done per instance of the adaptee object.
+
+For example::
+
+    from traits.adaptation.api import adapt, Adapter, CachedAdapterFactory, \
+        register_factory
+
+    class A(object):
+        pass
+
+    class B(object):
+        pass
+
+    class AToB(Adapter):
+        pass
+
+    register_factory(CachedAdapterFactory(factory=AToB), A, B)
+
+    a = A()
+    adapter = adapt(a, B)
+    adapter_2 = adapt(a, B)
+    assert adapter is adapter_2
 
 .. index:: adapters; using
 
@@ -853,17 +914,42 @@ uses adapt metadata::
 Using this definition, any value assigned to renter must implement the IName
 interface. Otherwise, an exception is raised.
 
-Implementation
-``````````````
+Implementation details
+``````````````````````
 
-Blah, precedence rules
+The algorithm for finding a sequence of adapters adapting an object ``adaptee``
+to a protocol ``to_protocol`` is based on a weighted graph.
+
+Nodes on the graphs are protocols (types or interfaces).
+Edges are adaptation offers that connect a ``offer.from_protocol`` to a
+``offer.to_protocol``.
+
+Edges connect protocol ``A`` to protocol ``B`` and are weighted by two
+numbers in this priority:
+
+1) a unit weight (1) representing the fact that we use 1 adaptation
+   offer to go from ``A`` to ``B``
+2) the number of steps up the type hierarchy that we need to take
+   to go from ``A`` to ``offer.from_protocol``, so that more specific
+   adapters are always preferred
+
+The algorithm finds the shortest weighted path between ``adaptee``
+and ``to_protocol``. Once a candidate path is found, it tries to
+create the adapters using the factories in the adaptation offers
+that compose the path. If this fails because of conditional
+adaptation (i.e., an adapter factory returns None), the path
+is discarded and the algorithm looks for the next shortest path.
+
+Cycles in adaptation are avoided by only considering path were
+every adaptation offer is used at most once.
 
 .. _migration:
 
 Migration guide
 ```````````````
 
-4.3.0 -> 4.4.0
+The implementation of the adaptation mechanism changed in Traits 4.4.0 from
+one based on PyProtocols to a new, smaller, and more robust implementation.
 
 Code written against the `traits.protocols` will continue to work, although
 the `traits.protocols` API has been deprecated and its members will log a
