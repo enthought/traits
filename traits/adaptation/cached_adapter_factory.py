@@ -1,7 +1,7 @@
 """ An adapter factory that caches adapters per instance. """
 
 
-from traits.api import Any, Bool, Callable, Dict, HasTraits, Property
+from traits.api import Any, Bool, HasTraits, Property
 import weakref
 
 from apptools.naming.initial_context import _import_symbol
