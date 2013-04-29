@@ -3,49 +3,216 @@
 
 from abc import ABCMeta
 
+from apptools.adaptation.api import Adapter
 
-#### Protocols #################################################################
 
-class FooABC(object):
+#### 'Power plugs' metaphor ###################################################
+
+#### Protocols ################################################################
+
+class UKStandard(object):
     __metaclass__ = ABCMeta
 
-class BarABC(object):
+class EUStandard(object):
     __metaclass__ = ABCMeta
 
-class BazABC(object):
+class JapanStandard(object):
     __metaclass__ = ABCMeta
 
-#### Implementations ###########################################################
+class IraqStandard(object):
+    __metaclass__ = ABCMeta
 
-class Foo(object):
+#### Implementations ##########################################################
+
+class UKPlug(object):
     pass
 
-FooABC.register(Foo)
+UKStandard.register(UKPlug)
 
-class Bar(object):
+class EUPlug(object):
     pass
 
-BarABC.register(Bar)
+EUStandard.register(EUPlug)
 
-class Baz(object):
+class JapanPlug(object):
     pass
 
-BazABC.register(Baz)
+JapanStandard.register(JapanPlug)
 
-#### Adapters ##################################################################
-
-class Adapter(object):
-    def __init__(self, adaptee):
-        self.adaptee = adaptee
-    
-class FooABCToBarABCAdapter(Adapter):
+class IraqPlug(object):
     pass
 
-BarABC.register(FooABCToBarABCAdapter)
+IraqStandard.register(IraqPlug)
 
-class BarABCToBazABCAdapter(Adapter):
+class TravelPlug(object):
+
+    def __init__(self, mode):
+        self.mode = mode
+
+#### Adapters #################################################################
+
+# UK->EU
+class UKStandardToEUStandard(Adapter):
     pass
 
-BazABC.register(BarABCToBazABCAdapter)
+EUStandard.register(UKStandardToEUStandard)
+
+# EU->Japan
+class EUStandardToJapanStandard(Adapter):
+    pass
+
+JapanStandard.register(EUStandardToJapanStandard)
+
+# Japan->Iraq
+class JapanStandardToIraqStandard(Adapter):
+    pass
+
+IraqStandard.register(JapanStandardToIraqStandard)
+
+# EU->Iraq
+class EUStandardToIraqStandard(Adapter):
+    pass
+
+IraqStandard.register(EUStandardToIraqStandard)
+
+# UK->Japan
+class UKStandardToJapanStandard(Adapter):
+    pass
+
+JapanStandard.register(UKStandardToJapanStandard)
+
+# Travel->Japan
+class TravelPlugToJapanStandard(Adapter):
+    pass
+
+JapanStandard.register(TravelPlugToJapanStandard)
+
+# Travel->EU
+class TravelPlugToEUStandard(Adapter):
+    pass
+
+EUStandard.register(TravelPlugToEUStandard)
+
+
+#### 'Editor, Scriptable, Undoable' metaphor ##################################
+
+class FileType(object):
+    pass
+
+class IEditor(object):
+    __metaclass__ = ABCMeta
+
+class IScriptable(object):
+    __metaclass__ = ABCMeta
+
+class IUndoable(object):
+    __metaclass__ = ABCMeta
+
+
+class FileTypeToIEditor(Adapter):
+    pass
+
+IEditor.register(FileTypeToIEditor)
+IScriptable.register(FileTypeToIEditor)
+
+class IScriptableToIUndoable(Adapter):
+    pass
+
+IUndoable.register(IScriptableToIUndoable)
+
+
+#### Hierarchy example ########################################################
+
+class IPrintable(object):
+    __metaclass__ = ABCMeta
+
+class Editor(object):
+    pass
+
+class TextEditor(Editor):
+    pass
+
+class EditorToIPrintable(Adapter):
+    pass
+
+IPrintable.register(EditorToIPrintable)
+
+class TextEditorToIPrintable(Adapter):
+    pass
+
+IPrintable.register(TextEditorToIPrintable)
+
+
+#### Interface hierarchy example ##############################################
+
+class IPrimate(object):
+    __metaclass__ = ABCMeta
+
+class IHuman(IPrimate):
+    pass
+
+class IChild(IHuman):
+    pass
+
+class IIntermediate(object):
+    __metaclass__ = ABCMeta
+
+class ITarget(object):
+    __metaclass__ = ABCMeta
+
+class Source(object):
+    pass
+
+IChild.register(Source)
+
+class IChildToIIntermediate(Adapter):
+    pass
+
+IIntermediate.register(IChildToIIntermediate)
+
+class IHumanToIIntermediate(Adapter):
+    pass
+
+IIntermediate.register(IHumanToIIntermediate)
+
+class IPrimateToIIntermediate(Adapter):
+    pass
+
+IIntermediate.register(IPrimateToIIntermediate)
+
+class IIntermediateToITarget(Adapter):
+    pass
+
+ITarget.register(IIntermediateToITarget)
+
+
+#### Non-trivial chaining example #############################################
+
+class IStart(object):
+    __metaclass__ = ABCMeta
+
+class IGeneric(object):
+    __metaclass__ = ABCMeta
+
+class ISpecific(IGeneric):
+    pass
+
+class IEnd(object):
+    __metaclass__ = ABCMeta
+
+class Start(object):
+    pass
+
+IStart.register(Start)
+
+class IStartToISpecific(Adapter):
+    pass
+
+ISpecific.register(IStartToISpecific)
+
+class IGenericToIEnd(Adapter):
+    pass
+
+IEnd.register(IGenericToIEnd)
 
 #### EOF ######################################################################
