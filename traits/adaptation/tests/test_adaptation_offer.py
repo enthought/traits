@@ -2,9 +2,9 @@
 
 
 import sys
-import unittest
 
 from traits.adaptation.adaptation_offer import AdaptationOffer
+from traits.testing.unittest_tools import unittest
 
 
 class TestAdaptationOffer(unittest.TestCase):

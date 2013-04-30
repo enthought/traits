@@ -2,10 +2,10 @@
 
 
 import sys
-import unittest
 
 import traits.adaptation.tests.interface_examples
 from traits.adaptation.api import AdaptationManager, CachedAdapterFactory
+from traits.testing.unittest_tools import unittest
 
 
 class TestCachedAdapterFactory(unittest.TestCase):
