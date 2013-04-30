@@ -7,7 +7,8 @@ constructor takes the object to be adapted as the first and only
 """
 
 
-from traits.api import Any, HasTraits
+from traits.has_traits import HasTraits
+from traits.trait_types import Any
 
 
 class Adapter(object):

@@ -18,133 +18,22 @@
 """ An extension to PyProtocols to simplify the declaration of adapters.
 """
 
-#-------------------------------------------------------------------------------
-#  Imports:
-#-------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
-# Standard library imports:
-import weakref
 
-# Traits imports:
-from .has_traits import HasTraits
-from .trait_types import Any, Bool, Expression
+from .adaptation.adapter import HasTraitsAdapter
+from .util.deprecated import deprecated
 
-# PyProtocols imports:
-from .protocols.advice import addClassAdvisor
 
-#-------------------------------------------------------------------------------
-#  'Adapter' class:
-#-------------------------------------------------------------------------------
+class Adapter(HasTraitsAdapter):
 
-class Adapter ( HasTraits ):
-    """ The base class for all traits adapters.
+    @deprecated("use 'HasTraitsAdapter' in 'traits.adaptation' instead")
+    def __init__(self, adaptee, **traits):
+        super(Adapter, self).__init__(adaptee, **traits)
 
-    In Traits, an *adapter* is a special type of class whose role is to
-    transform some type of object which does not implement a specific interface,
-    or set of interfaces, into one that does.
 
-    This class is provided as a convenience. If you subclass this class, the
-    only things you need to add to the subclass definition are:
-
-        * An implements() function call declaring which interfaces the adapter
-          class implements on behalf of the object is is adapting.
-        * A declaration for the **adaptee** trait, usually as an Instance of
-          a particular class.
-        * The actual implementations of the interfaces declared in the
-          implements() call. Usually the implementation code is written in
-          terms of the **adaptee** trait.
-
-    """
-
-    #-- Trait Definitions ------------------------------------------------------
-
-    #: The object that is being adapted.
-    adaptee = Any
-
-    #-- Constructor ------------------------------------------------------------
-
-    def __init__ ( self, adaptee ):
-        """ Constructor.
-
-            We have to declare an explicit constructor because adapters are
-            created by PyProtocols itself, which knows nothing about traits.
-        """
-        super( Adapter, self ).__init__()
-
-        self.adaptee = adaptee
-
-#-------------------------------------------------------------------------------
-#  'DefaultAdapterFactory' class:
-#-------------------------------------------------------------------------------
-
-class DefaultAdapterFactory ( HasTraits ):
-    """ An adapter factory for producing cached or categorized adapters.
-    """
-
-    #-- 'DefaultAdapterFactory' Interface --------------------------------------
-
-    #: The adapter class that this factory creates instances of
-    klass = Any
-
-    #: Does the factory generate cached adapters?
-    #: If an adapter is cached then the factory will produce at most one
-    #: adapter per instance.
-    cached = Bool( False )
-
-    #: An expression that is used to select which instances of a particular
-    #: type can be adapted by this factory.
-    #:
-    #: The expression is evaluated in a namespace that contains a single name
-    #: 'adaptee', which is bound to the object that this factory is attempting
-    #: to adapt (e.g. 'adaptee.is_folder').
-    when = Expression
-
-    #-- Private Interface ------------------------------------------------------
-
-    # If this is a cached adapter factory, then this mapping will contain
-    # the adapters keyed by weak references to the adapted objects.
-    _adapters = Any
-
-    #---------------------------------------------------------------------------
-    #  'IAdapterFactory' interface:
-    #---------------------------------------------------------------------------
-
-    def __call__ ( self, object ):
-        """ Creates an adapter for the specified object.
-
-            Returns **None** if the factory cannot perform the required
-            adaptation.
-        """
-        namespace = { 'adaptee': object }
-        if eval( self.when_, namespace, namespace ):
-            if self.cached:
-                adapter = self._adapters.get( object )
-                if adapter is None:
-                    self._adapters[ object ] = adapter = self.klass( object )
-
-                return adapter
-
-            return self.klass( object )
-
-        return None
-
-    #---------------------------------------------------------------------------
-    #  Private interface:
-    #---------------------------------------------------------------------------
-
-    def __adapters_default ( self ):
-        """ Trait initializer.
-        """
-        return weakref.WeakKeyDictionary()
-
-#-------------------------------------------------------------------------------
-#  'adapts' function:
-#-------------------------------------------------------------------------------
-
-def adapts ( from_, to, extra = None, factory = None, cached = False,
-                        when  = '' ):
+def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
     """ A class advisor for declaring adapters.
 
     Parameters
@@ -173,10 +62,10 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
     The ``cached`` and ``when`` arguments are ignored if ``factory`` is
     specified.
 
-
     """
 
-    from traits.adaptation.api import register_factory
+    from traits.adaptation.api import CachedAdapterFactory, register_factory
+    from traits.protocols.advice import addClassAdvisor
 
     if extra is not None:
         adapter, from_, to = from_, to, extra
@@ -209,14 +98,22 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
         if factory is None:
             # If the adapter is cached or has a 'when' expression then create a
             # default factory:
-            if cached or (when != ''):
-                adapter_factory = DefaultAdapterFactory(
-                    klass=klass, cached=cached, when=when or 'True'
-                )
 
-            # Otherwise, just use the adapter class itself.
-            else:
-                adapter_factory = klass
+            adapter_factory = klass
+
+            if when != '':
+                def _conditional_factory(adaptee, *args, **kw):
+                    namespace = {'adaptee': adaptee}
+
+                    if eval(when, namespace, namespace):
+                        return klass(adaptee, *args, **kw)
+
+                    return None
+
+                adapter_factory = _conditional_factory
+
+            if cached:
+                adapter_factory = CachedAdapterFactory(factory=adapter_factory)
 
         else:
             adapter_factory = factory
