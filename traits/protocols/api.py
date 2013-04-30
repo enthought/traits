@@ -25,17 +25,14 @@ def declareAdapter(factory, provides,
         for to_protocol in provides:
             register_factory(factory, from_protocol, to_protocol)
 
-@deprecated("use ABC's 'register method, or declare a null adapter instead")
+@deprecated("use the 'register_provides' function in 'traits.adaptation' instead")
 def declareImplementation(protocol,
                           instancesProvide=(), instancesDoNotProvide=()):
 
-    from traits.adaptation.api import register_factory
-
-    def null_adapter(adaptee):
-        return adaptee
+    from traits.adaptation.api import register_provides
 
     for to_protocol in instancesProvide:
-        register_factory(null_adapter, protocol, to_protocol)
+        register_provides(protocol, to_protocol)
 
 from traits.adaptation.adaptation_error import AdaptationError \
     as AdaptationFailure
