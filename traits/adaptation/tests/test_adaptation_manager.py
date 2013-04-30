@@ -547,4 +547,30 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
 
     examples = traits.adaptation.tests.interface_examples
 
+    def test_adapts_should_register_class_as_providing_the_to_protocol(self):
+
+        from traits.api import adapts, Adapter, HasTraits, Instance, Int, \
+             Interface
+
+        class IFoo(Interface):
+            x = Int
+
+        class Bar(HasTraits):
+            foo = Instance(IFoo)
+
+        class Baz(HasTraits):
+            pass
+
+        class BazToIFooAdapter(Adapter):
+            adapts(Baz, IFoo)
+
+        baz = Baz()
+        bar = Bar()
+        bar.foo = IFoo(baz)
+        print 'Adapter', adapter
+
+        self.assertEqual(bar.foo.adaptee, baz)
+
+        return
+
 #### EOF ######################################################################
