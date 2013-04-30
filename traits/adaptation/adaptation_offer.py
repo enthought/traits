@@ -147,8 +147,9 @@ class AdaptationOffer(HasTraits):
             type_name = type_or_type_name
 
         else:
-            type_name = "{}.{}".format(
-                type_or_type_name.__module__, type_or_type_name.__name__
+            type_name = "{module}.{name}".format(
+                module = type_or_type_name.__module__,
+                name   = type_or_type_name.__name__
             )
 
         return type_name

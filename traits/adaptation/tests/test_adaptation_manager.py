@@ -1,11 +1,10 @@
 """ Test the adapter manager. """
 
 
-import unittest
-
 from traits.adaptation.api import AdaptationManager
 import traits.adaptation.tests.abc_examples
 import traits.adaptation.tests.interface_examples
+from traits.testing.unittest_tools import unittest
 
 
 class TestAdaptationManagerWithABC(unittest.TestCase):
