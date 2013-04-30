@@ -526,6 +526,23 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
         self.assert_(self.adaptation_manager.provides_protocol(IB, IA))
 
+        return
+
+    def test_register_provides(self):
+
+        from traits.api import Interface
+
+        class IFoo(Interface):
+            pass
+
+        obj = {}
+        self.assertEqual(None, self.adaptation_manager.adapt(obj, IFoo, None))
+        self.adaptation_manager.register_provides(dict, IFoo)
+        self.assertEqual(obj, self.adaptation_manager.adapt(obj, IFoo))
+
+        return
+
+
 class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     """ Test the adaptation manager with Interfaces. """
 

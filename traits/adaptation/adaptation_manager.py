@@ -10,6 +10,12 @@ from traits.has_traits import __NoInterface__, HasTraits, Interface
 from traits.trait_types import Dict, List, Str
 
 
+def no_adapter_necessary(adaptee):
+    """ An adapter factory used when a prococol already provides another. """
+
+    return adaptee
+
+
 class AdaptationManager(HasTraits):
     """ Manages all registered adaptations. """
 
@@ -143,6 +149,13 @@ class AdaptationManager(HasTraits):
                 to_protocol   = to_protocol
             )
         )
+
+        return
+
+    def register_provides(self, provider_protocol, protocol):
+        """ Register that a protocol provides another. """
+
+        self.register_factory(no_adapter_necessary, provider_protocol, protocol)
 
         return
 
@@ -348,6 +361,7 @@ adaptation_manager = AdaptationManager()
 adapt             = adaptation_manager.adapt
 register_factory  = adaptation_manager.register_factory
 register_offer    = adaptation_manager.register_offer
+register_provides = adaptation_manager.register_provides
 supports_protocol = adaptation_manager.supports_protocol
 
 #### EOF ######################################################################
