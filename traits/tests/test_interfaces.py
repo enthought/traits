@@ -29,8 +29,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (HasTraits, Interface, Adapter, Instance, Int, List,
-        TraitError, AdaptedTo, adapts, implements)
+from ..api import HasTraits, Adapter, adapts, AdaptsTo, \
+    implements, Instance, Int, Interface, List, Supports, TraitError
 
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:
@@ -107,12 +107,15 @@ class SampleBad ( HasTraits ):
 
 class TraitsHolder ( HasTraits ):
 
-    a_no      = Instance( IAverage, adapt = 'no' )
-    a_yes     = Instance( IAverage, adapt = 'yes' )
-    a_default = Instance( IAverage, adapt = 'default' )
-    l_yes     = AdaptedTo( IList )
-    f_yes     = AdaptedTo( IFoo )
-    fp_yes    = AdaptedTo( IFooPlus )
+    a_no            = Instance( IAverage, adapt = 'no' )
+    a_yes           = Instance( IAverage, adapt = 'yes' )
+    a_default       = Instance( IAverage, adapt = 'default' )
+    list_adapted_to = Supports( IList )
+    foo_adapted_to  = Supports( IFoo )
+    foo_plus_adapted_to = Supports( IFooPlus )
+    list_adapts_to  = AdaptsTo( IList )
+    foo_adapts_to   = AdaptsTo( IFoo )
+    foo_plus_adapts_to = AdaptsTo( IFooPlus )
 
 #-------------------------------------------------------------------------------
 #  Test 'adapter' definitions:
@@ -196,7 +199,7 @@ class InterfacesTest ( unittest.TestCase ):
             implements( IFooPlus )
 
         ta = TraitsHolder()
-        ta.f_yes = Test()
+        ta.foo_adapted_to = Test()
 
     def test_implements_bad ( self ):
         self.assertRaises( TraitError, self.implements_bad )
@@ -231,31 +234,12 @@ class InterfacesTest ( unittest.TestCase ):
         self.assert_( isinstance( ta.a_yes,  ListAverageAdapter ) )
         self.assertFalse( hasattr(ta, 'a_yes_') )
 
-        ta.l_yes = object = Sample()
-        result = ta.l_yes.get_list()
-        self.assertEqual( len( result ), 3 )
-        for n in [ 1, 2, 3 ]:
-            self.assert_( n in result )
-        self.assert_( isinstance( ta.l_yes,  SampleListAdapter ) )
-        self.assertEqual( ta.l_yes_, object )
-
         ta.a_yes = object = Sample()
         self.assertEqual( ta.a_yes.get_average(), 2.0 )
         self.assert_( isinstance( ta.a_yes, ListAverageAdapter ) )
         self.assertFalse( hasattr(ta, 'a_yes_') )
 
         self.assertRaises( TraitError, ta.set, a_yes = SampleBad() )
-
-        ta.f_yes = object = Sample()
-        self.assertEqual( ta.f_yes.get_foo(), 6 )
-        self.assert_( isinstance( ta.f_yes, SampleFooAdapter ) )
-        self.assertEqual( ta.f_yes_, object )
-
-        ta.fp_yes = object = Sample( s1 = 5, s2 = 10, s3 = 15 )
-        self.assertEqual( ta.fp_yes.get_foo(), 30 )
-        self.assertEqual( ta.fp_yes.get_foo_plus(), 31 )
-        self.assert_( isinstance( ta.fp_yes, FooPlusAdapter ) )
-        self.assertEqual( ta.fp_yes_, object )
 
     def test_instance_adapt_default ( self ):
         ta = TraitsHolder()
@@ -279,7 +263,51 @@ class InterfacesTest ( unittest.TestCase ):
         self.assertEqual( ta.a_default, None )
         self.assertFalse( hasattr(ta, 'a_default_') )
 
-    #-- Helper Methods ---------------------------------------------------------
+    def test_adapted_to(self):
+        ta = TraitsHolder()
+
+        ta.list_adapted_to = object = Sample()
+        result = ta.list_adapted_to.get_list()
+        self.assertEqual( len( result ), 3 )
+        for n in [ 1, 2, 3 ]:
+            self.assert_( n in result )
+        self.assert_( isinstance( ta.list_adapted_to,  SampleListAdapter ) )
+        self.assertEqual( ta.list_adapted_to_, object )
+
+        ta.foo_adapted_to = object = Sample()
+        self.assertEqual( ta.foo_adapted_to.get_foo(), 6 )
+        self.assert_( isinstance( ta.foo_adapted_to, SampleFooAdapter ) )
+        self.assertEqual( ta.foo_adapted_to_, object )
+
+        ta.foo_plus_adapted_to = object = Sample( s1 = 5, s2 = 10, s3 = 15 )
+        self.assertEqual( ta.foo_plus_adapted_to.get_foo(), 30 )
+        self.assertEqual( ta.foo_plus_adapted_to.get_foo_plus(), 31 )
+        self.assert_( isinstance( ta.foo_plus_adapted_to, FooPlusAdapter ) )
+        self.assertEqual( ta.foo_plus_adapted_to_, object )
+
+    def test_adapts_to(self):
+        ta = TraitsHolder()
+
+        ta.list_adapts_to = object = Sample()
+        self.assertEqual(ta.list_adapts_to, object )
+        result = ta.list_adapts_to_.get_list()
+        self.assertEqual( len( result ), 3 )
+        for n in [ 1, 2, 3 ]:
+            self.assert_( n in result )
+        self.assert_( isinstance( ta.list_adapts_to_,  SampleListAdapter ) )
+
+        ta.foo_adapts_to = object = Sample()
+        self.assertEqual( ta.foo_adapts_to, object )
+        self.assertEqual( ta.foo_adapts_to_.get_foo(), 6 )
+        self.assert_( isinstance( ta.foo_adapts_to_, SampleFooAdapter ) )
+
+        ta.foo_plus_adapts_to = object = Sample( s1 = 5, s2 = 10, s3 = 15 )
+        self.assertEqual( ta.foo_plus_adapts_to, object )
+        self.assertEqual( ta.foo_plus_adapts_to_.get_foo(), 30 )
+        self.assertEqual( ta.foo_plus_adapts_to_.get_foo_plus(), 31 )
+        self.assert_( isinstance( ta.foo_plus_adapts_to_, FooPlusAdapter ) )
+
+    #-- Helper Methods --------------------------------------------------------
 
     def implements_bad ( self ):
         class Test ( HasTraits ):

@@ -42,7 +42,7 @@ from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
-        Symbol, WeakRef, Date, Time, false, true, undefined)
+        Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
         ListComplex, ListBool, ListFunction, ListMethod, ListClass,

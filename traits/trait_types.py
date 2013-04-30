@@ -2842,7 +2842,19 @@ class Instance ( BaseInstance ):
             self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
 
-class AdaptedTo ( Instance ):
+class Supports( Instance ):
+    """ A traits whose value must support a specified protocol.
+
+    In other words, the value of the trait directly provide, or can be adapted
+    to, the given protocol (Interface or type).
+
+    The value of the trait after assignment is the possibly adapted value
+    (i.e., it is the original assigned value if that provides the protocol,
+    or is an adapter otherwise).
+
+    The original, unadapted value is stored in a "shadow" attribute with
+    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    """
 
     adapt_default = 'yes'
 
@@ -2863,7 +2875,20 @@ class AdaptedTo ( Instance ):
         # unadapted value passed to 'setattr':
         return ctrait.post_setattr_original_value( True )
 
-class AdaptsTo ( AdaptedTo ):
+# Alias defined for backward compatibility with Traits 4.3.0
+AdaptedTo = Supports
+
+class AdaptsTo ( Supports ):
+    """ A traits whose value must support a specified protocol.
+
+    In other words, the value of the trait directly provide, or can be adapted
+    to, the given protocol (Interface or type).
+
+    The value of the trait after assignment is the original, unadapted value.
+
+    A possibly adapted value is stored in a "shadow" attribute with
+    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    """
 
     def modify_ctrait ( self, ctrait ):
         # Tell the C code that 'setattr' should store the original, unadapted
