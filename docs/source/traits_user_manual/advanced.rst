@@ -708,7 +708,10 @@ Registering adapters
 Once an adapter class has been defined, it has to be registered with the
 adaptation manager, using either the :func:`~traits.adaptation.api.adapts`
 decorator, or using the :func:`~traits.adaptation.api.register_factory`
-function.
+function. (We recommend using the latter method: the decorator forces the
+adapter to be register in all applications whenever the class is imported,
+while the function allows to register the adapter depending on the
+application needs).
 
 The signature of the :func:`~traits.adaptation.api.adapts` decorator is:
 
@@ -723,9 +726,6 @@ is:
 .. function:: register_factory(adapter_class, from_protocol, to_protocol)
     :noindex:
 
-The 'from_protocol' argument is the protocol (type, Interface, or ABC) of the
-objects accepted as adaptees. The 'to_protocol' argument is the protocol
-that the adapter promises to provide.
 
 The :func:`~register_factory` function additionally takes as first argument
 the adapter class (or an `adapter factory <adapter-factories>`_).
@@ -742,7 +742,6 @@ This is the example from the previous section, were the adapter is registered::
     from interface_implementation import Person
 
     # Declare what interfaces this adapter implements for its client
-    @provides(IName)
     @adapts(Person, IName)
     class PersonToIName(Adapter):
 
@@ -776,6 +775,9 @@ the adaptee object, and returns an adapter or None if the adaptation was
 not possible. Adapter factories allow flexibility in the adaptation process,
 as the result of adaptation may vary depending on the state of the
 adaptee object.
+
+
+.. _conditional-adaptation:
 
 Conditional adaptation
 ::::::::::::::::::::::
@@ -854,26 +856,60 @@ For example::
 
 .. _using-adapters:
 
-Using Adapters
-``````````````
+Requesting an adapter
+`````````````````````
 
-ADD: using adapt()
+The 'adapt' function
+::::::::::::::::::::
 
-You define adapter classes as described in the preceding sections, but you do
-not explicitly create instances of these classes. The Traits package
-automatically creates them whenever an object is assigned to an interface
-Instance trait, and the object being assigned does not implement the required
-interface. If an adapter class exists that can adapt the specified object to the
-required interface, an instance of the adapter class is created for the object,
-and is assigned as the actual value of the Instance trait.
+Adapter classes are defined as described in the preceding sections, but you do
+not explicitly create instances of these classes.
+
+Instead, the function :func:`~traits.adaptation.adaptation_manager.adapt` is
+used, giving the object that needs to be adapted, and the target protocol.
+For example, in the example in the :ref:`conditional-adaptation` section,
+a 2D numpy array is adapted to an ImageABC protocol with
+::
+
+    image = adapt(numpy.array([[1,2],[3,4]]), ImageABC)
 
 In some cases, no single adapter class exists that adapts the object to the
 required interface, but a series of adapter classes exist that together perform
-the required adaptation. In such cases, the necessary set of adapter objects are
-created, and the "last" link in the chain, the one that actually implements the
-required interface, is assigned as the trait value. When a situation like this
-arises, the adapted object assigned to the trait always contains the smallest
-set of adapter objects needed to adapt the original object.
+the required adaptation. In such cases, the necessary set of adapter objects
+are created, and the "last" link in the chain, the one that actually
+implements the required interface, is returned.
+
+When a situation like this arises, the adapted object assigned to the trait
+always contains the smallest set of adapter objects needed to adapt the
+original object. Also, more specific adapters are preferred over less specific
+ones. For instance, let's suppose we have a class ``Document`` and a subclass
+``HTMLDocument``. We register two adapters to an interface ``IPrintable``,
+``DocumentToIPrintable`` and ``HTMLDocumentToIPrintable``. The call
+::
+
+    html_doc = HTMLDocument()
+    printable = adapt(html_doc, IPrintable)
+
+will return an instance of the ``HTMLDocumentToIPrintable`` adapter, as it
+is more specific than ``DocumentToIPrintable``.
+
+If no single adapter and no adapter chain can be constructed for the requested
+adaptation, an :class:`~traits.adaptation.adaptation_error.AdaptationError`
+is raised. Alternatively, one can specify a default value to be returned
+in this case::
+
+    printable = adapt(unprintable_doc, IPrintable, default=EmptyPrintableDoc())
+
+Using Traits interfaces
+:::::::::::::::::::::::
+
+CONTINUE
+
+The Traits package automatically creates an adapter whenever an object is
+assigned to an interface Instance trait, and the object being assigned does not implement the required
+interface. If an adapter class exists that can adapt the specified object to the
+required interface, an instance of the adapter class is created for the object,
+and is assigned as the actual value of the Instance trait.
 
 .. index:: adapters; controlling
 
@@ -983,7 +1019,8 @@ This is a list of replacements for the old API:
 * :class:`traits.protocols.api.AdaptationFailure` -- use
   :class:`traits.adaptation.api.AdaptationError` instead
 
-* Adapter -> HasTraitsAdapter
+* :class:`traits.adapter.Adapter - use
+      :class:`traits.adaptation.api.HasTraitsAdapter` instead
 
 * `adapts`, `implements` --> replacements? Make sure to mention: the "adapts"
   decorator, unlike the "adapts" function, does **not** declare the class
