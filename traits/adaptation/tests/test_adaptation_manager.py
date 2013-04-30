@@ -3,16 +3,16 @@
 
 import unittest
 
-from apptools.adaptation.adaptation_manager import AdaptationManager
-import apptools.adaptation.tests.abc_examples
-import apptools.adaptation.tests.interface_examples
+from traits.adaptation.api import AdaptationManager
+import traits.adaptation.tests.abc_examples
+import traits.adaptation.tests.interface_examples
 
 
 class TestAdaptationManagerWithABC(unittest.TestCase):
     """ Test the adapter manager. """
 
     #: Class attribute pointing at the module containing the example data
-    examples = apptools.adaptation.tests.abc_examples
+    examples = traits.adaptation.tests.abc_examples
 
     #### 'TestCase' protocol ##################################################
 
@@ -375,7 +375,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 
     def test_default_argument_in_adapt(self):
 
-        from apptools.adaptation.adaptation_manager import AdaptationError
+        from traits.adaptation.adaptation_manager import AdaptationError
 
         # Without a default argument, a failed adaptation raises an error.
         with self.assertRaises(AdaptationError):
@@ -529,6 +529,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
 class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     """ Test the adaptation manager with Interfaces. """
 
-    examples = apptools.adaptation.tests.interface_examples
+    examples = traits.adaptation.tests.interface_examples
 
 #### EOF ######################################################################

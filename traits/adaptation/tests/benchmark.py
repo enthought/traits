@@ -10,8 +10,8 @@ import abc
 from pprint import pprint
 import time
 
-from apptools.adaptation.api import HasTraitsAdapter
-from apptools.adaptation.adaptation_manager import AdaptationManager
+from traits.adaptation.api import HasTraitsAdapter
+from traits.adaptation.adaptation_manager import AdaptationManager
 from traits.api import HasTraits, implements, Interface
 
 
@@ -59,7 +59,7 @@ for _ in range(N_ITERATIONS):
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print 'traits.protocol: %f msec per iteration' % time_per_iter
 
-#### apptools.adaptation with Interfaces #######################################
+#### traits.adaptation with Interfaces ########################################
 
 adaptation_manager = AdaptationManager()
 
@@ -87,7 +87,7 @@ time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print 'apptools using Interfaces: %.3f msec per iteration' % time_per_iter
 
 
-#### apptools.adaptation with ABCs #############################################
+#### traits.adaptation with ABCs ##############################################
 
 # Create some classes to adapt (using ABCs!).
 for i in range(N_SOURCES):

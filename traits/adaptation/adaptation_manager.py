@@ -8,7 +8,7 @@ import itertools
 from traits.api import Dict, HasTraits, Interface, List, Str
 from traits.has_traits import __NoInterface__
 
-from apptools.adaptation.adaptation_error import AdaptationError
+from traits.adaptation.adaptation_error import AdaptationError
 
 
 class AdaptationManager(HasTraits):
@@ -135,7 +135,7 @@ class AdaptationManager(HasTraits):
 
         """
 
-        from apptools.adaptation.adaptation_offer import AdaptationOffer
+        from traits.adaptation.adaptation_offer import AdaptationOffer
 
         self.register_offer(
             AdaptationOffer(

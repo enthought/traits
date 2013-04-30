@@ -10,7 +10,7 @@ from traits.util.api import deprecated
 
 @deprecated("use the 'adapt' function in 'traits.adaptation' instead")
 def adapt(*args, **kw):
-    from apptools.adaptation.api import adapt
+    from traits.adaptation.api import adapt
 
     return adapt(*args, **kw)
 
@@ -18,7 +18,7 @@ def adapt(*args, **kw):
 def declareAdapter(factory, provides,
                    forTypes=(), forProtocols=(), forObjects=()):
 
-    from apptools.adaptation.api import register_factory
+    from traits.adaptation.api import register_factory
     from itertools import chain
 
     for from_protocol in chain(forTypes, forProtocols, forObjects):
@@ -29,7 +29,7 @@ def declareAdapter(factory, provides,
 def declareImplementation(protocol,
                           instancesProvide=(), instancesDoNotProvide=()):
 
-    from apptools.adaptation.api import register_factory
+    from traits.adaptation.api import register_factory
 
     def null_adapter(adaptee):
         return adaptee
@@ -37,7 +37,7 @@ def declareImplementation(protocol,
     for to_protocol in instancesProvide:
         register_factory(null_adapter, protocol, to_protocol)
 
-from apptools.adaptation.adaptation_error import AdaptationError \
+from traits.adaptation.adaptation_error import AdaptationError \
     as AdaptationFailure
 
 AdaptationFailure = deprecated(

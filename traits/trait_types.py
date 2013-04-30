@@ -2680,7 +2680,7 @@ class BaseInstance ( BaseClass ):
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
         """
-        from apptools.adaptation.api import adapt
+        from traits.adaptation.api import adapt
 
         if value is None:
             if self._allow_none:

@@ -3,7 +3,7 @@
 
 from abc import ABCMeta
 
-from apptools.adaptation.api import Adapter
+from traits.adaptation.api import Adapter
 
 
 #### 'Power plugs' metaphor ###################################################

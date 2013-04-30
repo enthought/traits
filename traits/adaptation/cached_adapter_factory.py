@@ -1,10 +1,10 @@
 """ An adapter factory that caches adapters per instance. """
 
 
-from traits.api import Any, Bool, HasTraits, Property
 import weakref
 
-from apptools.naming.initial_context import _import_symbol
+from traits.api import Any, Bool, HasTraits, Property
+from traits.util.api import import_symbol
 
 
 class CachedAdapterFactory(HasTraits):
@@ -61,7 +61,7 @@ class CachedAdapterFactory(HasTraits):
 
         if not self._factory_loaded:
             if isinstance(self._factory, basestring):
-                self._factory = _import_symbol(self._factory)
+                self._factory = import_symbol(self._factory)
 
             self._factory_loaded = True
 

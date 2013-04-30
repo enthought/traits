@@ -3,8 +3,7 @@
 
 from traits.api import Any, Bool, HasTraits, Property
 
-from apptools.adaptation.adaptation_manager import AdaptationManager
-from apptools.naming.initial_context import _import_symbol
+from traits.util.api import import_symbol
 
 
 class AdaptationOffer(HasTraits):
@@ -75,7 +74,7 @@ class AdaptationOffer(HasTraits):
 
         if not self._factory_loaded:
             if isinstance(self._factory, basestring):
-                self._factory = _import_symbol(self._factory)
+                self._factory = import_symbol(self._factory)
 
             self._factory_loaded = True
 
@@ -97,7 +96,7 @@ class AdaptationOffer(HasTraits):
 
         if not self._from_protocol_loaded:
             if isinstance(self._from_protocol, basestring):
-                self._from_protocol = _import_symbol(self._from_protocol)
+                self._from_protocol = import_symbol(self._from_protocol)
 
             self._from_protocol_loaded = True
 
@@ -119,7 +118,7 @@ class AdaptationOffer(HasTraits):
 
         if not self._to_protocol_loaded:
             if isinstance(self._to_protocol, basestring):
-                self._to_protocol = _import_symbol(self._to_protocol)
+                self._to_protocol = import_symbol(self._to_protocol)
 
             self._to_protocol_loaded = True
 

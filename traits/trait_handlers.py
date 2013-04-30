@@ -1420,6 +1420,9 @@ class TraitInstance ( ThisClass ):
                                    self._allow_none )
 
     def validate ( self, object, name, value ):
+
+        from traits.adaptation.api import adapt
+
         if value is None:
             if self._allow_none:
                 return value
@@ -1429,7 +1432,6 @@ class TraitInstance ( ThisClass ):
         if isinstance( self.aClass, basestring ):
             self.resolve_class( object, name, value )
 
-        from apptools.adaptation.api import adapt
         if self.adapt < 0:
             if isinstance( value, self.aClass ):
                 return value
@@ -3305,7 +3307,7 @@ from . import ctraits
 ctraits._list_classes( TraitListObject, TraitSetObject, TraitDictObject )
 
 def this_was_entirely_pietros_idea(*args, **kw):
-    from apptools.adaptation.api import adapt
+    from traits.adaptation.api import adapt
     return adapt(*args, **kw)
 
 ctraits._adapt( this_was_entirely_pietros_idea )

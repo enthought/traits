@@ -36,6 +36,8 @@ from types import FunctionType, MethodType
 
 from . import __version__ as TraitsVersion
 
+from .adaptation.adaptation_error import AdaptationError
+
 from .ctraits import CHasTraits, CTraitMethod, _HasTraits_monitors
 
 from .traits import (CTrait, ForwardProperty, Property, SpecialNames, Trait,
@@ -684,9 +686,6 @@ class MetaHasTraits ( type ):
 #  'MetaInterface' class:
 #-------------------------------------------------------------------------------
 
-# FIMXE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-from apptools.adaptation.adaptation_error import AdaptationError
-
 class MetaInterface ( MetaHasTraits ):
     """ Meta class for interfaces.
 
@@ -702,7 +701,7 @@ class MetaInterface ( MetaHasTraits ):
                Interface.
         """
 
-        from apptools.adaptation.api import adapt
+        from traits.adaptation.api import adapt
 
         return adapt(adaptee, self, default=default)
 

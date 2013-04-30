@@ -4,15 +4,15 @@
 import sys
 import unittest
 
-import apptools.adaptation.tests.interface_examples
-from apptools.adaptation.api import AdaptationManager, CachedAdapterFactory
+import traits.adaptation.tests.interface_examples
+from traits.adaptation.api import AdaptationManager, CachedAdapterFactory
 
 
 class TestCachedAdapterFactory(unittest.TestCase):
     """ Test the cached adapter factory. """
 
 
-    examples = apptools.adaptation.tests.interface_examples
+    examples = traits.adaptation.tests.interface_examples
 
     #### 'TestCase' protocol ##################################################
 
@@ -64,7 +64,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
     def test_cached_adapters_with_lazy_loaded_factory(self):
 
-        LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
+        LAZY_EXAMPLES = 'traits.adaptation.tests.lazy_examples'
         if LAZY_EXAMPLES in sys.modules:
             del sys.modules[LAZY_EXAMPLES]
 

@@ -3,7 +3,7 @@
 
 from traits.api import Any, Enum, HasTraits, implements, Interface
 
-from apptools.adaptation.api import HasTraitsAdapter as Adapter
+from traits.adaptation.api import HasTraitsAdapter as Adapter
 
 #### 'Power plugs' metaphor ###################################################
 

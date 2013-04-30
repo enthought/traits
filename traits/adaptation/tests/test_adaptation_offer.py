@@ -4,7 +4,7 @@
 import sys
 import unittest
 
-from apptools.adaptation.adaptation_offer import AdaptationOffer
+from traits.adaptation.adaptation_offer import AdaptationOffer
 
 
 class TestAdaptationOffer(unittest.TestCase):
@@ -12,7 +12,7 @@ class TestAdaptationOffer(unittest.TestCase):
 
     def test_lazy_loading(self):
 
-        LAZY_EXAMPLES = 'apptools.adaptation.tests.lazy_examples'
+        LAZY_EXAMPLES = 'traits.adaptation.tests.lazy_examples'
         if LAZY_EXAMPLES in sys.modules:
             del sys.modules[LAZY_EXAMPLES]
 
@@ -28,7 +28,7 @@ class TestAdaptationOffer(unittest.TestCase):
 
         self.assertIn(LAZY_EXAMPLES, sys.modules)
 
-        from apptools.adaptation.tests.lazy_examples import IBarToIFoo
+        from traits.adaptation.tests.lazy_examples import IBarToIFoo
         self.assertIs(factory, IBarToIFoo)
 
 
@@ -36,7 +36,7 @@ class TestAdaptationOffer(unittest.TestCase):
 
         from_protocol = offer.from_protocol
 
-        from apptools.adaptation.tests.lazy_examples import IBar
+        from traits.adaptation.tests.lazy_examples import IBar
         self.assertIs(from_protocol, IBar)
 
 
@@ -44,7 +44,7 @@ class TestAdaptationOffer(unittest.TestCase):
 
         to_protocol = offer.to_protocol
 
-        from apptools.adaptation.tests.lazy_examples import IFoo
+        from traits.adaptation.tests.lazy_examples import IFoo
         self.assertIs(to_protocol, IFoo)
 
 

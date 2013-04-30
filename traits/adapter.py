@@ -175,6 +175,9 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
 
 
     """
+
+    from traits.adaptation.api import register_factory
+
     if extra is not None:
         adapter, from_, to = from_, to, extra
     else:
@@ -217,10 +220,6 @@ def adapts ( from_, to, extra = None, factory = None, cached = False,
 
         else:
             adapter_factory = factory
-
-        # FIXME: Temporary import from apptools!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        from apptools.adaptation.api import register_factory
-
 
         for from_protocol in from_protocols:
             for to_protocol in to_protocols:

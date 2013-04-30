@@ -1,3 +1,4 @@
 
-from deprecated import deprecated
+from .deprecated import deprecated
 
+from .symbol_importer import import_symbol
