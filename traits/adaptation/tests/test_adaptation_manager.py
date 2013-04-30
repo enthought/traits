@@ -567,10 +567,32 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         baz = Baz()
         bar = Bar()
         bar.foo = IFoo(baz)
-        print 'Adapter', adapter
 
         self.assertEqual(bar.foo.adaptee, baz)
 
         return
+
+    def test_spike(self):
+
+        from traits.api import HasTraits, Int, Interface, implements
+        
+        class IFoo(Interface):
+            x = Int
+
+        class Foo(HasTraits):
+            implements(IFoo)
+
+
+        class Bar(HasTraits):
+            pass
+        
+        foo = Foo()
+        print isinstance(foo, IFoo)
+        
+        print IFoo(foo, None)
+
+        #IFoo.register(Foo)
+        #print IFoo(foo, None)
+        
 
 #### EOF ######################################################################

@@ -683,29 +683,6 @@ class MetaHasTraits ( type ):
     remove_listener = classmethod( remove_listener )
 
 #-------------------------------------------------------------------------------
-#  'MetaInterface' class:
-#-------------------------------------------------------------------------------
-
-class MetaInterface ( MetaHasTraits ):
-    """ Meta class for interfaces.
-
-    """
-
-    def __call__ ( self, adaptee, default=AdaptationError ):
-        """ This method is copied over from the PyProtocols 'InterfaceClass'
-            (and cleaned up a little). It is needed here because:
-
-            a) the 'InterfaceClass' is no longer the first class in the
-               hierarchy.
-            b) the reference to 'Interface' now needs to reference *our*
-               Interface.
-        """
-
-        from traits.adaptation.api import adapt
-
-        return adapt(adaptee, self, default=default)
-
-#-------------------------------------------------------------------------------
 #  'MetaHasTraitsObject' class:
 #-------------------------------------------------------------------------------
 
@@ -1160,43 +1137,20 @@ def implements ( *interfaces ):
     # Verify that each argument is a valid interface:
     for interface in interfaces:
         if not issubclass( interface, Interface ):
-            raise TraitError( "All arguments to 'implements' must be "
-                              "subclasses of Interface." )
+            raise TraitError(
+                "All arguments to 'implements' must be "
+                "subclasses of Interface."
+            )
 
     # Define a function that is called when the containing class is constructed:
     def callback ( klass ):
-        from .category import Category
-
-        target = klass
-        bases  = klass.__bases__
-        if (len( bases ) == 2) and (bases[0] is Category):
-            target = bases[1]
-
-            # Update the class and each of the existing subclasses:
-            for subclass in target.trait_subclasses( True ):
-                # Merge in the interfaces implemented by the category:
-                subclass.__implements__ = _create_implements_class(
-                        subclass.__name__, interfaces, [ subclass ] )
-
-        target.__implements__ = _create_implements_class(
-            target.__name__, interfaces, bases )
-
-        # Compute the closure of all the interfaces (i.e. include all interface
-        # superclasses which are also interfaces):
-        closure = set( interfaces )
         for interface in interfaces:
-            for subclass in interface.__mro__:
-                if subclass is Interface:
-                    break
-
-                if issubclass( subclass, Interface ):
-                    closure.add( subclass )
+            interface.register(klass)
 
         # Make sure the class actually does implement the interfaces it claims
         # to:
         if CHECK_INTERFACES:
             from .interface_checker import check_implements
-
             check_implements( klass, interfaces, CHECK_INTERFACES )
 
         return klass
@@ -1751,7 +1705,7 @@ class HasTraits ( CHasTraits ):
            specified by *interfaces*. Return **True** if it does, and **False**
            otherwise.
         """
-        return issubclass( self.__implements__, interfaces )
+        return isinstance(self, interfaces)
 
     #---------------------------------------------------------------------------
     #  Prepares an object to be pickled:
@@ -3878,6 +3832,32 @@ class Vetoable ( HasStrictTraits ):
 VetoableEvent = Event( Vetoable )
 
 #-------------------------------------------------------------------------------
+#  'MetaInterface' class:
+#-------------------------------------------------------------------------------
+
+class MetaInterface ( ABCMetaHasTraits ):
+    """ Meta class for interfaces.
+
+    Interfaces are simple ABCs with the following features:-
+
+    1) They cannot be instantiated (they are interfaces, not implementations!).
+    2) Calling them is equivalent to calling 'adapt'.
+
+    """
+
+    def __call__ ( self, adaptee, default=AdaptationError ):
+        """ Attempt to adapt the adaptee to this interface.
+
+        Notte that this means that (intentionally ;^) that interfaces
+        cannot be instantiated!
+
+        """
+
+        from traits.adaptation.api import adapt
+
+        return adapt(adaptee, self, default=default)
+
+#-------------------------------------------------------------------------------
 #  'Interface' class:
 #-------------------------------------------------------------------------------
 
@@ -3910,4 +3890,3 @@ class traits_super ( super ):
 
     def _noop ( self, *args, **kw ):
         pass
-
