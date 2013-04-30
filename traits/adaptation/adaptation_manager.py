@@ -5,10 +5,9 @@ from heapq import heappop, heappush
 import inspect
 import itertools
 
-from traits.api import Dict, HasTraits, Interface, List, Str
-from traits.has_traits import __NoInterface__
-
 from traits.adaptation.adaptation_error import AdaptationError
+from traits.has_traits import __NoInterface__, HasTraits, Interface
+from traits.trait_types import Dict, List, Str
 
 
 class AdaptationManager(HasTraits):
