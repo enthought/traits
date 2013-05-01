@@ -6,7 +6,7 @@ import inspect
 import itertools
 
 from traits.adaptation.adaptation_error import AdaptationError
-from traits.has_traits import __NoInterface__, HasTraits, Interface
+from traits.has_traits import HasTraits, Interface
 from traits.trait_types import Dict, List, Str
 
 
