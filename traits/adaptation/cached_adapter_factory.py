@@ -20,20 +20,24 @@ from traits.util.api import import_symbol
 
 
 class CachedAdapterFactory(HasTraits):
-    """ An adapter factory that caches adapters per instance. """
+    """ An adapter factory that caches adapters per instance.
+
+    We provide this class to provide the caching functionality of the
+    old traits 'adapts' implementation. However, note that the cache will
+    not be cleared unless you take care of cleaning the 'adaptee' trait once
+    your adapter are deleted.
+
+    """
 
     #### 'object' protocol #####################################################
 
     def __call__(self, adaptee):
         """ The adapter manager uses callables for adapter factories. """
 
-        ref = self._adapter_cache.get(adaptee, None)
-        if ref is not None:
-            adapter = ref()
-
-        else:
+        adapter = self._adapter_cache.get(adaptee, None)
+        if adapter is None:
             adapter = self.factory(adaptee=adaptee)
-            self._adapter_cache[adaptee] = weakref.ref(adapter)
+            self._adapter_cache[adaptee] = adapter
 
         return adapter
 
