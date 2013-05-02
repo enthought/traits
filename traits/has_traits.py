@@ -3776,7 +3776,9 @@ def provides(*protocols):
 
     def wrapped_class(klass):
         for protocol in protocols:
-            protocol.register(klass)
+            # We use type(to_protocol) in case the to_protocols implements
+            # its own 'register' method which overrides the ABC method.
+            type(protocol).register(protocol, klass)
 
         # Make sure the class does provide the protocols it claims to.
         if CHECK_INTERFACES:

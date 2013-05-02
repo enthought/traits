@@ -140,7 +140,12 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
                 register_factory(adapter_factory, from_protocol, to_protocol)
 
         for to_protocol in to_protocols:
-            to_protocol.register(klass)
+            # We cannot register adapter factories that are functions. (This is
+            # ony relevant when using 'adapts' as a function.
+            if isinstance(klass, type):
+                # We use type(to_protocol) in case the to_protocols implements
+                # its own 'register' method which overrides the ABC method.
+                type(to_protocol).register(to_protocol, klass)
 
         return klass
 
