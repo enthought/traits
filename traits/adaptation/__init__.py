@@ -9,7 +9,6 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-# Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
 Adaptation package.
