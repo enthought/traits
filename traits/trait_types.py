@@ -2556,13 +2556,11 @@ def validate_implements ( value, klass, unused = None ):
     """ Checks to see if a specified value implements the instance class
         interface (if it is an interface).
     """
-    from .has_traits        import Interface
+
+    from .has_traits import isinterface
     from .interface_checker import check_implements
 
-    rc = (issubclass( klass, Interface) and
-          check_implements( value.__class__, klass ))
-
-    return rc
+    return isinterface(klass) and check_implements( value.__class__, klass )
 
 #: Tell the C-base code about the 'validate_implements' function (used by the
 #: 'fast_validate' code for Instance types):
@@ -2825,11 +2823,11 @@ class Instance ( BaseInstance ):
     """
 
     def init_fast_validate ( self ):
-        """ Sets up the C-level fast validator.
-        """
-        from .has_traits import Interface
+        """ Sets up the C-level fast validator. """
 
-        if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
+        from .has_traits import isinterface
+
+        if (self.adapt == 0) and (not isinterface(self.klass)):
             fast_validate = [ 1, self.klass ]
             if self._allow_none:
                 fast_validate = [ 1, None, self.klass ]

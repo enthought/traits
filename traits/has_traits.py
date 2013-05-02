@@ -3789,6 +3789,12 @@ def provides(*protocols):
 
     return wrapped_class
 
+
+def isinterface(klass):
+    """ Return True if the class is an Interface. """
+    return isinstance(klass, MetaInterface)
+
+
 #-------------------------------------------------------------------------------
 #  Defines the 'implements' function for declaring which interfaces a class
 #  implements:
