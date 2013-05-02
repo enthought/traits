@@ -78,10 +78,7 @@ from .trait_handlers import (BaseTraitHandler, TraitType, TraitHandler,
 from .trait_value import (BaseTraitValue, TraitValue, SyncValue,
         TypeValue, DefaultValue)
 
-# Deprecated in Traits 4.4.0, remove in Traits 5.0.
-from .adapter import adapts
-
-from .adaptation.adapter import Adapter
+from .adaptation.adapter import Adapter, adapts
 from .adaptation.adaptation_error import AdaptationError
 from .adaptation.adaptation_manager import adapt, register_factory, \
      register_provides
