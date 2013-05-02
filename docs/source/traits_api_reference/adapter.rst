@@ -12,8 +12,6 @@ Class
     .. automethod:: __init__
 
 
-.. autoclass:: DefaultAdapterFactory
-
 Function
 --------
 
