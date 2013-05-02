@@ -549,8 +549,8 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
 
     def test_adapts_should_register_class_as_providing_the_to_protocol(self):
 
-        from traits.api import adapts, Adapter, HasTraits, Instance, Int, \
-             Interface
+        from traits.api import adapts, HasTraits, HasTraitsAdapter, Instance, \
+             Int, Interface
 
         class IFoo(Interface):
             x = Int
@@ -561,7 +561,7 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         class Baz(HasTraits):
             pass
 
-        class BazToIFooAdapter(Adapter):
+        class BazToIFooAdapter(HasTraitsAdapter):
             adapts(Baz, IFoo)
 
         baz = Baz()
@@ -571,28 +571,5 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         self.assertEqual(bar.foo.adaptee, baz)
 
         return
-
-    def test_spike(self):
-
-        from traits.api import HasTraits, Int, Interface, implements
-        
-        class IFoo(Interface):
-            x = Int
-
-        class Foo(HasTraits):
-            implements(IFoo)
-
-
-        class Bar(HasTraits):
-            pass
-        
-        foo = Foo()
-        print isinstance(foo, IFoo)
-        
-        print IFoo(foo, None)
-
-        #IFoo.register(Foo)
-        #print IFoo(foo, None)
-        
 
 #### EOF ######################################################################

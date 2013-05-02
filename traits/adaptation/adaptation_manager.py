@@ -11,7 +11,11 @@ from traits.trait_types import Dict, List, Str
 
 
 def no_adapter_necessary(adaptee):
-    """ An adapter factory used when a prococol already provides another. """
+    """ An adapter factory used to register that a protocol provides another.
+
+    See 'register_provides' for details.
+
+    """
 
     return adaptee
 

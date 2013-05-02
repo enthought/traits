@@ -3775,7 +3775,7 @@ class MetaInterface ( ABCMetaHasTraits ):
     def __call__ ( self, adaptee, default=AdaptationError ):
         """ Attempt to adapt the adaptee to this interface.
 
-        Notte that this means that (intentionally ;^) that interfaces
+        Note that this means that (intentionally ;^) that interfaces
         cannot be instantiated!
 
         """
