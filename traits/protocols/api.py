@@ -37,10 +37,6 @@ def declareImplementation(protocol,
 from traits.adaptation.adaptation_error import AdaptationError \
     as AdaptationFailure
 
-AdaptationFailure = deprecated(
-    "use 'AdaptationError' in 'traits.adaptation' instead"
-)(AdaptationFailure)
-
 # We will provide decorators as replacements for 'implements' and 'adapts'
 # in the future.
 from .advice import addClassAdvisor
