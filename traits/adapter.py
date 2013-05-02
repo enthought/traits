@@ -122,6 +122,11 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
             for to_protocol in to_protocols:
                 register_factory(adapter_factory, from_protocol, to_protocol)
 
+        # fixme: this relies on the protocol being an ABC (which includes
+        # traits Interfaces).
+        for to_protocol in to_protocols:
+            to_protocol.register(klass)
+
         return klass
 
     if adapter is not None:

@@ -6,12 +6,16 @@ import inspect
 import itertools
 
 from traits.adaptation.adaptation_error import AdaptationError
-from traits.has_traits import __NoInterface__, HasTraits, Interface
+from traits.has_traits import HasTraits, Interface
 from traits.trait_types import Dict, List, Str
 
 
 def no_adapter_necessary(adaptee):
-    """ An adapter factory used when a prococol already provides another. """
+    """ An adapter factory used to register that a protocol provides another.
+
+    See 'register_provides' for details.
+
+    """
 
     return adaptee
 
@@ -67,23 +71,9 @@ class AdaptationManager(HasTraits):
 
         """
 
-        if type_ is protocol:
-            return True
-
-        # Support for traits Interfaces
-        if issubclass(protocol, Interface):
-            if (hasattr(type_, '__implements__')
-                and type_.__implements__ is not __NoInterface__):
-                provides_protocol = issubclass(type_.__implements__, protocol)
-
-            else:
-                provides_protocol = issubclass(type_, protocol)
-
-        # Support for regular ol' Python types (including ABCs).
-        else:
-            provides_protocol = issubclass(type_, protocol)
-
-        return provides_protocol
+        # We do the 'is' check first as a performance improvement to save us
+        # a call to 'subclass'.
+        return type_ is protocol or issubclass(type_, protocol)
 
     #### 'AdaptationManager' protocol ##########################################
 

@@ -549,8 +549,8 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
 
     def test_adapts_should_register_class_as_providing_the_to_protocol(self):
 
-        from traits.api import adapts, Adapter, HasTraits, Instance, Int, \
-             Interface
+        from traits.api import adapts, HasTraits, HasTraitsAdapter, Instance, \
+             Int, Interface
 
         class IFoo(Interface):
             x = Int
@@ -561,13 +561,12 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         class Baz(HasTraits):
             pass
 
-        class BazToIFooAdapter(Adapter):
+        class BazToIFooAdapter(HasTraitsAdapter):
             adapts(Baz, IFoo)
 
         baz = Baz()
         bar = Bar()
         bar.foo = IFoo(baz)
-        print 'Adapter', adapter
 
         self.assertEqual(bar.foo.adaptee, baz)
 
