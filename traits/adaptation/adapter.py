@@ -9,6 +9,7 @@ constructor takes the object to be adapted as the first and only
 
 from traits.has_traits import HasTraits
 from traits.trait_types import Any
+from traits.util.deprecated import deprecated
 
 
 class PurePythonAdapter(object):
@@ -75,7 +76,8 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
     else:
         adapter = None
 
-    def callback ( klass ):
+    @deprecated("use the 'register_factory' function from 'traits.api' instead")
+    def callback(klass):
         """ Called when the class has been created. """
 
         # At this point:-
@@ -125,8 +127,6 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
             for to_protocol in to_protocols:
                 register_factory(adapter_factory, from_protocol, to_protocol)
 
-        # fixme: this relies on the protocol being an ABC (which includes
-        # traits Interfaces).
         for to_protocol in to_protocols:
             to_protocol.register(klass)
 

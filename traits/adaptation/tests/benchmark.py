@@ -11,17 +11,24 @@ from pprint import pprint
 import time
 
 from traits.adaptation.adaptation_manager import AdaptationManager
-from traits.api import Adapter, HasTraits, implements, Interface
+from traits.api import Adapter, HasTraits, Interface, provides
 
 
 N_SOURCES    = 3
 N_ITERATIONS = 100
-N_PROTOCOLS  = 5
+N_PROTOCOLS  = 50
 
 # Create some classes to adapt.
+create_classes_to_adapt = """
+class IFoo{i}(Interface):
+    pass
+
+@provides(IFoo{i})
+class Foo{i}(HasTraits):
+    pass
+"""
 for i in range(N_SOURCES):
-    exec 'class IFoo{i}(Interface): pass'.format(i=i)
-    exec 'class Foo{i}(HasTraits): implements(IFoo{i})'.format(i=i)
+    exec create_classes_to_adapt.format(i=i)
 
 # The object that we will try to adapt!
 foo = Foo1()
@@ -31,8 +38,9 @@ for i in range(N_PROTOCOLS):
     exec 'class I{i}(Interface): pass'.format(i=i)
 
 create_traits_adapter_class = """
+@provides(I{target})
 class IFoo{source}ToI{target}(Adapter):
-    implements(I{source})
+    pass
 """
 
 #  Create adapters from each 'IFooX' to all of the interfaces.
@@ -40,23 +48,6 @@ for source in range(N_SOURCES):
     for target in range(N_PROTOCOLS):
         exec create_traits_adapter_class.format(source=source, target=target)
 
-#### PyProtocols ###############################################################
-
-from traits.api import adapts as traits_register
-
-register_ifoox_to_ix = """
-traits_register(IFoo{source}ToI{target}, IFoo{source}, I{target})
-"""
-
-for source in range(N_SOURCES):
-    for target in range(N_PROTOCOLS):
-        exec register_ifoox_to_ix.format(source=source, target=target)
-
-start_time = time.time()
-for _ in range(N_ITERATIONS):
-    I0(foo)
-time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
-print 'traits.protocol: %f msec per iteration' % time_per_iter
 
 #### traits.adaptation with Interfaces ########################################
 

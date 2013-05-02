@@ -1,7 +1,7 @@
 """ Test data for testing the protocol manager with interfaces. """
 
 
-from traits.api import Adapter, Enum, HasTraits, implements, Interface
+from traits.api import Adapter, Enum, HasTraits, Interface, provides
 
 
 #### 'Power plugs' metaphor ###################################################
@@ -22,17 +22,21 @@ class IraqStandard(Interface):
 
 #### Implementations ##########################################################
 
+@provides(UKStandard)
 class UKPlug(HasTraits):
-    implements(UKStandard)
+    pass
 
+@provides(EUStandard)
 class EUPlug(HasTraits):
-    implements(EUStandard)
+    pass
 
+@provides(JapanStandard)
 class JapanPlug(HasTraits):
-    implements(JapanStandard)
+    pass
 
+@provides(IraqStandard)
 class IraqPlug(HasTraits):
-    implements(IraqStandard)
+    pass
 
 class TravelPlug(HasTraits):
 
@@ -40,26 +44,33 @@ class TravelPlug(HasTraits):
 
 #### Adapters #################################################################
 
+@provides(EUStandard)
 class UKStandardToEUStandard(Adapter):
-    implements(EUStandard)
+    pass
 
+@provides(JapanStandard)
 class EUStandardToJapanStandard(Adapter):
-    implements(JapanStandard)
+    pass
 
+@provides(IraqStandard)
 class JapanStandardToIraqStandard(Adapter):
-    implements(IraqStandard)
+    pass
 
+@provides(IraqStandard)
 class EUStandardToIraqStandard(Adapter):
-    implements(IraqStandard)
+    pass
 
+@provides(JapanStandard)
 class UKStandardToJapanStandard(Adapter):
-    implements(JapanStandard)
+    pass
 
+@provides(JapanStandard)
 class TravelPlugToJapanStandard(Adapter):
-    implements(JapanStandard)
+    pass
 
+@provides(EUStandard)
 class TravelPlugToEUStandard(Adapter):
-    implements(EUStandard)
+    pass
 
 
 #### 'Editor, Scriptable, Undoable' metaphor ##################################
@@ -76,12 +87,13 @@ class IScriptable(Interface):
 class IUndoable(Interface):
     pass
 
+@provides(IEditor, IScriptable)
 class FileTypeToIEditor(Adapter):
-    implements(IEditor)
-    implements(IScriptable)
+    pass
 
+@provides(IUndoable)
 class IScriptableToIUndoable(Adapter):
-    implements(IUndoable)
+    pass
 
 
 #### Hierarchy example ########################################################
@@ -95,11 +107,13 @@ class Editor(HasTraits):
 class TextEditor(Editor):
     pass
 
+@provides(IPrintable)
 class EditorToIPrintable(Adapter):
-    implements(IPrintable)
+    pass
 
+@provides(IPrintable)
 class TextEditorToIPrintable(Adapter):
-    implements(IPrintable)
+    pass
 
 
 #### Interface hierarchy example ##############################################
@@ -119,20 +133,25 @@ class IIntermediate(Interface):
 class ITarget(Interface):
     pass
 
+@provides(IChild)
 class Source(HasTraits):
-    implements(IChild)
+    pass
 
+@provides(IIntermediate)
 class IChildToIIntermediate(Adapter):
-    implements(IIntermediate)
+    pass
 
+@provides(IIntermediate)
 class IHumanToIIntermediate(Adapter):
-    implements(IIntermediate)
+    pass
 
+@provides(IIntermediate)
 class IPrimateToIIntermediate(Adapter):
-    implements(IIntermediate)
+    pass
 
+@provides(ITarget)
 class IIntermediateToITarget(Adapter):
-    implements(ITarget)
+    pass
 
 
 #### Non-trivial chaining example #############################################
@@ -149,13 +168,16 @@ class ISpecific(IGeneric):
 class IEnd(Interface):
     pass
 
+@provides(IStart)
 class Start(HasTraits):
-    implements(IStart)
+    pass
 
+@provides(ISpecific)
 class IStartToISpecific(Adapter):
-    implements(ISpecific)
+    pass
 
+@provides(IEnd)
 class IGenericToIEnd(Adapter):
-    implements(IEnd)
+    pass
 
 #### EOF ######################################################################

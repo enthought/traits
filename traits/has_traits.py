@@ -59,6 +59,8 @@ from .trait_errors import TraitError
 
 from .protocols.advice import addClassAdvisor
 
+from .util.deprecated import deprecated
+
 #-------------------------------------------------------------------------------
 #  Set CHECK_INTERFACES to one of the following values:
 #
@@ -1038,54 +1040,6 @@ def _trait_monitor_index ( cls, handler ):
                 return i
 
     return -1
-
-#-------------------------------------------------------------------------------
-#  Defines the 'implements' function for declaring which interfaces a class
-#  implements:
-#-------------------------------------------------------------------------------
-
-def implements ( *interfaces ):
-    """ Declares the interfaces that a class implements.
-
-    Parameters
-    ----------
-    *interfaces :
-        A list of interface classes that the containing class implements.
-
-    Description
-    -----------
-    Registers each specified interface with the interface manager as an
-    interface that the containing class implements. Each specified interface
-    must be a subclass of **Interface**. This function should only be
-    called from directly within a class body.
-    """
-    # Exit immediately if there is nothing to do:
-    if len( interfaces ) == 0:
-        return
-
-    # Verify that each argument is a valid interface:
-    for interface in interfaces:
-        if not issubclass( interface, Interface ):
-            raise TraitError(
-                "All arguments to 'implements' must be "
-                "subclasses of Interface."
-            )
-
-    # Define a function that is called when the containing class is constructed:
-    def callback ( klass ):
-        for interface in interfaces:
-            interface.register(klass)
-
-        # Make sure the class actually does implement the interfaces it claims
-        # to:
-        if CHECK_INTERFACES:
-            from .interface_checker import check_implements
-            check_implements( klass, interfaces, CHECK_INTERFACES )
-
-        return klass
-
-    # Request that we be called back at class construction time:
-    addClassAdvisor( callback )
 
 #-------------------------------------------------------------------------------
 #  'HasTraits' decorators:
@@ -3793,6 +3747,74 @@ class Interface ( HasTraits ):
     """
 
     __metaclass__ = MetaInterface
+
+
+def provides(*protocols):
+    """ Class decorator to declare the protocols that a class provides.
+
+    Parameters
+    ----------
+    *protocols :
+        A list of protocols (Interface classes or Python ABCs) that the
+        decorated class provides.
+
+    """
+
+    from abc import ABCMeta
+
+    # Exit immediately if there is nothing to do.
+    if len(protocols) == 0:
+        return lambda klass: klass
+
+    # Verify that each argument is a valid protocol.
+    for protocol in protocols:
+        if not issubclass(protocol.__metaclass__, ABCMeta):
+            raise TraitError(
+                "All arguments to 'provides' must be "
+                "subclasses of Interface or be a Python ABC."
+            )
+
+    def wrapped_class(klass):
+        for protocol in protocols:
+            protocol.register(klass)
+
+        # Make sure the class does provide the protocols it claims to.
+        if CHECK_INTERFACES:
+            from .interface_checker import check_implements
+            check_implements(klass, protocols, CHECK_INTERFACES)
+
+        return klass
+
+    return wrapped_class
+
+#-------------------------------------------------------------------------------
+#  Defines the 'implements' function for declaring which interfaces a class
+#  implements:
+#-------------------------------------------------------------------------------
+
+def implements ( *interfaces ):
+    """ Declares the interfaces that a class implements.
+
+    Parameters
+    ----------
+    *interfaces :
+        A list of interface classes that the containing class implements.
+
+    Description
+    -----------
+    Registers each specified interface with the interface manager as an
+    interface that the containing class implements. Each specified interface
+    must be a subclass of **Interface**. This function should only be
+    called from directly within a class body.
+    """
+
+    callback = provides(*interfaces)
+    callback = deprecated(
+        "use the 'provides' class decorator instead"
+    )(callback)
+
+    addClassAdvisor(callback)
+
 
 #-------------------------------------------------------------------------------
 #  'ISerializable' interface:
