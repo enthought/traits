@@ -1092,6 +1092,11 @@ This is a list of replacements for the old API:
   :func:`traits.adaptation.api.register_provides` that declares a "null"
   adapter to adapt the type to the interface.
 
+* Testing if a class is an Interface
+
+  ``issubclass(klass, Interface)`` is not reliable, use
+  :func:`traits.api.isinterface` instead
+
 Gotchas
 ```````
 

@@ -60,7 +60,7 @@ from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
-        property_depends_on, provides)
+        property_depends_on, provides, isinterface)
 
 try:
     from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
