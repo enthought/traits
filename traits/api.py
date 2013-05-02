@@ -82,6 +82,7 @@ from .adaptation.adapter import Adapter, adapts
 from .adaptation.adaptation_error import AdaptationError
 from .adaptation.adaptation_manager import adapt, register_factory, \
      register_provides
+from .adaptation.cached_adapter_factory import CachedAdapterFactory
 
 from .trait_numeric import Array, CArray
 
