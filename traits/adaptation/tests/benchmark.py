@@ -10,9 +10,8 @@ import abc
 from pprint import pprint
 import time
 
-from traits.adaptation.api import HasTraitsAdapter
 from traits.adaptation.adaptation_manager import AdaptationManager
-from traits.api import HasTraits, implements, Interface
+from traits.api import Adapter, HasTraits, implements, Interface
 
 
 N_SOURCES    = 3
@@ -32,7 +31,7 @@ for i in range(N_PROTOCOLS):
     exec 'class I{i}(Interface): pass'.format(i=i)
 
 create_traits_adapter_class = """
-class IFoo{source}ToI{target}(HasTraitsAdapter):
+class IFoo{source}ToI{target}(Adapter):
     implements(I{source})
 """
 

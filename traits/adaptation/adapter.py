@@ -11,7 +11,7 @@ from traits.has_traits import HasTraits
 from traits.trait_types import Any
 
 
-class Adapter(object):
+class PurePythonAdapter(object):
     """ Base class for pure Python adapters. """
 
     def __init__(self, adaptee):
@@ -22,13 +22,13 @@ class Adapter(object):
         return
 
 
-class HasTraitsAdapter(HasTraits):
+class Adapter(HasTraits):
     """ Base class for adapters with traits. """
 
     def __init__(self, adaptee, **traits):
         """ Constructor. """
 
-        super(HasTraitsAdapter, self).__init__(**traits)
+        super(Adapter, self).__init__(**traits)
         self.adaptee = adaptee
 
         return

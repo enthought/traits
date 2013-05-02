@@ -3,7 +3,7 @@
 
 from abc import ABCMeta
 
-from traits.adaptation.api import Adapter
+from traits.adaptation.api import PurePythonAdapter as Adapter
 
 
 #### 'Power plugs' metaphor ###################################################

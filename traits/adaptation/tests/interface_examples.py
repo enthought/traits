@@ -1,9 +1,8 @@
 """ Test data for testing the protocol manager with interfaces. """
 
 
-from traits.api import Any, Enum, HasTraits, implements, Interface
+from traits.api import Adapter, Enum, HasTraits, implements, Interface
 
-from traits.adaptation.api import HasTraitsAdapter as Adapter
 
 #### 'Power plugs' metaphor ###################################################
 

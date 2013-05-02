@@ -1,4 +1,4 @@
-from .adapter import Adapter, HasTraitsAdapter
+from .adapter import Adapter, PurePythonAdapter
 
 from .adaptation_error import AdaptationError
 

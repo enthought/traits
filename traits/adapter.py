@@ -22,13 +22,13 @@
 from __future__ import absolute_import
 
 
-from .adaptation.adapter import HasTraitsAdapter
+import traits.adaptation.adapter
 from .util.deprecated import deprecated
 
 
-class Adapter(HasTraitsAdapter):
+class Adapter(traits.adaptation.adapter.Adapter):
 
-    @deprecated("use 'HasTraitsAdapter' in 'traits.adaptation' instead")
+    @deprecated("use 'Adapter' in 'traits.api' instead")
     def __init__(self, adaptee, **traits):
         super(Adapter, self).__init__(adaptee, **traits)
 
