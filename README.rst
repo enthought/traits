@@ -21,7 +21,7 @@ characteristics:
 - **Initialization**: A trait has a *default value*, which is
   automatically set as the initial value of an attribute before its
   first use in a program.
-- **Validation**: The type of a trait attributeis *explicitly declared*. The
+- **Validation**: The type of a trait attribute is *explicitly declared*. The
   type is evident in the code, and only values that meet a
   programmer-specified set of criteria (i.e., the trait definition) can
   be assigned to that attribute.

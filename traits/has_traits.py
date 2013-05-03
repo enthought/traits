@@ -3776,8 +3776,8 @@ def provides(*protocols):
 
     def wrapped_class(klass):
         for protocol in protocols:
-            # We use type(to_protocol) in case the to_protocols implements
-            # its own 'register' method which overrides the ABC method.
+            # We use 'type(protocol)' in case the 'protocol' implements
+            # its own 'register' method that overrides the ABC method.
             type(protocol).register(protocol, klass)
 
         # Make sure the class does provide the protocols it claims to.
@@ -3795,12 +3795,7 @@ def isinterface(klass):
     return isinstance(klass, MetaInterface)
 
 
-#-------------------------------------------------------------------------------
-#  Defines the 'implements' function for declaring which interfaces a class
-#  implements:
-#-------------------------------------------------------------------------------
-
-def implements ( *interfaces ):
+def implements(*interfaces):
     """ Declares the interfaces that a class implements.
 
     Parameters
