@@ -3748,8 +3748,11 @@ class Interface ( HasTraits ):
 
     __metaclass__ = MetaInterface
 
+#-------------------------------------------------------------------------------
+#  Class decorator to declare the protocols that a class provides.
+#-------------------------------------------------------------------------------
 
-def provides(*protocols):
+def provides( *protocols ):
     """ Class decorator to declare the protocols that a class provides.
 
     Parameters
@@ -3789,13 +3792,20 @@ def provides(*protocols):
 
     return wrapped_class
 
+#-------------------------------------------------------------------------------
+#  Return True if the class is an Interface.
+#-------------------------------------------------------------------------------
 
-def isinterface(klass):
+def isinterface( klass ):
     """ Return True if the class is an Interface. """
+
     return isinstance(klass, MetaInterface)
 
+#-------------------------------------------------------------------------------
+#  Declares the interfaces that a class implements.
+#-------------------------------------------------------------------------------
 
-def implements(*interfaces):
+def implements( *interfaces ):
     """ Declares the interfaces that a class implements.
 
     Parameters
@@ -3818,7 +3828,6 @@ def implements(*interfaces):
 
     addClassAdvisor(callback)
 
-
 #-------------------------------------------------------------------------------
 #  'ISerializable' interface:
 #-------------------------------------------------------------------------------
@@ -3827,7 +3836,6 @@ class ISerializable ( Interface ):
     """ A class that implemented ISerializable requires that all HasTraits
         objects saved as part of its state also implement ISerializable.
     """
-
 #-------------------------------------------------------------------------------
 #  'traits_super' class:
 #-------------------------------------------------------------------------------
