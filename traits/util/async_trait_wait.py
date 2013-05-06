@@ -37,9 +37,11 @@ def wait_for_condition(condition, obj, trait, timeout=None):
         elif timeout is None:
             # Allow a Ctrl-C to interrupt.  The 0.05 value matches
             # what's used by the standard library's Condition.wait.
-            while not condition_satisfied.wait(timeout=0.05):
-                pass
-        elif not condition_satisfied.wait(timeout=timeout):
-            raise RuntimeError("Timed out waiting for condition.")
+            while not condition_satisfied.is_set():
+                condition_satisfied.wait(timeout=0.05)
+        else:
+            condition_satisfied.wait(timeout=timeout)
+            if not condition_satisfied.is_set():
+                raise RuntimeError("Timed out waiting for condition.")
     finally:
         obj.on_trait_change(handler, trait, remove=True)
