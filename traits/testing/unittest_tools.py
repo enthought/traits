@@ -292,9 +292,9 @@ class UnittestTools(object):
                 )
             except RuntimeError:
                 actual_event_count = collector.event_count
-                msg = ("Expected {} event on {} to be fired at least {} "
-                       "times, but the event was only fired {} times "
-                       "before timeout ({} seconds).").format(
+                msg = ("Expected {0} event on {1} to be fired at least {2} "
+                       "times, but the event was only fired {3} times "
+                       "before timeout ({4} seconds).").format(
                     trait,
                     obj,
                     count,
@@ -336,4 +336,4 @@ class UnittestTools(object):
             condition_at_timeout = condition()
             self.fail(
                 "Timed out waiting for condition. "
-                "At timeout, condition was {}.".format(condition_at_timeout))
+                "At timeout, condition was {0}.".format(condition_at_timeout))
