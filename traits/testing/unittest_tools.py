@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2005-2013, Enthought, Inc.
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -13,6 +13,9 @@ Classes.
 
 """
 
+import contextlib
+import threading
+
 # Compatibility layer for Python 2.6: try loading unittest2
 import sys
 if sys.version_info[:2] == (2, 6):
@@ -23,6 +26,10 @@ if sys.version_info[:2] == (2, 6):
 
 else:
     import unittest
+
+from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
+        Property, Str)
+from traits.util.async_trait_wait import wait_for_condition
 
 
 class _AssertTraitChangesContext(object):
@@ -112,6 +119,60 @@ class _AssertTraitChangesContext(object):
             msg = 'A change event was not fired for: {0}'.format(self.xname)
             raise self.failureException(msg)
 
+
+class _TraitsChangeCollector(HasStrictTraits):
+    """
+    Class allowing thread-safe recording of events.
+
+    """
+    # The object we're listening to.
+    obj = Any
+
+    # The (possibly extended) trait name.
+    trait = Str
+
+    # Read-only event count.
+    event_count = Property(Int)
+
+    # Event that's triggered when the event count is updated.
+    event_count_updated = Event
+
+    # Private list of events.
+    events = List(Any)
+
+    # Lock used to allow access to events by multiple threads
+    # simultaneously.
+    _lock = Instance(threading.Lock, ())
+
+    def start_collecting(self):
+        self.obj.on_trait_change(
+            self._event_handler,
+            self.trait,
+        )
+
+    def stop_collecting(self):
+        self.obj.on_trait_change(
+            self._event_handler,
+            self.trait,
+            remove=True,
+        )
+
+    def _event_handler(self, new):
+        with self._lock:
+            self.events.append(new)
+        self.event_count_updated = True
+
+    def _get_event_count(self):
+        """
+        Traits property getter.
+
+        Thread-safe access to event count.
+
+        """
+        with self._lock:
+            return len(self.events)
+
+
 class UnittestTools(object):
     """ Mixin class to augment the unittest.TestCase class with useful trait
     related assert methods.
@@ -196,3 +257,83 @@ class UnittestTools(object):
 
         """
         return _AssertTraitChangesContext(obj, xname, 0, self)
+
+    @contextlib.contextmanager
+    def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):
+        """Assert an object trait eventually changes.
+
+        Context manager used to assert that the given trait changes at
+        least `count` times within the given timeout, as a result of
+        execution of the body of the corresponding with block.
+
+        The trait changes are permitted to occur asynchronously.
+
+        Example usage:
+
+        with self.assertTraitChangesAsync(my_object, 'SomeEvent', count=4):
+            <do stuff that should cause my_object.SomeEvent to be
+             fired at least 4 times within the next 5 seconds>
+
+        """
+        collector = _TraitsChangeCollector(obj=obj, trait=trait)
+
+        # Pass control to body of the with statement.
+        collector.start_collecting()
+        try:
+            yield collector
+
+            # Wait for the expected number of events to arrive.
+            try:
+                wait_for_condition(
+                    condition=lambda obj: obj.event_count >= count,
+                    obj=collector,
+                    trait='event_count_updated',
+                    timeout=timeout,
+                )
+            except RuntimeError:
+                actual_event_count = collector.event_count
+                msg = ("Expected {} event on {} to be fired at least {} "
+                       "times, but the event was only fired {} times "
+                       "before timeout ({} seconds).").format(
+                    trait,
+                    obj,
+                    count,
+                    actual_event_count,
+                    timeout,
+                )
+                self.fail(msg)
+
+        finally:
+            collector.stop_collecting()
+
+    def assertEventuallyTrue(self, obj, trait, condition, timeout=5.0):
+        """Assert that the given condition is eventually true.
+
+        Fail if the condition is not satisfied within the given timeout.
+
+        `condition` takes no arguments, and should return a Boolean.
+
+        `timeout` gives the maximum time (in seconds) to wait for the
+        condition to become true.  Default is 5.0 seconds.  A value of
+        `None` can be used to indicate no timeout.
+
+        (obj, trait) give an object and trait to listen to for
+        indication of a possible change: whenever the trait changes,
+        the condition is re-evaluated.
+
+        """
+        try:
+            wait_for_condition(
+                condition=lambda obj: condition(),
+                obj=obj,
+                trait=trait,
+                timeout=timeout,
+            )
+        except RuntimeError:
+            # Helpful to know whether we timed out because the
+            # condition never became true, or because the expected
+            # event was never issued.
+            condition_at_timeout = condition()
+            self.fail(
+                "Timed out waiting for condition. "
+                "At timeout, condition was {}.".format(condition_at_timeout))
