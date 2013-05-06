@@ -1,10 +1,14 @@
 """Trivial Interfaces and Adaptation from PyProtocols.
 
-This package is a direct copy of a subset of the files from Phillip J. Eby's
-PyProtocols package. They are only included here to help remove dependencies
-on external packages from the Traits package. The only significant change is
-the inclusion of a setup.py file.
+This package used to be a subset of the files from Phillip J. Eby's
+PyProtocols package. The package has been substituted by `traits.adaptation` as
+of Traits 4.4.0.
+
+Currently, the package contains deprecated aliases for backward compatibility,
+and will be removed in Traits 5.0 .
+
 """
+
 
 from traits.util.api import deprecated
 

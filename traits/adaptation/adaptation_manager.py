@@ -18,7 +18,7 @@ import inspect
 import itertools
 
 from traits.adaptation.adaptation_error import AdaptationError
-from traits.has_traits import HasTraits, Interface
+from traits.has_traits import HasTraits
 from traits.trait_types import Dict, List, Str
 
 
@@ -109,6 +109,8 @@ class AdaptationManager(HasTraits):
 
         # If the object already provides the given protocol then it is
         # simply returned.
+        # We use adaptee.__class__ instead of type(adaptee) as a curtesy to
+        # old-style classes.
         if self.provides_protocol(adaptee.__class__, to_protocol):
             result = adaptee
 
@@ -162,7 +164,7 @@ class AdaptationManager(HasTraits):
         return
 
     def supports_protocol(self, obj, protocol):
-        """ Does object support a given protocol?
+        """ Does the object support a given protocol?
 
         An object "supports" a protocol if either it "provides" it directly,
         or it can be adapted to it.
