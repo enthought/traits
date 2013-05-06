@@ -31,7 +31,7 @@ class AdaptationOffer(HasTraits):
     def __repr__(self):
         """ Return a string representation of the object. """
 
-        template = "AdaptationOffer: '{from_}' -> '{to}'"
+        template = "<AdaptationOffer: '{from_}' -> '{to}'>"
 
         from_name = getattr(
             self._from_protocol, '__name__', str(self._from_protocol)
