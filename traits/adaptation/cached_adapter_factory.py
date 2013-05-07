@@ -36,7 +36,7 @@ class CachedAdapterFactory(HasTraits):
 
         adapter = self._adapter_cache.get(adaptee, None)
         if adapter is None:
-            adapter = self.factory(adaptee=adaptee)
+            adapter = self.factory(adaptee)
             self._adapter_cache[adaptee] = adapter
 
         return adapter
