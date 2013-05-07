@@ -4,7 +4,8 @@
 import sys
 
 import traits.adaptation.tests.interface_examples
-from traits.adaptation.api import AdaptationManager, CachedAdapterFactory
+from traits.adaptation.api import AdaptationManager
+from traits.adaptation.cached_adapter_factory import CachedAdapterFactory
 from traits.testing.unittest_tools import unittest
 
 

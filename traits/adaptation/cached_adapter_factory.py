@@ -27,6 +27,8 @@ class CachedAdapterFactory(HasTraits):
     not be cleared unless you take care of cleaning the 'adaptee' trait once
     your adapter are deleted.
 
+    This class will be removed when the 'adapts' function is removed.
+
     """
 
     #### 'object' protocol #####################################################

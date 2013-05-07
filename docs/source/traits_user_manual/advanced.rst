@@ -755,8 +755,8 @@ This is the example from the previous section, were the adapter is registered::
 
 .. _adapter-factories:
 
-Adapter factories, caching, and conditional adaptation
-``````````````````````````````````````````````````````
+Adapter factories, and conditional adaptation
+`````````````````````````````````````````````
 
 The first argument to the :func:`~traits.adaptation.api.register_factory`
 function needs not be an adapter *class*, it can be, more generally, an
@@ -818,39 +818,6 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     # This succeeds.
     image = adapt(numpy.array([[1,2],[3,4]]), ImageABC)
     assert isinstance(image, NDArrayToImage)
-
-Caching
-:::::::
-
-Adapter factories are also used to cache the result of adaptation, which
-can be useful when creating the adapter is time consuming, or when the
-adapter should preserve some state across adaptations.
-
-The Traits adaptation package provide a class for this common case,
-:class:`~traits.adaptation.cached_adapter_factory.CachedAdapterFactory`.
-The class defines one trait, a :attr:`factory` that actually creates the
-adapters. Caching is done per instance of the adaptee object.
-
-For example::
-
-    from traits.adaptation.api import adapt, Adapter, CachedAdapterFactory, \
-        register_factory
-
-    class A(object):
-        pass
-
-    class B(object):
-        pass
-
-    class AToB(Adapter):
-        pass
-
-    register_factory(CachedAdapterFactory(factory=AToB), A, B)
-
-    a = A()
-    adapter = adapt(a, B)
-    adapter_2 = adapt(a, B)
-    assert adapter is adapter_2
 
 .. index::
   pair: adapters; requesting
@@ -1105,15 +1072,6 @@ Gotchas
    correctly in situations involving old-style classes. When used with Traits,
    the classes involved in adaptation are typically subclasses of
    :class:`~HasTraits`, in which case this is not an issue.
-
-2) The caching functionality is of limited utility at the moment. It is
-   a 1:1 port of the old ``traits.protocols`` code, and is provided mostly
-   for backward compatibility. The problem with it is that the cache will not
-   be cleared unless you take care of cleaning the 'adaptee' trait once your
-   adapter are deleted.
-
-   For the moment, you can provide more sensible caching on a case-by-case
-   basis by writing an appropriate adapter factory.
 
 Recommended readings about adaptation
 `````````````````````````````````````

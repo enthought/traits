@@ -80,7 +80,8 @@ def adapts(from_, to, extra=None, factory=None, cached=False, when=''):
 
     """
 
-    from traits.adaptation.api import CachedAdapterFactory, register_factory
+    from traits.adaptation.api import register_factory
+    from traits.adaptation.cached_adapter_factory import CachedAdapterFactory
     from traits.protocols.advice import addClassAdvisor
 
     if extra is not None:
