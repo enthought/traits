@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2003, Enthought, Inc.
+# Copyright (c) 2003-2013, Enthought, Inc.
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -14,7 +14,7 @@
 """
 Utility functions, part of the Traits project.
 
-:Copyright: 2003-2011 Enthought, Inc.
+:Copyright: 2003-2013 Enthought, Inc.
 
 
 """
