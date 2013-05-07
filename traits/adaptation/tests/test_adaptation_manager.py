@@ -1,7 +1,7 @@
 """ Test the adapter manager. """
 
 
-from traits.adaptation.api import AdaptationManager
+from traits.adaptation.api import AdaptationManager, adapt
 import traits.adaptation.tests.abc_examples
 import traits.adaptation.tests.interface_examples
 from traits.testing.unittest_tools import unittest
@@ -561,12 +561,20 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
         class Baz(HasTraits):
             pass
 
+        # Warning: because we are trying to test the 'adapts' class advisor,
+        # this will effect the global adaptation manager and hence may
+        # interfere with any other tests that rely on it (all of the tests
+        # in this package use a separate adaptation manager so there should
+        # be no clashes here ;^).
+        #
+        # 'adapts' is also deprecated, so expect a warning message when you
+        # run the tests.
         class BazToIFooAdapter(Adapter):
             adapts(Baz, IFoo)
 
         baz = Baz()
         bar = Bar()
-        bar.foo = IFoo(baz)
+        bar.foo = adapt(baz, IFoo)
 
         self.assertEqual(bar.foo.adaptee, baz)
 

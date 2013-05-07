@@ -3726,6 +3726,7 @@ class MetaInterface ( ABCMetaHasTraits ):
 
     """
 
+    @deprecated('use "adapt(adaptee, protocol)" instead.')
     def __call__ ( self, adaptee, default=AdaptationError ):
         """ Attempt to adapt the adaptee to this interface.
 
@@ -3822,9 +3823,7 @@ def implements( *interfaces ):
     """
 
     callback = provides(*interfaces)
-    callback = deprecated(
-        "use the 'provides' class decorator instead"
-    )(callback)
+    callback = deprecated("use the 'provides' class decorator")(callback)
 
     addClassAdvisor(callback)
 
