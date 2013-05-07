@@ -311,7 +311,8 @@ class UnittestTools(object):
 
         Fail if the condition is not satisfied within the given timeout.
 
-        `condition` takes no arguments, and should return a Boolean.
+        `condition` takes `obj` as an argument, and should return a Boolean
+        indicating whether the condition is satisfied or not.
 
         `timeout` gives the maximum time (in seconds) to wait for the
         condition to become true.  Default is 5.0 seconds.  A value of
@@ -324,7 +325,7 @@ class UnittestTools(object):
         """
         try:
             wait_for_condition(
-                condition=lambda obj: condition(),
+                condition=condition,
                 obj=obj,
                 trait=trait,
                 timeout=timeout,
@@ -333,7 +334,7 @@ class UnittestTools(object):
             # Helpful to know whether we timed out because the
             # condition never became true, or because the expected
             # event was never issued.
-            condition_at_timeout = condition()
+            condition_at_timeout = condition(obj)
             self.fail(
                 "Timed out waiting for condition. "
                 "At timeout, condition was {0}.".format(condition_at_timeout))
