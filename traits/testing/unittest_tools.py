@@ -89,26 +89,24 @@ class _AssertTraitChangesContext(object):
         self.obj = obj
         self.xname = xname
         self.count = count
+        self.event = None
         self.events = []
         self.failureException = test_case.failureException
 
     def _listener(self, obj, name, old, new):
-        """ Dummy trait listener
-        """
-        self.events.append((obj, name, old, new))
+        """Dummy trait listener."""
+        self.event = (obj, name, old, new)
+        self.events.append(self.event)
 
     def __enter__(self):
-        """ Bind the trait listener
-        """
+        """Bind the trait listener."""
         self.obj.on_trait_change(self._listener, self.xname)
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
-        """ Remove the trait listener
-
-        """
+        """Remove the trait listener."""
         if exc_type is not None:
-            return
+            return False
 
         self.obj.on_trait_change(self._listener, self.xname, remove=True)
         if self.count is not None and len(self.events) != self.count:
@@ -118,6 +116,21 @@ class _AssertTraitChangesContext(object):
         elif self.count is None and not self.events:
             msg = 'A change event was not fired for: {0}'.format(self.xname)
             raise self.failureException(msg)
+        return False
+
+
+@contextlib.contextmanager
+def reverse_assertion(context, msg):
+    context.__enter__()
+    try:
+        yield context
+    finally:
+        try:
+            context.__exit__(None, None, None)
+        except AssertionError:
+            pass
+        else:
+            raise context.failureException(msg)
 
 
 class _TraitsChangeCollector(HasStrictTraits):
@@ -179,84 +192,112 @@ class UnittestTools(object):
 
     """
 
-    def assertTraitChanges(self, obj, trait, count=None):
-        """ Assert that the class trait changes exactly n times.
+    def assertTraitChanges(self, obj, trait, count=None, callableObj=None,
+                           *args, **kwargs):
+        """Assert an object trait changes a given number of times.
 
-        Used in a with statement to assert that a class trait has changed
-        during the execution of the code inside the with context block
-        (similar to the assertRaises method).
+        Assert that the class trait changes exactly `count` times during
+        execution of the provided function.
 
-        Please note that the context manager returns itself and the user can
-        introspect the information of the fired events by accessing the
-        ``events`` attribute of the context object. The attribute is a list
-        with tuple elements containing the arguments of an `on_trait_change`
-        event signature (<object>, <name>, <old>, <new>).
+        Method can also be used in a with statement to assert that the
+        a class trait has changed during the execution of the code inside
+        the with statement (similar to the assertRaises method). Please note
+        that in that case the context manager returns itself and the user
+        can introspect the information of:
 
-        **Example**::
+        - The last event fired by accessing the ``event`` attribute of the
+          returned object.
+
+        - All the fired events by accessing the ``events`` attribute of
+          the return object.
+
+        Example::
 
             class MyClass(HasTraits):
-               number = Float(2.0)
+                number = Float(2.0)
 
             my_class = MyClass()
 
-            with self.assertTraitChanges(my_class, 'number') as ctx:
-               my_class.number = 3.0
-
-            self.assert(ctx.events, [(my_class, 'number', 2.0, 3.0)]
+            with self.assertTraitChangesExactly(my_class, 'number', count=1):
+                my_class.number = 3.0
 
         Parameters
         ----------
         obj : HasTraits
-            The HasTraits class instance who's class trait will change.
+            The HasTraits class instance whose class trait will change.
 
         xname : str
             The extended trait name of trait changes to listen too.
 
-        count : int, optional
+        callableObj : callable
+            A callable object that will trigger the trait change.
+
+        count : int
             The expected number of times the event should be fired. When None
             (default value) there is no check for the number of times the
             change event was fired.
 
+        *args :
+            List of positional arguments for ``callableObj``
+
+        **kwargs :
+            Dict of keyword value pairs to be passed to the ``callableObj``
+
+
         Notes
         -----
         - Checking if the provided xname corresponds to valid traits in
           the class is not implemented yet.
+        - Using the functional version of the assert method requires the
+          `count` argument to be given even it is None.
 
         """
-        return _AssertTraitChangesContext(obj, trait, count, self)
+        context = _AssertTraitChangesContext(obj, trait, count, self)
+        if callableObj is None:
+            return context
+        with context:
+            callableObj(*args, **kwargs)
 
-    def assertTraitDoesNotChange(self, obj, xname):
-        """ Assert that no trait event is fired.
+    def assertTraitDoesNotChange(self, obj, trait, callableObj=None,
+                           *args, **kwargs):
+        """Assert an object trait does not change.
 
-        Used in a with statement to assert that a class trait has not changed
-        during the execution of the code inside the with statement block.
+        Assert that the class trait does not change during
+        execution of the provided function.
 
-        **Example**::
+        """
+        msg = 'A change event was fired for: {0}'.format(trait)
+        context = _AssertTraitChangesContext(obj, trait, None, self)
+        if callableObj is None:
+            return reverse_assertion(context, msg)
+        with reverse_assertion(context, msg):
+            callableObj(*args, **kwargs)
+        return
 
-            class MyClass(HasTraits):
-                number = Float(2.0)
-                name = String
+    def assertMultiTraitChanges(self, objects, traits_modified,
+            traits_not_modified):
+        """Assert that traits on multiple objects do or do not change.
 
-            my_class = MyClass()
-
-            with self.assertTraitDoesNotChange(my_class, 'name'):
-                 my_class.number = 2.0
+        This combines some of the functionality of `assertTraitChanges` and
+        `assertTraitDoesNotChange`.
 
         Parameters
         ----------
-        obj : HasTraits
-            The HasTraits class instance who's class trait will change.
-
-        xname : str
-            The extended trait name of trait changes to listen too.
-
-        Notes
-        -----
-        - Checking if the provided xname corresponds to valid traits in
-          the class is not implemented yet.
+        objects : list of HasTraits
+            The HasTraits class instances whose traits will change.
+        traits_modified : list of str
+            The extended trait names of trait expected to change.
+        traits_not_modified : list of str
+            The extended trait names of traits not expected to change.
 
         """
-        return _AssertTraitChangesContext(obj, xname, 0, self)
+        args = []
+        for obj in objects:
+            for trait in traits_modified:
+                args.append(self.assertTraitChanges(obj, trait))
+            for trait in traits_not_modified:
+                args.append(self.assertTraitDoesNotChange(obj, trait))
+        return contextlib.nested(*args)
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):
