@@ -32,12 +32,10 @@ class TestSymbolImporter(unittest.TestCase):
         """ import dotted module """
 
         symbol = import_symbol(
-            'traits.util.symbol_importer:SymbolImporter'
+            'traits.util.symbol_importer:import_symbol'
         )
 
-        from traits.util.symbol_importer import SymbolImporter
-
-        self.assertEqual(symbol, SymbolImporter)
+        self.assertEqual(symbol, import_symbol)
 
         return
 

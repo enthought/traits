@@ -1,71 +1,37 @@
-""" The default import manager implementation. """
+""" A function to import symbols. """
 
 
-from traits.has_traits import HasTraits
+def import_symbol(symbol_path):
+    """ Import the symbol defined by the specified symbol path.
 
+    Examples
+    --------
 
-class SymbolImporter(HasTraits):
-    """ The default import manager implementation.
+    import_symbol('tarfile:TarFile') -> TarFile
+    import_symbol('tarfile:TarFile.open') -> TarFile.open
 
-    It's just a guess, but I think using an import manager to do all imports
-    will make debugging easier (as opposed to just letting imports happen from
-    all over the place).
+    To allow compatibility with old-school traits symbol names we also allow
+    all-dotted paths, but in this case you can only import top-level names
+    from the module.
+
+    import_symbol('tarfile.TarFile') -> TarFile
 
     """
 
-    ###########################################################################
-    # 'SymbolImporter' interface.
-    ###########################################################################
+    if ':' in symbol_path:
+        module_name, symbol_name = symbol_path.split(':')
 
-    def import_symbol(self, symbol_path):
-        """ Import the symbol defined by the specified symbol path. """
+        module = __import__(module_name, {}, {}, [symbol_name], 0)
+        symbol = eval(symbol_name, module.__dict__)
 
-        if ':' in symbol_path:
-            module_name, symbol_name = symbol_path.split(':')
+    else:
+        components  = symbol_path.split('.')
+        module_name = '.'.join(components[:-1])
+        symbol_name = components[-1]
 
-            module = self._import_module(module_name)
-            symbol = eval(symbol_name, module.__dict__)
+        module = __import__(module_name, {}, {}, [symbol_name], 0)
+        symbol = getattr(module, symbol_name)
 
-        else:
-            components = symbol_path.split('.')
-
-            module_name = '.'.join(components[:-1])
-            symbol_name = components[-1]
-
-            module = __import__(
-                module_name, globals(), locals(), [symbol_name]
-            )
-
-            symbol = getattr(module, symbol_name)
-
-        return symbol
-
-    ###########################################################################
-    # Private interface.
-    ###########################################################################
-
-    def _import_module(self, module_name):
-        """ Import the module with the specified (and possibly dotted) name.
-
-        Returns the imported module.
-
-        This method is copied from the documentation of the '__import__'
-        function in the Python Library Reference Manual.
-
-        """
-
-        module = __import__(module_name)
-
-        components = module_name.split('.')
-        for component in components[1:]:
-            module = getattr(module, component)
-
-        return module
-
-
-#: Global import manager, for convenience.
-symbol_importer = SymbolImporter()
-
-import_symbol = symbol_importer.import_symbol
+    return symbol
 
 #### EOF ######################################################################
