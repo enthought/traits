@@ -173,8 +173,19 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertRaises(AssertionError):
             with self.assertTraitChanges(test_object, 'number') as result:
                 test_object.flag = True
-
         self.assertEqual(result.events, [])
+
+        # Change event will not be fired 3 times
+        with self.assertRaises(AssertionError):
+            with self.assertTraitChanges(test_object, 'number', count=3) as \
+                    result:
+                test_object.flag = True
+                test_object.add_to_number(10.0)
+                test_object.add_to_number(10.0)
+
+        expected = [(test_object, 'number', 2.0, 12.0),
+                    (test_object, 'number', 12.0, 22.0)]
+        self.assertSequenceEqual(expected, result.events)
 
     def test_asserts_in_context_block(self):
         """ Make sure that the traits context manager does not stop
