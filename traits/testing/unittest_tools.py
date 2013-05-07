@@ -94,17 +94,20 @@ class _AssertTraitChangesContext(object):
         self.failureException = test_case.failureException
 
     def _listener(self, obj, name, old, new):
-        """Dummy trait listener."""
+        """ Dummy trait listener.
+        """
         self.event = (obj, name, old, new)
         self.events.append(self.event)
 
     def __enter__(self):
-        """Bind the trait listener."""
+        """ Bind the trait listener.
+        """
         self.obj.on_trait_change(self._listener, self.xname)
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
-        """Remove the trait listener."""
+        """ Remove the trait listener.
+        """
         if exc_type is not None:
             return False
 
@@ -134,9 +137,7 @@ def reverse_assertion(context, msg):
 
 
 class _TraitsChangeCollector(HasStrictTraits):
-    """
-    Class allowing thread-safe recording of events.
-
+    """ Class allowing thread-safe recording of events.
     """
     # The object we're listening to.
     obj = Any
@@ -176,8 +177,7 @@ class _TraitsChangeCollector(HasStrictTraits):
         self.event_count_updated = True
 
     def _get_event_count(self):
-        """
-        Traits property getter.
+        """ Traits property getter.
 
         Thread-safe access to event count.
 
@@ -194,7 +194,7 @@ class UnittestTools(object):
 
     def assertTraitChanges(self, obj, trait, count=None, callableObj=None,
                            *args, **kwargs):
-        """Assert an object trait changes a given number of times.
+        """ Assert an object trait changes a given number of times.
 
         Assert that the class trait changes exactly `count` times during
         execution of the provided function.
@@ -260,7 +260,7 @@ class UnittestTools(object):
 
     def assertTraitDoesNotChange(self, obj, trait, callableObj=None,
                            *args, **kwargs):
-        """Assert an object trait does not change.
+        """ Assert an object trait does not change.
 
         Assert that the class trait does not change during
         execution of the provided function.
@@ -276,7 +276,7 @@ class UnittestTools(object):
 
     def assertMultiTraitChanges(self, objects, traits_modified,
             traits_not_modified):
-        """Assert that traits on multiple objects do or do not change.
+        """ Assert that traits on multiple objects do or do not change.
 
         This combines some of the functionality of `assertTraitChanges` and
         `assertTraitDoesNotChange`.
@@ -301,7 +301,7 @@ class UnittestTools(object):
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):
-        """Assert an object trait eventually changes.
+        """ Assert an object trait eventually changes.
 
         Context manager used to assert that the given trait changes at
         least `count` times within the given timeout, as a result of
@@ -348,7 +348,7 @@ class UnittestTools(object):
             collector.stop_collecting()
 
     def assertEventuallyTrue(self, obj, trait, condition, timeout=5.0):
-        """Assert that the given condition is eventually true.
+        """ Assert that the given condition is eventually true.
 
         Fail if the condition is not satisfied within the given timeout.
 

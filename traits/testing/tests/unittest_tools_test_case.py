@@ -37,6 +37,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         self.test_object = TestObject()
 
     def test_when_using_with(self):
+        """ Check normal use cases as a context manager.
+        """
         test_object = self.test_object
 
         # Change event should NOT BE detected
