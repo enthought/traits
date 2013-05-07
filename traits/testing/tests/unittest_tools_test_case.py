@@ -139,6 +139,10 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             with self.assertTraitChanges(test_object, 'number'):
                 test_object.i_do_exist
 
+        with self.assertRaises(AttributeError):
+            with self.assertTraitDoesNotChange(test_object, 'number'):
+                test_object.i_do_exist
+
     def test_non_change_on_failure(self):
         test_object = self.test_object
         traits = 'flag, number'
