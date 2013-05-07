@@ -5,7 +5,7 @@ from traits.util.api import import_symbol
 from traits.testing.unittest_tools import unittest
 
 
-class TestSymbolImporter(unittest.TestCase):
+class TestImportSymbol(unittest.TestCase):
     """ Tests for the import manager. """
 
     def test_import_dotted_symbol(self):
@@ -32,7 +32,7 @@ class TestSymbolImporter(unittest.TestCase):
         """ import dotted module """
 
         symbol = import_symbol(
-            'traits.util.symbol_importer:import_symbol'
+            'traits.util.import_symbol:import_symbol'
         )
 
         self.assertEqual(symbol, import_symbol)
