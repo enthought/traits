@@ -33,15 +33,10 @@ class AdaptationOffer(HasTraits):
 
         template = "<AdaptationOffer: '{from_}' -> '{to}'>"
 
-        from_name = getattr(
-            self._from_protocol, '__name__', str(self._from_protocol)
-        )
+        from_ = self.from_protocol_name
+        to    = self.to_protocol_name
 
-        to_name = getattr(
-            self._to_protocol, '__name__', str(self._to_protocol)
-        )
-
-        return template.format(from_=from_name, to=to_name)
+        return template.format(from_=from_, to=to)
 
     #### 'AdaptationOffer' protocol ###########################################
 
@@ -74,6 +69,9 @@ class AdaptationOffer(HasTraits):
     #: statement 'from foo.bar import baz' and imported when the trait is
     #: accessed.
     to_protocol = Property(Any)
+    to_protocol_name = Property(Any)
+    def _get_to_protocol_name(self):
+        return self._get_type_name(self._to_protocol)
 
     #### Private protocol ######################################################
 
