@@ -216,6 +216,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             threading.Thread(target=thread_target, args=(a, events_per_thread))
             for _ in xrange(thread_count)
         ]
+
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
             a, 'event', expected_count, timeout=60.0):
@@ -282,7 +283,6 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         ]
 
         expected_count = thread_count * events_per_thread
-
         with self.assertRaises(AssertionError):
             with self.assertTraitChangesAsync(a, 'event', expected_count + 1):
                 for t in threads:
