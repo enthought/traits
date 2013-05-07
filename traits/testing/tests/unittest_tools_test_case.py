@@ -75,7 +75,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         self.assertSequenceEqual(expected, result.event)
 
         # Change event should BE detected exactly 3 times
-        with self.assertTraitChanges(test_object, 'number') as result:
+        with self.assertTraitChanges(test_object, 'number', count=3) as result:
             test_object.flag = True
             test_object.add_to_number(10.0)
             test_object.add_to_number(10.0)
@@ -121,6 +121,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                                       test_object.add_to_number, 13.0)
 
     def test_indirect_events(self):
+        """ Check catching indirect change events.
+        """
         test_object = self.test_object
 
         # Change event should BE detected
@@ -132,7 +134,11 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         expected = (test_object, 'list_of_numbers_items', [], [-3.0])
         self.assertSequenceEqual(expected, result.event)
 
-    def test_exception_in_context(self):
+    def test_exception_inside_context(self):
+        """ Check that exception inside the context statement block are
+        propagated.
+
+        """
         test_object = self.test_object
 
         with self.assertRaises(AttributeError):
@@ -144,35 +150,28 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                 test_object.i_do_exist
 
     def test_non_change_on_failure(self):
+        """ Check behaviour when assertion should be raised for non trait
+        change.
+
+        """
         test_object = self.test_object
         traits = 'flag, number'
-
         with self.assertRaises(AssertionError):
             with self.assertTraitDoesNotChange(test_object, traits) as result:
                 test_object.flag = True
                 test_object.number = -3.0
-
         expected = [(test_object, 'flag', False, True),
                     (test_object, 'number', 2.0, -3.0)]
         self.assertEqual(result.events, expected)
 
     def test_change_on_failure(self):
+        """ Check behaviour when assertion should be raised for trait change.
+        """
         test_object = self.test_object
-
         with self.assertRaises(AssertionError):
             with self.assertTraitChanges(test_object, 'number') as result:
                 test_object.flag = True
 
-        self.result = None
-
-        def test(self_):
-            with self.assertTraitChanges(test_object, 'number') as result:
-                self_.result = result
-                test_object.flag = True
-
-        self.assertRaises(AssertionError, test, self)
-        result = self.result
-        del self.result
         self.assertEqual(result.events, [])
 
     def test_asserts_in_context_block(self):
@@ -215,7 +214,6 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             threading.Thread(target=thread_target, args=(a, events_per_thread))
             for _ in xrange(thread_count)
         ]
-
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
             a, 'event', expected_count, timeout=60.0):
