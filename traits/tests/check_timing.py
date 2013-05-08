@@ -23,8 +23,6 @@ from __future__ import absolute_import
 from time import time
 from traits.api import Any, DelegatesTo, HasTraits, Int, Range
 
-print 'OK!'
-
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
@@ -118,7 +116,7 @@ class new_style_value ( object ):
             set_speed_up = reference_set/set_time,
         )
 
-        return t1, t2
+        return get_time, set_time
 
     def null ( self ):
         for i in range(n):
@@ -254,7 +252,9 @@ class delegate_3_value ( delegate_value ):
 
 if __name__ == '__main__':
 
+    print 'Run reference benchmark...'
     get_time, set_time = new_style_value().measure()
+    print '-'*20
 
     global_value().measure(get_time, set_time)
     old_style_value().measure(get_time, set_time)
