@@ -33,8 +33,8 @@ n = 1000000
 # Loop overhead time (actual value determined first time a measurement is made):
 t0 = -1.0
 
-template = '{name:^30}: Get {get_time:02.2f} us (x {get_speed_up:02.2f}), ' \
-           'Set {set_time:02.2f} us (x {set_speed_up:02.2f})'
+template = '{name:^30}: Get {get_time:02.3f} us (x {get_speed_up:02.3f}), ' \
+           'Set {set_time:02.3f} us (x {set_speed_up:02.3f})'
 
 #-------------------------------------------------------------------------------
 #  Measure how long it takes to execute a specified function:
