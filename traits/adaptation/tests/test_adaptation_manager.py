@@ -247,9 +247,6 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         return
 
     def test_spillover_adaptation_behavior(self):
-        # We skip this test: all the example we could come up with for this
-        # problem are cases of bad design, and without a good use case it's
-        # unclear what the right behavior should be.
 
         ex = self.examples
 
