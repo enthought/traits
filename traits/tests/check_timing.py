@@ -21,7 +21,7 @@
 from __future__ import absolute_import
 
 from time import time
-from ..api import Any, Delegate, HasTraits, Int, Range
+from traits.api import Any, DelegatesTo, HasTraits, Int, Range
 
 print 'OK!'
 
@@ -34,6 +34,9 @@ n = 1000000
 
 # Loop overhead time (actual value determined first time a measurement is made):
 t0 = -1.0
+
+template = '{name:^30}: Get {get_time:02.2f} us (x {get_speed_up:02.2f}), ' \
+           'Set {set_time:02.2f} us (x {set_speed_up:02.2f})'
 
 #-------------------------------------------------------------------------------
 #  Measure how long it takes to execute a specified function:
@@ -50,7 +53,7 @@ def measure ( func ):
 
 class old_style_value:
 
-    def measure ( self ):
+    def measure ( self, reference_get=1.0, reference_set=1.0 ):
         global t0
         self.init()
 
@@ -58,11 +61,20 @@ class old_style_value:
             t0 = measure( self.null )
         t1 = measure( self.do_get )
         t2 = measure( self.do_set )
+
         scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+        get_time = max( t1 - t0, 0.0 ) * scale
+        set_time = max( t2 - t0, 0.0 ) * scale
+
+        print template.format(
+            name         = self.__class__.__name__,
+            get_time     = get_time,
+            get_speed_up = reference_get/get_time,
+            set_time     = get_time,
+            set_speed_up = reference_set/set_time,
+        )
+
+        return get_time, set_time
 
     def null ( self ):
         for i in range(n):
@@ -85,7 +97,7 @@ class old_style_value:
 
 class new_style_value ( object ):
 
-    def measure ( self ):
+    def measure ( self, reference_get=1.0, reference_set=1.0 ):
         global t0
         self.init()
 
@@ -93,11 +105,20 @@ class new_style_value ( object ):
             t0 = measure( self.null )
         t1 = measure( self.do_get )
         t2 = measure( self.do_set )
+
         scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+        get_time = max( t1 - t0, 0.0 ) * scale
+        set_time = max( t2 - t0, 0.0 ) * scale
+
+        print template.format(
+            name         = self.__class__.__name__,
+            get_time     = get_time,
+            get_speed_up = reference_get/get_time,
+            set_time     = get_time,
+            set_speed_up = reference_set/set_time,
+        )
+
+        return t1, t2
 
     def null ( self ):
         for i in range(n):
@@ -199,7 +220,7 @@ class monitor_value ( int_value ):
 
 class delegate_value ( HasTraits, new_style_value ):
 
-    value    = Delegate( 'delegate' )
+    value    = DelegatesTo( 'delegate' )
     delegate = Any
 
     def init ( self ):
@@ -212,8 +233,9 @@ class delegate_value ( HasTraits, new_style_value ):
 class delegate_2_value ( delegate_value ):
 
     def init ( self ):
-        self.delegate = delegate_value()
-        self.delegate.init()
+        delegate = delegate_value()
+        delegate.init()
+        self.delegate = delegate
 
 #-------------------------------------------------------------------------------
 #  Float trait is delegated through two objects to another object:
@@ -222,23 +244,27 @@ class delegate_2_value ( delegate_value ):
 class delegate_3_value ( delegate_value ):
 
     def init ( self ):
-        self.delegate = delegate_2_value()
-        self.delegate.init()
+        delegate = delegate_2_value()
+        delegate.init()
+        self.delegate = delegate
 
 #-------------------------------------------------------------------------------
 #  Run the timing measurements:
 #-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
-    old_style_value().measure()
-    new_style_value().measure()
-    property_value().measure()
-    global_value().measure()
-    any_value().measure()
-    int_value().measure()
-    range_value().measure()
-    change_value().measure()
-    monitor_value().measure()
-    delegate_value().measure()
-    delegate_2_value().measure()
-    delegate_3_value().measure()
+
+    get_time, set_time = new_style_value().measure()
+
+    global_value().measure(get_time, set_time)
+    old_style_value().measure(get_time, set_time)
+    new_style_value().measure(get_time, set_time)
+    property_value().measure(get_time, set_time)
+    any_value().measure(get_time, set_time)
+    int_value().measure(get_time, set_time)
+    range_value().measure(get_time, set_time)
+    change_value().measure(get_time, set_time)
+    monitor_value().measure(get_time, set_time)
+    delegate_value().measure(get_time, set_time)
+    delegate_2_value().measure(get_time, set_time)
+    delegate_3_value().measure(get_time, set_time)
