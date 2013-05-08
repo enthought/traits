@@ -68,7 +68,7 @@ class old_style_value:
             name         = self.__class__.__name__,
             get_time     = get_time,
             get_speed_up = reference_get/get_time,
-            set_time     = get_time,
+            set_time     = set_time,
             set_speed_up = reference_set/set_time,
         )
 
@@ -112,7 +112,7 @@ class new_style_value ( object ):
             name         = self.__class__.__name__,
             get_time     = get_time,
             get_speed_up = reference_get/get_time,
-            set_time     = get_time,
+            set_time     = set_time,
             set_speed_up = reference_set/set_time,
         )
 
