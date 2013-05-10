@@ -367,5 +367,6 @@ register_factory  = adaptation_manager.register_factory
 register_offer    = adaptation_manager.register_offer
 register_provides = adaptation_manager.register_provides
 supports_protocol = adaptation_manager.supports_protocol
+provides_protocol = AdaptationManager.provides_protocol
 
 #### EOF ######################################################################
