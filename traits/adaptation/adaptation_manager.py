@@ -84,7 +84,7 @@ class AdaptationManager(HasTraits):
         """
 
         # We do the 'is' check first as a performance improvement to save us
-        # a call to 'subclass'.
+        # a call to 'issubclass'.
         return type_ is protocol or issubclass(type_, protocol)
 
     #### 'AdaptationManager' protocol ##########################################
@@ -109,7 +109,7 @@ class AdaptationManager(HasTraits):
 
         # If the object already provides the given protocol then it is
         # simply returned.
-        # We use adaptee.__class__ instead of type(adaptee) as a curtesy to
+        # We use adaptee.__class__ instead of type(adaptee) as a courtesy to
         # old-style classes.
         if self.provides_protocol(adaptee.__class__, to_protocol):
             result = adaptee

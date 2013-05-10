@@ -575,7 +575,7 @@ in API.*
 
 Adaptation is the process of transforming an object that does not implement a
 specific interface needed by a client into an object that does. In the adapter
-pattern, an object is wrapped in a a second object, the *adapter*,
+pattern, an object is wrapped in a second object, the *adapter*,
 that implements the target interface.
 
 Adaptation enables a programming style in which each component or service in an
