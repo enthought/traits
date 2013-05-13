@@ -507,39 +507,44 @@ class TraitChangeNotifyWrapper:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
+        obj = self.object
+        if (obj is not None) and (old is not Uninitialized):
             try:
-                self.dispatch( getattr( self.object(), self.name ) )
+                self.dispatch( getattr( obj(), self.name ) )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_1 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
+        obj = self.object
+        if (obj is not None) and (old is not Uninitialized):
             try:
-                self.dispatch( getattr( self.object(), self.name ), new )
+                self.dispatch( getattr( obj(), self.name ), new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
+        obj = self.object
+        if (obj is not None) and (old is not Uninitialized):
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                trait_name, new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
+        obj = self.object
+        if (obj is not None) and (old is not Uninitialized):
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
+        obj = self.object
+        if (obj is not None) and (old is not Uninitialized):
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, old, new )
             except:
                 handle_exception( object, trait_name, old, new )
@@ -581,39 +586,44 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             handle_exception( object, trait_name, old, new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
-        if self.object is not None:
+        obj = self.object
+        if obj is not None:
             try:
-                self.dispatch( getattr( self.object(), self.name ) )
+                self.dispatch( getattr( obj(), self.name ) )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_1 ( self, object, trait_name, old, new ):
-        if self.object is not None:
+        obj = self.object
+        if obj is not None:
             try:
-                self.dispatch( getattr( self.object(), self.name ), new )
+                self.dispatch( getattr( obj(), self.name ), new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
-        if self.object is not None:
+        obj = self.object
+        if obj is not None:
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                trait_name, new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
-        if self.object is not None:
+        obj = self.object
+        if obj is not None:
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, new )
             except:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
-        if self.object is not None:
+        obj = self.object
+        if obj is not None:
             try:
-                self.dispatch( getattr( self.object(), self.name ),
+                self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, old, new )
             except:
                 handle_exception( object, trait_name, old, new )
