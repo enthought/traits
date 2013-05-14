@@ -662,7 +662,7 @@ streamline the process of creating a new adapter class. They have a standard
 constructor that does not normally need to be overridden by subclasses. This
 constructor accepts one parameter, which is the object to be adapted, and
 assigns that object to an :attr:`adaptee` attribute (a trait in the case
-of :class:`~.Adapter`).
+of :class:`~traits.adaptation.adapter.Adapter`).
 
 As an adapter writer, you need to take care of the following:
 
