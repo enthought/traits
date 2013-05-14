@@ -609,7 +609,7 @@ Main features
 
 The main features of the :mod:`traits.adaptation` package are:
 
-* Support for Python classes, ABCs, and traits :class:`~Interface` s
+* Support for Python classes, ABCs, and traits :class:`~.Interface` s
 
    Protocols can be specified using any of those.
 
@@ -662,13 +662,13 @@ streamline the process of creating a new adapter class. They have a standard
 constructor that does not normally need to be overridden by subclasses. This
 constructor accepts one parameter, which is the object to be adapted, and
 assigns that object to an :attr:`adaptee` attribute (a trait in the case
-of :class:`~Adapter`).
+of :class:`~.Adapter`).
 
 As an adapter writer, you need to take care of the following:
 
 * Declare which interfaces the adapter class implements on behalf of the
   object it is adapting. For example, if we are working with Traits
-  :class:`~Interface` s, the adapter would be decorated with the
+  :class:`~.Interface` s, the adapter would be decorated with the
   :func:`~traits.has_traits.provides` decorator. In the case of Python ABCs,
   the class would be a subclass of the abstract base class, or be
   `registered with it
@@ -682,7 +682,7 @@ As an adapter writer, you need to take care of the following:
 
 * For Traits adapters, define a trait attribute named **adaptee** that
   declares what type of object it is an adapter for. Usually, this is an
-  :class:`~Instance` trait.
+  :class:`~.Instance` trait.
 
 .. index::
    pair: example; Adapter class
@@ -889,17 +889,17 @@ Using the ``Supports`` and ``AdaptsTo`` traits
 ::::::::::::::::::::::::::::::::::::::::::::::
 
 Using the terminology introduced in this section, we can say that the
-:class:`~Instance` trait accepts values that *provide* the specified protocol.
+:class:`~.Instance` trait accepts values that *provide* the specified protocol.
 
 Traits defines two additional traits that accept values that *support* a
 given protocol (they provide it or can be adapted to it) instead:
 
-* The :class:`~Supports` trait accepts value that support the specified
+* The :class:`~.Supports` trait accepts value that support the specified
   protocol. The value of the trait after assignment is the possibly adapted
   value (i.e., it is the original assigned value if that provides the protocol,
   or is an adapter otherwise).
 
-* The :class:`~AdaptsTo` trait also accepts values that support the specified
+* The :class:`~.AdaptsTo` trait also accepts values that support the specified
   protocol. Unlike ``Supports``, ``AdaptsTo`` stores the original, unadapted
   value.
 
@@ -1071,7 +1071,7 @@ Gotchas
    Adaptation might work in particular cases but is not guaranteed to work
    correctly in situations involving old-style classes. When used with Traits,
    the classes involved in adaptation are typically subclasses of
-   :class:`~HasTraits`, in which case this is not an issue.
+   :class:`~.HasTraits`, in which case this is not an issue.
 
 Recommended readings about adaptation
 `````````````````````````````````````

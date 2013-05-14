@@ -57,10 +57,10 @@
     :undoc-members:
     :show-inheritance:
 
-:mod:`symbol_importer` Module
+:mod:`import_symbol` Module
 -----------------------------
 
-.. automodule:: traits.util.symbol_importer
+.. automodule:: traits.util.import_symbol
     :members:
     :undoc-members:
     :show-inheritance:
