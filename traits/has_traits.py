@@ -3823,7 +3823,10 @@ def implements( *interfaces ):
     """
 
     callback = provides(*interfaces)
-    callback = deprecated("use the 'provides' class decorator")(callback)
+    callback = deprecated(
+        "'the 'implements' class advisor has been deprecated. "
+        "Use the 'provides' class decorator."
+    )(callback)
 
     addClassAdvisor(callback)
 
