@@ -20,14 +20,15 @@ from __future__ import absolute_import
 from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
-from ..api import Adapter, HasTraits, Instance, Int, Interface, adapts, implements
+from traits.api import Adapter, HasTraits, Instance, Int, Interface, \
+    provides, register_factory
 
 # Local imports.
-from ..interface_checker import InterfaceError, check_implements
+from traits.interface_checker import InterfaceError, check_implements
 
 # Make sure implicit interface checking is turned off, so that we can make the
 # checks explicitly:
-from .. import has_traits
+from traits import has_traits
 has_traits.CHECK_INTERFACES = 0
 
 
@@ -60,8 +61,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that *does* implement the interface.
+        @provides(IFoo)
         class Foo(object):
-            implements(IFoo)
 
             def foo(self):
                 pass
@@ -79,8 +80,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
 
         # A class that *does* implement the interface.
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
 
             x = Int
 
@@ -98,9 +99,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
-
             # Extra argument!
             def foo(self, x):
                 pass
@@ -116,8 +116,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
 
         # A class that does *not* implement the interface.
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
+            pass
 
 
         self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
@@ -132,8 +133,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
+            pass
 
 
         self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
@@ -153,9 +155,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             z = Int
 
         # A class that *does* implement the interface.
+        @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-            implements(IFoo, IBar, IBaz)
-
             x = Int
             y = Int
             z = Int
@@ -182,8 +183,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-            implements(IFoo, IBar, IBaz)
 
             def foo(self):
                 pass
@@ -214,8 +215,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             z = Int
 
         # A class that does *not* implement the interface.
+        @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-            implements(IFoo, IBar, IBaz)
 
             x = Int
             y = Int
@@ -242,8 +243,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IFoo, IBar, IBaz)
         class Foo(HasTraits):
-            implements(IFoo, IBar, IBaz)
 
             def foo(self):
                 pass
@@ -270,9 +271,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             z = Int
 
         # A class that *does* implement the interface.
+        @provides(IBaz)
         class Foo(HasTraits):
-            implements(IBaz)
-
             x = Int
             y = Int
             z = Int
@@ -299,8 +299,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IBaz)
         class Foo(HasTraits):
-            implements(IBaz)
 
             def foo(self):
                 pass
@@ -329,8 +329,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             z = Int
 
         # A class that does *not* implement the interface.
+        @provides(IBaz)
         class Foo(HasTraits):
-            implements(IBaz)
 
             x = Int
             y = Int
@@ -355,8 +355,8 @@ class InterfaceCheckerTestCase(unittest.TestCase):
                 pass
 
         # A class that does *not* implement the interface.
+        @provides(IBaz)
         class Foo(HasTraits):
-            implements(IBaz)
 
             def foo(self):
                 pass
@@ -376,8 +376,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class IFoo(Interface):
             pass
 
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
+            pass
 
         class Bar(HasTraits):
             foo = Instance(IFoo)
@@ -392,8 +393,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class IFoo(Interface):
             pass
 
+        @provides(IFoo)
         class Foo(HasTraits):
-            implements(IFoo)
+            pass
 
         f = Foo()
         self.assertEqual(f, IFoo(f))
@@ -409,8 +411,11 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
+        @provides(IFoo)
         class FooToIFooAdapter(Adapter):
-            adapts(Foo, IFoo)
+            pass
+
+        register_factory(FooToIFooAdapter, Foo, IFoo)
 
         f = Foo()
 

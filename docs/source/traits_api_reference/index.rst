@@ -29,8 +29,8 @@ Subpackages
 .. toctree::
     :maxdepth: 1
 
+    traits.adaptation
     traits.etsconfig
-    traits.protocols
     traits.testing
     traits.util
 

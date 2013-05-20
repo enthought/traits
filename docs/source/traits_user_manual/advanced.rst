@@ -441,7 +441,7 @@ raised.
 Interfaces
 ----------
 
-Starting in version 3.0, the Traits package supports declaring and implementing
+The Traits package supports declaring and implementing
 *interfaces*. An interface is an abstract data type that defines a set of
 attributes and methods that an object must have to work in a given situation.
 The interface says nothing about what the attributes or methods do, or how they
@@ -464,17 +464,16 @@ Defining an Interface
 
 To define an interface, create a subclass of Interface::
 
-    # interface_definition.py -- Example of defining an interface
     from traits.api import Interface
 
     class IName(Interface):
 
         def get_name(self):
-            ''' Returns a string which is the name of an object. '''
+            """ Returns a string which is the name of an object. """
 
-Interface classes serve primarily has documentation of the methods and
+Interface classes serve primarily as documentation of the methods and
 attributes that the interface defines. In this case, a class that implements the
-IName interface must have a method named get_name(), which takes no arguments
+``IName`` interface must have a method named ``get_name()``, which takes no arguments
 and returns a string. Do not include any implementation code in an interface
 declaration. However, the Traits package does not actually check to ensure that
 interfaces do not contain implementations.
@@ -489,25 +488,26 @@ Implementing an Interface
 `````````````````````````
 
 A class declares that it implements one or more interfaces using the
-:func:`~traits.has_traits.implements` function, which has the signature:
+:func:`~traits.api.provides` class decorator, which has the signature:
 
 .. currentmodule:: traits.has_traits
-
-.. function:: implements( interface[, interface2 , ... , interfaceN] )
+.. function:: provides(interface[, interface2 , ... , interfaceN])
     :noindex:
 
 .. index:: examples; interface implementation, interfaces; implementation; example
 
-Interface names beyond the first one are optional. The call to implements() must
-occur at class scope within the class definition. For example::
+Interface names beyond the first one are optional. As for all class
+decorators, the call to provides must occur just before the class
+definition. For example::
 
-    # interface_implementation.py -- Example of implementing an
-    #                                interface
-    from traits.api import HasTraits, implements, Str
-    from interface_definition import IName
+    from traits.api import HasTraits, Interface, provides, Str
 
+    class IName(Interface):
+        def get_name(self):
+            """ Returns a string which is the name of an object. """
+
+    @provides(IName)
     class Person(HasTraits):
-        implements(IName)
 
         first_name = Str( 'John' )
         last_name  = Str( 'Doe' )
@@ -515,11 +515,10 @@ occur at class scope within the class definition. For example::
         # Implementation of the 'IName' interface:
         def get_name ( self ):
             ''' Returns the name of an object. '''
-            return ('%s %s' % ( self.first_name, self.last_name ))
+            name = '{first} {last}'
+            return name.format(name=self.first_name, last=self.last_name)
 
-A class can contain at most one call to implements().
-
-In version 3.0, you can specify whether the implements() function verifies that
+You can specify whether the provides() decorator verifies that
 the class calling it actually implements the interface that it says it does.
 This is determined by the CHECK_INTERFACES variable, which can take one of three
 values:
@@ -544,23 +543,24 @@ Using Interfaces
 ````````````````
 
 You can use an interface at any place where you would normally use a class name.
-The most common way to use interfaces is with the Instance trait::
+The most common way to use interfaces is with the
+:class:`~traits.trait_types.Instance` or
+:class:`~traits.trait_types.Supports` traits::
 
     >>> from traits.api import HasTraits, Instance
-    >>> from interface_definition import IName
     >>> class Apartment(HasTraits):
     ...     renter = Instance(IName)
-    >>> from interface_implementation import Person
     >>> william = Person(first_name='William', last_name='Adams')
     >>> apt1 = Apartment( renter=william )
     >>> print 'Renter is: ', apt1.renter.get_name()
     Renter is: William Adams
 
-Using an interface class with an Instance trait definition declares that the
-trait accepts only values that implement the specified interface. (If the
-assigned object does not implement the interface, the Traits package may
-automatically substitute an adapter object that implements the specified
-interface. See :ref:`adaptation` for more information.)
+Using an interface class with an ``Instance`` trait definition declares that the
+trait accepts only values that implement the specified interface. Using the
+``Supports`` traits, if the assigned object does not implement the interface,
+the Traits package may automatically substitute an adapter object that
+implements the specified interface. See :ref:`adaptation` for more
+information.
 
 .. index:: adaptation
 
@@ -569,17 +569,76 @@ interface. See :ref:`adaptation` for more information.)
 Adaptation
 ----------
 
+*The adaptation features of Traits have been rewritten in v. 4.4.0 . See
+the* :ref:`migration guide <migration>` *below for details regarding changes
+in API.*
+
 Adaptation is the process of transforming an object that does not implement a
-specific interface (or set of interfaces) into an object that does. In Traits,
-this process is accomplished with *adapters*, which are special classes whose
-purpose is to adapt objects from one set of interfaces to another. Once adapter
-classes are defined, they are implicitly instantiated whenever they are needed
-to fulfill interface requirements. That is, if an Instance trait requires its
-values to implement interface IFoo, and an object is assigned to it which is of
-class Bar, which does not implement IFoo, then an adapter from Bar to IFoo is
-instantiated (if such an adapter class exists), and the adapter object is
-assigned to the trait. If necessary, a "chain" of adapter objects might be
+specific interface needed by a client into an object that does. In the adapter
+pattern, an object is wrapped in a second object, the *adapter*,
+that implements the target interface.
+
+Adaptation enables a programming style in which each component or service in an
+application defines an interface through which it would like to receive
+information. Objects that need to communicate with the component declare
+an adapter for that interface, as illustrated in the figure below.
+
+.. image:: images/adaptation.png
+
+Adaptation allows decoupling the data model from the application components and
+services: introducing a new component in the application should not require
+modifying the data objects!
+
+Traits provides a package to make this pattern easy and automatic:
+In the :mod:`traits.adaptation` package, adapters from a protocol
+(type or interface) to another can be registered with a manager object.
+HasTraits classes can either explicitly request to adapt an object to a
+protocol, or they can define special traits that automatically invoke
+the adaptation manager whenever it is necessary.
+
+For example, if a :class:`~traits.trait_types.Supports` trait requires
+its values to implement
+interface ``IPrintable``, and an object is assigned to it which is of
+class ``Image``, which does not implement ``IPrintable``, then Traits looks for
+an adapter from ``Image`` to ``IPrintable``, and if one exists the adapter object
+is assigned to the trait. If necessary, a "chain" of adapter objects might be
 created, in order to perform the required adaptation.
+
+Main features
+`````````````
+
+The main features of the :mod:`traits.adaptation` package are:
+
+* Support for Python classes, ABCs, and traits :class:`~.Interface` s
+
+   Protocols can be specified using any of those.
+
+* Chaining of adapters
+
+   Adapters can be chained, i.e., an object can be adapted
+   to a target protocol as long as there is a sequence of adapters
+   that can be used to transform it.
+
+* Conditional adaptation
+
+   Adaptation of an object to a protocol can be conditional, i.e. it may
+   succeed or fail depending on the state of the object.
+
+* Lazy loading
+
+   The classes for the adapter, the origin, and the target protocols can
+   be specified as strings, and are only loaded if they are required.
+
+Note on terminology
+```````````````````
+
+To avoid confusion, let's define two terms that we will use all the time:
+
+* We say that a class *provides* a protocol if it is a subclass of the
+  protocol, or if it implements the protocol (if it is an interface)
+
+* We say that a class *supports* a protocol if it provides the protocol
+  or an adapter object can be built that provides the protocol
 
 .. index:: adapters; defining
 
@@ -588,220 +647,444 @@ created, in order to perform the required adaptation.
 Defining Adapters
 `````````````````
 
-The Traits package provides several mechanisms for defining adapter classes:
-
-* Subclassing Adapter
-* Defining an adapter class without subclassing Adapter
-* Declaring a class to be an adapter externally to the class
-
 .. index:: Adapter class
 
 .. _subclassing-adapter:
 
-Subclassing Adapter
-:::::::::::::::::::
+The :class:`Adapter` class
+::::::::::::::::::::::::::
 
-The Traits package provides an Adapter class as convenience. This class
-streamlines the process of creating a new adapter class. It has a standard
+The Traits package provides two classes for defining adapters,
+one for Traits adapters, :class:`~traits.adaptation.adapter.Adapter`,
+and one for for pure-Python adapters,
+:class:`~traits.adaptation.adapter.PurePythonAdapter`. These classes
+streamline the process of creating a new adapter class. They have a standard
 constructor that does not normally need to be overridden by subclasses. This
 constructor accepts one parameter, which is the object to be adapted, and
-assigns that object to the adaptee trait attribute.
+assigns that object to an :attr:`adaptee` attribute (a trait in the case
+of :class:`~traits.adaptation.adapter.Adapter`).
 
-As an adapter writer, the only members you need to add to a subclass of Adapter
-are:
+As an adapter writer, you need to take care of the following:
 
-.. index:: adaptee attribute
+* Declare which interfaces the adapter class implements on behalf of the
+  object it is adapting. For example, if we are working with Traits
+  :class:`~.Interface` s, the adapter would be decorated with the
+  :func:`~traits.has_traits.provides` decorator. In the case of Python ABCs,
+  the class would be a subclass of the abstract base class, or be
+  `registered with it
+  <http://docs.python.org/2/library/abc.html#abc.ABCMeta.register>`_.
 
-* A call to implements() declaring which interfaces the adapter class
-  implements on behalf of the object it is adapting.
-* A trait attribute named **adaptee** that declares what type of object it is
-  an adapter for. Usually, this is an Instance trait.
-* Implementations of the interfaces declared in the implements() call. Usually,
-  these methods are implemented using appropriate members on the adaptee object.
+* Implement the methods defined in the interfaces declared in the previous
+  step. Usually, these methods are implemented using appropriate members
+  on the adaptee object.
+
+.. index:: adaptee trait
+
+* For Traits adapters, define a trait attribute named **adaptee** that
+  declares what type of object it is an adapter for. Usually, this is an
+  :class:`~.Instance` trait.
 
 .. index::
-   pair: examples; Adapter class
+   pair: example; Adapter class
 
 The following code example shows a definition of a simple adapter class::
 
-    # simple_adapter.py -- Example of adaptation using Adapter
-    from traits.api import Adapter, Instance, implements
-    from interface_definition import IName
-    from interface_implementation import Person
+    from traits.api import Adapter, Instance, provides
 
-    class PersonINameAdapter( Adapter ):
-
-        # Declare what interfaces this adapter implements for its
-        # client:
-        implements( IName )
+    # Declare what interfaces this adapter implements for its client
+    @provides(IName)
+    class PersonToIName(Adapter):
 
         # Declare the type of client it supports:
-        adaptee = Instance( Person )
+        adaptee = Instance(Person)
 
         # Implement the 'IName' interface on behalf of its client:
         def get_name ( self ):
-            return ('%s %s' % ( self.adaptee.first_name,
-                                self.adaptee.last_name ))
+            name = '{first} {last}'.format(first=self.adaptee.first_name,
+                                           last=self.adaptee.last_name)
+            return name
 
-.. index:: adapters; creating from scratch
+.. index::
+   pair: registering; adapters
 
-.. _creating-an-adapter-from-scratch:
+.. _registering-adapters:
 
-Creating an Adapter from Scratch
-::::::::::::::::::::::::::::::::
+Registering adapters
+::::::::::::::::::::
 
-You can create an adapter class without subclassing Adapter. If so, you must
-provide the same information and setup that are implicitly provided by Adapter.
+Once an adapter class has been defined, it has to be registered with the
+adaptation manager using the :func:`~traits.adaptation.api.register_factory`
+function.
 
-In particular, you must use the adapts() function instead of the implements()
-function, and you must define a constructor that corresponds to the constructor
-of Adapter. The adapts() function defines the class that contains it as an
-adapter class, and declares the set of interfaces that the class implements.
+The signature of :func:`~traits.adaptation.api.register_factory` is:
 
-The signature  of the adapts() function is:
-
-.. currentmodule:: traits.adapter
-.. function:: adapts( adaptee_class, interface[, interface2, ... , interfaceN])
+.. currentmodule:: traits.adaptation.api
+.. function:: register_factory(adapter_class, from_protocol, to_protocol)
     :noindex:
 
-This signature is very similar to that of implements(), but adds the class being
-adapted as the first parameter. Interface names beyond the first one are
-optional.
+The :func:`~traits.adaptation.adaptation_manager.register_factory` function
+takes as first argument
+the adapter class (or an `adapter factory <adapter-factories>`_), followed
+by the protocol to be adapted (the one provided by the adaptee,
+:attr:`from_protocol`), and the protocol that it provides
+(:attr:`to_protocol`).
 
-The constructor for the adapter class must accept one parameter, which is the
-object being adapted, and it must save this reference in an attribute that can
-be used by implementation code.
+.. index:: examples; registering adapters
 
-.. index:: examples; adapter from scratch
+This is the example from the previous section, were the adapter is registered::
 
-The following code shows an example of implementing an adapter without
-subclassing Adapter::
+    from traits.adaptation.api import HasTraitsAdapter, Instance, provides
 
-    # scratch_adapter.py -- Example of writing an adapter from scratch
-    from traits.api import HasTraits, Instance, adapts
-    from interface_definition import IName
-    from interface_implementation import Person
+    # Declare what interfaces this adapter implements for its client
+    @provides(IName)
+    class PersonToIName(Adapter):
 
-
-    class PersonINameAdapter ( HasTraits ):
-        # Declare what interfaces this adapter implements,
-        # and for what class:
-        adapts( Person, IName )
         # Declare the type of client it supports:
-        client = Instance( Person )
-
-        # Implement the adapter's constructor:
-        def __init__ ( self, client ):
-            self.client = client
+        adaptee = Instance(Person)
 
         # Implement the 'IName' interface on behalf of its client:
         def get_name ( self ):
-            return ('%s %s' % ( self.client.first_name,
-                                self.client.last_name ))
+            name = '{first} {last}'.format(first=self.adaptee.first_name,
+                                           last=self.adaptee.last_name)
+            return name
 
-.. index:: adapters; declaring externally
+    # ... somewhere else at application startup.
+    register_factory(PersonToIName, Person, IName)
 
-.. _declaring-a-class-as-an-adapter-externally:
+.. index:: adapters; factory; factories; conditional adaptation
 
-Declaring a Class as an Adapter Externally
-::::::::::::::::::::::::::::::::::::::::::
+.. _adapter-factories:
 
-You can declare a class to be an adapter by calling the adapts() function
-externally to the class definition. The class must provide the same information
-and setup as the Adapter class, just as in the case where adapts() is called
-within the class definition. That is, it must provide a constructor that accepts
-the object being adapted as a parameter, and it must implement the interfaces
-specified in the call to adapts().
+Adapter factories, and conditional adaptation
+`````````````````````````````````````````````
 
-In this case, signature of the adapts() function is:
+The first argument to the :func:`~traits.adaptation.api.register_factory`
+function needs not be an adapter *class*, it can be, more generally, an
+adapter *factory*.
 
-.. function: adapts( adapter_class, adaptee_class, interface[, interface2, ... , interfaceN] )
+An adapter factory can be any callable that accepts one positional argument,
+the adaptee object, and returns an adapter or None if the adaptation was
+not possible. Adapter factories allow flexibility in the adaptation process,
+as the result of adaptation may vary depending on the state of the
+adaptee object.
 
-As with implements() and the other form of adapts(), interface names beyond the
-first one are optional.
 
-.. index:: examples; adapter externally declared
+.. _conditional-adaptation:
 
-The following code shows this use of the adapts() function::
+Conditional adaptation
+::::::::::::::::::::::
 
-    # external_adapter.py -- Example of declaring a class as an
-    #                        adapter externally to the class
-    from traits.api import adapts
-    from interface_definition import IName
-    from interface_implementation import Person
+A common use of adapter factories is to allow adaptation only if the
+state of the adaptee object allows it. The factory returns an adapter object
+if adaptation is possible, or None if it is not.
 
-    class AnotherPersonAdapter ( object ):
+In the following example, a ``numpy.ndarray`` object can be adapted to provide
+an ``IImage`` protocol only if the number of dimensions is 2. (For
+illustration, this example uses Python ABCs rather than Traits Interfaces.)
+::
 
-        # Implement the adapter's constructor:
-        def __init__ ( self, person ):
-            self.person = person
+    import abc
+    import numpy
+    from traits.api import Array, HasTraits
+    from traits.adaptation.api import adapt, HasTraitsAdapter, register_factory
 
-        # Implement the 'IName' interface on behalf of its client:
-        def get_name ( self ):
-            return ('%s %s' % ( self.person.first_name,
-                                self.person.last_name ))
+    class ImageABC(object):
+        __metaclass__ = abc.ABCMeta
 
-    adapts( AnotherPersonAdapter, Person, IName )
+    class NDArrayToImage(HasTraitsAdapter):
+        adaptee = Array
 
-.. index:: adapters; using
+    # Declare that NDArrayToImage implements ImageABC.
+    ImageABC.register(NDArrayToImage)
+
+
+    def ndarray_to_image_abc(adaptee):
+        """ An adapter factory from numpy arrays to the ImageABC protocol.
+        if adaptee.ndim == 2:
+            return NDArrayToImage(adaptee=adaptee)
+        return None
+
+    # ... somewhere else at application startup
+    register_factory(ndarray_to_image_abc, numpy.ndarray, ImageABC)
+
+
+    #### Try to adapt numpy arrays to images. The `adapt` function is
+    # introduced later in the docs, but you can probably guess what it does ;-)
+
+    # This adaptation fails, as the array is 1D
+    image = adapt(numpy.ndarray([1,2,3]), ImageABC, default=None)
+    assert image == None
+
+    # This succeeds.
+    image = adapt(numpy.array([[1,2],[3,4]]), ImageABC)
+    assert isinstance(image, NDArrayToImage)
+
+.. index::
+  pair: adapters; requesting
 
 .. _using-adapters:
 
-Using Adapters
-``````````````
+Requesting an adapter
+`````````````````````
 
-You define adapter classes as described in the preceding sections, but you do
-not explicitly create instances of these classes. The Traits package
-automatically creates them whenever an object is assigned to an interface
-Instance trait, and the object being assigned does not implement the required
-interface. If an adapter class exists that can adapt the specified object to the
-required interface, an instance of the adapter class is created for the object,
-and is assigned as the actual value of the Instance trait.
+The ``adapt`` function
+::::::::::::::::::::::
 
-In some cases, no single adapter class exists that adapts the object to the
-required interface, but a series of adapter classes exist that together perform
-the required adaptation. In such cases, the necessary set of adapter objects are
-created, and the "last" link in the chain, the one that actually implements the
-required interface, is assigned as the trait value. When a situation like this
-arises, the adapted object assigned to the trait always contains the smallest
-set of adapter objects needed to adapt the original object.
+Adapter classes are defined as described in the preceding sections, but you do
+not explicitly create instances of these classes.
 
-.. index:: adapters; controlling
+Instead, the function :func:`~traits.adaptation.adaptation_manager.adapt` is
+used, giving the object that needs to be adapted and the target protocol.
 
-.. _controlling-adaptation:
+For instance, in the example in the :ref:`conditional-adaptation` section,
+a 2D numpy array is adapted to an ImageABC protocol with
+::
 
-Controlling Adaptation
+    image = adapt(numpy.array([[1,2],[3,4]]), ImageABC)
+
+In some cases, no single adapter class is registered that adapts the object
+to the required interface, but a series of adapter classes exist that,
+together, perform the required adaptation. In such cases, the necessary set
+of adapter objects are created, and the "last" link in the chain, the one
+that actually implements the required interface, is returned.
+
+When a situation like this arises, the adapted object assigned to the trait
+always contains the smallest set of adapter objects needed to adapt the
+original object. Also, more specific adapters are preferred over less specific
+ones. For example, let's suppose we have a class ``Document`` and a subclass
+``HTMLDocument``. We register two adapters to an interface ``IPrintable``,
+``DocumentToIPrintable`` and ``HTMLDocumentToIPrintable``. The call
+::
+
+    html_doc = HTMLDocument()
+    printable = adapt(html_doc, IPrintable)
+
+will return an instance of the ``HTMLDocumentToIPrintable`` adapter, as it
+is more specific than ``DocumentToIPrintable``.
+
+If no single adapter and no adapter chain can be constructed for the requested
+adaptation, an :class:`~traits.adaptation.adaptation_error.AdaptationError`
+is raised. Alternatively, one can specify a default value to be returned
+in this case::
+
+    printable = adapt(unprintable_doc, IPrintable, default=EmptyPrintableDoc())
+
+Using Traits interfaces
+:::::::::::::::::::::::
+
+An alternative syntax to create adapters when using Traits Interfaces is
+to use the interface class as an adapter factory, for example
+::
+
+    printable = IPrintable(html_doc, None)
+
+is equivalent to
+::
+
+    printable = adapt(html_doc, IPrintable, default=None)
+
+(the default argument, None, is optional).
+
+Using the ``Supports`` and ``AdaptsTo`` traits
+::::::::::::::::::::::::::::::::::::::::::::::
+
+Using the terminology introduced in this section, we can say that the
+:class:`~.Instance` trait accepts values that *provide* the specified protocol.
+
+Traits defines two additional traits that accept values that *support* a
+given protocol (they provide it or can be adapted to it) instead:
+
+* The :class:`~.Supports` trait accepts value that support the specified
+  protocol. The value of the trait after assignment is the possibly adapted
+  value (i.e., it is the original assigned value if that provides the protocol,
+  or is an adapter otherwise).
+
+* The :class:`~.AdaptsTo` trait also accepts values that support the specified
+  protocol. Unlike ``Supports``, ``AdaptsTo`` stores the original, unadapted
+  value.
+
+If your application works with adaptation, it is natural to use the
+``Supports`` trait in place of the ``Instance`` one in most cases. This
+will allow that application to be extended by adaptation in the future
+without changing the existing code, without having to invoke adaptation
+explicitly in your code.
+
+For example, a Traits object can be written against the ``IPrintable``
+interface and be open to extensions by adaptation as follows:
+::
+
+    from traits.api import HasTraits, HasTraitsAdapter, implements, Interface, List, register_factory, Str, Supports
+
+    class IPrintable(Interface):
+        def get_formatted_text(self, n_cols):
+            """ Return text formatted with the given number of columns. """
+
+    class PrintQueue(HasTraits):
+        # This is the key part of the example: we declare a list of
+        # items that provide or can be adapted to IPrintable
+        queue = List(Supports(IPrintable))
+
+        def is_empty(self):
+            return len(self.queue) == 0
+
+        def push(self, printable):
+            self.queue.append(printable)
+
+        def print_next(self):
+            printable = self.queue.pop(0)
+
+            # The elements from the list are guaranteed to provide
+            # IPrintable, so we can call the interface without worrying
+            # about adaptation.
+            lines = printable.get_formatted_text(n_cols=20)
+
+            print '-- Start document --'
+            print '\n'.join(lines)
+            print '-- End of document -\n'
+
+    class TextDocument(HasTraits):
+        """ A text document. """
+        text = Str
+
+    @provides(IPrintable)
+    class TextDocumentToIPrintable(HasTraitsAdapter):
+        """ Adapt TextDocument and provide IPrintable. """
+
+        def get_formatted_text(self, n_cols):
+            import textwrap
+            return textwrap.wrap(self.adaptee.text, n_cols)
+
+
+    # ---- Application starts here.
+
+    # Register the adapter.
+    register_factory(TextDocumentToIPrintable, TextDocument, IPrintable)
+
+    # Create two text documents.
+    doc1 = TextDocument(text='very very long text the will bore you for sure')
+    doc2 = TextDocument(text='once upon a time in a far away galaxy')
+
+    # The text documents can be pushed on the print queue; in the process,
+    # they are automatically adapted by Traits.
+    print_queue = PrintQueue()
+    print_queue.push(doc1)
+    print_queue.push(doc2)
+
+    while not print_queue.is_empty():
+        print_queue.print_next()
+
+This scripts produces this output:
+::
+
+    -- Start document --
+    very very long text
+    the will bore you
+    for sure
+    -- End of document -
+
+    -- Start document --
+    once upon a time in
+    a far away galaxy
+    -- End of document -
+
+
+Implementation details
 ``````````````````````
 
-Adaptation normally happens automatically when needed, and when appropriate
-adapter classes are available. However, the Instance trait lets you control how
-adaptation is performed, through its **adapt** metadata attribute. The **adapt**
-metadata attribute can have one of the following values:
+The algorithm for finding a sequence of adapters adapting an object ``adaptee``
+to a protocol ``to_protocol`` is based on a weighted graph.
 
-* ``no``: Adaptation is not allowed for this trait attribute.
-* ``yes``: Adaptation is allowed. If adaptation fails, an exception is raised.
-* ``default``: Adaptation is allowed. If adaptation fails, the default value
-  for the trait is assigned instead.
+Nodes on the graphs are protocols (types or interfaces).
+Edges are adaptation offers that connect a ``offer.from_protocol`` to a
+``offer.to_protocol``.
 
-.. index:: adapt metadata
+Edges connect protocol ``A`` to protocol ``B`` and are weighted by two
+numbers in this priority:
 
-The default value for the **adapt** metadata attribute is ``yes``.
+1) a unit weight (1) representing the fact that we use 1 adaptation
+   offer to go from ``A`` to ``B``
+2) the number of steps up the type hierarchy that we need to take
+   to go from ``A`` to ``offer.from_protocol``, so that more specific
+   adapters are always preferred
 
-.. index::
-   pair: examples; adapt metadata
+The algorithm finds the shortest weighted path between ``adaptee``
+and ``to_protocol``. Once a candidate path is found, it tries to
+create the chain of adapters using the factories in the adaptation offers
+that compose the path. If this fails because of conditional
+adaptation (i.e., an adapter factory returns None), the path
+is discarded and the algorithm looks for the next shortest path.
 
-The following code is an example of an interface Instance trait attribute that
-uses adapt metadata::
+Cycles in adaptation are avoided by only considering path were
+every adaptation offer is used at most once.
 
-    # adapt_metadata.py -- Example of using 'adapt' metadata
-    from traits.api import HasTraits, Instance
-    from interface_definition import IName
+.. _migration:
 
-    class Apartment( HasTraits ):
-        renter = Instance( IName, adapt='no' )
+Migration guide
+```````````````
 
-Using this definition, any value assigned to renter must implement the IName
-interface. Otherwise, an exception is raised.
+The implementation of the adaptation mechanism changed in Traits 4.4.0 from
+one based on PyProtocols to a new, smaller, and more robust implementation.
+
+Code written against ``traits.protocols`` will continue to work, although
+the `traits.protocols` API has been deprecated and its members will log a
+warning the first time they are accessed. The ``traits.protocols`` package
+will be removed in Traits 5.0 .
+
+This is a list of replacements for the old API:
+
+* :class:`traits.protocols.api.AdaptationFailure`
+
+  Use :class:`traits.api.AdaptationError` instead.
+
+* :func:`traits.api.adapts`
+
+  Use the :func:`traits.api.register_factory` function.
+
+* :func:`implements`
+
+  Use the :func:`traits.api.provides` decorator instead.
+
+* :func:`traits.protocols.api.declareAdapter`
+
+  Use the function :func:`traits.api.register_factory`, or the function
+  :func:`traits.adaptation.api.register_offer` instead. It is no longer
+  necessary to distinguish between "types", "protocols", and "objects".
+
+* :func:`traits.protocols.api.declareImplementation`
+
+  This function
+  was used occasionally to declare that an arbitrary type (e.g., ``dict``)
+  implements an interface. Users that use Python ABCs can use the ``register``
+  method for achieving the same result. Otherwise, use the function
+  :func:`traits.adaptation.api.register_provides` that declares a "null"
+  adapter to adapt the type to the interface.
+
+* Testing if a class is an Interface
+
+  ``issubclass(klass, Interface)`` is not reliable, use
+  :func:`traits.api.isinterface` instead
+
+Gotchas
+```````
+
+1) The adaptation mechanism does not explicitly support old-style classes.
+   Adaptation might work in particular cases but is not guaranteed to work
+   correctly in situations involving old-style classes. When used with Traits,
+   the classes involved in adaptation are typically subclasses of
+   :class:`~.HasTraits`, in which case this is not an issue.
+
+Recommended readings about adaptation
+`````````````````````````````````````
+
+This is a list of interesting readings about adaptation and the adapter
+pattern outside of Traits:
+
+* `PyProtocols <http://peak.telecommunity.com/protocol_ref/module-protocols.html>`_,
+  a precursor of ``traits.adaptation``
+* `PEP 246 <http://www.python.org/dev/peps/pep-0246/>`_ on object adaptation
+* `Article about adapters in Eclipse plugins
+  <http://www.eclipse.org/articles/article.php?file=Article-Adapters/index.html>`_
+
 
 .. index:: property traits
 
