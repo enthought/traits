@@ -21,7 +21,7 @@
 from __future__ import absolute_import
 
 from time import time
-from traits.api import Any, DelegatesTo, HasTraits, Int, Range
+from ..api import Any, DelegatesTo, HasTraits, Int, Range
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -32,9 +32,6 @@ n = 1000000
 
 # Loop overhead time (actual value determined first time a measurement is made):
 t0 = -1.0
-
-template = '{name:^30}: Get {get_time:02.3f} us (x {get_speed_up:02.3f}), ' \
-           'Set {set_time:02.3f} us (x {set_speed_up:02.3f})'
 
 #-------------------------------------------------------------------------------
 #  Measure how long it takes to execute a specified function:
@@ -64,14 +61,6 @@ class old_style_value:
         get_time = max( t1 - t0, 0.0 ) * scale
         set_time = max( t2 - t0, 0.0 ) * scale
 
-        print template.format(
-            name         = self.__class__.__name__,
-            get_time     = get_time,
-            get_speed_up = reference_get/get_time,
-            set_time     = set_time,
-            set_speed_up = reference_set/set_time,
-        )
-
         return get_time, set_time
 
     def null ( self ):
@@ -95,7 +84,7 @@ class old_style_value:
 
 class new_style_value ( object ):
 
-    def measure ( self, reference_get=1.0, reference_set=1.0 ):
+    def measure ( self ):
         global t0
         self.init()
 
@@ -107,14 +96,6 @@ class new_style_value ( object ):
         scale = 1.0e6 / n
         get_time = max( t1 - t0, 0.0 ) * scale
         set_time = max( t2 - t0, 0.0 ) * scale
-
-        print template.format(
-            name         = self.__class__.__name__,
-            get_time     = get_time,
-            get_speed_up = reference_get/get_time,
-            set_time     = set_time,
-            set_speed_up = reference_set/set_time,
-        )
 
         return get_time, set_time
 
@@ -250,21 +231,60 @@ class delegate_3_value ( delegate_value ):
 #  Run the timing measurements:
 #-------------------------------------------------------------------------------
 
+def report(name, get_time, set_time, ref_get_time, ref_set_time):
+    """ Return string containing a benchmark report.
+
+    The arguments are the name of the benchmark case, the times to do a 'get'
+    or a 'set' operation for that benchmark case in usec, and the
+    corresponding times for a reference operation (e.g., getting and
+    setting an attribute on a new-style instance.
+    """
+
+    template = (
+        '{name:^30}: Get {get_time:02.3f} us (x {get_speed_up:02.3f}), '
+        'Set {set_time:02.3f} us (x {set_speed_up:02.3f})'
+    )
+
+    report = template.format(
+        name         = name,
+        get_time     = get_time,
+        get_speed_up = ref_get_time / get_time,
+        set_time     = set_time,
+        set_speed_up = ref_set_time / set_time,
+    )
+
+    return report
+
+
+def run_benchmark(klass, ref_get_time, ref_set_time):
+    benchmark_name = klass.__name__
+    get_time, set_time = klass().measure()
+    print report(benchmark_name,
+                 get_time, set_time,
+                 ref_get_time, ref_set_time)
+
+
+def main():
+
+    ref_get_time, ref_set_time = new_style_value().measure()
+
+    benchmarks = [
+        global_value,
+        old_style_value,
+        new_style_value,
+        property_value,
+        any_value,
+        int_value,
+        range_value,
+        change_value,
+        monitor_value,
+        delegate_value,
+        delegate_2_value,
+        delegate_3_value
+    ]
+
+    for benchmark in benchmarks:
+        run_benchmark(benchmark, ref_get_time, ref_set_time)
+
 if __name__ == '__main__':
-
-    print 'Run reference benchmark...'
-    get_time, set_time = new_style_value().measure()
-    print '-'*20
-
-    global_value().measure(get_time, set_time)
-    old_style_value().measure(get_time, set_time)
-    new_style_value().measure(get_time, set_time)
-    property_value().measure(get_time, set_time)
-    any_value().measure(get_time, set_time)
-    int_value().measure(get_time, set_time)
-    range_value().measure(get_time, set_time)
-    change_value().measure(get_time, set_time)
-    monitor_value().measure(get_time, set_time)
-    delegate_value().measure(get_time, set_time)
-    delegate_2_value().measure(get_time, set_time)
-    delegate_3_value().measure(get_time, set_time)
+    main()
