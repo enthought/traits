@@ -1,0 +1,10 @@
+Traits CHANGELOG
+================
+
+Since 4.3.0:
+
+* The adaptation mechanism in Traits, formerly based on the 'traits.protocols'
+  package, has been replaced with the more robust 'traits.adaptation'
+  package.
+* Added utility function for importing symbols (name, classes, functions)
+  by name: 'traits.util.api.import_symbol'.

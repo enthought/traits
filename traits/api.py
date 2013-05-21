@@ -42,7 +42,7 @@ from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
-        Symbol, WeakRef, Date, Time, false, true, undefined)
+        Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
         ListComplex, ListBool, ListFunction, ListMethod, ListClass,
@@ -60,7 +60,7 @@ from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
-        property_depends_on)
+        property_depends_on, provides, isinterface)
 
 try:
     from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
@@ -78,7 +78,10 @@ from .trait_handlers import (BaseTraitHandler, TraitType, TraitHandler,
 from .trait_value import (BaseTraitValue, TraitValue, SyncValue,
         TypeValue, DefaultValue)
 
-from .adapter import Adapter, adapts
+from .adaptation.adapter import Adapter, adapts
+from .adaptation.adaptation_error import AdaptationError
+from .adaptation.adaptation_manager import adapt, register_factory, \
+     register_provides
 
 from .trait_numeric import Array, CArray
 
