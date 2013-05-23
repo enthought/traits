@@ -3772,7 +3772,7 @@ def provides( *protocols ):
 
     # Verify that each argument is a valid protocol.
     for protocol in protocols:
-        if not issubclass(protocol.__metaclass__, ABCMeta):
+        if not issubclass(type(protocol), ABCMeta):
             raise TraitError(
                 "All arguments to 'provides' must be "
                 "subclasses of Interface or be a Python ABC."

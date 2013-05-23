@@ -27,19 +27,11 @@
 
 from __future__ import absolute_import
 
-import sys
-
 from traits.testing.unittest_tools import unittest
 
 from traits.api import HasTraits, Adapter, AdaptsTo, Instance, Int, Interface, \
     List, provides, register_factory, Supports, TraitError
 
-if sys.version_info[0] >= 3:
-    import nose
-    raise nose.SkipTest("""
-        Currently, under Python 3, class advisors do not work anymore.
-        This is due to the new way of specifying metaclasses.
-    """)
 
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:

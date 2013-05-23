@@ -50,6 +50,9 @@ class TraitTypesTest ( unittest.TestCase ):
         # Remove numpy from the list of imported modules.
         import sys
         del sys.modules['numpy']
+        for k in list(sys.modules):
+            if k.startswith('numpy.'):
+                del sys.modules[k]
 
         # Check that the validators contain the numpy types.
         from traits.trait_types import float_fast_validate

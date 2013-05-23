@@ -182,10 +182,10 @@ class IntTest(AnyTraitTest):
         if sys.version_info[0] < 3:
             _good_values.extend([
                 np.int64(10),np.int64(-10),
+                np.int32(10),np.int32(-10),
                 np.int_(10),np.int_(-10)
             ])
             _bad_values.extend([
-                np.int32(10),np.int32(-10),
             ])
         else:
             #TODO: status of numpy-ints is unclear in python 3!

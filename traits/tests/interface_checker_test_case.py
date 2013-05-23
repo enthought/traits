@@ -18,7 +18,6 @@ from __future__ import absolute_import
 
 # Standard library imports.
 from traits.testing.unittest_tools import unittest
-import sys
 
 # Enthought library imports.
 from traits.api import Adapter, HasTraits, Instance, Int, Interface, \
@@ -31,13 +30,6 @@ from traits.interface_checker import InterfaceError, check_implements
 # checks explicitly:
 from traits import has_traits
 has_traits.CHECK_INTERFACES = 0
-
-if sys.version_info[0] >= 3:
-    import nose
-    raise nose.SkipTest("""
-        Currently, under Python 3, class advisors do not work anymore.
-        This is due to the new way of specifying metaclasses.
-    """)
 
 
 class InterfaceCheckerTestCase(unittest.TestCase):
