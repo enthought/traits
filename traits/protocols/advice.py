@@ -1,14 +1,19 @@
+""" This module implements functionality similar to class decorators.
+
+At the moment it is used for the 'implements' and 'adapts' functions, which
+have been deprecated together with the 'traits.protocols' package.
+
+Please don't import anything from this module!
+
+"""
+
 from __future__ import absolute_import
 
 from types import ClassType, FunctionType, InstanceType
 
 import sys
 
-__all__ = [
-    'addClassAdvisor', 'isClassAdvisor', 'metamethod', 'supermeta',
-    'minimalBases', 'determineMetaclass', 'getFrameInfo', 'getMRO',
-    'classicMRO', 'mkRef', 'StrongRef'
-]
+__all__ = ['addClassAdvisor']
 
 
 def metamethod(func):

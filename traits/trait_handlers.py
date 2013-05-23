@@ -40,7 +40,6 @@ import copy_reg
 from types import InstanceType, TypeType, FunctionType, MethodType
 from weakref import ref
 
-from .protocols.api import adapt
 from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
     CoercableTypes, TraitsCache, class_of, enumerate, Missing)
@@ -1421,6 +1420,9 @@ class TraitInstance ( ThisClass ):
                                    self._allow_none )
 
     def validate ( self, object, name, value ):
+
+        from traits.adaptation.api import adapt
+
         if value is None:
             if self._allow_none:
                 return value
@@ -3303,5 +3305,18 @@ class TraitDictObject ( dict ):
 
 from . import ctraits
 ctraits._list_classes( TraitListObject, TraitSetObject, TraitDictObject )
-ctraits._adapt( adapt )
 
+def _adapt_wrapper(*args, **kw):
+    # We need this wrapper to defer the import of 'adapt' and avoid a circular
+    # import. The ctraits 'adapt' callback needs to be set as soon as possible,
+    # but the adaptation mechanism relies on traits.
+
+    # This wrapper is called once, after which we set the ctraits callback
+    # to point directly to 'adapt'.
+
+    from traits.adaptation.api import adapt
+
+    ctraits._adapt(adapt)
+    return adapt(*args, **kw)
+
+ctraits._adapt( _adapt_wrapper )

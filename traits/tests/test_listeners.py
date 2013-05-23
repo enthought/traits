@@ -27,9 +27,13 @@
 
 from __future__ import absolute_import
 
+import threading
+import time
+
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Str, Int, Float
+from ..api import HasTraits, Str, Int, Float, Any, Event
+from ..api import push_exception_handler, pop_exception_handler
 
 #-------------------------------------------------------------------------------
 #  'GenerateEvents' class:
@@ -126,6 +130,52 @@ class Test_Listeners ( unittest.TestCase ):
         ge.set( name = 'Ralph', age = 29, weight = 198.0 )
         self.assertEqual(events, {})
 
+
+class A(HasTraits):
+    exception = Any
+
+    foo = Event
+
+    def foo_changed_handler(self):
+        pass
+
+
+def foo_writer(a, stop_event):
+    while not stop_event.is_set():
+        try:
+            a.foo = True
+        except Exception as e:
+            a.exception = e
+
+
+class TestRaceCondition(unittest.TestCase):
+    def setUp(self):
+        push_exception_handler(
+            handler=lambda *args: None,
+            reraise_exceptions=True,
+            main=True,
+        )
+
+    def tearDown(self):
+        pop_exception_handler()
+
+    def test_listener_thread_safety(self):
+        # Regression test for GitHub issue #56
+        a = A()
+        stop_event = threading.Event()
+
+        t = threading.Thread(target=foo_writer, args=(a, stop_event))
+        t.start()
+
+        for _ in xrange(100):
+            a.on_trait_change(a.foo_changed_handler, 'foo')
+            time.sleep(0.0001)  # encourage thread-switch
+            a.on_trait_change(a.foo_changed_handler, 'foo', remove=True)
+
+        stop_event.set()
+        t.join()
+
+        self.assertTrue(a.exception is None)
 
 
 # Run the unit tests (if invoked from the command line):

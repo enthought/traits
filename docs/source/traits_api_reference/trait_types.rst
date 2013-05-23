@@ -151,7 +151,7 @@ Traits
 
 .. autoclass:: Instance
 
-.. autoclass:: AdaptedTo
+.. autoclass:: Supports
 
 .. autoclass:: AdaptsTo
 

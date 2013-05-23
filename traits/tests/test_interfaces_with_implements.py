@@ -19,6 +19,10 @@
 #-------------------------------------------------------------------------------
 
 """ Unit test case for testing interfaces and adaptation.
+
+This file is equivalent to test_interfaces.py, only using the deprecated
+'implements' and 'adapts' functions.
+
 """
 
 #-------------------------------------------------------------------------------
@@ -29,8 +33,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from traits.api import HasTraits, Adapter, AdaptsTo, Instance, Int, Interface, \
-    List, provides, register_factory, Supports, TraitError
+from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
+    implements, Instance, Int, Interface, List, Supports, TraitError
 
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:
@@ -69,17 +73,18 @@ class Sample ( HasTraits ):
     i2 = Int( 5 )
     i3 = Int( 6 )
 
-@provides(IList)
 class SampleList ( HasTraits ):
-    """SampleList docstring."""
+
+    implements( IList )
 
     data = List( Int, [ 10, 20, 30 ] )
 
     def get_list ( self ):
         return self.data
 
-@provides(IList, IAverage)
 class SampleAverage ( HasTraits ):
+
+    implements( IList, IAverage )
 
     data = List( Int, [ 100, 200, 300 ] )
 
@@ -122,12 +127,16 @@ class TraitsHolder ( HasTraits ):
 
 class SampleListAdapter ( Adapter ):
 
+    adapts( Sample, IList )
+
     def get_list ( self ):
         obj = self.adaptee
         return [ getattr( obj, name )
                  for name in obj.trait_names( sample = True ) ]
 
 class ListAverageAdapter ( Adapter ):
+
+    adapts( IList, IAverage )
 
     def get_average ( self ):
         value = self.adaptee.get_list()
@@ -140,6 +149,8 @@ class ListAverageAdapter ( Adapter ):
         return (average / len( value ))
 
 class SampleFooAdapter ( HasTraits ):
+
+    adapts( Sample, IFoo )
 
     object = Instance( Sample )
 
@@ -161,10 +172,7 @@ class FooPlusAdapter ( object ):
     def get_foo_plus ( self ):
         return (self.obj.get_foo() + 1)
 
-register_factory(SampleListAdapter, Sample, IList)
-register_factory(ListAverageAdapter, IList, IAverage)
-register_factory(SampleFooAdapter, Sample, IFoo)
-register_factory(FooPlusAdapter, IFoo, IFooPlus)
+adapts( FooPlusAdapter, IFoo, IFooPlus )
 
 #-------------------------------------------------------------------------------
 #  'InterfacesTest' unit test class:
@@ -176,36 +184,29 @@ class InterfacesTest ( unittest.TestCase ):
     #  Individual unit test methods:
     #---------------------------------------------------------------------------
 
-    def test_provides_none ( self ):
-        @provides()
-        class Test(HasTraits):
-            pass
+    def test_implements_none ( self ):
+        class Test ( HasTraits ):
+            implements()
 
-    def test_provides_one ( self ):
-        @provides(IFoo)
-        class Test(HasTraits):
-            pass
+    def test_implements_one ( self ):
+        class Test ( HasTraits ):
+            implements( IFoo )
 
-    def test_provides_multi ( self ):
-        @provides(IFoo, IAverage, IList)
-        class Test (HasTraits):
-            pass
+    def test_implements_multi ( self ):
+        class Test ( HasTraits ):
+            implements( IFoo, IAverage, IList )
 
-    def test_provides_extended ( self ):
+    def test_implements_extended ( self ):
         """ Ensure that subclasses of Interfaces imply the superinterface.
         """
-        @provides(IFooPlus)
-        class Test(HasTraits):
-            pass
+        class Test ( HasTraits ):
+            implements( IFooPlus )
 
         ta = TraitsHolder()
         ta.foo_adapted_to = Test()
 
-    def test_provides_bad ( self ):
-        with self.assertRaises(Exception):
-            @provides(Sample)
-            class Test(HasTraits):
-                pass
+    def test_implements_bad ( self ):
+        self.assertRaises( TraitError, self.implements_bad )
 
     def test_instance_adapt_no ( self ):
         ta = TraitsHolder()
@@ -310,9 +311,11 @@ class InterfacesTest ( unittest.TestCase ):
         self.assertEqual( ta.foo_plus_adapts_to_.get_foo_plus(), 31 )
         self.assert_( isinstance( ta.foo_plus_adapts_to_, FooPlusAdapter ) )
 
-    def test_decorated_class_name_and_docstring(self):
-        self.assertEqual(SampleList.__name__, 'SampleList')
-        self.assertEqual(SampleList.__doc__, "SampleList docstring.")
+    #-- Helper Methods --------------------------------------------------------
+
+    def implements_bad ( self ):
+        class Test ( HasTraits ):
+            implements( Sample )
 
 # Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':

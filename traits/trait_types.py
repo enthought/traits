@@ -33,8 +33,6 @@ from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
 from . import trait_handlers
 
-from .protocols.api import adapt
-
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
         ClassTypes, Undefined, Missing, TraitsCache, python_version)
 
@@ -2558,16 +2556,11 @@ def validate_implements ( value, klass, unused = None ):
     """ Checks to see if a specified value implements the instance class
         interface (if it is an interface).
     """
-    from .has_traits        import Interface
+
+    from .has_traits import isinterface
     from .interface_checker import check_implements
-    from .protocols.api     import declareImplementation
 
-    rc = (issubclass( klass, Interface) and
-          check_implements( value.__class__, klass ))
-    if rc:
-        declareImplementation( value.__class__, instancesProvide = [ klass ] )
-
-    return rc
+    return isinterface(klass) and check_implements( value.__class__, klass )
 
 #: Tell the C-base code about the 'validate_implements' function (used by the
 #: 'fast_validate' code for Instance types):
@@ -2685,6 +2678,8 @@ class BaseInstance ( BaseClass ):
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid object instance.
         """
+        from traits.adaptation.api import adapt
+
         if value is None:
             if self._allow_none:
                 return value
@@ -2828,11 +2823,11 @@ class Instance ( BaseInstance ):
     """
 
     def init_fast_validate ( self ):
-        """ Sets up the C-level fast validator.
-        """
-        from .has_traits import Interface
+        """ Sets up the C-level fast validator. """
 
-        if (self.adapt == 0) and (not issubclass( self.klass, Interface )):
+        from .has_traits import isinterface
+
+        if (self.adapt == 0) and (not isinterface(self.klass)):
             fast_validate = [ 1, self.klass ]
             if self._allow_none:
                 fast_validate = [ 1, None, self.klass ]
@@ -2845,7 +2840,19 @@ class Instance ( BaseInstance ):
             self.fast_validate = ( 19, self.klass, self.adapt,
                                    self._allow_none )
 
-class AdaptedTo ( Instance ):
+class Supports( Instance ):
+    """ A traits whose value must support a specified protocol.
+
+    In other words, the value of the trait directly provide, or can be adapted
+    to, the given protocol (Interface or type).
+
+    The value of the trait after assignment is the possibly adapted value
+    (i.e., it is the original assigned value if that provides the protocol,
+    or is an adapter otherwise).
+
+    The original, unadapted value is stored in a "shadow" attribute with
+    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    """
 
     adapt_default = 'yes'
 
@@ -2866,7 +2873,20 @@ class AdaptedTo ( Instance ):
         # unadapted value passed to 'setattr':
         return ctrait.post_setattr_original_value( True )
 
-class AdaptsTo ( AdaptedTo ):
+# Alias defined for backward compatibility with Traits 4.3.0
+AdaptedTo = Supports
+
+class AdaptsTo ( Supports ):
+    """ A traits whose value must support a specified protocol.
+
+    In other words, the value of the trait directly provide, or can be adapted
+    to, the given protocol (Interface or type).
+
+    The value of the trait after assignment is the original, unadapted value.
+
+    A possibly adapted value is stored in a "shadow" attribute with
+    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    """
 
     def modify_ctrait ( self, ctrait ):
         # Tell the C code that 'setattr' should store the original, unadapted

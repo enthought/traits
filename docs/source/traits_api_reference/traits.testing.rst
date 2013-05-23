@@ -1,5 +1,5 @@
-testing Package
-===============
+:mod:`testing` Package
+======================
 
 :mod:`testing` Package
 ----------------------
