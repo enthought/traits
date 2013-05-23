@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2003-2013, Enthought, Inc.
+# Copyright (c) 2013, Enthought, Inc.
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -9,12 +9,11 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-# Description: <Enthought util package component>
 #------------------------------------------------------------------------------
 """
-Utility functions, part of the Traits project.
+Adaptation package.
 
-:Copyright: 2003-2013 Enthought, Inc.
+:Copyright: 2013 Enthought, Inc.
 
 
 """

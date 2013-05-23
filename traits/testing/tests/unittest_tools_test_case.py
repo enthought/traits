@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2005-2013, Enthought, Inc.
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -8,8 +8,12 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #------------------------------------------------------------------------------
+import threading
+import time
+
 from traits.testing.unittest_tools import unittest
-from traits.api import HasTraits, Float, List, Bool, on_trait_change
+from traits.api import (Bool, Event, Float, HasTraits, Int, List,
+                        on_trait_change)
 from traits.testing.api import UnittestTools
 
 
@@ -166,6 +170,100 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         with self.assertTraitChanges(test_object, 'number', count=0):
             test_object.flag = True
+
+    def test_assert_trait_changes_async(self):
+        # Exercise assertTraitChangesAsync.
+        thread_count = 10
+        events_per_thread = 1000
+
+        class A(HasTraits):
+            event = Event
+
+        a = A()
+
+        def thread_target(obj, count):
+            "Fire obj.event 'count' times."
+            for _ in xrange(count):
+                obj.event = True
+
+        threads = [
+            threading.Thread(target=thread_target, args=(a, events_per_thread))
+            for _ in xrange(thread_count)
+        ]
+
+        expected_count = thread_count * events_per_thread
+        with self.assertTraitChangesAsync(
+            a, 'event', expected_count, timeout=60.0):
+            for t in threads:
+                t.start()
+
+        for t in threads:
+            t.join()
+
+    def test_assert_trait_changes_async_events(self):
+        # Check access to the events after the with
+        # block completes.
+        thread_count = 10
+        events_per_thread = 100
+
+        class A(HasTraits):
+            event = Event(Int)
+
+        a = A()
+
+        def thread_target(obj, count):
+            "Fire obj.event 'count' times."
+            for n in xrange(count):
+                time.sleep(0.001)
+                obj.event = n
+
+        threads = [
+            threading.Thread(target=thread_target, args=(a, events_per_thread))
+            for _ in xrange(thread_count)
+        ]
+
+        expected_count = thread_count * events_per_thread
+        with self.assertTraitChangesAsync(
+            a, 'event', expected_count, timeout=60.0) as event_collector:
+            for t in threads:
+                t.start()
+
+        for t in threads:
+            t.join()
+
+        self.assertItemsEqual(
+            event_collector.events,
+            range(events_per_thread) * thread_count,
+        )
+
+    def test_assert_trait_changes_async_failure(self):
+        # Exercise assertTraitChangesAsync.
+        thread_count = 10
+        events_per_thread = 10000
+
+        class A(HasTraits):
+            event = Event
+
+        a = A()
+
+        def thread_target(obj, count):
+            "Fire obj.event 'count' times."
+            for _ in xrange(count):
+                obj.event = True
+
+        threads = [
+            threading.Thread(target=thread_target, args=(a, events_per_thread))
+            for _ in xrange(thread_count)
+        ]
+
+        expected_count = thread_count * events_per_thread
+        with self.assertRaises(AssertionError):
+            with self.assertTraitChangesAsync(a, 'event', expected_count + 1):
+                for t in threads:
+                    t.start()
+
+        for t in threads:
+            t.join()
 
 
 if __name__ == '__main__':

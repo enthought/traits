@@ -1,5 +1,5 @@
-util Package
-============
+:mod:`util` Package
+===================
 
 :mod:`util` Package
 -------------------
@@ -53,6 +53,14 @@ util Package
 ----------------------
 
 .. automodule:: traits.util.resource
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`import_symbol` Module
+-----------------------------
+
+.. automodule:: traits.util.import_symbol
     :members:
     :undoc-members:
     :show-inheritance:
