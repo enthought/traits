@@ -120,7 +120,8 @@ class AdaptationManager(HasTraits):
 
         if result is None:
             if default is AdaptationError:
-                raise AdaptationError
+                raise AdaptationError(
+                    'Could not adapt %r to %r' % (adaptee, to_protocol))
             else:
                 result = default
 
