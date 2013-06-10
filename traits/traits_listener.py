@@ -670,7 +670,18 @@ class ListenerItem ( ListenerBase ):
         if remove:
             return next.unregister( getattr( object, name ) )
 
-        if not self.deferred:
+        if not self.deferred or name in object.__dict__:
+            # Sometimes, the trait may already be assigned. This can happen when
+            # there are chains of dynamic initializers and 'delegate'
+            # notifications. If 'trait_a' and 'trait_b' have dynamic
+            # initializers and 'trait_a's initializer creates 'trait_b', *and*
+            # we have a DelegatesTo trait that delegates to 'trait_a', then the
+            # listener that implements the delegate will create 'trait_a' and
+            # thus 'trait_b'. If we are creating an extended trait change
+            # listener on 'trait_b.something', and the 'trait_a' delegate
+            # listeners just happen to get hooked up before this one, then
+            # 'trait_b' will have been initialized already, and the registration
+            # that we are deferring will never happen.
             return next.register( getattr( object, name ) )
 
         return ( object, name )
