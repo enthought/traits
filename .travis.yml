@@ -11,4 +11,4 @@ script:
   - nosetests
 notifications:
   email:
-    - pberkes@enthought.com
+    - travis-ci@enthought.com
