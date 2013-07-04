@@ -465,7 +465,13 @@ class TraitChangeNotifyWrapper:
         return ((self.name is None) and (handler == self.handler))
 
     def listener_deleted ( self, ref ):
-        self.owner.remove( self )
+        # In multithreaded situations, it's possible for this method to
+        # be called after, or concurrently with, the dispose method.
+        # Don't raise in that case.
+        try:
+            self.owner.remove( self )
+        except ValueError:
+            pass
         self.object = self.owner = None
 
     def dispose ( self ):

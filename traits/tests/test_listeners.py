@@ -27,6 +27,9 @@
 
 from __future__ import absolute_import
 
+import contextlib
+import cStringIO
+import sys
 import threading
 import time
 
@@ -34,6 +37,25 @@ from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Str, Int, Float, Any, Event
 from ..api import push_exception_handler, pop_exception_handler
+
+#-------------------------------------------------------------------------------
+#  captured_stderr helper context manager
+#-------------------------------------------------------------------------------
+
+@contextlib.contextmanager
+def captured_stderr():
+    """
+    Return a context manager that directs all stderr output to a string.
+
+    """
+    new_stderr = cStringIO.StringIO()
+    original_stderr = sys.stderr
+    sys.stderr = new_stderr
+    try:
+        yield new_stderr
+    finally:
+        sys.stderr = original_stderr
+
 
 #-------------------------------------------------------------------------------
 #  'GenerateEvents' class:
@@ -176,6 +198,50 @@ class TestRaceCondition(unittest.TestCase):
         t.join()
 
         self.assertTrue(a.exception is None)
+
+    def test_listener_deleted_race(self):
+        # Regression test for exception that occurred when the listener_deleted
+        # method is called after the dispose method on a
+        # TraitsChangeNotifyWrapper.
+        class Handler(HasTraits):
+            def handle(self):
+                time.sleep(1.0)
+
+        class EventSource(HasTraits):
+            foo = Event
+
+        def worker_thread(obj, start_event):
+            # Wait until the listener is set up on the main thread, then fire
+            # the event.
+            start_event.wait()
+            obj.foo = True
+            del obj
+
+        def main_thread(obj, start_event):
+            handler = Handler()
+            obj.on_trait_change(handler.handle, 'foo')
+            start_event.set()
+            # Allow time to make sure that we're in the middle of handling an
+            # event.
+            time.sleep(0.5)
+            obj.on_trait_change(handler.handle, 'foo', remove=True)
+
+        # Previously, a ValueError would be raised on the worker thread
+        # during (normal refcount-based) garbage collection.  That
+        # ValueError is ignored by the Python system, so the only
+        # visible effect is the output to stderr.
+        with captured_stderr() as s:
+            start_event = threading.Event()
+            event_source = EventSource()
+            t = threading.Thread(
+                target=worker_thread,
+                args=(event_source, start_event),
+            )
+            t.start()
+            main_thread(event_source, start_event)
+            t.join()
+
+        self.assertNotIn('Exception', s.getvalue())
 
 
 # Run the unit tests (if invoked from the command line):
