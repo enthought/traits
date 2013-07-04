@@ -203,28 +203,25 @@ class TestRaceCondition(unittest.TestCase):
         # Regression test for exception that occurred when the listener_deleted
         # method is called after the dispose method on a
         # TraitsChangeNotifyWrapper.
-        class Handler(HasTraits):
-            def handle(self):
+        class SlowListener(HasTraits):
+            def handle_age_change(self):
                 time.sleep(1.0)
 
-        class EventSource(HasTraits):
-            foo = Event
-
-        def worker_thread(obj, start_event):
+        def worker_thread(event_source, start_event):
             # Wait until the listener is set up on the main thread, then fire
             # the event.
             start_event.wait()
-            obj.foo = True
-            del obj
+            event_source.age = 11
 
-        def main_thread(obj, start_event):
-            handler = Handler()
-            obj.on_trait_change(handler.handle, 'foo')
+        def main_thread(event_source, start_event):
+            listener = SlowListener()
+            event_source.on_trait_change(listener.handle_age_change, 'age')
             start_event.set()
             # Allow time to make sure that we're in the middle of handling an
             # event.
             time.sleep(0.5)
-            obj.on_trait_change(handler.handle, 'foo', remove=True)
+            event_source.on_trait_change(
+                listener.handle_age_change, 'age', remove=True)
 
         # Previously, a ValueError would be raised on the worker thread
         # during (normal refcount-based) garbage collection.  That
@@ -232,7 +229,7 @@ class TestRaceCondition(unittest.TestCase):
         # visible effect is the output to stderr.
         with captured_stderr() as s:
             start_event = threading.Event()
-            event_source = EventSource()
+            event_source = GenerateEvents(age=10)
             t = threading.Thread(
                 target=worker_thread,
                 args=(event_source, start_event),
