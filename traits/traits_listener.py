@@ -622,9 +622,13 @@ class ListenerItem ( ListenerBase ):
         """
         handler = self.handler()
         if handler is not Undefined:
-            object._on_trait_change( handler, remove   = remove,
-                                              dispatch = self.dispatch,
-                                              priority = self.priority )
+            object._on_trait_change(
+                handler,
+                remove=remove,
+                dispatch=self.dispatch,
+                priority=self.priority,
+                target=self._get_target(),
+            )
 
         return ( object, name )
 
@@ -639,10 +643,14 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
             return ( object, name )
 
@@ -657,15 +665,23 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             return next.unregister( getattr( object, name ) )
@@ -697,23 +713,34 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
                 if self.is_list_handler:
-                    object._on_trait_change( self.handle_list_items_special,
-                                             name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        self.handle_list_items_special,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                 elif self.type == ANY_LISTENER:
-                    object._on_trait_change( handler, name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
             return ( object, name )
 
@@ -725,32 +752,51 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                     if self.is_list_handler:
-                        object._on_trait_change( self.handle_list_items_special,
-                                               name + '_items',
-                                               remove   = remove,
-                                               dispatch = self.dispatch,
-                                               priority = self.priority )
+                        object._on_trait_change(
+                            self.handle_list_items_special,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
                     elif self.type == ANY_LISTENER:
-                        object._on_trait_change( handler, name + '_items',
-                                                 remove   = remove,
-                                                 dispatch = self.dispatch,
-                                                 priority = self.priority )
+                        object._on_trait_change(
+                            handler,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
-        object._on_trait_change( tl_handler_items, name + '_items',
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler_items,
+            name + '_items',
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             handler = next.unregister
@@ -785,16 +831,24 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
                 if self.type == ANY_LISTENER:
-                    object._on_trait_change( handler, name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
             return ( object, name )
 
@@ -806,26 +860,42 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                     if self.type == ANY_LISTENER:
-                        object._on_trait_change( handler, name + '_items',
-                                                 remove   = remove,
-                                                 dispatch = self.dispatch,
-                                                 priority = self.priority )
+                        object._on_trait_change(
+                            handler,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = self.dispatch,
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch=self.dispatch,
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
-        object._on_trait_change( tl_handler_items, name + '_items',
-                                 remove   = remove,
-                                 dispatch = self.dispatch,
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler_items,
+            name + '_items',
+            remove=remove,
+            dispatch=self.dispatch,
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             handler = next.unregister
@@ -867,6 +937,18 @@ class ListenerItem ( ListenerBase ):
             # Set up the appropriate trait listeners on the object for the
             # new trait:
             getattr( self, type )( object, new_trait, False )
+
+    def _get_target(self):
+        """ Get the target object from the ListenerNotifyWrapper.
+        """
+        target = None
+        lnw = self.wrapped_handler_ref()
+        if lnw is not None:
+            target_ref = getattr(lnw, 'object', None)
+            if target_ref is not None:
+                target = target_ref()
+        return target
+
 
 #-------------------------------------------------------------------------------
 #  'ListenerGroup' class:
