@@ -98,6 +98,8 @@ def ViewElements ( ):
 WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
                    StaticTraitChangeNotifyWrapper )
 
+
+
 MethodTypes    = ( MethodType,   CTraitMethod )
 FunctionTypes  = ( FunctionType, CTraitMethod )
 
@@ -153,7 +155,7 @@ def _clone_trait ( clone, metadata = None ):
 
 def _get_method ( cls, method ):
     result = getattr( cls, method, None )
-    if (result is not None) and isinstance( result, MethodTypes ):
+    if (result is not None) and is_method_type(method):
         return result
     return None
 
@@ -165,18 +167,30 @@ def _get_def ( class_name, class_dict, bases, method ):
 
     result = class_dict.get( method )
     if ((result is not None) and
-        isinstance( result, FunctionTypes ) and
+        is_function_type(result) and
         (getattr( result, 'on_trait_change', None ) is None)):
         return result
 
     for base in bases:
         result = getattr( base, method, None )
         if ((result is not None) and
-            isinstance( result, MethodTypes ) and
+            is_method_type(result) and \
             (getattr( result.im_func, 'on_trait_change', None ) is None)):
             return result
 
     return None
+
+
+def is_cython_func_or_method(method):
+    # Only way to get the type from the method ... 
+    return 'cython_function_or_method' in str(type(method))
+
+def is_method_type(method):
+    return isinstance(method, MethodTypes ) or is_cython_func_or_method(method)
+
+def is_function_type(function):
+    return isinstance(function, FunctionTypes ) or \
+           is_cython_func_or_method(function)
 
 #-------------------------------------------------------------------------------
 #  Returns whether or not a specified value is serializable:
@@ -227,7 +241,7 @@ def _get_instance_handlers ( class_dict, bases ):
 
     # Merge in the information from the class dictionary:
     for name, value in class_dict.items():
-        if (name[:1] == '_') and isinstance( value, FunctionTypes ):
+        if (name[:1] == '_') and is_function_type(value):
             n   = 13
             col = name.find( '_changed_for_' )
             if col < 2:
@@ -768,7 +782,7 @@ class MetaHasTraitsObject ( object ):
                     prefix_list.append( name )
                     prefix_traits[ name ] = value
 
-            elif isinstance( value, FunctionType ):
+            elif isinstance( value, FunctionType ) or is_cython_func_or_method(value):
                 pattern = getattr( value, 'on_trait_change', None )
                 if pattern is not None:
                     listeners[ name ] = ( 'method', pattern )
@@ -1030,7 +1044,8 @@ def _trait_monitor_index ( cls, handler ):
     type_handler = type( handler )
     for i, _cls, _handler in enumerate( _HasTraits_monitors ):
         if type_handler is type( _handler ):
-            if ((type_handler is MethodType) and
+            if (((type_handler is MethodType)  or
+                'cython_function_or_method' in str(type_handler)) and \
                 (handler.im_self is not None)):
                 if ((handler.__name__ == _handler.__name__) and
                     (handler.im_self is _handler.im_self)):
