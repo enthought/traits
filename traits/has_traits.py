@@ -98,8 +98,6 @@ def ViewElements ( ):
 WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
                    StaticTraitChangeNotifyWrapper )
 
-
-
 MethodTypes    = ( MethodType,   CTraitMethod )
 FunctionTypes  = ( FunctionType, CTraitMethod )
 
@@ -182,13 +180,16 @@ def _get_def ( class_name, class_dict, bases, method ):
 
 
 def is_cython_func_or_method(method):
-    # Only way to get the type from the method ... 
+    """ Test if the given input is a Cython method or function. """
+    # The only way to get the type from the method with str comparison ...
     return 'cython_function_or_method' in str(type(method))
 
 def is_method_type(method):
+    """ Test if the given input is a Python method or a Cython method. """
     return isinstance(method, MethodTypes ) or is_cython_func_or_method(method)
 
 def is_function_type(function):
+    """ Test if the given input is a Python function or a Cython method. """
     return isinstance(function, FunctionTypes ) or \
            is_cython_func_or_method(function)
 
