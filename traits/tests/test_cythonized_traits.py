@@ -5,7 +5,7 @@ except ImportError:
     no_cython = True
 
 
-from ..testing.api import unittest, UnittestTools
+from ..testing.unittest_tools import unittest, UnittestTools
 
 
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
