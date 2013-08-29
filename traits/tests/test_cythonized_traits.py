@@ -7,11 +7,22 @@ except ImportError:
 
 from ..testing.unittest_tools import unittest, UnittestTools
 
+def has_no_compiler():
+    if no_cython:
+        return True
+    code = "return 1+1"
+    try:
+        result = cython.inline(code)
+        return False
+    except:
+        return True
+
+SKIP_TEST = has_no_compiler()
 
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
 
 
-    @unittest.skip(no_cython)
+    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_simple_default_methods(self):
 
         code =  """
@@ -31,7 +42,7 @@ return Test()
         self.assertEquals(obj.name, 'Joe')
 
 
-    @unittest.skip(no_cython)
+    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_basic_events(self):
 
         code = """
@@ -50,7 +61,7 @@ return Test()
 
 
 
-    @unittest.skip(no_cython)
+    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_change_decorator(self):
 
         code = """
