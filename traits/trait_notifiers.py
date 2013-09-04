@@ -295,35 +295,35 @@ class StaticAnyTraitChangeNotifyWrapper(object):
         if old is not Uninitialized:
             try:
                 self.handler()
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, trait_name )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, trait_name, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
@@ -358,35 +358,35 @@ class StaticTraitChangeNotifyWrapper(object):
         if old is not Uninitialized:
             try:
                 self.handler()
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.handler( object, trait_name, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
@@ -481,35 +481,35 @@ class TraitChangeNotifyWrapper(object):
         if old is not Uninitialized:
             try:
                 self.dispatch( self.handler )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.dispatch( self.handler, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.dispatch( self.handler, trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.dispatch( self.handler, object, trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
         if old is not Uninitialized:
             try:
                 self.dispatch( self.handler, object, trait_name, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
@@ -517,7 +517,7 @@ class TraitChangeNotifyWrapper(object):
         if (obj is not None) and (old is not Uninitialized):
             try:
                 self.dispatch( getattr( obj(), self.name ) )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_1 ( self, object, trait_name, old, new ):
@@ -525,7 +525,7 @@ class TraitChangeNotifyWrapper(object):
         if (obj is not None) and (old is not Uninitialized):
             try:
                 self.dispatch( getattr( obj(), self.name ), new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
@@ -534,7 +534,7 @@ class TraitChangeNotifyWrapper(object):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
@@ -543,7 +543,7 @@ class TraitChangeNotifyWrapper(object):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
@@ -552,7 +552,7 @@ class TraitChangeNotifyWrapper(object):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
@@ -564,31 +564,31 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     def call_0 ( self, object, trait_name, old, new ):
         try:
             self.dispatch( self.handler )
-        except:
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
     def call_1 ( self, object, trait_name, old, new ):
         try:
             self.dispatch( self.handler, new )
-        except:
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
     def call_2 ( self, object, trait_name, old, new ):
         try:
             self.dispatch( self.handler, trait_name, new )
-        except:
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
     def call_3 ( self, object, trait_name, old, new ):
         try:
             self.dispatch( self.handler, object, trait_name, new )
-        except:
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
     def call_4 ( self, object, trait_name, old, new ):
         try:
             self.dispatch( self.handler, object, trait_name, old, new )
-        except:
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
     def rebind_call_0 ( self, object, trait_name, old, new ):
@@ -596,7 +596,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         if obj is not None:
             try:
                 self.dispatch( getattr( obj(), self.name ) )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_1 ( self, object, trait_name, old, new ):
@@ -604,7 +604,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         if obj is not None:
             try:
                 self.dispatch( getattr( obj(), self.name ), new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_2 ( self, object, trait_name, old, new ):
@@ -613,7 +613,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_3 ( self, object, trait_name, old, new ):
@@ -622,7 +622,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
     def rebind_call_4 ( self, object, trait_name, old, new ):
@@ -631,7 +631,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 self.dispatch( getattr( obj(), self.name ),
                                object, trait_name, old, new )
-            except:
+            except Exception:
                 handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
@@ -666,7 +666,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.deferred = None
         try:
             self.handler()
-        except:
+        except Exception:
             handle_exception( deferred.object, deferred.trait_name,
                               deferred.old, deferred.new )
 
@@ -683,7 +683,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.deferred = None
         try:
             self.handler( deferred.new )
-        except:
+        except Exception:
             handle_exception( deferred.object, deferred.trait_name,
                               deferred.old, deferred.new )
 
@@ -701,7 +701,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.deferred = None
         try:
             self.handler( deferred.trait_name, deferred.new )
-        except:
+        except Exception:
             handle_exception( deferred.object, deferred.trait_name,
                               deferred.old, deferred.new )
 
@@ -720,7 +720,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         self.deferred = None
         try:
             self.handler( deferred.object, deferred.trait_name, deferred.new )
-        except:
+        except Exception:
             handle_exception( deferred.object, deferred.trait_name,
                               deferred.old, deferred.new )
 
@@ -740,7 +740,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         try:
             self.handler( deferred.object, deferred.trait_name, deferred.old,
                           deferred.new )
-        except:
+        except Exception:
             handle_exception( deferred.object, deferred.trait_name,
                               deferred.old, deferred.new )
 
@@ -755,7 +755,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         if self.object is not None:
             try:
                 getattr( self.object(), self.name )()
-            except:
+            except Exception:
                 handle_exception( deferred.object, deferred.trait_name,
                                   deferred.old, deferred.new )
 
@@ -773,7 +773,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         if self.object is not None:
             try:
                 getattr( self.object(), self.name )( deferred.new )
-            except:
+            except Exception:
                 handle_exception( deferred.object, deferred.trait_name,
                                   deferred.old, deferred.new )
 
@@ -793,7 +793,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 getattr( self.object(), self.name )( deferred.trait_name,
                                                             deferred.new )
-            except:
+            except Exception:
                 handle_exception( deferred.object, deferred.trait_name,
                                   deferred.old, deferred.new )
 
@@ -814,7 +814,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 getattr( self.object(), self.name )( deferred.object,
                          deferred.trait_name, deferred.new )
-            except:
+            except Exception:
                 handle_exception( deferred.object, deferred.trait_name,
                                   deferred.old, deferred.new )
 
@@ -835,7 +835,7 @@ class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             try:
                 getattr( self.object(), self.name )( deferred.object,
                          deferred.trait_name, deferred.old, deferred.new )
-            except:
+            except Exception:
                 handle_exception( deferred.object, deferred.trait_name,
                                   deferred.old, deferred.new )
 
