@@ -267,7 +267,7 @@ handle_exception       = notification_exception_handler._handle_exception
 #  'StaticAnyTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class StaticAnyTraitChangeNotifyWrapper:
+class StaticAnyTraitChangeNotifyWrapper(object):
 
     def __init__ ( self, handler ):
         n = handler.func_code.co_argcount
@@ -330,7 +330,7 @@ class StaticAnyTraitChangeNotifyWrapper:
 #  'StaticTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class StaticTraitChangeNotifyWrapper:
+class StaticTraitChangeNotifyWrapper(object):
 
     def __init__ ( self, handler ):
         n = handler.func_code.co_argcount
@@ -393,7 +393,7 @@ class StaticTraitChangeNotifyWrapper:
 #  'TraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class TraitChangeNotifyWrapper:
+class TraitChangeNotifyWrapper(object):
 
     def __init__ ( self, handler, owner, target=None ):
         self.init( handler, owner, target )
