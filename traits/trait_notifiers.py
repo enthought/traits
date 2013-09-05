@@ -264,10 +264,18 @@ pop_exception_handler  = notification_exception_handler._pop_handler
 handle_exception       = notification_exception_handler._handle_exception
 
 #-------------------------------------------------------------------------------
-#  'StaticAnyTraitChangeNotifyWrapper' class:
+#  'AbstractStaticChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class StaticAnyTraitChangeNotifyWrapper(object):
+class AbstractStaticChangeNotifyWrapper(object):
+    """
+    Concrete implementation must define the 'argument_transforms' class
+    argument, a dictionary mapping the number of arguments in the event
+    handler to a function that takes the arguments (obj, trait_name, old, new)
+    and returns the arguments tuple for the actual handler.
+    """
+
+    arguments_transforms = {}
 
     def __init__ ( self, handler ):
         n = handler.func_code.co_argcount
@@ -276,20 +284,9 @@ class StaticAnyTraitChangeNotifyWrapper(object):
                 ('Invalid number of arguments for the static anytrait change '
                  'notification handler: %s. A maximum of 4 arguments is '
                  'allowed, but %s were specified.') % ( handler.__name__, n ) )
+        self.argument_transform = self.argument_transforms[n]
 
         self.handler  = handler
-
-        # The wrapper is called with the full set of argument, and we need to
-        # create a tuple with the arguments that need to be sent to the event
-        # handler, depending on the number of those.
-        argument_transforms = {
-            0: lambda obj, name, old, new: (),
-            1: lambda obj, name, old, new: (obj,),
-            2: lambda obj, name, old, new: (obj, name),
-            3: lambda obj, name, old, new: (obj, name, new),
-            4: lambda obj, name, old, new: (obj, name, old, new),
-        }
-        self.argument_transform = argument_transforms[n]
 
     def __call__ ( self, object, trait_name, old, new ):
         """ Dispatch to the appropriate handler method. """
@@ -305,49 +302,40 @@ class StaticAnyTraitChangeNotifyWrapper(object):
 
     def equals ( self, handler ):
         return False
+
+#-------------------------------------------------------------------------------
+#  'StaticAnyTraitChangeNotifyWrapper' class:
+#-------------------------------------------------------------------------------
+
+class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
+
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (obj,),
+        2: lambda obj, name, old, new: (obj, name),
+        3: lambda obj, name, old, new: (obj, name, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
 #-------------------------------------------------------------------------------
 #  'StaticTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class StaticTraitChangeNotifyWrapper(object):
+class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
-    def __init__ ( self, handler ):
-        n = handler.func_code.co_argcount
-        if n > 4:
-            raise TraitNotificationError(
-                ('Invalid number of arguments for the static trait change '
-                 'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
-
-        self.handler  = handler
-
-        # The wrapper is called with the full set of argument, and we need to
-        # create a tuple with the arguments that need to be sent to the event
-        # handler, depending on the number of those.
-        argument_transforms = {
-            0: lambda obj, name, old, new: (),
-            1: lambda obj, name, old, new: (obj,),
-            2: lambda obj, name, old, new: (obj, new),
-            3: lambda obj, name, old, new: (obj, old, new),
-            4: lambda obj, name, old, new: (obj, name, old, new),
-        }
-        self.argument_transform = argument_transforms[n]
-
-    def __call__ ( self, object, trait_name, old, new ):
-        """ Dispatch to the appropriate handler method. """
-
-        if old is not Uninitialized:
-            try:
-                # Extract the arguments needed from the handler.
-                args = self.argument_transform( object, trait_name, old, new )
-                # Call the handler.
-                self.handler( *args )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def equals ( self, handler ):
-        return False
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (obj,),
+        2: lambda obj, name, old, new: (obj, new),
+        3: lambda obj, name, old, new: (obj, old, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
 #-------------------------------------------------------------------------------
 #  'TraitChangeNotifyWrapper' class:
