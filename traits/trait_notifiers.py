@@ -341,53 +341,33 @@ class StaticTraitChangeNotifyWrapper(object):
                  'allowed, but %s were specified.') % ( handler.__name__, n ) )
 
         self.handler  = handler
-        self.call_method = 'call_%d' % n
 
-    def __call__(self, object, trait_name, old, new):
-        """ Dispatch to the appropriate method.
+        # The wrapper is called with the full set of argument, and we need to
+        # create a tuple with the arguments that need to be sent to the event
+        # handler, depending on the number of those.
+        argument_transforms = {
+            0: lambda obj, name, old, new: (),
+            1: lambda obj, name, old, new: (obj,),
+            2: lambda obj, name, old, new: (obj, new),
+            3: lambda obj, name, old, new: (obj, old, new),
+            4: lambda obj, name, old, new: (obj, name, old, new),
+        }
+        self.argument_transform = argument_transforms[n]
 
-        We do explicit dispatch instead of assigning to the .__call__ instance
-        attribute to avoid reference cycles.
-        """
-        getattr(self, self.call_method)(object, trait_name, old, new)
+    def __call__ ( self, object, trait_name, old, new ):
+        """ Dispatch to the appropriate handler method. """
+
+        if old is not Uninitialized:
+            try:
+                # Extract the arguments needed from the handler.
+                args = self.argument_transform( object, trait_name, old, new )
+                # Call the handler.
+                self.handler( *args )
+            except Exception:
+                handle_exception( object, trait_name, old, new )
 
     def equals ( self, handler ):
         return False
-
-    def call_0 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler()
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, old, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, trait_name, old, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
 #  'TraitChangeNotifyWrapper' class:
