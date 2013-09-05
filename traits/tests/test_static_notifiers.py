@@ -1,7 +1,19 @@
+""" Tests for the static notifiers. """
 from traits.api import Float, HasTraits
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
+
+
+calls_0 = []
+class StaticNotifiers0(HasTraits):
+    ok = Float
+    def _ok_changed():
+        calls_0.append(True)
+
+    fail = Float
+    def _fail_changed():
+        raise Exception('error')
 
 
 class StaticNotifiers1(HasTraits):
@@ -53,8 +65,11 @@ class StaticNotifiers4(HasTraits):
 
 
 class TestNotifiers(unittest.TestCase):
+    """ Tests for the static notifiers, and the "anytrait" static notifiers.
+    """
 
     #### 'TestCase' protocol ##################################################
+
     def setUp(self):
         self._old_handle_exception = trait_notifiers.handle_exception
         self.exceptions = []
@@ -70,10 +85,19 @@ class TestNotifiers(unittest.TestCase):
 
     #### Tests ################################################################
 
+    def test_static_notifiers_0(self):
+        obj = StaticNotifiers0(ok=2)
+        obj.ok = 3
+        self.assertEqual(len(calls_0), 2)
+
+        obj.fail = 1
+        self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
+
     def test_static_notifiers_1(self):
         obj = StaticNotifiers1(ok=2)
         obj.ok = 3
         self.assertEqual(len(obj.calls), 2)
+
         obj.fail = 1
         self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
 
@@ -95,6 +119,7 @@ class TestNotifiers(unittest.TestCase):
         obj = StaticNotifiers4(ok=2)
         obj.ok = 3
         self.assertEqual(obj.calls, [('ok', 0, 2), ('ok', 2, 3)])
+
         obj.fail = 1
         self.assertEqual(self.exceptions, [(obj, 'fail', 0, 1)])
 
