@@ -17,6 +17,12 @@ def has_no_compiler():
     except:
         return True
 
+def cython_version():
+    if no_cython:
+        return None
+    from Cython.Compiler.Version import version
+    return tuple(int(v) for v in version.split('.'))
+
 SKIP_TEST = has_no_compiler()
 
 class CythonizedTraitsTestCase(unittest.TestCase, UnittestTools):
@@ -61,7 +67,7 @@ return Test()
 
 
 
-    @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
+    @unittest.skipIf(SKIP_TEST or cython_version() <= (0,19,1), 'Triggers Cython bug')
     def test_on_trait_change_decorator(self):
 
         code = """
