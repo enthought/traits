@@ -17,3 +17,4 @@ script:
 notifications:
   email:
     - hack@delley.net
+
