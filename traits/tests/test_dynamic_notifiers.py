@@ -1,22 +1,17 @@
 """ Tests for the dynamic notifiers. """
 from traits.api import Float, HasTraits, List, on_trait_change
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
 
 
 class DynamicNotifiers(HasTraits):
 
-    def __init__(self, **traits):
-        # Make sure the class-level list `rebinds_calls_0` is empty
-        self.rebind_calls_0 = []
-        super(DynamicNotifiers, self).__init__(**traits)
-
     ok = Float
     fail = Float
 
-    # Lists accumulating the arguments of calls to the traits notifiers.
-    rebind_calls_0 = []
+    # Lists where we accumulate the arguments of calls to the traits notifiers.
+    rebind_calls_0 = List
     rebind_calls_1 = List
     rebind_calls_2 = List
     rebind_calls_3 = List
@@ -120,6 +115,7 @@ def failing_function_listener_4(obj, name, old, new):
     exceptions_from.append(4)
     raise Exception('error')
 
+
 class TestDynamicNotifiers(unittest.TestCase):
 
     #### 'TestCase' protocol ##################################################
@@ -203,6 +199,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         # 10 failures: 5 are from the internal dynamic listeners, see
         # test_dynamic_notifiers_methods_failing
         self.assertEqual([(obj, 'fail', 0, 1)]*10, self.exceptions)
+
 
 if __name__ == '__main__':
     unittest.main()
