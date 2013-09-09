@@ -32,7 +32,7 @@ def has_no_compiler():
 
 SKIP_TEST = has_no_compiler()
 
-# Cython 0.19 implementeation of safe_type fails while parsing some of the
+# Cython 0.19 implementation of safe_type fails while parsing some of the
 # code. We provide a very basic implementation that always returns object
 # (we don't need any particular optimizations)
 def _always_object_type(arg, context):
