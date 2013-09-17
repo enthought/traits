@@ -5,10 +5,11 @@ python:
 install:
   - pip install nose
   - pip install unittest2
+  - pip install cython
   - python setup.py build_ext --inplace
   - python setup.py develop
 script:
   - nosetests
 notifications:
   email:
-    - pberkes@enthought.com
+    - travis-ci@enthought.com
