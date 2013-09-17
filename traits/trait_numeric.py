@@ -151,10 +151,7 @@ class AbstractArray ( TraitType ):
         """
         try:
             # Make sure the value is an array:
-            type_value = type( value )
             if not isinstance( value, ndarray ):
-                if not isinstance( value, SequenceTypes ):
-                    self.error( object, name, value )
                 if self.dtype is not None:
                     value = asarray( value, self.dtype )
                 else:
