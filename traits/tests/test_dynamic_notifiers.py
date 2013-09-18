@@ -200,6 +200,27 @@ class TestDynamicNotifiers(unittest.TestCase):
         # test_dynamic_notifiers_methods_failing
         self.assertEqual([(obj, 'fail', 0, 1)]*10, self.exceptions)
 
+    def test_object_can_be_garbage_collected(self):
+        # Make sure that a trait object can be garbage collected even though
+        # there are listener to its traits.
+
+        import gc
+
+        gc.collect()
+        gc.collect()
+        before_n_objs = len(gc.get_objects())
+
+        obj = DynamicNotifiers()
+        obj.on_trait_change(function_listener_0, 'ok')
+
+        # Remove reference to `obj`; it should be garbage collected at this
+        # point.
+        obj = None
+
+        after_n_objs = len(gc.get_objects())
+
+        self.assertEqual(before_n_objs, after_n_objs)
+
 
 if __name__ == '__main__':
     unittest.main()
