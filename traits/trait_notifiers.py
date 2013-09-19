@@ -340,6 +340,18 @@ class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 #-------------------------------------------------------------------------------
 
 class TraitChangeNotifyWrapper(object):
+    """ Dynamic change notify wrapper. """
+
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (new,),
+        2: lambda obj, name, old, new: (name, new),
+        3: lambda obj, name, old, new: (obj, name, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
     def __init__ ( self, handler, owner, target=None ):
         self.init( handler, owner, target )
@@ -348,7 +360,6 @@ class TraitChangeNotifyWrapper(object):
         # If target is not None and handler is a function
         # then the handler will be removed when target
         # is deleted.
-        func = handler
         if type( handler ) is MethodType:
             func   = handler.im_func
             object = handler.im_self
@@ -364,9 +375,11 @@ class TraitChangeNotifyWrapper(object):
                          'arguments is allowed, but %s were specified.') %
                         ( func.__name__, arg_count ) )
 
-                self.call_method = 'rebind_call_%d' % arg_count
+                self.notify_listener = self._notify_method_listener
+                self.argument_transform = self.argument_transforms[arg_count]
 
                 return arg_count
+
         elif target is not None:
             # Set up so the handler will be removed when the target
             # is deleted
@@ -383,7 +396,9 @@ class TraitChangeNotifyWrapper(object):
 
         self.name     = None
         self.handler  = handler
-        self.call_method = 'call_%d' % arg_count
+
+        self.notify_listener = self._notify_function_listener
+        self.argument_transform = self.argument_transforms[arg_count]
 
         return arg_count
 
@@ -393,11 +408,17 @@ class TraitChangeNotifyWrapper(object):
         We do explicit dispatch instead of assigning to the .__call__ instance
         attribute to avoid reference cycles.
         """
-        getattr(self, self.call_method)(object, trait_name, old, new)
 
-    # NOTE: This method is normally the only one that needs to be overridden in
-    # a subclass to implement the subclass's dispatch mechanism:
+        # `notify_listener` is either
+        # `_notify_method_listener` or `_notify_function_listener`
+        self.notify_listener( object, trait_name, old, new)
+
     def dispatch ( self, handler, *args ):
+        """ Dispatch the event to the listener.
+
+        This method is normally the only one that needs to be overridden in
+        a subclass to implement the subclass's dispatch mechanism.
+        """
         handler( *args )
 
     def equals ( self, handler ):
@@ -423,81 +444,33 @@ class TraitChangeNotifyWrapper(object):
     def dispose ( self ):
         self.object = None
 
-    def call_0 ( self, object, trait_name, old, new ):
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
+
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
+
+        obj_weak_ref = self.object
+        if (obj_weak_ref is not None) and (old is not Uninitialized):
+            # Dynamically resolve the listener by name.
+            listener = getattr( obj_weak_ref(), self.name )
+
+            # Dispatch the event.
+            try:
+                self.dispatch( listener, *args )
+            except Exception:
+                handle_exception( object, trait_name, old, new )
+
+    def _notify_function_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a function listener. """
+
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
+
         if old is not Uninitialized:
+            # Dispatch the event.
             try:
-                self.dispatch( self.handler )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, object, trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, object, trait_name, old, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_0 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if (obj is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( obj(), self.name ) )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_1 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if (obj is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( obj(), self.name ), new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_2 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if (obj is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_3 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if (obj is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               object, trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_4 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if (obj is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               object, trait_name, old, new )
+                self.dispatch( self.handler, *args )
             except Exception:
                 handle_exception( object, trait_name, old, new )
 
@@ -507,78 +480,33 @@ class TraitChangeNotifyWrapper(object):
 
 class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
-    def call_0 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
 
-    def call_1 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, new )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
 
-    def call_2 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, trait_name, new )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
+        obj_weak_ref = self.object
+        if obj_weak_ref is not None:
+            # Dynamically resolve the listener by name.
+            listener = getattr( obj_weak_ref(), self.name )
 
-    def call_3 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, object, trait_name, new )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, object, trait_name, old, new )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
-
-    def rebind_call_0 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if obj is not None:
+            # Dispatch the event.
             try:
-                self.dispatch( getattr( obj(), self.name ) )
+                self.dispatch( listener, *args )
             except Exception:
                 handle_exception( object, trait_name, old, new )
 
-    def rebind_call_1 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if obj is not None:
-            try:
-                self.dispatch( getattr( obj(), self.name ), new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+    def _notify_function_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a function listener. """
 
-    def rebind_call_2 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if obj is not None:
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
 
-    def rebind_call_3 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if obj is not None:
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               object, trait_name, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_4 ( self, object, trait_name, old, new ):
-        obj = self.object
-        if obj is not None:
-            try:
-                self.dispatch( getattr( obj(), self.name ),
-                               object, trait_name, old, new )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+        try:
+            self.dispatch( self.handler, *args )
+        except Exception:
+            handle_exception( object, trait_name, old, new )
 
 #-------------------------------------------------------------------------------
 #  'FastUITraitChangeNotifyWrapper' class:
@@ -600,4 +528,3 @@ class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
     def dispatch ( self, handler, *args ):
         Thread( target = handler, args = args ).start()
-
