@@ -1276,11 +1276,6 @@ class HasTraits ( CHasTraits ):
         'new':      NewTraitChangeNotifyWrapper,
         'fast_ui':  FastUITraitChangeNotifyWrapper,
         'ui':       FastUITraitChangeNotifyWrapper
-        # fixme: Disabling the new ui dispatch mechanism until the problems can
-        # be worked out (i.e. breaks Undo/Redo and doesn't handle list item
-        # event objects correctly because of the 'new' value replacement not
-        # always being the correct action to take).
-        #'ui':     UITraitChangeNotifyWrapper
     }
 
     #-- Trait Definitions ------------------------------------------------------
@@ -2580,10 +2575,9 @@ class HasTraits ( CHasTraits ):
             value       dispatch
             =========== =======================================================
             ``same``    Run notifications on the same thread as this one.
-            ``ui``      Run notifications on the UI thread, and allow them to
-                        be queued and deferred.
-            ``fast_ui`` Run notifications on the UI thread, and process
+            ``ui``      Run notifications on the UI thread, and process
                         them immediately.
+            ``fast_ui`` Alias for ``ui``.
             ``new``     Run notifications in a new thread.
             =========== =======================================================
 
