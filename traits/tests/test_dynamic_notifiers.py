@@ -217,6 +217,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         # point.
         obj = None
 
+        gc.collect()
         after_n_objs = len(gc.get_objects())
 
         self.assertEqual(before_n_objs, after_n_objs)
