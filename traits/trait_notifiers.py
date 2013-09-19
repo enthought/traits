@@ -275,13 +275,14 @@ class AbstractStaticChangeNotifyWrapper(object):
     arguments_transforms = {}
 
     def __init__ ( self, handler ):
-        n = handler.func_code.co_argcount
-        if n > 4:
+        arg_count = handler.func_code.co_argcount
+        if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the static anytrait change '
                  'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
-        self.argument_transform = self.argument_transforms[n]
+                 'allowed, but %s were specified.')
+                % ( handler.__name__, arg_count ) )
+        self.argument_transform = self.argument_transforms[arg_count]
 
         self.handler  = handler
 
