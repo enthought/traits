@@ -24,26 +24,16 @@
 
 from __future__ import absolute_import
 
-import weakref
+from threading import local as thread_local
+from threading import Thread
+from thread import get_ident
 import traceback
+from types import MethodType
+import weakref
 import sys
 
-from threading import local as thread_local
-
-from threading \
-    import Thread
-
-from thread \
-    import get_ident
-
-from types \
-    import MethodType
-
-from .trait_base \
-    import Uninitialized
-
-from .trait_errors \
-    import TraitNotificationError
+from .trait_base import Uninitialized
+from .trait_errors import TraitNotificationError
 
 #-------------------------------------------------------------------------------
 #  Global Data:
