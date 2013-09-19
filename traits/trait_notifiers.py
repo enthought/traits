@@ -340,7 +340,12 @@ class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 #-------------------------------------------------------------------------------
 
 class TraitChangeNotifyWrapper(object):
-    """ Dynamic change notify wrapper. """
+    """ Dynamic change notify wrapper.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method, or
+    the decorator with the same name.
+    """
 
     # The wrapper is called with the full set of argument, and we need to
     # create a tuple with the arguments that need to be sent to the event
@@ -479,6 +484,14 @@ class TraitChangeNotifyWrapper(object):
 #-------------------------------------------------------------------------------
 
 class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Change notify wrapper for "extended" trait change events..
+
+    The "extended notifiers" are set up internally when using extended traits,
+    to add/remove traits listeners when one of the intermediate traits changes.
+
+    For example, in a listener for the extended trait `a.b`, we need to
+    add/remove listeners to `a:b` when `a` changes.
+    """
 
     def _notify_method_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a method listener. """
@@ -513,6 +526,12 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 #-------------------------------------------------------------------------------
 
 class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Dynamic change notify wrapper, dispatching on the UI thread.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method and the
+    `dispatch` parameter set to 'ui' or 'fast_ui'.
+    """
 
     def dispatch ( self, handler, *args ):
         if get_ident() == ui_thread:
@@ -525,6 +544,12 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 #-------------------------------------------------------------------------------
 
 class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Dynamic change notify wrapper, dispatching on a new thread.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method and the
+    `dispatch` parameter set to 'new'.
+    """
 
     def dispatch ( self, handler, *args ):
         Thread( target = handler, args = args ).start()

@@ -5,19 +5,6 @@ add/remove traits listeners when one of the intermediate traits changes.
 
 For example, in a listener for the extended trait `a.b`, we need to add/remove
 listeners to `a:b` when `a` changes.
-
-The dispatch of these internal events is handled by the
-`traits_notifiers.ExtendedTraitChangeNotifyWrapper` class. To the author of
-these tests, it looks like most of the code in that class will never be
-reached, since the internal listeners always have the full signature, and
-they never raise exceptions (unless there is a bug in Traits).
-
-Nevertheless, before refactoring, I'd like to cover the full code, and so I'll
-directly set up the internal notifier for all cases. For the record, I think
-only `ExtendedTraitChangeNotifyWrapper.rebind_call_4` is necessary for Traits
-to work properly, and even then the "try ... except" statement is unnecessary.
-It looks like the rest of the code in that class can be removed in the future.
-
 """
 from traits.api import Float, HasTraits, List
 from traits.testing.unittest_tools import unittest
