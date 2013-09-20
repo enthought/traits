@@ -5,7 +5,7 @@ traits: explicitly typed attributes for Python
 http://github.enthought.com/traits
 
 .. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
-   :target: https://api.travis-ci.org/enthought/traits
+   :target: https://travis-ci.org/enthought/traits
    :alt: Build status
 
 The Traits project is at the center of all Enthought Tool Suite development
