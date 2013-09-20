@@ -155,7 +155,7 @@ def _clone_trait ( clone, metadata = None ):
 
 def _get_method ( cls, method ):
     result = getattr( cls, method, None )
-    if (result is not None) and is_method_type(method):
+    if (result is not None) and is_method_type(result):
         return result
     return None
 
