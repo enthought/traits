@@ -25,7 +25,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import,division
 
 import sys
 import copy as copy_module
@@ -2456,8 +2456,8 @@ class HasTraits ( CHasTraits ):
             try:
                 value = repr( getattr( self, name ) ).replace( '\n', '\\n' )
                 if len( value ) > maxval:
-                    value = '%s...%s' % ( value[: (maxval - 2) / 2 ],
-                                          value[ -((maxval - 3) / 2): ] )
+                    value = '%s...%s' % ( value[: (maxval - 2) // 2 ],
+                                          value[ -((maxval - 3) // 2): ] )
             except:
                 value = '<undefined>'
             lname = (name + ':').ljust( pad )
