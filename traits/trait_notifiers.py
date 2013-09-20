@@ -251,6 +251,40 @@ pop_exception_handler  = notification_exception_handler._pop_handler
 handle_exception       = notification_exception_handler._handle_exception
 
 #-------------------------------------------------------------------------------
+#  Traits global notification event tracer:
+#-------------------------------------------------------------------------------
+
+_trait_change_event_tracer = None
+def set_trait_change_event_tracer( tracer ):
+    """ Set a global trait change event tracer.
+
+    The global tracer is called whenever a trait change event is dispatched.
+    The tracer should be a callable taking 5 arguments:
+    ::
+      tracer(obj, trait_name, old, new, handler)
+
+    `obj` is the source object, on which trait `trait_name` was changed from
+    value `old` to value `new`. `handler` is the function or method that will
+    be notified of the change.
+
+    Note that for static trait change listeners, `handler` is not a method, but
+    rather the function before class creation, since this is the way Traits
+    works at the moment.
+    """
+    global _trait_change_event_tracer
+    _trait_change_event_tracer = tracer
+
+def clear_trait_change_event_tracer():
+    """ Clear the global trait change event tracer. """
+    global _trait_change_event_tracer
+    _trait_change_event_tracer = None
+
+def trace_change_event( obj, trait_name, old, new, handler ):
+    """ Call the global trait change event tracer. """
+    global _trait_change_event_tracer
+    _trait_change_event_tracer( obj, trait_name, old, new, handler )
+
+#-------------------------------------------------------------------------------
 #  'AbstractStaticChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
@@ -280,6 +314,10 @@ class AbstractStaticChangeNotifyWrapper(object):
         """ Dispatch to the appropriate handler method. """
 
         if old is not Uninitialized:
+            # Send a description of the change event to the event tracer.
+            if _trait_change_event_tracer is not None:
+                trace_change_event(object, trait_name, old, new, self.handler)
+
             try:
                 # Extract the arguments needed from the handler.
                 args = self.argument_transform( object, trait_name, old, new )
@@ -352,9 +390,8 @@ class TraitChangeNotifyWrapper(object):
         self.init( handler, owner, target )
 
     def init ( self, handler, owner, target=None ):
-        # If target is not None and handler is a function
-        # then the handler will be removed when target
-        # is deleted.
+        # If target is not None and handler is a function then the handler
+        # will be removed when target is deleted.
         if type( handler ) is MethodType:
             func   = handler.im_func
             object = handler.im_self
@@ -376,8 +413,7 @@ class TraitChangeNotifyWrapper(object):
                 return arg_count
 
         elif target is not None:
-            # Set up so the handler will be removed when the target
-            # is deleted
+            # Set up so the handler will be removed when the target is deleted.
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
 
@@ -406,7 +442,7 @@ class TraitChangeNotifyWrapper(object):
 
         # `notify_listener` is either
         # `_notify_method_listener` or `_notify_function_listener`
-        self.notify_listener( object, trait_name, old, new)
+        self.notify_listener( object, trait_name, old, new )
 
     def dispatch ( self, handler, *args ):
         """ Dispatch the event to the listener.
@@ -439,35 +475,37 @@ class TraitChangeNotifyWrapper(object):
     def dispose ( self ):
         self.object = None
 
-    def _notify_method_listener(self, object, trait_name, old, new):
-        """ Dispatch a trait change event to a method listener. """
+    def _dispatch_change_event(self, object, trait_name, old, new, handler):
+        """ Prepare and dispatch a trait change event to a listener. """
 
         # Extract the arguments needed from the handler.
         args = self.argument_transform( object, trait_name, old, new )
+
+        # Send a description of the event to the change event tracer.
+        if _trait_change_event_tracer is not None:
+            trace_change_event( object, trait_name, old, new, handler )
+
+        # Dispatch the event to the listener.
+        try:
+            self.dispatch( handler, *args )
+        except Exception:
+            handle_exception( object, trait_name, old, new )
+
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
 
         obj_weak_ref = self.object
         if (obj_weak_ref is not None) and (old is not Uninitialized):
             # Dynamically resolve the listener by name.
             listener = getattr( obj_weak_ref(), self.name )
-
-            # Dispatch the event.
-            try:
-                self.dispatch( listener, *args )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+            self._dispatch_change_event(object, trait_name, old, new, listener)
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
 
-        # Extract the arguments needed from the handler.
-        args = self.argument_transform( object, trait_name, old, new )
-
         if old is not Uninitialized:
-            # Dispatch the event.
-            try:
-                self.dispatch( self.handler, *args )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+            self._dispatch_change_event( object, trait_name, old, new,
+                                         self.handler )
 
 #-------------------------------------------------------------------------------
 #  'ExtendedTraitChangeNotifyWrapper' class:
@@ -483,33 +521,31 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     add/remove listeners to `a:b` when `a` changes.
     """
 
-    def _notify_method_listener(self, object, trait_name, old, new):
-        """ Dispatch a trait change event to a method listener. """
+    def _dispatch_change_event(self, object, trait_name, old, new, handler):
+        """ Prepare and dispatch a trait change event to a listener. """
 
         # Extract the arguments needed from the handler.
         args = self.argument_transform( object, trait_name, old, new )
+
+        # Dispatch the event to the listener.
+        try:
+            self.dispatch( handler, *args )
+        except Exception:
+            handle_exception( object, trait_name, old, new )
+
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
 
         obj_weak_ref = self.object
         if obj_weak_ref is not None:
             # Dynamically resolve the listener by name.
             listener = getattr( obj_weak_ref(), self.name )
-
-            # Dispatch the event.
-            try:
-                self.dispatch( listener, *args )
-            except Exception:
-                handle_exception( object, trait_name, old, new )
+            self._dispatch_change_event(object, trait_name, old, new, listener)
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
 
-        # Extract the arguments needed from the handler.
-        args = self.argument_transform( object, trait_name, old, new )
-
-        try:
-            self.dispatch( self.handler, *args )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
+        self._dispatch_change_event(object, trait_name, old, new, self.handler)
 
 #-------------------------------------------------------------------------------
 #  'FastUITraitChangeNotifyWrapper' class:
