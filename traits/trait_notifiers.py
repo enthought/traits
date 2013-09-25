@@ -254,12 +254,20 @@ handle_exception       = notification_exception_handler._handle_exception
 #  Traits global notification event tracer:
 #-------------------------------------------------------------------------------
 
-_trait_change_event_tracer = None
-def set_trait_change_event_tracer( tracer ):
-    """ Set a global trait change event tracer.
+_pre_change_event_tracer = None
+_post_change_event_tracer = None
 
-    The global tracer is called whenever a trait change event is dispatched.
-    The tracer should be a callable taking 5 arguments:
+def set_change_event_tracers( pre_tracer=None, post_tracer=None ):
+    """ Set the global trait change event tracers.
+
+    The global tracers are called whenever a trait change event is dispatched.
+    There are two tracers: `pre_tracer` is called before the notification is
+    sent; `post_tracer` is called after the notification is sent, even if the
+    notification failed with an exception (in which case the `post_tracer` is
+    called with a reference to the exception, then the exception is sent to
+    the `notification_exception_handler`).
+
+    The tracers should be a callable taking 5 arguments:
     ::
       tracer(obj, trait_name, old, new, handler)
 
@@ -267,22 +275,27 @@ def set_trait_change_event_tracer( tracer ):
     value `old` to value `new`. `handler` is the function or method that will
     be notified of the change.
 
+    The post-notification tracer also has a keyword argument, `exception`,
+    that is `None` if no exception has been raised, and the a reference to the
+    raise exception otherwise.
+    ::
+      post_tracer(obj, trait_name, old, new, handler, exception=None)
+
     Note that for static trait change listeners, `handler` is not a method, but
     rather the function before class creation, since this is the way Traits
     works at the moment.
     """
-    global _trait_change_event_tracer
-    _trait_change_event_tracer = tracer
+    global _pre_change_event_tracer
+    global _post_change_event_tracer
+    _pre_change_event_tracer = pre_tracer
+    _post_change_event_tracer = post_tracer
 
-def clear_trait_change_event_tracer():
+def clear_change_event_tracers():
     """ Clear the global trait change event tracer. """
-    global _trait_change_event_tracer
-    _trait_change_event_tracer = None
-
-def trace_change_event( obj, trait_name, old, new, handler ):
-    """ Call the global trait change event tracer. """
-    global _trait_change_event_tracer
-    _trait_change_event_tracer( obj, trait_name, old, new, handler )
+    global _pre_change_event_tracer
+    global _post_change_event_tracer
+    _pre_change_event_tracer = None
+    _post_change_event_tracer = None
 
 #-------------------------------------------------------------------------------
 #  'AbstractStaticChangeNotifyWrapper' class:
@@ -314,16 +327,28 @@ class AbstractStaticChangeNotifyWrapper(object):
         """ Dispatch to the appropriate handler method. """
 
         if old is not Uninitialized:
+            # Extract the arguments needed from the handler.
+            args = self.argument_transform( object, trait_name, old, new )
+
             # Send a description of the change event to the event tracer.
-            if _trait_change_event_tracer is not None:
-                trace_change_event(object, trait_name, old, new, self.handler)
+            if _pre_change_event_tracer is not None:
+                _pre_change_event_tracer( object, trait_name, old, new,
+                                          self.handler )
 
             try:
-                # Extract the arguments needed from the handler.
-                args = self.argument_transform( object, trait_name, old, new )
                 # Call the handler.
                 self.handler( *args )
-            except Exception:
+            except Exception as e:
+                exception = e
+            else:
+                exception = None
+            finally:
+                if _post_change_event_tracer is not None:
+                    _post_change_event_tracer( object, trait_name, old, new,
+                                               self.handler,
+                                               exception=exception )
+
+            if exception is not None:
                 handle_exception( object, trait_name, old, new )
 
     def equals ( self, handler ):
@@ -482,13 +507,22 @@ class TraitChangeNotifyWrapper(object):
         args = self.argument_transform( object, trait_name, old, new )
 
         # Send a description of the event to the change event tracer.
-        if _trait_change_event_tracer is not None:
-            trace_change_event( object, trait_name, old, new, handler )
+        if _pre_change_event_tracer is not None:
+            _pre_change_event_tracer( object, trait_name, old, new, handler )
 
         # Dispatch the event to the listener.
         try:
             self.dispatch( handler, *args )
-        except Exception:
+        except Exception as e:
+            exception = e
+        else:
+            exception = None
+        finally:
+            if _post_change_event_tracer is not None:
+                _post_change_event_tracer( object, trait_name, old, new,
+                                           handler, exception=exception )
+
+        if exception is not None:
             handle_exception( object, trait_name, old, new )
 
     def _notify_method_listener(self, object, trait_name, old, new):
