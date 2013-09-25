@@ -41,7 +41,7 @@ class _AssertTraitChangesContext(object):
         The HasTraits class instance who's class trait will change.
 
     xname : str
-        The extended trait name of trait changes to listen too.
+        The extended trait name of trait changes to listen to.
 
     count : int, optional
         The expected number of times the event should be fired. When None
@@ -69,7 +69,7 @@ class _AssertTraitChangesContext(object):
             The HasTraits class instance who's class trait will change.
 
         xname : str
-            The extended trait name of trait changes to listen too.
+            The extended trait name of trait changes to listen to.
 
         count : int, optional
             The expected number of times the event should be fired. When None
@@ -211,7 +211,7 @@ class UnittestTools(object):
         - All the fired events by accessing the ``events`` attribute of
           the return object.
 
-        Example::
+        **Example**::
 
             class MyClass(HasTraits):
                 number = Float(2.0)
@@ -226,16 +226,18 @@ class UnittestTools(object):
         obj : HasTraits
             The HasTraits class instance whose class trait will change.
 
-        xname : str
-            The extended trait name of trait changes to listen too.
+        trait : str
+            The extended trait name of trait changes to listen to.
 
-        callableObj : callable
-            A callable object that will trigger the trait change.
-
-        count : int
+        count : int or None, optional
             The expected number of times the event should be fired. When None
             (default value) there is no check for the number of times the
             change event was fired.
+
+        callableObj : callable, optional
+            A callable object that will trigger the expected trait change.
+            When None (default value) a trigger is expected to be called
+            under the context manger returned by this method.
 
         *args :
             List of positional arguments for ``callableObj``
@@ -244,12 +246,21 @@ class UnittestTools(object):
             Dict of keyword value pairs to be passed to the ``callableObj``
 
 
+        Returns
+        -------
+        context : context manager or None
+            If ``callableObj`` is None, an assertion context manager is returned,
+            inside of which a trait-change trigger can be invoked. Otherwise,
+            the context is used internally with ``callableObj`` as the trigger,
+            in which case None is returned.
+
+
         Notes
         -----
-        - Checking if the provided xname corresponds to valid traits in
+        - Checking if the provided ``trait`` corresponds to valid traits in
           the class is not implemented yet.
         - Using the functional version of the assert method requires the
-          `count` argument to be given even it is None.
+          ``count`` argument to be given even if it is None.
 
         """
         context = _AssertTraitChangesContext(obj, trait, count, self)
@@ -259,11 +270,40 @@ class UnittestTools(object):
             callableObj(*args, **kwargs)
 
     def assertTraitDoesNotChange(self, obj, trait, callableObj=None,
-                           *args, **kwargs):
+                                 *args, **kwargs):
         """ Assert an object trait does not change.
 
         Assert that the class trait does not change during
         execution of the provided function.
+
+        Parameters
+        ----------
+        obj : HasTraits
+            The HasTraits class instance whose class trait will change.
+
+        trait : str
+            The extended trait name of trait changes to listen to.
+
+        callableObj : callable, optional
+            A callable object that should not trigger a change in the
+            passed trait.  When None (default value) a trigger is expected
+            to be called under the context manger returned by this method.
+
+        *args :
+            List of positional arguments for ``callableObj``
+
+        **kwargs :
+            Dict of keyword value pairs to be passed to the ``callableObj``
+
+
+        Returns
+        -------
+        context : context manager or None
+            If ``callableObj`` is None, an assertion context manager is returned,
+            inside of which a trait-change trigger can be invoked. Otherwise,
+            the context is used internally with ``callableObj`` as the trigger,
+            in which case None is returned.
+
 
         """
         msg = 'A change event was fired for: {0}'.format(trait)
@@ -285,8 +325,10 @@ class UnittestTools(object):
         ----------
         objects : list of HasTraits
             The HasTraits class instances whose traits will change.
+
         traits_modified : list of str
             The extended trait names of trait expected to change.
+
         traits_not_modified : list of str
             The extended trait names of traits not expected to change.
 
@@ -309,11 +351,34 @@ class UnittestTools(object):
 
         The trait changes are permitted to occur asynchronously.
 
-        Example usage:
+        **Example usage**::
 
-        with self.assertTraitChangesAsync(my_object, 'SomeEvent', count=4):
-            <do stuff that should cause my_object.SomeEvent to be
-             fired at least 4 times within the next 5 seconds>
+            with self.assertTraitChangesAsync(my_object, 'SomeEvent', count=4):
+                <do stuff that should cause my_object.SomeEvent to be
+                fired at least 4 times within the next 5 seconds>
+
+
+        Parameters
+        ----------
+        obj : HasTraits
+            The HasTraits class instance whose class trait will change.
+
+        trait : str
+            The extended trait name of trait changes to listen to.
+
+        count : int, optional
+            The expected number of times the event should be fired.
+
+        timeout : float or None, optional
+            The amount of time in seconds to wait for the specified number
+            of changes. None can be used to indicate no timeout.
+
+
+        Raises
+        ------
+        RuntimeError if the specified number of trait changes do not
+        occur within the timeout period.
+
 
         """
         collector = _TraitsChangeCollector(obj=obj, trait=trait)
@@ -350,18 +415,29 @@ class UnittestTools(object):
     def assertEventuallyTrue(self, obj, trait, condition, timeout=5.0):
         """ Assert that the given condition is eventually true.
 
-        Fail if the condition is not satisfied within the given timeout.
+        Parameters
+        ----------
+        obj : HasTraits
+            The HasTraits class instance who's traits will change.
 
-        `condition` takes `obj` as an argument, and should return a Boolean
-        indicating whether the condition is satisfied or not.
+        trait : str
+            The extended trait name of trait changes to listen to.
 
-        `timeout` gives the maximum time (in seconds) to wait for the
-        condition to become true.  Default is 5.0 seconds.  A value of
-        `None` can be used to indicate no timeout.
+        condition : callable
+            A function that will be called when the specified trait
+            changes.  This should accept ``obj`` and should return a
+            Boolean indicating whether the condition is satisfied or not.
 
-        (obj, trait) give an object and trait to listen to for
-        indication of a possible change: whenever the trait changes,
-        the condition is re-evaluated.
+        timeout : float or None, optional
+            The amount of time in seconds to wait for the condition to
+            become true.  None can be used to indicate no timeout.
+
+
+        Raises
+        ------
+        RuntimeError if the condition is not satisfied within the timeout
+        period.
+
 
         """
         try:
