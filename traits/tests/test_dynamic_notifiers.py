@@ -121,7 +121,6 @@ class TestDynamicNotifiers(unittest.TestCase):
     #### 'TestCase' protocol ##################################################
 
     def setUp(self):
-        self._old_handle_exception = trait_notifiers.handle_exception
         self.exceptions = []
         trait_notifiers.push_exception_handler(self._handle_exception)
 
