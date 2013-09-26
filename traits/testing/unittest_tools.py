@@ -373,13 +373,6 @@ class UnittestTools(object):
             The amount of time in seconds to wait for the specified number
             of changes. None can be used to indicate no timeout.
 
-
-        Raises
-        ------
-        RuntimeError if the specified number of trait changes do not
-        occur within the timeout period.
-
-
         """
         collector = _TraitsChangeCollector(obj=obj, trait=trait)
 
@@ -431,13 +424,6 @@ class UnittestTools(object):
         timeout : float or None, optional
             The amount of time in seconds to wait for the condition to
             become true.  None can be used to indicate no timeout.
-
-
-        Raises
-        ------
-        RuntimeError if the condition is not satisfied within the timeout
-        period.
-
 
         """
         try:
