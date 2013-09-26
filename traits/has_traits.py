@@ -2575,8 +2575,10 @@ class HasTraits ( CHasTraits ):
             value       dispatch
             =========== =======================================================
             ``same``    Run notifications on the same thread as this one.
-            ``ui``      Run notifications on the UI thread, and process
-                        them immediately.
+            ``ui``      Run notifications on the UI thread. If the current
+                        thread is the UI thread, the notifications are executed
+                        immediately; otherwise, they are placed on the UI
+                        event queue.
             ``fast_ui`` Alias for ``ui``.
             ``new``     Run notifications in a new thread.
             =========== =======================================================
