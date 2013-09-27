@@ -1862,9 +1862,6 @@ getattr_trait ( trait_object      * trait,
             Py_DECREF( result );
         }
 
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
-
         return NULL;
     }
 
@@ -1900,9 +1897,6 @@ getattr_trait ( trait_object      * trait,
         }
         Py_DECREF( result );
     }
-
-    if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
 
     Py_DECREF( name );
     return NULL;
@@ -2177,9 +2171,6 @@ setattr_python ( trait_object      * traito,
             if ( PyDict_DelItem( dict, name ) >= 0 )
                 return 0;
 
-            if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                unknown_attribute_error( obj, name );
-
             return -1;
         }
 #ifdef Py_USING_UNICODE
@@ -2191,7 +2182,7 @@ setattr_python ( trait_object      * traito,
             return invalid_attribute_error();
 
         rc = PyDict_DelItem( dict, name );
-        if ( (rc < 0) && PyErr_ExceptionMatches( PyExc_KeyError ) )
+        if (rc < 0)
             unknown_attribute_error( obj, name );
 
         Py_DECREF( name );
