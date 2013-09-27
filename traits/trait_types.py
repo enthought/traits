@@ -2457,7 +2457,7 @@ class Dict ( TraitType ):
         """ Validates that the value is a valid dictionary.
         """
         if isinstance( value, dict ):
-            if value is None:
+            if object is None:
                 return value
             return TraitDictObject( self, object, name, value )
 
