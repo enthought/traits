@@ -111,6 +111,24 @@ class DictTestCase(unittest.TestCase):
 
         return
 
+    def test_validate(self):
+        """ Check the validation method.
+
+        """
+        foo = Dict()
+
+        # invalid value
+        with self.assertRaises(TraitError):
+            foo.validate(object=HasTraits(), name='bar', value=None)
+
+        # valid value
+        result = foo.validate(object=HasTraits(), name='bar', value={})
+        self.assertTrue(isinstance(result, TraitDictObject))
+
+        # object = None (check for issue #71)
+        result = foo.validate(object=None, name='bar', value={})
+        self.assertEqual(result, {})
+
 
 if __name__ == '__main__':
     unittest.main()
