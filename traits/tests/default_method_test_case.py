@@ -59,7 +59,7 @@ class DefaultMethodTestCase(unittest.TestCase):
         class FooKeyError(Foo):
 
             def _bar_default(self):
-                raise KeyError
+                raise KeyError()
 
         # Check that KeyError is propagated (issue #70).
         foo = FooKeyError()
