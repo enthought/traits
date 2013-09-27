@@ -53,8 +53,7 @@ class DefaultMethodTestCase(unittest.TestCase):
                 1 / 0
 
         foo = FooException()
-        with self.assertRaises(ZeroDivisionError):
-            foo.bar
+        self.assertRaises(ZeroDivisionError, lambda: foo.bar)
 
         class FooKeyError(Foo):
 
@@ -63,5 +62,4 @@ class DefaultMethodTestCase(unittest.TestCase):
 
         # Check that KeyError is propagated (issue #70).
         foo = FooKeyError()
-        with self.assertRaises(KeyError):
-            foo.bar
+        self.assertRaises(KeyError, lambda: foo.bar)
