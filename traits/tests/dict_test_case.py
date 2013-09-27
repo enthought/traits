@@ -64,7 +64,7 @@ class DictTestCase(unittest.TestCase):
     def test_modified_event(self):
 
         class Foo(HasTraits):
-            name     = Str
+            name = Str
             modified = Event
             
             @on_trait_change('name')
@@ -73,7 +73,7 @@ class DictTestCase(unittest.TestCase):
                 return
         
         class Bar(HasTraits):
-            foos     = Dict(Str, Foo)
+            foos = Dict(Str, Foo)
             modified = Event
             
             @on_trait_change('foos_items,foos.modified')
