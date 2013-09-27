@@ -28,7 +28,7 @@ class Foo(HasTraits):
         return 4
 
 class DefaultMethodTestCase(unittest.TestCase):
-    """ Test basic usage of the default trait value behaviour.
+    """ Test basic usage of the default method.
 
     """
 
