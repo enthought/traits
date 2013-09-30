@@ -27,7 +27,7 @@ class Foo(HasTraits):
     def _bar_default(self):
         return 4
 
-class DefaultMethodTestCase(unittest.TestCase):
+class TestTraitDefaultInitializer(unittest.TestCase):
     """ Test basic usage of the default method.
 
     """
