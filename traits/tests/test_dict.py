@@ -60,7 +60,7 @@ def initialize_listener(listener):
 
 
 
-class DictTestCase(unittest.TestCase):
+class TestDict(unittest.TestCase):
     """ Test cases for dictionary (Dict) traits. """
 
     def test_modified_event(self):
