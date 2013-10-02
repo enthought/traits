@@ -13,7 +13,6 @@
 #------------------------------------------------------------------------------
 """ Test cases for dictionary (Dict) traits. """
 
-
 from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
@@ -39,7 +38,7 @@ def create_listener():
         return
 
     listener.initialize = lambda : initialize_listener(listener)
-    
+
     return initialize_listener(listener)
 
 def initialize_listener(listener):
@@ -55,9 +54,8 @@ def initialize_listener(listener):
     listener.old        = None
     listener.new        = None
     listener.called     = 0
-    
-    return listener # For convenience
 
+    return listener # For convenience
 
 
 class TestDict(unittest.TestCase):
@@ -68,16 +66,16 @@ class TestDict(unittest.TestCase):
         class Foo(HasTraits):
             name = Str
             modified = Event
-            
+
             @on_trait_change('name')
             def _fire_modified_event(self):
                 self.modified = True
                 return
-        
+
         class Bar(HasTraits):
             foos = Dict(Str, Foo)
             modified = Event
-            
+
             @on_trait_change('foos_items,foos.modified')
             def _fire_modified_event(self, obj, trait_name, old, new):
                 self.modified = True
@@ -91,7 +89,7 @@ class TestDict(unittest.TestCase):
         bar.foos = {'dino' : Foo(name='dino')}
         self.assertEqual(1, listener.called)
         self.assertEqual('modified', listener.trait_name)
-        
+
         # Add an item to an existing dictionary.
         listener.initialize()
         fred = Foo(name='fred')
@@ -125,7 +123,7 @@ class TestDict(unittest.TestCase):
 
         # valid value
         result = foo.validate(object=HasTraits(), name='bar', value={})
-        self.assertTrue(isinstance(result, TraitDictObject))
+        self.assertIsInstance(result, TraitDictObject)
 
         # object = None (check for issue #71)
         result = foo.validate(object=None, name='bar', value={})
@@ -134,5 +132,3 @@ class TestDict(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-#### EOF ######################################################################
