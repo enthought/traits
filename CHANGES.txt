@@ -8,3 +8,5 @@ Since 4.3.0:
   package.
 * Added utility function for importing symbols (name, classes, functions)
   by name: 'traits.util.api.import_symbol'.
+* Users can set a global tracer, which receives all traits change events:
+  `traits.trait_notifiers.set_change_event_tracers`
