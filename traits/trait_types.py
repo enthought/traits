@@ -2176,6 +2176,12 @@ class List ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid list.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if (isinstance( value, list ) and
            (self.minlen <= len( value ) <= self.maxlen)):
@@ -2306,6 +2312,12 @@ class Set ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid set.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if isinstance( value, set ):
             if object is None:
@@ -2455,6 +2467,12 @@ class Dict ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid dictionary.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if isinstance( value, dict ):
             if object is None:
