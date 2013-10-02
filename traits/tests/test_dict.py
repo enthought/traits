@@ -125,7 +125,7 @@ class TestDict(unittest.TestCase):
         result = foo.validate(object=HasTraits(), name='bar', value={})
         self.assertIsInstance(result, TraitDictObject)
 
-        # object = None (check for issue #71)
+        # object is None (check for issue #71)
         result = foo.validate(object=None, name='bar', value={})
         self.assertEqual(result, {})
 
