@@ -2,6 +2,12 @@ language: python
 python:
   - 2.7
   - 2.6
+virtualenv:
+  # This allows installing PyQt using apt-get and being able to import it.
+  system_site_packages: true
+before_install:
+  # On Python 2.7 we install PyQt4 and run the UI tests.
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
   - pip install nose
   - pip install unittest2
