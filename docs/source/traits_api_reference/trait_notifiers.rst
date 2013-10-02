@@ -23,10 +23,6 @@ Classes
 
 .. autoclass:: FastUITraitChangeNotifyWrapper
 
-.. autoclass:: UITraitChangeNotifyWrapper
-
-.. autoclass:: DeferredTraitNotification
-
 .. autoclass:: NewTraitChangeNotifyWrapper
 
 Functions
