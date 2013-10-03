@@ -2166,13 +2166,16 @@ setattr_python ( trait_object      * traito,
 
     if ( dict != NULL ) {
         if ( PyString_Check( name ) ) {
-            if ( PyDict_DelItem( dict, name ) >= 0 )
+            rc = PyDict_DelItem( dict, name )
+            if ( rc >= 0 ) {
                 return 0;
-
-            if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
+            }
+            else if ( PyErr_ExceptionMatches( PyExc_KeyError ) ) {
                 unknown_attribute_error( obj, name );
-
-            return -1;
+            }
+            else {
+                return -1;
+            }
         }
 #ifdef Py_USING_UNICODE
         if ( PyUnicode_Check( name ) ) {
