@@ -10,6 +10,8 @@ New features
   package. (fc1d74a)
  * Added utility function for importing symbols (name, classes, functions)
   by name: 'traits.util.api.import_symbol'.
+ * Users can set a global tracer, which receives all traits change events:
+  `traits.trait_notifiers.set_change_event_tracers`
 
 Enhancements
 
@@ -29,3 +31,5 @@ Fixes
  * Fix race condition in TraitChangeNotifyWrapper.listener_deleted (6eea8d2)
  * Fix leaking notifiers. (9bcbd62)
  * Fix failing special instance trait events. (87d5a8f)
+
+>>>>>>> master
