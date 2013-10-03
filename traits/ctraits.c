@@ -2170,10 +2170,9 @@ setattr_python ( trait_object      * traito,
             if ( rc >= 0 ) {
                 return 0;
             }
-            else if ( PyErr_ExceptionMatches( PyExc_KeyError ) ) {
-                unknown_attribute_error( obj, name );
-            }
             else {
+                if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
+                    unknown_attribute_error( obj, name );
                 return -1;
             }
         }
