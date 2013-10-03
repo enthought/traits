@@ -2166,7 +2166,7 @@ setattr_python ( trait_object      * traito,
 
     if ( dict != NULL ) {
         if ( PyString_Check( name ) ) {
-            rc = PyDict_DelItem( dict, name )
+            rc = PyDict_DelItem( dict, name );
             if ( rc >= 0 ) {
                 return 0;
             }
