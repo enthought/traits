@@ -2143,8 +2143,6 @@ setattr_python ( trait_object      * traito,
         if ( PyString_Check( name ) ) {
             if ( PyDict_SetItem( dict, name, value ) >= 0 )
                 return 0;
-                if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                        PyErr_SetObject( PyExc_AttributeError, name );
             return -1;
         }
 #ifdef Py_USING_UNICODE
@@ -2156,7 +2154,7 @@ setattr_python ( trait_object      * traito,
             return invalid_attribute_error();
 
         rc = PyDict_SetItem( dict, name, value );
-        if ( (rc < 0) && PyErr_ExceptionMatches( PyExc_KeyError ) )
+        if (rc < 0)
              PyErr_SetObject( PyExc_AttributeError, name );
         Py_DECREF( name );
 
@@ -2590,8 +2588,6 @@ notify:
     }
 
     if ( PyDict_SetItem( dict, name, new_value ) < 0 ) {
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            PyErr_SetObject( PyExc_AttributeError, name );
         Py_XDECREF( old_value );
         Py_DECREF( name );
         Py_DECREF( value );
