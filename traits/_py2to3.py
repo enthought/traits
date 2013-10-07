@@ -53,3 +53,40 @@ else:
     ClassTypes    = ( type, )
 
 
+import contextlib
+if sys.version_info[0] < 3:
+    def nested_context_mgrs(*args):
+        return contextlib.nested(*args)
+else:
+    class nested_context_mgrs(contextlib.ExitStack):
+        """ Emulation of python 2's :py:class:`contextlib.nested`.
+        
+        It has gone from python 3 due to it's deprecation status
+        in python 2.
+        
+        Note that :py:class:`contextlib.nested` was deprecated for
+        a reason: It has issues with context managers that fail
+        during init. The same caveats also apply here.
+        So do not use this unless really necessary!
+        """
+        def __init__(self,*args):
+            super(nested_context_mgrs,self).__init__()
+            self._ctxt_mgrs = args
+        
+        def __enter__(self):
+            ret = []
+            try:
+                for mgr in self._ctxt_mgrs:
+                    ret.append(self.enter_context(mgr))
+            except:
+                self.close()
+                raise
+            return tuple(ret)
+
+if sys.version_info[0] < 3:
+    def assertCountEqual(self,itemsA,itemsB):
+        self.assertItemsEqual(itemsA,itemsB)
+else:
+    def assertCountEqual(self,itemsA,itemsB):
+        self.assertCountEqual(itemsA,itemsB)
+    

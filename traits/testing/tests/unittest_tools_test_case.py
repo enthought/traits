@@ -12,6 +12,8 @@ import threading
 import time
 import sys
 
+from traits import _py2to3
+
 from traits.testing.unittest_tools import unittest
 from traits.api import (Bool, Event, Float, HasTraits, Int, List,
                         on_trait_change)
@@ -269,16 +271,11 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         for t in threads:
             t.join()
 
-        if sys.version_info[0] < 3:
-            self.assertItemsEqual(
-                event_collector.events,
-                range(events_per_thread) * thread_count,
-            )
-        else:
-            self.assertCountEqual(
-                event_collector.events,
-                range(events_per_thread) * thread_count,
-            )
+        _py2to3.assertCountEqual(
+            self,
+            event_collector.events,
+            range(events_per_thread) * thread_count,
+        )
 
     def test_assert_trait_changes_async_failure(self):
         # Exercise assertTraitChangesAsync.
