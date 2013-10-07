@@ -46,15 +46,17 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(test_object, 'number') as result:
             test_object.flag = True
             test_object.number = 2.0
-        self.assertEqual(result.events, [])
+
+        msg = 'The assertion result is not None: {0}'.format(result.event)
+        self.assertIsNone(result.event, msg=msg)
 
         # Change event should BE detected
         with self.assertTraitChanges(test_object, 'number') as result:
             test_object.flag = False
             test_object.number = 5.0
 
-        expected = [(test_object, 'number', 2.0, 5.0)]
-        self.assertSequenceEqual(result.events, expected)
+        expected = (test_object, 'number', 2.0, 5.0)
+        self.assertSequenceEqual(expected, result.event)
 
         # Change event should BE detected exactly 2 times
         with self.assertTraitChanges(test_object, 'number', count=2) as result:
@@ -64,15 +66,16 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         expected = [(test_object, 'number', 5.0, 4.0),
                     (test_object, 'number', 4.0, 3.0)]
-        self.assertSequenceEqual(result.events, expected)
+        self.assertSequenceEqual(expected, result.events)
+        self.assertSequenceEqual(expected[-1], result.event)
 
         # Change event should BE detected
         with self.assertTraitChanges(test_object, 'number') as result:
             test_object.flag = True
             test_object.add_to_number(10.0)
 
-        expected = [(test_object, 'number', 3.0, 13.0)]
-        self.assertSequenceEqual(result.events, expected)
+        expected = (test_object, 'number', 3.0, 13.0)
+        self.assertSequenceEqual(expected, result.event)
 
         # Change event should BE detected exactly 3 times
         with self.assertTraitChanges(test_object, 'number', count=3) as result:
@@ -85,6 +88,40 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                     (test_object, 'number', 23.0, 33.0),
                     (test_object, 'number', 33.0, 43.0)]
         self.assertSequenceEqual(expected, result.events)
+        self.assertSequenceEqual(expected[-1], result.event)
+
+    def test_assert_multi_changes(self):
+        test_object = self.test_object
+
+        # Change event should NOT BE detected
+        with self.assertMultiTraitChanges([test_object], [],
+                ['flag', 'number', 'list_of_numbers[]']) as results:
+            test_object.number = 2.0
+
+        events = filter(bool, (result.event for result in results))
+        msg = 'The assertion result is not None: {0}'.format(", ".join(events))
+        self.assertFalse(events, msg=msg)
+
+        # Change event should BE detected
+        with self.assertMultiTraitChanges(
+                [test_object], ['number', 'list_of_numbers[]'],
+                ['flag']) as results:
+            test_object.number = 5.0
+
+        events = filter(bool, (result.event for result in results))
+        msg = 'The assertion result is None'
+        self.assertTrue(events, msg=msg)
+
+    def test_when_using_functions(self):
+        test_object = self.test_object
+
+        # Change event should BE detected
+        self.assertTraitChanges(test_object, 'number', 1,
+                                test_object.add_to_number, 13.0)
+
+        # Change event should NOT BE detected
+        self.assertTraitDoesNotChange(test_object, 'flag',
+                                      test_object.add_to_number, 13.0)
 
     def test_indirect_events(self):
         """ Check catching indirect change events.
@@ -97,8 +134,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             test_object.flag = True
             test_object.number = -3.0
 
-        expected = [(test_object, 'list_of_numbers_items', [], [-3.0])]
-        self.assertSequenceEqual(result.events, expected)
+        expected = (test_object, 'list_of_numbers_items', [], [-3.0])
+        self.assertSequenceEqual(expected, result.event)
 
     def test_exception_inside_context(self):
         """ Check that exception inside the context statement block are
