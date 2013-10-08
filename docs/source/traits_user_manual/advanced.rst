@@ -893,7 +893,7 @@ Using the terminology introduced in this section, we can say that the
 Traits defines two additional traits that accept values that *support* a
 given protocol (they provide it or can be adapted to it) instead:
 
-* The :class:`~.Supports` trait accepts value that support the specified
+* The :class:`~.Supports` trait accepts values that support the specified
   protocol. The value of the trait after assignment is the possibly adapted
   value (i.e., it is the original assigned value if that provides the protocol,
   or is an adapter otherwise).
