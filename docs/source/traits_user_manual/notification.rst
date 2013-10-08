@@ -631,13 +631,14 @@ As an example of an event, consider::
 
     point_2d = Tuple(0, 0)
 
+
     class Line2D(HasTraits):
         points = List(point_2d)
         line_color = RGBAColor('black')
         updated = Event
 
         def redraw(self):
-            pass # Not implemented for this example
+            pass  # Not implemented for this example
 
         def _points_changed(self):
             self.updated = True
