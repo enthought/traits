@@ -807,8 +807,7 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     # ... somewhere else at application startup
     register_factory(ndarray_to_image_abc, numpy.ndarray, ImageABC)
 
-
-    #### Try to adapt numpy arrays to images. The `adapt` function is
+    # Try to adapt numpy arrays to images. The `adapt` function is
     # introduced later in the docs, but you can probably guess what it does ;-)
 
     # This adaptation fails, as the array is 1D
