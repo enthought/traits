@@ -799,7 +799,7 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
 
 
     def ndarray_to_image_abc(adaptee):
-        """ An adapter factory from numpy arrays to the ImageABC protocol.
+        """ An adapter factory from numpy arrays to the ImageABC protocol."""
         if adaptee.ndim == 2:
             return NDArrayToImage(adaptee=adaptee)
         return None
