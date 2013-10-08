@@ -15,7 +15,7 @@ class Line2D(HasTraits):
     line_color = RGBColor('black')
     updated = Event
 
-    def redraw():
+    def redraw(self):
         pass # Not implemented for this example
 
     def _points_changed(self):
