@@ -873,7 +873,7 @@ has_traits_setattro ( has_traits_object * obj,
 
 PyObject *
 has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
-    
+
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
@@ -1862,9 +1862,6 @@ getattr_trait ( trait_object      * trait,
             Py_DECREF( result );
         }
 
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
-
         return NULL;
     }
 
@@ -1900,9 +1897,6 @@ getattr_trait ( trait_object      * trait,
         }
         Py_DECREF( result );
     }
-
-    if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
 
     Py_DECREF( name );
     return NULL;
@@ -2149,8 +2143,6 @@ setattr_python ( trait_object      * traito,
         if ( PyString_Check( name ) ) {
             if ( PyDict_SetItem( dict, name, value ) >= 0 )
                 return 0;
-                if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                        PyErr_SetObject( PyExc_AttributeError, name );
             return -1;
         }
 #ifdef Py_USING_UNICODE
@@ -2162,8 +2154,7 @@ setattr_python ( trait_object      * traito,
             return invalid_attribute_error();
 
         rc = PyDict_SetItem( dict, name, value );
-        if ( (rc < 0) && PyErr_ExceptionMatches( PyExc_KeyError ) )
-             PyErr_SetObject( PyExc_AttributeError, name );
+
         Py_DECREF( name );
 
         return rc;
@@ -2174,13 +2165,15 @@ setattr_python ( trait_object      * traito,
 
     if ( dict != NULL ) {
         if ( PyString_Check( name ) ) {
-            if ( PyDict_DelItem( dict, name ) >= 0 )
+            rc = PyDict_DelItem( dict, name );
+            if ( rc >= 0 ) {
                 return 0;
-
-            if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                unknown_attribute_error( obj, name );
-
-            return -1;
+            }
+            else {
+                if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
+                    unknown_attribute_error( obj, name );
+                return -1;
+            }
         }
 #ifdef Py_USING_UNICODE
         if ( PyUnicode_Check( name ) ) {
@@ -2596,8 +2589,6 @@ notify:
     }
 
     if ( PyDict_SetItem( dict, name, new_value ) < 0 ) {
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            PyErr_SetObject( PyExc_AttributeError, name );
         Py_XDECREF( old_value );
         Py_DECREF( name );
         Py_DECREF( value );
