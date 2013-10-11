@@ -873,7 +873,7 @@ has_traits_setattro ( has_traits_object * obj,
 
 PyObject *
 has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
-    
+
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
@@ -2154,8 +2154,7 @@ setattr_python ( trait_object      * traito,
             return invalid_attribute_error();
 
         rc = PyDict_SetItem( dict, name, value );
-        if (rc < 0)
-             PyErr_SetObject( PyExc_AttributeError, name );
+
         Py_DECREF( name );
 
         return rc;
