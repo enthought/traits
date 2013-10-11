@@ -31,5 +31,5 @@ Fixes
  * Fix race condition in TraitChangeNotifyWrapper.listener_deleted (6eea8d2)
  * Fix leaking notifiers. (9bcbd62)
  * Fix failing special instance trait events. (87d5a8f)
-
->>>>>>> master
+ * Fix hiding KeyError exception inside trait default initialize method.
+   (5e7e3bc)
