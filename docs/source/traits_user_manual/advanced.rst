@@ -799,7 +799,7 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
 
 
     def ndarray_to_image_abc(adaptee):
-        """ An adapter factory from numpy arrays to the ImageABC protocol.
+        """ An adapter factory from numpy arrays to the ImageABC protocol."""
         if adaptee.ndim == 2:
             return NDArrayToImage(adaptee=adaptee)
         return None
@@ -807,8 +807,7 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     # ... somewhere else at application startup
     register_factory(ndarray_to_image_abc, numpy.ndarray, ImageABC)
 
-
-    #### Try to adapt numpy arrays to images. The `adapt` function is
+    # Try to adapt numpy arrays to images. The `adapt` function is
     # introduced later in the docs, but you can probably guess what it does ;-)
 
     # This adaptation fails, as the array is 1D
@@ -894,7 +893,7 @@ Using the terminology introduced in this section, we can say that the
 Traits defines two additional traits that accept values that *support* a
 given protocol (they provide it or can be adapted to it) instead:
 
-* The :class:`~.Supports` trait accepts value that support the specified
+* The :class:`~.Supports` trait accepts values that support the specified
   protocol. The value of the trait after assignment is the possibly adapted
   value (i.e., it is the original assigned value if that provides the protocol,
   or is an adapter otherwise).
