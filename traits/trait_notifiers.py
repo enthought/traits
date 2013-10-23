@@ -530,9 +530,15 @@ class TraitChangeNotifyWrapper(object):
 
         obj_weak_ref = self.object
         if (obj_weak_ref is not None) and (old is not Uninitialized):
-            # Dynamically resolve the listener by name.
-            listener = getattr( obj_weak_ref(), self.name )
-            self._dispatch_change_event(object, trait_name, old, new, listener)
+            # We make sure to hold a reference to the object before invoking
+            # `getattr` so that the listener does not disappear in a
+            # multi-threaded case.
+            obj = obj_weak_ref()
+            if obj is not None:
+                # Dynamically resolve the listener by name.
+                listener = getattr( obj, self.name )
+                self._dispatch_change_event( object, trait_name, old, new,
+                                             listener )
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
@@ -572,9 +578,15 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
         obj_weak_ref = self.object
         if obj_weak_ref is not None:
-            # Dynamically resolve the listener by name.
-            listener = getattr( obj_weak_ref(), self.name )
-            self._dispatch_change_event(object, trait_name, old, new, listener)
+            # We make sure to hold a reference to the object before invoking
+            # `getattr` so that the listener does not disappear in a
+            # multi-threaded case.
+            obj = obj_weak_ref()
+            if obj is not None:
+                # Dynamically resolve the listener by name.
+                listener = getattr( obj_weak_ref(), self.name )
+                self._dispatch_change_event( object, trait_name, old, new,
+                                             listener )
 
     def _notify_function_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a function listener. """
