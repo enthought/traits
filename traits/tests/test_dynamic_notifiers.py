@@ -1,5 +1,5 @@
 """ Tests for the dynamic notifiers. """
-from traits.api import Float, HasTraits, List, on_trait_change
+from traits.api import Float, HasTraits, Instance, List, on_trait_change
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
@@ -205,6 +205,7 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         import gc
 
+        gc.collect()
         gc.collect()
         gc.collect()
         before_n_objs = len(gc.get_objects())
