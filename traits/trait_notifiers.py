@@ -514,16 +514,16 @@ class TraitChangeNotifyWrapper(object):
         try:
             self.dispatch( handler, *args )
         except Exception as e:
-            exception = e
-        else:
-            exception = None
-        finally:
             if _post_change_event_tracer is not None:
                 _post_change_event_tracer( object, trait_name, old, new,
-                                           handler, exception=exception )
-
-        if exception is not None:
+                                           handler, exception=e )
+            # This call needs to be made inside the `except` block in case
+            # the handler wants to re-raise the exception.
             handle_exception( object, trait_name, old, new )
+        else:
+            if _post_change_event_tracer is not None:
+                _post_change_event_tracer( object, trait_name, old, new,
+                                           handler, exception=None )
 
     def _notify_method_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a method listener. """
