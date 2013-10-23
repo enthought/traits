@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -650,7 +650,7 @@
                 <span class="k">if</span> <span class="n">pyc_time</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="c"># case where pyc file has been deleted.</span>
                     <span class="n">out_of_date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">pyc_time</span> <span class="o">&lt;=</span> <span class="n">py_time</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">pyc_time</span> <span class="o">&lt;</span> <span class="n">py_time</span><span class="p">:</span>
                     <span class="c"># module out of date</span>
                     <span class="n">out_of_date</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
 
@@ -707,7 +707,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
+      Last updated on Oct 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

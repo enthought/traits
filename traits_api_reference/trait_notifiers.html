@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -61,8 +61,7 @@
             
   <div class="section" id="module-traits.trait_notifiers">
 <span id="trait-notifiers-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_notifiers</span></tt> Module<a class="headerlink" href="#module-traits.trait_notifiers" title="Permalink to this headline">¶</a></h1>
-<p>Defines the classes needed to implement and support the Traits change
-notification mechanism.</p>
+<p>Classes that implement and support the Traits change notification mechanism</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -88,32 +87,47 @@ notification mechanism.</p>
 <dl class="class">
 <dt id="traits.trait_notifiers.TraitChangeNotifyWrapper">
 <em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">TraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dynamic change notify wrapper.</p>
+<p>This class is in charge to dispatch trait change events to dynamic
+listener, typically created using the <cite>on_trait_change</cite> method, or
+the decorator with the same name.</p>
+<dl class="method">
+<dt id="traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch">
+<tt class="descname">dispatch</tt><big>(</big><em>handler</em>, <em>*args</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#TraitChangeNotifyWrapper.dispatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatch the event to the listener.</p>
+<p>This method is normally the only one that needs to be overridden in
+a subclass to implement the subclass&#8217;s dispatch mechanism.</p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">
 <em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">ExtendedTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#ExtendedTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Change notify wrapper for &#8220;extended&#8221; trait change events..</p>
+<p>The &#8220;extended notifiers&#8221; are set up internally when using extended traits,
+to add/remove traits listeners when one of the intermediate traits changes.</p>
+<p>For example, in a listener for the extended trait <cite>a.b</cite>, we need to
+add/remove listeners to <cite>a:b</cite> when <cite>a</cite> changes.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.FastUITraitChangeNotifyWrapper">
 <em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">FastUITraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#FastUITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.FastUITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt id="traits.trait_notifiers.UITraitChangeNotifyWrapper">
-<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">UITraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#UITraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.UITraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt id="traits.trait_notifiers.DeferredTraitNotification">
-<em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">DeferredTraitNotification</tt><big>(</big><em>object</em>, <em>trait_name</em>, <em>old</em>, <em>new</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#DeferredTraitNotification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.DeferredTraitNotification" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dynamic change notify wrapper, dispatching on the UI thread.</p>
+<p>This class is in charge to dispatch trait change events to dynamic
+listener, typically created using the <cite>on_trait_change</cite> method and the
+<cite>dispatch</cite> parameter set to &#8216;ui&#8217; or &#8216;fast_ui&#8217;.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_notifiers.NewTraitChangeNotifyWrapper">
 <em class="property">class </em><tt class="descclassname">traits.trait_notifiers.</tt><tt class="descname">NewTraitChangeNotifyWrapper</tt><big>(</big><em>handler</em>, <em>owner</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_notifiers.html#NewTraitChangeNotifyWrapper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_notifiers.NewTraitChangeNotifyWrapper" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Dynamic change notify wrapper, dispatching on a new thread.</p>
+<p>This class is in charge to dispatch trait change events to dynamic
+listener, typically created using the <cite>on_trait_change</cite> method and the
+<cite>dispatch</cite> parameter set to &#8216;new&#8217;.</p>
+</dd></dl>
 
 </div>
 <div class="section" id="functions">
@@ -195,7 +209,7 @@ notification mechanism.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
+      Last updated on Oct 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

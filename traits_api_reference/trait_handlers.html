@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -349,7 +349,7 @@ trait. For example, in <em>List( Int )</em>, the <em>inner traits</em> for
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitType">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitType</tt><big>(</big><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object at 0x0369BF10&gt;</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitType</tt><big>(</big><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object at 0x102577a10&gt;</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for new trait types.</p>
 <p>This class enables you to define new traits using a class-based
 approach, instead of by calling the Trait() factory function with an
@@ -587,7 +587,7 @@ attribute, which must be an integer/long in the range from 0 to 150, and a
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitString">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitString</tt><big>(</big><em>minlen=0</em>, <em>maxlen=2147483647</em>, <em>regex=''</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitString" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitString</tt><big>(</big><em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a trait attribute value is a string that satisfied some
 additional, optional constraints.</p>
 <p>The optional constraints include minimum and maximum lengths, and a regular
@@ -911,7 +911,7 @@ strings, &#8216;Hearts&#8217;, &#8216;Diamonds&#8217;, &#8216;Spades&#8217;, or 
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitList">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitList</tt><big>(</big><em>trait=None</em>, <em>minlen=0</em>, <em>maxlen=2147483647</em>, <em>has_items=True</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitList</tt><big>(</big><em>trait=None</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>has_items=True</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a list containing
 elements of a specified type, and that the length of the list is also
 within a specified range.</p>
@@ -1076,7 +1076,7 @@ be floats (i.e., their most recently recorded weight).</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
+      Last updated on Oct 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

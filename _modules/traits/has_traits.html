@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -90,6 +90,8 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">TraitsVersion</span>
 
+<span class="kn">from</span> <span class="nn">.adaptation.adaptation_error</span> <span class="kn">import</span> <span class="n">AdaptationError</span>
+
 <span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">CHasTraits</span><span class="p">,</span> <span class="n">CTraitMethod</span><span class="p">,</span> <span class="n">_HasTraits_monitors</span>
 
 <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CTrait</span><span class="p">,</span> <span class="n">ForwardProperty</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span> <span class="n">SpecialNames</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span>
@@ -109,8 +111,9 @@
 
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
-<span class="kn">from</span> <span class="nn">.protocols.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">InterfaceClass</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">addClassAdvisor</span><span class="p">,</span>
-    <span class="n">declareImplementation</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.protocols.advice</span> <span class="kn">import</span> <span class="n">addClassAdvisor</span>
+
+<span class="kn">from</span> <span class="nn">.util.deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Set CHECK_INTERFACES to one of the following values:</span>
@@ -160,9 +163,7 @@
 <span class="n">PrefixTraits</span>    <span class="o">=</span> <span class="s">&#39;__prefix_traits__&#39;</span>
 <span class="n">ListenerTraits</span>  <span class="o">=</span> <span class="s">&#39;__listener_traits__&#39;</span>
 <span class="n">ViewTraits</span>      <span class="o">=</span> <span class="s">&#39;__view_traits__&#39;</span>
-<span class="n">SubclassTraits</span>  <span class="o">=</span> <span class="s">&#39;__subclass_traits__&#39;</span>
 <span class="n">InstanceTraits</span>  <span class="o">=</span> <span class="s">&#39;__instance_traits__&#39;</span>
-<span class="n">ImplementsClass</span> <span class="o">=</span> <span class="s">&#39;__implements__&#39;</span>
 
 <span class="c"># The default Traits View name</span>
 <span class="n">DefaultTraitsView</span> <span class="o">=</span> <span class="s">&#39;traits_view&#39;</span>
@@ -186,7 +187,7 @@
 <span class="c">#  Creates a clone of a specified trait:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="_clone_trait"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._clone_trait">[docs]</a><span class="k">def</span> <span class="nf">_clone_trait</span> <span class="p">(</span> <span class="n">clone</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">_clone_trait</span> <span class="p">(</span> <span class="n">clone</span><span class="p">,</span> <span class="n">metadata</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates a clone of a specified trait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trait</span> <span class="o">=</span> <span class="n">CTrait</span><span class="p">(</span> <span class="mi">0</span> <span class="p">)</span>
@@ -203,14 +204,14 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Gets the definition of a specified method (if any):</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_get_method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._get_method">[docs]</a><span class="k">def</span> <span class="nf">_get_method</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_get_method</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">MethodTypes</span> <span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">return</span> <span class="bp">None</span>
-</div>
-<div class="viewcode-block" id="_get_def"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._get_def">[docs]</a><span class="k">def</span> <span class="nf">_get_def</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_get_def</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Gets the definition of a specified method (if any).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">method</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;__&#39;</span><span class="p">:</span>
@@ -218,24 +219,39 @@
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">method</span> <span class="p">)</span>
     <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
-        <span class="nb">isinstance</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">FunctionTypes</span> <span class="p">)</span> <span class="ow">and</span>
+        <span class="n">is_function_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span>
         <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="nb">isinstance</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="n">MethodTypes</span> <span class="p">)</span> <span class="ow">and</span>
+            <span class="n">is_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> \
             <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="o">.</span><span class="n">im_func</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">return</span> <span class="bp">None</span>
 
+
+<span class="k">def</span> <span class="nf">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test if the given input is a Cython method or function. &quot;&quot;&quot;</span>
+    <span class="c"># The only way to get the type from the method with str comparison ...</span>
+    <span class="k">return</span> <span class="s">&#39;cython_function_or_method&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">is_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python method or a Cython method. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">MethodTypes</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">is_function_type</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python function or a Cython method. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">function</span><span class="p">,</span> <span class="n">FunctionTypes</span> <span class="p">)</span> <span class="ow">or</span> \
+           <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns whether or not a specified value is serializable:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_is_serializable"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._is_serializable">[docs]</a><span class="k">def</span> <span class="nf">_is_serializable</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_is_serializable</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns whether or not a specified value is serializable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="p">(</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span> <span class="p">)</span> <span class="p">):</span>
@@ -259,8 +275,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns a dictionary of potential &#39;Instance&#39; or &#39;List(Instance)&#39; handlers:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_get_instance_handlers"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._get_instance_handlers">[docs]</a><span class="k">def</span> <span class="nf">_get_instance_handlers</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_get_instance_handlers</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a dictionary of potential &#39;Instance&#39; or &#39;List(Instance)&#39;</span>
 <span class="sd">        handlers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -280,7 +296,7 @@
 
     <span class="c"># Merge in the information from the class dictionary:</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">FunctionTypes</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;_&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_function_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
             <span class="n">n</span>   <span class="o">=</span> <span class="mi">13</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span> <span class="s">&#39;_changed_for_&#39;</span> <span class="p">)</span>
             <span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -301,7 +317,7 @@
 <span class="c">#  Returns the correct &#39;delegate&#39; listener pattern for a specified name and</span>
 <span class="c">#  delegate trait:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+
 <div class="viewcode-block" id="get_delegate_pattern"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.get_delegate_pattern">[docs]</a><span class="k">def</span> <span class="nf">get_delegate_pattern</span> <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the correct &#39;delegate&#39; listener pattern for a specified name and</span>
 <span class="sd">        delegate trait.</span>
@@ -318,7 +334,7 @@
 <span class="c">#  &#39;_SimpleTest&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div>
-<div class="viewcode-block" id="_SimpleTest"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._SimpleTest">[docs]</a><span class="k">class</span> <span class="nc">_SimpleTest</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">_SimpleTest</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
     <span class="k">def</span> <span class="nf">__call__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">test</span>  <span class="p">):</span> <span class="k">return</span> <span class="n">test</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
@@ -326,8 +342,8 @@
 <span class="c">#  Checks if a function can be converted to a &#39;trait method&#39; (and converts it if</span>
 <span class="c">#  possible):</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_check_method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._check_method">[docs]</a><span class="k">def</span> <span class="nf">_check_method</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_check_method</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="p">):</span>
     <span class="n">method_name</span>  <span class="o">=</span> <span class="n">name</span>
     <span class="n">return_trait</span> <span class="o">=</span> <span class="n">Any</span>
 
@@ -373,8 +389,8 @@
 <span class="c">#  Returns either the original value or a valid CTrait if the value can be</span>
 <span class="c">#  converted to a CTrait:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_check_trait"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._check_trait">[docs]</a><span class="k">def</span> <span class="nf">_check_trait</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_check_trait</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns either the original value or a valid CTrait if the value can be</span>
 <span class="sd">        converted to a CTrait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -395,8 +411,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns the trait corresponding to a specified value:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_trait_for"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._trait_for">[docs]</a><span class="k">def</span> <span class="nf">_trait_for</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_trait_for</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the trait corresponding to a specified value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">trait</span> <span class="o">=</span> <span class="n">_check_trait</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span>
@@ -408,8 +424,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns the &#39;mapped trait&#39; definition for a mapped trait:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_mapped_trait_for"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._mapped_trait_for">[docs]</a><span class="k">def</span> <span class="nf">_mapped_trait_for</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_mapped_trait_for</span> <span class="p">(</span> <span class="n">trait</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the &#39;mapped trait&#39; definition for a mapped trait.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_value</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">default_value</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
@@ -424,8 +440,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Adds a list of handlers to a specified notifiers list:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_add_notifiers"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._add_notifiers">[docs]</a><span class="k">def</span> <span class="nf">_add_notifiers</span> <span class="p">(</span> <span class="n">notifiers</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_add_notifiers</span> <span class="p">(</span> <span class="n">notifiers</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Adds a list of handlers to a specified notifiers list.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">handlers</span><span class="p">:</span>
@@ -436,8 +452,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Adds any specified event handlers defined for a trait by a class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_add_event_handlers"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._add_event_handlers">[docs]</a><span class="k">def</span> <span class="nf">_add_event_handlers</span> <span class="p">(</span> <span class="n">trait</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_add_event_handlers</span> <span class="p">(</span> <span class="n">trait</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">handlers</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Adds any specified event handlers defined for a trait by a class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">events</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">event</span>
@@ -452,8 +468,8 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns the method associated with a particular class property getter/setter:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_property_method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._property_method">[docs]</a><span class="k">def</span> <span class="nf">_property_method</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">_property_method</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns the method associated with a particular class property</span>
 <span class="sd">    getter/setter.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -462,7 +478,7 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Defines a factory function for creating type checked methods:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+
 <div class="viewcode-block" id="trait_method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.trait_method">[docs]</a><span class="k">def</span> <span class="nf">trait_method</span> <span class="p">(</span> <span class="n">func</span><span class="p">,</span> <span class="n">return_type</span><span class="p">,</span> <span class="o">**</span><span class="n">arg_types</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Factory function for creating type-checked methods.</span>
 
@@ -529,7 +545,7 @@
 <span class="c">#  Defines a method &#39;decorator&#39; for adding type checking to methods:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div>
-<div class="viewcode-block" id="_add_assignment_advisor"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._add_assignment_advisor">[docs]</a><span class="k">def</span> <span class="nf">_add_assignment_advisor</span> <span class="p">(</span> <span class="n">callback</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">_add_assignment_advisor</span> <span class="p">(</span> <span class="n">callback</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Defines a method &#39;decorator&#39; for adding type checking to methods.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">frame</span>      <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span> <span class="n">depth</span> <span class="p">)</span>
@@ -567,7 +583,7 @@
 
     <span class="n">frame</span><span class="o">.</span><span class="n">f_trace</span> <span class="o">=</span> <span class="n">tracer</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">settrace</span><span class="p">(</span> <span class="n">tracer</span> <span class="p">)</span>
-</div>
+
 <div class="viewcode-block" id="method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.method">[docs]</a><span class="k">def</span> <span class="nf">method</span> <span class="p">(</span> <span class="n">return_type</span> <span class="o">=</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">arg_types</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg_types</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Declares that the method defined immediately following a call to this</span>
 <span class="sd">    function is type-checked.</span>
@@ -675,16 +691,6 @@
     <span class="n">_add_assignment_advisor</span><span class="p">(</span> <span class="n">callback</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;__NoInterface__&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="__NoInterface__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.__NoInterface__">[docs]</a><span class="k">class</span> <span class="nc">__NoInterface__</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; An uninstantiated class used to tag trait subclasses which do not</span>
-<span class="sd">        implement any interfaces.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;MetaHasTraits&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
@@ -703,11 +709,6 @@
 
         <span class="c"># Finish building the class using the updated class dictionary:</span>
         <span class="n">klass</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">_HasTraits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">_HasTraits</span> <span class="p">):</span>
-                    <span class="nb">getattr</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">SubclassTraits</span> <span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">klass</span> <span class="p">)</span>
-        <span class="nb">setattr</span><span class="p">(</span> <span class="n">klass</span><span class="p">,</span> <span class="n">SubclassTraits</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
 
         <span class="c"># Fix up all self referential traits to refer to this class:</span>
         <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">mhto</span><span class="o">.</span><span class="n">self_referential</span><span class="p">:</span>
@@ -742,55 +743,9 @@
     <span class="n">remove_listener</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span> <span class="n">remove_listener</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;MetaInterface&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="MetaInterface"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface">[docs]</a><span class="k">class</span> <span class="nc">MetaInterface</span> <span class="p">(</span> <span class="n">MetaHasTraits</span><span class="p">,</span> <span class="n">InterfaceClass</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Meta class for interfaces.</span>
-
-<span class="sd">        This combines trait and PyProtocols functionality.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="MetaInterface.__init__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">__bases__</span><span class="p">,</span> <span class="n">__dict__</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This method is copied over from PyProtocols &#39;AbstractBaseMets&#39;.</span>
-
-<span class="sd">            It is needed here to make sure that we don&#39;t add any implied</span>
-<span class="sd">            protocols for *our* &#39;Interface&#39; class (since PyProtocols doesn&#39;t</span>
-<span class="sd">            know about it.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">type</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">__name__</span><span class="p">,</span> <span class="n">__bases__</span><span class="p">,</span> <span class="n">__dict__</span> <span class="p">)</span>
-        <span class="n">Protocol</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">__bases__</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">InterfaceClass</span> <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Interface</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">addImpliedProtocol</span><span class="p">(</span> <span class="n">base</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="MetaInterface.__call__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This method is copied over from the PyProtocols &#39;InterfaceClass&#39;</span>
-<span class="sd">            (and cleaned up a little). It is needed here because:</span>
-
-<span class="sd">            a) the &#39;InterfaceClass&#39; is no longer the first class in the</span>
-<span class="sd">               hierarchy.</span>
-<span class="sd">            b) the reference to &#39;Interface&#39; now needs to reference *our*</span>
-<span class="sd">               Interface.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__init__</span> <span class="ow">is</span> <span class="n">Interface</span><span class="o">.</span><span class="n">__init__</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">Protocol</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
-
-        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="MetaInterface.getBases"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.getBases">[docs]</a>    <span class="k">def</span> <span class="nf">getBases</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Overridden to make sure we don&#39;t return our &#39;Interface&#39; class. &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="p">[</span> <span class="n">base</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bases__</span>
-                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">InterfaceClass</span> <span class="p">)</span> <span class="ow">and</span>
-                    <span class="p">(</span><span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Interface</span><span class="p">)</span> <span class="p">]</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;MetaHasTraitsObject&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div></div>
+</div>
 <div class="viewcode-block" id="MetaHasTraitsObject"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraitsObject">[docs]</a><span class="k">class</span> <span class="nc">MetaHasTraitsObject</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Performs all of the meta-class processing needed to convert any</span>
 <span class="sd">        subclass of HasTraits into a well-formed traits class.</span>
@@ -882,7 +837,7 @@
                     <span class="n">prefix_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
                     <span class="n">prefix_traits</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">FunctionType</span> <span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">FunctionType</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
                 <span class="n">pattern</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
                 <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">listeners</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="s">&#39;method&#39;</span><span class="p">,</span> <span class="n">pattern</span> <span class="p">)</span>
@@ -941,11 +896,6 @@
         <span class="n">implements</span>          <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">hastraits_bases</span><span class="p">:</span>
             <span class="n">base_dict</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">__dict__</span>
-
-            <span class="c"># List the subclasses that implement interfaces:</span>
-            <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">is_category</span><span class="p">)</span> <span class="ow">and</span>
-                <span class="p">(</span><span class="n">base_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">ImplementsClass</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">__NoInterface__</span><span class="p">)):</span>
-                <span class="n">implements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">base</span> <span class="p">)</span>
 
             <span class="c"># Merge listener information:</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">base_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">ListenerTraits</span> <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -1095,26 +1045,13 @@
 
                 <span class="n">listeners</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="s">&#39;property&#39;</span><span class="p">,</span> <span class="n">cached</span><span class="p">,</span> <span class="n">depends_on</span> <span class="p">)</span>
 
-        <span class="c"># Define a class that is a subclass of all of the interfaces that the</span>
-        <span class="c"># HasTraits base classes implement (we won&#39;t know which interfaces this</span>
-        <span class="c"># class explicitly implements until the &#39;implements&#39; function callback</span>
-        <span class="c"># runs, which is after we exit)...</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">implements</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">implements_class</span> <span class="o">=</span> <span class="n">__NoInterface__</span>
-        <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">implements_class</span> <span class="o">=</span> <span class="n">implements</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">__implements__</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">implements_class</span> <span class="o">=</span> <span class="n">_create_implements_class</span><span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">EmptyList</span><span class="p">,</span>
-                                                         <span class="n">implements</span> <span class="p">)</span>
-
         <span class="c"># Save the list of self referential traits:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">self_referential</span> <span class="o">=</span> <span class="n">self_referential</span>
 
         <span class="c"># Add the traits meta-data to the class:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_traits_meta_data</span><span class="p">(</span>
             <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">base_traits</span><span class="p">,</span> <span class="n">class_traits</span><span class="p">,</span> <span class="n">instance_traits</span><span class="p">,</span>
-            <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span><span class="p">,</span> <span class="n">implements_class</span> <span class="p">)</span>
+            <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">)</span>
 
     <span class="c">#---------------------------------------------------------------------------</span>
     <span class="c">#  Adds the traits meta-data to the class:</span>
@@ -1122,7 +1059,7 @@
 </div>
 <div class="viewcode-block" id="MetaHasTraitsObject.add_traits_meta_data"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data">[docs]</a>    <span class="k">def</span> <span class="nf">add_traits_meta_data</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">base_traits</span><span class="p">,</span>
                                <span class="n">class_traits</span><span class="p">,</span>  <span class="n">instance_traits</span><span class="p">,</span> <span class="n">prefix_traits</span><span class="p">,</span>
-                               <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span><span class="p">,</span> <span class="n">implements_class</span> <span class="p">):</span>
+                               <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds the Traits metadata to the class dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">class_dict</span><span class="p">[</span> <span class="n">BaseTraits</span>      <span class="p">]</span> <span class="o">=</span> <span class="n">base_traits</span>
@@ -1131,7 +1068,6 @@
         <span class="n">class_dict</span><span class="p">[</span> <span class="n">PrefixTraits</span>    <span class="p">]</span> <span class="o">=</span> <span class="n">prefix_traits</span>
         <span class="n">class_dict</span><span class="p">[</span> <span class="n">ListenerTraits</span>  <span class="p">]</span> <span class="o">=</span> <span class="n">listeners</span>
         <span class="n">class_dict</span><span class="p">[</span> <span class="n">ViewTraits</span>      <span class="p">]</span> <span class="o">=</span> <span class="n">view_elements</span>
-        <span class="n">class_dict</span><span class="p">[</span> <span class="n">ImplementsClass</span> <span class="p">]</span> <span class="o">=</span> <span class="n">implements_class</span>
 
     <span class="c">#---------------------------------------------------------------------------</span>
     <span class="c">#  Migrates an existing property to the class being defined (allowing for</span>
@@ -1157,13 +1093,14 @@
 <span class="c">#  Manages the list of trait instance monitors:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div></div>
-<div class="viewcode-block" id="_trait_monitor_index"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._trait_monitor_index">[docs]</a><span class="k">def</span> <span class="nf">_trait_monitor_index</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
+<span class="k">def</span> <span class="nf">_trait_monitor_index</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
     <span class="k">global</span> <span class="n">_HasTraits_monitors</span>
 
     <span class="n">type_handler</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">_cls</span><span class="p">,</span> <span class="n">_handler</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">_HasTraits_monitors</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">type_handler</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span> <span class="n">_handler</span> <span class="p">):</span>
-            <span class="k">if</span> <span class="p">((</span><span class="n">type_handler</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="k">if</span> <span class="p">(((</span><span class="n">type_handler</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">)</span>  <span class="ow">or</span>
+                <span class="s">&#39;cython_function_or_method&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">type_handler</span><span class="p">))</span> <span class="ow">and</span> \
                 <span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="p">((</span><span class="n">handler</span><span class="o">.</span><span class="n">__name__</span> <span class="o">==</span> <span class="n">_handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">)</span> <span class="ow">and</span>
                     <span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">im_self</span> <span class="ow">is</span> <span class="n">_handler</span><span class="o">.</span><span class="n">im_self</span><span class="p">)):</span>
@@ -1175,124 +1112,9 @@
     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Creates a class the implements a set of interfaces:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="_create_implements_class"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._create_implements_class">[docs]</a><span class="k">def</span> <span class="nf">_create_implements_class</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">base_classes</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Creates a class the implements a set of interfaces.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">locals</span>  <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">classes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
-        <span class="nb">locals</span><span class="p">[</span> <span class="n">interface</span><span class="o">.</span><span class="n">__name__</span> <span class="p">]</span> <span class="o">=</span> <span class="n">interface</span>
-        <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">interface</span><span class="o">.</span><span class="n">__name__</span> <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">base_class</span> <span class="ow">in</span> <span class="n">base_classes</span><span class="p">:</span>
-        <span class="n">ic</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">base_class</span><span class="p">,</span> <span class="n">ImplementsClass</span><span class="p">,</span> <span class="n">__NoInterface__</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">ic</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">__NoInterface__</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">ifc</span> <span class="ow">in</span> <span class="n">_extract_interfaces</span><span class="p">(</span> <span class="n">ic</span> <span class="p">):</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">ifc</span><span class="o">.</span><span class="n">__name__</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">:</span>
-                    <span class="nb">locals</span><span class="p">[</span> <span class="n">ifc</span><span class="o">.</span><span class="n">__name__</span> <span class="p">]</span> <span class="o">=</span> <span class="n">ifc</span>
-                    <span class="n">classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">ifc</span><span class="o">.</span><span class="n">__name__</span> <span class="p">)</span>
-
-    <span class="n">name</span> <span class="o">=</span> <span class="n">class_name</span> <span class="o">+</span> <span class="s">&#39;Implements&#39;</span>
-    <span class="k">exec</span> <span class="s">&#39;class </span><span class="si">%s</span><span class="s">(</span><span class="si">%s</span><span class="s">):__ignore_interface__=None&#39;</span> <span class="o">%</span> <span class="p">(</span>
-         <span class="n">name</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">classes</span> <span class="p">)</span> <span class="p">)</span> <span class="ow">in</span> <span class="nb">locals</span>
-
-    <span class="k">return</span> <span class="nb">locals</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-</div>
-<div class="viewcode-block" id="_extract_interfaces"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits._extract_interfaces">[docs]</a><span class="k">def</span> <span class="nf">_extract_interfaces</span> <span class="p">(</span> <span class="n">implements_class</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extracts the list of interfaces implemented by a specified class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ifc</span> <span class="ow">in</span> <span class="n">implements_class</span><span class="o">.</span><span class="n">__mro__</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">ifc</span> <span class="ow">is</span> <span class="n">Interface</span><span class="p">:</span>
-            <span class="k">break</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="n">ifc</span><span class="p">,</span> <span class="s">&#39;__ignore_interface__&#39;</span> <span class="p">):</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">ifc</span> <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Defines the &#39;implements&#39; function for declaring which interfaces a class</span>
-<span class="c">#  implements:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="implements"><a class="viewcode-back" href="../../traits_user_manual/advanced.html#traits.has_traits.implements">[docs]</a><span class="k">def</span> <span class="nf">implements</span> <span class="p">(</span> <span class="o">*</span><span class="n">interfaces</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Declares the interfaces that a class implements.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    *interfaces :</span>
-<span class="sd">        A list of interface classes that the containing class implements.</span>
-
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
-<span class="sd">    Registers each specified interface with the interface manager as an</span>
-<span class="sd">    interface that the containing class implements. Each specified interface</span>
-<span class="sd">    must be a subclass of **Interface**. This function should only be</span>
-<span class="sd">    called from directly within a class body.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># Exit immediately if there is nothing to do:</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">interfaces</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span>
-
-    <span class="c"># Verify that each argument is a valid interface:</span>
-    <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="n">interface</span><span class="p">,</span> <span class="n">Interface</span> <span class="p">):</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s">&quot;All arguments to &#39;implements&#39; must be &quot;</span>
-                              <span class="s">&quot;subclasses of Interface.&quot;</span> <span class="p">)</span>
-
-    <span class="c"># Define a function that is called when the containing class is constructed:</span>
-    <span class="k">def</span> <span class="nf">callback</span> <span class="p">(</span> <span class="n">klass</span> <span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">.category</span> <span class="kn">import</span> <span class="n">Category</span>
-
-        <span class="n">target</span> <span class="o">=</span> <span class="n">klass</span>
-        <span class="n">bases</span>  <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">__bases__</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="n">bases</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">bases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="n">Category</span><span class="p">):</span>
-            <span class="n">target</span> <span class="o">=</span> <span class="n">bases</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-
-            <span class="c"># Update the class and each of the existing subclasses:</span>
-            <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">trait_subclasses</span><span class="p">(</span> <span class="bp">True</span> <span class="p">):</span>
-                <span class="c"># Merge in the interfaces implemented by the category:</span>
-                <span class="n">subclass</span><span class="o">.</span><span class="n">__implements__</span> <span class="o">=</span> <span class="n">_create_implements_class</span><span class="p">(</span>
-                        <span class="n">subclass</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="p">[</span> <span class="n">subclass</span> <span class="p">]</span> <span class="p">)</span>
-
-        <span class="n">target</span><span class="o">.</span><span class="n">__implements__</span> <span class="o">=</span> <span class="n">_create_implements_class</span><span class="p">(</span>
-            <span class="n">target</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">bases</span> <span class="p">)</span>
-
-        <span class="c"># Compute the closure of all the interfaces (i.e. include all interface</span>
-        <span class="c"># superclasses which are also interfaces):</span>
-        <span class="n">closure</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span> <span class="n">interfaces</span> <span class="p">)</span>
-        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="n">interface</span><span class="o">.</span><span class="n">__mro__</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">subclass</span> <span class="ow">is</span> <span class="n">Interface</span><span class="p">:</span>
-                    <span class="k">break</span>
-
-                <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="n">subclass</span><span class="p">,</span> <span class="n">Interface</span> <span class="p">):</span>
-                    <span class="n">closure</span><span class="o">.</span><span class="n">add</span><span class="p">(</span> <span class="n">subclass</span> <span class="p">)</span>
-
-        <span class="c"># Tell PyProtocols that the class implements its interfaces:</span>
-        <span class="n">declareImplementation</span><span class="p">(</span> <span class="n">target</span><span class="p">,</span> <span class="n">instancesProvide</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span> <span class="n">closure</span> <span class="p">)</span> <span class="p">)</span>
-
-        <span class="c"># Make sure the class actually does implement the interfaces it claims</span>
-        <span class="c"># to:</span>
-        <span class="k">if</span> <span class="n">CHECK_INTERFACES</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="kn">import</span> <span class="n">check_implements</span>
-
-            <span class="n">check_implements</span><span class="p">(</span> <span class="n">klass</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">CHECK_INTERFACES</span> <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">klass</span>
-
-    <span class="c"># Request that we be called back at class construction time:</span>
-    <span class="n">addClassAdvisor</span><span class="p">(</span> <span class="n">callback</span> <span class="p">)</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;HasTraits&#39; decorators:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+
 <div class="viewcode-block" id="on_trait_change"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.on_trait_change">[docs]</a><span class="k">def</span> <span class="nf">on_trait_change</span> <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">post_init</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Marks the following method definition as being a handler for the</span>
 <span class="sd">        extended trait change specified by *name(s)*.</span>
@@ -1508,11 +1330,6 @@
         <span class="s">&#39;new&#39;</span><span class="p">:</span>      <span class="n">NewTraitChangeNotifyWrapper</span><span class="p">,</span>
         <span class="s">&#39;fast_ui&#39;</span><span class="p">:</span>  <span class="n">FastUITraitChangeNotifyWrapper</span><span class="p">,</span>
         <span class="s">&#39;ui&#39;</span><span class="p">:</span>       <span class="n">FastUITraitChangeNotifyWrapper</span>
-        <span class="c"># fixme: Disabling the new ui dispatch mechanism until the problems can</span>
-        <span class="c"># be worked out (i.e. breaks Undo/Redo and doesn&#39;t handle list item</span>
-        <span class="c"># event objects correctly because of the &#39;new&#39; value replacement not</span>
-        <span class="c"># always being the correct action to take).</span>
-        <span class="c">#&#39;ui&#39;:     UITraitChangeNotifyWrapper</span>
     <span class="p">}</span>
 
     <span class="c">#-- Trait Definitions ------------------------------------------------------</span>
@@ -1693,8 +1510,7 @@
                 <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">InstanceTraits</span> <span class="p">),</span>
                 <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">PrefixTraits</span> <span class="p">),</span>
                 <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">ListenerTraits</span> <span class="p">),</span>
-                <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">ViewTraits</span><span class="p">,</span> <span class="bp">None</span> <span class="p">),</span>
-                <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">ImplementsClass</span> <span class="p">)</span> <span class="p">)</span>
+                <span class="nb">getattr</span><span class="p">(</span> <span class="n">category</span><span class="p">,</span> <span class="n">ViewTraits</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="p">)</span>
 
         <span class="c"># Copy all methods that are not already in the class from the category:</span>
         <span class="k">for</span> <span class="n">subcls</span> <span class="ow">in</span> <span class="n">category</span><span class="o">.</span><span class="n">__mro__</span><span class="p">:</span>
@@ -1709,8 +1525,7 @@
     <span class="c">#---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_add_trait_category</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">base_traits</span><span class="p">,</span> <span class="n">class_traits</span><span class="p">,</span> <span class="n">instance_traits</span><span class="p">,</span>
-                                   <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span><span class="p">,</span>
-                                   <span class="n">implements_class</span> <span class="p">):</span>
+                              <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">):</span>
         <span class="c"># Update the class and each of the existing subclasses:</span>
         <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="p">[</span> <span class="n">cls</span> <span class="p">]</span> <span class="o">+</span> <span class="n">cls</span><span class="o">.</span><span class="n">trait_subclasses</span><span class="p">(</span> <span class="bp">True</span> <span class="p">):</span>
 
@@ -1804,13 +1619,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">SubclassTraits</span> <span class="p">)[:]</span>
+            <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">_trait_subclasses</span><span class="p">(</span> <span class="p">[]</span> <span class="p">)</span>
 </div>
     <span class="n">trait_subclasses</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span> <span class="n">trait_subclasses</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_trait_subclasses</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">subclasses</span> <span class="p">):</span>
-        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">SubclassTraits</span> <span class="p">):</span>
+        <span class="k">for</span> <span class="n">subclass</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">subclass</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
                 <span class="n">subclasses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">subclass</span> <span class="p">)</span>
                 <span class="n">subclass</span><span class="o">.</span><span class="n">_trait_subclasses</span><span class="p">(</span> <span class="n">subclasses</span> <span class="p">)</span>
@@ -1836,7 +1651,7 @@
 <span class="sd">           specified by *interfaces*. Return **True** if it does, and **False**</span>
 <span class="sd">           otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">__implements__</span><span class="p">,</span> <span class="n">interfaces</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">)</span>
 
     <span class="c">#---------------------------------------------------------------------------</span>
     <span class="c">#  Prepares an object to be pickled:</span>
@@ -2814,10 +2629,11 @@
 <span class="sd">            value       dispatch</span>
 <span class="sd">            =========== =======================================================</span>
 <span class="sd">            ``same``    Run notifications on the same thread as this one.</span>
-<span class="sd">            ``ui``      Run notifications on the UI thread, and allow them to</span>
-<span class="sd">                        be queued and deferred.</span>
-<span class="sd">            ``fast_ui`` Run notifications on the UI thread, and process</span>
-<span class="sd">                        them immediately.</span>
+<span class="sd">            ``ui``      Run notifications on the UI thread. If the current</span>
+<span class="sd">                        thread is the UI thread, the notifications are executed</span>
+<span class="sd">                        immediately; otherwise, they are placed on the UI</span>
+<span class="sd">                        event queue.</span>
+<span class="sd">            ``fast_ui`` Alias for ``ui``.</span>
 <span class="sd">            ``new``     Run notifications in a new thread.</span>
 <span class="sd">            =========== =======================================================</span>
 
@@ -3963,14 +3779,122 @@
 <span class="n">VetoableEvent</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span> <span class="n">Vetoable</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;Interface&#39; class:</span>
+<span class="c">#  &#39;MetaInterface&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
+<div class="viewcode-block" id="MetaInterface"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface">[docs]</a><span class="k">class</span> <span class="nc">MetaInterface</span> <span class="p">(</span> <span class="n">ABCMetaHasTraits</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Meta class for interfaces.</span>
+
+<span class="sd">    Interfaces are simple ABCs with the following features:-</span>
+
+<span class="sd">    1) They cannot be instantiated (they are interfaces, not implementations!).</span>
+<span class="sd">    2) Calling them is equivalent to calling &#39;adapt&#39;.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s">&#39;use &quot;adapt(adaptee, protocol)&quot; instead.&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="MetaInterface.__call__"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaInterface.__call__">[docs]</a>    <span class="k">def</span> <span class="nf">__call__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Attempt to adapt the adaptee to this interface.</span>
+
+<span class="sd">        Note that this means that (intentionally ;^) that interfaces</span>
+<span class="sd">        cannot be instantiated!</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">adapt</span>
+
+        <span class="k">return</span> <span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  &#39;Interface&#39; class:</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div></div>
 <div class="viewcode-block" id="Interface"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.Interface">[docs]</a><span class="k">class</span> <span class="nc">Interface</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The base class for all interfaces.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MetaInterface</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Class decorator to declare the protocols that a class provides.</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<div class="viewcode-block" id="provides"><a class="viewcode-back" href="../../traits_user_manual/advanced.html#traits.has_traits.provides">[docs]</a><span class="k">def</span> <span class="nf">provides</span><span class="p">(</span> <span class="o">*</span><span class="n">protocols</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class decorator to declare the protocols that a class provides.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *protocols :</span>
+<span class="sd">        A list of protocols (Interface classes or Python ABCs) that the</span>
+<span class="sd">        decorated class provides.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+
+    <span class="c"># Exit immediately if there is nothing to do.</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">protocols</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">klass</span><span class="p">:</span> <span class="n">klass</span>
+
+    <span class="c"># Verify that each argument is a valid protocol.</span>
+    <span class="k">for</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="n">protocols</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">protocol</span><span class="o">.</span><span class="n">__metaclass__</span><span class="p">,</span> <span class="n">ABCMeta</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                <span class="s">&quot;All arguments to &#39;provides&#39; must be &quot;</span>
+                <span class="s">&quot;subclasses of Interface or be a Python ABC.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">wrapped_class</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="n">protocols</span><span class="p">:</span>
+            <span class="c"># We use &#39;type(protocol)&#39; in case the &#39;protocol&#39; implements</span>
+            <span class="c"># its own &#39;register&#39; method that overrides the ABC method.</span>
+            <span class="nb">type</span><span class="p">(</span><span class="n">protocol</span><span class="p">)</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+
+        <span class="c"># Make sure the class does provide the protocols it claims to.</span>
+        <span class="k">if</span> <span class="n">CHECK_INTERFACES</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="kn">import</span> <span class="n">check_implements</span>
+            <span class="n">check_implements</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">protocols</span><span class="p">,</span> <span class="n">CHECK_INTERFACES</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">klass</span>
+
+    <span class="k">return</span> <span class="n">wrapped_class</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Return True if the class is an Interface.</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+</div>
+<span class="k">def</span> <span class="nf">isinterface</span><span class="p">(</span> <span class="n">klass</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return True if the class is an Interface. &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">MetaInterface</span><span class="p">)</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#  Declares the interfaces that a class implements.</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="implements"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.implements">[docs]</a><span class="k">def</span> <span class="nf">implements</span><span class="p">(</span> <span class="o">*</span><span class="n">interfaces</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Declares the interfaces that a class implements.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *interfaces :</span>
+<span class="sd">        A list of interface classes that the containing class implements.</span>
+
+<span class="sd">    Description</span>
+<span class="sd">    -----------</span>
+<span class="sd">    Registers each specified interface with the interface manager as an</span>
+<span class="sd">    interface that the containing class implements. Each specified interface</span>
+<span class="sd">    must be a subclass of **Interface**. This function should only be</span>
+<span class="sd">    called from directly within a class body.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">callback</span> <span class="o">=</span> <span class="n">provides</span><span class="p">(</span><span class="o">*</span><span class="n">interfaces</span><span class="p">)</span>
+    <span class="n">callback</span> <span class="o">=</span> <span class="n">deprecated</span><span class="p">(</span>
+        <span class="s">&quot;&#39;the &#39;implements&#39; class advisor has been deprecated. &quot;</span>
+        <span class="s">&quot;Use the &#39;provides&#39; class decorator.&quot;</span>
+    <span class="p">)(</span><span class="n">callback</span><span class="p">)</span>
+
+    <span class="n">addClassAdvisor</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;ISerializable&#39; interface:</span>
@@ -3980,7 +3904,6 @@
     <span class="sd">&quot;&quot;&quot; A class that implemented ISerializable requires that all HasTraits</span>
 <span class="sd">        objects saved as part of its state also implement ISerializable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;traits_super&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
@@ -3994,8 +3917,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_noop</span>
 
     <span class="k">def</span> <span class="nf">_noop</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">):</span>
-        <span class="k">pass</span>
-</pre></div></div>
+        <span class="k">pass</span></div>
+</pre></div>
 
           </div>
         </div>
@@ -4038,7 +3961,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
+      Last updated on Oct 23, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>

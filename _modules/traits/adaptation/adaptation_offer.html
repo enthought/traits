@@ -1,0 +1,269 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.adaptation.adaptation_offer &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.adaptation.adaptation_offer</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.adaptation.adaptation_offer</h1><div class="highlight"><pre>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="c"># Copyright (c) 2013, Enthought, Inc.</span>
+<span class="c"># All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c"># Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c"># Author: Enthought, Inc.</span>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; An offer to provide adapters from one protocol to another. &quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Property</span>
+
+<span class="kn">from</span> <span class="nn">traits.util.api</span> <span class="kn">import</span> <span class="n">import_symbol</span>
+
+
+<div class="viewcode-block" id="AdaptationOffer"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_offer.AdaptationOffer">[docs]</a><span class="k">class</span> <span class="nc">AdaptationOffer</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An offer to provide adapters from one protocol to another.</span>
+
+<span class="sd">    An adaptation offer consists of a factory that can create adapters, and the</span>
+<span class="sd">    protocols that define what the adapters adapt from and to.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c">#### &#39;object&#39; protocol ####################################################</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a string representation of the object. &quot;&quot;&quot;</span>
+
+        <span class="n">template</span> <span class="o">=</span> <span class="s">&quot;&lt;AdaptationOffer: &#39;{from_}&#39; -&gt; &#39;{to}&#39;&gt;&quot;</span>
+
+        <span class="n">from_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_protocol_name</span>
+        <span class="n">to</span>    <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_protocol_name</span>
+
+        <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">from_</span><span class="o">=</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">to</span><span class="p">)</span>
+
+    <span class="c">#### &#39;AdaptationOffer&#39; protocol ###########################################</span>
+
+    <span class="c">#: A factory for creating adapters.</span>
+    <span class="c">#:</span>
+    <span class="c">#: The factory must ba callable that takes exactly one argument which is</span>
+    <span class="c">#: the object to be adapted (known as the adaptee), and returns an</span>
+    <span class="c">#: adapter from the `from_protocol` to the `to_protocol`.</span>
+    <span class="c">#:</span>
+    <span class="c">#: The factory can be specified as either a callable, or a string in the</span>
+    <span class="c">#: form &#39;foo.bar.baz&#39; which is turned into an import statement</span>
+    <span class="c">#: &#39;from foo.bar import baz&#39; and imported when the trait is first accessed.</span>
+    <span class="n">factory</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+
+    <span class="c">#: Adapters created by the factory adapt *from* this protocol.</span>
+    <span class="c">#:</span>
+    <span class="c">#: The protocol can be specified as a protocol (class/Interface), or a</span>
+    <span class="c">#: string in the form &#39;foo.bar.baz&#39; which is turned into an import</span>
+    <span class="c">#: statement &#39;from foo.bar import baz&#39; and imported when the trait is</span>
+    <span class="c">#: accessed.</span>
+    <span class="n">from_protocol</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+    <span class="n">from_protocol_name</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_from_protocol_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span><span class="p">)</span>
+
+    <span class="c">#: Adapters created by the factory adapt *to* this protocol.</span>
+    <span class="c">#:</span>
+    <span class="c">#: The protocol can be specified as a protocol (class/Interface), or a</span>
+    <span class="c">#: string in the form &#39;foo.bar.baz&#39; which is turned into an import</span>
+    <span class="c">#: statement &#39;from foo.bar import baz&#39; and imported when the trait is</span>
+    <span class="c">#: accessed.</span>
+    <span class="n">to_protocol</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+    <span class="n">to_protocol_name</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_to_protocol_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span><span class="p">)</span>
+
+    <span class="c">#### Private protocol ######################################################</span>
+
+    <span class="c">#: Shadow trait for the corresponding property.</span>
+    <span class="n">_factory</span> <span class="o">=</span> <span class="n">Any</span>
+    <span class="n">_factory_loaded</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property getter. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory_loaded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">import_symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_factory</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_factory_loaded</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span>
+
+    <span class="k">def</span> <span class="nf">_set_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property setter. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_factory</span> <span class="o">=</span> <span class="n">factory</span>
+
+        <span class="k">return</span>
+
+    <span class="c">#: Shadow trait for the corresponding property.</span>
+    <span class="n">_from_protocol</span> <span class="o">=</span> <span class="n">Any</span>
+    <span class="n">_from_protocol_loaded</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_from_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property getter. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol_loaded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span> <span class="o">=</span> <span class="n">import_symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol_loaded</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span>
+
+    <span class="k">def</span> <span class="nf">_set_from_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property setter. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_from_protocol</span> <span class="o">=</span> <span class="n">from_protocol</span>
+
+        <span class="k">return</span>
+
+    <span class="c">#: Shadow trait for the corresponding property.</span>
+    <span class="n">_to_protocol</span> <span class="o">=</span> <span class="n">Any</span>
+    <span class="n">_to_protocol_loaded</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_to_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property getter. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol_loaded</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span> <span class="o">=</span> <span class="n">import_symbol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol_loaded</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span>
+
+    <span class="k">def</span> <span class="nf">_set_to_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait property setter. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_to_protocol</span> <span class="o">=</span> <span class="n">to_protocol</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_get_type_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_or_type_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the full dotted path for a type.</span>
+
+<span class="sd">        For example:</span>
+<span class="sd">        from traits.api import HasTraits</span>
+<span class="sd">        _get_type_name(HasTraits) == &#39;traits.has_traits.HasTraits&#39;</span>
+
+<span class="sd">        If the type is given as a string (e.g., for lazy loading), it is just</span>
+<span class="sd">        returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_or_type_name</span><span class="p">,</span> <span class="nb">basestring</span><span class="p">):</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="n">type_or_type_name</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="s">&quot;{module}.{name}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">module</span> <span class="o">=</span> <span class="n">type_or_type_name</span><span class="o">.</span><span class="n">__module__</span><span class="p">,</span>
+                <span class="n">name</span>   <span class="o">=</span> <span class="n">type_or_type_name</span><span class="o">.</span><span class="n">__name__</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">type_name</span>
+
+<span class="c">#### EOF ######################################################################</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.adaptation.adaptation_offer</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Oct 23, 2013.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

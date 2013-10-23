@@ -9,7 +9,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>traits.util.home_directory &mdash; Traits 4 User Manual</title>
+    <title>traits.adaptation.adaptation_error &mdash; Traits 4 User Manual</title>
     
     <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -40,7 +40,7 @@
         <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
   
-    <li><a href="#">traits.util.home_directory</a></li>
+    <li><a href="#">traits.adaptation.adaptation_error</a></li>
   
 
       </ul>
@@ -51,9 +51,9 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <h1>Source code for traits.util.home_directory</h1><div class="highlight"><pre>
+  <h1>Source code for traits.adaptation.adaptation_error</h1><div class="highlight"><pre>
 <span class="c">#------------------------------------------------------------------------------</span>
-<span class="c"># Copyright (c) 2005, 2006 by Enthought, Inc.</span>
+<span class="c"># Copyright (c) 2013, Enthought, Inc.</span>
 <span class="c"># All rights reserved.</span>
 <span class="c">#</span>
 <span class="c"># This software is provided without warranty under the terms of the BSD</span>
@@ -63,34 +63,15 @@
 <span class="c"># Thanks for using Enthought open source!</span>
 <span class="c">#</span>
 <span class="c"># Author: Enthought, Inc.</span>
-<span class="c"># Description: &lt;Enthought util package component&gt;</span>
 <span class="c">#------------------------------------------------------------------------------</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="sd">&quot;&quot;&quot; Exception raised when a requested adaptation is not possible. &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="get_home_directory"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.home_directory.get_home_directory">[docs]</a><span class="k">def</span> <span class="nf">get_home_directory</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot; Determine the user&#39;s home directory.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AdaptationError"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_error.AdaptationError">[docs]</a><span class="k">class</span> <span class="nc">AdaptationError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Exception raised when a requested adaptation is not possible. &quot;&quot;&quot;</span>
 
-    <span class="c"># &#39;HOME&#39; should work on most Unixes, and &#39;USERPROFILE&#39; works on at</span>
-    <span class="c"># least Windows XP ;^)</span>
-    <span class="c">#</span>
-    <span class="c"># FIXME: Is this really better than the following??</span>
-    <span class="c">#       path = os.path.expanduser(&#39;~&#39;)</span>
-    <span class="c"># The above seems to work on both Windows and Unixes though the docs</span>
-    <span class="c"># indicate it might not work as well on Macs.</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;HOME&#39;</span><span class="p">,</span> <span class="s">&#39;USERPROFILE&#39;</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-            <span class="c"># Make sure that the path ends with a path separator.</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">:</span>
-                <span class="n">path</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
+    <span class="k">pass</span>
 
-            <span class="k">break</span>
-
-    <span class="c"># If all else fails, the current directory will do.</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
-
-    <span class="k">return</span> <span class="n">path</span></div>
+<span class="c">#### EOF ######################################################################</span></div>
 </pre></div>
 
           </div>
@@ -127,7 +108,7 @@
         <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li>
   
-    <li><a href="#">traits.util.home_directory</a></li>
+    <li><a href="#">traits.adaptation.adaptation_error</a></li>
   
 
       </ul>
