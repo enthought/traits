@@ -584,7 +584,7 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             obj = obj_weak_ref()
             if obj is not None:
                 # Dynamically resolve the listener by name.
-                listener = getattr( obj_weak_ref(), self.name )
+                listener = getattr( obj, self.name )
                 self._dispatch_change_event( object, trait_name, old, new,
                                              listener )
 
