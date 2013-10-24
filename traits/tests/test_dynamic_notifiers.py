@@ -205,14 +205,13 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         import weakref
 
-
         obj = DynamicNotifiers()
         obj.on_trait_change(function_listener_0, 'ok')
 
         # Create a weak reference to `obj` with a callback that flags when the
         # object is finalized.
         obj_collected = []
-        def obj_collected_callback(weafref):
+        def obj_collected_callback(weakref):
             obj_collected.append(True)
 
         obj_weakref = weakref.ref(obj, obj_collected_callback)
