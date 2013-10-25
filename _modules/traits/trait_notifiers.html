@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -568,25 +566,31 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">exception</span> <span class="o">=</span> <span class="n">e</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">exception</span> <span class="o">=</span> <span class="bp">None</span>
-        <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">_post_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
-                                           <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">exception</span> <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                                           <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">e</span> <span class="p">)</span>
+            <span class="c"># This call needs to be made inside the `except` block in case</span>
+            <span class="c"># the handler wants to re-raise the exception.</span>
             <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">_post_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                                           <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="bp">None</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_notify_method_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dispatch a trait change event to a method listener. &quot;&quot;&quot;</span>
 
         <span class="n">obj_weak_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">obj_weak_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
-            <span class="c"># Dynamically resolve the listener by name.</span>
-            <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj_weak_ref</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">listener</span><span class="p">)</span>
+            <span class="c"># We make sure to hold a reference to the object before invoking</span>
+            <span class="c"># `getattr` so that the listener does not disappear in a</span>
+            <span class="c"># multi-threaded case.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">obj_weak_ref</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># Dynamically resolve the listener by name.</span>
+                <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                                             <span class="n">listener</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_notify_function_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dispatch a trait change event to a function listener. &quot;&quot;&quot;</span>
@@ -626,9 +630,15 @@
 
         <span class="n">obj_weak_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span>
         <span class="k">if</span> <span class="n">obj_weak_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c"># Dynamically resolve the listener by name.</span>
-            <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj_weak_ref</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">listener</span><span class="p">)</span>
+            <span class="c"># We make sure to hold a reference to the object before invoking</span>
+            <span class="c"># `getattr` so that the listener does not disappear in a</span>
+            <span class="c"># multi-threaded case.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">obj_weak_ref</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="c"># Dynamically resolve the listener by name.</span>
+                <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                                             <span class="n">listener</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_notify_function_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dispatch a trait change event to a function listener. &quot;&quot;&quot;</span>
@@ -710,8 +720,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Oct 23, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Oct 25, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>
