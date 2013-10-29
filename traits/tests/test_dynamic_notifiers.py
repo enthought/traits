@@ -205,23 +205,24 @@ class TestDynamicNotifiers(unittest.TestCase):
         # Make sure that a trait object can be garbage collected even though
         # there are listener to its traits.
 
-        import gc
-
-        gc.collect()
-        gc.collect()
-        before_n_objs = len(gc.get_objects())
+        import weakref
 
         obj = DynamicNotifiers()
         obj.on_trait_change(function_listener_0, 'ok')
 
-        # Remove reference to `obj`; it should be garbage collected at this
-        # point.
-        obj = None
+        # Create a weak reference to `obj` with a callback that flags when the
+        # object is finalized.
+        obj_collected = []
+        def obj_collected_callback(weakref):
+            obj_collected.append(True)
 
-        gc.collect()
-        after_n_objs = len(gc.get_objects())
+        obj_weakref = weakref.ref(obj, obj_collected_callback)
 
-        self.assertEqual(before_n_objs, after_n_objs)
+        # Remove reference to `obj`, and check that the weak reference
+        # callback has been called, indicating that it has been collected.
+        del obj
+
+        self.assertEqual(obj_collected, [True])
 
 
 if __name__ == '__main__':

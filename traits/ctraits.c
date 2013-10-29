@@ -927,7 +927,7 @@ has_traits_setattro ( has_traits_object * obj,
 
 PyObject *
 has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
-    
+
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
@@ -1819,6 +1819,31 @@ getattr_trait ( trait_object      * trait,
             return NULL;
 
         obj->obj_dict = dict;
+        }
+
+        if ( PyString_Check( name ) ) {
+        if ( (result = default_value_for( trait, obj, name )) != NULL ) {
+            if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
+
+                rc = 0;
+                if ( (trait->post_setattr != NULL) &&
+                     ((trait->flags & TRAIT_IS_MAPPED) == 0) )
+                    rc = trait->post_setattr( trait, obj, name, result );
+
+                if (rc == 0) {
+                    tnotifiers = trait->notifiers;
+                    onotifiers = obj->notifiers;
+                    if ( has_notifiers( tnotifiers, onotifiers ) )
+                        rc = call_notifiers( tnotifiers, onotifiers, obj, name,
+                                             Uninitialized, result );
+                }
+                if ( rc == 0 )
+                    return result;
+            }
+            Py_DECREF( result );
+        }
+
+        return NULL;
     }
 
     PyObject *nname = Py2to3_NormaliseAttrName(name);
@@ -1855,6 +1880,7 @@ getattr_trait ( trait_object      * trait,
         PyErr_SetObject( PyExc_AttributeError, nname );
 
     Py2to3_FinishNormaliseAttrName(name,nname);
+    Py_DECREF( name );
     return NULL;
 }
 
@@ -2457,6 +2483,7 @@ setattr_trait ( trait_object      * traito,
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
             PyErr_SetObject( PyExc_AttributeError, nname );
         Py_XDECREF( old_value );
+        Py_DECREF( name );
         Py2to3_FinishNormaliseAttrName( name, nname );
         Py_DECREF( value );
 
