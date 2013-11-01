@@ -33,3 +33,4 @@ Fixes
  * Fix failing special instance trait events. (87d5a8f)
  * Fix hiding KeyError exception inside trait default initialize method.
    (5e7e3bc)
+ * Fix Adapter object initialization. (bbfc3a4)
