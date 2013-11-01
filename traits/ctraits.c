@@ -1821,7 +1821,7 @@ getattr_trait ( trait_object      * trait,
         obj->obj_dict = dict;
         }
 
-        if ( PyString_Check( name ) ) {
+        if ( Py2to3_SimpleString_Check( name ) ) {
         if ( (result = default_value_for( trait, obj, name )) != NULL ) {
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
 
