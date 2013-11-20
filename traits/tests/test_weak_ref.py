@@ -49,7 +49,9 @@ class TestWeakRef(UnittestTools, unittest.TestCase):
 
     def test_set_and_get(self):
         eggs = Eggs(name='platypus')
-        spam = Spam(eggs=eggs)
+        spam = Spam()
+        self.assertIsNone(spam.eggs)
+        spam.eggs = eggs
         self.assertIs(spam.eggs, eggs)
         del eggs
         self.assertIsNone(spam.eggs)

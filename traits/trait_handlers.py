@@ -1550,7 +1550,6 @@ class TraitWeakRef ( TraitInstance ):
 
 def _make_value_freed_callback ( object_ref, name ):
     def _value_freed ( value_ref ):
-        print "In _value_freed"
         object = object_ref()
         if object is not None:
             object.trait_property_changed( name, Undefined, None )
