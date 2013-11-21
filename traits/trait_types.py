@@ -27,7 +27,6 @@ from __future__ import absolute_import
 import sys
 import re
 import datetime
-from weakref import ref
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
@@ -38,7 +37,7 @@ from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTyp
 
 from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
-        ThisClass, items_event, RangeTypes)
+        ThisClass, items_event, RangeTypes, HandleWeakRef)
 
 from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
         html_editor, password_editor, shell_editor, date_editor, time_editor)
@@ -3341,20 +3340,6 @@ class WeakRef ( Instance ):
             self.validate_failed( object, name, value )
 
         self.klass = klass
-
-#-- Private Class --------------------------------------------------------------
-
-class HandleWeakRef ( object ):
-
-    def __init__ ( self, object, name, value ):
-        self.object = ref( object )
-        self.name   = name
-        self.value  = ref( value, self._value_freed )
-
-    def _value_freed ( self, ref ):
-        object = self.object()
-        if object is not None:
-            object.trait_property_changed( self.name, Undefined, None )
 
 
 #-- Date Trait definition ----------------------------------------------------
