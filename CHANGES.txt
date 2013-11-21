@@ -24,6 +24,8 @@ Enhancements
 
 Fixes
 
+ * Issue #97: `TraitSetObject.copy` now returns a plain set
+   rather than an uninitialized `TraitSetObject` instance.
  * Fix race condition when removing a traits listener. (3f318a9)
  * Fix ugly interaction between DelegatesTo change handlers, dynamic change
    handlers and two levels of dynamic intialization. (56da71a)

@@ -84,15 +84,19 @@ def test_trait_dict_object_copies():
 
 def test_trait_set_object_copies():
     a = A()
-    set = copy.deepcopy(a.set)
-    assert set.object() is None
-    set.add(10)
+    set1 = copy.deepcopy(a.set)
+    assert set1.object() is None
+    set1.add(10)
     assert len(a.events) == 0
     a.set.add(20)
     assert len(a.events) == 1
-    set2 = copy.deepcopy(set)
+    set2 = copy.deepcopy(set1)
     set2.add(30)
     assert set2.object() is None
+    set3 = a.set.copy()
+    assert type(set3) is set
+    # Should not raise an AttributeError:
+    set3.remove(20)
 
 def test_pickle_whole():
     a = A()
