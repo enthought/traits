@@ -432,7 +432,9 @@ class TraitChangeNotifyWrapper(object):
                          'arguments is allowed, but %s were specified.') %
                         ( func.__name__, arg_count ) )
 
-                self.notify_listener = self._notify_method_listener
+                # We use the unbound method here to prevent cyclic garbage
+                # (issue #100).
+                self.notify_listener = type(self)._notify_method_listener
                 self.argument_transform = self.argument_transforms[arg_count]
 
                 return arg_count
@@ -453,7 +455,9 @@ class TraitChangeNotifyWrapper(object):
         self.name     = None
         self.handler  = handler
 
-        self.notify_listener = self._notify_function_listener
+        # We use the unbound method here to prevent cyclic garbage
+        # (issue #100).
+        self.notify_listener = type(self)._notify_function_listener
         self.argument_transform = self.argument_transforms[arg_count]
 
         return arg_count
@@ -465,9 +469,10 @@ class TraitChangeNotifyWrapper(object):
         attribute to avoid reference cycles.
         """
 
-        # `notify_listener` is either
-        # `_notify_method_listener` or `_notify_function_listener`
-        self.notify_listener( object, trait_name, old, new )
+        # `notify_listener` is either the *unbound*
+        # `_notify_method_listener` or `_notify_function_listener` to
+        # prevent cyclic garbage (issue #100).
+        self.notify_listener( self, object, trait_name, old, new )
 
     def dispatch ( self, handler, *args ):
         """ Dispatch the event to the listener.
