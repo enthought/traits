@@ -92,7 +92,7 @@ performs additional processing after a value has been validated and assigned.
 The signatures of these methods are:
 
 .. method:: validate( object, name, value )
-.. method:: post_setattr( object, name, value
+.. method:: post_setattr( object, name, value )
 
 The parameters of these methods are:
 
