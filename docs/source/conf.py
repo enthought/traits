@@ -188,7 +188,10 @@ latex_logo = "e-logo-rev.png"
 # Options for Texinfo output
 # --------------------------
 
+# Grouping the document tree into Texinfo files. List of tuples
+# (source start file, target name, title, author,
+#  dir menu entry, description, category)
 texinfo_documents = [
-  (master_doc, 'traits', 'Traits 4 User Manual', 'Enthought, Inc.',
+  ('index', 'traits', 'Traits 4 User Manual', 'Enthought, Inc.',
    'Traits', 'Explicitly typed attributes for Python.', 'Python'),
 ]
