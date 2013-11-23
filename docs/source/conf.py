@@ -19,7 +19,7 @@ import sys, os
 sys.path.append(os.path.abspath('_extensions'))
 sys.path.append(os.path.abspath('../../'))
 
-    # General configuration
+# General configuration
 # ---------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
