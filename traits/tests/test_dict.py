@@ -13,12 +13,13 @@
 #------------------------------------------------------------------------------
 """ Test cases for dictionary (Dict) traits. """
 
-
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
-from ..api import on_trait_change, Dict, Event, HasTraits, Str
+from ..trait_types import Dict, Event, Str, TraitDictObject
+from ..has_traits import HasTraits, on_trait_change
+from ..trait_errors import TraitError
 
 
 # fixme: We'd like to use a callable instance for the listener so that we
@@ -37,7 +38,7 @@ def create_listener():
         return
 
     listener.initialize = lambda : initialize_listener(listener)
-    
+
     return initialize_listener(listener)
 
 def initialize_listener(listener):
@@ -53,29 +54,28 @@ def initialize_listener(listener):
     listener.old        = None
     listener.new        = None
     listener.called     = 0
-    
+
     return listener # For convenience
 
 
-
-class DictTestCase(unittest.TestCase):
+class TestDict(unittest.TestCase):
     """ Test cases for dictionary (Dict) traits. """
 
     def test_modified_event(self):
 
         class Foo(HasTraits):
-            name     = Str
+            name = Str
             modified = Event
-            
+
             @on_trait_change('name')
             def _fire_modified_event(self):
                 self.modified = True
                 return
-        
+
         class Bar(HasTraits):
-            foos     = Dict(Str, Foo)
+            foos = Dict(Str, Foo)
             modified = Event
-            
+
             @on_trait_change('foos_items,foos.modified')
             def _fire_modified_event(self, obj, trait_name, old, new):
                 self.modified = True
@@ -89,8 +89,8 @@ class DictTestCase(unittest.TestCase):
         bar.foos = {'dino' : Foo(name='dino')}
         self.assertEqual(1, listener.called)
         self.assertEqual('modified', listener.trait_name)
-        
-        # Add an item to an existing disctionary.
+
+        # Add an item to an existing dictionary.
         listener.initialize()
         fred = Foo(name='fred')
         bar.foos['fred'] = fred
@@ -111,8 +111,24 @@ class DictTestCase(unittest.TestCase):
 
         return
 
+    def test_validate(self):
+        """ Check the validation method.
+
+        """
+        foo = Dict()
+
+        # invalid value
+        with self.assertRaises(TraitError):
+            foo.validate(object=HasTraits(), name='bar', value=None)
+
+        # valid value
+        result = foo.validate(object=HasTraits(), name='bar', value={})
+        self.assertIsInstance(result, TraitDictObject)
+
+        # object is None (check for issue #71)
+        result = foo.validate(object=None, name='bar', value={})
+        self.assertEqual(result, {})
+
 
 if __name__ == '__main__':
     unittest.main()
-
-#### EOF ######################################################################

@@ -18,7 +18,7 @@
 """
 
 # Standard library imports
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports
 from traits.api import HasTraits, Instance, Int

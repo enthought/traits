@@ -77,7 +77,7 @@
     us to dynamically change the implementation of method().
 
     When you edit a python module and then reload it in a python session,
-    any classes within the module are reinstantiated within that module
+    any classes within the module are re-instantiated within that module
     and any newly created objects created with a call to module.class()
     will have the behavior and methods of your freshly edited code.  But
     what about objects that are already "live" in the system that were
@@ -374,7 +374,7 @@ class Refresher(object):
                 setattr(mod, name, old_function)
 
     def _update_function(self, old_function, new_function):
-        """ Update thbe old_function to have the same implementation
+        """ Update the old_function to have the same implementation
             code as new_function.  old_function is modified inplace !
         """
 
@@ -508,7 +508,7 @@ def function_and_class_names_in_file(file_name):
     return function_names, class_names
 
 def source_file_for_module(module):
-    """ Find the .py file that cooresponds to the module.
+    """ Find the .py file that corresponds to the module.
     """
 
     if hasattr(module,'__file__'):
@@ -540,7 +540,7 @@ def filter_functions_and_classes(items):
     #         to do this for python classes, or is this only
     #         needed for classes declared in C?  Adding bases
     #         finds about 6000 classes compared to 2000 from
-    #         the envisage interpeter.
+    #         the envisage interpreter.
     sub_items = [item for item in items if
                     isinstance(item, (FunctionType, ClassType, type))
                     #or hasattr(item,'__bases__')
@@ -596,7 +596,7 @@ def out_of_date_modules():
                 if pyc_time is None:
                     # case where pyc file has been deleted.
                     out_of_date.append(mod)
-                elif pyc_time <= py_time:
+                elif pyc_time < py_time:
                     # module out of date
                     out_of_date.append(mod)
 

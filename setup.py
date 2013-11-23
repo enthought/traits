@@ -1,4 +1,4 @@
-# Copyright (c) 2008-2012 by Enthought, Inc.
+# Copyright (c) 2008-2013 by Enthought, Inc.
 # All rights reserved.
 
 from os.path import join
@@ -12,15 +12,6 @@ execfile(join('traits', '__init__.py'), d)
 ctraits = Extension(
     'traits.ctraits',
     sources = ['traits/ctraits.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3'],
-    )
-
-
-speedups = Extension(
-    'traits.protocols._speedups',
-    # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can
-    # play with each other. See #1364
-    sources = ['traits/protocols/_speedups.c'],
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
     )
 
@@ -51,9 +42,8 @@ setup(
     long_description = open('README.rst').read(),
     download_url = ('http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
                     d['__version__']),
-    ext_modules = [ctraits, speedups],
+    ext_modules = [ctraits],
     include_package_data = True,
-    package_data = {'traits': ['protocols/_speedups.pyx']},
     license = 'BSD',
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',

@@ -83,13 +83,13 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
     Parameters
     ----------
-    project : string
+    project : str
         The name of the project to look for the resource in. Can be the name or
         a requirement string. Ex: 'MyProject', 'MyProject>1.0', 'MyProject==1.1'
-    resource_path : string
+    resource_path : str
         The path to the file from inside the package. If the file desired is
         MyProject/data/image.jpg, resource_path would be 'data/image.jpg'.
-    alt_path : string
+    alt_path : str
         The path to the resource relative to the location of the application's
         top-level script (the one with __main__). If this function is called in
         code/scripts/myscript.py and the resource is code/data/image.jpg, the
@@ -169,7 +169,7 @@ def find_resource(project, resource_path, alt_path=None, return_path=False):
 
 
 def store_resource(project, resource_path, filename):
-    """ Store the content of a resource, given by the name of the projet
+    """ Store the content of a resource, given by the name of the project
         and the path (relative to the root of the project), into a newly
         created file.
 

@@ -1,5 +1,5 @@
-util Package
-============
+:mod:`util` Package
+===================
 
 :mod:`util` Package
 -------------------
@@ -57,6 +57,14 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`import_symbol` Module
+-----------------------------
+
+.. automodule:: traits.util.import_symbol
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`toposort` Module
 ----------------------
 
@@ -65,3 +73,10 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`trait_documenter` Module
+------------------------------
+
+.. automodule:: traits.util.trait_documenter
+    :members:
+    :undoc-members:
+    :show-inheritance:

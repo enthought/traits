@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------
 #
-#  Copyright (c) 2005, Enthought, Inc.
+#  Copyright (c) 2005-2013, Enthought, Inc.
 #  All rights reserved.
 #
 #  This software is provided without warranty under the terms of the BSD
@@ -13,12 +13,9 @@
 #  Author:        David C. Morrill
 #  Original Date: 06/21/2002
 #
-#  Refactored into a separate module: 07/04/2003
-#
 #------------------------------------------------------------------------------
 
-""" Defines the classes needed to implement and support the Traits change
-    notification mechanism.
+""" Classes that implement and support the Traits change notification mechanism
 """
 
 #-------------------------------------------------------------------------------
@@ -27,26 +24,16 @@
 
 from __future__ import absolute_import
 
-import weakref
+from threading import local as thread_local
+from threading import Thread
+from thread import get_ident
 import traceback
+from types import MethodType
+import weakref
 import sys
 
-from threading import local as thread_local
-
-from threading \
-    import Thread
-
-from thread \
-    import get_ident
-
-from types \
-    import MethodType
-
-from .trait_base \
-    import Uninitialized
-
-from .trait_errors \
-    import TraitNotificationError
+from .trait_base import Uninitialized
+from .trait_errors import TraitNotificationError
 
 #-------------------------------------------------------------------------------
 #  Global Data:
@@ -115,21 +102,21 @@ class NotificationExceptionHandler ( object ):
                 notification exception handler is used. If *handler* is not
                 None, then it must be a callable which can accept four
                 arguments: object, trait_name, old_value, new_value.
-            reraise_exceptions : Boolean
+            reraise_exceptions : bool
                 Indicates whether exceptions should be reraised after the
                 exception handler has executed. If True, exceptions will be
                 re-raised after the specified handler has been executed.
                 The default value is False.
-            main : Boolean
+            main : bool
                 Indicates whether the caller represents the main application
                 thread. If True, then the caller's exception handler is
                 made the default handler for any other threads that are
-                created. Note that a thread can explictly set its own exception
-                handler if desired. The *main* flag is provided to make it
-                easier to set a global application policy without having to
-                explicitly set it for each thread. The default value is
-                False.
-            locked : Boolean
+                created. Note that a thread can explicitly set its own
+                exception handler if desired. The *main* flag is provided to
+                make it easier to set a global application policy without
+                having to explicitly set it for each thread. The default
+                value is False.
+            locked : bool
                 Indicates whether further changes to the Traits notification
                 exception handler state should be allowed. If True, then
                 any subsequent calls to _push_handler() or _pop_handler() for
@@ -264,145 +251,172 @@ pop_exception_handler  = notification_exception_handler._pop_handler
 handle_exception       = notification_exception_handler._handle_exception
 
 #-------------------------------------------------------------------------------
-#  'StaticAnyTraitChangeNotifyWrapper' class:
+#  Traits global notification event tracer:
 #-------------------------------------------------------------------------------
 
-class StaticAnyTraitChangeNotifyWrapper:
+_pre_change_event_tracer = None
+_post_change_event_tracer = None
+
+def set_change_event_tracers( pre_tracer=None, post_tracer=None ):
+    """ Set the global trait change event tracers.
+
+    The global tracers are called whenever a trait change event is dispatched.
+    There are two tracers: `pre_tracer` is called before the notification is
+    sent; `post_tracer` is called after the notification is sent, even if the
+    notification failed with an exception (in which case the `post_tracer` is
+    called with a reference to the exception, then the exception is sent to
+    the `notification_exception_handler`).
+
+    The tracers should be a callable taking 5 arguments:
+    ::
+      tracer(obj, trait_name, old, new, handler)
+
+    `obj` is the source object, on which trait `trait_name` was changed from
+    value `old` to value `new`. `handler` is the function or method that will
+    be notified of the change.
+
+    The post-notification tracer also has a keyword argument, `exception`,
+    that is `None` if no exception has been raised, and the a reference to the
+    raise exception otherwise.
+    ::
+      post_tracer(obj, trait_name, old, new, handler, exception=None)
+
+    Note that for static trait change listeners, `handler` is not a method, but
+    rather the function before class creation, since this is the way Traits
+    works at the moment.
+    """
+    global _pre_change_event_tracer
+    global _post_change_event_tracer
+    _pre_change_event_tracer = pre_tracer
+    _post_change_event_tracer = post_tracer
+
+def clear_change_event_tracers():
+    """ Clear the global trait change event tracer. """
+    global _pre_change_event_tracer
+    global _post_change_event_tracer
+    _pre_change_event_tracer = None
+    _post_change_event_tracer = None
+
+#-------------------------------------------------------------------------------
+#  'AbstractStaticChangeNotifyWrapper' class:
+#-------------------------------------------------------------------------------
+
+class AbstractStaticChangeNotifyWrapper(object):
+    """
+    Concrete implementation must define the 'argument_transforms' class
+    argument, a dictionary mapping the number of arguments in the event
+    handler to a function that takes the arguments (obj, trait_name, old, new)
+    and returns the arguments tuple for the actual handler.
+    """
+
+    arguments_transforms = {}
 
     def __init__ ( self, handler ):
-        n = handler.func_code.co_argcount
-        if n > 4:
+        arg_count = handler.func_code.co_argcount
+        if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the static anytrait change '
                  'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
+                 'allowed, but %s were specified.')
+                % ( handler.__name__, arg_count ) )
+        self.argument_transform = self.argument_transforms[arg_count]
 
         self.handler  = handler
-        self.call_method = 'call_%d' % n
 
-    def __call__(self, object, trait_name, old, new):
-        """ Dispatch to the appropriate method.
+    def __call__ ( self, object, trait_name, old, new ):
+        """ Dispatch to the appropriate handler method. """
 
-        We do explicit dispatch instead of assigning to the .__call__ instance
-        attribute to avoid reference cycles.
-        """
-        getattr(self, self.call_method)(object, trait_name, old, new)
+        if old is not Uninitialized:
+            # Extract the arguments needed from the handler.
+            args = self.argument_transform( object, trait_name, old, new )
+
+            # Send a description of the change event to the event tracer.
+            if _pre_change_event_tracer is not None:
+                _pre_change_event_tracer( object, trait_name, old, new,
+                                          self.handler )
+
+            try:
+                # Call the handler.
+                self.handler( *args )
+            except Exception as e:
+                exception = e
+            else:
+                exception = None
+            finally:
+                if _post_change_event_tracer is not None:
+                    _post_change_event_tracer( object, trait_name, old, new,
+                                               self.handler,
+                                               exception=exception )
+
+            if exception is not None:
+                handle_exception( object, trait_name, old, new )
 
     def equals ( self, handler ):
         return False
 
-    def call_0 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler()
-            except:
-                handle_exception( object, trait_name, old, new )
+#-------------------------------------------------------------------------------
+#  'StaticAnyTraitChangeNotifyWrapper' class:
+#-------------------------------------------------------------------------------
 
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object )
-            except:
-                handle_exception( object, trait_name, old, new )
+class StaticAnyTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, trait_name )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, trait_name, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (obj,),
+        2: lambda obj, name, old, new: (obj, name),
+        3: lambda obj, name, old, new: (obj, name, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
 #-------------------------------------------------------------------------------
 #  'StaticTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class StaticTraitChangeNotifyWrapper:
+class StaticTraitChangeNotifyWrapper(AbstractStaticChangeNotifyWrapper):
 
-    def __init__ ( self, handler ):
-        n = handler.func_code.co_argcount
-        if n > 4:
-            raise TraitNotificationError(
-                ('Invalid number of arguments for the static trait change '
-                 'notification handler: %s. A maximum of 4 arguments is '
-                 'allowed, but %s were specified.') % ( handler.__name__, n ) )
-
-        self.handler  = handler
-        self.call_method = 'call_%d' % n
-
-    def __call__(self, object, trait_name, old, new):
-        """ Dispatch to the appropriate method.
-
-        We do explicit dispatch instead of assigning to the .__call__ instance
-        attribute to avoid reference cycles.
-        """
-        getattr(self, self.call_method)(object, trait_name, old, new)
-
-    def equals ( self, handler ):
-        return False
-
-    def call_0 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler()
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.handler( object, trait_name, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (obj,),
+        2: lambda obj, name, old, new: (obj, new),
+        3: lambda obj, name, old, new: (obj, old, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
 #-------------------------------------------------------------------------------
 #  'TraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
-class TraitChangeNotifyWrapper:
+class TraitChangeNotifyWrapper(object):
+    """ Dynamic change notify wrapper.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method, or
+    the decorator with the same name.
+    """
+
+    # The wrapper is called with the full set of argument, and we need to
+    # create a tuple with the arguments that need to be sent to the event
+    # handler, depending on the number of those.
+    argument_transforms = {
+        0: lambda obj, name, old, new: (),
+        1: lambda obj, name, old, new: (new,),
+        2: lambda obj, name, old, new: (name, new),
+        3: lambda obj, name, old, new: (obj, name, new),
+        4: lambda obj, name, old, new: (obj, name, old, new),
+    }
 
     def __init__ ( self, handler, owner, target=None ):
         self.init( handler, owner, target )
 
     def init ( self, handler, owner, target=None ):
-        # If target is not None and handler is a function
-        # then the handler will be removed when target
-        # is deleted.
-        func = handler
+        # If target is not None and handler is a function then the handler
+        # will be removed when target is deleted.
         if type( handler ) is MethodType:
             func   = handler.im_func
             object = handler.im_self
@@ -418,12 +432,13 @@ class TraitChangeNotifyWrapper:
                          'arguments is allowed, but %s were specified.') %
                         ( func.__name__, arg_count ) )
 
-                self.call_method = 'rebind_call_%d' % arg_count
+                self.notify_listener = self._notify_method_listener
+                self.argument_transform = self.argument_transforms[arg_count]
 
                 return arg_count
+
         elif target is not None:
-            # Set up so the handler will be removed when the target
-            # is deleted
+            # Set up so the handler will be removed when the target is deleted.
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
 
@@ -437,7 +452,9 @@ class TraitChangeNotifyWrapper:
 
         self.name     = None
         self.handler  = handler
-        self.call_method = 'call_%d' % arg_count
+
+        self.notify_listener = self._notify_function_listener
+        self.argument_transform = self.argument_transforms[arg_count]
 
         return arg_count
 
@@ -447,11 +464,17 @@ class TraitChangeNotifyWrapper:
         We do explicit dispatch instead of assigning to the .__call__ instance
         attribute to avoid reference cycles.
         """
-        getattr(self, self.call_method)(object, trait_name, old, new)
 
-    # NOTE: This method is normally the only one that needs to be overridden in
-    # a subclass to implement the subclass's dispatch mechanism:
+        # `notify_listener` is either
+        # `_notify_method_listener` or `_notify_function_listener`
+        self.notify_listener( object, trait_name, old, new )
+
     def dispatch ( self, handler, *args ):
+        """ Dispatch the event to the listener.
+
+        This method is normally the only one that needs to be overridden in
+        a subclass to implement the subclass's dispatch mechanism.
+        """
         handler( *args )
 
     def equals ( self, handler ):
@@ -465,164 +488,122 @@ class TraitChangeNotifyWrapper:
         return ((self.name is None) and (handler == self.handler))
 
     def listener_deleted ( self, ref ):
-        self.owner.remove( self )
+        # In multithreaded situations, it's possible for this method to
+        # be called after, or concurrently with, the dispose method.
+        # Don't raise in that case.
+        try:
+            self.owner.remove( self )
+        except ValueError:
+            pass
         self.object = self.owner = None
 
     def dispose ( self ):
         self.object = None
 
-    def call_0 ( self, object, trait_name, old, new ):
+    def _dispatch_change_event(self, object, trait_name, old, new, handler):
+        """ Prepare and dispatch a trait change event to a listener. """
+
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
+
+        # Send a description of the event to the change event tracer.
+        if _pre_change_event_tracer is not None:
+            _pre_change_event_tracer( object, trait_name, old, new, handler )
+
+        # Dispatch the event to the listener.
+        try:
+            self.dispatch( handler, *args )
+        except Exception as e:
+            if _post_change_event_tracer is not None:
+                _post_change_event_tracer( object, trait_name, old, new,
+                                           handler, exception=e )
+            # This call needs to be made inside the `except` block in case
+            # the handler wants to re-raise the exception.
+            handle_exception( object, trait_name, old, new )
+        else:
+            if _post_change_event_tracer is not None:
+                _post_change_event_tracer( object, trait_name, old, new,
+                                           handler, exception=None )
+
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
+
+        obj_weak_ref = self.object
+        if (obj_weak_ref is not None) and (old is not Uninitialized):
+            # We make sure to hold a reference to the object before invoking
+            # `getattr` so that the listener does not disappear in a
+            # multi-threaded case.
+            obj = obj_weak_ref()
+            if obj is not None:
+                # Dynamically resolve the listener by name.
+                listener = getattr( obj, self.name )
+                self._dispatch_change_event( object, trait_name, old, new,
+                                             listener )
+
+    def _notify_function_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a function listener. """
+
         if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, object, trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            try:
-                self.dispatch( self.handler, object, trait_name, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_0 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( self.object(), self.name ) )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_1 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( self.object(), self.name ), new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_2 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_3 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               object, trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_4 ( self, object, trait_name, old, new ):
-        if (self.object is not None) and (old is not Uninitialized):
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               object, trait_name, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
+            self._dispatch_change_event( object, trait_name, old, new,
+                                         self.handler )
 
 #-------------------------------------------------------------------------------
 #  'ExtendedTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
 class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Change notify wrapper for "extended" trait change events..
 
-    def call_0 ( self, object, trait_name, old, new ):
+    The "extended notifiers" are set up internally when using extended traits,
+    to add/remove traits listeners when one of the intermediate traits changes.
+
+    For example, in a listener for the extended trait `a.b`, we need to
+    add/remove listeners to `a:b` when `a` changes.
+    """
+
+    def _dispatch_change_event(self, object, trait_name, old, new, handler):
+        """ Prepare and dispatch a trait change event to a listener. """
+
+        # Extract the arguments needed from the handler.
+        args = self.argument_transform( object, trait_name, old, new )
+
+        # Dispatch the event to the listener.
         try:
-            self.dispatch( self.handler )
-        except:
+            self.dispatch( handler, *args )
+        except Exception:
             handle_exception( object, trait_name, old, new )
 
-    def call_1 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+    def _notify_method_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a method listener. """
 
-    def call_2 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, trait_name, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+        obj_weak_ref = self.object
+        if obj_weak_ref is not None:
+            # We make sure to hold a reference to the object before invoking
+            # `getattr` so that the listener does not disappear in a
+            # multi-threaded case.
+            obj = obj_weak_ref()
+            if obj is not None:
+                # Dynamically resolve the listener by name.
+                listener = getattr( obj, self.name )
+                self._dispatch_change_event( object, trait_name, old, new,
+                                             listener )
 
-    def call_3 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, object, trait_name, new )
-        except:
-            handle_exception( object, trait_name, old, new )
+    def _notify_function_listener(self, object, trait_name, old, new):
+        """ Dispatch a trait change event to a function listener. """
 
-    def call_4 ( self, object, trait_name, old, new ):
-        try:
-            self.dispatch( self.handler, object, trait_name, old, new )
-        except:
-            handle_exception( object, trait_name, old, new )
-
-    def rebind_call_0 ( self, object, trait_name, old, new ):
-        if self.object is not None:
-            try:
-                self.dispatch( getattr( self.object(), self.name ) )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_1 ( self, object, trait_name, old, new ):
-        if self.object is not None:
-            try:
-                self.dispatch( getattr( self.object(), self.name ), new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_2 ( self, object, trait_name, old, new ):
-        if self.object is not None:
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_3 ( self, object, trait_name, old, new ):
-        if self.object is not None:
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               object, trait_name, new )
-            except:
-                handle_exception( object, trait_name, old, new )
-
-    def rebind_call_4 ( self, object, trait_name, old, new ):
-        if self.object is not None:
-            try:
-                self.dispatch( getattr( self.object(), self.name ),
-                               object, trait_name, old, new )
-            except:
-                handle_exception( object, trait_name, old, new )
+        self._dispatch_change_event(object, trait_name, old, new, self.handler)
 
 #-------------------------------------------------------------------------------
 #  'FastUITraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
 class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Dynamic change notify wrapper, dispatching on the UI thread.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method and the
+    `dispatch` parameter set to 'ui' or 'fast_ui'.
+    """
 
     def dispatch ( self, handler, *args ):
         if get_ident() == ui_thread:
@@ -631,212 +612,16 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
             ui_handler( handler, *args )
 
 #-------------------------------------------------------------------------------
-#  'UITraitChangeNotifyWrapper' class:
-#-------------------------------------------------------------------------------
-
-class UITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
-
-    def __init__ ( self, handler, owner, target ):
-        self.init( handler, owner, target )
-        self.deferred = None
-
-    def call_0 ( self, object, trait_name, old, new ):
-        if (old is not Uninitialized) and (self.deferred is None):
-            self.deferred = DeferredTraitNotification( object, trait_name, old,
-                                                       new )
-            ui_handler( self.dispatch_0, self.deferred )
-
-    def dispatch_0 ( self, deferred ):
-        self.deferred = None
-        try:
-            self.handler()
-        except:
-            handle_exception( deferred.object, deferred.trait_name,
-                              deferred.old, deferred.new )
-
-    def call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            if self.deferred is None:
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.dispatch_1, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def dispatch_1 ( self, deferred ):
-        self.deferred = None
-        try:
-            self.handler( deferred.new )
-        except:
-            handle_exception( deferred.object, deferred.trait_name,
-                              deferred.old, deferred.new )
-
-    def call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            if ((self.deferred is None) or
-                (self.deferred.trait_name != trait_name)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.dispatch_2, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def dispatch_2 ( self, deferred ):
-        self.deferred = None
-        try:
-            self.handler( deferred.trait_name, deferred.new )
-        except:
-            handle_exception( deferred.object, deferred.trait_name,
-                              deferred.old, deferred.new )
-
-    def call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            deferred = self.deferred
-            if ((deferred is None) or (deferred.trait_name != trait_name) or
-                (deferred.object is not object)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.dispatch_3, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def dispatch_3 ( self, deferred ):
-        self.deferred = None
-        try:
-            self.handler( deferred.object, deferred.trait_name, deferred.new )
-        except:
-            handle_exception( deferred.object, deferred.trait_name,
-                              deferred.old, deferred.new )
-
-    def call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            deferred = self.deferred
-            if ((deferred is None) or (deferred.trait_name != trait_name) or
-                (deferred.object is not object)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.dispatch_4, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def dispatch_4 ( self, deferred ):
-        self.deferred = None
-        try:
-            self.handler( deferred.object, deferred.trait_name, deferred.old,
-                          deferred.new )
-        except:
-            handle_exception( deferred.object, deferred.trait_name,
-                              deferred.old, deferred.new )
-
-    def rebind_call_0 ( self, object, trait_name, old, new ):
-        if (old is not Uninitialized) and (self.deferred is None):
-            self.deferred = DeferredTraitNotification( object, trait_name, old,
-                                                       new )
-            ui_handler( self.rebind_dispatch_0, self.deferred )
-
-    def rebind_dispatch_0 ( self, deferred ):
-        self.deferred = None
-        if self.object is not None:
-            try:
-                getattr( self.object(), self.name )()
-            except:
-                handle_exception( deferred.object, deferred.trait_name,
-                                  deferred.old, deferred.new )
-
-    def rebind_call_1 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            if self.deferred is None:
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.rebind_dispatch_1, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def rebind_dispatch_1 ( self, deferred ):
-        self.deferred = None
-        if self.object is not None:
-            try:
-                getattr( self.object(), self.name )( deferred.new )
-            except:
-                handle_exception( deferred.object, deferred.trait_name,
-                                  deferred.old, deferred.new )
-
-    def rebind_call_2 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            if ((self.deferred is None) or
-                (self.deferred.trait_name != trait_name)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.rebind_dispatch_2, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def rebind_dispatch_2 ( self, deferred ):
-        self.deferred = None
-        if self.object is not None:
-            try:
-                getattr( self.object(), self.name )( deferred.trait_name,
-                                                            deferred.new )
-            except:
-                handle_exception( deferred.object, deferred.trait_name,
-                                  deferred.old, deferred.new )
-
-    def rebind_call_3 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            deferred = self.deferred
-            if ((deferred is None) or (deferred.trait_name != trait_name) or
-                (deferred.object is not object)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.rebind_dispatch_3, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def rebind_dispatch_3 ( self, deferred ):
-        self.deferred = None
-        if self.object is not None:
-            try:
-                getattr( self.object(), self.name )( deferred.object,
-                         deferred.trait_name, deferred.new )
-            except:
-                handle_exception( deferred.object, deferred.trait_name,
-                                  deferred.old, deferred.new )
-
-    def rebind_call_4 ( self, object, trait_name, old, new ):
-        if old is not Uninitialized:
-            deferred = self.deferred
-            if ((deferred is None) or (deferred.trait_name != trait_name) or
-                (deferred.object is not object)):
-                self.deferred = DeferredTraitNotification( object, trait_name,
-                                                           old, new )
-                ui_handler( self.rebind_dispatch_4, self.deferred )
-            else:
-                self.deferred.new = new
-
-    def rebind_dispatch_4 ( self, deferred ):
-        self.deferred = None
-        if self.object is not None:
-            try:
-                getattr( self.object(), self.name )( deferred.object,
-                         deferred.trait_name, deferred.old, deferred.new )
-            except:
-                handle_exception( deferred.object, deferred.trait_name,
-                                  deferred.old, deferred.new )
-
-class DeferredTraitNotification ( object ):
-
-    def __init__ ( self, object, trait_name, old, new ):
-        self.object     = object
-        self.trait_name = trait_name
-        self.old        = old
-        self.new        = new
-
-#-------------------------------------------------------------------------------
 #  'NewTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
 class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Dynamic change notify wrapper, dispatching on a new thread.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method and the
+    `dispatch` parameter set to 'new'.
+    """
 
     def dispatch ( self, handler, *args ):
         Thread( target = handler, args = args ).start()
-

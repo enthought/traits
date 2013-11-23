@@ -40,7 +40,6 @@ import copy_reg
 from types import InstanceType, TypeType, FunctionType, MethodType
 from weakref import ref
 
-from .protocols.api import adapt
 from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
     CoercableTypes, TraitsCache, class_of, enumerate, Missing)
@@ -123,7 +122,7 @@ class BaseTraitHandler ( object ):
     object:
 
         * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parameterized types*.
+          them to create *parametrized types*.
         * Trait handlers can have multiple methods, whereas validator functions
           can have only one callable interface. This feature allows more
           flexibility in their implementation, and allows them to handle a
@@ -153,11 +152,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
-        name : string
-            The name of the attribute being assigned
+            The object whose attribute is being assigned.
+        name : str
+            The name of the attribute being assigned.
         value : object
-            The proposed new value for the attribute
+            The proposed new value for the attribute.
 
         Description
         -----------
@@ -176,15 +175,15 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
-        arg_num : integer
-            The position of the incorrect argument in the argument list
+            The method that encountered the error.
+        arg_num : int
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
-        name : string
-            The name of the parameter corresponding to the incorrect argument
+            The object whose method was called.
+        name : str
+            The name of the parameter corresponding to the incorrect argument.
         value : object
-            The value passed to the argument
+            The value passed to the argument.
 
         Description
         -----------
@@ -204,13 +203,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         object : object
-            The object whose method was called
-        name : string
-            The name of the parameter corresponding to the incorrect argument
-        value
-            The value passed to the argument
+            The object whose method was called.
+        name : str
+            The name of the parameter corresponding to the incorrect argument.
+        value :
+            The value passed to the argument.
 
         Description
         -----------
@@ -229,13 +228,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
-        arg_num : integer
-            The position of the incorrect argument in the argument list
+            The method that encountered the error.
+        arg_num : int
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
-        name : string
-            The name of the parameter corresponding to the incorrect argument
+            The object whose method was called.
+        name : str
+            The name of the parameter corresponding to the incorrect argument.
 
         Description
         -----------
@@ -254,13 +253,13 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
-        arg_num : integer
-            The position of the incorrect argument in the argument list
+            The method that encountered the error.
+        arg_num : int
+            The position of the incorrect argument in the argument list.
         object : object
-            The object whose method was called
-        name : string
-            The name of the parameter corresponding to the incorrect argument
+            The object whose method was called.
+        name : str
+            The name of the parameter corresponding to the incorrect argument.
 
         Description
         -----------
@@ -279,11 +278,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         method : function
-            The method that encountered the error
+            The method that encountered the error.
         object : object
-            The object whose method was called
-        value
-            The value returned by the method
+            The object whose method was called.
+        value :
+            The value returned by the method.
 
         Description
         -----------
@@ -301,11 +300,11 @@ class BaseTraitHandler ( object ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
-        name : string
-            The name of the attribute being assigned
-        value
-            The proposed new value for the attribute
+            The object whose attribute is being assigned.
+        name : str
+            The name of the attribute being assigned.
+        value :
+            The proposed new value for the attribute.
 
         Description
         -----------
@@ -352,9 +351,10 @@ class BaseTraitHandler ( object ):
     def repr ( self, value ):
         """ Returns a printable representation of a value along with its type.
 
-        DEPRECATED: This functionality was only used to provide readable error
-        messages. This functionality has been incorporated into TraitError
-        itself.
+        .. deprecated :: 3.0.3
+            This functionality was only used to provide readable error
+            messages. This functionality has been incorporated into
+            TraitError itself.
 
         Parameters
         ----------
@@ -372,8 +372,8 @@ class BaseTraitHandler ( object ):
 
         Parameters
         ----------
-        trait : trait
-            The trait to be edited
+        trait : Trait
+            The trait to be edited.
 
         Description
         -----------
@@ -434,12 +434,10 @@ class TraitType ( BaseTraitHandler ):
 
           This is the getter method of a trait that behaves like a property.
 
-          *Parameters*
+          :Parameters:
+            **object** (*object*) -- The object that the property applies to.
 
-          object : an object
-              The object that the property applies to.
-          name : string
-              The name of the property on *object* property.
+            **name** (str) -- The name of the property on *object* property.
 
           *Description*
 
@@ -453,14 +451,12 @@ class TraitType ( BaseTraitHandler ):
 
           This is the setter method of a trait that behaves like a property.
 
-          *Parameters*
+          :Parameters:
+            **object** (*object*) -- The object that the property applies to.
 
-          object : instance
-              The object that the property applies to.
-          name : string
-              The name of the property on *object*.
-          value : any
-              The value being assigned as the value of the property.
+            **name** (str) -- The name of the property on *object*.
+
+            **value** -- The value being assigned as the value of the property.
 
           *Description*
 
@@ -531,7 +527,7 @@ class TraitType ( BaseTraitHandler ):
             else:
                 self._metadata = metadata
         else:
-            self._metadata = self.metadata
+            self._metadata = self.metadata.copy()
 
         self.init()
 
@@ -769,7 +765,7 @@ class TraitHandler ( BaseTraitHandler ):
     object:
 
         * Trait handlers have constructors and state. Therefore, you can use
-          them to create *parameterized types*.
+          them to create *parametrized types*.
         * Trait handlers can have multiple methods, whereas validator functions
           can have only one callable interface. This feature allows more
           flexibility in their implementation, and allows them to handle a
@@ -785,11 +781,11 @@ class TraitHandler ( BaseTraitHandler ):
         Parameters
         ----------
         object : object
-            The object whose attribute is being assigned
-        name : string
-            The name of the attribute being assigned
-        value
-            The proposed new value for the attribute
+            The object whose attribute is being assigned.
+        name : str
+            The name of the attribute being assigned.
+        value :
+            The proposed new value for the attribute.
 
         Returns
         -------
@@ -843,13 +839,13 @@ class TraitRange ( TraitHandler ):
         Parameters
         ----------
         low : number
-            The minimum value that the trait can accept
+            The minimum value that the trait can accept.
         high : number
-            The maximum value that the trait can accept
-        exclude_low : Boolean
-            Should the *low* value be exclusive (or inclusive)
-        exclude_high : Boolean
-            Should the *high* value be exclusive (or inclusive)
+            The maximum value that the trait can accept.
+        exclude_low : bool
+            Should the *low* value be exclusive (or inclusive).
+        exclude_high : bool
+            Should the *high* value be exclusive (or inclusive).
 
         Description
         -----------
@@ -995,10 +991,10 @@ class TraitString ( TraitHandler ):
 
     Example
     -------
-    ::
 
-        class Person(HasTraits):
-            name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
+    class Person(HasTraits):
+        name = Trait('', TraitString(maxlen=50, regex=r'^[A-Za-z]*$'))
+
 
     This example defines a **Person** class with a **name** attribute, which
     must be a string of between 0 and 50 characters that consist of only
@@ -1009,12 +1005,12 @@ class TraitString ( TraitHandler ):
 
         Parameters
         ----------
-        minlen : integer
-            The minimum length allowed for the string
-        maxlen : integer
-            The maximum length allowed for the string
-        regex : string
-            A Python regular expression that the string must match
+        minlen : int
+            The minimum length allowed for the string.
+        maxlen : int
+            The maximum length allowed for the string.
+        regex : str
+            A Python regular expression that the string must match.
 
         """
         self.minlen = max( 0, minlen )
@@ -1103,7 +1099,7 @@ class TraitCoerceType ( TraitHandler ):
 
     TraitCoerceType is the underlying handler for the predefined traits and
     factories for Python simple types. The TraitCoerceType class is also an
-    example of a parameterized type, because the single TraitCoerceType class
+    example of a parametrized type, because the single TraitCoerceType class
     allows creating instances that check for totally different sets of values.
     For example::
 
@@ -1147,7 +1143,7 @@ class TraitCoerceType ( TraitHandler ):
         ----------
         aType : type
             Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., 'cat')
+            Python value (e.g., 'cat').
 
         Description
         -----------
@@ -1254,7 +1250,7 @@ class TraitCastType ( TraitCoerceType ):
         ----------
         aType : type
             Either a Python type (e.g., ``str`` or types.StringType) or a
-            Python value (e.g., ``'cat``)
+            Python value (e.g., ``'cat``).
 
         Description
         -----------
@@ -1296,9 +1292,9 @@ class ThisClass ( TraitHandler ):
 
         Parameters
         ----------
-        allow_none : Boolean
+        allow_none : bool
             Flag indicating whether None is accepted as a valid value
-            (True or non-zero) or not (False or 0)
+            (True or non-zero) or not (False or 0).
         """
         if allow_none:
             self.validate      = self.validate_none
@@ -1375,11 +1371,11 @@ class TraitInstance ( ThisClass ):
         Parameters
         ----------
         aClass : class or type
-            A Python class, an instance of a Python class, or a Python type
-        allow_none : boolean
-            Flag indicating whether None is accepted as a valid value
+            A Python class, an instance of a Python class, or a Python type.
+        allow_none : bool
+            Flag indicating whether None is accepted as a valid value.
             (True or non-zero) or not (False or 0)
-        adapt : string
+        adapt : str
             Value indicating how adaptation should be handled:
 
             - 'no' (-1): Adaptation is not allowed.
@@ -1424,6 +1420,9 @@ class TraitInstance ( ThisClass ):
                                    self._allow_none )
 
     def validate ( self, object, name, value ):
+
+        from traits.adaptation.api import adapt
+
         if value is None:
             if self._allow_none:
                 return value
@@ -1545,17 +1544,27 @@ class TraitWeakRef ( TraitInstance ):
             self.validate_failed( object, name, value )
         self.aClass = aClass
 
+
+
+#-- Private Class --------------------------------------------------------------
+
+def _make_value_freed_callback ( object_ref, name ):
+    def _value_freed ( value_ref ):
+        object = object_ref()
+        if object is not None:
+            object.trait_property_changed( name, Undefined, None )
+    return _value_freed
+
+
 class HandleWeakRef ( object ):
 
     def __init__ ( self, object, name, value ):
-        self.object = ref( object )
-        self.name   = name
-        self.value  = ref( value, self._value_freed )
+        object_ref = ref( object )
+        _value_freed = _make_value_freed_callback( object_ref, name )
+        self.object = object_ref
+        self.name = name
+        self.value = ref( value, _value_freed )
 
-    def _value_freed ( self, ref ):
-        object = self.object()
-        if object is not None:
-            object.trait_property_changed( self.name, Undefined, None )
 
 #-------------------------------------------------------------------------------
 #  'TraitClass' class:
@@ -1575,7 +1584,7 @@ class TraitClass ( TraitHandler ):
         Parameters
         ----------
         aClass : class
-            A Python class
+            A Python class.
 
         Description
         -----------
@@ -1630,14 +1639,14 @@ class TraitFunction ( TraitHandler ):
         Parameters
         ----------
         aFunc : function
-            A function to validate trait attribute values
+            A function to validate trait attribute values.
 
         Description
         -----------
         The signature of the function passed as an argument must be of the
         form *function* ( *object*, *name*, *value* ). The function must
         verify that *value* is a legal value for the *name* trait attribute
-        of *object*. If it is, the value returned by the fucntion is the
+        of *object*. If it is, the value returned by the function is the
         actual value assigned to the trait attribute. If it is not, the
         function must raise a TraitError exception.
         """
@@ -1677,7 +1686,7 @@ class TraitEnum ( TraitHandler ):
         Parameters
         ----------
         values : list or tuple
-            Enumeration of all legal values for a trait
+            Enumeration of all legal values for a trait.
 
         Description
         -----------
@@ -1740,10 +1749,13 @@ class TraitPrefixList ( TraitHandler ):
     *s*\ :sub:`n`\ ], then the string *v* is a valid value for the trait if
     *v* == *s*\ :sub:`i[:j]` for one and only one pair of values (i, j). If *v*
     is a valid value, then the actual value assigned to the trait attribute is
-    the corresponding *s*\ :sub:`i` value that *v* matched. For example::
+    the corresponding *s*\ :sub:`i` value that *v* matched.
 
-        class Person(HasTraits):
-            married = Trait('no', TraitPrefixList('yes', 'no')
+    Example
+    -------
+
+    class Person(HasTraits):
+        married = Trait('no', TraitPrefixList('yes', 'no')
 
     The Person class has a **married** trait that accepts any of the
     strings 'y', 'ye', 'yes', 'n', or 'no' as valid values. However, the actual
@@ -1762,7 +1774,7 @@ class TraitPrefixList ( TraitHandler ):
         Parameters
         ----------
         values : list or tuple of strings
-            Enumeration of all legal values for a trait
+            Enumeration of all legal values for a trait.
 
         Description
         -----------
@@ -1829,7 +1841,10 @@ class TraitMap ( TraitHandler ):
     TraitMap dictionary. The name of the shadow attribute is simply the base
     attribute name with an underscore ('_') appended. Mapped trait attributes
     can be used to allow a variety of user-friendly input values to be mapped to
-    a set of internal, program-friendly values. For example::
+    a set of internal, program-friendly values.
+
+    Example
+    -------
 
         >>>class Person(HasTraits):
         ...    married = Trait('yes', TraitMap({'yes': 1, 'no': 0 })
@@ -1853,7 +1868,7 @@ class TraitMap ( TraitHandler ):
 
         Parameters
         ----------
-        map : dictionary
+        map : dict
             A dictionary whose keys are valid values for the trait attribute,
             and whose corresponding values are the values for the shadow
             trait attribute.
@@ -1909,13 +1924,9 @@ class TraitPrefixMap ( TraitMap ):
 
     Example
     -------
-    ::
 
-        boolean_map = Trait('true', TraitPrefixMap( {
-                                        'true': 1,
-                                        'yes': 1,
-                                        'false': 0,
-                                        'no': 0 } ))
+        mapping = {'true': 1, 'yes': 1, 'false': 0, 'no': 0 }
+        boolean_map = Trait('true', TraitPrefixMap(mapping))
 
     This example defines a Boolean trait that accepts any prefix of 'true',
     'yes', 'false', or 'no', and maps them to 1 or 0.
@@ -1925,7 +1936,7 @@ class TraitPrefixMap ( TraitMap ):
 
         Parameters
         ----------
-        map : dictionary
+        map : dict
             A dictionary whose keys are strings that are valid values for the
             trait attribute, and whose corresponding values are the values for
             the shadow trait attribute.
@@ -2009,13 +2020,9 @@ class TraitCompound ( TraitHandler ):
 
         Parameters
         ----------
-        handlers : list or tuple of TraitHandler or trait objects
-            The trait handlers to be combined
+        *handlers :
+            list or tuple of TraitHandler or trait objects to be combined.
 
-        Description
-        -----------
-        The TraitHandler or trait objects can be provided directly as
-        arguments to the constructor.
         """
         if (len( handlers ) == 1) and (type( handlers[0] ) in SequenceTypes):
             handlers = handlers[0]
@@ -2155,7 +2162,8 @@ class TraitTuple ( TraitHandler ):
     TraitTuple is the underlying handler for the predefined trait **Tuple**,
     and the trait factory Tuple().
 
-    For example::
+    Example
+    -------
 
         rank = Range(1, 13)
         suit = Trait('Hearts', 'Diamonds', 'Spades', 'Clubs')
@@ -2172,9 +2180,9 @@ class TraitTuple ( TraitHandler ):
 
         Parameters
         ----------
-        args : list of traits
-            Each *trait*\ :sub:`i` specifies the type that the *i*\ th element of a
-            tuple must be.
+        *args :
+            A list of traits, each *trait*\ :sub:`i` specifies the type that
+            the *i*\ th element of a tuple must be.
 
         Description
         -----------
@@ -2272,12 +2280,14 @@ class TraitList ( TraitHandler ):
     constraints. TraitList is the underlying handler for the predefined
     list-based traits.
 
-    For example::
+    Example
+    -------
 
-        class Card(HasTraits):
-            pass
-        class Hand(HasTraits):
-            cards = Trait([], TraitList(Trait(Card), maxlen=52))
+    class Card(HasTraits):
+        pass
+    class Hand(HasTraits):
+        cards = Trait([], TraitList(Trait(Card), maxlen=52))
+
 
     This example defines a Hand class, which has a **cards** trait attribute,
     which is a list of Card objects and can have from 0 to 52 items in the
@@ -2293,14 +2303,14 @@ class TraitList ( TraitHandler ):
 
         Parameters
         ----------
-        trait : trait
-            The type of items the list can contain
-        minlen : integer
-            The minimum length of the list
-        maxlen : integer
-            The maximum length of the list
-        has_items : boolean
-            Flag indicating whether the list contains elements
+        trait : Trait
+            The type of items the list can contain.
+        minlen : int
+            The minimum length of the list.
+        maxlen : int
+            The maximum length of the list.
+        has_items : bool
+            Flag indicating whether the list contains elements.
 
         Description
         -----------
@@ -2915,6 +2925,11 @@ class TraitSetObject ( set ):
             self._send_trait_items_event( self.name_items,
                 TraitSetEvent( removed ) )
 
+    def copy ( self ):
+        """ Return a true ``set`` object with a copy of the data.
+        """
+        return set(self)
+
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
         """
@@ -2950,12 +2965,12 @@ class TraitDictEvent ( object ):
         """
         Parameters
         ----------
-        added : dictionary
-            New keys and values
-        changed : dictionary
-            Updated keys and their previous values
-        removed : dictionary
-            Old keys and values that were just removed
+        added : dict
+            New keys and values.
+        changed : dict
+            Updated keys and their previous values.
+        removed : dict
+            Old keys and values that were just removed.
         """
         # Construct new empty dicts every time instead of using a default value
         # in the method argument, just in case someone gets the bright idea of
@@ -2985,10 +3000,12 @@ class TraitDict ( TraitHandler ):
     type constraints. TraitDict is the underlying handler for the
     dictionary-based predefined traits, and the Dict() trait factory.
 
-     For example::
+    Example
+    -------
 
-            class WorkoutClass(HasTraits):
-                member_weights = Trait({}, TraitDict(str, float))
+    class WorkoutClass(HasTraits):
+        member_weights = Trait({}, TraitDict(str, float))
+
 
     This example defines a WorkoutClass class containing a *member_weights*
     trait attribute whose value must be a dictionary containing keys that
@@ -3006,11 +3023,11 @@ class TraitDict ( TraitHandler ):
         Parameters
         ----------
         key_trait : trait
-            The type for the dictionary keys
+            The type for the dictionary keys.
         value_trait : trait
-            The type for the dictionary values
-        has_items : boolean
-            Flag indicating whether the dictionary contains entries
+            The type for the dictionary values.
+        has_items : bool
+            Flag indicating whether the dictionary contains entries.
 
         Description
         -----------
@@ -3303,5 +3320,18 @@ class TraitDictObject ( dict ):
 
 from . import ctraits
 ctraits._list_classes( TraitListObject, TraitSetObject, TraitDictObject )
-ctraits._adapt( adapt )
 
+def _adapt_wrapper(*args, **kw):
+    # We need this wrapper to defer the import of 'adapt' and avoid a circular
+    # import. The ctraits 'adapt' callback needs to be set as soon as possible,
+    # but the adaptation mechanism relies on traits.
+
+    # This wrapper is called once, after which we set the ctraits callback
+    # to point directly to 'adapt'.
+
+    from traits.adaptation.api import adapt
+
+    ctraits._adapt(adapt)
+    return adapt(*args, **kw)
+
+ctraits._adapt( _adapt_wrapper )

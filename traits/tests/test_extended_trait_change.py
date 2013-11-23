@@ -29,7 +29,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from nose import SkipTest
 
@@ -733,7 +733,6 @@ class OnTraitChangeTest ( unittest.TestCase ):
 
     def multi_register ( self, object, handlers, pattern, remove = False ):
         for handler in handlers:
-            print object, handler, pattern, remove
             object.on_trait_change( handler, pattern, remove = remove )
 
     def build_list ( self ):
