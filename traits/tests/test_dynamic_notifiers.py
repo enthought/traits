@@ -228,7 +228,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         gc.collect()
         DynamicNotifiers()
         # When an object with dynamic listeners has no more references,
-        # it should not create cyclic garbage
+        # it should not create cyclic garbage.
         self.assertEqual(gc.collect(), 0)
 
 
