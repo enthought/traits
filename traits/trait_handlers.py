@@ -1544,17 +1544,27 @@ class TraitWeakRef ( TraitInstance ):
             self.validate_failed( object, name, value )
         self.aClass = aClass
 
+
+
+#-- Private Class --------------------------------------------------------------
+
+def _make_value_freed_callback ( object_ref, name ):
+    def _value_freed ( value_ref ):
+        object = object_ref()
+        if object is not None:
+            object.trait_property_changed( name, Undefined, None )
+    return _value_freed
+
+
 class HandleWeakRef ( object ):
 
     def __init__ ( self, object, name, value ):
-        self.object = ref( object )
-        self.name   = name
-        self.value  = ref( value, self._value_freed )
+        object_ref = ref( object )
+        _value_freed = _make_value_freed_callback( object_ref, name )
+        self.object = object_ref
+        self.name = name
+        self.value = ref( value, _value_freed )
 
-    def _value_freed ( self, ref ):
-        object = self.object()
-        if object is not None:
-            object.trait_property_changed( self.name, Undefined, None )
 
 #-------------------------------------------------------------------------------
 #  'TraitClass' class:
@@ -2914,6 +2924,11 @@ class TraitSetObject ( set ):
         if self.name_items is not None:
             self._send_trait_items_event( self.name_items,
                 TraitSetEvent( removed ) )
+
+    def copy ( self ):
+        """ Return a true ``set`` object with a copy of the data.
+        """
+        return set(self)
 
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
