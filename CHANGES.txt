@@ -24,6 +24,7 @@ Enhancements
 
 Fixes
 
+ * Issue #100: Fix cyclic garbage arising from dynamic trait change handlers.
  * Issue #95: Fix cyclic garbage arising from use of the WeakRef trait type.
  * Issue #97: `TraitSetObject.copy` now returns a plain set
    rather than an uninitialized `TraitSetObject` instance.
