@@ -79,7 +79,6 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">ref</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">ModuleType</span>
 
@@ -90,7 +89,7 @@
 
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TraitType</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span>
         <span class="n">TraitSetObject</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">,</span> <span class="n">TraitDictObject</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">,</span>
-        <span class="n">ThisClass</span><span class="p">,</span> <span class="n">items_event</span><span class="p">,</span> <span class="n">RangeTypes</span><span class="p">)</span>
+        <span class="n">ThisClass</span><span class="p">,</span> <span class="n">items_event</span><span class="p">,</span> <span class="n">RangeTypes</span><span class="p">,</span> <span class="n">HandleWeakRef</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Trait</span><span class="p">,</span> <span class="n">trait_from</span><span class="p">,</span> <span class="n">_TraitMaker</span><span class="p">,</span> <span class="n">_InstanceArgs</span><span class="p">,</span> <span class="n">code_editor</span><span class="p">,</span>
         <span class="n">html_editor</span><span class="p">,</span> <span class="n">password_editor</span><span class="p">,</span> <span class="n">shell_editor</span><span class="p">,</span> <span class="n">date_editor</span><span class="p">,</span> <span class="n">time_editor</span><span class="p">)</span>
@@ -3394,20 +3393,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">klass</span> <span class="o">=</span> <span class="n">klass</span>
 
-<span class="c">#-- Private Class --------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="HandleWeakRef"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.HandleWeakRef">[docs]</a><span class="k">class</span> <span class="nc">HandleWeakRef</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>   <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span>  <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_freed</span> <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_value_freed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-
 
 <span class="c">#-- Date Trait definition ----------------------------------------------------</span></div>
 <span class="n">Date</span> <span class="o">=</span> <span class="n">BaseInstance</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="n">date_editor</span><span class="p">)</span>
@@ -3538,7 +3523,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Oct 25, 2013.
+      Last updated on Nov 26, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>

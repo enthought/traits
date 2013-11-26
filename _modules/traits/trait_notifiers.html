@@ -484,7 +484,9 @@
                          <span class="s">&#39;arguments is allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
                         <span class="p">(</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_notify_method_listener</span>
+                <span class="c"># We use the unbound method here to prevent cyclic garbage</span>
+                <span class="c"># (issue #100).</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_notify_method_listener</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transforms</span><span class="p">[</span><span class="n">arg_count</span><span class="p">]</span>
 
                 <span class="k">return</span> <span class="n">arg_count</span>
@@ -505,7 +507,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>  <span class="o">=</span> <span class="n">handler</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_notify_function_listener</span>
+        <span class="c"># We use the unbound method here to prevent cyclic garbage</span>
+        <span class="c"># (issue #100).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_notify_function_listener</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transforms</span><span class="p">[</span><span class="n">arg_count</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">arg_count</span>
@@ -517,9 +521,10 @@
 <span class="sd">        attribute to avoid reference cycles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># `notify_listener` is either</span>
-        <span class="c"># `_notify_method_listener` or `_notify_function_listener`</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="c"># `notify_listener` is either the *unbound*</span>
+        <span class="c"># `_notify_method_listener` or `_notify_function_listener` to</span>
+        <span class="c"># prevent cyclic garbage (issue #100).</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="TraitChangeNotifyWrapper.dispatch"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dispatch the event to the listener.</span>
@@ -720,7 +725,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Oct 25, 2013.
+      Last updated on Nov 26, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>

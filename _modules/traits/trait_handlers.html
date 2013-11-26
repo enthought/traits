@@ -1595,18 +1595,28 @@
         <span class="k">if</span> <span class="n">aClass</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">validate_failed</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aClass</span> <span class="o">=</span> <span class="n">aClass</span>
+
+
+
+<span class="c">#-- Private Class --------------------------------------------------------------</span>
 </div>
+<span class="k">def</span> <span class="nf">_make_value_freed_callback</span> <span class="p">(</span> <span class="n">object_ref</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_value_freed</span> <span class="p">(</span> <span class="n">value_ref</span> <span class="p">):</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="n">object_ref</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_value_freed</span>
+
+
 <div class="viewcode-block" id="HandleWeakRef"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.HandleWeakRef">[docs]</a><span class="k">class</span> <span class="nc">HandleWeakRef</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>   <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span>  <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_freed</span> <span class="p">)</span>
+        <span class="n">object_ref</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
+        <span class="n">_value_freed</span> <span class="o">=</span> <span class="n">_make_value_freed_callback</span><span class="p">(</span> <span class="n">object_ref</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">object_ref</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">_value_freed</span> <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_value_freed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;TraitClass&#39; class:</span>
@@ -2967,6 +2977,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
                 <span class="n">TraitSetEvent</span><span class="p">(</span> <span class="n">removed</span> <span class="p">)</span> <span class="p">)</span>
 
+<div class="viewcode-block" id="TraitSetObject.copy"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.TraitSetObject.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a true ``set`` object with a copy of the data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</div>
     <span class="k">def</span> <span class="nf">__reduce_ex__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Overridden to make sure we call our custom __getstate__.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3415,7 +3430,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Oct 25, 2013.
+      Last updated on Nov 26, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>

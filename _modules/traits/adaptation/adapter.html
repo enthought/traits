@@ -93,8 +93,8 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Constructor. &quot;&quot;&quot;</span>
 
+        <span class="n">traits</span><span class="p">[</span><span class="s">&#39;adaptee&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adaptee</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Adapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span> <span class="o">=</span> <span class="n">adaptee</span>
 
         <span class="k">return</span>
 
@@ -252,7 +252,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Oct 25, 2013.
+      Last updated on Nov 26, 2013.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
