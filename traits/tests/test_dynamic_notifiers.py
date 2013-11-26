@@ -1,4 +1,6 @@
 """ Tests for the dynamic notifiers. """
+import gc
+
 from traits.api import Float, HasTraits, List, on_trait_change
 from traits.testing.unittest_tools import unittest
 
@@ -221,6 +223,13 @@ class TestDynamicNotifiers(unittest.TestCase):
         del obj
 
         self.assertEqual(obj_collected, [True])
+
+    def test_creating_notifiers_dont_create_cyclic_garbage(self):
+        gc.collect()
+        DynamicNotifiers()
+        # When an object with dynamic listeners has no more references,
+        # it should not create cyclic garbage.
+        self.assertEqual(gc.collect(), 0)
 
 
 if __name__ == '__main__':

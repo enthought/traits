@@ -41,8 +41,8 @@ class Adapter(HasTraits):
     def __init__(self, adaptee, **traits):
         """ Constructor. """
 
+        traits['adaptee'] = adaptee
         super(Adapter, self).__init__(**traits)
-        self.adaptee = adaptee
 
         return
 
