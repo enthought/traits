@@ -24,9 +24,10 @@
 
 from __future__ import absolute_import
 
-import sys
-import re
 import datetime
+import operator
+import re
+import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 
@@ -119,6 +120,45 @@ class Generic ( Any ):
 
     #: The standard metadata for the trait:
     metadata = { 'trait_value': True }
+
+#-------------------------------------------------------------------------------
+#  'Integer' trait:
+#-------------------------------------------------------------------------------
+
+class Integer ( TraitType ):
+    """ Defines a trait whose type must be an int or long.
+
+    """
+
+    #: The function to use for evaluating strings to this type:
+    evaluate = int
+
+    #: The default value for the trait:
+    default_value = 0
+
+    #: A description of the type of value this trait accepts:
+    info_text = 'an integer (int or long)'
+
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+        if isinstance( value, (int, long) ):
+            return int(value)
+        
+        try:
+            int_value = operator.index( value )
+        except TypeError:
+            pass
+        else:
+            return int_value
+
+        self.error( object, name, value )
+            
+    def create_editor ( self ):
+        """ Returns the default traits UI editor for this type of trait.
+        """
+        return default_text_editor( self, int )
+
 
 #-------------------------------------------------------------------------------
 #  'BaseInt' and 'Int' traits:

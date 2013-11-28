@@ -137,6 +137,7 @@ in the following table.
 .. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
 .. index:: floating point number type, Long trait, CLong trait, Str trait
 .. index:: CStr trait, Unicode; trait, CUnicode trait
+.. index:: Integer trait
 
 .. _predefined-defaults-for-simple-types-table:
 
@@ -153,6 +154,12 @@ Long           CLong         Long integer           0L
 Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
 ============== ============= ====================== ======================
+
+The ``Integer`` type is similar to ``Int`` and ``Long``, but is intended for
+use for values that may be either a Python ``int`` or a Python ``long``.  It
+will convert any other integral types (specifically, types that implement the
+``__index__`` method) to ``int`` or ``long``.
+
 
 .. index::
    pair: types; coercing
@@ -320,6 +327,8 @@ the table.
 | Instance         | Instance( [*klass* = None, *factory* = None, *args* =    |
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
++------------------+----------------------------------------------------------+
+| Integer          | Integer ( [*value* = 0] )                                |
 +------------------+----------------------------------------------------------+
 | List, ListBool,  |List([*trait* = None, *value* = None, *minlen* = 0,       |
 | ListClass,       |*maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*]) |
