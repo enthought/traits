@@ -3420,14 +3420,14 @@ validate_trait_integer ( trait_object * trait, has_traits_object * obj,
         return value;
     }
     else if (PyLong_CheckExact(value)) {
-        int overflow;
         long x;
-        x = PyLong_AsLongAndOverflow(value, &overflow);
-        if (overflow) {
-            Py_INCREF(value);
-            return value;
-        }
-        else if (x == -1 && PyErr_Occurred()) {
+        x = PyLong_AsLong(value);
+        if (x == -1 && PyErr_Occurred()) {
+            if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                PyErr_Clear();
+                Py_INCREF(value);
+                return value;
+            }
             return NULL;
         }
         else {
@@ -4075,14 +4075,14 @@ check_implements:
                     return value;
                 }
                 else if (PyLong_CheckExact(value)) {
-                    int overflow;
                     long x;
-                    x = PyLong_AsLongAndOverflow(value, &overflow);
-                    if (overflow) {
-                        Py_INCREF(value);
-                        return value;
-                    }
-                    else if (x == -1 && PyErr_Occurred()) {
+                    x = PyLong_AsLong(value);
+                    if (x == -1 && PyErr_Occurred()) {
+                        if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                            PyErr_Clear();
+                            Py_INCREF(value);
+                            return value;
+                        }
                         return NULL;
                     }
                     else {
