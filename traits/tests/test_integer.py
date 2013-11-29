@@ -48,6 +48,11 @@ class Truncatable(object):
 
 
 class TestInteger(unittest.TestCase):
+    def test_default(self):
+        a = A()
+        self.assertEqual(a.integral, 0)
+        self.assertIs(type(a.integral), int)
+
     def test_accepts_int(self):
         a = A()
         a.integral = 23
@@ -63,6 +68,10 @@ class TestInteger(unittest.TestCase):
 
     def test_accepts_large_long(self):
         a = A()
+        a.integral = long(sys.maxint)
+        self.assertEqual(a.integral, sys.maxint)
+        self.assertIs(type(a.integral), int)
+
         a.integral = sys.maxint + 1
         self.assertEqual(a.integral, sys.maxint + 1)
         self.assertIs(type(a.integral), long)
