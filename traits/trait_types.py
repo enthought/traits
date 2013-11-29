@@ -122,12 +122,11 @@ class Generic ( Any ):
     metadata = { 'trait_value': True }
 
 #-------------------------------------------------------------------------------
-#  'Integer' trait:
+#  'BaseInteger' and 'Integer' traits:
 #-------------------------------------------------------------------------------
 
-class Integer ( TraitType ):
+class BaseInteger ( TraitType ):
     """ Defines a trait whose type must be an int or long.
-
     """
 
     #: The function to use for evaluating strings to this type:
@@ -142,23 +141,33 @@ class Integer ( TraitType ):
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
         """
-        if isinstance( value, (int, long) ):
+        if type(value) is int:
+            return value
+        elif type(value) is long:
             return int(value)
-        
+
         try:
             int_value = operator.index( value )
         except TypeError:
             pass
         else:
-            return int_value
+            return int(int_value)
 
         self.error( object, name, value )
-            
+
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
         return default_text_editor( self, int )
 
+
+class Integer ( BaseInteger ):
+    """ Defines a trait whose type must be an int or long using a C-level fast
+        validator.
+    """
+
+    #: The C-level fast validator to use:
+    fast_validate = ( 20, )
 
 #-------------------------------------------------------------------------------
 #  'BaseInt' and 'Int' traits:

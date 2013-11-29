@@ -52,7 +52,7 @@ from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
 from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
         BaseUnicode, BaseBool, BaseCInt, BaseCLong, BaseCFloat, BaseCComplex,
         BaseCStr, BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange,
-        BaseEnum, BaseTuple, BaseInstance)
+        BaseEnum, BaseTuple, BaseInstance, BaseInteger)
 
 from .trait_types import UUID
 
