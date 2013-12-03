@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -48,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
   
 
       </ul>
@@ -66,67 +64,11 @@
 <h2>Class<a class="headerlink" href="#class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.adapter.Adapter">
-<em class="property">class </em><tt class="descclassname">traits.adapter.</tt><tt class="descname">Adapter</tt><big>(</big><em>adaptee</em><big>)</big><a class="reference internal" href="../_modules/traits/adapter.html#Adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.Adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base class for all traits adapters.</p>
-<p>In Traits, an <em>adapter</em> is a special type of class whose role is to
-transform some type of object which does not implement a specific interface,
-or set of interfaces, into one that does.</p>
-<p>This class is provided as a convenience. If you subclass this class, the
-only things you need to add to the subclass definition are:</p>
-<blockquote>
-<div><ul class="simple">
-<li>An implements() function call declaring which interfaces the adapter
-class implements on behalf of the object is is adapting.</li>
-<li>A declaration for the <strong>adaptee</strong> trait, usually as an Instance of
-a particular class.</li>
-<li>The actual implementations of the interfaces declared in the
-implements() call. Usually the implementation code is written in
-terms of the <strong>adaptee</strong> trait.</li>
-</ul>
-</div></blockquote>
-<dl class="method">
+<em class="property">class </em><tt class="descclassname">traits.adapter.</tt><tt class="descname">Adapter</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/traits/adapter.html#Adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.Adapter" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
 <dt id="traits.adapter.Adapter.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>adaptee</em><big>)</big><a class="reference internal" href="../_modules/traits/adapter.html#Adapter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.Adapter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructor.</p>
-<p>We have to declare an explicit constructor because adapters are
-created by PyProtocols itself, which knows nothing about traits.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.adapter.Adapter.adaptee">
-<tt class="descname">adaptee</tt><em class="property"> = Any</em><a class="headerlink" href="#traits.adapter.Adapter.adaptee" title="Permalink to this definition">¶</a></dt>
-<dd><p>The object that is being adapted.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.adapter.DefaultAdapterFactory">
-<em class="property">class </em><tt class="descclassname">traits.adapter.</tt><tt class="descname">DefaultAdapterFactory</tt><a class="reference internal" href="../_modules/traits/adapter.html#DefaultAdapterFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.DefaultAdapterFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>An adapter factory for producing cached or categorized adapters.</p>
-<dl class="attribute">
-<dt id="traits.adapter.DefaultAdapterFactory.klass">
-<tt class="descname">klass</tt><em class="property"> = Any</em><a class="headerlink" href="#traits.adapter.DefaultAdapterFactory.klass" title="Permalink to this definition">¶</a></dt>
-<dd><p>The adapter class that this factory creates instances of</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.adapter.DefaultAdapterFactory.cached">
-<tt class="descname">cached</tt><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.adapter.DefaultAdapterFactory.cached" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the factory generate cached adapters?
-If an adapter is cached then the factory will produce at most one
-adapter per instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.adapter.DefaultAdapterFactory.when">
-<tt class="descname">when</tt><em class="property"> = Expression</em><a class="headerlink" href="#traits.adapter.DefaultAdapterFactory.when" title="Permalink to this definition">¶</a></dt>
-<dd><p>An expression that is used to select which instances of a particular
-type can be adapted by this factory.</p>
-<p>The expression is evaluated in a namespace that contains a single name
-&#8216;adaptee&#8217;, which is bound to the object that this factory is attempting
-to adapt (e.g. &#8216;adaptee.is_folder&#8217;).</p>
-</dd></dl>
+<tt class="descname">__init__</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/traits/adapter.html#Adapter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.Adapter.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -135,7 +77,7 @@ to adapt (e.g. &#8216;adaptee.is_folder&#8217;).</p>
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.adapter.adapts">
-<tt class="descclassname">traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>from_</em>, <em>to</em>, <em>extra=None</em>, <em>factory=None</em>, <em>cached=False</em>, <em>when=''</em><big>)</big><a class="reference internal" href="../_modules/traits/adapter.html#adapts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adapter.</tt><tt class="descname">adapts</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#traits.adapter.adapts" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class advisor for declaring adapters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -231,15 +173,15 @@ specified.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -48,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#">testing Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></li>
   
 
       </ul>
@@ -60,7 +58,7 @@
           <div class="body">
             
   <div class="section" id="testing-package">
-<h1>testing Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">testing</span></tt> Package<a class="headerlink" href="#testing-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">testing</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-traits.testing"></span><p>Scripts and assert tools related to running unit tests.</p>
@@ -135,6 +133,11 @@ a performance-measuring test.</p>
 <span id="trait-assert-tools-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">trait_assert_tools</span></tt> Module<a class="headerlink" href="#module-traits.testing.unittest_tools" title="Permalink to this headline">¶</a></h2>
 <p>Trait assert mixin class to simplify test implementation for Trait
 Classes.</p>
+<dl class="function">
+<dt id="traits.testing.unittest_tools.reverse_assertion">
+<tt class="descclassname">traits.testing.unittest_tools.</tt><tt class="descname">reverse_assertion</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#reverse_assertion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.reverse_assertion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="traits.testing.unittest_tools.UnittestTools">
 <em class="property">class </em><tt class="descclassname">traits.testing.unittest_tools.</tt><tt class="descname">UnittestTools</tt><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools" title="Permalink to this definition">¶</a></dt>
@@ -143,76 +146,54 @@ Classes.</p>
 related assert methods.</p>
 <dl class="method">
 <dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChanges">
-<tt class="descname">assertTraitChanges</tt><big>(</big><em>obj</em>, <em>trait</em>, <em>count=None</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assert that the class trait changes exactly n times.</p>
-<p>Used in a with statement to assert that a class trait has changed
-during the execution of the code inside the with context block
-(similar to the assertRaises method).</p>
-<p>Please note that the context manager returns itself and the user can
-introspect the information of the fired events by accessing the
-<tt class="docutils literal"><span class="pre">events</span></tt> attribute of the context object. The attribute is a list
-with tuple elements containing the arguments of an <cite>on_trait_change</cite>
-event signature (&lt;object&gt;, &lt;name&gt;, &lt;old&gt;, &lt;new&gt;).</p>
-<p><strong>Example</strong>:</p>
-<div class="highlight-python"><pre>class MyClass(HasTraits):
-   number = Float(2.0)
-
-my_class = MyClass()
-
-with self.assertTraitChanges(my_class, 'number') as ctx:
-   my_class.number = 3.0
-
-self.assert(ctx.events, [(my_class, 'number', 2.0, 3.0)]</pre>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance who&#8217;s class trait will change.</li>
-<li><strong>xname</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen too.</li>
-<li><strong>count</strong> (<em>int, optional</em>) &#8211; The expected number of times the event should be fired. When None
-(default value) there is no check for the number of times the
-change event was fired.</li>
+<tt class="descname">assertTraitChanges</tt><big>(</big><em>obj</em>, <em>trait</em>, <em>count=None</em>, <em>callableObj=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert an object trait changes a given number of times.</p>
+<p>Assert that the class trait changes exactly <cite>count</cite> times during
+execution of the provided function.</p>
+<p>Method can also be used in a with statement to assert that the
+a class trait has changed during the execution of the code inside
+the with statement (similar to the assertRaises method). Please note
+that in that case the context manager returns itself and the user
+can introspect the information of:</p>
+<ul class="simple">
+<li>The last event fired by accessing the <tt class="docutils literal"><span class="pre">event</span></tt> attribute of the
+returned object.</li>
+<li>All the fired events by accessing the <tt class="docutils literal"><span class="pre">events</span></tt> attribute of
+the return object.</li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<ul class="last simple">
-<li>Checking if the provided xname corresponds to valid traits in
-the class is not implemented yet.</li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">
-<tt class="descname">assertTraitDoesNotChange</tt><big>(</big><em>obj</em>, <em>xname</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitDoesNotChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assert that no trait event is fired.</p>
-<p>Used in a with statement to assert that a class trait has not changed
-during the execution of the code inside the with statement block.</p>
 <p><strong>Example</strong>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">number</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">String</span>
 
 <span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 
-<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">):</span>
-     <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChangesExactly</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">3.0</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance who&#8217;s class trait will change.</li>
-<li><strong>xname</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen too.</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
+<li><strong>count</strong> (<em>int or None, optional</em>) &#8211; The expected number of times the event should be fired. When None
+(default value) there is no check for the number of times the
+change event was fired.</li>
+<li><strong>callableObj</strong> (<em>callable, optional</em>) &#8211; A callable object that will trigger the expected trait change.
+When None (default value) a trigger is expected to be called
+under the context manger returned by this method.</li>
+<li><strong>*args</strong> &#8211; List of positional arguments for <tt class="docutils literal"><span class="pre">callableObj</span></tt></li>
+<li><strong>**kwargs</strong> &#8211; Dict of keyword value pairs to be passed to the <tt class="docutils literal"><span class="pre">callableObj</span></tt></li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) &#8211;
+If <tt class="docutils literal"><span class="pre">callableObj</span></tt> is None, an assertion context manager is returned,
+inside of which a trait-change trigger can be invoked. Otherwise,
+the context is used internally with <tt class="docutils literal"><span class="pre">callableObj</span></tt> as the trigger,
+in which case None is returned.</p>
 </td>
 </tr>
 </tbody>
@@ -220,10 +201,118 @@ during the execution of the code inside the with statement block.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <ul class="last simple">
-<li>Checking if the provided xname corresponds to valid traits in
+<li>Checking if the provided <tt class="docutils literal"><span class="pre">trait</span></tt> corresponds to valid traits in
 the class is not implemented yet.</li>
+<li>Using the functional version of the assert method requires the
+<tt class="docutils literal"><span class="pre">count</span></tt> argument to be given even if it is None.</li>
 </ul>
 </div>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">
+<tt class="descname">assertTraitDoesNotChange</tt><big>(</big><em>obj</em>, <em>trait</em>, <em>callableObj=None</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitDoesNotChange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert an object trait does not change.</p>
+<p>Assert that the class trait does not change during
+execution of the provided function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
+<li><strong>callableObj</strong> (<em>callable, optional</em>) &#8211; A callable object that should not trigger a change in the
+passed trait.  When None (default value) a trigger is expected
+to be called under the context manger returned by this method.</li>
+<li><strong>*args</strong> &#8211; List of positional arguments for <tt class="docutils literal"><span class="pre">callableObj</span></tt></li>
+<li><strong>**kwargs</strong> &#8211; Dict of keyword value pairs to be passed to the <tt class="docutils literal"><span class="pre">callableObj</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>context</strong> (<em>context manager or None</em>) &#8211;
+If <tt class="docutils literal"><span class="pre">callableObj</span></tt> is None, an assertion context manager is returned,
+inside of which a trait-change trigger can be invoked. Otherwise,
+the context is used internally with <tt class="docutils literal"><span class="pre">callableObj</span></tt> as the trigger,
+in which case None is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">
+<tt class="descname">assertMultiTraitChanges</tt><big>(</big><em>objects</em>, <em>traits_modified</em>, <em>traits_not_modified</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertMultiTraitChanges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert that traits on multiple objects do or do not change.</p>
+<p>This combines some of the functionality of <cite>assertTraitChanges</cite> and
+<cite>assertTraitDoesNotChange</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>objects</strong> (<em>list of HasTraits</em>) &#8211; The HasTraits class instances whose traits will change.</li>
+<li><strong>traits_modified</strong> (<em>list of str</em>) &#8211; The extended trait names of trait expected to change.</li>
+<li><strong>traits_not_modified</strong> (<em>list of str</em>) &#8211; The extended trait names of traits not expected to change.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">
+<tt class="descname">assertTraitChangesAsync</tt><big>(</big><em>*args</em>, <em>**kwds</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertTraitChangesAsync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert an object trait eventually changes.</p>
+<p>Context manager used to assert that the given trait changes at
+least <cite>count</cite> times within the given timeout, as a result of
+execution of the body of the corresponding with block.</p>
+<p>The trait changes are permitted to occur asynchronously.</p>
+<p><strong>Example usage</strong>:</p>
+<div class="highlight-python"><pre>with self.assertTraitChangesAsync(my_object, 'SomeEvent', count=4):
+    &lt;do stuff that should cause my_object.SomeEvent to be
+    fired at least 4 times within the next 5 seconds&gt;</pre>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance whose class trait will change.</li>
+<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
+<li><strong>count</strong> (<em>int, optional</em>) &#8211; The expected number of times the event should be fired.</li>
+<li><strong>timeout</strong> (<em>float or None, optional</em>) &#8211; The amount of time in seconds to wait for the specified number
+of changes. None can be used to indicate no timeout.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue">
+<tt class="descname">assertEventuallyTrue</tt><big>(</big><em>obj</em>, <em>trait</em>, <em>condition</em>, <em>timeout=5.0</em><big>)</big><a class="reference internal" href="../_modules/traits/testing/unittest_tools.html#UnittestTools.assertEventuallyTrue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert that the given condition is eventually true.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>obj</strong> (<em>HasTraits</em>) &#8211; The HasTraits class instance who&#8217;s traits will change.</li>
+<li><strong>trait</strong> (<em>str</em>) &#8211; The extended trait name of trait changes to listen to.</li>
+<li><strong>condition</strong> (<em>callable</em>) &#8211; A function that will be called when the specified trait
+changes.  This should accept <tt class="docutils literal"><span class="pre">obj</span></tt> and should return a
+Boolean indicating whether the condition is satisfied or not.</li>
+<li><strong>timeout</strong> (<em>float or None, optional</em>) &#8211; The amount of time in seconds to wait for the condition to
+become true.  None can be used to indicate no timeout.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -242,7 +331,7 @@ the class is not implemented yet.</li>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">testing Package</a><ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a><ul>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-traits.testing.doctest_tools"><tt class="docutils literal"><span class="pre">doctest_tools</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.testing.nose_tools"><tt class="docutils literal"><span class="pre">nose_tools</span></tt> Module</a></li>
@@ -253,10 +342,10 @@ the class is not implemented yet.</li>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.protocols.html"
-                        title="previous chapter">protocols Package</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">protocols</span></tt> Package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.util.html"
-                        title="next chapter">util Package</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.testing.txt"
@@ -294,15 +383,15 @@ the class is not implemented yet.</li>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#">testing Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

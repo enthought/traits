@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -44,7 +42,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#">util Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">util</span></tt> Package</a></li>
   
 
       </ul>
@@ -56,7 +54,7 @@
           <div class="body">
             
   <div class="section" id="util-package">
-<h1>util Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#util-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-traits.util"></span><p>Utility functions, part of the Traits project.</p>
@@ -64,7 +62,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">2003-2011 Enthought, Inc.</td>
+<tr class="field-odd field"><th class="field-name">Copyright:</th><td class="field-body">2003-2013 Enthought, Inc.</td>
 </tr>
 </tbody>
 </table>
@@ -479,6 +477,23 @@ The return value in always None.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-traits.util.import_symbol">
+<span id="import-symbol-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">import_symbol</span></tt> Module<a class="headerlink" href="#module-traits.util.import_symbol" title="Permalink to this headline">¶</a></h2>
+<p>A function to import symbols.</p>
+<dl class="function">
+<dt id="traits.util.import_symbol.import_symbol">
+<tt class="descclassname">traits.util.import_symbol.</tt><tt class="descname">import_symbol</tt><big>(</big><em>symbol_path</em><big>)</big><a class="reference internal" href="../_modules/traits/util/import_symbol.html#import_symbol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.import_symbol.import_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import the symbol defined by the specified symbol path.</p>
+<p class="rubric">Examples</p>
+<p>import_symbol(&#8216;tarfile:TarFile&#8217;) -&gt; TarFile
+import_symbol(&#8216;tarfile:TarFile.open&#8217;) -&gt; TarFile.open</p>
+<p>To allow compatibility with old-school traits symbol names we also allow
+all-dotted paths, but in this case you can only import top-level names
+from the module.</p>
+<p>import_symbol(&#8216;tarfile.TarFile&#8217;) -&gt; TarFile</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-traits.util.toposort">
 <span id="toposort-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">toposort</span></tt> Module<a class="headerlink" href="#module-traits.util.toposort" title="Permalink to this headline">¶</a></h2>
 <p>A simple topological sort on a dictionary graph.</p>
@@ -599,7 +614,7 @@ option set to the trait definition.</p>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">util Package</a><ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a><ul>
 <li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
 <li><a class="reference internal" href="#module-traits.util.camel_case"><tt class="docutils literal"><span class="pre">camel_case</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.clean_strings"><tt class="docutils literal"><span class="pre">clean_strings</span></tt> Module</a></li>
@@ -612,6 +627,7 @@ option set to the trait definition.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-traits.util.resource"><tt class="docutils literal"><span class="pre">resource</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-traits.util.import_symbol"><tt class="docutils literal"><span class="pre">import_symbol</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.toposort"><tt class="docutils literal"><span class="pre">toposort</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.trait_documenter"><tt class="docutils literal"><span class="pre">trait_documenter</span></tt> Module</a></li>
 </ul>
@@ -620,7 +636,7 @@ option set to the trait definition.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.testing.html"
-                        title="previous chapter">testing Package</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.util.txt"
@@ -655,15 +671,15 @@ option set to the trait definition.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#">util Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">util</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

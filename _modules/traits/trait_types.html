@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -81,20 +79,17 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">ref</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">ModuleType</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trait_handlers</span>
-
-<span class="kn">from</span> <span class="nn">.protocols.api</span> <span class="kn">import</span> <span class="n">adapt</span>
 
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">strx</span><span class="p">,</span> <span class="n">get_module_name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">TypeTypes</span><span class="p">,</span>
         <span class="n">ClassTypes</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">python_version</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TraitType</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span>
         <span class="n">TraitSetObject</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">,</span> <span class="n">TraitDictObject</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">,</span>
-        <span class="n">ThisClass</span><span class="p">,</span> <span class="n">items_event</span><span class="p">,</span> <span class="n">RangeTypes</span><span class="p">)</span>
+        <span class="n">ThisClass</span><span class="p">,</span> <span class="n">items_event</span><span class="p">,</span> <span class="n">RangeTypes</span><span class="p">,</span> <span class="n">HandleWeakRef</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Trait</span><span class="p">,</span> <span class="n">trait_from</span><span class="p">,</span> <span class="n">_TraitMaker</span><span class="p">,</span> <span class="n">_InstanceArgs</span><span class="p">,</span> <span class="n">code_editor</span><span class="p">,</span>
         <span class="n">html_editor</span><span class="p">,</span> <span class="n">password_editor</span><span class="p">,</span> <span class="n">shell_editor</span><span class="p">,</span> <span class="n">date_editor</span><span class="p">,</span> <span class="n">time_editor</span><span class="p">)</span>
@@ -317,7 +312,7 @@
     <span class="n">evaluate</span> <span class="o">=</span> <span class="nb">complex</span>
 
     <span class="c">#: The default value for the trait:</span>
-    <span class="n">default_value</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">+</span> <span class="mf">0.0</span><span class="n">j</span>
+    <span class="n">default_value</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="o">+</span> <span class="mf">0.0j</span>
 
     <span class="c">#: A description of the type of value this trait accepts:</span>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;a complex number&#39;</span>
@@ -2232,6 +2227,12 @@
 
 <div class="viewcode-block" id="List.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.List.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the values is a valid list.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            `object` can be None when validating a default value (see e.g.</span>
+<span class="sd">            :meth:`~traits.trait_handlers.TraitType.clone`)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">)</span> <span class="ow">and</span>
            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">)):</span>
@@ -2362,6 +2363,12 @@
 
 <div class="viewcode-block" id="Set.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Set.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the values is a valid set.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            `object` can be None when validating a default value (see e.g.</span>
+<span class="sd">            :meth:`~traits.trait_handlers.TraitType.clone`)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">set</span> <span class="p">):</span>
             <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -2511,9 +2518,15 @@
 
 <div class="viewcode-block" id="Dict.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Dict.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid dictionary.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            `object` can be None when validating a default value (see e.g.</span>
+<span class="sd">            :meth:`~traits.trait_handlers.TraitType.clone`)</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">dict</span> <span class="p">):</span>
-            <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
             <span class="k">return</span> <span class="n">TraitDictObject</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
 
@@ -2612,16 +2625,11 @@
     <span class="sd">&quot;&quot;&quot; Checks to see if a specified value implements the instance class</span>
 <span class="sd">        interface (if it is an interface).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">.has_traits</span>        <span class="kn">import</span> <span class="n">Interface</span>
+
+    <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">isinterface</span>
     <span class="kn">from</span> <span class="nn">.interface_checker</span> <span class="kn">import</span> <span class="n">check_implements</span>
-    <span class="kn">from</span> <span class="nn">.protocols.api</span>     <span class="kn">import</span> <span class="n">declareImplementation</span>
 
-    <span class="n">rc</span> <span class="o">=</span> <span class="p">(</span><span class="nb">issubclass</span><span class="p">(</span> <span class="n">klass</span><span class="p">,</span> <span class="n">Interface</span><span class="p">)</span> <span class="ow">and</span>
-          <span class="n">check_implements</span><span class="p">(</span> <span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">klass</span> <span class="p">))</span>
-    <span class="k">if</span> <span class="n">rc</span><span class="p">:</span>
-        <span class="n">declareImplementation</span><span class="p">(</span> <span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">instancesProvide</span> <span class="o">=</span> <span class="p">[</span> <span class="n">klass</span> <span class="p">]</span> <span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">rc</span>
+    <span class="k">return</span> <span class="n">isinterface</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span> <span class="ow">and</span> <span class="n">check_implements</span><span class="p">(</span> <span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">klass</span> <span class="p">)</span>
 
 <span class="c">#: Tell the C-base code about the &#39;validate_implements&#39; function (used by the</span>
 <span class="c">#: &#39;fast_validate&#39; code for Instance types):</span>
@@ -2739,6 +2747,8 @@
 <div class="viewcode-block" id="BaseInstance.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInstance.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that the value is a valid object instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">adapt</span>
+
         <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_none</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
@@ -2882,11 +2892,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Instance.init_fast_validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Instance.init_fast_validate">[docs]</a>    <span class="k">def</span> <span class="nf">init_fast_validate</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Sets up the C-level fast validator.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">Interface</span>
+        <span class="sd">&quot;&quot;&quot; Sets up the C-level fast validator. &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span><span class="p">,</span> <span class="n">Interface</span> <span class="p">)):</span>
+        <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">isinterface</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adapt</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">isinterface</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">klass</span><span class="p">)):</span>
             <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span> <span class="p">]</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_allow_none</span><span class="p">:</span>
                 <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span> <span class="p">]</span>
@@ -2899,17 +2909,29 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">19</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">klass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt</span><span class="p">,</span>
                                    <span class="bp">self</span><span class="o">.</span><span class="n">_allow_none</span> <span class="p">)</span>
 </div></div>
-<div class="viewcode-block" id="AdaptedTo"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.AdaptedTo">[docs]</a><span class="k">class</span> <span class="nc">AdaptedTo</span> <span class="p">(</span> <span class="n">Instance</span> <span class="p">):</span>
+<div class="viewcode-block" id="Supports"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Supports">[docs]</a><span class="k">class</span> <span class="nc">Supports</span><span class="p">(</span> <span class="n">Instance</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A traits whose value must support a specified protocol.</span>
+
+<span class="sd">    In other words, the value of the trait directly provide, or can be adapted</span>
+<span class="sd">    to, the given protocol (Interface or type).</span>
+
+<span class="sd">    The value of the trait after assignment is the possibly adapted value</span>
+<span class="sd">    (i.e., it is the original assigned value if that provides the protocol,</span>
+<span class="sd">    or is an adapter otherwise).</span>
+
+<span class="sd">    The original, unadapted value is stored in a &quot;shadow&quot; attribute with</span>
+<span class="sd">    the same name followed by an underscore (e.g., &#39;foo&#39; and &#39;foo_&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">adapt_default</span> <span class="o">=</span> <span class="s">&#39;yes&#39;</span>
 
-<div class="viewcode-block" id="AdaptedTo.post_setattr"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.AdaptedTo.post_setattr">[docs]</a>    <span class="k">def</span> <span class="nf">post_setattr</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+<div class="viewcode-block" id="Supports.post_setattr"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Supports.post_setattr">[docs]</a>    <span class="k">def</span> <span class="nf">post_setattr</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Performs additional post-assignment processing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Save the original, unadapted value in the mapped trait:</span>
         <span class="nb">object</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#39;_&#39;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 </div>
-<div class="viewcode-block" id="AdaptedTo.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.AdaptedTo.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="viewcode-block" id="Supports.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Supports.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a CTrait corresponding to the trait defined by this class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modify_ctrait</span><span class="p">(</span> <span class="nb">super</span><span class="p">(</span> <span class="n">AdaptedTo</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span> <span class="p">)</span>
@@ -2919,8 +2941,21 @@
         <span class="c"># Tell the C code that the &#39;post_setattr&#39; method wants the original,</span>
         <span class="c"># unadapted value passed to &#39;setattr&#39;:</span>
         <span class="k">return</span> <span class="n">ctrait</span><span class="o">.</span><span class="n">post_setattr_original_value</span><span class="p">(</span> <span class="bp">True</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="AdaptsTo"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.AdaptsTo">[docs]</a><span class="k">class</span> <span class="nc">AdaptsTo</span> <span class="p">(</span> <span class="n">AdaptedTo</span> <span class="p">):</span>
+
+<span class="c"># Alias defined for backward compatibility with Traits 4.3.0</span></div>
+<span class="n">AdaptedTo</span> <span class="o">=</span> <span class="n">Supports</span>
+
+<div class="viewcode-block" id="AdaptsTo"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.AdaptsTo">[docs]</a><span class="k">class</span> <span class="nc">AdaptsTo</span> <span class="p">(</span> <span class="n">Supports</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A traits whose value must support a specified protocol.</span>
+
+<span class="sd">    In other words, the value of the trait directly provide, or can be adapted</span>
+<span class="sd">    to, the given protocol (Interface or type).</span>
+
+<span class="sd">    The value of the trait after assignment is the original, unadapted value.</span>
+
+<span class="sd">    A possibly adapted value is stored in a &quot;shadow&quot; attribute with</span>
+<span class="sd">    the same name followed by an underscore (e.g., &#39;foo&#39; and &#39;foo_&#39;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">modify_ctrait</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ctrait</span> <span class="p">):</span>
         <span class="c"># Tell the C code that &#39;setattr&#39; should store the original, unadapted</span>
@@ -3358,20 +3393,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">klass</span> <span class="o">=</span> <span class="n">klass</span>
 
-<span class="c">#-- Private Class --------------------------------------------------------------</span>
-</div>
-<div class="viewcode-block" id="HandleWeakRef"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.HandleWeakRef">[docs]</a><span class="k">class</span> <span class="nc">HandleWeakRef</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span>   <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span>  <span class="o">=</span> <span class="n">ref</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_freed</span> <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_value_freed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
-        <span class="nb">object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-
 
 <span class="c">#-- Date Trait definition ----------------------------------------------------</span></div>
 <span class="n">Date</span> <span class="o">=</span> <span class="n">BaseInstance</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">editor</span><span class="o">=</span><span class="n">date_editor</span><span class="p">)</span>
@@ -3502,8 +3523,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

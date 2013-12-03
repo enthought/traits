@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -48,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
   
 
       </ul>
@@ -115,35 +113,25 @@ when <em>any</em> class is created.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.MetaInterface">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">MetaInterface</tt><big>(</big><em>__name__</em>, <em>__bases__</em>, <em>__dict__</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">MetaInterface</tt><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Meta class for interfaces.</p>
-<p>This combines trait and PyProtocols functionality.</p>
+<p>Interfaces are simple ABCs with the following features:-</p>
+<ol class="arabic simple">
+<li>They cannot be instantiated (they are interfaces, not implementations!).</li>
+<li>Calling them is equivalent to calling &#8216;adapt&#8217;.</li>
+</ol>
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>__name__</em>, <em>__bases__</em>, <em>__dict__</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is copied over from PyProtocols &#8216;AbstractBaseMets&#8217;.</p>
-<p>It is needed here to make sure that we don&#8217;t add any implied
-protocols for <em>our</em> &#8216;Interface&#8217; class (since PyProtocols doesn&#8217;t
-know about it.</p>
+<tt class="descname">__init__</tt><big>(</big><big>)</big><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__call__">
 <tt class="descname">__call__</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method is copied over from the PyProtocols &#8216;InterfaceClass&#8217;
-(and cleaned up a little). It is needed here because:</p>
-<ol class="loweralpha simple">
-<li>the &#8216;InterfaceClass&#8217; is no longer the first class in the
-hierarchy.</li>
-<li>the reference to &#8216;Interface&#8217; now needs to reference <em>our</em>
-Interface.</li>
-</ol>
-</dd></dl>
-
-<dl class="method">
-<dt id="traits.has_traits.MetaInterface.getBases">
-<tt class="descname">getBases</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.getBases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.getBases" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overridden to make sure we don&#8217;t return our &#8216;Interface&#8217; class.</p>
+<dd><p>Attempt to adapt the adaptee to this interface.</p>
+<p>Note that this means that (intentionally ;^) that interfaces
+cannot be instantiated!</p>
 </dd></dl>
 
 </dd></dl>
@@ -161,7 +149,7 @@ subclass of HasTraits into a well-formed traits class.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaHasTraitsObject.add_traits_meta_data">
-<tt class="descname">add_traits_meta_data</tt><big>(</big><em>bases</em>, <em>class_dict</em>, <em>base_traits</em>, <em>class_traits</em>, <em>instance_traits</em>, <em>prefix_traits</em>, <em>listeners</em>, <em>view_elements</em>, <em>implements_class</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.add_traits_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">add_traits_meta_data</tt><big>(</big><em>bases</em>, <em>class_dict</em>, <em>base_traits</em>, <em>class_traits</em>, <em>instance_traits</em>, <em>prefix_traits</em>, <em>listeners</em>, <em>view_elements</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.add_traits_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the Traits metadata to the class dictionary.</p>
 </dd></dl>
 
@@ -850,12 +838,13 @@ Possible values are:</p>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
 <tr class="row-odd"><td><tt class="docutils literal"><span class="pre">ui</span></tt></td>
-<td>Run notifications on the UI thread, and allow them to
-be queued and deferred.</td>
+<td>Run notifications on the UI thread. If the current
+thread is the UI thread, the notifications are executed
+immediately; otherwise, they are placed on the UI
+event queue.</td>
 </tr>
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">fast_ui</span></tt></td>
-<td>Run notifications on the UI thread, and process
-them immediately.</td>
+<td>Alias for <tt class="docutils literal"><span class="pre">ui</span></tt>.</td>
 </tr>
 <tr class="row-odd"><td><tt class="docutils literal"><span class="pre">new</span></tt></td>
 <td>Run notifications in a new thread.</td>
@@ -1130,12 +1119,13 @@ Possible values are:</p>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
 <tr class="row-odd"><td><tt class="docutils literal"><span class="pre">ui</span></tt></td>
-<td>Run notifications on the UI thread, and allow them to
-be queued and deferred.</td>
+<td>Run notifications on the UI thread. If the current
+thread is the UI thread, the notifications are executed
+immediately; otherwise, they are placed on the UI
+event queue.</td>
 </tr>
 <tr class="row-even"><td><tt class="docutils literal"><span class="pre">fast_ui</span></tt></td>
-<td>Run notifications on the UI thread, and process
-them immediately.</td>
+<td>Alias for <tt class="docutils literal"><span class="pre">ui</span></tt>.</td>
 </tr>
 <tr class="row-odd"><td><tt class="docutils literal"><span class="pre">new</span></tt></td>
 <td>Run notifications in a new thread.</td>
@@ -1885,120 +1875,6 @@ called from directly within a class body.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="private-function">
-<h2>Private Function<a class="headerlink" href="#private-function" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="traits.has_traits._clone_trait">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_clone_trait</tt><big>(</big><em>clone</em>, <em>metadata=None</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_clone_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._clone_trait" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a clone of a specified trait.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._get_method">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_get_method</tt><big>(</big><em>cls</em>, <em>method</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_get_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._get_method" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._get_def">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_get_def</tt><big>(</big><em>class_name</em>, <em>class_dict</em>, <em>bases</em>, <em>method</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_get_def"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._get_def" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the definition of a specified method (if any).</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._is_serializable">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_is_serializable</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_is_serializable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._is_serializable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns whether or not a specified value is serializable.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._get_instance_handlers">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_get_instance_handlers</tt><big>(</big><em>class_dict</em>, <em>bases</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_get_instance_handlers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._get_instance_handlers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a dictionary of potential &#8216;Instance&#8217; or &#8216;List(Instance)&#8217;
-handlers.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._check_method">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_check_method</tt><big>(</big><em>class_dict</em>, <em>name</em>, <em>func</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_check_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._check_method" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._check_trait">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_check_trait</tt><big>(</big><em>trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_check_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._check_trait" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns either the original value or a valid CTrait if the value can be
-converted to a CTrait.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._trait_for">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_trait_for</tt><big>(</big><em>trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_trait_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._trait_for" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the trait corresponding to a specified value.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._mapped_trait_for">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_mapped_trait_for</tt><big>(</big><em>trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_mapped_trait_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._mapped_trait_for" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the &#8216;mapped trait&#8217; definition for a mapped trait.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._add_notifiers">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_add_notifiers</tt><big>(</big><em>notifiers</em>, <em>handlers</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_add_notifiers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._add_notifiers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a list of handlers to a specified notifiers list.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._add_event_handlers">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_add_event_handlers</tt><big>(</big><em>trait</em>, <em>cls</em>, <em>handlers</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_add_event_handlers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._add_event_handlers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds any specified event handlers defined for a trait by a class.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._property_method">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_property_method</tt><big>(</big><em>class_dict</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_property_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._property_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the method associated with a particular class property
-getter/setter.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._extract_interfaces">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_extract_interfaces</tt><big>(</big><em>implements_class</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_extract_interfaces"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._extract_interfaces" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extracts the list of interfaces implemented by a specified class.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._create_implements_class">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_create_implements_class</tt><big>(</big><em>class_name</em>, <em>interfaces</em>, <em>base_classes</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_create_implements_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._create_implements_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a class the implements a set of interfaces.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._trait_monitor_index">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_trait_monitor_index</tt><big>(</big><em>cls</em>, <em>handler</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_trait_monitor_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._trait_monitor_index" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits._add_assignment_advisor">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">_add_assignment_advisor</tt><big>(</big><em>callback</em>, <em>depth=2</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_add_assignment_advisor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._add_assignment_advisor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a method &#8216;decorator&#8217; for adding type checking to methods.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="private-classes">
-<h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="traits.has_traits._SimpleTest">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">_SimpleTest</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#_SimpleTest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits._SimpleTest" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="class">
-<dt id="traits.has_traits.__NoInterface__">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">__NoInterface__</tt><a class="reference internal" href="../_modules/traits/has_traits.html#__NoInterface__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.__NoInterface__" title="Permalink to this definition">¶</a></dt>
-<dd><p>An uninstantiated class used to tag trait subclasses which do not
-implement any interfaces.</p>
-</dd></dl>
-
-</div>
 </div>
 
 
@@ -2016,18 +1892,16 @@ implement any interfaces.</p>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#abc-classes">ABC classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
-<li><a class="reference internal" href="#private-function">Private Function</a></li>
-<li><a class="reference internal" href="#private-classes">Private Classes</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="category.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">category</span></tt> Module</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">category</span></tt> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="has_dynamic_views.html"
-                        title="next chapter"><tt class="docutils literal docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
+                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/has_traits.txt"
@@ -2065,15 +1939,15 @@ implement any interfaces.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

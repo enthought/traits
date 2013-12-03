@@ -1,0 +1,259 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.adaptation.adapter &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.adaptation.adapter</a></li>
+  
+
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for traits.adaptation.adapter</h1><div class="highlight"><pre>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="c"># Copyright (c) 2013, Enthought, Inc.</span>
+<span class="c"># All rights reserved.</span>
+<span class="c">#</span>
+<span class="c"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c"># Thanks for using Enthought open source!</span>
+<span class="c">#</span>
+<span class="c"># Author: Enthought, Inc.</span>
+<span class="c">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; Base classes for adapters.</span>
+
+<span class="sd">Adapters do not have to inherit from these classes, as long as their</span>
+<span class="sd">constructor takes the object to be adapted as the first and only</span>
+<span class="sd">*positional* argument.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="kn">import</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.trait_types</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">from</span> <span class="nn">traits.util.deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
+
+<div class="viewcode-block" id="PurePythonAdapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.PurePythonAdapter">[docs]</a><span class="k">class</span> <span class="nc">PurePythonAdapter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for pure Python adapters. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructor. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span> <span class="o">=</span> <span class="n">adaptee</span>
+
+        <span class="k">return</span>
+
+</div>
+<div class="viewcode-block" id="Adapter"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter">[docs]</a><span class="k">class</span> <span class="nc">Adapter</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for adapters with traits. &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructor. &quot;&quot;&quot;</span>
+
+        <span class="n">traits</span><span class="p">[</span><span class="s">&#39;adaptee&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adaptee</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Adapter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="n">adaptee</span> <span class="o">=</span> <span class="n">Any</span>
+
+</div>
+<div class="viewcode-block" id="adapts"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.adapts">[docs]</a><span class="k">def</span> <span class="nf">adapts</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">cached</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A class advisor for declaring adapters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    from_ : type or interface</span>
+<span class="sd">        What the adapter adapts *from*, or a list of such types or interfaces</span>
+<span class="sd">        (the &#39;_&#39; suffix is used because &#39;from&#39; is a Python keyword).</span>
+<span class="sd">    to : type or interface</span>
+<span class="sd">        What the adapter adapts *to*, or a list of such types or interfaces.</span>
+<span class="sd">    factory : callable</span>
+<span class="sd">        An (optional) factory for actually creating the adapters. This is</span>
+<span class="sd">        any callable that takes a single argument which is the object to</span>
+<span class="sd">        be adapted. The factory should return an adapter if it can</span>
+<span class="sd">        perform the adaptation and **None** if it cannot.</span>
+<span class="sd">    cached : bool</span>
+<span class="sd">        Should the adapters be cached? If an adapter is cached, then the</span>
+<span class="sd">        factory will produce at most one adapter per instance.</span>
+<span class="sd">    when : str</span>
+<span class="sd">        A Python expression that selects which instances of a particular type</span>
+<span class="sd">        can be adapted by this factory. The expression is evaluated in a</span>
+<span class="sd">        namespace that contains a single name *adaptee*, which is bound to the</span>
+<span class="sd">        object to be adapted (e.g., &#39;adaptee.is_folder&#39;).</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The ``cached`` and ``when`` arguments are ignored if ``factory`` is</span>
+<span class="sd">    specified.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">register_factory</span>
+    <span class="kn">from</span> <span class="nn">traits.adaptation.cached_adapter_factory</span> <span class="kn">import</span> <span class="n">CachedAdapterFactory</span>
+    <span class="kn">from</span> <span class="nn">traits.protocols.advice</span> <span class="kn">import</span> <span class="n">addClassAdvisor</span>
+
+    <span class="k">if</span> <span class="n">extra</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">adapter</span><span class="p">,</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span> <span class="o">=</span> <span class="n">from_</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">extra</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="s">&quot;use the &#39;register_factory&#39; function from &#39;traits.api&#39; instead&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">klass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Called when the class has been created. &quot;&quot;&quot;</span>
+
+        <span class="c"># At this point:-</span>
+        <span class="c">#</span>
+        <span class="c"># klass is the callable (usually a class) that takes one argument (the</span>
+        <span class="c"># adaptee) and returns an appropriate adapter (or None if the adaptation</span>
+        <span class="c"># is not possible).</span>
+
+        <span class="c"># What the adapters created by the factory will adapt from.</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">from_</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">from_protocols</span> <span class="o">=</span> <span class="p">[</span><span class="n">from_</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">from_protocols</span> <span class="o">=</span> <span class="n">from_</span>
+
+        <span class="c"># What the adapters created by the factory will adapt to.</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">to</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">to_protocols</span> <span class="o">=</span> <span class="p">[</span><span class="n">to</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">to_protocols</span> <span class="o">=</span> <span class="n">to</span>
+
+        <span class="k">if</span> <span class="n">factory</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># If the adapter is cached or has a &#39;when&#39; expression then create a</span>
+            <span class="c"># default factory:</span>
+
+            <span class="n">adapter_factory</span> <span class="o">=</span> <span class="n">klass</span>
+
+            <span class="k">if</span> <span class="n">when</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">_conditional_factory</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+                    <span class="n">namespace</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;adaptee&#39;</span><span class="p">:</span> <span class="n">adaptee</span><span class="p">}</span>
+
+                    <span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="n">when</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+                        <span class="k">return</span> <span class="n">klass</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+                    <span class="k">return</span> <span class="bp">None</span>
+
+                <span class="n">adapter_factory</span> <span class="o">=</span> <span class="n">_conditional_factory</span>
+
+            <span class="k">if</span> <span class="n">cached</span><span class="p">:</span>
+                <span class="n">adapter_factory</span> <span class="o">=</span> <span class="n">CachedAdapterFactory</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="n">adapter_factory</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adapter_factory</span> <span class="o">=</span> <span class="n">factory</span>
+
+        <span class="k">for</span> <span class="n">from_protocol</span> <span class="ow">in</span> <span class="n">from_protocols</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">to_protocol</span> <span class="ow">in</span> <span class="n">to_protocols</span><span class="p">:</span>
+                <span class="n">register_factory</span><span class="p">(</span><span class="n">adapter_factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">to_protocol</span> <span class="ow">in</span> <span class="n">to_protocols</span><span class="p">:</span>
+            <span class="c"># We cannot register adapter factories that are functions. (This is</span>
+            <span class="c"># ony relevant when using &#39;adapts&#39; as a function.</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+                <span class="c"># We use type(to_protocol) in case the to_protocols implements</span>
+                <span class="c"># its own &#39;register&#39; method which overrides the ABC method.</span>
+                <span class="nb">type</span><span class="p">(</span><span class="n">to_protocol</span><span class="p">)</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">to_protocol</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">klass</span>
+
+    <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">callback</span><span class="p">(</span><span class="n">adapter</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">addClassAdvisor</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+
+<span class="c">#### EOF ######################################################################</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li>
+  
+    <li><a href="#">traits.adaptation.adapter</a></li>
+  
+
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008-2011, Enthought.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+    </div>
+  </body>
+</html>

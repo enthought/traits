@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -48,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
   
 
       </ul>
@@ -298,7 +296,7 @@ as the keyword. This feature lets you associate metadata with a trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Keywords :</th><td class="field-body"><ul class="first last">
+<tr class="field-odd field"><th class="field-name">Keywords:</th><td class="field-body"><ul class="first last">
 <li><p class="first"><strong>desc</strong> (<em>str</em>) &#8211;
 Describes the intended meaning of the trait. It is used in
 exception messages and fly-over help in user interfaces.</p>
@@ -333,8 +331,9 @@ where a detailed comparison of two objects is very expensive, or where
 you do not care whether the details of an object change, as long as the
 same object is used.</p>
 <blockquote>
-<div><p class="deprecated">
-<span class="versionmodified">Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+<div><div class="deprecated">
+<p><span>Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+</div>
 </div></blockquote>
 </li>
 </ul>
@@ -422,8 +421,10 @@ value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
 <dl class="function">
 <dt id="traits.traits.RGBColor">
 <tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait whose value must be a GUI toolkit-specific RGB-based
-color.</p>
+<dd><dl class="docutils">
+<dt>Returns a trait whose value must be a GUI toolkit-specific RGB-based</dt>
+<dd>color.</dd>
+</dl>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following values:</p>
 <ul class="simple">
@@ -558,7 +559,7 @@ original value.</p>
                         title="previous chapter">API Reference</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="adapter.html"
-                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
+                        title="next chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.txt"
@@ -596,15 +597,15 @@ original value.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

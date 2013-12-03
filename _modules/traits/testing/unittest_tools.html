@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -53,7 +51,7 @@
             
   <h1>Source code for traits.testing.unittest_tools</h1><div class="highlight"><pre>
 <span class="c">#------------------------------------------------------------------------------</span>
-<span class="c"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c"># Copyright (c) 2005-2013, Enthought, Inc.</span>
 <span class="c"># All rights reserved.</span>
 <span class="c">#</span>
 <span class="c"># This software is provided without warranty under the terms of the BSD</span>
@@ -67,6 +65,24 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="c"># Compatibility layer for Python 2.6: try loading unittest2</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">unittest2</span> <span class="kn">as</span> <span class="nn">unittest</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Any</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span>
+        <span class="n">Property</span><span class="p">,</span> <span class="n">Str</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">traits.util.async_trait_wait</span> <span class="kn">import</span> <span class="n">wait_for_condition</span>
+
 
 <span class="k">class</span> <span class="nc">_AssertTraitChangesContext</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A context manager used to implement the trait change assert methods.</span>
@@ -77,7 +93,7 @@
 <span class="sd">        The HasTraits class instance who&#39;s class trait will change.</span>
 
 <span class="sd">    xname : str</span>
-<span class="sd">        The extended trait name of trait changes to listen too.</span>
+<span class="sd">        The extended trait name of trait changes to listen to.</span>
 
 <span class="sd">    count : int, optional</span>
 <span class="sd">        The expected number of times the event should be fired. When None</span>
@@ -105,7 +121,7 @@
 <span class="sd">            The HasTraits class instance who&#39;s class trait will change.</span>
 
 <span class="sd">        xname : str</span>
-<span class="sd">            The extended trait name of trait changes to listen too.</span>
+<span class="sd">            The extended trait name of trait changes to listen to.</span>
 
 <span class="sd">        count : int, optional</span>
 <span class="sd">            The expected number of times the event should be fired. When None</span>
@@ -125,26 +141,27 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">obj</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xname</span> <span class="o">=</span> <span class="n">xname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span> <span class="o">=</span> <span class="n">test_case</span><span class="o">.</span><span class="n">failureException</span>
 
     <span class="k">def</span> <span class="nf">_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Dummy trait listener</span>
+        <span class="sd">&quot;&quot;&quot; Dummy trait listener.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Bind the trait listener</span>
+        <span class="sd">&quot;&quot;&quot; Bind the trait listener.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_listener</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xname</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">tb</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Remove the trait listener</span>
-
+        <span class="sd">&quot;&quot;&quot; Remove the trait listener.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">exc_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span>
+            <span class="k">return</span> <span class="bp">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_listener</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xname</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">:</span>
@@ -154,6 +171,72 @@
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;A change event was not fired for: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xname</span><span class="p">)</span>
             <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+
+<span class="nd">@contextlib.contextmanager</span>
+<div class="viewcode-block" id="reverse_assertion"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.reverse_assertion">[docs]</a><span class="k">def</span> <span class="nf">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">__enter__</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">context</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">__exit__</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">context</span><span class="o">.</span><span class="n">failureException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+</div>
+<span class="k">class</span> <span class="nc">_TraitsChangeCollector</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Class allowing thread-safe recording of events.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># The object we&#39;re listening to.</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c"># The (possibly extended) trait name.</span>
+    <span class="n">trait</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c"># Read-only event count.</span>
+    <span class="n">event_count</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Int</span><span class="p">)</span>
+
+    <span class="c"># Event that&#39;s triggered when the event count is updated.</span>
+    <span class="n">event_count_updated</span> <span class="o">=</span> <span class="n">Event</span>
+
+    <span class="c"># Private list of events.</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Any</span><span class="p">)</span>
+
+    <span class="c"># Lock used to allow access to events by multiple threads</span>
+    <span class="c"># simultaneously.</span>
+    <span class="n">_lock</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">,</span> <span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">start_collecting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event_handler</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">stop_collecting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_event_handler</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">,</span>
+            <span class="n">remove</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_event_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_count_updated</span> <span class="o">=</span> <span class="bp">True</span>
+
+    <span class="k">def</span> <span class="nf">_get_event_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Traits property getter.</span>
+
+<span class="sd">        Thread-safe access to event count.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="UnittestTools"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools">[docs]</a><span class="k">class</span> <span class="nc">UnittestTools</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Mixin class to augment the unittest.TestCase class with useful trait</span>
@@ -161,84 +244,255 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="UnittestTools.assertTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitChanges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Assert that the class trait changes exactly n times.</span>
+<div class="viewcode-block" id="UnittestTools.assertTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitChanges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">callableObj</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                           <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert an object trait changes a given number of times.</span>
 
-<span class="sd">        Used in a with statement to assert that a class trait has changed</span>
-<span class="sd">        during the execution of the code inside the with context block</span>
-<span class="sd">        (similar to the assertRaises method).</span>
+<span class="sd">        Assert that the class trait changes exactly `count` times during</span>
+<span class="sd">        execution of the provided function.</span>
 
-<span class="sd">        Please note that the context manager returns itself and the user can</span>
-<span class="sd">        introspect the information of the fired events by accessing the</span>
-<span class="sd">        ``events`` attribute of the context object. The attribute is a list</span>
-<span class="sd">        with tuple elements containing the arguments of an `on_trait_change`</span>
-<span class="sd">        event signature (&lt;object&gt;, &lt;name&gt;, &lt;old&gt;, &lt;new&gt;).</span>
+<span class="sd">        Method can also be used in a with statement to assert that the</span>
+<span class="sd">        a class trait has changed during the execution of the code inside</span>
+<span class="sd">        the with statement (similar to the assertRaises method). Please note</span>
+<span class="sd">        that in that case the context manager returns itself and the user</span>
+<span class="sd">        can introspect the information of:</span>
 
-<span class="sd">        **Example**::</span>
+<span class="sd">        - The last event fired by accessing the ``event`` attribute of the</span>
+<span class="sd">          returned object.</span>
 
-<span class="sd">            class MyClass(HasTraits):</span>
-<span class="sd">               number = Float(2.0)</span>
-
-<span class="sd">            my_class = MyClass()</span>
-
-<span class="sd">            with self.assertTraitChanges(my_class, &#39;number&#39;) as ctx:</span>
-<span class="sd">               my_class.number = 3.0</span>
-
-<span class="sd">            self.assert(ctx.events, [(my_class, &#39;number&#39;, 2.0, 3.0)]</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        obj : HasTraits</span>
-<span class="sd">            The HasTraits class instance who&#39;s class trait will change.</span>
-
-<span class="sd">        xname : str</span>
-<span class="sd">            The extended trait name of trait changes to listen too.</span>
-
-<span class="sd">        count : int, optional</span>
-<span class="sd">            The expected number of times the event should be fired. When None</span>
-<span class="sd">            (default value) there is no check for the number of times the</span>
-<span class="sd">            change event was fired.</span>
-
-<span class="sd">        Notes</span>
-<span class="sd">        -----</span>
-<span class="sd">        - Checking if the provided xname corresponds to valid traits in</span>
-<span class="sd">          the class is not implemented yet.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_AssertTraitChangesContext</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-</div>
-<div class="viewcode-block" id="UnittestTools.assertTraitDoesNotChange"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitDoesNotChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">xname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Assert that no trait event is fired.</span>
-
-<span class="sd">        Used in a with statement to assert that a class trait has not changed</span>
-<span class="sd">        during the execution of the code inside the with statement block.</span>
+<span class="sd">        - All the fired events by accessing the ``events`` attribute of</span>
+<span class="sd">          the return object.</span>
 
 <span class="sd">        **Example**::</span>
 
 <span class="sd">            class MyClass(HasTraits):</span>
 <span class="sd">                number = Float(2.0)</span>
-<span class="sd">                name = String</span>
 
 <span class="sd">            my_class = MyClass()</span>
 
-<span class="sd">            with self.assertTraitDoesNotChange(my_class, &#39;name&#39;):</span>
-<span class="sd">                 my_class.number = 2.0</span>
+<span class="sd">            with self.assertTraitChangesExactly(my_class, &#39;number&#39;, count=1):</span>
+<span class="sd">                my_class.number = 3.0</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        obj : HasTraits</span>
-<span class="sd">            The HasTraits class instance who&#39;s class trait will change.</span>
+<span class="sd">            The HasTraits class instance whose class trait will change.</span>
 
-<span class="sd">        xname : str</span>
-<span class="sd">            The extended trait name of trait changes to listen too.</span>
+<span class="sd">        trait : str</span>
+<span class="sd">            The extended trait name of trait changes to listen to.</span>
+
+<span class="sd">        count : int or None, optional</span>
+<span class="sd">            The expected number of times the event should be fired. When None</span>
+<span class="sd">            (default value) there is no check for the number of times the</span>
+<span class="sd">            change event was fired.</span>
+
+<span class="sd">        callableObj : callable, optional</span>
+<span class="sd">            A callable object that will trigger the expected trait change.</span>
+<span class="sd">            When None (default value) a trigger is expected to be called</span>
+<span class="sd">            under the context manger returned by this method.</span>
+
+<span class="sd">        *args :</span>
+<span class="sd">            List of positional arguments for ``callableObj``</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Dict of keyword value pairs to be passed to the ``callableObj``</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        context : context manager or None</span>
+<span class="sd">            If ``callableObj`` is None, an assertion context manager is returned,</span>
+<span class="sd">            inside of which a trait-change trigger can be invoked. Otherwise,</span>
+<span class="sd">            the context is used internally with ``callableObj`` as the trigger,</span>
+<span class="sd">            in which case None is returned.</span>
+
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        - Checking if the provided xname corresponds to valid traits in</span>
+<span class="sd">        - Checking if the provided ``trait`` corresponds to valid traits in</span>
 <span class="sd">          the class is not implemented yet.</span>
+<span class="sd">        - Using the functional version of the assert method requires the</span>
+<span class="sd">          ``count`` argument to be given even if it is None.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">_AssertTraitChangesContext</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">xname</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div></div>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">_AssertTraitChangesContext</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">callableObj</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">context</span>
+        <span class="k">with</span> <span class="n">context</span><span class="p">:</span>
+            <span class="n">callableObj</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="UnittestTools.assertTraitDoesNotChange"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitDoesNotChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">callableObj</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                                 <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert an object trait does not change.</span>
+
+<span class="sd">        Assert that the class trait does not change during</span>
+<span class="sd">        execution of the provided function.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : HasTraits</span>
+<span class="sd">            The HasTraits class instance whose class trait will change.</span>
+
+<span class="sd">        trait : str</span>
+<span class="sd">            The extended trait name of trait changes to listen to.</span>
+
+<span class="sd">        callableObj : callable, optional</span>
+<span class="sd">            A callable object that should not trigger a change in the</span>
+<span class="sd">            passed trait.  When None (default value) a trigger is expected</span>
+<span class="sd">            to be called under the context manger returned by this method.</span>
+
+<span class="sd">        *args :</span>
+<span class="sd">            List of positional arguments for ``callableObj``</span>
+
+<span class="sd">        **kwargs :</span>
+<span class="sd">            Dict of keyword value pairs to be passed to the ``callableObj``</span>
+
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        context : context manager or None</span>
+<span class="sd">            If ``callableObj`` is None, an assertion context manager is returned,</span>
+<span class="sd">            inside of which a trait-change trigger can be invoked. Otherwise,</span>
+<span class="sd">            the context is used internally with ``callableObj`` as the trigger,</span>
+<span class="sd">            in which case None is returned.</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;A change event was fired for: {0}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">_AssertTraitChangesContext</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">callableObj</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">reverse_assertion</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+            <span class="n">callableObj</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span>
+</div>
+<div class="viewcode-block" id="UnittestTools.assertMultiTraitChanges"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges">[docs]</a>    <span class="k">def</span> <span class="nf">assertMultiTraitChanges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">,</span> <span class="n">traits_modified</span><span class="p">,</span>
+            <span class="n">traits_not_modified</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert that traits on multiple objects do or do not change.</span>
+
+<span class="sd">        This combines some of the functionality of `assertTraitChanges` and</span>
+<span class="sd">        `assertTraitDoesNotChange`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        objects : list of HasTraits</span>
+<span class="sd">            The HasTraits class instances whose traits will change.</span>
+
+<span class="sd">        traits_modified : list of str</span>
+<span class="sd">            The extended trait names of trait expected to change.</span>
+
+<span class="sd">        traits_not_modified : list of str</span>
+<span class="sd">            The extended trait names of traits not expected to change.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_modified</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits_not_modified</span><span class="p">:</span>
+                <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nested</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+</div>
+    <span class="nd">@contextlib.contextmanager</span>
+<div class="viewcode-block" id="UnittestTools.assertTraitChangesAsync"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync">[docs]</a>    <span class="k">def</span> <span class="nf">assertTraitChangesAsync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert an object trait eventually changes.</span>
+
+<span class="sd">        Context manager used to assert that the given trait changes at</span>
+<span class="sd">        least `count` times within the given timeout, as a result of</span>
+<span class="sd">        execution of the body of the corresponding with block.</span>
+
+<span class="sd">        The trait changes are permitted to occur asynchronously.</span>
+
+<span class="sd">        **Example usage**::</span>
+
+<span class="sd">            with self.assertTraitChangesAsync(my_object, &#39;SomeEvent&#39;, count=4):</span>
+<span class="sd">                &lt;do stuff that should cause my_object.SomeEvent to be</span>
+<span class="sd">                fired at least 4 times within the next 5 seconds&gt;</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : HasTraits</span>
+<span class="sd">            The HasTraits class instance whose class trait will change.</span>
+
+<span class="sd">        trait : str</span>
+<span class="sd">            The extended trait name of trait changes to listen to.</span>
+
+<span class="sd">        count : int, optional</span>
+<span class="sd">            The expected number of times the event should be fired.</span>
+
+<span class="sd">        timeout : float or None, optional</span>
+<span class="sd">            The amount of time in seconds to wait for the specified number</span>
+<span class="sd">            of changes. None can be used to indicate no timeout.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">collector</span> <span class="o">=</span> <span class="n">_TraitsChangeCollector</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="o">=</span><span class="n">trait</span><span class="p">)</span>
+
+        <span class="c"># Pass control to body of the with statement.</span>
+        <span class="n">collector</span><span class="o">.</span><span class="n">start_collecting</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">collector</span>
+
+            <span class="c"># Wait for the expected number of events to arrive.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">wait_for_condition</span><span class="p">(</span>
+                    <span class="n">condition</span><span class="o">=</span><span class="k">lambda</span> <span class="n">obj</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">event_count</span> <span class="o">&gt;=</span> <span class="n">count</span><span class="p">,</span>
+                    <span class="n">obj</span><span class="o">=</span><span class="n">collector</span><span class="p">,</span>
+                    <span class="n">trait</span><span class="o">=</span><span class="s">&#39;event_count_updated&#39;</span><span class="p">,</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+                <span class="n">actual_event_count</span> <span class="o">=</span> <span class="n">collector</span><span class="o">.</span><span class="n">event_count</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;Expected {0} event on {1} to be fired at least {2} &quot;</span>
+                       <span class="s">&quot;times, but the event was only fired {3} times &quot;</span>
+                       <span class="s">&quot;before timeout ({4} seconds).&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">trait</span><span class="p">,</span>
+                    <span class="n">obj</span><span class="p">,</span>
+                    <span class="n">count</span><span class="p">,</span>
+                    <span class="n">actual_event_count</span><span class="p">,</span>
+                    <span class="n">timeout</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">collector</span><span class="o">.</span><span class="n">stop_collecting</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="UnittestTools.assertEventuallyTrue"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue">[docs]</a>    <span class="k">def</span> <span class="nf">assertEventuallyTrue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assert that the given condition is eventually true.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        obj : HasTraits</span>
+<span class="sd">            The HasTraits class instance who&#39;s traits will change.</span>
+
+<span class="sd">        trait : str</span>
+<span class="sd">            The extended trait name of trait changes to listen to.</span>
+
+<span class="sd">        condition : callable</span>
+<span class="sd">            A function that will be called when the specified trait</span>
+<span class="sd">            changes.  This should accept ``obj`` and should return a</span>
+<span class="sd">            Boolean indicating whether the condition is satisfied or not.</span>
+
+<span class="sd">        timeout : float or None, optional</span>
+<span class="sd">            The amount of time in seconds to wait for the condition to</span>
+<span class="sd">            become true.  None can be used to indicate no timeout.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">wait_for_condition</span><span class="p">(</span>
+                <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span>
+                <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span>
+                <span class="n">trait</span><span class="o">=</span><span class="n">trait</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
+            <span class="c"># Helpful to know whether we timed out because the</span>
+            <span class="c"># condition never became true, or because the expected</span>
+            <span class="c"># event was never issued.</span>
+            <span class="n">condition_at_timeout</span> <span class="o">=</span> <span class="n">condition</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span>
+                <span class="s">&quot;Timed out waiting for condition. &quot;</span>
+                <span class="s">&quot;At timeout, condition was {0}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">condition_at_timeout</span><span class="p">))</span></div></div>
 </pre></div>
 
           </div>
@@ -282,8 +536,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>

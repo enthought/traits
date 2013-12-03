@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.2.1',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -48,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#">protocols Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">protocols</span></tt> Package</a></li>
   
 
       </ul>
@@ -60,509 +58,17 @@
           <div class="body">
             
   <div class="section" id="protocols-package">
-<h1>protocols Package<a class="headerlink" href="#protocols-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">protocols</span></tt> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h1><tt class="xref py py-mod docutils literal"><span class="pre">protocols</span></tt> Package<a class="headerlink" href="#protocols-package" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <a class="reference internal" href="#module-traits.protocols" title="traits.protocols"><tt class="xref py py-mod docutils literal"><span class="pre">traits.protocols</span></tt></a> package is deprecated.  Use the <a class="reference internal" href="traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><tt class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></tt></a> package instead in new code.</p>
+</div>
 <span class="target" id="module-traits.protocols"></span><p>Trivial Interfaces and Adaptation from PyProtocols.</p>
-<p>This package is a subset of the files from Phillip J. Eby&#8217;s
-PyProtocols package. They are only included here to help remove dependencies
-on external packages from the Traits package. The code has been reorganized to
-address circular imports that were discovered when explicit relative imports
-were added.</p>
-</div>
-<div class="section" id="module-traits.protocols.adapters">
-<span id="adapters-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">adapters</span></tt> Module<a class="headerlink" href="#module-traits.protocols.adapters" title="Permalink to this headline">¶</a></h2>
-<p>Basic Adapters and Adapter Operations</p>
-</div>
-<div class="section" id="module-traits.protocols.advice">
-<span id="advice-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">advice</span></tt> Module<a class="headerlink" href="#module-traits.protocols.advice" title="Permalink to this headline">¶</a></h2>
-<dl class="attribute">
-<dt id="traits.protocols.advice.metamethod">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">metamethod</tt><a class="reference internal" href="../_modules/traits/protocols/advice.html#metamethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.metamethod" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.classicMRO">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">classicMRO</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#classicMRO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.classicMRO" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.getMRO">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">getMRO</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#getMRO"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.getMRO" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.supermeta">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">supermeta</tt><big>(</big><em>typ</em>, <em>ob</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#supermeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.supermeta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.getFrameInfo">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">getFrameInfo</tt><big>(</big><em>frame</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#getFrameInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.getFrameInfo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return (kind,module,locals,globals) for a frame</p>
-<p>&#8216;kind&#8217; is one of &#8220;exec&#8221;, &#8220;module&#8221;, &#8220;class&#8221;, &#8220;function call&#8221;, or &#8220;unknown&#8221;.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.addClassAdvisor">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">addClassAdvisor</tt><big>(</big><em>callback</em>, <em>depth=2</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#addClassAdvisor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.addClassAdvisor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set up &#8216;callback&#8217; to be passed the containing class upon creation</p>
-<p>This function is designed to be called by an &#8220;advising&#8221; function executed
-in a class suite.  The &#8220;advising&#8221; function supplies a callback that it
-wishes to have executed when the containing class is created.  The
-callback will be given one argument: the newly created containing class.
-The return value of the callback will be used in place of the class, so
-the callback should return the input if it does not wish to replace the
-class.</p>
-<p>The optional &#8216;depth&#8217; argument to this function determines the number of
-frames between this function and the targeted class suite.  &#8216;depth&#8217;
-defaults to 2, since this skips this function&#8217;s frame and one calling
-function frame.  If you use this function from a function called directly
-in the class suite, the default will be correct, otherwise you will need
-to determine the correct depth yourself.</p>
-<p>This function works by installing a special class factory function in
-place of the &#8216;__metaclass__&#8217; of the containing class.  Therefore, only
-callbacks <em>after</em> the last &#8216;__metaclass__&#8217; assignment in the containing
-class will be executed.  Be sure that classes using &#8220;advising&#8221; functions
-declare any &#8216;__metaclass__&#8217; <em>first</em>, to ensure all callbacks are run.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.isClassAdvisor">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">isClassAdvisor</tt><big>(</big><em>ob</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#isClassAdvisor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.isClassAdvisor" title="Permalink to this definition">¶</a></dt>
-<dd><p>True if &#8216;ob&#8217; is a class advisor function</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.determineMetaclass">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">determineMetaclass</tt><big>(</big><em>bases</em>, <em>explicit_mc=None</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#determineMetaclass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.determineMetaclass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determine metaclass from 1+ bases and optional explicit __metaclass__</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.minimalBases">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">minimalBases</tt><big>(</big><em>classes</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#minimalBases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.minimalBases" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reduce a list of base classes to its ordered minimum equivalent</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.advice.StrongRef">
-<em class="property">class </em><tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">StrongRef</tt><big>(</big><em>referent</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#StrongRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.StrongRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Like a weakref, but for non-weakrefable objects</p>
-<dl class="attribute">
-<dt id="traits.protocols.advice.StrongRef.referent">
-<tt class="descname">referent</tt><a class="headerlink" href="#traits.protocols.advice.StrongRef.referent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.advice.mkRef">
-<tt class="descclassname">traits.protocols.advice.</tt><tt class="descname">mkRef</tt><big>(</big><em>ob</em>, <em>*args</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/advice.html#mkRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.advice.mkRef" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return either a weakref or a StrongRef for &#8216;ob&#8217;</p>
-<p>Note that extra args are forwarded to weakref.ref() if applicable.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-traits.protocols.classic">
-<span id="classic-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">classic</span></tt> Module<a class="headerlink" href="#module-traits.protocols.classic" title="Permalink to this headline">¶</a></h2>
-<p>Declaration support for Python built-in types</p>
-<dl class="class">
-<dt id="traits.protocols.classic.ProviderMixin">
-<em class="property">class </em><tt class="descclassname">traits.protocols.classic.</tt><tt class="descname">ProviderMixin</tt><a class="reference internal" href="../_modules/traits/protocols/classic.html#ProviderMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.classic.ProviderMixin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mixin to support per-instance declarations</p>
-<dl class="attribute">
-<dt id="traits.protocols.classic.ProviderMixin.declareProvides">
-<tt class="descname">declareProvides</tt><a class="reference internal" href="../_modules/traits/protocols/classic.html#ProviderMixin.declareProvides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.classic.ProviderMixin.declareProvides" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.classic.ProviderMixin.newProtocolImplied">
-<tt class="descname">newProtocolImplied</tt><a class="reference internal" href="../_modules/traits/protocols/classic.html#ProviderMixin.newProtocolImplied"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.classic.ProviderMixin.newProtocolImplied" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-traits.protocols.generate">
-<span id="generate-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">generate</span></tt> Module<a class="headerlink" href="#module-traits.protocols.generate" title="Permalink to this headline">¶</a></h2>
-<p>Autogenerated protocols from type+method names, URI, sequence, etc.</p>
-<dl class="class">
-<dt id="traits.protocols.generate.URIProtocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">URIProtocol</tt><big>(</big><em>uri</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#URIProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.URIProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Protocol" title="traits.protocols.protocols.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Protocol</span></tt></a></p>
-<p>Protocol representing a URI, UUID, or other unique textual identifier</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.generate.TypeSubset">
-<em class="property">class </em><tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">TypeSubset</tt><big>(</big><em>baseType</em>, <em>methods</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#TypeSubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.TypeSubset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Protocol" title="traits.protocols.protocols.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Protocol</span></tt></a></p>
-<p>Protocol representing some set of a type&#8217;s methods</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.generate.WeakSubset">
-<em class="property">class </em><tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">WeakSubset</tt><big>(</big><em>baseType</em>, <em>methods</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#WeakSubset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.WeakSubset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.generate.TypeSubset" title="traits.protocols.generate.TypeSubset"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.generate.TypeSubset</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>TypeSubset that accepts any object with the right attributes</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.generate.SequenceProtocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">SequenceProtocol</tt><big>(</big><em>baseProtocol</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#SequenceProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.SequenceProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Protocol" title="traits.protocols.protocols.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Protocol</span></tt></a></p>
-<p>Protocol representing a &#8220;sequence of&#8221; some base protocol</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.generate.IBasicSequence">
-<em class="property">class </em><tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">IBasicSequence</tt><a class="reference internal" href="../_modules/traits/protocols/generate.html#IBasicSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.IBasicSequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<p>Non-string, iterable object sequence</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.generate.ADAPT_SEQUENCE">
-<tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">ADAPT_SEQUENCE</tt><big>(</big><em>ob</em>, <em>proto</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#ADAPT_SEQUENCE"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.ADAPT_SEQUENCE" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert iterable &#8216;ob&#8217; into list of objects implementing &#8216;proto&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.generate.protocolForURI">
-<tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">protocolForURI</tt><big>(</big><em>uri</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#protocolForURI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.protocolForURI" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a unique protocol object representing the supplied URI/UUID</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.generate.protocolForType">
-<tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">protocolForType</tt><big>(</big><em>baseType</em>, <em>methods=()</em>, <em>implicit=False</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#protocolForType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.protocolForType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a protocol representing a subset of methods of a specific type</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.generate.sequenceOf">
-<tt class="descclassname">traits.protocols.generate.</tt><tt class="descname">sequenceOf</tt><big>(</big><em>baseProtocol</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/generate.html#sequenceOf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.generate.sequenceOf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a protocol representing an sequence of a given base protocol</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-traits.protocols.interfaces">
-<span id="interfaces-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">interfaces</span></tt> Module<a class="headerlink" href="#module-traits.protocols.interfaces" title="Permalink to this headline">¶</a></h2>
-<p>Implement Interfaces and define the interfaces used by the package</p>
-</div>
-<div class="section" id="module-traits.protocols.protocols">
-<span id="protocols-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">protocols</span></tt> Module<a class="headerlink" href="#module-traits.protocols.protocols" title="Permalink to this headline">¶</a></h2>
-<p>Basic Adapters and Adapter Operations</p>
-<dl class="exception">
-<dt id="traits.protocols.protocols.AdaptationFailure">
-<em class="property">exception </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">AdaptationFailure</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#AdaptationFailure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.AdaptationFailure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.NotImplementedError</span></tt>, <tt class="xref py py-class docutils literal"><span class="pre">exceptions.TypeError</span></tt></p>
-<p>A suitable implementation/adapter could not be found</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.NO_ADAPTER_NEEDED">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">NO_ADAPTER_NEEDED</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#NO_ADAPTER_NEEDED"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.NO_ADAPTER_NEEDED" title="Permalink to this definition">¶</a></dt>
-<dd><p>Assume &#8216;obj&#8217; implements &#8216;protocol&#8217; directly</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.DOES_NOT_SUPPORT">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">DOES_NOT_SUPPORT</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#DOES_NOT_SUPPORT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.DOES_NOT_SUPPORT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prevent &#8216;obj&#8217; from supporting &#8216;protocol&#8217;</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.Adapter">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">Adapter</tt><big>(</big><em>ob</em>, <em>proto</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Adapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Convenient base class for adapters</p>
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Adapter.protocol">
-<tt class="descname">protocol</tt><a class="headerlink" href="#traits.protocols.protocols.Adapter.protocol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.StickyAdapter">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">StickyAdapter</tt><big>(</big><em>ob</em>, <em>proto</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#StickyAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.StickyAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Adapter that attaches itself to its subject for repeated use</p>
-<dl class="attribute">
-<dt id="traits.protocols.protocols.StickyAdapter.attachForProtocols">
-<tt class="descname">attachForProtocols</tt><em class="property"> = ()</em><a class="headerlink" href="#traits.protocols.protocols.StickyAdapter.attachForProtocols" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.StickyAdapter.protocol">
-<tt class="descname">protocol</tt><a class="headerlink" href="#traits.protocols.protocols.StickyAdapter.protocol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.minimumAdapter">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">minimumAdapter</tt><big>(</big><em>a1</em>, <em>a2</em>, <em>d1=0</em>, <em>d2=0</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#minimumAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.minimumAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shortest route to implementation, &#8216;a1&#8217; &#64; depth &#8216;d1&#8217;, or &#8216;a2&#8217; &#64; &#8216;d2&#8217;?</p>
-<p>Assuming both a1 and a2 are interchangeable adapters (i.e. have the same
-source and destination protocols), return the one which is preferable; that
-is, the one with the shortest implication depth, or, if the depths are
-equal, then the adapter that is composed of the fewest chained adapters.
-If both are the same, then prefer &#8216;NO_ADAPTER_NEEDED&#8217;, followed by
-anything but &#8216;DOES_NOT_SUPPORT&#8217;, with &#8216;DOES_NOT_SUPPORT&#8217; being least
-preferable.  If there is no unambiguous choice, and &#8216;not a1 is a2&#8217;,
-TypeError is raised.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.composeAdapters">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">composeAdapters</tt><big>(</big><em>baseAdapter</em>, <em>baseProtocol</em>, <em>extendingAdapter</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#composeAdapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.composeAdapters" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the composition of &#8216;baseAdapter&#8217;+&#8217;extendingAdapter&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.bindAdapter">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">bindAdapter</tt><big>(</big><em>adapter</em>, <em>proto</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#bindAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.bindAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Backward compatibility: wrap &#8216;adapter&#8217; to support old 2-arg signature</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.updateWithSimplestAdapter">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">updateWithSimplestAdapter</tt><big>(</big><em>mapping</em>, <em>key</em>, <em>adapter</em>, <em>depth</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#updateWithSimplestAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.updateWithSimplestAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace &#8216;mapping[key]&#8217; w/&#8217;adapter&#8217; &#64; &#8216;depth&#8217;, return true if changed</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.Protocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">Protocol</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generic protocol w/type-based adapter registry</p>
-<dl class="method">
-<dt id="traits.protocols.protocols.Protocol.getImpliedProtocols">
-<tt class="descname">getImpliedProtocols</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol.getImpliedProtocols"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol.getImpliedProtocols" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Protocol.addImpliedProtocol">
-<tt class="descname">addImpliedProtocol</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol.addImpliedProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol.addImpliedProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Protocol.registerImplementation">
-<tt class="descname">registerImplementation</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol.registerImplementation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol.registerImplementation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Protocol.registerObject">
-<tt class="descname">registerObject</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol.registerObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol.registerObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Protocol.addImplicationListener">
-<tt class="descname">addImplicationListener</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Protocol.addImplicationListener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Protocol.addImplicationListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Wrapper for metaclass method that might be confused w/instance method</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.AbstractBaseMeta">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">AbstractBaseMeta</tt><big>(</big><em>__name__</em>, <em>__bases__</em>, <em>__dict__</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#AbstractBaseMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.AbstractBaseMeta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Protocol" title="traits.protocols.protocols.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Protocol</span></tt></a>, <tt class="xref py py-class docutils literal"><span class="pre">type</span></tt></p>
-<p>Metaclass for &#8216;AbstractBase&#8217; - a protocol that&#8217;s also a class</p>
-<p>(Note that this should not be used as an explicit metaclass - always
-subclass from &#8216;AbstractBase&#8217; or &#8216;Interface&#8217; instead.)</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.AbstractBase">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">AbstractBase</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#AbstractBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.AbstractBase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Base class for a protocol that&#8217;s a class</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.InterfaceClass">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">InterfaceClass</tt><big>(</big><em>__name__</em>, <em>__bases__</em>, <em>__dict__</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#InterfaceClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.InterfaceClass" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.AbstractBaseMeta" title="traits.protocols.protocols.AbstractBaseMeta"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.AbstractBaseMeta</span></tt></a></p>
-<p>Metaclass for &#8216;Interface&#8217; - a non-instantiable protocol</p>
-<p>(Note that this should not be used as an explicit metaclass - always
-subclass from &#8216;AbstractBase&#8217; or &#8216;Interface&#8217; instead.)</p>
-<dl class="method">
-<dt id="traits.protocols.protocols.InterfaceClass.getBases">
-<tt class="descname">getBases</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#InterfaceClass.getBases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.InterfaceClass.getBases" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.Interface">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">Interface</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.Variation">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">Variation</tt><big>(</big><em>baseProtocol</em>, <em>context=None</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Variation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Variation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Protocol" title="traits.protocols.protocols.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Protocol</span></tt></a></p>
-<p>A variation of a base protocol - &#8220;inherits&#8221; the base&#8217;s adapters</p>
-<p>See the &#8216;LocalProtocol&#8217; example in the reference manual for more info.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="traits.protocols.protocols.Attribute">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">Attribute</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#Attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.Attribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attribute declaration; should we get rid of this?</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IAdapterFactory">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IAdapterFactory</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IAdapterFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IAdapterFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<p>Callable that can adapt an object to a protocol</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IProtocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IProtocol</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<p>Object usable as a protocol by &#8216;adapt()&#8217;</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IAdaptingProtocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IAdaptingProtocol</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IAdaptingProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IAdaptingProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.IProtocol" title="traits.protocols.protocols.IProtocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.IProtocol</span></tt></a></p>
-<p>A protocol that potentially knows how to adapt some object to itself</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IOpenProvider">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IOpenProvider</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProvider" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<p>An object that can be told how to adapt to protocols</p>
-<dl class="method">
-<dt id="traits.protocols.protocols.IOpenProvider.declareProvides">
-<tt class="descname">declareProvides</tt><big>(</big><em>protocol</em>, <em>adapter=&lt;built-in function NO_ADAPTER_NEEDED&gt;</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProvider.declareProvides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProvider.declareProvides" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register &#8216;adapter&#8217; as providing &#8216;protocol&#8217; for this object</p>
-<p>Return a true value if the provided adapter is the &#8220;shortest path&#8221; to
-&#8216;protocol&#8217; for the object, or false if a shorter path already existed.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IOpenImplementor">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IOpenImplementor</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenImplementor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenImplementor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<p>Object/type that can be told how its instances adapt to protocols</p>
-<dl class="method">
-<dt id="traits.protocols.protocols.IOpenImplementor.declareClassImplements">
-<tt class="descname">declareClassImplements</tt><big>(</big><em>protocol</em>, <em>adapter=&lt;built-in function NO_ADAPTER_NEEDED&gt;</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenImplementor.declareClassImplements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenImplementor.declareClassImplements" title="Permalink to this definition">¶</a></dt>
-<dd><p>Register &#8216;adapter&#8217; as implementing &#8216;protocol&#8217; for instances</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IOpenProtocol">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IOpenProtocol</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.IAdaptingProtocol" title="traits.protocols.protocols.IAdaptingProtocol"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.IAdaptingProtocol</span></tt></a></p>
-<p>A protocol that be told what it implies, and what supports it</p>
-<p>Note that these methods are for the use of the declaration APIs only,
-and you should NEVER call them directly.</p>
-<dl class="classmethod">
-<dt id="traits.protocols.protocols.IOpenProtocol.addImpliedProtocol">
-<em class="property">classmethod </em><tt class="descname">addImpliedProtocol</tt><big>(</big><em>proto</em>, <em>adapter=&lt;built-in function NO_ADAPTER_NEEDED&gt;</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProtocol.addImpliedProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProtocol.addImpliedProtocol" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="traits.protocols.protocols.IOpenProtocol.registerImplementation">
-<em class="property">classmethod </em><tt class="descname">registerImplementation</tt><big>(</big><em>klass</em>, <em>adapter=&lt;built-in function NO_ADAPTER_NEEDED&gt;</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProtocol.registerImplementation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProtocol.registerImplementation" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="traits.protocols.protocols.IOpenProtocol.registerObject">
-<em class="property">classmethod </em><tt class="descname">registerObject</tt><big>(</big><em>ob</em>, <em>adapter=&lt;built-in function NO_ADAPTER_NEEDED&gt;</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProtocol.registerObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProtocol.registerObject" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="classmethod">
-<dt id="traits.protocols.protocols.IOpenProtocol.addImplicationListener">
-<em class="property">classmethod </em><tt class="descname">addImplicationListener</tt><big>(</big><em>listener</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IOpenProtocol.addImplicationListener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IOpenProtocol.addImplicationListener" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.protocols.protocols.IImplicationListener">
-<em class="property">class </em><tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">IImplicationListener</tt><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IImplicationListener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IImplicationListener" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#traits.protocols.protocols.Interface" title="traits.protocols.protocols.Interface"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.protocols.Interface</span></tt></a></p>
-<dl class="method">
-<dt id="traits.protocols.protocols.IImplicationListener.newProtocolImplied">
-<tt class="descname">newProtocolImplied</tt><big>(</big><em>srcProto</em>, <em>destProto</em>, <em>adapter</em>, <em>depth</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#IImplicationListener.newProtocolImplied"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.IImplicationListener.newProtocolImplied" title="Permalink to this definition">¶</a></dt>
-<dd><p>&#8216;srcProto&#8217; now implies &#8216;destProto&#8217; via &#8216;adapter&#8217; at &#8216;depth&#8217;</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.adapt">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">adapt</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#adapt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.adapt" title="Permalink to this definition">¶</a></dt>
-<dd><p>PEP 246-alike: Adapt &#8216;obj&#8217; to &#8216;protocol&#8217;, return &#8216;default&#8217;</p>
-<p>If &#8216;default&#8217; is not supplied and no implementation is found,
-raise &#8216;AdaptationFailure&#8217;.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.declareAdapterForType">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">declareAdapterForType</tt><big>(</big><em>protocol</em>, <em>adapter</em>, <em>typ</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#declareAdapterForType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.declareAdapterForType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declare that &#8216;adapter&#8217; adapts instances of &#8216;typ&#8217; to &#8216;protocol&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.declareAdapterForProtocol">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">declareAdapterForProtocol</tt><big>(</big><em>protocol</em>, <em>adapter</em>, <em>proto</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#declareAdapterForProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.declareAdapterForProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declare that &#8216;adapter&#8217; adapts &#8216;proto&#8217; to &#8216;protocol&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.declareAdapterForObject">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">declareAdapterForObject</tt><big>(</big><em>protocol</em>, <em>adapter</em>, <em>ob</em>, <em>depth=1</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#declareAdapterForObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.declareAdapterForObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declare that &#8216;adapter&#8217; adapts &#8216;ob&#8217; to &#8216;protocol&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.declareAdapter">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">declareAdapter</tt><big>(</big><em>factory</em>, <em>provides</em>, <em>forTypes=()</em>, <em>forProtocols=()</em>, <em>forObjects=()</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#declareAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.declareAdapter" title="Permalink to this definition">¶</a></dt>
-<dd><p>&#8216;factory&#8217; is an IAdapterFactory providing &#8216;provides&#8217; protocols</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.declareImplementation">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">declareImplementation</tt><big>(</big><em>typ</em>, <em>instancesProvide=()</em>, <em>instancesDoNotProvide=()</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#declareImplementation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.declareImplementation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declare information about a class, type, or &#8216;IOpenImplementor&#8217;</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.adviseObject">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">adviseObject</tt><big>(</big><em>ob</em>, <em>provides=()</em>, <em>doesNotProvide=()</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#adviseObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.adviseObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tell an object what it does or doesn&#8217;t provide</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.protocols.protocols.advise">
-<tt class="descclassname">traits.protocols.protocols.</tt><tt class="descname">advise</tt><big>(</big><em>**kw</em><big>)</big><a class="reference internal" href="../_modules/traits/protocols/protocols.html#advise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.protocols.protocols.advise" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
+<p>This package used to be a subset of the files from Phillip J. Eby&#8217;s PyProtocols
+package. The package has been substituted by <a class="reference internal" href="traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><tt class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></tt></a> as of
+Traits 4.4.0.</p>
+<p>Currently, the package contains deprecated aliases for backward compatibility,
+and will be removed in Traits 5.0 .</p>
 </div>
 
 
@@ -574,26 +80,12 @@ raise &#8216;AdaptationFailure&#8217;.</p>
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">protocols Package</a><ul>
-<li><a class="reference internal" href="#id1"><tt class="docutils literal"><span class="pre">protocols</span></tt> Package</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.adapters"><tt class="docutils literal"><span class="pre">adapters</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.advice"><tt class="docutils literal"><span class="pre">advice</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.classic"><tt class="docutils literal"><span class="pre">classic</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.generate"><tt class="docutils literal"><span class="pre">generate</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.interfaces"><tt class="docutils literal"><span class="pre">interfaces</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.protocols.protocols"><tt class="docutils literal"><span class="pre">protocols</span></tt> Module</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.etsconfig.html"
-                        title="previous chapter">etsconfig Package</a></p>
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">etsconfig</span></tt> Package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.testing.html"
-                        title="next chapter">testing Package</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.protocols.txt"
@@ -631,15 +123,15 @@ raise &#8216;AdaptationFailure&#8217;.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#">protocols Package</a></li>
+    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">protocols</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Feb 22, 2013.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+      Last updated on Nov 26, 2013.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
     </div>
   </body>
 </html>
