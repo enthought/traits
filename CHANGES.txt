@@ -1,6 +1,10 @@
 Traits CHANGELOG
 ================
 
+What's new in Traits 4.5.0
+--------------------------
+
+
 Release 4.4.0
 -------------
 
