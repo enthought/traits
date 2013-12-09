@@ -37,13 +37,18 @@ import sys
 import re
 import copy
 import copy_reg
-from types import InstanceType, TypeType, FunctionType, MethodType
+from types import FunctionType, MethodType
+TypeType = type
+import collections
+
 from weakref import ref
 
 from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
-    CoercableTypes, TraitsCache, class_of, enumerate, Missing)
+    CoercableTypes, TraitsCache, class_of, Missing)
 from .trait_errors import TraitError, repr_type
+
+from . import _py2to3
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -1591,7 +1596,7 @@ class TraitClass ( TraitHandler ):
         If *aClass* is an instance, it is mapped to the class it is an instance
         of.
         """
-        if type( aClass ) is InstanceType:
+        if _py2to3.is_old_style_instance(aClass):
             aClass = aClass.__class__
         self.aClass = aClass
 
@@ -1792,7 +1797,7 @@ class TraitPrefixList ( TraitHandler ):
 
     def validate ( self, object, name, value ):
         try:
-            if not self.values_.has_key( value ):
+            if value not in self.values_:
                 match = None
                 n     = len( value )
                 for key in self.values:
@@ -1878,7 +1883,7 @@ class TraitMap ( TraitHandler ):
 
     def validate ( self, object, name, value ):
         try:
-            if self.map.has_key( value ):
+            if value in self.map:
                 return value
         except:
             pass
@@ -1949,7 +1954,7 @@ class TraitPrefixMap ( TraitMap ):
 
     def validate ( self, object, name, value ):
         try:
-            if not self._map.has_key( value ):
+            if value not in self._map:
                 match = None
                 n     = len( value )
                 for key in self.map.keys():
@@ -2421,7 +2426,7 @@ class TraitListObject ( list ):
                 if validate is not None:
                     value = [ validate( object, name, val ) for val in value ]
 
-                list.__setslice__( self, 0, 0, value )
+                list.__setitem__(self, slice(0, 0), value )
 
                 return
 
@@ -2459,107 +2464,98 @@ class TraitListObject ( list ):
         except:
             pass
         try:
-            validate = self.trait.item_trait.handler.validate
             object   = self.object()
-            if validate is not None:
-                value = validate( object, self.name, value )
+            validate = self.trait.item_trait.handler.validate
+            name     = self.name
+            
+            if isinstance(key,slice):
+                values = value
+                if not isinstance(values, collections.Sequence):
+                    raise TypeError, 'must assign sequence (not "%s") to slice' % (
+                                     values.__class__.__name__ )
+                key = slice(*key.indices(len( self )))
+                slice_len = max(0, (key.stop - key.start) // key.step)
+                delta = len( values ) - slice_len
+                if key.step != 1 and delta != 0:
+                    raise ValueError, 'attempt to assign sequence of size %d to extended slice of size %d' % (
+                        len( values ), slice_len
+                    )
+                newlen = (len(self) + delta)
+                if not (self_trait.minlen <= newlen <= self_trait.maxlen):
+                    self.len_error( newlen )
+                    return
+
+                if validate is not None:
+                    values = [ validate( object, name, value )
+                               for value in values ]
+                value = values
+                
+                startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
+            else:                        
+                if validate is not None:
+                    value = validate( object, name, value )
+
+                values = [ value ]
+                removed = [ removed ]
+                delta = 0
+                
+                startidx = len( self ) + key if key < 0 else key
 
             list.__setitem__( self, key, value )
             if self.name_items is not None:
-                if key < 0:
-                    key = len( self ) + key
-
-                try:
-                    if removed == value:
-                        return
-                except:
-                    # Treat incomparable values as unequal:
-                    pass
-
+                if delta == 0:
+                    try:
+                        if removed == values:
+                            return
+                    except:
+                        # Treat incomparable values as equal:
+                        pass
                 self._send_trait_items_event( self.name_items,
-                    TraitListEvent( key, [ removed ], [ value ] ))
+                    TraitListEvent( startidx, removed, values ) )
+
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
 
-    def __setslice__ ( self, i, j, values ):
-        try:
-            delta = len( values ) - (min( j, len( self ) ) - max( 0, i ))
-        except:
-            raise TypeError, 'must assign sequence (not "%s") to slice' % (
-                             values.__class__.__name__ )
-        self_trait = getattr(self, 'trait', None)
-        if self_trait is None:
-            return list.__setslice__(self, i, j, values)
-        if self_trait.minlen <= (len(self) + delta) <= self_trait.maxlen:
-            try:
-                object   = self.object()
-                name     = self.name
-                trait    = self_trait.item_trait
-                removed  = self[ i: j ]
-                validate = trait.handler.validate
-                if validate is not None:
-                    values = [ validate( object, name, value )
-                               for value in values ]
-
-                list.__setslice__( self, i, j, values )
-                if self.name_items is not None:
-                    if delta == 0:
-                        try:
-                            if removed == values:
-                                return
-                        except:
-                            # Treat incomparable values as equal:
-                            pass
-                    self._send_trait_items_event( self.name_items,
-                        TraitListEvent( max( 0, i ), removed, values ) )
-
-                return
-
-            except TraitError, excp:
-                excp.set_prefix( 'Each element of the' )
-                raise excp
-
-        self.len_error( len( self ) + delta )
-
+    if sys.version_info[0] < 3:
+        def __setslice__ ( self, i, j, values ):
+            self.__setitem__(slice(i,j),values)
+        
     def __delitem__ ( self, key ):
         trait = getattr(self, 'trait', None)
         if trait is None:
             return list.__delitem__(self, key)
-        if self.trait.minlen <= (len( self ) - 1):
-            try:
-                removed = [ self[ key ] ]
-            except:
-                pass
+            
+        try:
+            removed = self[ key ]
+        except:
+            pass
 
-            list.__delitem__( self, key )
-
-            if self.name_items is not None:
-                if key < 0:
-                    key = len( self ) + key + 1
-
-                self._send_trait_items_event( self.name_items,
-                    TraitListEvent( key, removed ) )
-
+        if isinstance(key,slice):
+            key = slice(*key.indices(len( self )))
+            slice_len = max(0, (key.stop - key.start) // key.step)
+            delta = slice_len
+            startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
+        else:
+            delta = 1
+            startidx = len( self ) + key + 1 if key < 0 else key
+            removed = [ removed ]
+            
+        if not (trait.minlen <= (len( self ) - delta)):
+            self.len_error( len( self ) - delta)
             return
 
-        self.len_error( len( self ) - 1 )
+        list.__delitem__( self, key )
 
-    def __delslice__ ( self, i, j ):
-        trait = getattr(self, 'trait', None)
-        if trait is None:
-            return list.__delslice__(self, i, j)
-        delta = min( j, len( self ) ) - max( 0, i )
-        if self.trait.minlen <= (len( self ) - delta):
-            removed = self[ i: j ]
-            list.__delslice__( self, i, j )
-            if (self.name_items is not None) and (len( removed ) != 0):
-                self._send_trait_items_event( self.name_items,
-                    TraitListEvent( max( 0, i ), removed ) )
+        if self.name_items is not None:
+            self._send_trait_items_event( self.name_items,
+                TraitListEvent( startidx, removed ) )
 
-            return
+    if sys.version_info[0] < 3:
+        def __delslice__ ( self, i, j ):
+            self.__delitem__(slice(i,j))
 
-        self.len_error( len( self ) - delta )
+
 
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
@@ -3150,7 +3146,7 @@ class TraitDictObject ( dict ):
                 value = validate( object, self.name, value )
 
             if self.name_items is not None:
-                if dict.has_key( self, key ):
+                if key in self:
                     added   = None
                     old     = self[ key ]
                     changed = { key: old }
@@ -3222,7 +3218,7 @@ class TraitDictObject ( dict ):
                 dict.update( self, new_dic )
 
     def setdefault ( self, key, value = None ):
-        if self.has_key( key ):
+        if key in self:
             return self[ key ]
 
         self[ key ] = value
@@ -3235,7 +3231,7 @@ class TraitDictObject ( dict ):
         return result
 
     def pop ( self, key, value = Undefined ):
-        if (value is Undefined) or self.has_key( key ):
+        if (value is Undefined) or key in self:
             result = dict.pop( self, key )
 
             if self.name_items is not None:

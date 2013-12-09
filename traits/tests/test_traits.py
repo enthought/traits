@@ -18,6 +18,8 @@
 
 from __future__ import absolute_import
 
+import sys
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
@@ -168,9 +170,31 @@ class IntTest(AnyTraitTest):
 
     _default_value = 99
     _good_values   = [10, -10]
-    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j, 10L,
-                      -10L, 10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
+    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j,
+                      10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
                       u'-10L', u'10.1', u'-10.1',  '10', '-10', u'10', u'-10']
+
+    try:
+        import numpy as np
+    except ImportError:
+        pass
+    else:
+        if sys.version_info[0] < 3:
+            _good_values.extend([
+                np.int64(10),np.int64(-10),
+                np.int32(10),np.int32(-10),
+                np.int_(10),np.int_(-10)
+            ])
+            _bad_values.extend([
+            ])
+        else:
+            #TODO: status of numpy-ints is unclear in python 3!
+            pass
+            
+    if sys.version_info[0] < 3:
+        # 2to3 will remove the L suffix and therfore make them actually good ones!
+        _bad_values.extend([-10L,10L])
+                
 
     def coerce(self, value):
         try:
@@ -200,8 +224,9 @@ class CoercibleLongTest(AnyTraitTest):
     obj = CoercibleLongTrait()
 
     _default_value = 99L
-    _good_values   = [10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', '10L',
-                      '-10L', u'10', u'-10', u'10L', u'-10L']
+    _good_values   = [10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', u'10', u'-10']
+    if sys.version_info[0] < 3:
+        _good_values.extend(['10L','-10L',u'10L',u'-10L'])
     _bad_values    = ['10.1', '-10.1', u'10.1', u'-10.1', 'ten', u'ten', [10],
                       [10l], {'ten': 10},(10,),(10L,), None, 1j]
 
@@ -265,9 +290,14 @@ class FloatTest(AnyTraitTest):
 
     _default_value = 99.0
     _good_values   = [10, -10, 10.1, -10.1]
-    _bad_values    = [10L, -10L, 'ten', u'ten', [10], {'ten': 10},(10,), None,
+    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None,
                       1j, '10', '-10', '10L', '-10L', '10.1', '-10.1', u'10',
                       u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
+
+    if sys.version_info[0] < 3:
+        # 2to3 will remove the L suffix and therfore make them actually good ones!
+        _bad_values.extend([-10L,10L])
+
 
     def coerce(self, value):
         try:
@@ -801,7 +831,10 @@ class DelegateTests(unittest.TestCase):
 # Make a TraitCompound handler that does not have a fast_validate so we can
 # check for a particular regression.
 slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
-del slow.handler.fast_validate
+try:
+    del slow.handler.fast_validate
+except AttributeError:
+    pass
 
 class complex_value(HasTraits):
 

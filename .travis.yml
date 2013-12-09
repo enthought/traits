@@ -1,7 +1,11 @@
 language: python
 python:
+  - 3.3
+  - 3.2
   - 2.7
   - 2.6
+matrix:
+  allow_failures:
 virtualenv:
   # This allows installing PyQt using apt-get and being able to import it.
   system_site_packages: true
@@ -10,12 +14,16 @@ before_install:
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
   - pip install nose
-  - pip install unittest2
+  - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
   - pip install cython
-  - python setup.py build_ext --inplace
-  - python setup.py develop
+  - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
+  - python setup.py install
+before_script:
+  - cd ../..
 script:
-  - nosetests
+  - nosetests traits --exe
 notifications:
   email:
     - travis-ci@enthought.com
+    - hack@delley.net
+
