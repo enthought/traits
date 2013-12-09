@@ -74,10 +74,12 @@ else:
         
             """
             def __init__(self):
+                from collections import deque
                 self._exit_callbacks = deque()
         
             def pop_all(self):
                 """Preserve the context stack by transferring it to a new instance"""
+                from collections import deque
                 new_stack = type(self)()
                 new_stack._exit_callbacks = self._exit_callbacks
                 self._exit_callbacks = deque()
