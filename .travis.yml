@@ -15,9 +15,9 @@ before_install:
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
   - pip install nose
-  - if python --version 2>&1 | grep -v "Python 3." >/dev/null; then pip install unittest2 ; fi
+  - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
   - pip install cython
-  - if python --version 2>&1 | grep "Python 3." >/dev/null; then pip install numpy ; fi
+  - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
   - python setup.py install
 before_script:
   - cd ../..
@@ -25,5 +25,6 @@ script:
   - nosetests traits --exe
 notifications:
   email:
+    - travis-ci@enthought.com
     - hack@delley.net
 
