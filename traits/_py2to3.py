@@ -172,8 +172,10 @@ else:
                             raise
                         exc_details = new_exc_details
                 return suppressed_exc
+    else:
+        ExitStack = contextlib.ExitStack
 
-    class nested_context_mgrs(contextlib.ExitStack):
+    class nested_context_mgrs(ExitStack):
         """ Emulation of python 2's :py:class:`contextlib.nested`.
         
         It has gone from python 3 due to it's deprecation status
