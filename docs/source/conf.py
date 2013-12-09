@@ -19,7 +19,7 @@ import sys, os
 sys.path.append(os.path.abspath('_extensions'))
 sys.path.append(os.path.abspath('../../'))
 
-    # General configuration
+# General configuration
 # ---------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
@@ -78,7 +78,11 @@ today_fmt = '%B %d, %Y'
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Options for the autodoc extension.
 autodoc_default_flags =['members']
+
+autodoc_member_order = 'bysource'
+
 
 # Options for HTML output
 # -----------------------
@@ -181,4 +185,13 @@ latex_logo = "e-logo-rev.png"
 # If false, no module index is generated.
 #latex_use_modindex = True
 
-autodoc_member_order = 'bysource'
+# Options for Texinfo output
+# --------------------------
+
+# Grouping the document tree into Texinfo files. List of tuples
+# (source start file, target name, title, author,
+#  dir menu entry, description, category)
+texinfo_documents = [
+  ('index', 'traits', 'Traits 4 User Manual', 'Enthought, Inc.',
+   'Traits', 'Explicitly typed attributes for Python.', 'Python'),
+]
