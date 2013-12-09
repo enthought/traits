@@ -84,7 +84,7 @@ def test_trait_dict_object_copies():
 
 def test_trait_set_object_copies():
     a = A()
-    set1 = copy.deepcopy(a.set)
+    set1 = copy.deepcopy(a.aset)
     assert set1.object() is None
     set1.add(10)
     assert len(a.events) == 0
@@ -93,7 +93,7 @@ def test_trait_set_object_copies():
     set2 = copy.deepcopy(set1)
     set2.add(30)
     assert set2.object() is None
-    set3 = a.set.copy()
+    set3 = a.aset.copy()
     assert type(set3) is set
     # Should not raise an AttributeError:
     set3.remove(20)
