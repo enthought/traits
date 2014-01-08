@@ -12,11 +12,12 @@ install:
   - pip install nose
   - pip install unittest2
   - pip install cython
+  - pip install coverage
   - pip install coveralls
   - python setup.py build_ext --inplace
   - python setup.py develop
 script:
-  - nosetests --with-coverage --cover-branches --cover-erase --cover-package=traits
+  - coverage run setup.py test
 notifications:
   email:
     - travis-ci@enthought.com
