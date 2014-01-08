@@ -7,12 +7,14 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..api import HasTraits, Int
+from ..api import HasTraits, Int, List
 
 
 class A(HasTraits):
 
     t = Int
+
+    l = List(Int)
 
 
 class B(HasTraits):
@@ -20,6 +22,8 @@ class B(HasTraits):
     t = Int
 
     u = Int
+
+    l = List(Int)
 
 
 class TestSyncTraits(unittest.TestCase, UnittestTools):
@@ -67,10 +71,11 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         """ Test one-way synchronization of two traits.
         """
 
-        a = A()
-        b = B()
+        a = A(t=3)
+        b = B(t=4)
 
         a.sync_trait('t', b, mutual=False)
+        self.assertEqual(b.t, 3)
 
         a.t = 5
         self.assertEqual(b.t, a.t)
@@ -83,6 +88,47 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
 
         with self.assertTraitDoesNotChange(b, 't'):
             a.t = 12
+
+    def test_sync_lists(self):
+        """ Test synchronization of list traits.
+        """
+
+        a = A()
+        b = B()
+
+        a.sync_trait('l', b)
+
+        # Change entire list.
+        a.l = [1, 2, 3]
+        self.assertEqual(a.l, b.l)
+        b.l = [4, 5]
+        self.assertEqual(a.l, b.l)
+
+        # Change list items.
+        a.l = [7, 8, 9]
+        with self.assertTraitChanges(b, 'l_items'):
+            a.l[-1] = 20
+        self.assertEqual(b.l, [7, 8, 20])
+
+        # Remove synchronization
+        a.sync_trait('l', b, remove=True)
+
+        with self.assertTraitDoesNotChange(a, 'l'):
+            b.l = [7, 8]
+
+    def test_sync_delete(self):
+        """ Test that deleting a synchronized trait works.
+        """
+
+        a = A()
+        b = B()
+
+        a.sync_trait('t', b)
+
+        a.t = 5
+        del a.t
+
+        self.assertEqual(b.t, 0)
 
 
 if __name__ == '__main__':
