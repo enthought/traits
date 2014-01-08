@@ -1900,8 +1900,11 @@ class HasTraits ( CHasTraits ):
 
         return result
 
-    # Defines the deprecated alias for 'trait_get'
-    get = trait_get
+    # def get(self, *args, **kwargs):
+    #     raise RuntimeError('HasTraits.get not allowed')
+
+    # def set(self, *args, **kwargs):
+    #     raise RuntimeError('HasTraits.set not allowed')
 
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
@@ -1952,9 +1955,6 @@ class HasTraits ( CHasTraits ):
                 setattr( self, name, value )
 
         return self
-
-    # Defines the deprecated alias for 'trait_set'
-    set = trait_set
 
     def trait_setq ( self, **traits ):
         """ Shortcut for setting object trait attributes.
@@ -2950,12 +2950,12 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
-                listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler_ref = weakref.ref(lnw),
-                              type            = lnw.type,
-                              dispatch        = dispatch,
-                              priority        = priority,
-                              deferred        = deferred )
+                listener.trait_set( handler         = ListenerHandler( handler ),
+                                    wrapped_handler_ref = weakref.ref(lnw),
+                                    type            = lnw.type,
+                                    dispatch        = dispatch,
+                                    priority        = priority,
+                                    deferred        = deferred )
                 listener.register( self )
 
     # A synonym for 'on_trait_change'
@@ -3792,8 +3792,8 @@ try:
 
 
     class ABCMetaHasTraits(abc.ABCMeta, MetaHasTraits):
-        """ A MetaHasTraits subclass which also inherits from 
-        abc.ABCMeta. 
+        """ A MetaHasTraits subclass which also inherits from
+        abc.ABCMeta.
 
         """
         # The ABCMeta class is cooperative and behaves nicely with
@@ -3900,4 +3900,3 @@ class traits_super ( super ):
 
     def _noop ( self, *args, **kw ):
         pass
-
