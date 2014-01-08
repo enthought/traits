@@ -634,12 +634,15 @@ invalid_result_error ( trait_object * trait, PyObject * meth, PyObject * obj,
 static PyObject *
 get_callable_value ( PyObject * value ) {
     PyObject * tuple, * temp;
-    if ( value == NULL )
+    if ( value == NULL ) {
         value = Py_None;
-    else if ( PyCallable_Check( value ) )
+        Py_INCREF( value );
+    } else if ( PyCallable_Check( value ) ) {
         value = is_callable;
-    else if ( PyTuple_Check( value ) &&
-              (PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+        Py_INCREF( value );
+    } else if ( PyTuple_Check( value ) &&
+              ( PyTuple_GET_SIZE( value ) >= 3 ) &&
+              ( PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
@@ -649,9 +652,12 @@ get_callable_value ( PyObject * value ) {
             PyTuple_SET_ITEM( tuple, 2, is_callable );
             Py_INCREF( is_callable );
             value = tuple;
+        } else {
+            value = NULL;
         }
+    } else {
+        Py_INCREF( value );
     }
-    Py_INCREF( value );
     return value;
 }
 
@@ -1018,63 +1024,6 @@ has_traits_traverse ( has_traits_object * obj, visitproc visit, void * arg ) {
     Py_VISIT( obj->obj_dict );
 
         return 0;
-}
-
-/*-----------------------------------------------------------------------------
-|  Returns whether an object's '__dict__' value is defined or not:
-+----------------------------------------------------------------------------*/
-
-static int
-has_value_for ( has_traits_object * obj, PyObject * name ) {
-
-    PyObject * uname;
-    long hash;
-    int  rc;
-
-    PyDictObject * dict = (PyDictObject *) obj->obj_dict;
-
-        if ( dict == NULL )
-        return 0;
-
-    assert( PyDict_Check( dict ) );
-
-    if ( PyString_CheckExact( name ) ) {
-         if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
-             hash = PyObject_Hash( name );
-             return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL);
-    }
-
-    if ( PyString_Check( name ) ) {
-        hash = PyObject_Hash( name );
-        if ( hash == -1 ) {
-            PyErr_Clear();
-            return 0;
-        }
-        return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL );
-    }
-#ifdef Py_USING_UNICODE
-    if ( !PyUnicode_Check( name ) )
-        return 0;
-
-    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
-    if ( uname == NULL ) {
-        PyErr_Clear();
-            return 0;
-    }
-
-        hash = PyObject_Hash( uname );
-        if ( hash == -1 ) {
-        Py_DECREF( uname );
-        PyErr_Clear();
-        return 0;
-    }
-
-    rc = ((dict->ma_lookup)( dict, uname, hash )->me_value != NULL);
-    Py_DECREF( uname );
-    return rc;
-#else
-    return 0;
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -2944,6 +2893,7 @@ setattr_readonly ( trait_object      * traito,
 
     PyObject * dict;
     PyObject * result;
+    int rc;
 
     if ( value == NULL )
         return delete_readonly_error( obj, name );
@@ -2971,11 +2921,13 @@ setattr_readonly ( trait_object      * traito,
         Py_INCREF( name );
 
     result = PyDict_GetItem( dict, name );
-    Py_DECREF( name );
     if ( (result == NULL) || (result == Undefined) )
-        return setattr_python( traito, traitd, obj, name, value );
+        rc = setattr_python( traito, traitd, obj, name, value );
+    else
+        rc = set_readonly_error( obj, name );
 
-    return set_readonly_error( obj, name );
+    Py_DECREF( name );
+    return rc;
 }
 
 /*-----------------------------------------------------------------------------
@@ -3646,6 +3598,8 @@ validate_trait_cast_type ( trait_object * trait, has_traits_object * obj,
 
     if ( (result = type_converter( type, value )) != NULL )
         return result;
+
+    PyErr_Clear();
 
     return raise_trait_error( trait, obj, name, value );
 }
