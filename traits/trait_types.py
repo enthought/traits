@@ -33,7 +33,7 @@ from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
 from . import trait_handlers
 
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
-        ClassTypes, Undefined, Missing, TraitsCache, python_version)
+        ClassTypes, Undefined, TraitsCache, python_version)
 
 from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
