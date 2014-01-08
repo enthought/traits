@@ -1974,8 +1974,7 @@ cdef class cTrait:
             return <object>result
         else:
             PyErr_Clear()
-
-        return None
+            return None
 
 ### Trait method  object #####################################################
 
