@@ -120,7 +120,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
-        f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
+        f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
@@ -165,7 +165,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
-        f = File(path=os.path.join(cwd, 'protocols_usage_test_case.py'))
+        f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
         self.assert_(f.is_file)
 
         # A reference to the parent folder
