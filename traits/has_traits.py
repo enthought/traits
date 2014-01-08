@@ -1900,12 +1900,6 @@ class HasTraits ( CHasTraits ):
 
         return result
 
-    # def get(self, *args, **kwargs):
-    #     raise RuntimeError('HasTraits.get not allowed')
-
-    # def set(self, *args, **kwargs):
-    #     raise RuntimeError('HasTraits.set not allowed')
-
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
     #---------------------------------------------------------------------------
