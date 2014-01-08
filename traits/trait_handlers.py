@@ -39,7 +39,6 @@ import copy
 import copy_reg
 from types import FunctionType, MethodType
 TypeType = type
-import collections
 
 from weakref import ref
 
@@ -2467,19 +2466,22 @@ class TraitListObject ( list ):
             object   = self.object()
             validate = self.trait.item_trait.handler.validate
             name     = self.name
-            
-            if isinstance(key,slice):
+
+            if isinstance(key, slice):
                 values = value
-                if not isinstance(values, collections.Sequence):
-                    raise TypeError, 'must assign sequence (not "%s") to slice' % (
-                                     values.__class__.__name__ )
+                try:
+                    key = slice(*key.indices(len( self )))
+                except (ValueError, TypeError):
+                    raise TypeError('must assign sequence (not "%s") to slice' % (
+                                    values.__class__.__name__ ))
                 key = slice(*key.indices(len( self )))
                 slice_len = max(0, (key.stop - key.start) // key.step)
                 delta = len( values ) - slice_len
                 if key.step != 1 and delta != 0:
-                    raise ValueError, 'attempt to assign sequence of size %d to extended slice of size %d' % (
+                    raise ValueError(
+                        'attempt to assign sequence of size %d to extended slice of size %d' % (
                         len( values ), slice_len
-                    )
+                    ))
                 newlen = (len(self) + delta)
                 if not (self_trait.minlen <= newlen <= self_trait.maxlen):
                     self.len_error( newlen )
@@ -2489,16 +2491,16 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 value = values
-                
+
                 startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
-            else:                        
+            else:
                 if validate is not None:
                     value = validate( object, name, value )
 
                 values = [ value ]
                 removed = [ removed ]
                 delta = 0
-                
+
                 startidx = len( self ) + key if key < 0 else key
 
             list.__setitem__( self, key, value )
@@ -2517,15 +2519,11 @@ class TraitListObject ( list ):
             excp.set_prefix( 'Each element of the' )
             raise excp
 
-    if sys.version_info[0] < 3:
-        def __setslice__ ( self, i, j, values ):
-            self.__setitem__(slice(i,j),values)
-        
     def __delitem__ ( self, key ):
         trait = getattr(self, 'trait', None)
         if trait is None:
             return list.__delitem__(self, key)
-            
+
         try:
             removed = self[ key ]
         except:
