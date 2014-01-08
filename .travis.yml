@@ -15,7 +15,7 @@ install:
   - python setup.py build_ext --inplace
   - python setup.py develop
 script:
-  - nosetests
+  - nosetests --with-coverage --cover-branch --cover-branches --cover-inclusive
 notifications:
   email:
     - travis-ci@enthought.com
