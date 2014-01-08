@@ -60,14 +60,12 @@ try:
 
     AbstractFoo.register(FooLike)
 
-
     class AbstractBar(object):
         __metaclass__ = abc.ABCMeta
 
         @abc.abstractmethod
         def bar(self):
             raise NotImplementedError()
-
 
     class TestABC(unittest.TestCase):
         def test_basic_abc(self):
