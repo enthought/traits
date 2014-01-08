@@ -129,6 +129,9 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         del a.t
 
         self.assertEqual(b.t, 0)
+        with self.assertTraitDoesNotChange(a, 't'):
+            b.t = 7
+        self.assertEqual(b.t, 7)
 
 
 if __name__ == '__main__':
