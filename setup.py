@@ -3,7 +3,6 @@
 
 from os.path import join
 from setuptools import setup, Extension, find_packages
-from Cython.Distutils import build_ext
 
 d = {}
 traits_init = join('traits', '__init__.py')
@@ -51,7 +50,6 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
-    cmdclass = {'build_ext': build_ext},
     use_2to3 = True,
     use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
 )
