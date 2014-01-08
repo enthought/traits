@@ -50,4 +50,5 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    test_suite = 'nose.collector',
 )
