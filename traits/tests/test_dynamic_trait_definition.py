@@ -6,11 +6,7 @@ from traits.api import Float, HasTraits, Int, List
 class Foo(HasTraits):
     x = Float
 
-    x_changes = List
     y_changes = List
-
-    def _x_changed(self, new):
-        self.x_changes.append(new)
 
     def _y_changed(self, new):
         self.y_changes.append(new)
