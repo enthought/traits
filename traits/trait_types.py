@@ -1067,25 +1067,6 @@ class Disallow ( TraitType ):
 Disallow = Disallow()
 
 #-------------------------------------------------------------------------------
-#  'missing' trait:
-#-------------------------------------------------------------------------------
-
-class missing ( TraitType ):
-    """ Defines a trait used to indicate that a parameter is missing from a
-        type-checked method signature. Allows any value to be assigned; no
-        type-checking is performed; default value is the singleton Missing
-        object.
-
-        See the **traits.has_traits.method()**.
-    """
-
-    #: The default value for the trait:
-    default_value = Missing
-
-# Create a singleton instance as the trait:
-missing = missing()
-
-#-------------------------------------------------------------------------------
 #  'Constant' trait:
 #-------------------------------------------------------------------------------
 

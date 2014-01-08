@@ -38,7 +38,7 @@ from .traits import (CTrait, Trait, Property, TraitFactory, Default, Color,
 from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Unicode, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode, CBool,
         String, Regex, Code, HTML, Password, Callable, This, self, Function,
-        Method, Class, Module, Python, ReadOnly, Disallow, missing, Constant,
+        Method, Class, Module, Python, ReadOnly, Disallow, Constant,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
@@ -56,7 +56,7 @@ from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
 
 from .trait_types import UUID
 
-from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
+from .has_traits import (HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
