@@ -1075,22 +1075,6 @@ has_traits_traverse ( has_traits_object * obj, visitproc visit, void * arg ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns whether an object's '__dict__' value is defined or not:
-+----------------------------------------------------------------------------*/
-
-static int
-has_value_for ( has_traits_object * obj, PyObject * name ) {
-    PyDictObject * dict = (PyDictObject *) obj->obj_dict;
-
-    if ( dict == NULL )
-    return 0;
-
-    assert( PyDict_Check( dict ) );
-
-    return Py2to3_GetAttrDictValue(dict,name,NULL) != NULL;
-}
-
-/*-----------------------------------------------------------------------------
 |  Handles the 'getattr' operation on a 'CHasTraits' instance:
 +----------------------------------------------------------------------------*/
 
