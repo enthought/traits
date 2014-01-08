@@ -71,8 +71,6 @@ Functions
 
 .. autofunction:: trait_method
 
-.. autofunction:: method
-
 .. autofunction:: weak_arg
 
 .. autofunction:: property_depends_on

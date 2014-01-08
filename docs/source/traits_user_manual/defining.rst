@@ -325,7 +325,7 @@ the table.
 | ListClass,       |*maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*]) |
 | ListComplex,     |                                                          |
 | ListFloat,       |.. index:: Function(), Generic(), generic_trait, HTML()   |
-| ListFunction,    |.. index:: Instance(), List(), Method(), missing, Module()|
+| ListFunction,    |.. index:: Instance(), List(), Method(), Module()         |
 | ListInstance,    |.. index:: Password(), Property(), Python(), PythonValue()|
 | ListInt,         |.. index:: Range(), ReadOnly(), Regex(), RGBColor(), Set()|
 | ListMethod,      |.. index:: String(), This, ToolbarButton(), true, Tuple() |
@@ -334,8 +334,6 @@ the table.
 | ListUnicode      |                                                          |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
-+------------------+----------------------------------------------------------+
-| missing          | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+
