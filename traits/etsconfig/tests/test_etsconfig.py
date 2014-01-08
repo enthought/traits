@@ -94,13 +94,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, 'dummy.txt')
         data = str(time.time())
 
-        f = file(path, 'w')
+        f = open(path, 'w')
         f.write(data)
         f.close()
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = file(path)
+        f = open(path)
         result = f.read()
         f.close()
 
@@ -210,13 +210,13 @@ class ETSConfigTestCase(unittest.TestCase):
         path = os.path.join(dirname, 'dummy.txt')
         data = str(time.time())
 
-        f = file(path, 'w')
+        f = open(path, 'w')
         f.write(data)
         f.close()
 
         self.assertEqual(os.path.exists(path), True)
 
-        f = file(path)
+        f = open(path)
         result = f.read()
         f.close()
 
