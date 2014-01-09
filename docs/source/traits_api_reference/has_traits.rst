@@ -69,8 +69,6 @@ Functions
 
 .. autofunction:: get_delegate_pattern
 
-.. autofunction:: trait_method
-
 .. autofunction:: weak_arg
 
 .. autofunction:: property_depends_on
