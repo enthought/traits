@@ -3,11 +3,12 @@
 
 import sys
 
+import nose
+
 import traits.adaptation.tests.interface_examples
 from traits.adaptation.api import AdaptationManager
 from traits.adaptation.cached_adapter_factory import CachedAdapterFactory
 from traits.testing.unittest_tools import unittest
-from traits.testing.nose_tools import skip
 
 
 class TestCachedAdapterFactory(unittest.TestCase):
@@ -59,7 +60,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         return
 
     def test_cached_adapters_should_be_cleaned_up(self):
-        nose.SkipTest("Cache cleaning is broken")
+        raise nose.SkipTest("Cache cleaning is broken")
 
         ex = self.examples
 
@@ -108,7 +109,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         return
 
     def test_cached_adapter_that_was_garbage_collected(self):
-        nose.SkipTest("Cache cleaning is broken")
+        raise nose.SkipTest("Cache cleaning is broken")
 
         ex = self.examples
 
