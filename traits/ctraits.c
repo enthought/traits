@@ -296,6 +296,10 @@ static PyObject *
 raise_trait_error ( trait_object * trait, has_traits_object * obj,
                                     PyObject * name, PyObject * value ) {
 
+    /* Clear any current exception. We are handling it by raising
+     * a TraitError. */
+    PyErr_Clear();
+
     PyObject * result = PyObject_CallMethod( trait->handler,
                                           "error", "(OOO)", obj, name, value );
     Py_XDECREF( result );
@@ -3541,8 +3545,6 @@ validate_trait_cast_type ( trait_object * trait, has_traits_object * obj,
     if ( (result = type_converter( type, value )) != NULL )
         return result;
 
-    PyErr_Clear();
-
     return raise_trait_error( trait, obj, name, value );
 }
 
@@ -3560,8 +3562,6 @@ validate_trait_function ( trait_object * trait, has_traits_object * obj,
                              obj, name, value );
     if ( result != NULL )
         return result;
-
-    PyErr_Clear();
 
     return raise_trait_error( trait, obj, name, value );
 }
