@@ -2491,7 +2491,8 @@ class TraitListObject ( list ):
                                for value in values ]
                 value = values
 
-                startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
+                # startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
+                index = key
             else:
                 if validate is not None:
                     value = validate( object, name, value )
@@ -2500,7 +2501,7 @@ class TraitListObject ( list ):
                 removed = [ removed ]
                 delta = 0
 
-                startidx = len( self ) + key if key < 0 else key
+                index = len( self ) + key if key < 0 else key
 
             list.__setitem__( self, key, value )
             if self.name_items is not None:
@@ -2512,7 +2513,7 @@ class TraitListObject ( list ):
                         # Treat incomparable values as equal:
                         pass
                 self._send_trait_items_event( self.name_items,
-                    TraitListEvent( startidx, removed, values ) )
+                    TraitListEvent( index, removed, values ) )
 
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
@@ -2536,12 +2537,12 @@ class TraitListObject ( list ):
             key = slice(*key.indices(len( self )))
             slice_len = max(0, (key.stop - key.start) // key.step)
             delta = slice_len
-            startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
+            index = key
         else:
             delta = 1
-            startidx = len( self ) + key + 1 if key < 0 else key
+            index = len( self ) + key + 1 if key < 0 else key
             removed = [ removed ]
-            
+
         if not (trait.minlen <= (len( self ) - delta)):
             self.len_error( len( self ) - delta)
             return
@@ -2550,7 +2551,7 @@ class TraitListObject ( list ):
 
         if self.name_items is not None:
             self._send_trait_items_event( self.name_items,
-                TraitListEvent( startidx, removed ) )
+                TraitListEvent( index, removed ) )
 
     if sys.version_info[0] < 3:
         def __delslice__ ( self, i, j ):
