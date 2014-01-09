@@ -2474,7 +2474,6 @@ class TraitListObject ( list ):
                 except (ValueError, TypeError):
                     raise TypeError('must assign sequence (not "%s") to slice' % (
                                     values.__class__.__name__ ))
-                key = slice(*key.indices(len( self )))
                 slice_len = max(0, (key.stop - key.start) // key.step)
                 delta = len( values ) - slice_len
                 if key.step != 1 and delta != 0:
@@ -2518,6 +2517,10 @@ class TraitListObject ( list ):
         except TraitError, excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
+
+    if sys.version_info[0] < 3:
+        def __setslice__ ( self, i, j, values ):
+            self.__setitem__(slice(i,j), values)
 
     def __delitem__ ( self, key ):
         trait = getattr(self, 'trait', None)
