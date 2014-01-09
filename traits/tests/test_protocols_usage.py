@@ -18,7 +18,7 @@ from __future__ import absolute_import
 
 
 # Standard library imports.
-import pickle, unittest, os
+import pickle, unittest, os, sys
 
 # Enthought library imports.
 from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
@@ -27,6 +27,14 @@ from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
 # NOTE: There is a File class in apptools.io module, but since we want to
 # eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
+
+if sys.version_info[0] >= 3:
+    import nose
+    raise nose.SkipTest("""
+        Currently, under Python 3, class advisors do not work anymore.
+        This is due to the new way of specifying metaclasses.
+    """)
+
 
 # Test class
 class File(HasTraits):

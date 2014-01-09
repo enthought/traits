@@ -38,16 +38,24 @@ from .traits import (CTrait, Trait, Property, TraitFactory, Default, Color,
 from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Unicode, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode, CBool,
         String, Regex, Code, HTML, Password, Callable, This, self, Function,
-        Method, Class, Module, Python, ReadOnly, Disallow, missing, Constant,
+        Method, Module, Python, ReadOnly, Disallow, missing, Constant,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
         Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
-        ListComplex, ListBool, ListFunction, ListMethod, ListClass,
-        ListInstance, ListThis, DictStrAny, DictStrStr, DictStrInt,
+        ListComplex, ListBool, ListFunction, ListMethod, 
+        ListThis, DictStrAny, DictStrStr, DictStrInt,
         DictStrLong, DictStrFloat, DictStrBool, DictStrList)
+
+try:
+    from .trait_types import Class, ListClass, ListInstance
+except ImportError:
+    # Python 3 does not have old-style classes anymore, so Class does not exist
+    # interestingly, ListInstance is not equivalent to List(Instance), but
+    # rather only allows old-style instances.
+    pass
 
 from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
         BaseUnicode, BaseBool, BaseCInt, BaseCLong, BaseCFloat, BaseCComplex,
