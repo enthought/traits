@@ -16,17 +16,6 @@ Classes.
 import contextlib
 import threading
 
-# Compatibility layer for Python 2.6: try loading unittest2
-import sys
-if sys.version_info[:2] == (2, 6):
-    try:
-        import unittest2 as unittest
-    except ImportError:
-        import unittest
-
-else:
-    import unittest
-
 from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
         Property, Str)
 from traits.util.async_trait_wait import wait_for_condition
