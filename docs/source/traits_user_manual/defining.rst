@@ -23,8 +23,7 @@ In practice, steps 2 and 3 are often combined by defining traits in-line
 in an attribute definition. This strategy is used in many examples in this
 guide. However, you can also define traits independently, and reuse the trait
 definitions across multiple classes and attributes (see
-:ref:`reusing-trait-definitions`). Type-checked method signatures typically
-use independently defined traits.
+:ref:`reusing-trait-definitions`).
 
 In order to use trait attributes in a class, the class must inherit from the
 HasTraits class in the Traits package (or from a subclass of HasTraits). The
