@@ -23,8 +23,8 @@ class TestNewNotifiers(unittest.TestCase):
     """ Tests for dynamic notifiers with `dispatch='new'`. """
 
     def test_notification_on_separate_thread(self):
-
         notifications = []
+
         def on_foo_notifications(obj, name, old, new):
             thread_id = thread.get_ident()
             event = (thread_id, obj, name, old, new)

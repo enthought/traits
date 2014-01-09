@@ -89,24 +89,33 @@ class ExtendedNotifiers(HasTraits):
 
 
 # 'ok' function listeners
-
 calls_0 = []
+
+
 def function_listener_0():
     calls_0.append(True)
 
 calls_1 = []
+
+
 def function_listener_1(new):
     calls_1.append(new)
 
 calls_2 = []
+
+
 def function_listener_2(name, new):
     calls_2.append((name, new))
 
 calls_3 = []
+
+
 def function_listener_3(obj, name, new):
     calls_3.append((obj, name, new))
 
 calls_4 = []
+
+
 def function_listener_4(obj, name, old, new):
     calls_4.append((obj, name, old, new))
 
@@ -115,21 +124,26 @@ def function_listener_4(obj, name, old, new):
 
 exceptions_from = []
 
+
 def failing_function_listener_0():
     exceptions_from.append(0)
     raise Exception('error')
+
 
 def failing_function_listener_1(new):
     exceptions_from.append(1)
     raise Exception('error')
 
+
 def failing_function_listener_2(name, new):
     exceptions_from.append(2)
     raise Exception('error')
 
+
 def failing_function_listener_3(obj, name, new):
     exceptions_from.append(3)
     raise Exception('error')
+
 
 def failing_function_listener_4(obj, name, old, new):
     exceptions_from.append(4)
@@ -176,8 +190,8 @@ class TestExtendedNotifiers(unittest.TestCase):
         obj = ExtendedNotifiers()
         obj.fail = 1
 
-        self.assertItemsEqual([0,1,2,3,4], obj.exceptions_from)
-        self.assertEqual([(obj, 'fail', 0, 1)]*5, self.exceptions)
+        self.assertItemsEqual([0, 1, 2, 3, 4], obj.exceptions_from)
+        self.assertEqual([(obj, 'fail', 0, 1)] * 5, self.exceptions)
 
     def test_extended_notifiers_functions(self):
         obj = ExtendedNotifiers()
@@ -219,10 +233,10 @@ class TestExtendedNotifiers(unittest.TestCase):
 
         obj.fail = 1
 
-        self.assertItemsEqual([0,1,2,3,4], obj.exceptions_from)
+        self.assertItemsEqual([0, 1, 2, 3, 4], obj.exceptions_from)
         # 10 failures: 5 are from the internal extended listeners, see
         # test_extended_notifiers_methods_failing
-        self.assertEqual([(obj, 'fail', 0, 1)]*10, self.exceptions)
+        self.assertEqual([(obj, 'fail', 0, 1)] * 10, self.exceptions)
 
 
 if __name__ == '__main__':

@@ -98,7 +98,7 @@ class TestChangeEventTracers(unittest.TestCase):
         ]
         self.assertEqual(self.post_change_events, expected_post_events)
 
-        self.assertEqual(self.exceptions, [None]*4)
+        self.assertEqual(self.exceptions, [None] * 4)
 
         # Deactivate the tracer; it should not be called anymore.
         trait_notifiers.clear_change_event_tracers()
