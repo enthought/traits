@@ -126,12 +126,14 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         a.sync_trait('t', b)
 
         a.t = 5
-        del a.t
+        del a
 
-        self.assertEqual(b.t, 0)
-        with self.assertTraitDoesNotChange(a, 't'):
+        try:
+            # Updating `b.t` should not raise an exception due to remaining
+            # listeners.
             b.t = 7
-        self.assertEqual(b.t, 7)
+        except Exception:
+            self.fail("Unexpected exception while setting sync trait.")
 
 
 if __name__ == '__main__':
