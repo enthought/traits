@@ -2270,6 +2270,7 @@ class TraitListEvent ( object ):
             added = []
         self.added = added
 
+
 #-------------------------------------------------------------------------------
 #  'TraitList' class:
 #-------------------------------------------------------------------------------
@@ -2461,7 +2462,7 @@ class TraitListObject ( list ):
         try:
             removed = self[ key ]
         except:
-            pass
+            removed = []
         try:
             object   = self.object()
             validate = self.trait.item_trait.handler.validate
@@ -2490,9 +2491,19 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 value = values
-
-                # startidx = key.start+(slice_len-1)*key.step if key.step<0 else key.start
-                index = key
+                if key.step == 1:
+                    # FIXME: Bug-for-bug compatibility with old __setslice__ code.
+                    # In this case, we return a TraitListEvent with an
+                    # index=key.start and the removed and added lists as they
+                    # are.
+                    index = key.start
+                else:
+                    # Otherwise, we have an extended slice which was handled,
+                    # badly, by __setitem__ before. In this case, we return the
+                    # removed and added lists wrapped in another list.
+                    index = key
+                    values = [values]
+                    removed = [removed]
             else:
                 if validate is not None:
                     value = validate( object, name, value )
@@ -2531,13 +2542,19 @@ class TraitListObject ( list ):
         try:
             removed = self[ key ]
         except:
-            pass
+            removed = []
 
         if isinstance(key,slice):
             key = slice(*key.indices(len( self )))
             slice_len = max(0, (key.stop - key.start) // key.step)
             delta = slice_len
-            index = key
+            if key.step == 1:
+                # FIXME: See corresponding comment in __setitem__() for
+                # explanation.
+                index = key.start
+            else:
+                index = key
+                removed = [removed]
         else:
             delta = 1
             index = len( self ) + key + 1 if key < 0 else key
@@ -2556,8 +2573,6 @@ class TraitListObject ( list ):
     if sys.version_info[0] < 3:
         def __delslice__ ( self, i, j ):
             self.__delitem__(slice(i,j))
-
-
 
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
