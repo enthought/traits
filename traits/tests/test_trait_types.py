@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Unit test case for testing trait types created by subclassing TraitType.
 #
 #  Written by: David C. Morrill
@@ -16,48 +14,30 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
 
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
 
-#-------------------------------------------------------------------------------
 #  Imports:
-#-------------------------------------------------------------------------------
 
 from traits.testing.unittest_tools import unittest
 
 from traits.api import Float, TraitType
 
-#-------------------------------------------------------------------------------
-#  'TraitTypesTest' unit test class:
-#-------------------------------------------------------------------------------
 
-class TraitTypesTest ( unittest.TestCase ):
+class TraitTypesTest (unittest.TestCase):
 
-    #---------------------------------------------------------------------------
-    #  Test fixture set-up:
-    #---------------------------------------------------------------------------
-
-    def setUp ( self ):
+    def setUp(self):
         """ Test fixture set-up.
         """
         pass
 
-    #---------------------------------------------------------------------------
-    #  Test fixture tear-down:
-    #---------------------------------------------------------------------------
-
-    def tearDown ( self ):
+    def tearDown(self):
         """ Test fixture tear-down.
         """
         pass
 
-    #---------------------------------------------------------------------------
-    #  Individual unit test methods:
-    #---------------------------------------------------------------------------
-
-    def test_ ( self ):
+    def test_(self):
         pass
 
     def test_traits_shared_transient(self):
@@ -75,4 +55,3 @@ class TraitTypesTest ( unittest.TestCase ):
 # Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':
     unittest.main()
-

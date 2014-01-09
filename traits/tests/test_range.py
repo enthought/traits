@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
@@ -7,16 +5,13 @@
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#-------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Str
+
 
 class WithFloatRange(HasTraits):
     r = Range(0.0, 100.0)
@@ -29,7 +24,7 @@ class WithFloatRange(HasTraits):
         self.r_copied_on_change = str(self.r)
 
         if (self.r % 10) > 0:
-            self.r += 10-(self.r % 10)
+            self.r += 10 - (self.r % 10)
 
 
 class WithLargeIntRange(HasTraits):
@@ -44,7 +39,6 @@ class WithLargeIntRange(HasTraits):
 
         if self.r > 100:
             self.r = 0
-
 
 
 class RangeTestCase(unittest.TestCase):
@@ -88,45 +82,46 @@ class RangeTestCase(unittest.TestCase):
     def ui_test_events(self):
         import nose
         raise nose.SkipTest('Requires GUI')
-        print
-        print 'enter the value 34.56 in the range text box and tab out or enter.'
-        print 'Notice that the changed handler call count is 2.'
-        print 'Notice the slider is at 34.56 and the text box still shows 34.56'
-        print 'Notice that r_copied_on_change shows 40.0'
-        print 'Click OK to close the window.'
-        print 'The test will not fail, because the range value was rounded by the event handler.'
-        print 'However, the range widget did not show that change.'
+        msg = """enter the value 34.56 in the range text box and tab out or
+enter. Notice that the changed handler call count is 2.
+Notice the slider is at 34.56 and the text box still shows 34.56
+Notice that r_copied_on_change shows 40.0
+Click OK to close the window.
+The test will not fail, because the range value was rounded by the event
+handler. However, the range widget did not show that change."""
+        print msg
 
         obj = WithFloatRange()
         obj._changed_handler_calls = 0
 
-        obj.edit_traits(kind='livemodal', )
+        obj.edit_traits(kind='livemodal',)
 
-        self.failUnlessEqual( obj.r%10, 0 )
-
+        self.failUnlessEqual(obj.r % 10, 0)
         return
 
     def ui_test_int_events(self):
         import nose
         raise nose.SkipTest('Requires GUI')
-        print
-        print 'enter the value 95 in the range text box.'
-        print 'Notice that the changed handler call count is 2.'
-        print 'Notice that r_copied_on_change shows 95'
-        print 'Click the up arrow 5 times. Each time the handler call count will increment by one.'
-        print 'The R value is now 100 and the change handler call count is 7.'
-        print 'Click the up array 1 time. The call count is 11, R is 101 (wrong), and R copied on change is 0 (correct)'
-        print 'Click OK to close the window.'
-        print 'The test will not fail, because the range value kept below 101 by the event handler.'
-        print 'However, the range widget did not show that change.'
+        msg = """
+enter the value 95 in the range text box.
+Notice that the changed handler call count is 2.
+Notice that r_copied_on_change shows 95
+Click the up arrow 5 times. Each time the handler call count will increment by
+one.
+The R value is now 100 and the change handler call count is 7.
+Click the up array 1 time. The call count is 11, R is 101 (wrong), and R
+copied on change is 0 (correct)
+Click OK to close the window.
+The test will not fail, because the range value kept below 101 by the event
+handler. However, the range widget did not show that change.' """
+        print msg
 
         obj = WithLargeIntRange()
         obj._changed_handler_calls = 0
 
-        obj.edit_traits(kind='livemodal', )
+        obj.edit_traits(kind='livemodal',)
 
-        self.failUnless( obj.r <= 100 )
-
+        self.failUnless(obj.r <= 100)
         return
 
 ### EOF

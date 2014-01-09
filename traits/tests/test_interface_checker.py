@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
@@ -7,10 +5,6 @@
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#-------------------------------------------------------------------------------
 
 """ Tests to help find out if we can do type-safe casting. """
 
@@ -120,9 +114,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
-
         self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
-
         return
 
     def test_single_interface_with_missing_method(self):
@@ -136,7 +128,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         @provides(IFoo)
         class Foo(HasTraits):
             pass
-
 
         self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
@@ -424,11 +415,9 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         self.assertNotEqual(None, i_foo)
         self.assertEqual(FooToIFooAdapter, type(i_foo))
-
         return
 
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
     unittest.main()
-
