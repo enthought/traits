@@ -1,9 +1,30 @@
 # Copyright (c) 2008-2013 by Enthought, Inc.
 # All rights reserved.
+import glob
+import os
+import shutil
 
-from os.path import join
+from os.path import join, relpath
 from setuptools import setup, Extension, find_packages
 
+from distutils.command.build_ext import build_ext as old_build_ext
+
+if "DISTUTILS_WITH_COVERAGE" in os.environ:
+    BUILD_WITH_COVERAGE = True
+else:
+    BUILD_WITH_COVERAGE = False
+
+class BuildExtWithCoverage(old_build_ext):
+    def run(self):
+        old_build_ext.run(self)
+
+        if BUILD_WITH_COVERAGE and self.inplace:
+            for root, dirs, files in os.walk(self.build_temp):
+                gcno_files = glob.glob(join(root, "*.gcno"))
+                for gcno_file in gcno_files:
+                    source = gcno_file
+                    target = relpath(gcno_file, self.build_temp)
+                    shutil.move(source, target)
 
 d = {}
 execfile(join('traits', '__init__.py'), d)
@@ -17,6 +38,7 @@ ctraits = Extension(
 
 
 setup(
+    cmdclass = {"build_ext": BuildExtWithCoverage},
     name = 'traits',
     version = d['__version__'],
     url = 'http://code.enthought.com/projects/traits',
