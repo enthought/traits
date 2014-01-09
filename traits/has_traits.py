@@ -37,7 +37,7 @@ from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
 
-from .ctraits import CHasTraits, CTraitMethod, _HasTraits_monitors
+from .ctraits import CHasTraits, _HasTraits_monitors
 
 from .traits import (CTrait, ForwardProperty, Property, SpecialNames, Trait,
     TraitFactory, __newobj__, generic_trait, trait_factory)
@@ -97,8 +97,8 @@ def ViewElements ( ):
 WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
                    StaticTraitChangeNotifyWrapper )
 
-MethodTypes    = ( MethodType,   CTraitMethod )
-FunctionTypes  = ( FunctionType, CTraitMethod )
+MethodTypes    = ( MethodType, )
+FunctionTypes  = ( FunctionType, )
 
 # Class dictionary entries used to save trait, listener and view information and
 # definitions:
@@ -284,53 +284,6 @@ class _SimpleTest:
     def __call__ ( self, test  ): return test == self.value
 
 #-------------------------------------------------------------------------------
-#  Checks if a function can be converted to a 'trait method' (and converts it if
-#  possible):
-#-------------------------------------------------------------------------------
-
-def _check_method ( class_dict, name, func ):
-    method_name  = name
-    return_trait = Any
-
-    col = name.find( '__' )
-    if col >= 1:
-        type_name    = name[ : col ]
-        method_name  = name[ col + 2: ]
-
-        return_trait = globals().get( type_name )
-        if not isinstance( return_trait, CTrait ):
-            return_trait = SpecialNames.get( type_name.lower() )
-            if return_trait is None:
-                return_trait = Any
-                method_name  = name
-
-    has_traits = (method_name != name)
-    arg_traits = []
-
-    defaults = func.func_defaults
-    if defaults is not None:
-        for trait in defaults:
-            trait = _check_trait( trait )
-            if isinstance( trait, CTrait ):
-                has_traits = True
-            else:
-                trait = Any( trait ).as_ctrait()
-            arg_traits.append( trait )
-
-    if has_traits:
-        code       = func.func_code
-        var_names  = code.co_varnames
-        arg_traits = (([ Missing ] * (code.co_argcount - len( arg_traits ))) +
-                      arg_traits)
-        traits     = []
-        for i, trait in enumerate( arg_traits ):
-            traits.append( var_names[i] )
-            traits.append( trait )
-        del class_dict[ name ]
-        class_dict[ method_name ] = CTraitMethod( method_name, func,
-                                          tuple( [ return_trait ] + traits ) )
-
-#-------------------------------------------------------------------------------
 #  Returns either the original value or a valid CTrait if the value can be
 #  converted to a CTrait:
 #-------------------------------------------------------------------------------
@@ -419,72 +372,6 @@ def _property_method ( class_dict, name ):
     getter/setter.
     """
     return class_dict.get( name )
-
-#-------------------------------------------------------------------------------
-#  Defines a factory function for creating type checked methods:
-#-------------------------------------------------------------------------------
-
-def trait_method ( func, return_type, **arg_types ):
-    """ Factory function for creating type-checked methods.
-
-    Parameters
-    ----------
-    func : function
-        The method to be type-checked.
-    return_type :
-        The return type of the method, a trait or value that can be converted
-        to a trait using Trait().
-    **arg_types :
-        Zero or more '*keyword* = *trait*' pairs, the argument names and types
-        of parameters of the type-checked method. The *trait* portion of each
-        pair must be a trait or a value that can be converted to a trait using
-        Trait().
-    """
-    # Make the sure the first argument is a function:
-    if type( func ) is not FunctionType:
-        if type( return_type ) is not FunctionType:
-            raise TypeError, "First or second argument must be a function."
-        else:
-            func, return_type = return_type, func
-
-    # Make sure the return type is a trait (if not, coerce it to one):
-    return_type = _trait_for( return_type )
-
-    # Make up the list of arguments defined by the function we are wrapping:
-    code       = func.func_code
-    arg_count  = code.co_argcount
-    var_names  = code.co_varnames[ : arg_count ]
-    defaults   = func.func_defaults or ()
-    defaults   = ( Missing, ) * (arg_count - len( defaults )) + defaults
-    arg_traits = []
-    for i, name in enumerate( var_names ):
-        try:
-            trait = arg_types[ name ]
-            del arg_types[ name ]
-        except:
-            # fixme: Should this be a hard error (i.e. missing parameter type?)
-            trait = Any
-
-        arg_traits.append( name )
-        arg_traits.append( Trait( defaults[i], _trait_for( trait ) ) )
-
-    # Make sure there are no unaccounted for type parameters left over:
-    if len( arg_types ) > 0:
-        names = arg_types.keys()
-        if len( names ) == 1:
-            raise TraitError, ("The '%s' keyword defines a type for an "
-                               "argument which '%s' does not have." % (
-                               names[0], func.func_name ))
-        else:
-            names.sort()
-            raise TraitError, ("The %s keywords define types for arguments "
-                               "which '%s' does not have." % (
-                               ', '.join( [ "'%s'" % name for name in names ] ),
-                               func.func_name ))
-
-    # Otherwise, return a method wrapper for the function:
-    return CTraitMethod( func.func_name, func,
-                                         tuple( [ return_type ] + arg_traits ) )
 
 #-------------------------------------------------------------------------------
 #  'MetaHasTraits' class:
@@ -637,8 +524,6 @@ class MetaHasTraitsObject ( object ):
                 pattern = getattr( value, 'on_trait_change', None )
                 if pattern is not None:
                     listeners[ name ] = ( 'method', pattern )
-
-                _check_method( class_dict, name, value )
 
             elif isinstance( value, property ):
                 class_traits[ name ] = generic_trait
