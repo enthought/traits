@@ -16,7 +16,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, Range, Str
+from ..api import HasTraits, Int, Range, Str, TraitError
+
 
 class WithFloatRange(HasTraits):
     r = Range(0.0, 100.0)
@@ -46,6 +47,16 @@ class WithLargeIntRange(HasTraits):
             self.r = 0
 
 
+class WithDynamicRange(HasTraits):
+    low = Int(0)
+    high = Int(10)
+    value = Int(3)
+
+    r = Range(value='value', low='low', high='high', exclude_high=True)
+
+    def _r_changed(self, old, new):
+        self._changed_handler_calls += 1
+
 
 class RangeTestCase(unittest.TestCase):
 
@@ -55,14 +66,12 @@ class RangeTestCase(unittest.TestCase):
         obj._changed_handler_calls = 0
 
         obj.r = 10
-        self.failUnlessEqual(1, obj._changed_handler_calls)
+        self.assertEqual(1, obj._changed_handler_calls)
 
         obj._changed_handler_calls = 0
         obj.r = 34.56
-        self.failUnlessEqual(2, obj._changed_handler_calls)
-        self.failUnlessEqual(40, obj.r)
-
-        return
+        self.assertEqual(2, obj._changed_handler_calls)
+        self.assertEqual(40, obj.r)
 
     def test_non_ui_int_events(self):
 
@@ -72,18 +81,29 @@ class RangeTestCase(unittest.TestCase):
         obj._changed_handler_calls = 0
 
         obj.r = 10
-        self.failUnlessEqual(1, obj._changed_handler_calls)
-        self.failUnlessEqual(10, obj.r)
+        self.assertEqual(1, obj._changed_handler_calls)
+        self.assertEqual(10, obj.r)
 
         obj.r = 100
-        self.failUnlessEqual(2, obj._changed_handler_calls)
-        self.failUnlessEqual(100, obj.r)
+        self.assertEqual(2, obj._changed_handler_calls)
+        self.assertEqual(100, obj.r)
 
         obj.r = 101
-        self.failUnlessEqual(4, obj._changed_handler_calls)
-        self.failUnlessEqual(0, obj.r)
+        self.assertEqual(4, obj._changed_handler_calls)
+        self.assertEqual(0, obj.r)
 
-        return
+    def test_dynamic_events(self):
+
+        obj = WithDynamicRange()
+        obj._changed_handler_calls = 0
+
+        obj.r = 5
+        self.assertEqual(1, obj._changed_handler_calls)
+        self.assertEqual(5, obj.r)
+
+        with self.assertRaises(TraitError):
+            obj.r = obj.high
+        self.assertEqual(5, obj.r)
 
     def ui_test_events(self):
         import nose
