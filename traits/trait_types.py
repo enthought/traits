@@ -56,6 +56,25 @@ SetTypes     = SequenceTypes + ( set, )
 #  Numeric type fast validator definitions:
 #-------------------------------------------------------------------------------
 
+# A few words about the next block of code:
+
+# Validator #11 is a generic validator for possibly coercible types
+# (see validate_trait_coerce_type in ctraits.c).
+#
+# The tuples below are of the form
+# (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
+#
+# 'type1' corresponds to the main type for the trait
+# 'None' acts as the separator between 'types' and 'ctypes' (coercible types)
+#
+# The validation passes if:
+# 1) The trait value type is (a subtype of) one of 'type1', 'type2',  ...
+#    in which case the value is returned as-is
+# or
+# 2) The trait value type is (a subtype of) one of 'ctype1', 'ctype2', ...
+#    in which case the value is returned coerced to trait type using
+#    'return type1(value')
+
 if sys.modules.get( 'numpy' ) is not None:
     # The numpy enhanced definitions:
     from numpy import integer, floating, complexfloating, bool_
