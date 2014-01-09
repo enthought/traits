@@ -50,7 +50,6 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
-    test_suite = 'nose.collector',
     use_2to3 = True,
     use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
 )
