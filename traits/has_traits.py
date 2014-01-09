@@ -2770,6 +2770,11 @@ class HasTraits ( CHasTraits ):
         ----------
         name : str
             Name of the attribute to remove.
+
+        Returns
+        -------
+        result : bool
+            True if the trait was successfully removed.
         """
         # Get the trait definition:
         trait = self._trait( name, 0 )
