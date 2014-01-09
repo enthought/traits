@@ -8,6 +8,8 @@ import os, time, unittest
 from traits.etsconfig.api import ETSConfig
 
 
+# FIXME: Unit tests should not touch files/directories outside of a staging area.
+
 class ETSConfigTestCase(unittest.TestCase):
     """ Tests the 'ETSConfig' configuration object. """
 
@@ -23,16 +25,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        return
-
-    def tearDown(self):
-        """
-        Called immediately after each test method has been called.
-
-        """
-
-        return
-
+        # Make a fresh instance each time.
+        self.ETSConfig = type(ETSConfig)()
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.
@@ -46,7 +40,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        dirname = ETSConfig.application_data
+        dirname = self.ETSConfig.application_data
 
         self.assertEqual(os.path.exists(dirname), True)
         self.assertEqual(os.path.isdir(dirname), True)
@@ -59,13 +53,13 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        old = ETSConfig.application_data
+        old = self.ETSConfig.application_data
 
-        ETSConfig.application_data = 'foo'
-        self.assertEqual('foo', ETSConfig.application_data)
+        self.ETSConfig.application_data = 'foo'
+        self.assertEqual('foo', self.ETSConfig.application_data)
 
-        ETSConfig.application_data = old
-        self.assertEqual(old, ETSConfig.application_data)
+        self.ETSConfig.application_data = old
+        self.assertEqual(old, self.ETSConfig.application_data)
 
         return
 
@@ -78,6 +72,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         # Just do the previous test again!
         self.test_application_data()
+        self.test_application_data()
 
         return
 
@@ -88,8 +83,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        ETSConfig.company = 'Blah'
-        dirname = ETSConfig.application_data
+        self.ETSConfig.company = 'Blah'
+        dirname = self.ETSConfig.application_data
 
         path = os.path.join(dirname, 'dummy.txt')
         data = str(time.time())
@@ -117,7 +112,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        self.assertEqual(ETSConfig.company, 'Enthought')
+        self.assertEqual(self.ETSConfig.company, 'Enthought')
 
         return
 
@@ -128,13 +123,13 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        old = ETSConfig.company
+        old = self.ETSConfig.company
 
-        ETSConfig.company = 'foo'
-        self.assertEqual('foo', ETSConfig.company)
+        self.ETSConfig.company = 'foo'
+        self.assertEqual('foo', self.ETSConfig.company)
 
-        ETSConfig.company = old
-        self.assertEqual(old, ETSConfig.company)
+        self.ETSConfig.company = old
+        self.assertEqual(old, self.ETSConfig.company)
 
         return
 
@@ -148,10 +143,10 @@ class ETSConfigTestCase(unittest.TestCase):
         # This test is only valid when run with the 'main' at the end of this
         # file: "python app_dat_locator_test_case.py", in which case the
         # app_name will be the directory this file is in ('tests').
-        app_home = ETSConfig.application_home
+        app_home = self.ETSConfig.application_home
         (dirname, app_name) = os.path.split(app_home)
 
-        self.assertEqual(dirname, ETSConfig.application_data)
+        self.assertEqual(dirname, self.ETSConfig.application_data)
         self.assertEqual(app_name, 'tests')
 
 
@@ -161,7 +156,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        dirname = ETSConfig.user_data
+        dirname = self.ETSConfig.user_data
 
         self.assertEqual(os.path.exists(dirname), True)
         self.assertEqual(os.path.isdir(dirname), True)
@@ -175,13 +170,13 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        old = ETSConfig.user_data
+        old = self.ETSConfig.user_data
 
-        ETSConfig.user_data = 'foo'
-        self.assertEqual('foo', ETSConfig.user_data)
+        self.ETSConfig.user_data = 'foo'
+        self.assertEqual('foo', self.ETSConfig.user_data)
 
-        ETSConfig.user_data = old
-        self.assertEqual(old, ETSConfig.user_data)
+        self.ETSConfig.user_data = old
+        self.assertEqual(old, self.ETSConfig.user_data)
 
         return
 
@@ -204,8 +199,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         """
 
-        ETSConfig.company = 'Blah'
-        dirname = ETSConfig.user_data
+        self.ETSConfig.company = 'Blah'
+        dirname = self.ETSConfig.user_data
 
         path = os.path.join(dirname, 'dummy.txt')
         data = str(time.time())
