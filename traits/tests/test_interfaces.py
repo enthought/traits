@@ -32,6 +32,7 @@ from traits.testing.unittest_tools import unittest
 from traits.api import HasTraits, Adapter, AdaptsTo, Instance, Int, Interface, \
     List, provides, register_factory, Supports, TraitError
 
+
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:
 #-------------------------------------------------------------------------------

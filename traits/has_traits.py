@@ -25,7 +25,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import,division
 
 import sys
 import copy as copy_module
@@ -53,7 +53,7 @@ from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
 from .trait_handlers import TraitType
 
 from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
-    add_article, enumerate, is_none, not_event, not_false)
+    add_article, is_none, not_event, not_false)
 
 from .trait_errors import TraitError
 
@@ -98,7 +98,13 @@ def ViewElements ( ):
 WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
                    StaticTraitChangeNotifyWrapper )
 
-MethodTypes    = ( MethodType,   CTraitMethod )
+if sys.version_info[0] >= 3:
+    # in python 3, unbound methods do not exist anymore, they're just functions
+    BoundMethodTypes    = ( MethodType, CTraitMethod )  
+    UnboundMethodTypes  = ( FunctionType, CTraitMethod )
+else:
+    BoundMethodTypes    = ( MethodType, CTraitMethod )  
+    UnboundMethodTypes  = ( MethodType, CTraitMethod )
 FunctionTypes  = ( FunctionType, CTraitMethod )
 
 # Class dictionary entries used to save trait, listener and view information and
@@ -153,30 +159,53 @@ def _clone_trait ( clone, metadata = None ):
 
 def _get_method ( cls, method ):
     result = getattr( cls, method, None )
-    if (result is not None) and is_method_type(result):
+    if (result is not None) and is_unbound_method_type(result):
         return result
     return None
 
-def _get_def ( class_name, class_dict, bases, method ):
-    """ Gets the definition of a specified method (if any).
-    """
-    if method[0:2] == '__':
-        method = '_%s%s' % ( class_name, method )
 
-    result = class_dict.get( method )
-    if ((result is not None) and
-        is_function_type(result) and
-        (getattr( result, 'on_trait_change', None ) is None)):
-        return result
-
-    for base in bases:
-        result = getattr( base, method, None )
+if sys.version_info[0] >= 3:
+    def _get_def ( class_name, class_dict, bases, method ):
+        """ Gets the definition of a specified method (if any).
+        """
+        if method[0:2] == '__':
+            method = '_%s%s' % ( class_name, method )
+    
+        result = class_dict.get( method )
         if ((result is not None) and
-            is_method_type(result) and \
-            (getattr( result.im_func, 'on_trait_change', None ) is None)):
+            is_function_type(result) and
+            (getattr( result, 'on_trait_change', None ) is None)):
             return result
-
-    return None
+    
+        for base in bases:
+            result = getattr( base, method, None )
+            if ((result is not None) and
+                is_unbound_method_type(result) and \
+                (getattr( result, 'on_trait_change', None ) is None)):
+                return result
+    
+        return None
+else:
+    def _get_def ( class_name, class_dict, bases, method ):
+        """ Gets the definition of a specified method (if any).
+        """
+        if method[0:2] == '__':
+            method = '_%s%s' % ( class_name, method )
+    
+        result = class_dict.get( method )
+        if ((result is not None) and
+            is_function_type(result) and
+            (getattr( result, 'on_trait_change', None ) is None)):
+            return result
+    
+        for base in bases:
+            result = getattr( base, method, None )
+            if ((result is not None) and
+                is_unbound_method_type(result) and \
+                (getattr( result.im_func, 'on_trait_change', None ) is None)):
+                return result
+    
+        return None
 
 
 def is_cython_func_or_method(method):
@@ -184,9 +213,13 @@ def is_cython_func_or_method(method):
     # The only way to get the type from the method with str comparison ...
     return 'cython_function_or_method' in str(type(method))
 
-def is_method_type(method):
+def is_bound_method_type(method):
     """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, MethodTypes ) or is_cython_func_or_method(method)
+    return isinstance(method, BoundMethodTypes ) or is_cython_func_or_method(method)
+
+def is_unbound_method_type(method):
+    """ Test if the given input is a Python method or a Cython method. """
+    return isinstance(method, UnboundMethodTypes ) or is_cython_func_or_method(method)
 
 def is_function_type(function):
     """ Test if the given input is a Python function or a Cython method. """
@@ -907,7 +940,7 @@ class MetaHasTraitsObject ( object ):
         # Make sure the trait prefixes are sorted longest to shortest
         # so that we can easily bind dynamic traits to the longest matching
         # prefix:
-        prefix_list.sort( lambda x, y: len( y ) - len( x ) )
+        prefix_list.sort( key = lambda x: -len(x) )
 
         # Get the list of all possible 'Instance'/'List(Instance)' handlers:
         instance_traits = _get_instance_handlers( class_dict, hastraits_bases )
@@ -1508,7 +1541,7 @@ class HasTraits ( CHasTraits ):
 
             # Resort the list from longest to shortest (if necessary):
             if changed:
-                subclass_list.sort( lambda x, y: len( y ) - len( x ) )
+                subclass_list.sort( key = lambda x: -len( x ) )
 
             # Merge the 'listeners':
             subclass_traits = getattr( subclass, ListenerTraits )
@@ -1616,7 +1649,7 @@ class HasTraits ( CHasTraits ):
             def __getstate__(self):
                 state = super(X,self).__getstate__()
                 for key in ['foo', 'bar']:
-                    if state.has_key(key):
+                    if key in state:
                         del state[key]
                 return state
         """
@@ -2451,8 +2484,8 @@ class HasTraits ( CHasTraits ):
             try:
                 value = repr( getattr( self, name ) ).replace( '\n', '\\n' )
                 if len( value ) > maxval:
-                    value = '%s...%s' % ( value[: (maxval - 2) / 2 ],
-                                          value[ -((maxval - 3) / 2): ] )
+                    value = '%s...%s' % ( value[: (maxval - 2) // 2 ],
+                                          value[ -((maxval - 3) // 2): ] )
             except:
                 value = '<undefined>'
             lname = (name + ':').ljust( pad )
@@ -3035,6 +3068,11 @@ class HasTraits ( CHasTraits ):
         ----------
         name : str
             Name of the attribute to remove.
+
+        Returns
+        -------
+        result : bool
+            True if the trait was successfully removed.
         """
         # Get the trait definition:
         trait = self._trait( name, 0 )
@@ -3784,7 +3822,7 @@ def provides( *protocols ):
 
     # Verify that each argument is a valid protocol.
     for protocol in protocols:
-        if not issubclass(protocol.__metaclass__, ABCMeta):
+        if not issubclass(type(protocol), ABCMeta):
             raise TraitError(
                 "All arguments to 'provides' must be "
                 "subclasses of Interface or be a Python ABC."

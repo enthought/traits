@@ -48,15 +48,15 @@ Visualization:
 
 from __future__ import absolute_import
 
-from types import (NoneType, IntType, LongType, FloatType, ComplexType,
-    StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
-    ClassType, MethodType, InstanceType, TypeType)
+import sys
+from types import FunctionType, MethodType
+NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
 from .ctraits import cTrait
 from .trait_errors import TraitError
 from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
-    add_article, enumerate, BooleanType)
+    add_article)
 
 from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
@@ -413,33 +413,35 @@ ctraits._ctrait( CTrait )
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, IntType, LongType, FloatType, ComplexType,
-                     StringType, UnicodeType )
+ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
 
-PythonTypes      = ( StringType,   UnicodeType,  IntType,    LongType,
-                     FloatType,    ComplexType,  ListType,   TupleType,
-                     DictType,     FunctionType, MethodType, ClassType,
-                     InstanceType, TypeType,     NoneType )
+PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
+                     dict, FunctionType, MethodType, type, NoneType )
+
+if sys.version_info[0] < 3:
+    from types import InstanceType,ClassType
+    PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
+
 
 CallableTypes    = ( FunctionType, MethodType )
 
 TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
-    StringType:  '',
-    UnicodeType: u'',
-    IntType:     0,
-    LongType:    0L,
-    FloatType:   0.0,
-    ComplexType: 0j,
-    ListType:    [],
-    TupleType:   (),
-    DictType:    {},
-    BooleanType: False
+    str:  '',
+    unicode: u'',
+    int:     0,
+    long:    0L,
+    float:   0.0,
+    complex: 0j,
+    list:    [],
+    tuple:   (),
+    dict:    {},
+    bool: False
 }
 
 DefaultValueSpecial = [ Missing, Self ]
-DefaultValueTypes   = [ ListType, DictType ]
+DefaultValueTypes   = [ list, dict ]
 
 #-------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
@@ -922,7 +924,7 @@ class _TraitMaker ( object ):
                 elif typeItem in SequenceTypes:
                     self.do_list( item, enum, map, other )
 
-                elif typeItem is DictType:
+                elif typeItem is dict:
                     map.update( item )
 
                 elif typeItem in CallableTypes:

@@ -4,15 +4,15 @@
 from os.path import join
 from setuptools import setup, Extension, find_packages
 
-
 d = {}
-execfile(join('traits', '__init__.py'), d)
+traits_init = join('traits', '__init__.py')
+exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 
 
 ctraits = Extension(
     'traits.ctraits',
     sources = ['traits/ctraits.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3'],
+    extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
 
 
@@ -51,4 +51,6 @@ setup(
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
     test_suite = 'nose.collector',
+    use_2to3 = True,
+    use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
 )

@@ -18,6 +18,8 @@
 
 from __future__ import absolute_import
 
+import sys
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
@@ -64,6 +66,9 @@ class test_base2(unittest.TestCase):
 
     def indexed_range_assign(self, list, index1, index2, value):
         list[ index1: index2 ] = value
+
+    def extended_slice_assign(self, list, index1, index2, step, value):
+        list[index1:index2:step] = value
 
     # This avoids using a method name that contains 'test' so that this is not
     # called by the tester directly, as nose looks for all tests, regardless of
@@ -157,9 +162,31 @@ class IntTest(AnyTraitTest):
 
     _default_value = 99
     _good_values   = [10, -10]
-    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j, 10L,
-                      -10L, 10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
+    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j,
+                      10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
                       u'-10L', u'10.1', u'-10.1',  '10', '-10', u'10', u'-10']
+
+    try:
+        import numpy as np
+    except ImportError:
+        pass
+    else:
+        if sys.version_info[0] < 3:
+            _good_values.extend([
+                np.int64(10),np.int64(-10),
+                np.int32(10),np.int32(-10),
+                np.int_(10),np.int_(-10)
+            ])
+            _bad_values.extend([
+            ])
+        else:
+            #TODO: status of numpy-ints is unclear in python 3!
+            pass
+            
+    if sys.version_info[0] < 3:
+        # 2to3 will remove the L suffix and therfore make them actually good ones!
+        _bad_values.extend([-10L,10L])
+                
 
     def coerce(self, value):
         try:
@@ -189,8 +216,9 @@ class CoercibleLongTest(AnyTraitTest):
     obj = CoercibleLongTrait()
 
     _default_value = 99L
-    _good_values   = [10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', '10L',
-                      '-10L', u'10', u'-10', u'10L', u'-10L']
+    _good_values   = [10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', u'10', u'-10']
+    if sys.version_info[0] < 3:
+        _good_values.extend(['10L','-10L',u'10L',u'-10L'])
     _bad_values    = ['10.1', '-10.1', u'10.1', u'-10.1', 'ten', u'ten', [10],
                       [10l], {'ten': 10},(10,),(10L,), None, 1j]
 
@@ -254,9 +282,14 @@ class FloatTest(AnyTraitTest):
 
     _default_value = 99.0
     _good_values   = [10, -10, 10.1, -10.1]
-    _bad_values    = [10L, -10L, 'ten', u'ten', [10], {'ten': 10},(10,), None,
+    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None,
                       1j, '10', '-10', '10L', '-10L', '10.1', '-10.1', u'10',
                       u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
+
+    if sys.version_info[0] < 3:
+        # 2to3 will remove the L suffix and therfore make them actually good ones!
+        _bad_values.extend([-10L,10L])
+
 
     def coerce(self, value):
         try:
@@ -790,7 +823,10 @@ class DelegateTests(unittest.TestCase):
 # Make a TraitCompound handler that does not have a fast_validate so we can
 # check for a particular regression.
 slow = Trait(1, TraitRange(1, 3), TraitRange(-3, -1))
-del slow.handler.fast_validate
+try:
+    del slow.handler.fast_validate
+except AttributeError:
+    pass
 
 class complex_value(HasTraits):
 
@@ -863,13 +899,24 @@ class list_value(HasTraits):
                           maxlen = 4))
     list2 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]),
                           minlen = 1, maxlen = 4))
+    alist = List()
 
 class test_list_value(test_base2):
 
     obj = list_value()
 
+    def setUp(self):
+        test_base2.setUp(self)
+        self.last_event = None
+
+    def tearDown(self):
+        del self.last_event
+
     def del_range(self, list, index1, index2):
         del list[ index1: index2 ]
+
+    def del_extended_slice(self, list, index1, index2, step):
+        del list[index1:index2:step]
 
     def check_list(self, list):
         self.assertEqual(list, [ 2 ])
@@ -888,6 +935,9 @@ class test_list_value(test_base2):
         list.extend([ 3, 4 ])
         self.assertEqual(list, [ 1 ,2, 3, 4 ])
         self.assertRaises(TraitError, list.append, 1)
+        self.assertRaises(ValueError,
+                          self.extended_slice_assign,
+                          list, 0, 4, 2, [4, 5, 6])
         del list[1]
         self.assertEqual(list, [ 1, 3, 4 ])
         del list[0]
@@ -907,3 +957,51 @@ class test_list_value(test_base2):
     def test_list2(self):
         self.check_list(self.obj.list2)
         self.assertRaises(TraitError, self.del_range, self.obj.list2, 0, 1)
+        self.assertRaises(TraitError,
+                          self.del_extended_slice,
+                          self.obj.list2, 4, -5, -1)
+
+    def assertLastTraitListEventEqual(self, index, removed, added):
+        self.assertEqual(self.last_event.index, index)
+        self.assertEqual(self.last_event.removed, removed)
+        self.assertEqual(self.last_event.added, added)
+
+    def test_trait_list_event(self):
+        """ Record TraitListEvent behavior.
+        """
+        # FIXME: The behavior of TraitListEvent is suboptimal with
+        # respect to extended slice changes. Previously, TraitListObject
+        # used to have a __setitem__() and a separate __setslice__() to
+        # handle non-extended slices. Extended slices were added to the
+        # underlying list object later. The __setitem__() code handled
+        # the new extended slices, but created the TraitListEvent in the
+        # same way it did for an integer index; namely it wrapped the
+        # value with a list. For simple slices, the `index` attribute of
+        # the TraitListEvent is an integer, and the `added` list is just
+        # the list of values added. For an extended slice, the `index`
+        # attribute is the slice object and the `added` list is the list
+        # of values wrapped in another list.
+        self.obj.alist = [1, 2, 3, 4]
+        self.obj.on_trait_change(self._record_trait_list_event, 'alist_items')
+        del self.obj.alist[0]
+        self.assertLastTraitListEventEqual(0, [1], [])
+        self.obj.alist.append(5)
+        self.assertLastTraitListEventEqual(3, [], [5])
+        self.obj.alist[0:2] = [6, 7]
+        self.assertLastTraitListEventEqual(0, [2, 3], [6, 7])
+        self.obj.alist[0:2:1] = [8, 9]
+        self.assertLastTraitListEventEqual(0, [6, 7], [8, 9])
+        old_event = self.last_event
+        self.obj.alist[0:2:1] = [8, 9]
+        # If no values changed, no new TraitListEvent will be generated.
+        self.assertIs(self.last_event, old_event)
+        self.obj.alist[0:4:2] = [10, 11]
+        self.assertLastTraitListEventEqual(slice(0, 4, 2), [[8, 4]], [[10, 11]])
+        del self.obj.alist[1:4:2]
+        self.assertLastTraitListEventEqual(slice(1, 4, 2), [[9, 5]], [])
+        self.obj.alist = [1, 2, 3, 4]
+        del self.obj.alist[2:4]
+        self.assertLastTraitListEventEqual(2, [3, 4], [])
+
+    def _record_trait_list_event(self, object, name, old, new):
+        self.last_event = new
