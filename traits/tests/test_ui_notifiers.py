@@ -33,8 +33,6 @@ import thread
 from threading import Thread
 import time
 
-import nose
-
 from traits.api import Float, HasTraits
 from traits.testing.unittest_tools import unittest
 
@@ -68,10 +66,9 @@ class TestUINotifiers(unittest.TestCase):
     #### Tests ################################################################
 
 
+    @unittest.skipIf(
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_main_thread(self):
-        if not QT_FOUND:
-            raise nose.SkipTest(
-                "Qt event loop not found, UI dispatch not possible.")
 
         obj = Foo()
         obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
@@ -88,10 +85,9 @@ class TestUINotifiers(unittest.TestCase):
         ui_thread = trait_notifiers.ui_thread
         self.assertEqual(thread_id, ui_thread)
 
+    @unittest.skipIf(
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_separate_thread(self):
-        if not QT_FOUND:
-            raise nose.SkipTest(
-                "Qt event loop not found, UI dispatch not possible.")
 
         obj = Foo()
         obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
