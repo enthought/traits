@@ -57,6 +57,8 @@ SetTypes     = SequenceTypes + ( set, )
 #  Numeric type fast validator definitions:
 #-------------------------------------------------------------------------------
 
+# A few words about the next block of code:
+
 # Validator #11 is a generic validator for possibly coercible types
 # (see validate_trait_coerce_type in ctraits.c).
 #
