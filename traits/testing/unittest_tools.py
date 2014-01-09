@@ -20,6 +20,13 @@ from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
         Property, Str)
 from traits.util.async_trait_wait import wait_for_condition
 
+# Compatibility layer for Python 2.6: try loading unittest2
+import sys
+if sys.version_info[:2] == (2, 6):
+    import unittest2 as unittest
+else:
+    import unittest
+
 
 class _AssertTraitChangesContext(object):
     """ A context manager used to implement the trait change assert methods.
