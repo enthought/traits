@@ -759,11 +759,14 @@ call_class ( PyObject * class, trait_object * trait, has_traits_object * obj,
 
 static PyObject *
 dict_getitem ( PyDictObject * dict, PyObject *key ) {
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
+    Py_hash_t hash;
+#endif
 
     assert( PyDict_Check( dict ) );
 
 #if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
-    Py_hash_t hash = Py2to3_GetHash_wCache( key );
+    hash = Py2to3_GetHash_wCache( key );
     if ( hash == -1 ) {
         PyErr_Clear();
         return NULL;
@@ -1083,6 +1086,7 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
 
     trait_object * trait;
     PyObject *value;
+    PyObject *bad_attr_marker;
     /* The following is a performance hack to short-circuit the normal
        look-up when the value is in the object's dictionary.
 */
@@ -1090,8 +1094,8 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
 
     if ( dict != NULL ) {
         assert( PyDict_Check( dict ) );
-        
-        PyObject *bad_attr_marker = name;
+
+        bad_attr_marker = name;
         value = Py2to3_GetAttrDictValue(dict, name, bad_attr_marker);
         // there is a slight performance-hit here:
         // Py2to3_GetAttrDictValue cannot signal invalid attributes
@@ -1795,6 +1799,7 @@ getattr_trait ( trait_object      * trait,
     PyListObject * tnotifiers;
     PyListObject * onotifiers;
     PyObject * result;
+    PyObject * nname;
     PyObject * dict = obj->obj_dict;
 
     if ( dict == NULL ) {
@@ -1830,7 +1835,7 @@ getattr_trait ( trait_object      * trait,
         return NULL;
     }
 
-    PyObject *nname = Py2to3_NormaliseAttrName(name);
+    nname = Py2to3_NormaliseAttrName(name);
 
     if( nname == NULL ){
         invalid_attribute_error();
@@ -1881,6 +1886,7 @@ getattr_delegate ( trait_object      * trait,
     PyObject     * delegate_attr_name;
     PyObject     * delegate;
     PyObject     * result;
+    PyObject     * nname;
     PyObject     * dict = obj->obj_dict;
 
     if ( (dict == NULL) ||
@@ -1894,8 +1900,8 @@ getattr_delegate ( trait_object      * trait,
         Py_INCREF( delegate );
     }
 
-    PyObject *nname = Py2to3_NormaliseAttrName(name);
-    
+    nname = Py2to3_NormaliseAttrName(name);
+
     if( nname == NULL ){
         invalid_attribute_error();
         Py_DECREF( delegate );
@@ -2061,6 +2067,7 @@ setattr_python ( trait_object      * traito,
                  PyObject          * name,
                  PyObject          * value ) {
 
+    PyObject *nname;
     PyObject * dict = obj->obj_dict;
 
     if ( value != NULL ) {
@@ -2070,8 +2077,8 @@ setattr_python ( trait_object      * traito,
                 return -1;
                 obj->obj_dict = dict;
         }
-    
-        PyObject *nname = Py2to3_NormaliseAttrName( name );
+
+        nname = Py2to3_NormaliseAttrName( name );
         if( nname == NULL )
             return invalid_attribute_error();
 
@@ -2822,6 +2829,7 @@ setattr_readonly ( trait_object      * traito,
 
     PyObject * dict;
     PyObject * result;
+    PyObject * nname;
     int rc;
 
     if ( value == NULL )
@@ -2834,7 +2842,7 @@ setattr_readonly ( trait_object      * traito,
     if ( dict == NULL )
         return setattr_python( traito, traitd, obj, name, value );
 
-    PyObject *nname = Py2to3_NormaliseAttrName(name);
+    nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
         return invalid_attribute_error();
     }
@@ -4302,6 +4310,10 @@ delegate_attr_name_class_name ( trait_object      * trait,
                                 PyObject          * name ) {
 
     PyObject * prefix, * result;
+#if PY_MAJOR_VERSION < 3
+    char * p;
+    int prefix_len, name_len, total_len;
+#endif
 
     prefix = PyObject_GetAttr( (PyObject *) Py_TYPE(obj), class_prefix );
 // fixme: Should verify that prefix is a string...
@@ -4313,8 +4325,6 @@ delegate_attr_name_class_name ( trait_object      * trait,
     }
 
 #if PY_MAJOR_VERSION < 3
-    char     * p;
-    int prefix_len, name_len, total_len;
     prefix_len = PyString_GET_SIZE( prefix );
     name_len   = PyString_GET_SIZE( name );
     total_len  = prefix_len + name_len;
@@ -5488,6 +5498,7 @@ static PyObject *
 getinstclassname ( PyObject * inst ) {
 
         PyObject *class;
+        PyObject *ret;
 
         if ( inst == NULL ) {
                 return Py2to3_SimpleString_FromString( "nothing" );
@@ -5500,7 +5511,7 @@ getinstclassname ( PyObject * inst ) {
                 class = (PyObject *)Py_TYPE(inst);
                 Py_INCREF( class );
         }
-        PyObject *ret = getclassname( class );
+        ret = getclassname( class );
         Py_XDECREF( class );
         return ret;
 }
@@ -5512,8 +5523,9 @@ getinstclassname ( PyObject * inst ) {
 static PyObject *
 trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
 
-        PyObject     * class,  * result, * self, * new_arg, * func, * value = NULL,
-                 * traits, * valid_result, * name = NULL, * dv, * tkw, * tuple;
+    PyObject     * class,   * result, * self, * new_arg, * func, * value = NULL,
+                 * traits,  * valid_result, * name = NULL, * dv, * tkw, * tuple,
+                 * clsname, * instname;
     trait_object * trait;
         int from, to, to_args, traits_len, ntraits, ti;
 
@@ -5548,8 +5560,8 @@ trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
                 return NULL;
         }
         func = trait_method_GET_FUNCTION( meth );
-        PyObject *clsname = getclassname( class );
-        PyObject *instname = getinstclassname( self );
+        clsname = getclassname( class );
+        instname = getinstclassname( self );
         PyErr_Format(
             PyExc_TypeError,
             "unbound method %" Py2to3_PYERR_SIMPLE_STRING_FMTCHR

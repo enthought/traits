@@ -161,13 +161,15 @@ Py_hash_t Py2to3_GetHash_wCache(PyObject *obj){
 PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject *bad_attr) {
 
     long hash;
+    PyObject *nname;
+    PyObject *value;
     if ( PyString_CheckExact( name ) ) {
         if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
            hash = PyObject_Hash( name );
         return (dict->ma_lookup)( dict, name, hash )->me_value;
     }
 
-    PyObject *nname = Py2to3_NormaliseAttrName(name);
+    nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
         PyErr_Clear();
         return bad_attr;
@@ -179,7 +181,7 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
         PyErr_Clear();
         return NULL;
     }
-    PyObject *value = (dict->ma_lookup)( dict, nname, hash )->me_value;
+    value = (dict->ma_lookup)( dict, nname, hash )->me_value;
     Py2to3_FinishNormaliseAttrName(name,nname);
     return value;
 }
