@@ -153,7 +153,6 @@ Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
 ============== ============= ====================== ======================
 
-
 .. index::
    pair: types; coercing
 
