@@ -20,6 +20,7 @@ from __future__ import absolute_import
 # Standard library imports.
 import os
 import pickle
+import sys
 import unittest
 
 # Enthought library imports.
