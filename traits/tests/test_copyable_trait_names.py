@@ -90,13 +90,13 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
             'type': 'trait'
         })
 
-        self.failUnlessEqual(['a', 'i', 's', 'b'], names)
+        self.failUnlessEqual(['a', 'b', 'i', 's'], sorted(names))
 
         names = self.foo.copyable_trait_names(**{
             'type': lambda t: t in ('trait', 'property',)
         })
 
-        self.failUnlessEqual(['a', 'p', 's', 'b', 'i'], names)
+        self.failUnlessEqual(['a', 'b', 'i', 'p', 's'], sorted(names))
 
     def test_property_query(self):
         names = self.foo.copyable_trait_names(**{
@@ -123,7 +123,10 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
                                               type=eval_true,
                                               transient=eval_true)
 
-        self.assertEquals(['a', 'b', 'e', 'd', 'i', 'trait_added', 'p', 's',
-                           'trait_modified', 'p_ro', 'p_wo'], names)
+        self.assertEquals(['a', 'b', 'd', 'e', 'i', 'p',
+                           'p_ro', 'p_wo', 's',
+                           'trait_added',
+                           'trait_modified'
+                           ], sorted(names))
 
 ### EOF

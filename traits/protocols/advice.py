@@ -9,9 +9,11 @@ Please don't import anything from this module!
 
 from __future__ import absolute_import
 
-from types import ClassType, FunctionType, InstanceType
+from types import FunctionType
 
 import sys
+
+from .. import _py2to3
 
 __all__ = ['addClassAdvisor']
 
@@ -21,38 +23,51 @@ def metamethod(func):
     return property(lambda ob: func.__get__(ob,ob.__class__))
 
 
-try:
-    from ExtensionClass import ExtensionClass
-except ImportError:
+if sys.version_info[0] < 3:
+    from types import ClassType, InstanceType
+    
     ClassicTypes = ClassType
+    
+    def classicMRO(ob, extendedClassic=False):
+        stack = []
+        push = stack.insert
+        pop = stack.pop
+        push(0,ob)
+        while stack:
+            cls = pop()
+            yield cls
+            p = len(stack)
+            for b in cls.__bases__: push(p,b)
+        if extendedClassic:
+            yield InstanceType
+            yield object
+    
+    
+    def getMRO(ob, extendedClassic=False):
+    
+        if isinstance(ob,ClassicTypes):
+            return classicMRO(ob,extendedClassic)
+    
+        elif isinstance(ob,type):
+            return ob.__mro__
+    
+        return ob,
 else:
-    ClassicTypes = ClassType, ExtensionClass
-
-
-def classicMRO(ob, extendedClassic=False):
-    stack = []
-    push = stack.insert
-    pop = stack.pop
-    push(0,ob)
-    while stack:
-        cls = pop()
-        yield cls
-        p = len(stack)
-        for b in cls.__bases__: push(p,b)
-    if extendedClassic:
-        yield InstanceType
-        yield object
-
-
-def getMRO(ob, extendedClassic=False):
-
-    if isinstance(ob,ClassicTypes):
-        return classicMRO(ob,extendedClassic)
-
-    elif isinstance(ob,type):
-        return ob.__mro__
-
-    return ob,
+    def getMRO(ob, *args, **kwargs):
+        if args or kwargs:
+            kwargs.pop('extendedClassic',None)
+            if len(args)>1 or kwargs:
+                raise TypeError
+            import warnings
+            warnings.warn(DeprecationWarning(
+                """In Python 3 there are no more ols-style classes.
+                Therefore, extendedClassic has no meaning and should not be used.
+                """
+            ))
+        if isinstance(ob,type):
+            return ob.__mro__
+    
+        return ob,
 
 try:
     from ._speedups import metamethod, getMRO, classicMRO
@@ -157,7 +172,18 @@ def addClassAdvisor(callback, depth=2):
     place of the '__metaclass__' of the containing class.  Therefore, only
     callbacks *after* the last '__metaclass__' assignment in the containing
     class will be executed.  Be sure that classes using "advising" functions
-    declare any '__metaclass__' *first*, to ensure all callbacks are run."""
+    declare any '__metaclass__' *first*, to ensure all callbacks are run.
+
+    Moreover, since starting from Python 3, metaclasses are specified
+    differently, this function does not work anymore. Worse, as the metaclass
+    is selected even before running the class's body, there is no way to
+    fix this in a general way. As long as the metaclass provides some hooks
+    to run code at class creation time, we can use them, but standard "type"
+    does not.    
+    """
+    if sys.version_info[0] >= 3:
+        raise NotImplementedError("Class advisors are not possible in python 3.")
+
 
     frame = sys._getframe(depth)
     kind, module, caller_locals, caller_globals = getFrameInfo(frame)
@@ -168,7 +194,7 @@ def addClassAdvisor(callback, depth=2):
         )
 
     previousMetaclass = caller_locals.get('__metaclass__')
-    defaultMetaclass  = caller_globals.get('__metaclass__', ClassType)
+    defaultMetaclass  = caller_globals.get('__metaclass__', type)  #TODO: This used to be ClassType, but I think this was errornous. Check it!
 
 
     def advise(name,bases,cdict):
@@ -229,6 +255,8 @@ def determineMetaclass(bases, explicit_mc=None):
 
     if not candidates:
         # they're all "classic" classes
+        # should never happen in Python 3, so this should be fine
+        from types import ClassType
         return ClassType
 
     elif len(candidates)>1:
@@ -242,7 +270,7 @@ def determineMetaclass(bases, explicit_mc=None):
 def minimalBases(classes):
     """Reduce a list of base classes to its ordered minimum equivalent"""
 
-    classes = [c for c in classes if c is not ClassType]
+    classes = [c for c in classes if not _py2to3.is_old_style_class(c)]
     candidates = []
 
     for m in classes:

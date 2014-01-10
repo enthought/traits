@@ -101,8 +101,6 @@ Traits
 
 .. autoclass:: Disallow
 
-.. autoclass:: missing
-
 .. autoclass:: Constant
 
 .. autoclass:: Delegate

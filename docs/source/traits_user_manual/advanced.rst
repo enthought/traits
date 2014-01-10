@@ -20,7 +20,6 @@ validation features of the Traits package.
 * Overriding default values
 * Reusing trait definitions
 * Trait attribute definition strategies
-* Type-checked methods
 
 .. index:: initialization; dynamic
 
@@ -379,60 +378,6 @@ attribute (either a trait attribute or a regular attribute) simply by assigning
 to it, as is normally the case in Python. In this case, add_trait() is the only
 way to create a new attribute for the class outside of the class definition.
 
-.. index:: methods; type-checking, type-checking methods
-
-.. _type-checked-methods:
-
-Type-Checked Methods
-````````````````````
-
-In addition type-checked attributes, the Traits package provides the ability to
-create type-checked methods.
-
-.. index::
-   pair: examples; type-checking methods
-
-A type-checked method is created by writing a normal method definition within a
-class, preceded by a method() signature function call, as shown in the following
-example::
-
-    # type_checked_methods.py --- Example of traits-based method type
-    #                             checking
-    from traits.api import HasTraits, method, Tuple
-
-    Color = Tuple(int, int, int, int)
-
-    class Palette(HasTraits):
-
-        method(Color, color1=Color, color2=Color)
-        def blend (self, color1, color2):
-            return ((color1[0] + color2[0]) / 2,
-                    (color1[1] + color2[1]) / 2,
-                    (color1[2] + color2[2]) / 2,
-                    (color1[3] + color2[3]) / 2 )
-
-        method(Color, Color, Color)
-        def max (self, color1, color2):
-            return (max( color1[0], color2[0]),
-                    max( color1[1], color2[1]),
-                    max( color1[2], color2[2]),
-                    max( color1[3], color2[3]) )
-
-In this example, Color is defined to be a trait that accepts tuples of four
-integer values. The method() signature function appearing before the definition
-of the blend() method ensures that the two arguments to blend() both match the
-Color trait definition, as does the result returned by blend(). The method
-signature appearing before the max() method does exactly the same thing, but
-uses positional rather than keyword arguments. When
-
-Use of the method() signature function is optional. Methods not preceded by a
-method() function have standard Python behavior (i.e., no type-checking of
-arguments or results is performed). Also, the method() function can be used in
-classes that do not subclass from HasTraits, because the resulting method
-performs the type checking directly. And finally, when the method() function is
-used, it must directly precede the definition of the method whose type signature
-it defines. (However, white space is allowed.) If it does not, a TraitError is
-raised.
 
 .. index:: interfaces
 
@@ -1281,7 +1226,7 @@ to override __getstate__() to remove items that should not be persisted::
         state = super( XXX, self ).__getstate__()
 
         for key in [ 'foo', 'bar' ]:
-            if state.has_key( key ):
+            if key in state:
                 del state[ key ]
 
         return state

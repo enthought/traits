@@ -30,7 +30,15 @@ from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
 # eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
 
+if sys.version_info[0] >= 3:
+    import nose
+    raise nose.SkipTest("""
+        Currently, under Python 3, class advisors do not work anymore.
+        This is due to the new way of specifying metaclasses.
+    """)
 
+
+# Test class
 class File(HasTraits):
 
     # The path name of this file/folder.

@@ -8,6 +8,8 @@
 
 from __future__ import absolute_import
 
+import sys
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import CList, HasTraits, Instance, Int, List, Str, TraitError
@@ -240,11 +242,18 @@ class ListTestCase(unittest.TestCase):
 
         try:
             from numpy import array
-            f.ints = array([1, 2, 3])
-            self.failUnlessEqual(f.ints, [1, 2, 3])
-            f.strs = array(("abc", "def", "ghi"))
-            self.failUnlessEqual(f.strs, ["abc", "def", "ghi"])
         except ImportError:
             pass
+        else:
+            if sys.version_info[0] < 3:
+                f.ints = array([1,2,3])
+                self.failUnlessEqual( f.ints, [1,2,3] )
+            else:
+                # These would fail due to np.int_ being an invalid vallue
+                # for the Int-trait. 
+                pass
+            
+            f.strs = array( ("abc", "def", "ghi") )
+            self.failUnlessEqual( f.strs, ["abc", "def", "ghi"] )
 
 ### EOF

@@ -18,6 +18,7 @@ import threading
 
 # Compatibility layer for Python 2.6: try loading unittest2
 import sys
+from traits import _py2to3
 if sys.version_info[:2] == (2, 6):
     try:
         import unittest2 as unittest
@@ -339,7 +340,8 @@ class UnittestTools(object):
                 args.append(self.assertTraitChanges(obj, trait))
             for trait in traits_not_modified:
                 args.append(self.assertTraitDoesNotChange(obj, trait))
-        return contextlib.nested(*args)
+        return _py2to3.nested_context_mgrs(*args)
+        
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):

@@ -31,6 +31,12 @@ def has_no_compiler():
     except:
         return True
 
+def cython_version():
+    if no_cython:
+        return None
+    from Cython.Compiler.Version import version
+    return tuple(int(v) for v in version.split('.'))
+
 SKIP_TEST = has_no_compiler()
 
 
