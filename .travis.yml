@@ -19,7 +19,9 @@ install:
   - pip install coveralls
   - python setup.py install
 -before_script:
-  - cd ../..
+  - mkdir testrunner
+  - cp .coveragerc testrunner/
+  - cd testrunner
 script:
   - coverage run -m nose.core traits --exe
 notifications:
