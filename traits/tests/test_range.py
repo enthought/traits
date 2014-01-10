@@ -56,8 +56,6 @@ class RangeTestCase(unittest.TestCase):
         self.failUnlessEqual(2, obj._changed_handler_calls)
         self.failUnlessEqual(40, obj.r)
 
-        return
-
     def test_non_ui_int_events(self):
 
         # Even thou the range is configured for 0..1000, the handler resets
@@ -76,52 +74,3 @@ class RangeTestCase(unittest.TestCase):
         obj.r = 101
         self.failUnlessEqual(4, obj._changed_handler_calls)
         self.failUnlessEqual(0, obj.r)
-
-        return
-
-    def ui_test_events(self):
-        import nose
-        raise nose.SkipTest('Requires GUI')
-        msg = """enter the value 34.56 in the range text box and tab out or
-enter. Notice that the changed handler call count is 2.
-Notice the slider is at 34.56 and the text box still shows 34.56
-Notice that r_copied_on_change shows 40.0
-Click OK to close the window.
-The test will not fail, because the range value was rounded by the event
-handler. However, the range widget did not show that change."""
-        print msg
-
-        obj = WithFloatRange()
-        obj._changed_handler_calls = 0
-
-        obj.edit_traits(kind='livemodal',)
-
-        self.failUnlessEqual(obj.r % 10, 0)
-        return
-
-    def ui_test_int_events(self):
-        import nose
-        raise nose.SkipTest('Requires GUI')
-        msg = """
-enter the value 95 in the range text box.
-Notice that the changed handler call count is 2.
-Notice that r_copied_on_change shows 95
-Click the up arrow 5 times. Each time the handler call count will increment by
-one.
-The R value is now 100 and the change handler call count is 7.
-Click the up array 1 time. The call count is 11, R is 101 (wrong), and R
-copied on change is 0 (correct)
-Click OK to close the window.
-The test will not fail, because the range value kept below 101 by the event
-handler. However, the range widget did not show that change.' """
-        print msg
-
-        obj = WithLargeIntRange()
-        obj._changed_handler_calls = 0
-
-        obj.edit_traits(kind='livemodal',)
-
-        self.failUnless(obj.r <= 100)
-        return
-
-### EOF
