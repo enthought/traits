@@ -31,6 +31,7 @@ def has_no_compiler():
     except:
         return True
 
+
 def cython_version():
     if no_cython:
         return None

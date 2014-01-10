@@ -246,14 +246,12 @@ class ListTestCase(unittest.TestCase):
             pass
         else:
             if sys.version_info[0] < 3:
-                f.ints = array([1,2,3])
-                self.failUnlessEqual( f.ints, [1,2,3] )
+                f.ints = array([1, 2, 3])
+                self.failUnlessEqual(f.ints, [1, 2, 3])
             else:
                 # These would fail due to np.int_ being an invalid vallue
-                # for the Int-trait. 
+                # for the Int-trait.
                 pass
-            
-            f.strs = array( ("abc", "def", "ghi") )
-            self.failUnlessEqual( f.strs, ["abc", "def", "ghi"] )
 
-### EOF
+            f.strs = array(("abc", "def", "ghi"))
+            self.failUnlessEqual(f.strs, ["abc", "def", "ghi"])

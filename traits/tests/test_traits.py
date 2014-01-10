@@ -150,10 +150,10 @@ class IntTest(AnyTraitTest):
     obj = IntTrait()
 
     _default_value = 99
-    _good_values   = [10, -10]
-    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j,
-                      10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
-                      u'-10L', u'10.1', u'-10.1',  '10', '-10', u'10', u'-10']
+    _good_values = [10, -10]
+    _bad_values = ['ten', u'ten', [10], {'ten': 10}, (10,), None, 1j,
+                   10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
+                   u'-10L', u'10.1', u'-10.1',  '10', '-10', u'10', u'-10']
 
     try:
         import numpy as np
@@ -162,20 +162,20 @@ class IntTest(AnyTraitTest):
     else:
         if sys.version_info[0] < 3:
             _good_values.extend([
-                np.int64(10),np.int64(-10),
-                np.int32(10),np.int32(-10),
-                np.int_(10),np.int_(-10)
+                np.int64(10), np.int64(-10),
+                np.int32(10), np.int32(-10),
+                np.int_(10), np.int_(-10)
             ])
             _bad_values.extend([
             ])
         else:
             #TODO: status of numpy-ints is unclear in python 3!
             pass
-            
+
     if sys.version_info[0] < 3:
-        # 2to3 will remove the L suffix and therfore make them actually good ones!
-        _bad_values.extend([-10L,10L])
-                
+        # 2to3 will remove the L suffix and therefore make them actually good
+        # ones!
+        _bad_values.extend([-10L, 10L])
 
     def coerce(self, value):
         try:
@@ -200,11 +200,12 @@ class CoercibleLongTest(AnyTraitTest):
     obj = CoercibleLongTrait()
 
     _default_value = 99L
-    _good_values   = [10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', u'10', u'-10']
+    _good_values = [
+        10, -10, 10L, -10L, 10.1, -10.1, '10', '-10', u'10', u'-10']
     if sys.version_info[0] < 3:
-        _good_values.extend(['10L','-10L',u'10L',u'-10L'])
-    _bad_values    = ['10.1', '-10.1', u'10.1', u'-10.1', 'ten', u'ten', [10],
-                      [10l], {'ten': 10},(10,),(10L,), None, 1j]
+        _good_values.extend(['10L', '-10L', u'10L', u'-10L'])
+    _bad_values = ['10.1', '-10.1', u'10.1', u'-10.1', 'ten', u'ten', [10],
+                   [10l], {'ten': 10}, (10,), (10L,), None, 1j]
 
     def coerce(self, value):
         try:
@@ -259,15 +260,15 @@ class FloatTest(AnyTraitTest):
     obj = FloatTrait()
 
     _default_value = 99.0
-    _good_values   = [10, -10, 10.1, -10.1]
-    _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None,
-                      1j, '10', '-10', '10L', '-10L', '10.1', '-10.1', u'10',
-                      u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
+    _good_values = [10, -10, 10.1, -10.1]
+    _bad_values = ['ten', u'ten', [10], {'ten': 10}, (10,), None,
+                   1j, '10', '-10', '10L', '-10L', '10.1', '-10.1', u'10',
+                   u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
 
     if sys.version_info[0] < 3:
-        # 2to3 will remove the L suffix and therfore make them actually good ones!
-        _bad_values.extend([-10L,10L])
-
+        # 2to3 will remove the L suffix and therfore make them actually good
+        # ones!
+        _bad_values.extend([-10L, 10L])
 
     def coerce(self, value):
         try:
@@ -814,10 +815,10 @@ class test_complex_value(test_base2):
 
 class list_value(HasTraits):
     # Trait definitions:
-    list1 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]),
-                          maxlen = 4))
-    list2 = Trait([ 2 ], TraitList(Trait([ 1, 2, 3, 4 ]),
-                          minlen = 1, maxlen = 4))
+    list1 = Trait([2], TraitList(Trait([1, 2, 3, 4]),
+                                 maxlen=4))
+    list2 = Trait([2], TraitList(Trait([1, 2, 3, 4]),
+                                 minlen=1, maxlen=4))
     alist = List()
 
 
@@ -916,7 +917,8 @@ class test_list_value(test_base2):
         # If no values changed, no new TraitListEvent will be generated.
         self.assertIs(self.last_event, old_event)
         self.obj.alist[0:4:2] = [10, 11]
-        self.assertLastTraitListEventEqual(slice(0, 4, 2), [[8, 4]], [[10, 11]])
+        self.assertLastTraitListEventEqual(
+            slice(0, 4, 2), [[8, 4]], [[10, 11]])
         del self.obj.alist[1:4:2]
         self.assertLastTraitListEventEqual(slice(1, 4, 2), [[9, 5]], [])
         self.obj.alist = [1, 2, 3, 4]

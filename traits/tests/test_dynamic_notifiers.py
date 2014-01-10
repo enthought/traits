@@ -168,7 +168,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         obj = DynamicNotifiers()
         obj.fail = 1
 
-        _py2to3.assertCountEqual(self, [0,1,2,3,4], obj.exceptions_from)
+        _py2to3.assertCountEqual(self, [0, 1, 2, 3, 4], obj.exceptions_from)
         self.assertEqual([(obj, 'fail', 0, 1)]*5, self.exceptions)
 
     def test_dynamic_notifiers_functions(self):
@@ -206,7 +206,7 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         obj.fail = 1
 
-        _py2to3.assertCountEqual(self, [0,1,2,3,4], obj.exceptions_from)
+        _py2to3.assertCountEqual(self, [0, 1, 2, 3, 4], obj.exceptions_from)
         # 10 failures: 5 are from the internal dynamic listeners, see
         # test_dynamic_notifiers_methods_failing
         self.assertEqual([(obj, 'fail', 0, 1)] * 10, self.exceptions)
