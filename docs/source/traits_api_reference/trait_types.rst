@@ -19,10 +19,6 @@ Traits
 
 .. autoclass:: Long
 
-.. autoclass:: BaseInteger
-
-.. autoclass:: Integer
-
 .. autoclass:: BaseFloat
 
 .. autoclass:: Float
