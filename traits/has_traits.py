@@ -25,12 +25,12 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import, division
 
-import sys
 import copy as copy_module
 import weakref
 import re
+import sys
 
 from types import FunctionType, MethodType
 
@@ -38,7 +38,7 @@ from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
 
-from .ctraits import CHasTraits, CTraitMethod, _HasTraits_monitors
+from .ctraits import CHasTraits, _HasTraits_monitors
 
 from .traits import (CTrait, ForwardProperty, Property, SpecialNames, Trait,
     TraitFactory, __newobj__, generic_trait, trait_factory)
@@ -53,7 +53,7 @@ from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
 from .trait_handlers import TraitType
 
 from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
-    add_article, enumerate, is_none, not_event, not_false)
+    add_article, is_none, not_event, not_false)
 
 from .trait_errors import TraitError
 
@@ -98,8 +98,15 @@ def ViewElements ( ):
 WrapperTypes   = ( StaticAnyTraitChangeNotifyWrapper,
                    StaticTraitChangeNotifyWrapper )
 
-MethodTypes    = ( MethodType,   CTraitMethod )
-FunctionTypes  = ( FunctionType, CTraitMethod )
+if sys.version_info[0] >= 3:
+    # in python 3, unbound methods do not exist anymore, they're just functions
+    BoundMethodTypes    = ( MethodType, )
+    UnboundMethodTypes  = ( FunctionType, )
+else:
+    BoundMethodTypes    = ( MethodType, )
+    UnboundMethodTypes  = ( MethodType, )
+
+FunctionTypes  = ( FunctionType, )
 
 # Class dictionary entries used to save trait, listener and view information and
 # definitions:
@@ -153,30 +160,53 @@ def _clone_trait ( clone, metadata = None ):
 
 def _get_method ( cls, method ):
     result = getattr( cls, method, None )
-    if (result is not None) and is_method_type(result):
+    if (result is not None) and is_unbound_method_type(result):
         return result
     return None
 
-def _get_def ( class_name, class_dict, bases, method ):
-    """ Gets the definition of a specified method (if any).
-    """
-    if method[0:2] == '__':
-        method = '_%s%s' % ( class_name, method )
 
-    result = class_dict.get( method )
-    if ((result is not None) and
-        is_function_type(result) and
-        (getattr( result, 'on_trait_change', None ) is None)):
-        return result
-
-    for base in bases:
-        result = getattr( base, method, None )
+if sys.version_info[0] >= 3:
+    def _get_def ( class_name, class_dict, bases, method ):
+        """ Gets the definition of a specified method (if any).
+        """
+        if method[0:2] == '__':
+            method = '_%s%s' % ( class_name, method )
+    
+        result = class_dict.get( method )
         if ((result is not None) and
-            is_method_type(result) and \
-            (getattr( result.im_func, 'on_trait_change', None ) is None)):
+            is_function_type(result) and
+            (getattr( result, 'on_trait_change', None ) is None)):
             return result
-
-    return None
+    
+        for base in bases:
+            result = getattr( base, method, None )
+            if ((result is not None) and
+                is_unbound_method_type(result) and \
+                (getattr( result, 'on_trait_change', None ) is None)):
+                return result
+    
+        return None
+else:
+    def _get_def ( class_name, class_dict, bases, method ):
+        """ Gets the definition of a specified method (if any).
+        """
+        if method[0:2] == '__':
+            method = '_%s%s' % ( class_name, method )
+    
+        result = class_dict.get( method )
+        if ((result is not None) and
+            is_function_type(result) and
+            (getattr( result, 'on_trait_change', None ) is None)):
+            return result
+    
+        for base in bases:
+            result = getattr( base, method, None )
+            if ((result is not None) and
+                is_unbound_method_type(result) and \
+                (getattr( result.im_func, 'on_trait_change', None ) is None)):
+                return result
+    
+        return None
 
 
 def is_cython_func_or_method(method):
@@ -184,9 +214,13 @@ def is_cython_func_or_method(method):
     # The only way to get the type from the method with str comparison ...
     return 'cython_function_or_method' in str(type(method))
 
-def is_method_type(method):
+def is_bound_method_type(method):
     """ Test if the given input is a Python method or a Cython method. """
-    return isinstance(method, MethodTypes ) or is_cython_func_or_method(method)
+    return isinstance(method, BoundMethodTypes ) or is_cython_func_or_method(method)
+
+def is_unbound_method_type(method):
+    """ Test if the given input is a Python method or a Cython method. """
+    return isinstance(method, UnboundMethodTypes ) or is_cython_func_or_method(method)
 
 def is_function_type(function):
     """ Test if the given input is a Python function or a Cython method. """
@@ -285,53 +319,6 @@ class _SimpleTest:
     def __call__ ( self, test  ): return test == self.value
 
 #-------------------------------------------------------------------------------
-#  Checks if a function can be converted to a 'trait method' (and converts it if
-#  possible):
-#-------------------------------------------------------------------------------
-
-def _check_method ( class_dict, name, func ):
-    method_name  = name
-    return_trait = Any
-
-    col = name.find( '__' )
-    if col >= 1:
-        type_name    = name[ : col ]
-        method_name  = name[ col + 2: ]
-
-        return_trait = globals().get( type_name )
-        if not isinstance( return_trait, CTrait ):
-            return_trait = SpecialNames.get( type_name.lower() )
-            if return_trait is None:
-                return_trait = Any
-                method_name  = name
-
-    has_traits = (method_name != name)
-    arg_traits = []
-
-    defaults = func.func_defaults
-    if defaults is not None:
-        for trait in defaults:
-            trait = _check_trait( trait )
-            if isinstance( trait, CTrait ):
-                has_traits = True
-            else:
-                trait = Any( trait ).as_ctrait()
-            arg_traits.append( trait )
-
-    if has_traits:
-        code       = func.func_code
-        var_names  = code.co_varnames
-        arg_traits = (([ Missing ] * (code.co_argcount - len( arg_traits ))) +
-                      arg_traits)
-        traits     = []
-        for i, trait in enumerate( arg_traits ):
-            traits.append( var_names[i] )
-            traits.append( trait )
-        del class_dict[ name ]
-        class_dict[ method_name ] = CTraitMethod( method_name, func,
-                                          tuple( [ return_trait ] + traits ) )
-
-#-------------------------------------------------------------------------------
 #  Returns either the original value or a valid CTrait if the value can be
 #  converted to a CTrait:
 #-------------------------------------------------------------------------------
@@ -420,221 +407,6 @@ def _property_method ( class_dict, name ):
     getter/setter.
     """
     return class_dict.get( name )
-
-#-------------------------------------------------------------------------------
-#  Defines a factory function for creating type checked methods:
-#-------------------------------------------------------------------------------
-
-def trait_method ( func, return_type, **arg_types ):
-    """ Factory function for creating type-checked methods.
-
-    Parameters
-    ----------
-    func : function
-        The method to be type-checked.
-    return_type :
-        The return type of the method, a trait or value that can be converted
-        to a trait using Trait().
-    **arg_types :
-        Zero or more '*keyword* = *trait*' pairs, the argument names and types
-        of parameters of the type-checked method. The *trait* portion of each
-        pair must be a trait or a value that can be converted to a trait using
-        Trait().
-    """
-    # Make the sure the first argument is a function:
-    if type( func ) is not FunctionType:
-        if type( return_type ) is not FunctionType:
-            raise TypeError, "First or second argument must be a function."
-        else:
-            func, return_type = return_type, func
-
-    # Make sure the return type is a trait (if not, coerce it to one):
-    return_type = _trait_for( return_type )
-
-    # Make up the list of arguments defined by the function we are wrapping:
-    code       = func.func_code
-    arg_count  = code.co_argcount
-    var_names  = code.co_varnames[ : arg_count ]
-    defaults   = func.func_defaults or ()
-    defaults   = ( Missing, ) * (arg_count - len( defaults )) + defaults
-    arg_traits = []
-    for i, name in enumerate( var_names ):
-        try:
-            trait = arg_types[ name ]
-            del arg_types[ name ]
-        except:
-            # fixme: Should this be a hard error (i.e. missing parameter type?)
-            trait = Any
-
-        arg_traits.append( name )
-        arg_traits.append( Trait( defaults[i], _trait_for( trait ) ) )
-
-    # Make sure there are no unaccounted for type parameters left over:
-    if len( arg_types ) > 0:
-        names = arg_types.keys()
-        if len( names ) == 1:
-            raise TraitError, ("The '%s' keyword defines a type for an "
-                               "argument which '%s' does not have." % (
-                               names[0], func.func_name ))
-        else:
-            names.sort()
-            raise TraitError, ("The %s keywords define types for arguments "
-                               "which '%s' does not have." % (
-                               ', '.join( [ "'%s'" % name for name in names ] ),
-                               func.func_name ))
-
-    # Otherwise, return a method wrapper for the function:
-    return CTraitMethod( func.func_name, func,
-                                         tuple( [ return_type ] + arg_traits ) )
-
-#-------------------------------------------------------------------------------
-#  Defines a method 'decorator' for adding type checking to methods:
-#-------------------------------------------------------------------------------
-
-def _add_assignment_advisor ( callback, depth = 2 ):
-    """ Defines a method 'decorator' for adding type checking to methods.
-    """
-    frame      = sys._getframe( depth )
-    old_trace  = [ frame.f_trace ]
-    old_locals = frame.f_locals.copy()
-
-    def tracer ( frm, event, arg ):
-
-        if event == 'call':
-            if old_trace[0]:
-                return old_trace[0]( frm, event, arg )
-            else:
-                return None
-        try:
-            if frm is frame and event != 'exception':
-                for k, v in frm.f_locals.items():
-                    if k not in old_locals:
-                        del frm.f_locals[k]
-                        break
-                    elif old_locals[k] is not v:
-                        frm.f_locals[k] = old_locals[k]
-                        break
-                else:
-                    return tracer
-
-                callback( frm, k, v )
-
-        finally:
-            if old_trace[0]:
-                old_trace[0] = old_trace[0]( frm, event, arg )
-
-        frm.f_trace = old_trace[0]
-        sys.settrace( old_trace[0] )
-        return old_trace[0]
-
-    frame.f_trace = tracer
-    sys.settrace( tracer )
-
-def method ( return_type = Any, *arg_types, **kwarg_types ):
-    """ Declares that the method defined immediately following a call to this
-    function is type-checked.
-
-    Parameters
-    ----------
-    return_type : type
-        The type returned by the type-checked method. Must be either a trait
-        or a value that can be converted to a trait using the Trait()
-        function. The default of Any means that the return value is not
-        type-checked.
-    *arg_types :
-        Zero or more types of positional parameters of the type-checked method.
-        Each value must either a trait or a value that can be converted to a
-        trait using the Trait() function.
-    **kwarg_types :
-        Zero or more *keyword* = *type* pairs, the type names and types of
-        keyword parameters of the type-checked method. The *type* portion of
-        the parameter must be either a trait or a value that can be converted
-        to a trait using the Trait() function.
-
-    Description
-    -----------
-    Whenever the type-checked method is called, the method() function ensures
-    that each parameter passed to the method of the type specified by
-    *arg_types* and *kwarg_types*, and that the return value is of the type
-    specified by *return_type*. It is an error to specify both positional and
-    keyword definitions for the same method parameter. If a parameter defined by
-    the type-checked method is not referenced in the method() call, the
-    parameter is not type-checked (i.e., its type is implicitly set to Any).
-    If the call to method() signature contains an *arg_types* or *kwarg_types*
-    parameter that does not correspond to a parameter in the type-checked method
-    definition, a TraitError exception is raised.
-    """
-    # The following is a 'hack' to get around what seems to be a Python bug
-    # that does not pass 'return_type' and 'arg_types' through to the scope of
-    # 'callback' below:
-    kwarg_types[''] = ( return_type, arg_types )
-
-    def callback ( frame, method_name, func ):
-
-        # This undoes the work of the 'hack' described above:
-        return_type, arg_types = kwarg_types['']
-        del kwarg_types['']
-
-        # Add a 'fake' positional argument as a place holder for 'self':
-        arg_types = ( Any, ) + arg_types
-
-        # Make the sure the first argument is a function:
-        if type( func ) is not FunctionType:
-            raise TypeError, ("'method' must immediately precede a method "
-                              "definition.")
-
-        # Make sure the return type is a trait (if not, coerce it to one):
-        return_type = _trait_for( return_type )
-
-        # Make up the list of arguments defined by the function we are wrapping:
-        code       = func.func_code
-        func_name  = func.func_name
-        arg_count  = code.co_argcount
-        var_names  = code.co_varnames[ : arg_count ]
-        defaults   = func.func_defaults or ()
-        defaults   = ( Missing, ) * (arg_count - len( defaults )) + defaults
-        arg_traits = []
-        n          = len( arg_types )
-        if n > len( var_names ):
-            raise TraitError, ("Too many positional argument types specified "
-                               "in the method signature for %s" % func_name)
-        for i, name in enumerate( var_names ):
-            if (i > 0) and (i < n):
-                if name in kwarg_types:
-                    raise TraitError, ("The '%s' argument is defined by both "
-                                       "a positional and keyword argument in "
-                                       "the method signature for %s" %
-                                       ( name, func_name ) )
-                trait = arg_types[i]
-            else:
-                try:
-                    trait = kwarg_types[ name ]
-                    del kwarg_types[ name ]
-                except:
-                    # fixme: Should this be an error (missing parameter type?)
-                    trait = Any
-            arg_traits.append( name )
-            arg_traits.append( Trait( defaults[i], _trait_for( trait ) ) )
-
-        # Make sure there are no unaccounted for type parameters left over:
-        if len( kwarg_types ) > 0:
-            names = kwarg_types.keys()
-            if len( names ) == 1:
-                raise TraitError, ("The '%s' method signature keyword defines "
-                                   "a type for an argument which '%s' does not "
-                                   "have." % ( names[0], func_name ))
-            else:
-                names.sort()
-                raise TraitError, ("The %s method signature keywords define "
-                          "types for arguments which '%s' does not have." % (
-                          ', '.join( [ "'%s'" % name for name in names ] ),
-                          func_name ))
-
-        # Otherwise, return a method wrapper for the function:
-        frame.f_locals[ method_name ] = CTraitMethod( func_name, func,
-                                         tuple( [ return_type ] + arg_traits ) )
-
-    _add_assignment_advisor( callback )
 
 #-------------------------------------------------------------------------------
 #  'MetaHasTraits' class:
@@ -788,8 +560,6 @@ class MetaHasTraitsObject ( object ):
                 if pattern is not None:
                     listeners[ name ] = ( 'method', pattern )
 
-                _check_method( class_dict, name, value )
-
             elif isinstance( value, property ):
                 class_traits[ name ] = generic_trait
 
@@ -907,7 +677,7 @@ class MetaHasTraitsObject ( object ):
         # Make sure the trait prefixes are sorted longest to shortest
         # so that we can easily bind dynamic traits to the longest matching
         # prefix:
-        prefix_list.sort( lambda x, y: len( y ) - len( x ) )
+        prefix_list.sort( key = lambda x: -len(x) )
 
         # Get the list of all possible 'Instance'/'List(Instance)' handlers:
         instance_traits = _get_instance_handlers( class_dict, hastraits_bases )
@@ -1508,7 +1278,7 @@ class HasTraits ( CHasTraits ):
 
             # Resort the list from longest to shortest (if necessary):
             if changed:
-                subclass_list.sort( lambda x, y: len( y ) - len( x ) )
+                subclass_list.sort( key = lambda x: -len( x ) )
 
             # Merge the 'listeners':
             subclass_traits = getattr( subclass, ListenerTraits )
@@ -1616,7 +1386,7 @@ class HasTraits ( CHasTraits ):
             def __getstate__(self):
                 state = super(X,self).__getstate__()
                 for key in ['foo', 'bar']:
-                    if state.has_key(key):
+                    if key in state:
                         del state[key]
                 return state
         """
@@ -2451,8 +2221,8 @@ class HasTraits ( CHasTraits ):
             try:
                 value = repr( getattr( self, name ) ).replace( '\n', '\\n' )
                 if len( value ) > maxval:
-                    value = '%s...%s' % ( value[: (maxval - 2) / 2 ],
-                                          value[ -((maxval - 3) / 2): ] )
+                    value = '%s...%s' % ( value[: (maxval - 2) // 2 ],
+                                          value[ -((maxval - 3) // 2): ] )
             except:
                 value = '<undefined>'
             lname = (name + ':').ljust( pad )
@@ -3789,7 +3559,7 @@ def provides( *protocols ):
 
     # Verify that each argument is a valid protocol.
     for protocol in protocols:
-        if not issubclass(protocol.__metaclass__, ABCMeta):
+        if not issubclass(type(protocol), ABCMeta):
             raise TraitError(
                 "All arguments to 'provides' must be "
                 "subclasses of Interface or be a Python ABC."
