@@ -17,9 +17,11 @@ install:
   - pip install cython
   - pip install coverage
   - pip install coveralls
-  - python setup.py develop
+  - python setup.py install
+-before_script:
+  - cd ../..
 script:
-  - coverage run -m nose.core
+  - coverage run -m nose.core traits --exe
 notifications:
   email:
     - travis-ci@enthought.com
