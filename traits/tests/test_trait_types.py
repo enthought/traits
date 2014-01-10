@@ -21,44 +21,11 @@
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
 
-#-------------------------------------------------------------------------------
-#  Imports:
-#-------------------------------------------------------------------------------
-
 from traits.testing.unittest_tools import unittest
 
 from traits.api import Float, TraitType
 
-#-------------------------------------------------------------------------------
-#  'TraitTypesTest' unit test class:
-#-------------------------------------------------------------------------------
-
 class TraitTypesTest ( unittest.TestCase ):
-
-    #---------------------------------------------------------------------------
-    #  Test fixture set-up:
-    #---------------------------------------------------------------------------
-
-    def setUp ( self ):
-        """ Test fixture set-up.
-        """
-        pass
-
-    #---------------------------------------------------------------------------
-    #  Test fixture tear-down:
-    #---------------------------------------------------------------------------
-
-    def tearDown ( self ):
-        """ Test fixture tear-down.
-        """
-        pass
-
-    #---------------------------------------------------------------------------
-    #  Individual unit test methods:
-    #---------------------------------------------------------------------------
-
-    def test_ ( self ):
-        pass
 
     def test_traits_shared_transient(self):
         # Regression test for a bug in traits where the same _metadata
@@ -70,6 +37,27 @@ class TraitTypesTest ( unittest.TestCase ):
         self.assertFalse(Float().transient)
         LazyProperty().as_ctrait()
         self.assertFalse(Float().transient)
+
+    def test_numpy_validators_loaded_if_numpy_present(self):
+        # If 'numpy' is available, the numpy validators should be loaded.
+
+        # Make sure that numpy is present on this machine.
+        try:
+            import numpy
+        except ImportError:
+            self.skipTest("numpy library not found.")
+
+        # Remove numpy from the list of imported modules.
+        import sys
+        del sys.modules['numpy']
+        for k in list(sys.modules):
+            if k.startswith('numpy.'):
+                del sys.modules[k]
+
+        # Check that the validators contain the numpy types.
+        from traits.trait_types import float_fast_validate
+        import numpy
+        self.assertIn(numpy.floating, float_fast_validate)
 
 
 # Run the unit tests (if invoked from the command line):

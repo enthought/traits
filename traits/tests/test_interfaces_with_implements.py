@@ -31,10 +31,20 @@ This file is equivalent to test_interfaces.py, only using the deprecated
 
 from __future__ import absolute_import
 
+import sys
+
 from traits.testing.unittest_tools import unittest
 
 from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
     implements, Instance, Int, Interface, List, Supports, TraitError
+
+
+if sys.version_info[0] >= 3:
+    import nose
+    raise nose.SkipTest("""
+        Currently, under Python 3, class advisors do not work anymore.
+        Therefore, this test will fail due to the use of "adapts".
+    """)
 
 #-------------------------------------------------------------------------------
 #  Test 'Interface' definitions:

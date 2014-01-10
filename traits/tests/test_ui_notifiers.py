@@ -65,9 +65,10 @@ class TestUINotifiers(unittest.TestCase):
 
     #### Tests ################################################################
 
+
+    @unittest.skipIf(
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_main_thread(self):
-        if not QT_FOUND:
-            self.skipTest("Qt event loop not found, UI dispatch not possible.")
 
         obj = Foo()
         obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
@@ -84,10 +85,9 @@ class TestUINotifiers(unittest.TestCase):
         ui_thread = trait_notifiers.ui_thread
         self.assertEqual(thread_id, ui_thread)
 
-
+    @unittest.skipIf(
+        not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_separate_thread(self):
-        if not QT_FOUND:
-            self.skipTest("Qt event loop not found, UI dispatch not possible.")
 
         obj = Foo()
         obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')

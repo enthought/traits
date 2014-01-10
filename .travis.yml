@@ -1,5 +1,7 @@
 language: python
 python:
+  - 3.3
+  - 3.2
   - 2.7
   - 2.6
 virtualenv:
@@ -10,12 +12,21 @@ before_install:
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
   - pip install nose
-  - pip install unittest2
+  - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
+  - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
   - pip install cython
-  - python setup.py build_ext --inplace
-  - python setup.py develop
+  - pip install coverage
+  - pip install coveralls
+  - python setup.py install
+before_script:
+  - mkdir testrunner
+  - cp .coveragerc testrunner/
+  - cd testrunner
 script:
-  - nosetests
+  - coverage run -m nose.core traits --exe
 notifications:
   email:
     - travis-ci@enthought.com
+    - hack@delley.net
+after_success:
+  coveralls

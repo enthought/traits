@@ -10,6 +10,9 @@
 #------------------------------------------------------------------------------
 import threading
 import time
+import sys
+
+from traits import _py2to3
 
 from traits.testing.unittest_tools import unittest
 from traits.api import (Bool, Event, Float, HasTraits, Int, List,
@@ -268,7 +271,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         for t in threads:
             t.join()
 
-        self.assertItemsEqual(
+        _py2to3.assertCountEqual(
+            self,
             event_collector.events,
             range(events_per_thread) * thread_count,
         )

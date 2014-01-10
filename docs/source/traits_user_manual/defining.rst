@@ -23,8 +23,7 @@ In practice, steps 2 and 3 are often combined by defining traits in-line
 in an attribute definition. This strategy is used in many examples in this
 guide. However, you can also define traits independently, and reuse the trait
 definitions across multiple classes and attributes (see
-:ref:`reusing-trait-definitions`). Type-checked method signatures typically
-use independently defined traits.
+:ref:`reusing-trait-definitions`).
 
 In order to use trait attributes in a class, the class must inherit from the
 HasTraits class in the Traits package (or from a subclass of HasTraits). The
@@ -334,7 +333,7 @@ the table.
 | ListClass,       |*maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*]) |
 | ListComplex,     |                                                          |
 | ListFloat,       |.. index:: Function(), Generic(), generic_trait, HTML()   |
-| ListFunction,    |.. index:: Instance(), List(), Method(), missing, Module()|
+| ListFunction,    |.. index:: Instance(), List(), Method(), Module()         |
 | ListInstance,    |.. index:: Password(), Property(), Python(), PythonValue()|
 | ListInt,         |.. index:: Range(), ReadOnly(), Regex(), RGBColor(), Set()|
 | ListMethod,      |.. index:: String(), This, ToolbarButton(), true, Tuple() |
@@ -343,8 +342,6 @@ the table.
 | ListUnicode      |                                                          |
 +------------------+----------------------------------------------------------+
 | Method           | Method ([\*\*\ *metadata*] )                             |
-+------------------+----------------------------------------------------------+
-| missing          | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | Module           | Module ( [\*\*\ *metadata*] )                            |
 +------------------+----------------------------------------------------------+

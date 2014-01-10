@@ -1,5 +1,6 @@
 """ Test the adapter manager. """
 
+import sys
 
 from traits.adaptation.api import AdaptationManager, adapt
 import traits.adaptation.tests.abc_examples
@@ -545,6 +546,12 @@ class TestAdaptationManagerWithInterfaces(TestAdaptationManagerWithABC):
     examples = traits.adaptation.tests.interface_examples
 
     def test_adapts_should_register_class_as_providing_the_to_protocol(self):
+
+        if sys.version_info[0] >= 3:
+            self.skipTest("""
+                Currently, under Python 3, class advisors do not work anymore.
+                Therefore, this test will fail due to the use of "adapts".
+            """)
 
         from traits.api import Adapter, adapts, HasTraits, Instance, \
              Int, Interface

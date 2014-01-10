@@ -24,25 +24,22 @@
 
 from __future__ import absolute_import
 
-import exceptions
-
-from types import InstanceType
+import sys
 
 from .trait_base import class_of
 
+from . import _py2to3
 
 #-------------------------------------------------------------------------------
 #  Utilities
 #-------------------------------------------------------------------------------
 
+
 def repr_type(obj):
     """ Return a string representation of a value and its type for readable
     error messages.
     """
-    the_type = type(obj)
-    if the_type is InstanceType:
-        # Old-style class.
-        the_type = obj.__class__
+    the_type = _py2to3.type_w_old_style(obj)
     msg = '%r %r' % (obj, the_type)
     return msg
 
@@ -50,7 +47,7 @@ def repr_type(obj):
 #  'TraitError' class:
 #-------------------------------------------------------------------------------
 
-class TraitError ( exceptions.Exception ):
+class TraitError ( Exception ):
 
     def __init__ ( self, args = None, name = None, info = None, value = None ):
         if name is None:
@@ -91,9 +88,7 @@ class TraitError ( exceptions.Exception ):
 
         # Note: self.args must be a tuple so be sure to leave the trailing
         # commas.
-        the_type = type(self.value)
-        if the_type is InstanceType:
-            the_type = self.value.__class__
+        the_type = _py2to3.type_w_old_style(self.value)
         if obj is not None:
             self.args = ("%s '%s' trait of %s instance%s must be %s, "
                          "but a value of %s was specified." % (
@@ -108,7 +103,7 @@ class TraitError ( exceptions.Exception ):
 #  'TraitNotificationError' class:
 #-------------------------------------------------------------------------------
 
-class TraitNotificationError ( exceptions.Exception ):
+class TraitNotificationError ( Exception ):
 
     pass
 
