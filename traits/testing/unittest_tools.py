@@ -16,21 +16,17 @@ Classes.
 import contextlib
 import threading
 
+from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
+        Property, Str)
+from traits.util.async_trait_wait import wait_for_condition
+
 # Compatibility layer for Python 2.6: try loading unittest2
 import sys
 from traits import _py2to3
 if sys.version_info[:2] == (2, 6):
-    try:
-        import unittest2 as unittest
-    except ImportError:
-        import unittest
-
+    import unittest2 as unittest
 else:
     import unittest
-
-from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
-        Property, Str)
-from traits.util.async_trait_wait import wait_for_condition
 
 
 class _AssertTraitChangesContext(object):
