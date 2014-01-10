@@ -4,6 +4,28 @@ Traits CHANGELOG
 What's new in Traits 4.5.0
 --------------------------
 
+Traits is now compatible with Python 3! The library now supports
+Python 3.2 and 3.3 .
+
+The release also includes increased code coverage and automatic
+coverage report through coveralls.io .
+
+
+Change summary
+~~~~~~~~~~~~~~
+
+Enhancements
+
+ * Test files cleanups (#108,#111)
+ * Add automatic coverage reports (#110,#122)
+ * Removed obsolete code (#112,#113)
+ * Increased test coverage (#114)
+ * Python 3 support (#115)
+
+Fixes
+
+ * Fix clearing exception when raising a TraitError (#119)
+
 
 Release 4.4.0
 -------------
@@ -22,6 +44,7 @@ improvements.
 
 
 Change summary since 4.3.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 New features
 
@@ -62,4 +85,4 @@ Fixes
  * Fix cyclic garbage arising from use of the WeakRef trait type. (#95)
  * `TraitSetObject.copy` now returns a plain rather than an
    uninitialized `TraitSetObject` instance. (#97)
- * Fix cyclic garbage arising from dynamic trait change handlers. (#100)
+ * Fix cyclic garbage arising from dynamic trait change handlers. (#101)
