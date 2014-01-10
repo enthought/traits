@@ -161,7 +161,7 @@ class IntTest(AnyTraitTest):
     obj = IntTrait()
 
     _default_value = 99
-    _good_values   = [10, -10]
+    _good_values   = [10, -10, 10L, -10L]
     _bad_values    = ['ten', u'ten', [10], {'ten': 10},(10,), None, 1j,
                       10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
                       u'-10L', u'10.1', u'-10.1',  '10', '-10', u'10', u'-10']
@@ -183,11 +183,6 @@ class IntTest(AnyTraitTest):
             #TODO: status of numpy-ints is unclear in python 3!
             pass
             
-    if sys.version_info[0] < 3:
-        # 2to3 will remove the L suffix and therfore make them actually good ones!
-        _bad_values.extend([-10L,10L])
-                
-
     def coerce(self, value):
         try:
             return int(value)

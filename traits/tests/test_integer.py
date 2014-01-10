@@ -12,7 +12,7 @@
 #
 #-------------------------------------------------------------------------------
 """
-Tests for the Integer trait type.
+Tests for the Int trait type.
 
 """
 
@@ -30,11 +30,11 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Integer, TraitError
+from ..api import HasTraits, Int, TraitError
 
 
 class A(HasTraits):
-    integral = Integer
+    integral = Int
 
 
 class IntegerLike(object):
@@ -47,7 +47,7 @@ class Truncatable(object):
         return 42
 
 
-class TestInteger(unittest.TestCase):
+class TestInt(unittest.TestCase):
     def test_default(self):
         a = A()
         self.assertEqual(a.integral, 0)

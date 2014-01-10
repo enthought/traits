@@ -142,10 +142,10 @@ class Generic ( Any ):
     metadata = { 'trait_value': True }
 
 #-------------------------------------------------------------------------------
-#  'BaseInteger' and 'Integer' traits:
+#  'BaseInt' and 'Int' traits:
 #-------------------------------------------------------------------------------
 
-class BaseInteger ( TraitType ):
+class BaseInt ( TraitType ):
     """ Defines a trait whose type must be an int or long.
     """
 
@@ -181,54 +181,13 @@ class BaseInteger ( TraitType ):
         return default_text_editor( self, int )
 
 
-class Integer ( BaseInteger ):
+class Int ( BaseInt ):
     """ Defines a trait whose type must be an int or long using a C-level fast
         validator.
     """
 
     #: The C-level fast validator to use:
     fast_validate = ( 20, )
-
-#-------------------------------------------------------------------------------
-#  'BaseInt' and 'Int' traits:
-#-------------------------------------------------------------------------------
-
-class BaseInt ( TraitType ):
-    """ Defines a trait whose value must be a Python int.
-    """
-
-    #: The function to use for evaluating strings to this type:
-    evaluate = int
-
-    #: The default value for the trait:
-    default_value = 0
-
-    #: A description of the type of value this trait accepts:
-    info_text = 'an integer'
-
-    def validate ( self, object, name, value ):
-        """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
-        """
-        if isinstance( value, int ):
-            return value
-
-        self.error( object, name, value )
-
-    def create_editor ( self ):
-        """ Returns the default traits UI editor for this type of trait.
-        """
-        return default_text_editor( self, int )
-
-
-class Int ( BaseInt ):
-    """ Defines a trait whose value must be a Python int using a C-level fast
-        validator.
-    """
-
-    #: The C-level fast validator to use:
-    fast_validate = int_fast_validate
 
 #-------------------------------------------------------------------------------
 #  'BaseLong' and 'Long' traits:
