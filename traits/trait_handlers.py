@@ -42,7 +42,6 @@ TypeType = type
 
 from weakref import ref
 
-from .ctraits import CTraitMethod
 from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
     CoercableTypes, TraitsCache, class_of, Missing)
 from .trait_errors import TraitError, repr_type
@@ -67,7 +66,7 @@ RICH_COMPARE            = 2
 
 RangeTypes    = ( int, long, float )
 
-CallableTypes = ( FunctionType, MethodType, CTraitMethod )
+CallableTypes = ( FunctionType, MethodType )
 
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {
@@ -171,131 +170,6 @@ class BaseTraitHandler ( object ):
         """
         raise TraitError( object, name, self.full_info( object, name, value ),
                           value )
-
-    def arg_error ( self, method, arg_num, object, name, value ):
-        """ Raises a TraitError exception to notify the user that a method on
-        an instance received a positional argument of an incorrect type.
-
-        Parameters
-        ----------
-        method : function
-            The method that encountered the error.
-        arg_num : int
-            The position of the incorrect argument in the argument list.
-        object : object
-            The object whose method was called.
-        name : str
-            The name of the parameter corresponding to the incorrect argument.
-        value : object
-            The value passed to the argument.
-
-        Description
-        -----------
-        This method can be called when type-checking a method.
-        """
-        raise TraitError, ("The '%s' parameter (argument %d) of the %s method "
-                           "of %s instance must be %s, but a value of %s was "
-                           "specified." % (name, arg_num, method.tm_name,
-                           class_of(object),
-                           self.full_info(object, name, value),
-                           repr_type(value)))
-
-    def keyword_error ( self, method, object, name, value ):
-        """ Raises a TraitError exception to notify the user that a method on
-        an instance received a keyword argument of an incorrect type.
-
-        Parameters
-        ----------
-        method : function
-            The method that encountered the error.
-        object : object
-            The object whose method was called.
-        name : str
-            The name of the parameter corresponding to the incorrect argument.
-        value :
-            The value passed to the argument.
-
-        Description
-        -----------
-        This method can be called when type-checking a method.
-        """
-        raise TraitError, ("The '%s' keyword argument of the %s method of "
-                           "%s instance must be %s, but a value of %s was "
-                           "specified." % (name, method.tm_name,
-                           class_of(object), self.info(object, name, value),
-                           repr_type(value)))
-
-    def missing_arg_error ( self, method, arg_num, object, name ):
-        """ Raises a TraitError exception to notify the user that a method on
-        an instance failed to receive a required positional argument.
-
-        Parameters
-        ----------
-        method : function
-            The method that encountered the error.
-        arg_num : int
-            The position of the incorrect argument in the argument list.
-        object : object
-            The object whose method was called.
-        name : str
-            The name of the parameter corresponding to the incorrect argument.
-
-        Description
-        -----------
-        This method can be called when type-checking a method.
-        """
-        raise TraitError, ("The '%s' parameter (argument %d) of the %s method "
-                           "of %s instance must be specified, but was omitted."
-                           % ( name, arg_num, method.tm_name,
-                               class_of( object ) ) )
-
-    def dup_arg_error ( self, method, arg_num, object, name ):
-        """ Raises a TraitError exception to notify the user that a method on
-        an instance received an argument as both a keyword argument and a
-        positional argument.
-
-        Parameters
-        ----------
-        method : function
-            The method that encountered the error.
-        arg_num : int
-            The position of the incorrect argument in the argument list.
-        object : object
-            The object whose method was called.
-        name : str
-            The name of the parameter corresponding to the incorrect argument.
-
-        Description
-        -----------
-        This method can be called when type-checking a method.
-        """
-        raise TraitError, ("The '%s' parameter (argument %d) of the %s method "
-                           "of %s instance was specified as both a positional "
-                           "and keyword value."
-                           % ( name, arg_num, method.tm_name,
-                               class_of( object ) ) )
-
-    def return_error ( self, method, object, value ):
-        """ Raises a TraitError exception to notify the user that a method on
-        an instance returned a value of incorrect type.
-
-        Parameters
-        ----------
-        method : function
-            The method that encountered the error.
-        object : object
-            The object whose method was called.
-        value :
-            The value returned by the method.
-
-        Description
-        -----------
-        This method can be called when type-checking a method.
-        """
-        raise TraitError, ("The result of the %s method of %s instance must "
-                           "be %s, but a value of %s was returned." % (
-                           method.tm_name, class_of(object), self.info(),
-                           repr_type(value)))
 
     def full_info ( self, object, name, value ):
         """Returns a string describing the type of value accepted by the

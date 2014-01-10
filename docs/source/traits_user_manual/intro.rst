@@ -112,11 +112,6 @@ package. These features are elaborated in the rest of this guide.
     # (if a supported GUI toolkit is installed)
     moe.configure_traits()
 
-In addition, traits can be used to define type-checked method signatures. The
-Traits package can ensure that the arguments and return value of a method
-invocation match the traits defined for the parameters and return value in the
-method signature. This feature is described in :ref:`type-checked-methods`.
-
 Background
 ----------
 Python does not require the data type of variables to be declared. As any

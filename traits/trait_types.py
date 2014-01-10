@@ -33,7 +33,7 @@ from types import FunctionType, MethodType, ModuleType
 from . import trait_handlers
 
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
-        ClassTypes, Undefined, Missing, TraitsCache, python_version)
+        ClassTypes, Undefined, TraitsCache, python_version)
 
 from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
@@ -1087,25 +1087,6 @@ class Disallow ( TraitType ):
 
 # Create a singleton instance as the trait:
 Disallow = Disallow()
-
-#-------------------------------------------------------------------------------
-#  'missing' trait:
-#-------------------------------------------------------------------------------
-
-class missing ( TraitType ):
-    """ Defines a trait used to indicate that a parameter is missing from a
-        type-checked method signature. Allows any value to be assigned; no
-        type-checking is performed; default value is the singleton Missing
-        object.
-
-        See the **traits.has_traits.method()**.
-    """
-
-    #: The default value for the trait:
-    default_value = Missing
-
-# Create a singleton instance as the trait:
-missing = missing()
 
 #-------------------------------------------------------------------------------
 #  'Constant' trait:
