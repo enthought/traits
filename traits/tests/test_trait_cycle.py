@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 import gc
 import time
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports
 from ..api import HasTraits, Any, DelegatesTo, Instance, Int

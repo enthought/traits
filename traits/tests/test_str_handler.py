@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Trait, TraitError, TraitHandler
 from ..trait_base import strx
@@ -22,7 +22,7 @@ from ..trait_base import strx
 # Validation via function
 def validator(object, name, value):
     if isinstance(value, basestring):
-        # abitrary rule for testing
+        # arbitrary rule for testing
         if value.find('fail') < 0:
             return value
         else:
@@ -45,7 +45,7 @@ class MyHandler(TraitHandler):
         return
 
     def info(self):
-        msg = "a string not contining the character sequence 'fail'"
+        msg = "a string not containing the character sequence 'fail'"
         return msg
 
 class Foo(HasTraits):

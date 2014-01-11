@@ -48,15 +48,15 @@ Visualization:
 
 from __future__ import absolute_import
 
-from types import (NoneType, IntType, LongType, FloatType, ComplexType,
-    StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
-    ClassType, MethodType, InstanceType, TypeType)
+import sys
+from types import FunctionType, MethodType
+NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
 from .ctraits import cTrait
 from .trait_errors import TraitError
 from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
-    add_article, enumerate, BooleanType)
+    add_article)
 
 from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
@@ -274,7 +274,7 @@ class CTrait ( cTrait ):
                 from traitsui.api import TextEditor
                 editor = TextEditor
 
-        # If the result is not an EditoryFactory:
+        # If the result is not an EditorFactory:
         if not isinstance( editor, EditorFactory ):
             # Then it should be a factory for creating them:
             args   = ()
@@ -307,7 +307,7 @@ class CTrait ( cTrait ):
 
         Parameters
         ----------
-        full : Boolean
+        full : bool
             Indicates whether to return the value of the *help* attribute of
             the trait itself.
 
@@ -413,33 +413,35 @@ ctraits._ctrait( CTrait )
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, IntType, LongType, FloatType, ComplexType,
-                     StringType, UnicodeType )
+ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
 
-PythonTypes      = ( StringType,   UnicodeType,  IntType,    LongType,
-                     FloatType,    ComplexType,  ListType,   TupleType,
-                     DictType,     FunctionType, MethodType, ClassType,
-                     InstanceType, TypeType,     NoneType )
+PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
+                     dict, FunctionType, MethodType, type, NoneType )
+
+if sys.version_info[0] < 3:
+    from types import InstanceType,ClassType
+    PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
+
 
 CallableTypes    = ( FunctionType, MethodType )
 
 TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
-    StringType:  '',
-    UnicodeType: u'',
-    IntType:     0,
-    LongType:    0L,
-    FloatType:   0.0,
-    ComplexType: 0j,
-    ListType:    [],
-    TupleType:   (),
-    DictType:    {},
-    BooleanType: False
+    str:  '',
+    unicode: u'',
+    int:     0,
+    long:    0L,
+    float:   0.0,
+    complex: 0j,
+    list:    [],
+    tuple:   (),
+    dict:    {},
+    bool: False
 }
 
 DefaultValueSpecial = [ Missing, Self ]
-DefaultValueTypes   = [ ListType, DictType ]
+DefaultValueTypes   = [ list, dict ]
 
 #-------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
@@ -688,16 +690,19 @@ def Trait ( *value_type, **metadata ):
 
     The following predefined keywords are accepted:
 
-    desc : string
+    Keywords
+    --------
+    desc : str
         Describes the intended meaning of the trait. It is used in
         exception messages and fly-over help in user interfaces.
-    label : string
+    label : str
         Provides a human-readable name for the trait. It is used to label user
         interface editors for traits.
-    editor : instance of a subclass of traits.api.Editor
-        Object to use when creating a user interface editor for the trait. See
-        the "Traits UI User Guide" for more information on trait editors.
-    comparison_mode : integer
+    editor : traits.api.Editor
+        Instance of a subclass Editor object to use when creating a user
+        interface editor for the trait. See the "Traits UI User Guide" for
+        more information on trait editors.
+    comparison_mode : int
         Indicates when trait change notifications should be generated based upon
         the result of comparing the old and new values of a trait assignment:
 
@@ -709,13 +714,17 @@ def Trait ( *value_type, **metadata ):
           old and new values are not equal using Python's
           'rich comparison' operator. This is the default.
 
-    rich_compare : Boolean (DEPRECATED: Use comparison_mode instead)
+    rich_compare : bool
         Indicates whether the basis for considering a trait attribute value to
         have changed is a "rich" comparison (True, the default), or simple
         object identity (False). This attribute can be useful in cases
         where a detailed comparison of two objects is very expensive, or where
         you do not care whether the details of an object change, as long as the
         same object is used.
+
+            .. deprecated:: 3.0.3
+                Use ``comparison_mode`` instead
+
 
     """
     return _TraitMaker( *value_type, **metadata ).as_ctrait()
@@ -915,7 +924,7 @@ class _TraitMaker ( object ):
                 elif typeItem in SequenceTypes:
                     self.do_list( item, enum, map, other )
 
-                elif typeItem is DictType:
+                elif typeItem is dict:
                     map.update( item )
 
                 elif typeItem in CallableTypes:
@@ -1002,18 +1011,19 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     Parameters
     ----------
     fget : function
-        The "getter" function for the property
+        The "getter" function for the property.
     fset : function
-        The "setter" function for the property
+        The "setter" function for the property.
     fvalidate : function
-        The validation function for the property
-    force : Boolean
-        Indicates whether to use only the function definitions spedficied by
+        The validation function for the property.
+    force : bool
+        Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
     handler : function
-        A trait handler function for the trait
-    trait : a trait definition or value that can be converted to a trait
-        A trait definition that constrains the values of the property trait
+        A trait handler function for the trait.
+    trait : Trait or value
+        A trait definition or a value that can be converted to a trait that
+        constrains the values of the property trait.
 
     Description
     -----------

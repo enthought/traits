@@ -1,5 +1,5 @@
 # Standard library imports.
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Local imports.
 from traits.util.camel_case import camel_case_to_python, camel_case_to_words

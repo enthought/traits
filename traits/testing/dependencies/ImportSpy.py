@@ -121,7 +121,7 @@ if path_hooks is not None:
             # build the dependency map
             if len(find_module_chain) > 1:
                 parent = find_module_chain[-2]
-                if dependency_map.has_key(parent):
+                if parent in dependency_map:
                     dependency_map[parent].append(fullname)
                 else:
                     dependency_map[parent] = [fullname]
@@ -131,7 +131,7 @@ if path_hooks is not None:
                     pass
                 else:
                     parent = incomplete_imports[-1]
-                    if dependency_map.has_key(parent):
+                    if parent in dependency_map:
                         dependency_map[parent].append(fullname)
                     else:
                         dependency_map[parent] = [fullname]
