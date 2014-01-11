@@ -3,9 +3,11 @@ define the core performance oriented portions of the Traits package.
 
 """
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
-from cpython.int cimport PyInt_Check, PyInt_AS_LONG
+from cpython.int cimport PyInt_Check, PyInt_AS_LONG, PyInt_CheckExact, PyInt_FromLong
+from cpython.long cimport PyLong_CheckExact, PyLong_AsLong
 from cpython.exc cimport PyErr_Clear
 from cpython.float cimport PyFloat_Check, PyFloat_FromDouble, PyFloat_AS_DOUBLE
+from cpython.number cimport PyNumber_Index, PyNumber_Int
 from cpython.object cimport (
     PyCallable_Check, PyObject_TypeCheck,
     PyObject_Call, PyObject_RichCompareBool, Py_NE, PyObject_GetAttr
@@ -220,6 +222,30 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
         return value
     else:
         raise_trait_error(trait, obj, name, value)
+
+
+cdef object validate_trait_integer(cTrait trait, CHasTraits obj, object name, object value):
+    cdef object result
+    cdef object int_value
+    cdef long x
+
+    if PyInt_CheckExact(value):
+        # FIXME: Will cython compatibility handle this in Py3?
+        return value
+    elif PyLong_CheckExact(value):
+        try:
+            x = PyLong_AsLong(value)
+        except OverflowError:
+            return value
+        return PyInt_FromLong(x)
+    else:
+        try:
+            int_value = PyNumber_Index(value)
+        except TypeError:
+            raise_trait_error(trait, obj, name, value)
+        # FIXME: Will cython compatibility handle this in Py3?
+        return PyNumber_Int(int_value)
+
 
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
 
@@ -552,7 +578,7 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
 
 
 
-cdef trait_validate validate_handlers[20]
+cdef trait_validate validate_handlers[21]
 validate_handlers[0] = validate_trait_type
 validate_handlers[1] = validate_trait_instance
 validate_handlers[2] = validate_trait_self_type
@@ -575,6 +601,7 @@ validate_handlers[17] = setattr_validate2
 validate_handlers[18] = setattr_validate3
 #    # End of __getstate__ method entries
 validate_handlers[19] = validate_trait_adapt
+validate_handlers[20] = validate_trait_integer
 
 
 cdef int trait_property_changed( CHasTraits obj, str name, object old_value, object new_value):
@@ -1791,6 +1818,11 @@ cdef class cTrait:
                 # case 15..18: Property 'setattr' validate checks
                 elif kind == 19:  # PyProtocols 'adapt' check
                     if n == 4 and isinstance(validate[2], int) and isinstance(validate[3], bool):
+                        pass
+                    else:
+                        raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 20:  # Integer check
+                    if n == 1:
                         pass
                     else:
                         raise ValueError('The argument must be a tuple or callable.')
