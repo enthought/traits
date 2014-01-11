@@ -59,7 +59,7 @@ DEF HASTRAITS_INITED = 0x00000001
 # Do not send notifications when a trait changes value:
 DEF HASTRAITS_NO_NOTIFY = 0x00000002
 
-# Requests that no event notifications be sent when this object is assigned to 
+# Requests that no event notifications be sent when this object is assigned to
 # a trait
 DEF HASTRAITS_VETO_NOTIFY = 0x00000004
 
@@ -82,17 +82,17 @@ DEF TRAIT_SETATTR_ORIGINAL_VALUE = 0x00000008
 # Send the 'post_setattr' method the original unvalidated value
 DEF TRAIT_POST_SETATTR_ORIGINAL_VALUE = 0x00000010
 
-# Can a 'TraitValue' be assigned to override the trait definition? 
+# Can a 'TraitValue' be assigned to override the trait definition?
 DEF TRAIT_VALUE_ALLOWED = 0x00000020
 
 # Is this trait a special 'TraitValue' trait that uses a property?
 DEF TRAIT_VALUE_PROPERTY = 0x00000040
 
-# Does this trait have an associated 'mapped' trait? 
+# Does this trait have an associated 'mapped' trait?
 DEF TRAIT_IS_MAPPED = 0x00000080
 
 # Should any old/new value test be performed before generating
-# notifications? 
+# notifications?
 DEF TRAIT_NO_VALUE_TEST = 0x00000100
 
 # Forward declarations
@@ -635,7 +635,7 @@ cdef class CHasTraits:
 
     def __init__(self, *args, **kwargs):
 
-        # Make sure no non-keyword arguments were specified 
+        # Make sure no non-keyword arguments were specified
         if len(args) > 0:
             raise ValueError('Do not use positional arguments in constructor.')
 
@@ -667,7 +667,7 @@ cdef class CHasTraits:
         self.flags |= HASTRAITS_INITED
 
     cdef has_traits_clear(self):
-        # FIXME: 
+        # FIXME:
         # Supposed to Py_CLEAR the members ... do we really want to do that? Or
         # will Cython do it for us?
         pass
@@ -1035,7 +1035,7 @@ cdef class CHasTraits:
                 )
 
 
-# Assigns a value to a specified property trait attribute 
+# Assigns a value to a specified property trait attribute
 cdef object getattr_property0(cTrait trait, CHasTraits obj, object name):
     return trait.delegate_name()
 
@@ -1365,7 +1365,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     #                        rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
     #
     #        return rc
-    #    # FIXME: add support for unicode 
+    #    # FIXME: add support for unicode
     #
     #else:
 
@@ -1664,7 +1664,7 @@ cdef class cTrait:
     cdef object delegate_prefix # Optional delate prefix (also usef for property set)
     cdef delegate_attr_name_func delegate_attr_name # Optional routirne to return the computed delegate attribute name
     cdef list notifiers # Optional list of notification handlers
-    cdef object _handler # Associated trait handler object 
+    cdef object _handler # Associated trait handler object
     cdef dict obj_dict # Standard Python object dict
 
     def __init__(self, int kind):
@@ -1806,7 +1806,7 @@ cdef class cTrait:
             return self.py_validate
 
     def clone(self, cTrait source):
-       trait_clone(self, source) 
+       trait_clone(self, source)
 
     def _notifiers(self, force_create):
         """ Returns (and optionally creates) the anytrait 'notifiers' list """
@@ -1993,7 +1993,7 @@ cdef object create_trait_method (object name, object func, object self,
                                  object traits, object class_obj):
     """ Creates a new trait method instance. """
 
-    # FIXME: removed some optimization from the C function 
+    # FIXME: removed some optimization from the C function
 
     cdef CTraitMethod im = CTraitMethod()
     im._tm_name = name
@@ -2167,5 +2167,3 @@ cdef void trait_clone(cTrait target, cTrait source):
 
 cdef int is_trait_property(cTrait trait):
     return trait.flags & TRAIT_VALUE_PROPERTY != 0
-
-
