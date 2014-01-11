@@ -191,26 +191,28 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
     # FIXME: where defined as register in the C code
     cdef object low, high
     cdef object type_info = trait.py_validate
-    cdef long int_value, exclude_mask
+    cdef long int_value, exclude_mask, int_low, int_high
 
-    if PyInt_Check(value):
-        int_value = PyInt_AS_LONG(value)
+    if isinstance(value, int):
+        int_value = value
         low = type_info[1]
         high = type_info[2]
-        exclude_mask = PyInt_AS_LONG(type_info[3])
+        exclude_mask = type_info[3]
 
         if low is not None:
+            int_low = low
             if exclude_mask & 1 != 0:
-                if int_value <= PyInt_AS_LONG(low):
+                if int_value <= int_low:
                     raise_trait_error(trait, obj, name, value)
-            elif int_value < PyInt_AS_LONG(low):
+            elif int_value < int_low:
                 raise_trait_error(trait, obj, name, value)
 
         if high is not None:
+            int_high = high
             if exclude_mask & 2 != 0:
-                if int_value >= PyInt_AS_LONG(high):
+                if int_value >= int_high:
                     raise_trait_error(trait, obj, name, value)
-            elif int_value > PyInt_AS_LONG(high):
+            elif int_value > int_high:
                 raise_trait_error(trait, obj, name, value)
 
         return value
