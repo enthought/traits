@@ -138,13 +138,14 @@ cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, objec
 
     cdef object type_info = trait.py_validate
     cdef int kind = PyTuple_GET_SIZE(type_info)
+    cdef object type_
 
-    if (kind == 3 and value is None) or \
-        PyObject_TypeCheck(
-            value, <PyTypeObject*> PyTuple_GET_ITEM(type_info, kind -1)):
-        return value
-    else:
-        trait.handler.error(obj, name, value)
+    if (kind == 3 and value is None):
+        type_ = type_info[-1]
+        if isinstance(value, type):
+            return value
+    trait.handler.error(obj, name, value)
+
 
 cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is a float within a specified range. """
