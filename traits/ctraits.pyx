@@ -243,7 +243,7 @@ cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, objec
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     cdef object type_info = trait.py_validate
-    if PyDict_GetItem(type_info[1], value) != NULL:
+    if value in type_info[1]:
         return value
     else:
         raise_trait_error(trait, obj, name, value)
