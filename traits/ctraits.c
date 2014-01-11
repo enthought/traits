@@ -281,13 +281,14 @@ static int setattr_disallow ( trait_object      * traito,
 static PyObject *
 raise_trait_error ( trait_object * trait, has_traits_object * obj,
                                     PyObject * name, PyObject * value ) {
+    PyObject * result;
 
     /* Clear any current exception. We are handling it by raising
      * a TraitError. */
     PyErr_Clear();
 
-    PyObject * result = PyObject_CallMethod( trait->handler,
-                                          "error", "(OOO)", obj, name, value );
+    result = PyObject_CallMethod( trait->handler,
+                                  "error", "(OOO)", obj, name, value );
     Py_XDECREF( result );
     return NULL;
 }
@@ -2297,7 +2298,7 @@ setattr_trait ( trait_object      * traito,
         }
     }
 
-    
+
 
     nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
@@ -3175,6 +3176,8 @@ error:
 static PyObject *
 validate_trait_integer ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
+    PyObject *int_value, *result;
+
     /* Fast paths for the most common cases. */
 #if PY_MAJOR_VERSION < 3
     if (PyInt_CheckExact(value)) {
@@ -3208,7 +3211,6 @@ validate_trait_integer ( trait_object * trait, has_traits_object * obj,
        because in Python 2, operator.index (somewhat controversially) does
        *not* always return something of type int or long, but can return
        instances of subclasses of int or long. */
-    PyObject *int_value, *result;
     int_value = PyNumber_Index(value);
     if (int_value == NULL) {
         /* Translate a TypeError to a TraitError, but pass
@@ -3627,6 +3629,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
     long   exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
+    PyObject * int_value;
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -3955,7 +3958,6 @@ check_implements:
                 }
 #endif // #if PY_MAJOR_VERSION < 3
                 /* General case. */
-                PyObject *int_value, *result;
                 int_value = PyNumber_Index(value);
                 if (int_value == NULL) {
                     /* Translate a TypeError to a TraitError, but pass
@@ -5159,7 +5161,7 @@ Py2to3_MOD_INIT(ctraits) {
 
     /* Create the 'ctraits' module: */
     PyObject * module;
-    
+
     Py2to3_MOD_DEF(
         module,
         "ctraits",
@@ -5229,4 +5231,3 @@ Py2to3_MOD_INIT(ctraits) {
 
     return Py2to3_MOD_SUCCESS_VAL(module);
 }
-
