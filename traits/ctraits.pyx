@@ -153,14 +153,14 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     # FIXME: where defined as register in the C code
     cdef object low, high
     cdef long exlude_mask
-    cdef double float_value
+    cdef double float_value, float_low, float_high
 
     cdef object type_info = trait.py_validate
 
-    if not PyFloat_Check(value):
-        if not PyInt_Check(value):
+    if not isinstance(value, float):
+        if not isinstance(value, int):
             raise_trait_error(trait, obj, name, value)
-        float_value = <double> PyInt_AS_LONG(value)
+        float_value = value
         value = float(float_value)
     else:
         float_value = value
@@ -170,17 +170,19 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     exclude_mask = type_info[3]
 
     if low is not None:
+        float_low = low
         if (exclude_mask & 1) != 0:
-            if float_value <= low:
+            if float_value <= float_low:
                 raise_trait_error(trait, obj, name, value)
-        elif float_value < low:
+        elif float_value < float_low:
             raise_trait_error(trait, obj, name, value)
 
     if high is not None:
+        float_high = high
         if exclude_mask & 2 != 0:
-            if float_value >= high:
+            if float_value >= float_high:
                 raise_trait_error(trait, obj, name, value)
-        elif float_value > high:
+        elif float_value > float_high:
                 raise_trait_error(trait, obj, name, value)
 
     return value
