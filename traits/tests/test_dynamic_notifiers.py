@@ -75,27 +75,34 @@ class DynamicNotifiers(HasTraits):
 # 'ok' function listeners
 
 calls_0 = []
-calls_1 = []
-calls_2 = []
-calls_3 = []
-calls_4 = []
-exceptions_from = []
 
 
 def function_listener_0():
     calls_0.append(True)
 
 
+calls_1 = []
+
+
 def function_listener_1(new):
     calls_1.append(new)
+
+
+calls_2 = []
 
 
 def function_listener_2(name, new):
     calls_2.append((name, new))
 
 
+calls_3 = []
+
+
 def function_listener_3(obj, name, new):
     calls_3.append((obj, name, new))
+
+
+calls_4 = []
 
 
 def function_listener_4(obj, name, old, new):
@@ -103,6 +110,10 @@ def function_listener_4(obj, name, old, new):
 
 
 # 'fail' function listeners
+
+exceptions_from = []
+
+
 def failing_function_listener_0():
     exceptions_from.append(0)
     raise Exception('error')
