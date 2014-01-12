@@ -25,19 +25,6 @@ from traits.api import Float, TraitType
 
 class TraitTypesTest(unittest.TestCase):
 
-    def setUp(self):
-        """ Test fixture set-up.
-        """
-        pass
-
-    def tearDown(self):
-        """ Test fixture tear-down.
-        """
-        pass
-
-    def test_(self):
-        pass
-
     def test_traits_shared_transient(self):
         # Regression test for a bug in traits where the same _metadata
         # dictionary was shared between different trait types.
