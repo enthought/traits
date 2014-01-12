@@ -24,9 +24,10 @@
 
 from __future__ import absolute_import
 
-import sys
-import re
 import datetime
+import operator
+import re
+import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 
@@ -145,7 +146,7 @@ class Generic ( Any ):
 #-------------------------------------------------------------------------------
 
 class BaseInt ( TraitType ):
-    """ Defines a trait whose value must be a Python int.
+    """ Defines a trait whose type must be an int or long.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -155,15 +156,22 @@ class BaseInt ( TraitType ):
     default_value = 0
 
     #: A description of the type of value this trait accepts:
-    info_text = 'an integer'
+    info_text = 'an integer (int or long)'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, int ):
+        if type(value) is int:
             return value
+        elif type(value) is long:
+            return int(value)
+
+        try:
+            int_value = operator.index( value )
+        except TypeError:
+            pass
+        else:
+            return int(int_value)
 
         self.error( object, name, value )
 
@@ -174,12 +182,12 @@ class BaseInt ( TraitType ):
 
 
 class Int ( BaseInt ):
-    """ Defines a trait whose value must be a Python int using a C-level fast
+    """ Defines a trait whose type must be an int or long using a C-level fast
         validator.
     """
 
     #: The C-level fast validator to use:
-    fast_validate = int_fast_validate
+    fast_validate = ( 20, )
 
 #-------------------------------------------------------------------------------
 #  'BaseLong' and 'Long' traits:
