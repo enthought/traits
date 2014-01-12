@@ -8,8 +8,6 @@
 
 from __future__ import absolute_import
 
-import sys
-
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Long, TraitError
