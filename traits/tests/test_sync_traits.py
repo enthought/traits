@@ -1,4 +1,4 @@
-""" Test that the `sync_trait` member function of the `HasTraits`
+""" Test that the `sync_trait` member function of `HasTraits` instances
 functions correctly.
 
 """

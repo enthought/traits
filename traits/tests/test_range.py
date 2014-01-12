@@ -16,7 +16,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, Range, Str
+from ..api import HasTraits, Int, Range, Str, TraitError
+
 
 class WithFloatRange(HasTraits):
     r = Range(0.0, 100.0)
@@ -46,6 +47,16 @@ class WithLargeIntRange(HasTraits):
             self.r = 0
 
 
+class WithDynamicRange(HasTraits):
+    low = Int(0)
+    high = Int(10)
+    value = Int(3)
+
+    r = Range(value='value', low='low', high='high', exclude_high=True)
+
+    def _r_changed(self, old, new):
+        self._changed_handler_calls += 1
+
 
 class RangeTestCase(unittest.TestCase):
 
@@ -55,30 +66,43 @@ class RangeTestCase(unittest.TestCase):
         obj._changed_handler_calls = 0
 
         obj.r = 10
-        self.failUnlessEqual(1, obj._changed_handler_calls)
+        self.assertEqual(1, obj._changed_handler_calls)
 
         obj._changed_handler_calls = 0
         obj.r = 34.56
-        self.failUnlessEqual(2, obj._changed_handler_calls)
-        self.failUnlessEqual(40, obj.r)
+        self.assertEqual(obj._changed_handler_calls, 2)
+        self.assertEqual(obj.r, 40)
 
     def test_non_ui_int_events(self):
 
-        # Even thou the range is configured for 0..1000, the handler resets
+        # Even though the range is configured for 0..1000, the handler resets
         # the value to 0 when it exceeds 100.
         obj = WithLargeIntRange()
         obj._changed_handler_calls = 0
 
         obj.r = 10
-        self.failUnlessEqual(1, obj._changed_handler_calls)
-        self.failUnlessEqual(10, obj.r)
+        self.assertEqual(obj._changed_handler_calls, 1)
+        self.assertEqual(obj.r, 10)
 
         obj.r = 100
-        self.failUnlessEqual(2, obj._changed_handler_calls)
-        self.failUnlessEqual(100, obj.r)
+        self.assertEqual(obj._changed_handler_calls, 2)
+        self.assertEqual(obj.r, 100)
 
         obj.r = 101
-        self.failUnlessEqual(4, obj._changed_handler_calls)
-        self.failUnlessEqual(0, obj.r)
+        self.assertEqual(obj._changed_handler_calls, 4)
+        self.assertEqual(obj.r, 0)
+
+    def test_dynamic_events(self):
+
+        obj = WithDynamicRange()
+        obj._changed_handler_calls = 0
+
+        obj.r = 5
+        self.assertEqual(obj._changed_handler_calls, 1)
+        self.assertEqual(obj.r, 5)
+
+        with self.assertRaises(TraitError):
+            obj.r = obj.high
+        self.assertEqual(obj.r, 5)
 
 ### EOF
