@@ -18,17 +18,16 @@ from numpy import array, concatenate, zeros
 from ..api import Array, Bool, HasTraits
 
 
-
-class Foo( HasTraits ):
+class Foo(HasTraits):
     a = Array()
     event_fired = Bool(False)
 
     def _a_changed(self):
         self.event_fired = True
 
-class ArrayTestCase( unittest.TestCase ):
-    """ Test cases for delegated traits. """
 
+class ArrayTestCase(unittest.TestCase):
+    """ Test cases for delegated traits. """
 
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
@@ -43,9 +42,8 @@ class ArrayTestCase( unittest.TestCase ):
         f.a = concatenate((f.a, array([100])))
 
         # Confirm that the static trait handler was invoked.
-        self.assertEqual( f.event_fired, True )
+        self.assertEqual(f.event_fired, True)
 
         return
 
 #### EOF ######################################################################
-

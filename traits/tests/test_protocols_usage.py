@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 """ Tests for protocols usage. """
 
@@ -18,11 +18,14 @@ from __future__ import absolute_import
 
 
 # Standard library imports.
-import pickle, unittest, os, sys
+import os
+import pickle
+import sys
+import unittest
 
 # Enthought library imports.
 from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
-        Property)
+                   Property)
 
 # NOTE: There is a File class in apptools.io module, but since we want to
 # eliminate dependencies of Traits on other modules, we create another
@@ -64,7 +67,8 @@ class Person(HasTraits):
     """ A person! """
 
     name = Str
-    age  = Int
+    age = Int
+
 
 class ProtocolsUsageTestCase(unittest.TestCase):
     """ Tests for protocols usage. """
@@ -205,7 +209,6 @@ class ProtocolsUsageTestCase(unittest.TestCase):
             def save(self, output_stream):
                 """ Save the object to an output stream. """
 
-
         class HasTraitsToISaveableAdapter(Adapter):
             """ An adapter from 'HasTraits' to 'ISaveable'. """
 
@@ -247,7 +250,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return
 
         # Create some people!
-        fred  = Person(name='fred', age=42)
+        fred = Person(name='fred', age=42)
         wilma = Person(name='wilma', age=35)
 
         fred_saveable = ISaveable(fred)
@@ -272,8 +275,8 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         # Clean up.
         for path in ['fred.pickle', 'wilma.pickle']:
-           if os.access(path, os.W_OK):
-               os.remove(path)
+            if os.access(path, os.W_OK):
+                os.remove(path)
 
         return
 

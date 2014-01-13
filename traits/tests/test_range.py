@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
@@ -7,10 +5,6 @@
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#-------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -30,7 +24,7 @@ class WithFloatRange(HasTraits):
         self.r_copied_on_change = str(self.r)
 
         if (self.r % 10) > 0:
-            self.r += 10-(self.r % 10)
+            self.r += 10 - (self.r % 10)
 
 
 class WithLargeIntRange(HasTraits):
@@ -104,5 +98,3 @@ class RangeTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.r = obj.high
         self.assertEqual(obj.r, 5)
-
-### EOF

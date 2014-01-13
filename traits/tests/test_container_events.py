@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 """
 Tests for Dict and List items_changed events
@@ -20,15 +20,17 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Dict, List
+from ..api import HasTraits, Dict
+
 
 class ListEventTestCase(unittest.TestCase):
     # TODO: Implement this!
     pass
 
+
 class MyClass(HasTraits):
     """ A dummy HasTraits class with a Dict """
-    d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian" })
+    d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian"})
 
     def __init__(self, callback):
         "The callback is called with the TraitDictEvent instance"
@@ -40,9 +42,11 @@ class MyClass(HasTraits):
             self.callback(event)
         return
 
+
 class MyOtherClass(HasTraits):
     """ A dummy HasTraits class with a Dict """
-    d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian" })
+    d = Dict({"a": "apple", "b": "banana", "c": "cherry", "d": "durian"})
+
 
 class Callback:
     """
@@ -71,19 +75,19 @@ class DictEventTestCase(unittest.TestCase):
 
     def test_setitem(self):
         # overwriting an existing item
-        cb = Callback(self, changed={"c":"cherry"})
+        cb = Callback(self, changed={"c": "cherry"})
         foo = MyClass(cb)
         foo.d["c"] = "coconut"
         self.assert_(cb.called)
         # adding a new item
-        cb = Callback(self, added={"g":"guava"})
+        cb = Callback(self, added={"g": "guava"})
         bar = MyClass(cb)
         bar.d["g"] = "guava"
         self.assert_(cb.called)
         return
 
     def test_delitem(self):
-        cb = Callback(self, removed={"b":"banana"})
+        cb = Callback(self, removed={"b": "banana"})
         foo = MyClass(cb)
         del foo.d["b"]
         self.assert_(cb.called)
@@ -98,8 +102,8 @@ class DictEventTestCase(unittest.TestCase):
         return
 
     def test_update(self):
-        update_dict = {"a":"artichoke", "f": "fig"}
-        cb = Callback(self, changed={"a":"apple"}, added={"f":"fig"})
+        update_dict = {"a": "artichoke", "f": "fig"}
+        cb = Callback(self, changed={"a": "apple"}, added={"f": "fig"})
         foo = MyClass(cb)
         foo.d.update(update_dict)
         self.assert_(cb.called)
@@ -113,7 +117,7 @@ class DictEventTestCase(unittest.TestCase):
         self.assert_(not cb.called)
 
         # Test adding a new value
-        cb = Callback(self, added={"f":"fig"})
+        cb = Callback(self, added={"f": "fig"})
         bar = MyClass(cb)
         self.assert_(bar.d.setdefault("f", "fig") == "fig")
         self.assert_(cb.called)
@@ -137,7 +141,7 @@ class DictEventTestCase(unittest.TestCase):
         foo = MyClass(None)
         foo.d.clear()
         foo.d["x"] = "xylophone"
-        cb = Callback(self, removed={"x":"xylophone"})
+        cb = Callback(self, removed={"x": "xylophone"})
         foo.callback = cb
         self.assert_(foo.d.popitem() == ("x", "xylophone"))
         self.assert_(cb.called)
@@ -146,24 +150,23 @@ class DictEventTestCase(unittest.TestCase):
     def test_dynamic_listener(self):
         foo = MyOtherClass()
         # Test adding
-        func = Callback(self, added={"g":"guava"})
+        func = Callback(self, added={"g": "guava"})
         foo.on_trait_change(func.__call__, "d_items")
         foo.d["g"] = "guava"
         foo.on_trait_change(func.__call__, "d_items", remove=True)
         self.assert_(func.called)
 
         # Test removing
-        func2 = Callback(self, removed={"a":"apple"})
+        func2 = Callback(self, removed={"a": "apple"})
         foo.on_trait_change(func2.__call__, "d_items")
         del foo.d["a"]
         foo.on_trait_change(func2.__call__, "d_items", remove=True)
         self.assert_(func2.called)
 
         # Test changing
-        func3 = Callback(self, changed={"b":"banana"})
+        func3 = Callback(self, changed={"b": "banana"})
         foo.on_trait_change(func3.__call__, "d_items")
         foo.d["b"] = "broccoli"
         foo.on_trait_change(func3.__call__, "d_items", remove=True)
         self.assert_(func3.called)
         return
-
