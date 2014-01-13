@@ -59,7 +59,7 @@ DEF HASTRAITS_INITED = 0x00000001
 # Do not send notifications when a trait changes value:
 DEF HASTRAITS_NO_NOTIFY = 0x00000002
 
-# Requests that no event notifications be sent when this object is assigned to 
+# Requests that no event notifications be sent when this object is assigned to
 # a trait
 DEF HASTRAITS_VETO_NOTIFY = 0x00000004
 
@@ -82,17 +82,17 @@ DEF TRAIT_SETATTR_ORIGINAL_VALUE = 0x00000008
 # Send the 'post_setattr' method the original unvalidated value
 DEF TRAIT_POST_SETATTR_ORIGINAL_VALUE = 0x00000010
 
-# Can a 'TraitValue' be assigned to override the trait definition? 
+# Can a 'TraitValue' be assigned to override the trait definition?
 DEF TRAIT_VALUE_ALLOWED = 0x00000020
 
 # Is this trait a special 'TraitValue' trait that uses a property?
 DEF TRAIT_VALUE_PROPERTY = 0x00000040
 
-# Does this trait have an associated 'mapped' trait? 
+# Does this trait have an associated 'mapped' trait?
 DEF TRAIT_IS_MAPPED = 0x00000080
 
 # Should any old/new value test be performed before generating
-# notifications? 
+# notifications?
 DEF TRAIT_NO_VALUE_TEST = 0x00000100
 
 # Forward declarations
@@ -152,14 +152,14 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     # FIXME: where defined as register in the C code
     cdef object low, high
     cdef long exlude_mask
-    cdef double float_value
+    cdef double float_value, float_low, float_high
 
     cdef object type_info = trait.py_validate
 
-    if not PyFloat_Check(value):
-        if not PyInt_Check(value):
+    if not isinstance(value, float):
+        if not isinstance(value, int):
             raise_trait_error(trait, obj, name, value)
-        float_value = <double> PyInt_AS_LONG(value)
+        float_value = value
         value = float(float_value)
     else:
         float_value = value
@@ -169,17 +169,19 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     exclude_mask = type_info[3]
 
     if low is not None:
+        float_low = low
         if (exclude_mask & 1) != 0:
-            if float_value <= low:
+            if float_value <= float_low:
                 raise_trait_error(trait, obj, name, value)
-        elif float_value < low:
+        elif float_value < float_low:
             raise_trait_error(trait, obj, name, value)
 
     if high is not None:
+        float_high = high
         if exclude_mask & 2 != 0:
-            if float_value >= high:
+            if float_value >= float_high:
                 raise_trait_error(trait, obj, name, value)
-        elif float_value > high:
+        elif float_value > float_high:
                 raise_trait_error(trait, obj, name, value)
 
     return value
@@ -191,26 +193,28 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
     # FIXME: where defined as register in the C code
     cdef object low, high
     cdef object type_info = trait.py_validate
-    cdef long int_value, exclude_mask
+    cdef long int_value, exclude_mask, int_low, int_high
 
-    if PyInt_Check(value):
-        int_value = PyInt_AS_LONG(value)
+    if isinstance(value, int):
+        int_value = value
         low = type_info[1]
         high = type_info[2]
-        exclude_mask = PyInt_AS_LONG(type_info[3])
+        exclude_mask = type_info[3]
 
         if low is not None:
+            int_low = low
             if exclude_mask & 1 != 0:
-                if int_value <= PyInt_AS_LONG(low):
+                if int_value <= int_low:
                     raise_trait_error(trait, obj, name, value)
-            elif int_value < PyInt_AS_LONG(low):
+            elif int_value < int_low:
                 raise_trait_error(trait, obj, name, value)
 
         if high is not None:
+            int_high = high
             if exclude_mask & 2 != 0:
-                if int_value >= PyInt_AS_LONG(high):
+                if int_value >= int_high:
                     raise_trait_error(trait, obj, name, value)
-            elif int_value > PyInt_AS_LONG(high):
+            elif int_value > int_high:
                 raise_trait_error(trait, obj, name, value)
 
         return value
@@ -239,7 +243,7 @@ cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, objec
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     cdef object type_info = trait.py_validate
-    if PyDict_GetItem(type_info[1], value) != NULL:
+    if value in type_info[1]:
         return value
     else:
         raise_trait_error(trait, obj, name, value)
@@ -631,7 +635,7 @@ cdef class CHasTraits:
 
     def __init__(self, *args, **kwargs):
 
-        # Make sure no non-keyword arguments were specified 
+        # Make sure no non-keyword arguments were specified
         if len(args) > 0:
             raise ValueError('Do not use positional arguments in constructor.')
 
@@ -663,7 +667,7 @@ cdef class CHasTraits:
         self.flags |= HASTRAITS_INITED
 
     cdef has_traits_clear(self):
-        # FIXME: 
+        # FIXME:
         # Supposed to Py_CLEAR the members ... do we really want to do that? Or
         # will Cython do it for us?
         pass
@@ -1031,7 +1035,7 @@ cdef class CHasTraits:
                 )
 
 
-# Assigns a value to a specified property trait attribute 
+# Assigns a value to a specified property trait attribute
 cdef object getattr_property0(cTrait trait, CHasTraits obj, object name):
     return trait.delegate_name()
 
@@ -1361,7 +1365,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     #                        rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
     #
     #        return rc
-    #    # FIXME: add support for unicode 
+    #    # FIXME: add support for unicode
     #
     #else:
 
@@ -1660,7 +1664,7 @@ cdef class cTrait:
     cdef object delegate_prefix # Optional delate prefix (also usef for property set)
     cdef delegate_attr_name_func delegate_attr_name # Optional routirne to return the computed delegate attribute name
     cdef list notifiers # Optional list of notification handlers
-    cdef object _handler # Associated trait handler object 
+    cdef object _handler # Associated trait handler object
     cdef dict obj_dict # Standard Python object dict
 
     def __init__(self, int kind):
@@ -1802,7 +1806,7 @@ cdef class cTrait:
             return self.py_validate
 
     def clone(self, cTrait source):
-       trait_clone(self, source) 
+       trait_clone(self, source)
 
     def _notifiers(self, force_create):
         """ Returns (and optionally creates) the anytrait 'notifiers' list """
@@ -1989,7 +1993,7 @@ cdef object create_trait_method (object name, object func, object self,
                                  object traits, object class_obj):
     """ Creates a new trait method instance. """
 
-    # FIXME: removed some optimization from the C function 
+    # FIXME: removed some optimization from the C function
 
     cdef CTraitMethod im = CTraitMethod()
     im._tm_name = name
@@ -2163,5 +2167,3 @@ cdef void trait_clone(cTrait target, cTrait source):
 
 cdef int is_trait_property(cTrait trait):
     return trait.flags & TRAIT_VALUE_PROPERTY != 0
-
-
