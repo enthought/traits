@@ -21,9 +21,7 @@
 from __future__ import absolute_import
 
 from time import time
-from ..api import Any, Delegate, HasTraits, Int, Range
-
-print 'OK!'
+from ..api import Any, DelegatesTo, HasTraits, Int, Range
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -50,7 +48,7 @@ def measure ( func ):
 
 class old_style_value:
 
-    def measure ( self ):
+    def measure ( self, reference_get=1.0, reference_set=1.0 ):
         global t0
         self.init()
 
@@ -58,11 +56,12 @@ class old_style_value:
             t0 = measure( self.null )
         t1 = measure( self.do_get )
         t2 = measure( self.do_set )
+
         scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+        get_time = max( t1 - t0, 0.0 ) * scale
+        set_time = max( t2 - t0, 0.0 ) * scale
+
+        return get_time, set_time
 
     def null ( self ):
         for i in range(n):
@@ -93,11 +92,12 @@ class new_style_value ( object ):
             t0 = measure( self.null )
         t1 = measure( self.do_get )
         t2 = measure( self.do_set )
+
         scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+        get_time = max( t1 - t0, 0.0 ) * scale
+        set_time = max( t2 - t0, 0.0 ) * scale
+
+        return get_time, set_time
 
     def null ( self ):
         for i in range(n):
@@ -199,7 +199,7 @@ class monitor_value ( int_value ):
 
 class delegate_value ( HasTraits, new_style_value ):
 
-    value    = Delegate( 'delegate' )
+    value    = DelegatesTo( 'delegate' )
     delegate = Any
 
     def init ( self ):
@@ -212,8 +212,9 @@ class delegate_value ( HasTraits, new_style_value ):
 class delegate_2_value ( delegate_value ):
 
     def init ( self ):
-        self.delegate = delegate_value()
-        self.delegate.init()
+        delegate = delegate_value()
+        delegate.init()
+        self.delegate = delegate
 
 #-------------------------------------------------------------------------------
 #  Float trait is delegated through two objects to another object:
@@ -222,23 +223,68 @@ class delegate_2_value ( delegate_value ):
 class delegate_3_value ( delegate_value ):
 
     def init ( self ):
-        self.delegate = delegate_2_value()
-        self.delegate.init()
+        delegate = delegate_2_value()
+        delegate.init()
+        self.delegate = delegate
 
 #-------------------------------------------------------------------------------
 #  Run the timing measurements:
 #-------------------------------------------------------------------------------
 
+def report(name, get_time, set_time, ref_get_time, ref_set_time):
+    """ Return string containing a benchmark report.
+
+    The arguments are the name of the benchmark case, the times to do a 'get'
+    or a 'set' operation for that benchmark case in usec, and the
+    corresponding times for a reference operation (e.g., getting and
+    setting an attribute on a new-style instance.
+    """
+
+    template = (
+        '{name:^30}: Get {get_time:02.3f} us (x {get_speed_up:02.3f}), '
+        'Set {set_time:02.3f} us (x {set_speed_up:02.3f})'
+    )
+
+    report = template.format(
+        name         = name,
+        get_time     = get_time,
+        get_speed_up = ref_get_time / get_time,
+        set_time     = set_time,
+        set_speed_up = ref_set_time / set_time,
+    )
+
+    return report
+
+
+def run_benchmark(klass, ref_get_time, ref_set_time):
+    benchmark_name = klass.__name__
+    get_time, set_time = klass().measure()
+    print report(benchmark_name,
+                 get_time, set_time,
+                 ref_get_time, ref_set_time)
+
+
+def main():
+
+    ref_get_time, ref_set_time = new_style_value().measure()
+
+    benchmarks = [
+        global_value,
+        old_style_value,
+        new_style_value,
+        property_value,
+        any_value,
+        int_value,
+        range_value,
+        change_value,
+        monitor_value,
+        delegate_value,
+        delegate_2_value,
+        delegate_3_value
+    ]
+
+    for benchmark in benchmarks:
+        run_benchmark(benchmark, ref_get_time, ref_set_time)
+
 if __name__ == '__main__':
-    old_style_value().measure()
-    new_style_value().measure()
-    property_value().measure()
-    global_value().measure()
-    any_value().measure()
-    int_value().measure()
-    range_value().measure()
-    change_value().measure()
-    monitor_value().measure()
-    delegate_value().measure()
-    delegate_2_value().measure()
-    delegate_3_value().measure()
+    main()

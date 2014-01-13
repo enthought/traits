@@ -23,6 +23,11 @@ Classes
 
 .. autoclass:: ForwardProperty
 
+.. autofunction:: Color
+
+.. autofunction:: RGBColor
+
+.. autofunction:: Font
 
 Functions
 ---------
@@ -47,11 +52,6 @@ Functions
 
 .. autofunction:: trait_from
 
-.. autofunction:: Color
-
-.. autofunction:: RGBColor
-
-.. autofunction:: Font
 
 Private Classes
 ---------------
@@ -59,5 +59,4 @@ Private Classes
 .. autoclass:: traits.traits._InstanceArgs
 
 .. autoclass:: traits.traits._TraitMaker
-
 

@@ -4,10 +4,6 @@
 # Standard library imports.
 import logging
 
-# Logging.
-logger = logging.getLogger(__name__)
-
-
 # We only warn about each function or method once!
 _cache = {}
 
@@ -29,7 +25,7 @@ def deprecated(message):
             function_name = fn.__name__
 
             if (module_name, function_name) not in _cache:
-                logging.warn(
+                logging.getLogger(module_name).warn(
                     'DEPRECATED: %s.%s, %s' % (
                         module_name, function_name, message
                     )

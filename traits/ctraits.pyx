@@ -3,9 +3,11 @@ define the core performance oriented portions of the Traits package.
 
 """
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
-from cpython.int cimport PyInt_Check, PyInt_AS_LONG
+from cpython.int cimport PyInt_Check, PyInt_AS_LONG, PyInt_CheckExact, PyInt_FromLong
+from cpython.long cimport PyLong_CheckExact, PyLong_AsLong
 from cpython.exc cimport PyErr_Clear
 from cpython.float cimport PyFloat_Check, PyFloat_FromDouble, PyFloat_AS_DOUBLE
+from cpython.number cimport PyNumber_Index, PyNumber_Int
 from cpython.object cimport (
     PyCallable_Check, PyObject_TypeCheck,
     PyObject_Call, PyObject_RichCompareBool, Py_NE, PyObject_GetAttr
@@ -98,7 +100,6 @@ DEF TRAIT_NO_VALUE_TEST = 0x00000100
 # Forward declarations
 cdef class cTrait
 cdef class CHasTraits
-cdef class CTraitMethod
 
 ctypedef object (*trait_validate)(cTrait, CHasTraits, object, object)
 ctypedef object (*trait_getattr)(cTrait, CHasTraits, object)
@@ -220,6 +221,30 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
         return value
     else:
         raise_trait_error(trait, obj, name, value)
+
+
+cdef object validate_trait_integer(cTrait trait, CHasTraits obj, object name, object value):
+    cdef object result
+    cdef object int_value
+    cdef long x
+
+    if PyInt_CheckExact(value):
+        # FIXME: Will cython compatibility handle this in Py3?
+        return value
+    elif PyLong_CheckExact(value):
+        try:
+            x = PyLong_AsLong(value)
+        except OverflowError:
+            return value
+        return PyInt_FromLong(x)
+    else:
+        try:
+            int_value = PyNumber_Index(value)
+        except TypeError:
+            raise_trait_error(trait, obj, name, value)
+        # FIXME: Will cython compatibility handle this in Py3?
+        return PyNumber_Int(int_value)
+
 
 cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, object value):
 
@@ -552,7 +577,7 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
 
 
 
-cdef trait_validate validate_handlers[20]
+cdef trait_validate validate_handlers[21]
 validate_handlers[0] = validate_trait_type
 validate_handlers[1] = validate_trait_instance
 validate_handlers[2] = validate_trait_self_type
@@ -575,6 +600,7 @@ validate_handlers[17] = setattr_validate2
 validate_handlers[18] = setattr_validate3
 #    # End of __getstate__ method entries
 validate_handlers[19] = validate_trait_adapt
+validate_handlers[20] = validate_trait_integer
 
 
 cdef int trait_property_changed( CHasTraits obj, str name, object old_value, object new_value):
@@ -1794,6 +1820,11 @@ cdef class cTrait:
                         pass
                     else:
                         raise ValueError('The argument must be a tuple or callable.')
+                elif kind == 20:  # Integer check
+                    if n == 1:
+                        pass
+                    else:
+                        raise ValueError('The argument must be a tuple or callable.')
                 else:
                     raise NotImplementedError('Work in progress. {}'.format(kind))
 
@@ -1980,123 +2011,6 @@ cdef class cTrait:
             PyErr_Clear()
             return None
 
-### Trait method  object #####################################################
-
-#-----------------------------------------------------------------------------
-#  Instance method objects are used for two purposes:
-#  (a) as bound instance methods (returned by instancename.methodname)
-#  (b) as unbound methods (returned by ClassName.methodname)
-#  In case (b), tm_self is NULL
-#----------------------------------------------------------------------------*/
-
-cdef object create_trait_method (object name, object func, object self,
-                                 object traits, object class_obj):
-    """ Creates a new trait method instance. """
-
-    # FIXME: removed some optimization from the C function
-
-    cdef CTraitMethod im = CTraitMethod()
-    im._tm_name = name
-    im._tm_func = func
-    im._tm_self = self
-    im._tm_traits = traits
-    im._tm_class = class_obj
-    return im
-
-
-cdef class CTraitMethod:
-    """"traitmethod(function, traits)
-
-    Create a type checked instance method object.")
-
-    """
-
-    cdef object _tm_name, _tm_func, _tm_self, _tm_traits, _tm_class
-
-    def __dealloc__(self):
-        # FIXME: check trait_method_dealloc and ensure nothing is needed here
-        pass
-
-    property tm_name:
-        """ The name of the method. """
-        def __get__(self):
-            return self._tm_name
-
-    property tm_func:
-        """ The function (or other callable) implementing a method. """
-        def __get__(self):
-            return self._tm_func
-
-    property tm_self:
-        """ The instance to which a method is bound; None for unbound methods. """
-        def __get__(self):
-            raise self._tm_self
-
-    property tm_traits:
-        """ The traits associated with a method. """
-        def __get__(self):
-            raise self._tm_traits
-
-    property tm_class:
-        """ The class associated with a method. """
-        def __get__(self):
-            raise self._tm_class
-
-    # Descriptor protocol
-    def __get__(self, instance, klass):
-        return create_trait_method(
-            self._tm_name, self._tm_func, instance, self._tm_traits, klass
-        )
-
-    def __repr__(self):
-        funcname = getattr(self.tm_func, '__name__')
-        if self.tm_class is not None:
-            klassname = getattr(self.tm_class, '__name__')
-        else:
-            klassname = ''
-
-        if self.tm_self is None:
-            result = '<unbound method %s.%s>' % (klassname, funcname)
-        else:
-            result = '<bound method %s.%s of %s>' % (
-                klassname, funcname, repr(self.tm_self)
-            )
-
-        return result
-
-    def __getattr__(self, name):
-        """ Gets the value of a trait method attribute:
-
-        The getattr() implementation for trait method objects is similar to
-        PyObject_GenericGetAttr(), but instead of looking in __dict__ it
-        asks tm_self for the attribute.  Then the error handling is a bit
-        different because we want to preserve the exception raised by the
-        delegate, unless we have an alternative from our class.
-
-        """
-        # trait_method_gettro function in the C code.
-
-        cdef type type_ = type(self)
-
-        descr = f = None
-        if hasattr(type_, name):
-            descr = getattr(type_, name)
-            # f is supposed to be a getter on a descriptor
-            if hasattr(descr, '__get__'):
-                f = descr.__get__
-                return f(self, type_)
-
-        try:
-            return getattr((<CTraitMethod>self).tm_func, name)
-        except Exception as e:
-            if isinstance(e, AttributeError):
-                raise e
-
-        if f is not None:
-            return f(self, type_)
-
-        if descr is not None:
-            return descr
 
 def _undefined(Undefined_, Uninitialized_):
     """ Sets the global Undefined and Uninitialized values. """

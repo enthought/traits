@@ -14,7 +14,9 @@
 
 from __future__ import absolute_import
 
-import unittest
+import sys
+
+from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Long, TraitError
 
@@ -26,10 +28,10 @@ class A(HasTraits):
 
 class TraitIntRangeLong(unittest.TestCase):
     def test_int(self):
-        "Test to make sure it is illegal to set an Int trait to a long value"
+        "Test to make sure it is legal to set an Int trait to a long value"
         a = A()
         a.i = 1
-        self.assertRaises(TraitError, a.set, i=10L)
+        a.i = 10L
 
     def test_long(self):
         "Test if it is legal to set a Long trait to an int value"

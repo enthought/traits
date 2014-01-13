@@ -217,7 +217,7 @@ class AbstractArray ( TraitType ):
 
         return 'an array%s%s' % ( dtype, shape )
 
-    def get_editor ( self, trait = None ):
+    def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         editor = None
@@ -288,7 +288,7 @@ class Array ( AbstractArray ):
             first dimension must be in the range 3 to 5 (inclusive), and the
             second dimension must be at least 2.)
         value : numpy array
-            A default value for the array
+            A default value for the array.
 
         Default Value
         -------------
@@ -322,7 +322,7 @@ class CArray ( AbstractArray ):
         Parameters
         ----------
         dtype : a numpy dtype (e.g., int32)
-            The type of elements in the array
+            The type of elements in the array.
         shape : a tuple
             Describes the required shape of any assigned value. Wildcards and
             ranges are allowed. The value None within the *shape* tuple means
@@ -335,7 +335,7 @@ class CArray ( AbstractArray ):
             first dimension must be in the range 3 to 5 (inclusive), and the
             second dimension must be at least 2.)
         value : numpy array
-            A default value for the array
+            A default value for the array.
 
         Default Value
         -------------
