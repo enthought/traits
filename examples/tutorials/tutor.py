@@ -711,7 +711,7 @@ class Lab(ASection):
                      ),
                 Item('demo',
                      id='demo',
-                     style='ustom',
+                     style='custom',
                      resizable=True,
                      dock='tab',
                      export='DockWindowShell',
