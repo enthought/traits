@@ -95,7 +95,7 @@ example as follows::
 
   from traits.api import HasTraits, Instance, adapts
 
-  class PersonINameAdapter (HasTraits):
+  class PersonINameAdapter(HasTraits):
 
       # Declare what interfaces this adapter implements, and for who:
       adapts(Person, IName)
@@ -217,7 +217,7 @@ default
 As an example of modifying the adaptation behavior of an **AdaptedTo** trait,
 we could rewrite the example **Apartment** class as follows::
 
-    class Apartment (HasTraits):
+    class Apartment(HasTraits):
 
         renter = AdaptedTo(IName, adapt = 'no')
 
@@ -240,7 +240,7 @@ class IName (Interface):
 
 
 #--[Person Class]--------------------------------------------------------------
-class Person (HasTraits):
+class Person(HasTraits):
 
     first_name = Str('John')
     last_name = Str('Doe')
