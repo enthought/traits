@@ -360,7 +360,7 @@ class IEHTMLItem(HTMLItem):
         Item('content',
              style='readonly',
              show_label=False,
-             editor=IEHTMLEditor,
+             editor=IEHTMLEditor(),
              )
         )
 
@@ -385,7 +385,7 @@ class FlashItem(HTMLItem):
         Item('content',
              style='readonly',
              show_label=False,
-             editor=FlashEditor,
+             editor=FlashEditor(),
              )
         )
 
