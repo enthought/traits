@@ -20,7 +20,7 @@ class Foo(HasTraits):
     boo = Float
 
 
-class TestGreenletNotifiers(unittest.TestCase, UnittestTools):
+class TestGEventNotifiers(unittest.TestCase, UnittestTools):
     """ Tests for dynamic notifiers with `dispatch='green'`. """
 
     #### 'TestCase' protocol ##################################################
@@ -31,7 +31,7 @@ class TestGreenletNotifiers(unittest.TestCase, UnittestTools):
     def on_foo_notifications(self, obj, name, old, new):
         if name == 'foo':
             gevent.sleep(1)
-        event =(str(gevent.getcurrent()), (obj, name, old, new))
+        event = (obj, name, old, new)
         self.notifications.append(event)
 
     #### Tests ################################################################
@@ -44,11 +44,22 @@ class TestGreenletNotifiers(unittest.TestCase, UnittestTools):
         obj.on_trait_change(
             self.on_foo_notifications, 'boo', dispatch='gevent')
 
-        for i in range(100):
+        # Events are dispatched into the gevent event loop.
+        for i in range(10):
             obj.foo = float(i)
             obj.boo = float(i)
         gevent.wait()
-        self.assertEqual(len(self.notifications), 198)
+        self.assertEqual(len(self.notifications), 18)
+        previous = None
+        for _, name, _, _ in self.notifications:
+            if previous is None:
+                previous = name
+            elif previous == name:
+                break
+        else:
+            self.fail(
+                " We should have had some events out of order. "
+                " Since half of the are sleeping for 1 second. ")
 
 
 if __name__ == '__main__':
