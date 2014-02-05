@@ -631,15 +631,20 @@ class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     def dispatch ( self, handler, *args ):
         Thread( target = handler, args = args ).start()
 
-class GreenTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
-    """ Dynamic change notify wrapper, dispatching on a new thread.
+#-------------------------------------------------------------------------------
+#  'NewTraitChangeNotifyWrapper' class:
+#-------------------------------------------------------------------------------
 
-    This class is in charge to dispatch trait change events to dynamic
+class GEventTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
+    """ Dynamic change notify wrapper, dispatching on a gevent event loop.
+
+    This class is in charge to dispatch trait change events to a dynamic
     listener, typically created using the `on_trait_change` method and the
     `dispatch` parameter set to 'new'.
+
     """
 
-    def dispatch ( self, handler, *args ):
-        from greenlet import greenlet
-        green = greenlet(handler)
-        green.switch(*args)
+    def dispatch (self, handler, *args):
+        # lazy import to avoid import errors when gevent is not used
+        import gevent
+        gevent.spawn_raw(handler, *args)
