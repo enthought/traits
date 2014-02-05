@@ -630,3 +630,16 @@ class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
 
     def dispatch ( self, handler, *args ):
         Thread( target = handler, args = args ).start()
+
+class GreenTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
+    """ Dynamic change notify wrapper, dispatching on a new thread.
+
+    This class is in charge to dispatch trait change events to dynamic
+    listener, typically created using the `on_trait_change` method and the
+    `dispatch` parameter set to 'new'.
+    """
+
+    def dispatch ( self, handler, *args ):
+        from greenlet import greenlet
+        green = greenlet(handler)
+        green.switch(*args)

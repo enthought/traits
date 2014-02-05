@@ -48,7 +48,7 @@ from .trait_types import Any, Bool, Disallow, Enum, Event, Python, This
 from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper,
     StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
-    TraitChangeNotifyWrapper)
+    TraitChangeNotifyWrapper, GreenTraitChangeNotifyWrapper)
 
 from .trait_handlers import TraitType
 
@@ -171,20 +171,20 @@ if sys.version_info[0] >= 3:
         """
         if method[0:2] == '__':
             method = '_%s%s' % ( class_name, method )
-    
+
         result = class_dict.get( method )
         if ((result is not None) and
             is_function_type(result) and
             (getattr( result, 'on_trait_change', None ) is None)):
             return result
-    
+
         for base in bases:
             result = getattr( base, method, None )
             if ((result is not None) and
                 is_unbound_method_type(result) and \
                 (getattr( result, 'on_trait_change', None ) is None)):
                 return result
-    
+
         return None
 else:
     def _get_def ( class_name, class_dict, bases, method ):
@@ -192,20 +192,20 @@ else:
         """
         if method[0:2] == '__':
             method = '_%s%s' % ( class_name, method )
-    
+
         result = class_dict.get( method )
         if ((result is not None) and
             is_function_type(result) and
             (getattr( result, 'on_trait_change', None ) is None)):
             return result
-    
+
         for base in bases:
             result = getattr( base, method, None )
             if ((result is not None) and
                 is_unbound_method_type(result) and \
                 (getattr( result.im_func, 'on_trait_change', None ) is None)):
                 return result
-    
+
         return None
 
 
@@ -1045,7 +1045,8 @@ class HasTraits ( CHasTraits ):
         'extended': ExtendedTraitChangeNotifyWrapper,
         'new':      NewTraitChangeNotifyWrapper,
         'fast_ui':  FastUITraitChangeNotifyWrapper,
-        'ui':       FastUITraitChangeNotifyWrapper
+        'ui':       FastUITraitChangeNotifyWrapper,
+        'green':    GreenTraitChangeNotifyWrapper,
     }
 
     #-- Trait Definitions ------------------------------------------------------
@@ -2341,17 +2342,18 @@ class HasTraits ( CHasTraits ):
             A string indicating the thread on which notifications must be run.
             Possible values are:
 
-            =========== =======================================================
-            value       dispatch
-            =========== =======================================================
-            ``same``    Run notifications on the same thread as this one.
-            ``ui``      Run notifications on the UI thread. If the current
-                        thread is the UI thread, the notifications are executed
-                        immediately; otherwise, they are placed on the UI
-                        event queue.
-            ``fast_ui`` Alias for ``ui``.
-            ``new``     Run notifications in a new thread.
-            =========== =======================================================
+            ===========  ======================================================
+            value        dispatch
+            ===========  ======================================================
+            ``same``     Run notifications on the same thread as this one.
+            ``ui``       Run notifications on the UI thread. If the current
+                         thread is the UI thread, the notifications are
+                         executed immediately; otherwise, they are placed on
+                         the UI event queue.
+            ``fast_ui``  Alias for ``ui``.
+            ``new``      Run notifications in a new thread.
+            ``greenlet``
+            ============ ======================================================
 
         Description
         -----------
