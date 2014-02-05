@@ -48,7 +48,7 @@ from .trait_types import Any, Bool, Disallow, Enum, Event, Python, This
 from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
     FastUITraitChangeNotifyWrapper, NewTraitChangeNotifyWrapper,
     StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
-    TraitChangeNotifyWrapper, GreenTraitChangeNotifyWrapper)
+    TraitChangeNotifyWrapper, GEventTraitChangeNotifyWrapper)
 
 from .trait_handlers import TraitType
 
@@ -1046,7 +1046,7 @@ class HasTraits ( CHasTraits ):
         'new':      NewTraitChangeNotifyWrapper,
         'fast_ui':  FastUITraitChangeNotifyWrapper,
         'ui':       FastUITraitChangeNotifyWrapper,
-        'green':    GreenTraitChangeNotifyWrapper,
+        'gevent':   GEventTraitChangeNotifyWrapper,
     }
 
     #-- Trait Definitions ------------------------------------------------------
@@ -2352,7 +2352,7 @@ class HasTraits ( CHasTraits ):
                          the UI event queue.
             ``fast_ui``  Alias for ``ui``.
             ``new``      Run notifications in a new thread.
-            ``greenlet``
+            ``gevent``   Run notifications on the gevent event loop.
             ============ ======================================================
 
         Description
