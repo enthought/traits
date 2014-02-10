@@ -7,7 +7,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..api import HasTraits, Int, List
+from ..api import (
+    HasTraits, Int, List, push_exception_handler, pop_exception_handler)
 
 
 class A(HasTraits):
@@ -27,6 +28,12 @@ class B(HasTraits):
 
 
 class TestSyncTraits(unittest.TestCase, UnittestTools):
+
+    def setUp(self):
+        push_exception_handler(lambda *args: None, reraise_exceptions=True)
+
+    def tearDown(self):
+        pop_exception_handler()
 
     def test_mutual_sync(self):
         """ Test that two traits can be mutually synchronized.
