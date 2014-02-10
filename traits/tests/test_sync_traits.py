@@ -135,6 +135,23 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
         except Exception:
             self.fail("Unexpected exception while setting sync trait.")
 
+    def test_sync_delete_one_way(self):
+        """ Test that deleting a one-way synchronized trait works.
+
+        (Regression test for #131).
+
+        """
+        a = A()
+        b = B()
+
+        a.sync_trait('t', b, mutual=False)
+        del b
+
+        try:
+            a.t = 42
+        except Exception:
+            self.fail("Unexpected exception while setting sync trait.")
+
 
 if __name__ == '__main__':
     unittest.main()
