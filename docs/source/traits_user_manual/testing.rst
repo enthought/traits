@@ -7,10 +7,17 @@ Testing Traits Classes
 ======================
 
 A mixin class is provided to facilitate writing tests for HasTraits classes.
-The methods :meth:`~traits.testing.api.UnittestTools.assertTraitChanges`
-and :meth:`~traits.testing.api.UnittestTools.assertTraitDoesChange` are
-available when the :class:`~traits.testing.api.UnittestTools` is added as
-a mixin class in the developers TestCase.
+The following methods are available when |UnittestTools| is added as a
+mixin class in the developer's test cases.
+
+.. autosummary::
+    :nosignatures:
+
+    ~traits.testing.unittest_tools.UnittestTools.assertTraitChanges
+    ~traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange
+    ~traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges
+    ~traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync
+    ~traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue
 
 The methods behave as a context manager which at entry hooks and traits
 listener on the class for the desired events and records the arguments pass
@@ -26,7 +33,7 @@ to assert the behaviour.
 The following example demonstrates the basic usage of the mixin class in a
 TestCase::
 
-    from traits.testing.unittest_tools import unittest
+    import unittest
     from traits.api import HasTraits, Float, List, Bool, on_trait_change
     from traits.testing.api import UnittestTools
 
@@ -92,11 +99,11 @@ TestCase::
 Using Mocks
 ===========
 
-Trying to mock a method in a `HasStrictTraits` instance will raise an error
-because the `HasStrictTraits` machinary does not allow any modification of the
-methods and attributes of a `HasStrictTraits` instance. To circumvent the
-`HasStrictTraits` machinery, and mock methods using |mock|, please follow the
-logic in the following example::
+Trying to mock a method in a |HasStrictTraits| instance will raise an error
+because the |HasStrictTraits| machinery does not allow any modification of
+the methods and attributes of a |HasStrictTraits| instance. To circumvent the
+|HasStrictTraits| machinery, and mock methods using `the mock library`_,
+please follow the logic in the following example::
 
     from traits.api import HasStrictTraits, Float
     from mock import Mock
@@ -119,9 +126,12 @@ logic in the following example::
     my_class.add_number(42)
     print my_class.add_to_number.call_args_list
 
-.. notes::
+.. note::
 
-    The above method will not work for mocking traits Property setters,
+    The above method will not work for mocking |Property| setters,
     getters and validators.
 
-.. |mock| replace::  `the mock library <https://pypi.python.org/pypi/mock>`_
+.. _the mock library: https://pypi.python.org/pypi/mock
+.. |HasStrictTraits| replace:: :class:`~traits.has_traits.HasStrictTraits`
+.. |UnittestTools| replace:: :class:`~traits.testing.unittest_tools.UnittestTools`
+.. |Property| replace:: :func:`~traits.traits.Property`
