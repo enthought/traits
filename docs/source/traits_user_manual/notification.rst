@@ -74,7 +74,10 @@ In these signatures:
   `gevent`   Asynchronous dispatch of a new greenlet on the gevent event loop.
   ========== ==================================================================
 
-  See the *Traits API Reference* for details on non-default values.
+  .. note::
+
+    - `gevent` dispatch requires gevent version 1.0 and above.
+    - See the *Traits API Reference* for details on non-default values.
 
 .. index:: examples; dynamic notification
 
