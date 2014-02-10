@@ -1033,7 +1033,11 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     attribute this trait is assigned to. For example::
 
         class Bar(HasTraits):
+            
+            
+            # A float traits Property that should be always positive.
             foo = Property(Float)
+            
             # Shadow trait attribute
             _foo = Float
 
