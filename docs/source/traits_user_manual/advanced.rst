@@ -1056,9 +1056,9 @@ The Property() function has the following signature:
 All parameters are optional, including the *fget* "getter", *fvalidate*
 "validator"  and *fset* "setter" methods. If no parameters are specified, then
 the trait looks for and uses methods on the same class as the attribute that
-the trait is assigned to, with names of the form _get_\ *name*\ () _validate_\
-() *name*\ and _set_\ *name*\ (), where *name* is the name of the trait
-attribute.
+the trait is assigned to, with names of the form _get_\ *name*\ (), 
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the 
+trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
 that trait's handler supersedes the *handler* argument, if any. Because the
