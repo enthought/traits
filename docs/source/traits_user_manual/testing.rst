@@ -92,10 +92,10 @@ TestCase::
 Using Mocks
 ===========
 
-Trying to mock a method in a `HasStrictTraits` instance will raise an error,
+Trying to mock a method in a `HasStrictTraits` instance will raise an error
 because the `HasStrictTraits` machinary does not allow any modification of the
 methods and attributes of a `HasStrictTraits` instance. To circumvent the
-`HasStrictTraits` machinary and mock methods using |mock|, please follow the
+`HasStrictTraits` machinary, and mock methods using |mock|, please follow the
 logic in the following example::
 
     from traits.api import HasStrictTraits, Float
@@ -122,7 +122,6 @@ logic in the following example::
 .. notes::
 
     The above method will not work for mocking traits Property setters,
-    getters and validators. There is currently no easy way to mock such
-    methods.
+    getters and validators.
 
 .. |mock| replace::  `the mock libary <https://pypi.python.org/pypi/mock>`_
