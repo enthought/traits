@@ -647,4 +647,6 @@ class GEventTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
     def dispatch (self, handler, *args):
         # lazy import to avoid import errors when gevent is not used
         import gevent
-        gevent.spawn_raw(handler, *args)
+
+        # Shoule we use `spawn_raw` as an optimization?
+        gevent.spawn(handler, *args)
