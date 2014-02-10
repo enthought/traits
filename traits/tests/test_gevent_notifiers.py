@@ -10,7 +10,12 @@ notification really occurs on the gevent eventloop.
 At present, `dispatch='ui'` and `dispatch='fast_ui'` have the same effect.
 
 """
-import gevent
+try:
+    import gevent
+except (ImportError, SyntaxError):
+    GEVENT_FOUND = False
+else:
+    GEVENT_FOUND = True
 
 from traits.api import Float, HasTraits, List
 from traits.testing.unittest_tools import unittest, UnittestTools
@@ -39,6 +44,9 @@ class TestGEventNotifiers(unittest.TestCase, UnittestTools):
 
     #### Tests ################################################################
 
+    @unittest.skipIf(
+        not GEVENT_FOUND,
+        "Gevent could not be imported, `gevent` dispatch is not possible")
     def test_notification_gevent(self):
 
         obj = Foo()
