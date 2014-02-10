@@ -1015,7 +1015,8 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     fset : function
         The "setter" function for the property.
     fvalidate : function
-        The validation function for the property.
+        The validation function for the property. The method should return the
+        value to set or raise TraitError if the new value is not valid.
     force : bool
         Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
@@ -1027,9 +1028,9 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
     Description
     -----------
-    If no getter or setter functions are specified (and **force** is not True),
-    it is assumed that they are defined elsewhere on the class whose attribute
-    this trait is assigned to. For example::
+    If no getter, setter or validate functions are specified (and **force** is
+    not True), it is assumed that they are defined elsewhere on the class whose
+    attribute this trait is assigned to. For example::
 
         class Bar(HasTraits):
             foo = Property(Float)
@@ -1038,6 +1039,13 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
             def _set_foo(self,x):
                 self._foo = x
+
+            def _validate_foo(self, x):
+                value = float(x)
+                if value <= 0:
+                    raise TraitError(
+                        'foo property should be a positive number')
+                return value
 
             def _get_foo(self):
                 return self._foo
