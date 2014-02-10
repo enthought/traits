@@ -25,6 +25,8 @@ Classes
 
 .. autoclass:: NewTraitChangeNotifyWrapper
 
+.. autoclass:: GEventTraitChangeNotifyWrapper
+
 Functions
 ---------
 

@@ -57,8 +57,24 @@ In these signatures:
   the specified trait attributes are modified. In other words, it causes the
   handler to be "unhooked".
 * *dispatch*: String indicating the thread on which notifications must be run.
-  In most cases, it can be omitted. See the *Traits API Reference* for details
-  on non-default values.
+  In most cases, it can be omitted.
+
+  ========== ==================================================================
+  Value
+  ========== ==================================================================
+  `same`     Synchronous dispatch on the same thread that the change took
+             place. (Default value)
+  `extended` Extended dispatch mechanism for container trait type. For internal
+             use only.
+  `new`      Asynchronous dipatch on a new thread.
+  `fast_ui`  if we are not already running of the event loop thread the
+             dispatch will take place sychronously, in all other cases the
+             the change handler execution dispatched in the ui event loop.
+  `ui`       Alias to `fast_ui`.
+  `gevent`   Asynchronous dispatch of a new greenlet on the gevent event loop.
+  ========== ==================================================================
+
+  See the *Traits API Reference* for details on non-default values.
 
 .. index:: examples; dynamic notification
 
@@ -684,5 +700,3 @@ always Undefined.
    _\ *name*\ _items_changed() handler, the *new* parameter is a TraitListEvent
    or TraitDictEvent whose **index**, **added**, and **removed** attributes
    indicate the nature of the change, and the *old* parameter is Undefined.
-
-
