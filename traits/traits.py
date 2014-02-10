@@ -1044,11 +1044,10 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
                 self._foo = x
 
             def _validate_foo(self, x):
-                value = float(x)
-                if value <= 0:
+                if x <= 0:
                     raise TraitError(
                         'foo property should be a positive number')
-                return value
+                return x
 
             def _get_foo(self):
                 return self._foo
