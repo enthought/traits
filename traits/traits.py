@@ -1034,7 +1034,6 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
         class Bar(HasTraits):
             
-            
             # A float traits Property that should be always positive.
             foo = Property(Float)
             
