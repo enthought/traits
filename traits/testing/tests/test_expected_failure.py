@@ -19,7 +19,7 @@ class TestExpectedFailure(unittest.TestCase):
                 raise AssertionError
 
     def test_unexpected_success(self):
-        with self.assertRaises(unittest.case._ExpectedFailure):
+        with self.assertRaises(unittest.case._UnexpectedSuccess):
             with expected_failure():
                 pass
 
