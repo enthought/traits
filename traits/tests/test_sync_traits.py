@@ -1,4 +1,4 @@
-""" Test that the `sync_trait` member function of the `HasTraits`
+""" Test that the `sync_trait` member function of `HasTraits` instances
 functions correctly.
 
 """
@@ -7,7 +7,8 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..api import HasTraits, Int, List
+from ..api import (
+    HasTraits, Int, List, push_exception_handler, pop_exception_handler)
 
 
 class A(HasTraits):
@@ -27,6 +28,12 @@ class B(HasTraits):
 
 
 class TestSyncTraits(unittest.TestCase, UnittestTools):
+
+    def setUp(self):
+        push_exception_handler(lambda *args: None, reraise_exceptions=True)
+
+    def tearDown(self):
+        pop_exception_handler()
 
     def test_mutual_sync(self):
         """ Test that two traits can be mutually synchronized.
@@ -132,6 +139,23 @@ class TestSyncTraits(unittest.TestCase, UnittestTools):
             # Updating `b.t` should not raise an exception due to remaining
             # listeners.
             b.t = 7
+        except Exception:
+            self.fail("Unexpected exception while setting sync trait.")
+
+    def test_sync_delete_one_way(self):
+        """ Test that deleting a one-way synchronized trait works.
+
+        (Regression test for #131).
+
+        """
+        a = A()
+        b = B()
+
+        a.sync_trait('t', b, mutual=False)
+        del b
+
+        try:
+            a.t = 42
         except Exception:
             self.fail("Unexpected exception while setting sync trait.")
 

@@ -44,12 +44,13 @@ class DelegateMess(HasTraits):
         """
         for name in ['y', '_on_dummy1_x']:
             data = self.__class__.__listener_traits__[name]
-            getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
+            getattr(self, '_init_trait_%s_listener' % data[0])(name, *data)
 
 
 class Presenter(HasTraits):
     obj = Instance(Dummy)
     y = Property(Int(), depends_on='obj.x')
+
     def _get_y(self):
         return self.obj.x
 

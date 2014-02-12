@@ -281,13 +281,14 @@ static int setattr_disallow ( trait_object      * traito,
 static PyObject *
 raise_trait_error ( trait_object * trait, has_traits_object * obj,
                                     PyObject * name, PyObject * value ) {
+    PyObject * result;
 
     /* Clear any current exception. We are handling it by raising
      * a TraitError. */
     PyErr_Clear();
 
-    PyObject * result = PyObject_CallMethod( trait->handler,
-                                          "error", "(OOO)", obj, name, value );
+    result = PyObject_CallMethod( trait->handler,
+                                  "error", "(OOO)", obj, name, value );
     Py_XDECREF( result );
     return NULL;
 }
@@ -2297,7 +2298,7 @@ setattr_trait ( trait_object      * traito,
         }
     }
 
-    
+
 
     nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
@@ -3169,6 +3170,71 @@ error:
 #endif  // #if PY_MAJOR_VERSION < 3
 
 /*-----------------------------------------------------------------------------
+|  Verifies a Python value is a Python integer (an int or long)
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_integer ( trait_object * trait, has_traits_object * obj,
+                         PyObject * name, PyObject * value ) {
+    PyObject *int_value, *result;
+
+    /* Fast paths for the most common cases. */
+#if PY_MAJOR_VERSION < 3
+    if (PyInt_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+    else if (PyLong_CheckExact(value)) {
+        long x;
+        x = PyLong_AsLong(value);
+        if (x == -1 && PyErr_Occurred()) {
+            if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                PyErr_Clear();
+                Py_INCREF(value);
+                return value;
+            }
+            return NULL;
+        }
+        else {
+            return PyInt_FromLong(x);
+        }
+    }
+#else
+    if (PyLong_CheckExact(value)) {
+      Py_INCREF(value);
+      return value;
+    }
+#endif // #if PY_MAJOR_VERSION < 3
+
+    /* General case.  The effect is supposed to be that of
+       int(operator.index(value)).  The extra call to 'int' is necessary
+       because in Python 2, operator.index (somewhat controversially) does
+       *not* always return something of type int or long, but can return
+       instances of subclasses of int or long. */
+    int_value = PyNumber_Index(value);
+    if (int_value == NULL) {
+        /* Translate a TypeError to a TraitError, but pass
+           on other exceptions. */
+        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+            PyErr_Clear();
+            goto error;
+        }
+        return NULL;
+    }
+
+#if PY_MAJOR_VERSION < 3
+    result = PyNumber_Int(int_value);
+#else
+    result = PyNumber_Long(int_value);
+#endif // #if PY_MAJOR_VERSION < 3
+    Py_DECREF(int_value);
+    return result;
+
+error:
+    return raise_trait_error( trait, obj, name, value );
+}
+
+/*-----------------------------------------------------------------------------
 |  Verifies a Python value is a float within a specified range:
 +----------------------------------------------------------------------------*/
 
@@ -3563,6 +3629,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
     long   exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
+    PyObject * int_value;
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -3861,6 +3928,54 @@ check_implements:
                     goto done;
                 break;
 
+            case 20:  /* Integer check: */
+
+                /* Fast paths for the most common cases. */
+#if PY_MAJOR_VERSION < 3
+                if (PyInt_CheckExact(value)) {
+                    Py_INCREF(value);
+                    return value;
+                }
+                else if (PyLong_CheckExact(value)) {
+                    long x;
+                    x = PyLong_AsLong(value);
+                    if (x == -1 && PyErr_Occurred()) {
+                        if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                            PyErr_Clear();
+                            Py_INCREF(value);
+                            return value;
+                        }
+                        return NULL;
+                    }
+                    else {
+                        return PyInt_FromLong(x);
+                    }
+                }
+#else
+                if (PyLong_CheckExact(value)) {
+                    Py_INCREF(value);
+                    return value;
+                }
+#endif // #if PY_MAJOR_VERSION < 3
+                /* General case. */
+                int_value = PyNumber_Index(value);
+                if (int_value == NULL) {
+                    /* Translate a TypeError to a TraitError, but pass
+                       on other exceptions. */
+                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        PyErr_Clear();
+                        break;
+                    }
+                    return NULL;
+                }
+#if PY_MAJOR_VERSION < 3
+                result = PyNumber_Int(int_value);
+#else
+                result = PyNumber_Long(int_value);
+#endif // #if PY_MAJOR_VERSION < 3
+                Py_DECREF(int_value);
+                return result;
+
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
         }
@@ -3894,7 +4009,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate0,           setattr_validate1,
     setattr_validate2,           setattr_validate3,
 /*  ...End of __getstate__ method entries */
-    validate_trait_adapt
+    validate_trait_adapt,        validate_trait_integer,
 };
 
 static PyObject *
@@ -4039,8 +4154,13 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         goto done;
                     }
                     break;
+
+                case 20:  /* Integer check: */
+                    if ( n == 1 )
+                        goto done;
+                    break;
             }
-                }
+        }
     }
 
     PyErr_SetString( PyExc_ValueError,
@@ -5041,7 +5161,7 @@ Py2to3_MOD_INIT(ctraits) {
 
     /* Create the 'ctraits' module: */
     PyObject * module;
-    
+
     Py2to3_MOD_DEF(
         module,
         "ctraits",
@@ -5111,4 +5231,3 @@ Py2to3_MOD_INIT(ctraits) {
 
     return Py2to3_MOD_SUCCESS_VAL(module);
 }
-

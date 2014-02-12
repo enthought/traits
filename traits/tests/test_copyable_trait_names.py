@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
@@ -7,16 +5,14 @@
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#-------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Any, Bool, Delegate, Event, Instance, Property, Str
+from ..api import (HasTraits, Any, Bool, Delegate, Event, Instance, Property,
+                   Str)
+
 
 class Foo(HasTraits):
 
@@ -25,7 +21,7 @@ class Foo(HasTraits):
     s = Str
     i = Instance(HasTraits)
     e = Event
-    d = Delegate( 'i' )
+    d = Delegate('i')
 
     p = Property
 
@@ -46,6 +42,7 @@ class Foo(HasTraits):
 
     def _set_p_wo(self, p_wo):
         self._p_wo = p_wo
+
 
 class TestCopyableTraitNames(unittest.TestCase):
     """ Validate that copyable_trait_names returns the appropriate result.
@@ -81,6 +78,7 @@ class TestCopyableTraitNames(unittest.TestCase):
 
     def test_property_copyable(self):
         self.assert_('p' in self.names)
+
 
 class TestCopyableTraitNameQueries(unittest.TestCase):
 
