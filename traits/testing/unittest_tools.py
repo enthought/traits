@@ -28,6 +28,26 @@ if sys.version_info[:2] == (2, 6):
 else:
     import unittest
 
+from unittest.case import _ExpectedFailure, _UnexpectedSuccess
+
+
+@contextlib.contextmanager
+def expected_failure():
+    """ An expected failure context manager. The executed block will only be
+    considered an expected failure if there is an assertion raised. Else if
+    an exception is raised the error is re-raised. Finally if there was no
+    exception the block is marked as an unexpected success.
+
+    """
+    try:
+        yield
+    except AssertionError:
+        raise _ExpectedFailure(sys.exc_info())
+    except Exception:
+        raise
+    else:
+        raise _UnexpectedSuccess
+
 
 class _AssertTraitChangesContext(object):
     """ A context manager used to implement the trait change assert methods.
