@@ -95,7 +95,8 @@ class TestUnittestTools(unittest.TestCase, UnittestTools):
         test_object = self.test_object
 
         # Change event should NOT BE detected
-        with self.assertMultiTraitChanges([test_object], [],
+        with self.assertMultiTraitChanges(
+                [test_object], [],
                 ['flag', 'number', 'list_of_numbers[]']) as results:
             test_object.number = 2.0
 
@@ -232,7 +233,7 @@ class TestUnittestTools(unittest.TestCase, UnittestTools):
 
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
-            a, 'event', expected_count, timeout=60.0):
+                a, 'event', expected_count, timeout=60.0):
             for t in threads:
                 t.start()
 
@@ -263,7 +264,7 @@ class TestUnittestTools(unittest.TestCase, UnittestTools):
 
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
-            a, 'event', expected_count, timeout=60.0) as event_collector:
+                a, 'event', expected_count, timeout=60.0) as event_collector:
             for t in threads:
                 t.start()
 
