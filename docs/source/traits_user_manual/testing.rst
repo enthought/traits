@@ -86,3 +86,43 @@ TestCase::
             with self.assertTraitDoesNotChange(my_class, 'number') as result:
                 my_class.flag = True
                 my_class.number = 2.0  # The value is the same as the original
+
+
+===========
+Using Mocks
+===========
+
+Trying to mock a method in a `HasStrictTraits` instance will raise an error,
+because the `HasStrictTraits` machinary does not allow any modification of the
+methods and attributes of a `HasStrictTraits` instance. To circumvent the
+`HasStrictTraits` machinary and mock methods using |mock|, please follow the
+logic in the following example::
+
+    from traits.api import HasStrictTraits, Float
+    from mock import Mock
+
+    class MyClass(HasStrictTraits):
+
+        number = Float(2.0)
+
+        def add_to_number(self, value):
+            """ Add the value to `number`. """
+            self.number += value
+
+    my_class = MyClass()
+
+    # Using my_class.add_to_number = Mock() will fail.
+    # But setting the mock on the instance `__dict__` works.
+    my_class.__dict__['add_to_number'] = Mock()
+
+    # We can now use the mock in out tests.
+    my_class.add_number(42)
+    print my_class.add_to_number.call_args_list
+
+.. notes::
+
+    The above method will not work for mocking traits Property setters,
+    getters and validators. There is currently no easy way to mock such
+    methods.
+
+.. |mock| replace::  `the mock libary <https://pypi.python.org/pypi/mock>`_

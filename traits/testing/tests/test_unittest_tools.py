@@ -10,7 +10,6 @@
 #------------------------------------------------------------------------------
 import threading
 import time
-import sys
 
 from traits import _py2to3
 
@@ -34,7 +33,7 @@ class TestObject(HasTraits):
         self.number += value
 
 
-class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
+class TestUnittestTools(unittest.TestCase, UnittestTools):
 
     def setUp(self):
         self.test_object = TestObject()
@@ -96,7 +95,8 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         test_object = self.test_object
 
         # Change event should NOT BE detected
-        with self.assertMultiTraitChanges([test_object], [],
+        with self.assertMultiTraitChanges(
+                [test_object], [],
                 ['flag', 'number', 'list_of_numbers[]']) as results:
             test_object.number = 2.0
 
@@ -233,7 +233,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
-            a, 'event', expected_count, timeout=60.0):
+                a, 'event', expected_count, timeout=60.0):
             for t in threads:
                 t.start()
 
@@ -264,7 +264,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         expected_count = thread_count * events_per_thread
         with self.assertTraitChangesAsync(
-            a, 'event', expected_count, timeout=60.0) as event_collector:
+                a, 'event', expected_count, timeout=60.0) as event_collector:
             for t in threads:
                 t.start()
 
