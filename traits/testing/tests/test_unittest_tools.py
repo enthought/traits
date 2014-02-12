@@ -10,7 +10,6 @@
 #------------------------------------------------------------------------------
 import threading
 import time
-import sys
 
 from traits import _py2to3
 
@@ -34,7 +33,7 @@ class TestObject(HasTraits):
         self.number += value
 
 
-class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
+class TestUnittestTools(unittest.TestCase, UnittestTools):
 
     def setUp(self):
         self.test_object = TestObject()
