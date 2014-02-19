@@ -166,7 +166,7 @@ class ThreadChangeEventRecorder(object):
             ).encode('utf-8'),
         )
         if indent == 1:
-            handle.write(u'{}'.format(os.linesep).encode('utf-8'))
+            handle.write(u'{0}'.format(os.linesep).encode('utf-8'))
 
 
 @contextmanager
