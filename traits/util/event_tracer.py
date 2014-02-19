@@ -28,11 +28,11 @@ from traits import trait_notifiers
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} '{name}' changed from "
-    u"{old} to {new} in '{class_name}'{sep}")
-CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}{sep}"
+    u"{old} to {new} in '{class_name}'\n")
+CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
-    u"EXIT: '{handler}'{exception}{sep}")
+    u"EXIT: '{handler}'{exception}\n")
 
 
 class BaseMessageEventRecord(object):
@@ -44,7 +44,7 @@ class BaseMessageEventRecord(object):
             setattr(self, attr, value)
 
     def __unicode__(self):
-        return u'{0}'.format(os.sep)
+        return u'\n'
 
 
 class ChangeMessageEventRecord(BaseMessageEventRecord):
@@ -62,7 +62,6 @@ class ChangeMessageEventRecord(BaseMessageEventRecord):
             new=self.new,
             class_name=self.class_name,
             length=length,
-            sep=os.linesep,
         )
 
 
@@ -77,8 +76,7 @@ class CallingMessageEventRecord(BaseMessageEventRecord):
             action=self.action,
             handler=self.handler,
             source=self.source,
-            gap=gap,
-            sep=os.linesep,
+            gap=gap
         )
 
 
@@ -94,7 +92,6 @@ class ExitMessageEventRecord(BaseMessageEventRecord):
             handler=self.handler,
             exception=self.exception,
             length=length,
-            sep=os.linesep,
         )
 
 
