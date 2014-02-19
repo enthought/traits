@@ -130,7 +130,6 @@ class ChangeEventContainer(object):
         with self._change_event_containers_lock:
             containers = self._thread_change_event_containers
             for thread_name, container in containers.iteritems():
-                print thread_name, container
                 filename = os.path.join(
                     directory_name, '{0}.trace'.format(thread_name))
                 container.save_to_file(filename)
