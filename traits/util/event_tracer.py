@@ -109,7 +109,7 @@ class ThreadChangeEventContainer(object):
     def save_to_file(self, filename):
         with open(filename, 'w') as fh:
             for record in self._records:
-                fh.write(unicode(record).encode('utf-8'))
+                fh.write(unicode(record))
 
 
 class ChangeEventContainer(object):
@@ -131,8 +131,8 @@ class ChangeEventContainer(object):
             containers = self._thread_change_event_containers
             for thread_name, container in containers.iteritems():
                 print thread_name, container
-                filename = os.path.join(directory_name,
-                                        '{0}.trace'.format(thread_name))
+                filename = os.path.join(
+                    directory_name, '{0}.trace'.format(thread_name))
                 container.save_to_file(filename)
 
 
