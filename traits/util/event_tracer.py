@@ -13,6 +13,11 @@
 #  Author: Simon Jagoe
 #
 #------------------------------------------------------------------------------
+""" Debugging helpers to record trait change events in single and
+multi-threaded environments.
+
+"""
+
 from contextlib import contextmanager
 import inspect
 import os
@@ -171,13 +176,12 @@ class ThreadChangeEventRecorder(object):
 
 @contextmanager
 def record_events(trace_directory):
-    """ Multi-threaded trait event tracer
+    """ Multi-threaded trait change event tracer.
 
     Parameters
     ----------
     trace_directory : string
         The directory where the change log for each event will be saved
-
 
     Usage
     -----
