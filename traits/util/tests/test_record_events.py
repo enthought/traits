@@ -16,6 +16,7 @@ import unittest
 from traits.api import HasTraits, on_trait_change, Bool, Float, List
 from traits.util.event_tracer import record_events
 
+
 class TestObject(HasTraits):
 
     number = Float(2.0)
@@ -29,6 +30,7 @@ class TestObject(HasTraits):
     def add_to_number(self, value):
         self.number += value
 
+
 class TestRecordEvents(unittest.TestCase):
 
     def setUp(self):
@@ -39,8 +41,9 @@ class TestRecordEvents(unittest.TestCase):
 
     def test_record_events_on_single_thread(self):
         test_object = TestObject()
-        with record_events(self.directory):
+        with record_events() as container:
             test_object.number = 5.0
+        container.save_to_directory(self.directory)
         trace_files = os.listdir(self.directory)
         self.assertEqual(trace_files, ['MainThread.trace'])
         main_trace = os.path.join(self.directory, trace_files[0])
@@ -51,6 +54,7 @@ class TestRecordEvents(unittest.TestCase):
             self.assertIn(' ->', lines[0])
             self.assertIn('CALLING', lines[1])
             self.assertIn('EXIT', lines[2])
+
 
 if __name__ == '__main__':
     unittest.main()

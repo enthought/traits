@@ -17,7 +17,6 @@
 multi-threaded environments.
 
 """
-
 from contextlib import contextmanager
 import inspect
 import os
@@ -25,6 +24,7 @@ import threading
 from datetime import datetime
 
 from traits import trait_notifiers
+
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} '{name}' changed from "
@@ -35,6 +35,107 @@ EXITMSG = (
     u"EXIT: '{handler}'{exception}{sep}")
 
 
+class BaseMessageEventRecord(object):
+
+    __slots__ = ()
+
+    def __init__(self, **kwargs):
+        for attr, value in kwargs.iteritems():
+            setattr(self, attr, value)
+
+    def __unicode__(self):
+        return u'{0}'.format(os.sep)
+
+
+class ChangeMessageEventRecord(BaseMessageEventRecord):
+
+    __slots__ = ('time', 'direction', 'indent', 'name', 'old', 'new',
+                 'class_name')
+
+    def __unicode__(self):
+        length = self.indent * 2
+        return CHANGEMSG.format(
+            time=self.time,
+            direction=self.direction,
+            name=self.name,
+            old=self.old,
+            new=self.new,
+            class_name=self.class_name,
+            length=length,
+            sep=os.linesep,
+        )
+
+
+class CallingMessageEventRecord(BaseMessageEventRecord):
+
+    __slots__ = ('time', 'indent', 'action', 'handler', 'source')
+
+    def __unicode__(self):
+        gap = self.indent * 2 + 9
+        return CALLINGMSG.format(
+            time=self.time,
+            action=self.action,
+            handler=self.handler,
+            source=self.source,
+            gap=gap,
+            sep=os.linesep,
+        )
+
+
+class ExitMessageEventRecord(BaseMessageEventRecord):
+
+    __slots__ = ('time', 'direction', 'indent', 'handler', 'exception')
+
+    def __unicode__(self):
+        length = self.indent * 2
+        return EXITMSG.format(
+            time=self.time,
+            direction=self.direction,
+            handler=self.handler,
+            exception=self.exception,
+            length=length,
+            sep=os.linesep,
+        )
+
+
+class ThreadChangeEventContainer(object):
+
+    def __init__(self):
+        self._records = []
+
+    def record(self, record):
+        self._records.append(record)
+
+    def save_to_file(self, filename):
+        with open(filename, 'w') as fh:
+            for record in self._records:
+                fh.write(unicode(record).encode('utf-8'))
+
+
+class ChangeEventContainer(object):
+
+    def __init__(self):
+        self._change_event_containers_lock = threading.Lock()
+        self._thread_change_event_containers = {}
+
+    def get_change_event_collector(self, thread_name):
+        with self._change_event_containers_lock:
+            container = self._thread_change_event_containers.get(thread_name)
+            if container is None:
+                container = ThreadChangeEventContainer()
+                self._thread_change_event_containers[thread_name] = container
+            return container
+
+    def save_to_directory(self, directory_name):
+        with self._change_event_containers_lock:
+            containers = self._thread_change_event_containers
+            for thread_name, container in containers.iteritems():
+                print thread_name, container
+                filename = os.path.join(directory_name,
+                                        '{0}.trace'.format(thread_name))
+                container.save_to_file(filename)
+
+
 class ChangeEventRecorder(object):
     """ A thread aware trait change recorder
 
@@ -43,7 +144,7 @@ class ChangeEventRecorder(object):
 
     """
 
-    def __init__(self, trace_directory):
+    def __init__(self, change_event_container):
         """ Object constructor
 
         Parameters
@@ -54,17 +155,14 @@ class ChangeEventRecorder(object):
         """
         self.tracers = {}
         self.tracer_lock = threading.Lock()
-        self.trace_directory = trace_directory
+        self.change_event_container = change_event_container
 
     def close(self):
         """ Close log files.
 
         """
         with self.tracer_lock:
-            tracers = self.tracers
             self.tracers = {}
-            for tracer in tracers.values():
-                tracer.fh.close()
 
     def pre_tracer(self, obj, name, old, new, handler):
         """ The traits pre event tracer.
@@ -88,10 +186,9 @@ class ChangeEventRecorder(object):
         with self.tracer_lock:
             thread = threading.current_thread().name
             if thread not in self.tracers:
-                filename = os.path.join(self.trace_directory,
-                                        '{0}.trace'.format(thread))
-                fh = open(filename, 'wb')
-                tracer = ThreadChangeEventRecorder(fh)
+                container = self.change_event_container
+                thread_container = container.get_change_event_collector(thread)
+                tracer = ThreadChangeEventRecorder(thread_container)
                 self.tracers[thread] = tracer
                 return tracer
             else:
@@ -103,8 +200,7 @@ class ThreadChangeEventRecorder(object):
 
     """
 
-
-    def __init__(self, fh):
+    def __init__(self, change_event_container):
         """ Class constructor
 
         Parameters
@@ -114,7 +210,7 @@ class ThreadChangeEventRecorder(object):
 
         """
         self.indent = 1
-        self.fh = fh
+        self.change_event_container = change_event_container
 
     def pre_tracer(self, obj, name, old, new, handler):
         """ Record a string representation of the trait change dispatch
@@ -122,28 +218,27 @@ class ThreadChangeEventRecorder(object):
         """
         indent = self.indent
         time = datetime.utcnow().isoformat(' ')
-        handle = self.fh
-        handle.write(
-            CHANGEMSG.format(
+        container = self.change_event_container
+        container.record(
+            ChangeMessageEventRecord(
                 time=time,
                 direction='>',
-                length=indent*2,
+                indent=indent,
                 name=name,
                 old=old,
                 new=new,
                 class_name=obj.__class__.__name__,
-                sep=os.linesep,
-            ).encode('utf-8'),
+            ),
         )
-        handle.write(
-            CALLINGMSG.format(
+
+        container.record(
+            CallingMessageEventRecord(
                 time=time,
-                gap=indent*2 + 9,
+                indent=indent,
                 action='CALLING',
                 handler=handler.__name__,
                 source=inspect.getsourcefile(handler),
-                sep=os.linesep,
-            ).encode('utf-8'),
+            ),
         )
         self.indent += 1
 
@@ -153,29 +248,30 @@ class ThreadChangeEventRecorder(object):
         """
         time = datetime.utcnow().isoformat(' ')
         self.indent -= 1
-        handle = self.fh
         indent = self.indent
         if exception:
             exception_msg = ' [EXCEPTION: {}]'.format(exception)
         else:
             exception_msg = ''
 
-        handle.write(
-            EXITMSG.format(
+        container = self.change_event_container
+
+        container.record(
+            ExitMessageEventRecord(
                 time=time,
                 direction='<',
-                length=indent*2,
+                indent=indent,
                 handler=handler.__name__,
                 exception=exception_msg,
-                sep=os.linesep,
-            ).encode('utf-8'),
+            ),
         )
+
         if indent == 1:
-            handle.write(u'{0}'.format(os.linesep).encode('utf-8'))
+            container.record(BaseMessageEventRecord())
 
 
 @contextmanager
-def record_events(trace_directory):
+def record_events():
     """ Multi-threaded trait change event tracer.
 
     Parameters
@@ -188,8 +284,9 @@ def record_events(trace_directory):
     ::
 
         >>> from trace_recorder import record_events
-        >>> with record_events('C:\\dev\\trace'):
+        >>> with record_events() as change_event_container:
         ...     my_model.some_trait = True
+        >>> change_event_container.save_to_directory('C:\\dev\\trace')
 
     This will install a tracer that will record all events that occur from
     setting of some_trait on the my_model instance.
@@ -199,12 +296,13 @@ def record_events(trace_directory):
     traced.
 
     """
-    recorder = ChangeEventRecorder(trace_directory)
+    container = ChangeEventContainer()
+    recorder = ChangeEventRecorder(container)
     trait_notifiers.set_change_event_tracers(
         pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer)
 
     try:
-        yield
+        yield container
     finally:
         trait_notifiers.clear_change_event_tracers()
         recorder.close()
