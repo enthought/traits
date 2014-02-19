@@ -51,9 +51,9 @@ class TestRecordEvents(unittest.TestCase):
             lines = handle.readlines()
             # very basic checking
             self.assertEqual(len(lines), 4)
-            self.assertIn(' ->', lines[0])
-            self.assertIn('CALLING', lines[1])
-            self.assertIn('EXIT', lines[2])
+            self.assertTrue(' ->' in lines[0])
+            self.assertTrue('CALLING' in lines[1])
+            self.assertTrue('EXIT' in lines[2])
 
 
 if __name__ == '__main__':
