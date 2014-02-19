@@ -55,10 +55,11 @@ from traits import trait_notifiers
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} '{name}' changed from "
-    u"{old} to {new} in '{class_name}'\n")
-CALLINGMSG = (
-    u"{time} {action:>{gap}}: '{handler}' in {source}\n")
-EXITMSG = u"{direction:-{direction}{length}} EXIT: '{handler}'{exception}\n"
+    u"{old} to {new} in '{class_name}'{sep}")
+CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}{sep}"
+EXITMSG = (
+    u"{time} {direction:-{direction}{length}} "
+    u"EXIT: '{handler}'{exception}{sep}")
 
 
 class ChangeEventRecorder(object):
@@ -124,7 +125,6 @@ class ChangeEventRecorder(object):
                 return self.tracers[thread]
 
 
-
 class ThreadChangeEventRecorder(object):
     """ A single thread trait change event recorder.
 
@@ -159,6 +159,7 @@ class ThreadChangeEventRecorder(object):
                 old=old,
                 new=new,
                 class_name=obj.__class__.__name__,
+                sep=os.linesep,
             ).encode('utf-8'),
         )
         handle.write(
@@ -168,6 +169,7 @@ class ThreadChangeEventRecorder(object):
                 action='CALLING',
                 handler=handler.__name__,
                 source=inspect.getsourcefile(handler),
+                sep=os.linesep,
             ).encode('utf-8'),
         )
         self.indent += 1
@@ -176,6 +178,7 @@ class ThreadChangeEventRecorder(object):
         """ Record a string representation of the trait change return
 
         """
+        time = datetime.utcnow().isoformat(' ')
         self.indent -= 1
         handle = self.fh
         indent = self.indent
@@ -186,15 +189,16 @@ class ThreadChangeEventRecorder(object):
 
         handle.write(
             EXITMSG.format(
+                time=time,
                 direction='<',
                 length=indent*2,
                 handler=handler.__name__,
                 exception=exception_msg,
+                sep=os.linesep,
             ).encode('utf-8'),
         )
-
         if indent == 1:
-            handle.write(u'\n'.encode('utf-8'))
+            handle.write(u'{}'.format(os.linesep).encode('utf-8'))
 
 
 @contextmanager

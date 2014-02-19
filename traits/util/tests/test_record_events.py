@@ -8,6 +8,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #------------------------------------------------------------------------------
+import os
 import shutil
 import tempfile
 import unittest
@@ -32,7 +33,6 @@ class TestRecordEvents(unittest.TestCase):
 
     def setUp(self):
         self.directory = tempfile.mkdtemp()
-        print self.directory
 
     def tearDown(self):
         shutil.rmtree(self.directory)
@@ -41,9 +41,16 @@ class TestRecordEvents(unittest.TestCase):
         test_object = TestObject()
         with record_events(self.directory):
             test_object.number = 5.0
-
-
-
+        trace_files = os.listdir(self.directory)
+        self.assertEqual(trace_files, ['MainThread.trace'])
+        main_trace = os.path.join(self.directory, trace_files[0])
+        with open(main_trace, 'Ur') as handle:
+            lines = handle.readlines()
+            # very basic checking
+            self.assertEqual(len(lines), 4)
+            self.assertIn(' ->', lines[0])
+            self.assertIn('CALLING', lines[1])
+            self.assertIn('EXIT', lines[2])
 
 if __name__ == '__main__':
     unittest.main()
