@@ -89,7 +89,7 @@ class ChangeEventRecorder(object):
             thread = threading.current_thread().name
             if thread not in self.tracers:
                 filename = os.path.join(self.trace_directory,
-                                        '{}.trace'.format(thread))
+                                        '{0}.trace'.format(thread))
                 fh = open(filename, 'wb')
                 tracer = ThreadChangeEventRecorder(fh)
                 self.tracers[thread] = tracer
