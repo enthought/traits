@@ -1,6 +1,5 @@
 # Copyright (c) 2008-2013 by Enthought, Inc.
 # All rights reserved.
-import sys
 from os.path import join
 from setuptools import setup, Extension, find_packages
 
