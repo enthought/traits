@@ -270,11 +270,6 @@ class ThreadChangeEventRecorder(object):
 def record_events():
     """ Multi-threaded trait change event tracer.
 
-    Parameters
-    ----------
-    trace_directory : string
-        The directory where the change log for each event will be saved
-
     Usage
     -----
     ::
