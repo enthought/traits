@@ -37,6 +37,12 @@ SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
 class BaseMessageRecord(object):
+    """ Default message record class
+
+    All message record (sub)classes accept only keywords arguments as defined
+    in the __slots__ attribute.
+
+    """
 
     __slots__ = ()
 
@@ -56,6 +62,9 @@ class BaseMessageRecord(object):
 
 
 class ChangeMessageRecord(BaseMessageRecord):
+    """ Message record for a change event dispatch.
+
+    """
 
     __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
 
@@ -73,6 +82,9 @@ class ChangeMessageRecord(BaseMessageRecord):
 
 
 class CallingMessageRecord(BaseMessageRecord):
+    """ Message record for a change handler call.
+
+    """
 
     __slots__ = ('time', 'indent', 'action', 'handler', 'source')
 
@@ -87,6 +99,9 @@ class CallingMessageRecord(BaseMessageRecord):
 
 
 class ExitMessageRecord(BaseMessageRecord):
+    """ Message record for returning from a change event dispatch.
+
+    """
 
     __slots__ = ('time', 'indent', 'handler', 'exception')
 
