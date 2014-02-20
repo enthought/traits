@@ -6,5 +6,6 @@ class FixRenameUnicode(fixer_base.BaseFix):
     PATTERN = r"funcdef< 'def' name='__unicode__' parameters< '(' NAME ')' > any+ >"
 
     def transform(self, node, results):
+        print('I was called')
         name = results['name']
         name.replace(Name('__str__', prefix=name.prefix))
