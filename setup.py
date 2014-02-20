@@ -15,17 +15,6 @@ ctraits = Extension(
     extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
 
-# if we are running on python 3, enable 2to3 and
-# let it use the custom fixers from the custom_fixers
-# package.
-extra = {}
-if sys.version_info >= (3, 0):
-    extra.update(
-        use_2to3=True,
-        use_2to3_fixers=['traits.2to3_fixers'],
-        use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
-    )
-
 setup(
     name = 'traits',
     version = d['__version__'],
@@ -60,5 +49,7 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
-    **extra
+    use_2to3=True,
+    use_2to3_fixers=['traits.2to3_fixers'],
+    use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
 )
