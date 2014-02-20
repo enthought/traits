@@ -11,17 +11,17 @@ exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 
 ctraits = Extension(
     'traits.ctraits',
-    sources = ['traits/ctraits.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
+    sources=['traits/ctraits.c'],
+    extra_compile_args=['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
 
 setup(
-    name = 'traits',
-    version = d['__version__'],
-    url = 'http://code.enthought.com/projects/traits',
-    author = 'David C. Morrill, et. al.',
-    author_email = 'dmorrill@enthought.com',
-    classifiers = [c.strip() for c in """\
+    name='traits',
+    version=d['__version__'],
+    url='http://code.enthought.com/projects/traits',
+    author='David C. Morrill, et. al.',
+    author_email='dmorrill@enthought.com',
+    classifiers=[c.strip() for c in """\
         Development Status :: 5 - Production/Stable
         Intended Audience :: Developers
         Intended Audience :: Science/Research
@@ -37,19 +37,20 @@ setup(
         Topic :: Software Development
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
-    description = 'explicitly typed attributes for Python',
-    long_description = open('README.rst').read(),
-    download_url = ('http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
-                    d['__version__']),
-    ext_modules = [ctraits],
-    include_package_data = True,
-    license = 'BSD',
-    maintainer = 'ETS Developers',
-    maintainer_email = 'enthought-dev@enthought.com',
-    packages = find_packages(),
-    platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-    zip_safe = False,
+    description='explicitly typed attributes for Python',
+    long_description=open('README.rst').read(),
+    download_url=(
+        'http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
+        d['__version__']),
+    ext_modules=[ctraits],
+    include_package_data=True,
+    license='BSD',
+    maintainer='ETS Developers',
+    maintainer_email='enthought-dev@enthought.com',
+    packages=find_packages(),
+    platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
+    zip_safe= False,
     use_2to3=True,
     use_2to3_fixers=['fixes'],
-    use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
+    use_2to3_exclude_fixers=['lib2to3.fixes.fix_next']   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
 )
