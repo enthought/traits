@@ -33,10 +33,10 @@ CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
     u"EXIT: '{handler}'{exception}\n")
-SPACES_TO_ALIGN = 9
+SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
-class BaseMessageEventRecord(object):
+class BaseMessageRecord(object):
 
     __slots__ = ()
 
@@ -48,7 +48,7 @@ class BaseMessageEventRecord(object):
         return u'\n'
 
 
-class ChangeMessageEventRecord(BaseMessageEventRecord):
+class ChangeMessageRecord(BaseMessageRecord):
 
     __slots__ = ('time', 'direction', 'indent', 'name', 'old', 'new',
                  'class_name')
@@ -66,22 +66,21 @@ class ChangeMessageEventRecord(BaseMessageEventRecord):
         )
 
 
-class CallingMessageEventRecord(BaseMessageEventRecord):
+class CallingMessageRecord(BaseMessageRecord):
 
     __slots__ = ('time', 'indent', 'action', 'handler', 'source')
 
     def __unicode__(self):
-        gap = self.indent * 2 + SPACES_TO_ALIGN
+        gap = self.indent * 2 + SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE
         return CALLINGMSG.format(
             time=self.time,
             action=self.action,
             handler=self.handler,
             source=self.source,
-            gap=gap
-        )
+            gap=gap)
 
 
-class ExitMessageEventRecord(BaseMessageEventRecord):
+class ExitMessageRecord(BaseMessageRecord):
 
     __slots__ = ('time', 'direction', 'indent', 'handler', 'exception')
 
@@ -96,7 +95,7 @@ class ExitMessageEventRecord(BaseMessageEventRecord):
         )
 
 
-class ThreadChangeEventContainer(object):
+class ThreadChangeRecordContainer(object):
 
     def __init__(self):
         self._records = []
@@ -110,7 +109,7 @@ class ThreadChangeEventContainer(object):
                 fh.write(unicode(record))
 
 
-class ChangeEventContainer(object):
+class ChangeRecordContainer(object):
 
     def __init__(self):
         self._change_event_containers_lock = threading.Lock()
@@ -120,7 +119,7 @@ class ChangeEventContainer(object):
         with self._change_event_containers_lock:
             container = self._thread_change_event_containers.get(thread_name)
             if container is None:
-                container = ThreadChangeEventContainer()
+                container = ThreadChangeRecordContainer()
                 self._thread_change_event_containers[thread_name] = container
             return container
 
@@ -217,7 +216,7 @@ class ThreadChangeEventRecorder(object):
         time = datetime.utcnow().isoformat(' ')
         container = self.change_event_container
         container.record(
-            ChangeMessageEventRecord(
+            ChangeMessageRecord(
                 time=time,
                 direction='>',
                 indent=indent,
@@ -229,7 +228,7 @@ class ThreadChangeEventRecorder(object):
         )
 
         container.record(
-            CallingMessageEventRecord(
+            CallingMessageRecord(
                 time=time,
                 indent=indent,
                 action='CALLING',
@@ -254,7 +253,7 @@ class ThreadChangeEventRecorder(object):
         container = self.change_event_container
 
         container.record(
-            ExitMessageEventRecord(
+            ExitMessageRecord(
                 time=time,
                 direction='<',
                 indent=indent,
@@ -264,7 +263,7 @@ class ThreadChangeEventRecorder(object):
         )
 
         if indent == 1:
-            container.record(BaseMessageEventRecord())
+            container.record(BaseMessageRecord())
 
 
 @contextmanager
@@ -288,7 +287,7 @@ def record_events():
     traced.
 
     """
-    container = ChangeEventContainer()
+    container = ChangeRecordContainer()
     recorder = ChangeEventRecorder(container)
     trait_notifiers.set_change_event_tracers(
         pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer)
