@@ -20,6 +20,7 @@ multi-threaded environments.
 from contextlib import contextmanager
 import inspect
 import os
+import sys
 import threading
 from datetime import datetime
 
@@ -46,6 +47,12 @@ class BaseMessageEventRecord(object):
     def __unicode__(self):
         return u'\n'
 
+    if sys.version_info[0] < 3:
+      def __str__(self):
+          return self.__unicode__().encode('utf8')
+    else:
+      def __str__(self):
+          return self.__unicode__()
 
 class ChangeMessageEventRecord(BaseMessageEventRecord):
 
