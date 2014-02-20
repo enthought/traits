@@ -18,22 +18,22 @@ multi-threaded environments.
 
 """
 from contextlib import contextmanager
+from datetime import datetime
 import inspect
 import os
-import sys
 import threading
-from datetime import datetime
 
 from traits import trait_notifiers
 
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} '{name}' changed from "
-    u"{old} to {new} in '{class_name}'\n")
+    u"{old!r} to {new!r} in '{class_name}'\n")
 CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
     u"EXIT: '{handler}'{exception}\n")
+SPACES_TO_ALIGN = 9
 
 
 class BaseMessageEventRecord(object):
@@ -46,6 +46,7 @@ class BaseMessageEventRecord(object):
 
     def __unicode__(self):
         return u'\n'
+
 
 class ChangeMessageEventRecord(BaseMessageEventRecord):
 
@@ -70,7 +71,7 @@ class CallingMessageEventRecord(BaseMessageEventRecord):
     __slots__ = ('time', 'indent', 'action', 'handler', 'source')
 
     def __unicode__(self):
-        gap = self.indent * 2 + 9
+        gap = self.indent * 2 + SPACES_TO_ALIGN
         return CALLINGMSG.format(
             time=self.time,
             action=self.action,
