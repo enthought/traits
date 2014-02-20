@@ -41,8 +41,15 @@ class BaseMessageRecord(object):
     __slots__ = ()
 
     def __init__(self, **kwargs):
-        for attr, value in kwargs.iteritems():
-            setattr(self, attr, value)
+        if sorted(kwargs.keys()) == sorted(self.__slots__):
+            for attr, value in kwargs.iteritems():
+                setattr(self, attr, value)
+        else:
+            msg = (
+                '{0} expects only these keywords {1} at initialization but'
+                'received values for {2}')
+            raise TypeError(
+                msg.format(type(self), self.__slots__, kwargs.keys()))
 
     def __unicode__(self):
         return u'\n'
@@ -50,14 +57,13 @@ class BaseMessageRecord(object):
 
 class ChangeMessageRecord(BaseMessageRecord):
 
-    __slots__ = ('time', 'direction', 'indent', 'name', 'old', 'new',
-                 'class_name')
+    __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
 
     def __unicode__(self):
         length = self.indent * 2
         return CHANGEMSG.format(
             time=self.time,
-            direction=self.direction,
+            direction='>',
             name=self.name,
             old=self.old,
             new=self.new,
@@ -82,13 +88,13 @@ class CallingMessageRecord(BaseMessageRecord):
 
 class ExitMessageRecord(BaseMessageRecord):
 
-    __slots__ = ('time', 'direction', 'indent', 'handler', 'exception')
+    __slots__ = ('time', 'indent', 'handler', 'exception')
 
     def __unicode__(self):
         length = self.indent * 2
         return EXITMSG.format(
             time=self.time,
-            direction=self.direction,
+            direction='<',
             handler=self.handler,
             exception=self.exception,
             length=length,
@@ -218,7 +224,6 @@ class ThreadChangeEventRecorder(object):
         container.record(
             ChangeMessageRecord(
                 time=time,
-                direction='>',
                 indent=indent,
                 name=name,
                 old=old,
@@ -255,7 +260,6 @@ class ThreadChangeEventRecorder(object):
         container.record(
             ExitMessageRecord(
                 time=time,
-                direction='<',
                 indent=indent,
                 handler=handler.__name__,
                 exception=exception_msg,
