@@ -47,13 +47,6 @@ class BaseMessageEventRecord(object):
     def __unicode__(self):
         return u'\n'
 
-    if sys.version_info[0] < 3:
-      def __str__(self):
-          return self.__unicode__().encode('utf8')
-    else:
-      def __str__(self):
-          return self.__unicode__()
-
 class ChangeMessageEventRecord(BaseMessageEventRecord):
 
     __slots__ = ('time', 'direction', 'indent', 'name', 'old', 'new',
