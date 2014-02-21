@@ -122,7 +122,7 @@ please follow the logic in the example below::
     # But setting the mock on the instance `__dict__` works.
     my_class.__dict__['add_to_number'] = Mock()
 
-    # We can now use the mock in out tests.
+    # We can now use the mock in our tests.
     my_class.add_number(42)
     print my_class.add_to_number.call_args_list
 
