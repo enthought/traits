@@ -14,6 +14,7 @@ ctraits = Extension(
     extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
 
+
 def additional_commands():
     try:
         from sphinx.setup_command import BuildDoc
@@ -21,6 +22,7 @@ def additional_commands():
         return {}
     else:
         return {'documentation': BuildDoc}
+
 
 setup(
     name = 'traits',
