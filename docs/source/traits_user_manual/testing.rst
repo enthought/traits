@@ -19,17 +19,15 @@ mixin class in the developer's test cases.
     ~traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync
     ~traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue
 
-The above assert methods, except |assertEventuallyTrue| can be used as
-context manager which at entry hooks and traits listener on the class for the
-desired events and records the arguments pass to the listener at every fired
-events. This way the developer can easily assert that specific events have
-been fired. Further analysis and checking can be performed by inspecting the
-list of recorded events.
-
-Both normal and extended trait names are supported. However, no check is
-performed regarding the validity of the trait name, thus care is required to
-safeguard against spelling mistakes in the names of the traits that we need
-to assert the behaviour.
+The above assert methods, except |assertEventuallyTrue|, can be used as
+context managers, which at entry, hook a trait listeners on the class for the
+desired events and record the arguments passed to the change handler at every
+fired event. This way the developer can easily assert that specific events
+have been fired. Further analysis and checking can be performed by inspecting
+the list of recorded events. Both normal and extended trait names are
+supported. However, no check is performed regarding the validity of the trait
+name, thus care is required to safeguard against spelling mistakes in the
+names of the traits that we need to assert the behaviour.
 
 The following example demonstrates the basic usage of the mixin class in a
 TestCase::
