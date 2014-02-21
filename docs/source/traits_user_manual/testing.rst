@@ -19,11 +19,12 @@ mixin class in the developer's test cases.
     ~traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync
     ~traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue
 
-The methods behave as a context manager which at entry hooks and traits
-listener on the class for the desired events and records the arguments pass
-to the listener at every fired events. This way the developer can easily
-assert that specific events have been fired. Further analysis and checking
-can be performed by inspecting the list of recorded events arguments.
+The above assert methods, except |assertEventuallyTrue| can be used as
+context manager which at entry hooks and traits listener on the class for the
+desired events and records the arguments pass to the listener at every fired
+events. This way the developer can easily assert that specific events have
+been fired. Further analysis and checking can be performed by inspecting the
+list of recorded events.
 
 Both normal and extended trait names are supported. However, no check is
 performed regarding the validity of the trait name, thus care is required to
@@ -135,3 +136,4 @@ please follow the logic in the example below::
 .. |HasStrictTraits| replace:: :class:`~traits.has_traits.HasStrictTraits`
 .. |UnittestTools| replace:: :class:`~traits.testing.unittest_tools.UnittestTools`
 .. |Property| replace:: :func:`~traits.traits.Property`
+.. |assertEventuallyTrue| replace:: :func:`~traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue`
