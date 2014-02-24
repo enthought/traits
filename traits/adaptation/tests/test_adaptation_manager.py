@@ -1,4 +1,4 @@
-""" Test the adapter manager. """
+""" Test the adaptation manager. """
 
 import sys
 
@@ -9,7 +9,7 @@ from traits.testing.unittest_tools import unittest
 
 
 class TestAdaptationManagerWithABC(unittest.TestCase):
-    """ Test the adapter manager. """
+    """ Test the adaptation manager. """
 
     #: Class attribute pointing at the module containing the example data
     examples = traits.adaptation.tests.abc_examples
