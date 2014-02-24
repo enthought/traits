@@ -1023,7 +1023,7 @@ Gotchas
    function
    :func:`~traits.adaptation.adaptation_manager.get_global_adaptation_manager`.
    The traits automatic adaptation features also use the global manager.
-   Having a global adaptation manager can get you into troubles, for the usual
+   Having a global adaptation manager can get you into trouble, for the usual
    reasons related to having a global state. If you want to have more control
    over adaptation, we recommend creating a new
    :class:`~traits.adaptation.adaptation_manager.AdaptationManager`
