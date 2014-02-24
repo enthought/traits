@@ -29,7 +29,7 @@ from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
     implements, Instance, Int, Interface, List, Supports, TraitError
 
 
-# Using the deprecates class advisor "adapts", the registration of adapters
+# Using the deprecated class advisor "adapts", the registration of adapters
 # occurs globally at class definition time. Since other tests will reset the
 # global adaptation manager, the registration will be lost.
 # That's why we save a reference to the current global adaptation manager.

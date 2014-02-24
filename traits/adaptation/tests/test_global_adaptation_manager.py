@@ -9,7 +9,7 @@ import traits.adaptation.tests.abc_examples
 from traits.testing.unittest_tools import unittest
 
 
-class TestAdapter(unittest.TestCase):
+class TestGlobalAdaptationManager(unittest.TestCase):
     """ Test the setting/getting/resetting/using the global adaptation manager.
     """
 
