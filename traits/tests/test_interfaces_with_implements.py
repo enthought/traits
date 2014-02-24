@@ -23,9 +23,17 @@ from __future__ import absolute_import
 import sys
 
 from traits.testing.unittest_tools import unittest
-
+from traits.adaptation.api import get_global_adaptation_manager,\
+    set_global_adaptation_manager
 from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
     implements, Instance, Int, Interface, List, Supports, TraitError
+
+
+# Using the deprecates class advisor "adapts", the registration of adapters
+# occurs globally at class definition time. Since other tests will reset the
+# global adaptation manager, the registration will be lost.
+# That's why we save a reference to the current global adaptation manager.
+_adaptation_manager = get_global_adaptation_manager()
 
 
 if sys.version_info[0] >= 3:
@@ -173,6 +181,13 @@ adapts(FooPlusAdapter, IFoo, IFooPlus)
 
 
 class InterfacesTest(unittest.TestCase):
+
+    #### 'TestCase' protocol ##################################################
+
+    def setUp(self):
+        set_global_adaptation_manager(_adaptation_manager)
+
+    #### Tests ################################################################
 
     def test_implements_none(self):
         class Test(HasTraits):

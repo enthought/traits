@@ -20,6 +20,7 @@ from traits.testing.unittest_tools import unittest
 
 from traits.api import (HasTraits, Adapter, AdaptsTo, Instance, Int, Interface,
                         List, provides, register_factory, Supports, TraitError)
+from traits.adaptation.api import reset_global_adaptation_manager
 
 
 class IFoo(Interface):
@@ -144,13 +145,21 @@ class FooPlusAdapter(object):
     def get_foo_plus(self):
         return (self.obj.get_foo() + 1)
 
-register_factory(SampleListAdapter, Sample, IList)
-register_factory(ListAverageAdapter, IList, IAverage)
-register_factory(SampleFooAdapter, Sample, IFoo)
-register_factory(FooPlusAdapter, IFoo, IFooPlus)
-
 
 class InterfacesTest(unittest.TestCase):
+
+    #### 'TestCase' protocol ##################################################
+
+    def setUp(self):
+        reset_global_adaptation_manager()
+
+        # Register adapters.
+        register_factory(SampleListAdapter, Sample, IList)
+        register_factory(ListAverageAdapter, IList, IAverage)
+        register_factory(SampleFooAdapter, Sample, IFoo)
+        register_factory(FooPlusAdapter, IFoo, IFooPlus)
+
+    #### Tests ################################################################
 
     def test_provides_none(self):
         @provides()
