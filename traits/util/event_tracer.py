@@ -116,37 +116,52 @@ class ExitMessageRecord(BaseMessageRecord):
         )
 
 
-class ThreadChangeRecordContainer(object):
+class RecordContainer(object):
+    """ A simple record container.
+
+     This class is commonly used to hold records from a single thread.
+
+    """
 
     def __init__(self):
         self._records = []
 
     def record(self, record):
+        """ Add the record into the container.
+
+        """
+
         self._records.append(record)
 
     def save_to_file(self, filename):
+        """ Save the records into a file.
+
+        """
         with open(filename, 'w') as fh:
             for record in self._records:
                 fh.write(unicode(record))
 
 
-class ChangeRecordContainer(object):
+class MultiThreadRecordContainer(object):
+    """ A container of record containers that are used by separate threads.
+
+    """
 
     def __init__(self):
-        self._change_event_containers_lock = threading.Lock()
-        self._thread_change_event_containers = {}
+        self._creation_lock = threading.Lock()
+        self._record_containers = {}
 
     def get_change_event_collector(self, thread_name):
-        with self._change_event_containers_lock:
-            container = self._thread_change_event_containers.get(thread_name)
+        with self._creation_lock:
+            container = self._record_containers.get(thread_name)
             if container is None:
-                container = ThreadChangeRecordContainer()
-                self._thread_change_event_containers[thread_name] = container
+                container = RecordContainer()
+                self._record_containers[thread_name] = container
             return container
 
     def save_to_directory(self, directory_name):
-        with self._change_event_containers_lock:
-            containers = self._thread_change_event_containers
+        with self._creation_lock:
+            containers = self._record_containers
             for thread_name, container in containers.iteritems():
                 filename = os.path.join(
                     directory_name, '{0}.trace'.format(thread_name))
@@ -306,7 +321,7 @@ def record_events():
     traced.
 
     """
-    container = ChangeRecordContainer()
+    container = RecordContainer()
     recorder = ChangeEventRecorder(container)
     trait_notifiers.set_change_event_tracers(
         pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer)
