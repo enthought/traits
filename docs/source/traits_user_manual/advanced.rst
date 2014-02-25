@@ -1017,6 +1017,25 @@ Gotchas
    the classes involved in adaptation are typically subclasses of
    :class:`~.HasTraits`, in which case this is not an issue.
 
+2) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
+   :func:`~traits.adaptation.adaptation_manager.adapt`,
+   etc. use a global adaptation manager, which is accessible through the
+   function
+   :func:`~traits.adaptation.adaptation_manager.get_global_adaptation_manager`.
+   The traits automatic adaptation features also use the global manager.
+   Having a global adaptation manager can get you into trouble, for the usual
+   reasons related to having a global state. If you want to have more control
+   over adaptation, we recommend creating a new
+   :class:`~traits.adaptation.adaptation_manager.AdaptationManager`
+   instance, use it directly in your application, and set it as the global
+   manager using
+   :func:`~traits.adaptation.adaptation_manager.set_global_adaptation_manager`.
+   A common issue with the global manager arises in unittesting, where adapters
+   registered in one test influence the outcome of other tests downstream.
+   Tests relying on adaptation should make sure to reset the state of the
+   global adapter using
+   :func:`~traits.adaptation.adaptation_manager.reset_global_adaptation_manager`.
+
 Recommended readings about adaptation
 `````````````````````````````````````
 

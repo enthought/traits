@@ -14,6 +14,7 @@ from __future__ import absolute_import
 from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
+from traits.adaptation.api import reset_global_adaptation_manager
 from traits.api import Adapter, HasTraits, Instance, Int, Interface, \
     provides, register_factory
 
@@ -35,6 +36,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
+        reset_global_adaptation_manager()
 
         return
 

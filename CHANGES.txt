@@ -21,6 +21,7 @@ Enhancements
  * Removed obsolete code (#112,#113)
  * Increased test coverage (#114)
  * Python 3 support (#115)
+ * Allow setting and resetting the global adaptation manager (#145)
 
 Fixes
 
