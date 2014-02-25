@@ -1053,11 +1053,12 @@ The Property() function has the following signature:
 
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
-All parameters are optional, including the *fget* "getter" and *fset* "setter"
-methods. If no parameters are specified, then the trait looks for and uses
-methods on the same class as the attribute that the trait is assigned to, with
-names of the form _get_\ *name*\ () and _set_\ *name*\ (), where *name* is the
-name of the trait attribute.
+All parameters are optional, including the *fget* "getter", *fvalidate*
+"validator"  and *fset* "setter" methods. If no parameters are specified, then
+the trait looks for and uses methods on the same class as the attribute that
+the trait is assigned to, with names of the form _get_\ *name*\ (), 
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the 
+trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
 that trait's handler supersedes the *handler* argument, if any. Because the
