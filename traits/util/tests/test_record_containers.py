@@ -61,7 +61,8 @@ class TestRecordContainers(unittest.TestCase):
 
         self.assertEqual(len(container._record_containers), 3)
         for collector in container._record_containers.itervalues():
-            self.assertIsInstance(collector._records[0], BaseMessageRecord)
+            self.assertTrue(
+                isinstance(collector._records[0], BaseMessageRecord))
             self.assertEqual(len(collector._records), 1)
 
         # save records

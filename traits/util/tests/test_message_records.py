@@ -25,8 +25,7 @@ class TestMessageRecords(unittest.TestCase):
         self.assertEqual(unicode(record), u'\n')
 
         # Check initialization
-        with self.assertRaises(TypeError):
-            BaseMessageRecord(sdd=0)
+        self.assertRaises(TypeError, BaseMessageRecord, sdd=0)
 
     def test_change_message_record(self):
         record = ChangeMessageRecord(
@@ -39,8 +38,7 @@ class TestMessageRecords(unittest.TestCase):
             u"1 -----> 'john' changed from 1 to 1 in 'MyClass'\n")
 
         # Check initialization
-        with self.assertRaises(TypeError):
-            ChangeMessageRecord(sdd=0)
+        self.assertRaises(TypeError, ChangeMessageRecord, sdd=0)
 
     def test_exit_message_record(self):
         record = ExitMessageRecord(
@@ -51,8 +49,7 @@ class TestMessageRecords(unittest.TestCase):
             unicode(record), u"7 <--------- EXIT: 'john'sssss\n")
 
         # Check initialization
-        with self.assertRaises(TypeError):
-            ExitMessageRecord(sdd=0)
+        self.assertRaises(TypeError, ExitMessageRecord, sdd=0)
 
     def test_calling_message_record(self):
         record = CallingMessageRecord(
@@ -63,8 +60,7 @@ class TestMessageRecords(unittest.TestCase):
             unicode(record), u"7                 run: 'john' in sssss\n")
 
         # Check initialization
-        with self.assertRaises(TypeError):
-            CallingMessageRecord(sdd=0)
+        self.assertRaises(TypeError, CallingMessageRecord, sdd=0)
 
 
 if __name__ == '__main__':
