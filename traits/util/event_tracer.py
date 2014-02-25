@@ -169,70 +169,11 @@ class MultiThreadRecordContainer(object):
 
 
 class ChangeEventRecorder(object):
-    """ A thread aware trait change recorder
-
-    The class manages multiple ThreadChangeEventRecorders which record
-    trait change events for each thread in a separate file.
-
-    """
-
-    def __init__(self, change_event_container):
-        """ Object constructor
-
-        Parameters
-        ----------
-        trace_directory : string
-            The directory where the change log for each thread will be saved
-
-        """
-        self.tracers = {}
-        self.tracer_lock = threading.Lock()
-        self.change_event_container = change_event_container
-
-    def close(self):
-        """ Close log files.
-
-        """
-        with self.tracer_lock:
-            self.tracers = {}
-
-    def pre_tracer(self, obj, name, old, new, handler):
-        """ The traits pre event tracer.
-
-        This method should be set as the global pre event tracer for traits.
-
-        """
-        tracer = self._get_tracer()
-        tracer.pre_tracer(obj, name, old, new, handler)
-
-    def post_tracer(self, obj, name, old, new, handler, exception=None):
-        """ The traits post event tracer.
-
-        This method should be set as the global post event tracer for traits.
-
-        """
-        tracer = self._get_tracer()
-        tracer.post_tracer(obj, name, old, new, handler, exception=exception)
-
-    def _get_tracer(self):
-        with self.tracer_lock:
-            thread = threading.current_thread().name
-            if thread not in self.tracers:
-                container = self.change_event_container
-                thread_container = container.get_change_event_collector(thread)
-                tracer = ThreadChangeEventRecorder(thread_container)
-                self.tracers[thread] = tracer
-                return tracer
-            else:
-                return self.tracers[thread]
-
-
-class ThreadChangeEventRecorder(object):
     """ A single thread trait change event recorder.
 
     """
 
-    def __init__(self, change_event_container):
+    def __init__(self, container):
         """ Class constructor
 
         Parameters
@@ -242,7 +183,7 @@ class ThreadChangeEventRecorder(object):
 
         """
         self.indent = 1
-        self.change_event_container = change_event_container
+        self.container = container
 
     def pre_tracer(self, obj, name, old, new, handler):
         """ Record a string representation of the trait change dispatch
@@ -250,7 +191,7 @@ class ThreadChangeEventRecorder(object):
         """
         indent = self.indent
         time = datetime.utcnow().isoformat(' ')
-        container = self.change_event_container
+        container = self.container
         container.record(
             ChangeMessageRecord(
                 time=time,
@@ -285,7 +226,7 @@ class ThreadChangeEventRecorder(object):
         else:
             exception_msg = ''
 
-        container = self.change_event_container
+        container = self.container
 
         container.record(
             ExitMessageRecord(
@@ -298,6 +239,66 @@ class ThreadChangeEventRecorder(object):
 
         if indent == 1:
             container.record(BaseMessageRecord())
+
+
+class MultiThreadChangeEventRecorder(object):
+    """ A thread aware trait change recorder
+
+    The class manages multiple ChangeEventRecorders which record
+    trait change events for each thread in a separate file.
+
+    """
+
+    def __init__(self, container):
+        """ Object constructor
+
+        Parameters
+        ----------
+        container : Mulkti
+            A
+
+        """
+        self.tracers = {}
+        self.tracer_lock = threading.Lock()
+        self.container = container
+
+    def close(self):
+        """ Close and stop all logging.
+
+        """
+        with self.tracer_lock:
+            self.tracers = {}
+
+    def pre_tracer(self, obj, name, old, new, handler):
+        """ The traits pre event tracer.
+
+        This method should be set as the global pre event tracer for traits.
+
+        """
+        tracer = self._get_tracer()
+        tracer.pre_tracer(obj, name, old, new, handler)
+
+    def post_tracer(self, obj, name, old, new, handler, exception=None):
+        """ The traits post event tracer.
+
+        This method should be set as the global post event tracer for traits.
+
+        """
+        tracer = self._get_tracer()
+        tracer.post_tracer(obj, name, old, new, handler, exception=exception)
+
+    def _get_tracer(self):
+        with self.tracer_lock:
+            thread = threading.current_thread().name
+            if thread not in self.tracers:
+                container = self.container
+                thread_container = container.get_change_event_collector(
+                    thread)
+                tracer = ChangeEventRecorder(thread_container)
+                self.tracers[thread] = tracer
+                return tracer
+            else:
+                return self.tracers[thread]
 
 
 @contextmanager
@@ -321,8 +322,8 @@ def record_events():
     traced.
 
     """
-    container = RecordContainer()
-    recorder = ChangeEventRecorder(container)
+    container = MultiThreadRecordContainer()
+    recorder = MultiThreadChangeEventRecorder(container=container)
     trait_notifiers.set_change_event_tracers(
         pre_tracer=recorder.pre_tracer, post_tracer=recorder.post_tracer)
 
