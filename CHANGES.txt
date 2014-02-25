@@ -10,7 +10,6 @@ Python 3.2 and 3.3 .
 The release also includes increased code coverage and automatic
 coverage report through coveralls.io .
 
-
 Change summary
 ~~~~~~~~~~~~~~
 
@@ -26,6 +25,7 @@ Enhancements
 Fixes
 
  * Fix clearing exception when raising a TraitError (#119)
+ * Fix automatic adaptation when Assigning to List trait (#147)
 
 
 Release 4.4.0

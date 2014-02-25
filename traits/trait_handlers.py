@@ -1242,7 +1242,7 @@ class TraitInstance ( ThisClass ):
     TraitInstance ensures that assigned values are exactly of the type specified
     (i.e., no coercion is performed).
     """
-    def __init__ ( self, aClass, allow_none = True, adapt = 'yes',
+    def __init__ ( self, aClass, allow_none = True, adapt = 'no',
                    module = '' ):
         """Creates a TraitInstance handler.
 
