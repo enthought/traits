@@ -2,6 +2,7 @@
 # Copyright 2014 Enthought, Inc.
 ###############################################################################
 
+from traits.adaptation.api import reset_global_adaptation_manager
 from traits.api import HasTraits, Instance, List, register_factory, TraitError
 from traits.testing.unittest_tools import unittest
 
@@ -27,6 +28,13 @@ class FooContainer(HasTraits):
 
 
 class TestAutomaticAdaptation(unittest.TestCase):
+
+    #### 'TestCase' protocol ##################################################
+
+    def setUp(self):
+        reset_global_adaptation_manager()
+
+    #### Tests ################################################################
 
     def test_instance_trait_automatic_adaptation(self):
         bar = Bar()
