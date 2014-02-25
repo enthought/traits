@@ -43,7 +43,6 @@ class TestRecordContainers(unittest.TestCase):
             lines = handle.readlines()
         self.assertEqual(lines, ['\n'] * 7)
 
-
     def test_multi_thread_record_container(self):
         container = MultiThreadRecordContainer()
 
@@ -72,7 +71,6 @@ class TestRecordContainers(unittest.TestCase):
             with open(filename, 'Ur') as handle:
                 lines = handle.readlines()
             self.assertEqual(lines, ['\n'])
-
 
 
 if __name__ == '__main__':

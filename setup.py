@@ -11,7 +11,7 @@ exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 ctraits = Extension(
     'traits.ctraits',
     sources=['traits/ctraits.c'],
-    extra_compile_args=['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
+    extra_compile_args=['-DNDEBUG=1', '-O3'],
     )
 
 setup(
@@ -51,5 +51,7 @@ setup(
     zip_safe= False,
     use_2to3=True,
     use_2to3_fixers=['fixers'],
-    use_2to3_exclude_fixers=['lib2to3.fixes.fix_next']  # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
+    # traits_listener.ListenerItem has a trait *next* which gets
+    # wrongly renamed
+    use_2to3_exclude_fixers=['lib2to3.fixes.fix_next']
 )
