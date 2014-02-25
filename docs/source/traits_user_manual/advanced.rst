@@ -669,7 +669,7 @@ The signature of :func:`~traits.adaptation.api.register_factory` is:
 
 The :func:`~traits.adaptation.adaptation_manager.register_factory` function
 takes as first argument
-the adapter class (or an `adapter factory <adapter-factories>`_), followed
+the adapter class (or an :ref:`adapter factory <adapter-factories>`), followed
 by the protocol to be adapted (the one provided by the adaptee,
 :attr:`from_protocol`), and the protocol that it provides
 (:attr:`to_protocol`).
@@ -1075,8 +1075,8 @@ The Property() function has the following signature:
 All parameters are optional, including the *fget* "getter", *fvalidate*
 "validator"  and *fset* "setter" methods. If no parameters are specified, then
 the trait looks for and uses methods on the same class as the attribute that
-the trait is assigned to, with names of the form _get_\ *name*\ (), 
-_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the 
+the trait is assigned to, with names of the form _get_\ *name*\ (),
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the
 trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
@@ -1468,6 +1468,3 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
-
-
-
