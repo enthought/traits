@@ -23,7 +23,7 @@ from __future__ import absolute_import
 import sys
 
 from traits.testing.unittest_tools import unittest
-from traits.adaptation.api import get_global_adaptation_manager,\
+from traits.adaptation.api import get_global_adaptation_manager, \
     set_global_adaptation_manager
 from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
     implements, Instance, Int, Interface, List, Supports, TraitError

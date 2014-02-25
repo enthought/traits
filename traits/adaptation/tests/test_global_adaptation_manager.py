@@ -33,7 +33,7 @@ class TestGlobalAdaptationManager(unittest.TestCase):
         adaptation_manager.register_factory(
             factory       = ex.UKStandardToEUStandard,
             from_protocol = ex.UKStandard,
-            to_protocol   = ex.EUStandard
+            to_protocol   = ex.EUStandard,
         )
 
         # Create a UKPlug.
