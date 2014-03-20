@@ -2594,8 +2594,12 @@ setattr_validate_property ( trait_object      * traito,
                             PyObject          * value ) {
 
     int result;
+    PyObject * validated;
 
-    PyObject * validated = traitd->validate( traitd, obj, name, value );
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+
+    validated = traitd->validate( traitd, obj, name, value );
     if ( validated == NULL )
         return -1;
     result = ((trait_setattr) traitd->post_setattr)( traito, traitd, obj, name,

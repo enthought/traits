@@ -669,7 +669,7 @@ The signature of :func:`~traits.adaptation.api.register_factory` is:
 
 The :func:`~traits.adaptation.adaptation_manager.register_factory` function
 takes as first argument
-the adapter class (or an `adapter factory <adapter-factories>`_), followed
+the adapter class (or an :ref:`adapter factory <adapter-factories>`), followed
 by the protocol to be adapted (the one provided by the adaptee,
 :attr:`from_protocol`), and the protocol that it provides
 (:attr:`to_protocol`).
@@ -1017,6 +1017,25 @@ Gotchas
    the classes involved in adaptation are typically subclasses of
    :class:`~.HasTraits`, in which case this is not an issue.
 
+2) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
+   :func:`~traits.adaptation.adaptation_manager.adapt`,
+   etc. use a global adaptation manager, which is accessible through the
+   function
+   :func:`~traits.adaptation.adaptation_manager.get_global_adaptation_manager`.
+   The traits automatic adaptation features also use the global manager.
+   Having a global adaptation manager can get you into trouble, for the usual
+   reasons related to having a global state. If you want to have more control
+   over adaptation, we recommend creating a new
+   :class:`~traits.adaptation.adaptation_manager.AdaptationManager`
+   instance, use it directly in your application, and set it as the global
+   manager using
+   :func:`~traits.adaptation.adaptation_manager.set_global_adaptation_manager`.
+   A common issue with the global manager arises in unittesting, where adapters
+   registered in one test influence the outcome of other tests downstream.
+   Tests relying on adaptation should make sure to reset the state of the
+   global adapter using
+   :func:`~traits.adaptation.adaptation_manager.reset_global_adaptation_manager`.
+
 Recommended readings about adaptation
 `````````````````````````````````````
 
@@ -1053,11 +1072,12 @@ The Property() function has the following signature:
 
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
-All parameters are optional, including the *fget* "getter" and *fset* "setter"
-methods. If no parameters are specified, then the trait looks for and uses
-methods on the same class as the attribute that the trait is assigned to, with
-names of the form _get_\ *name*\ () and _set_\ *name*\ (), where *name* is the
-name of the trait attribute.
+All parameters are optional, including the *fget* "getter", *fvalidate*
+"validator"  and *fset* "setter" methods. If no parameters are specified, then
+the trait looks for and uses methods on the same class as the attribute that
+the trait is assigned to, with names of the form _get_\ *name*\ (),
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the
+trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
 that trait's handler supersedes the *handler* argument, if any. Because the
@@ -1448,6 +1468,3 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
-
-
-

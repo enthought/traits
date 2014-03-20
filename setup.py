@@ -14,6 +14,16 @@ ctraits = Extension(
     extra_compile_args=['-DNDEBUG=1', '-O3'],
     )
 
+
+def additional_commands():
+    try:
+        from sphinx.setup_command import BuildDoc
+    except ImportError:
+        return {}
+    else:
+        return {'documentation': BuildDoc}
+
+
 setup(
     name='traits',
     version=d['__version__'],
@@ -53,5 +63,6 @@ setup(
     use_2to3_fixers=['fixers'],
     # traits_listener.ListenerItem has a trait *next* which gets
     # wrongly renamed
-    use_2to3_exclude_fixers=['lib2to3.fixes.fix_next']
+    use_2to3_exclude_fixers=['lib2to3.fixes.fix_next'],
+    cmdclass=additional_commands(),
 )
