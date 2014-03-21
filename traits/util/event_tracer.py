@@ -27,12 +27,12 @@ from traits import trait_notifiers
 
 
 CHANGEMSG = (
-    u"{time} {direction:-{direction}{length}} '{name}' changed from "
+    u"{time} {direction:-{direction}{length}} {name!r} changed from "
     u"{old!r} to {new!r} in '{class_name}'\n")
-CALLINGMSG = u"{time} {action:>{gap}}: '{handler}' in {source}\n"
+CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
-    u"EXIT: '{handler}'{exception}\n")
+    u"EXIT: {handler!r}{exception}\n")
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
