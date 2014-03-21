@@ -46,28 +46,22 @@ class SentinelRecord(object):
 class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
-    ------------ --------------------------------------------------------------
-    Field        Description
-    ------------ --------------------------------------------------------------
-    `time`       Time stamp in UTC.
-    `indent`     Depth level of the new change event in a chain of trait change
-                 dispatches.
-    `name`       The name of the trait that changed
-    `old`        The old value.
-    `new`        The new value.
-    `class_name` The name of the class that the trati change took place.
-    ------------ --------------------------------------------------------------
-
     """
 
     __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
 
     def __init__(self, time, indent, name, old, new, class_name):
+        #: Time stamp in UTC.
         self.time = time
+        #: Depth level in a chain of trait change dispatches.
         self.indent = indent
+        #: The name of the trait that changed
         self.name = name
+        #: The old value.
         self.old = old
+        #: The new value.
         self.new = new
+        #: The name of the class that the trati change took place.
         self.class_name = class_name
 
     def __unicode__(self):
@@ -86,23 +80,18 @@ class ChangeMessageRecord(object):
 class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
-    --------- --------------------------------------------------------------
-    Field     Description
-    --------- --------------------------------------------------------------
-    `time`    Time stamp in UTC.
-    `indent`  Depth level of the call in a chain of trait change dispatches.
-    `handler` The traits change handler that is called.
-    `source`  The source file where the handler was defined.
-    --------- --------------------------------------------------------------
-
     """
 
     __slots__ = ('time', 'indent', 'handler', 'source')
 
     def __init__(self, time, indent, handler, source):
+        #: Time stamp in UTC.
         self.time = time
+        #: Depth level of the call in a chain of trait change dispatches.
         self.indent = indent
+        #: The traits change handler that is called.
         self.handler = handler
+        #: The source file where the handler was defined.
         self.source = source
 
     def __unicode__(self):
@@ -118,23 +107,18 @@ class CallingMessageRecord(object):
 class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
 
-    ----------- ------------------------------------------------------------
-    Field       Description
-    ----------- ------------------------------------------------------------
-    `time`      Time stamp in UTC.
-    `indent`    Depth level of the exit in a chain of trait change dispatch.
-    `handler`   The traits change handler that is called.
-    `exception` The exception type (if one took place).
-    ----------- ------------------------------------------------------------
-
     """
 
     __slots__ = ('time', 'indent', 'handler', 'exception')
 
     def __init__(self, time, indent, handler, exception):
+        #: Time stamp in UTC.
         self.time = time
+        #: Depth level of the exit in a chain of trait change dispatch.
         self.indent = indent
+        #: The traits change handler that is called.
         self.handler = handler
+        #: The exception type (if one took place)
         self.exception = exception
 
     def __unicode__(self):
