@@ -280,14 +280,14 @@ class MultiThreadChangeEventRecorder(object):
 
         """
         self.tracers = {}
-        self.tracer_lock = threading.Lock()
+        self._tracer_lock = threading.Lock()
         self.container = container
 
     def close(self):
         """ Close and stop all logging.
 
         """
-        with self.tracer_lock:
+        with self._tracer_lock:
             self.tracers = {}
 
     def pre_tracer(self, obj, name, old, new, handler):
@@ -309,7 +309,7 @@ class MultiThreadChangeEventRecorder(object):
         tracer.post_tracer(obj, name, old, new, handler, exception=exception)
 
     def _get_tracer(self):
-        with self.tracer_lock:
+        with self._tracer_lock:
             thread = threading.current_thread().name
             if thread not in self.tracers:
                 container = self.container
