@@ -46,6 +46,18 @@ class SentinelRecord(object):
 class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
+    ------------ --------------------------------------------------------------
+    Field        Description
+    ------------ --------------------------------------------------------------
+    `time`       Time stamp in UTC.
+    `indent`     Depth level of the new change event in a chain of trait change
+                 dispatches.
+    `name`       The name of the trait that changed
+    `old`        The old value.
+    `new`        The new value.
+    `class_name` The name of the class that the trati change took place.
+    ------------ --------------------------------------------------------------
+
     """
 
     __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
@@ -74,6 +86,15 @@ class ChangeMessageRecord(object):
 class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
+    --------- --------------------------------------------------------------
+    Field     Description
+    --------- --------------------------------------------------------------
+    `time`    Time stamp in UTC.
+    `indent`  Depth level of the call in a chain of trait change dispatches.
+    `handler` The traits change handler that is called.
+    `source`  The source file where the handler was defined.
+    --------- --------------------------------------------------------------
+
     """
 
     __slots__ = ('time', 'indent', 'handler', 'source')
@@ -96,6 +117,15 @@ class CallingMessageRecord(object):
 
 class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
+
+    ----------- ------------------------------------------------------------
+    Field       Description
+    ----------- ------------------------------------------------------------
+    `time`      Time stamp in UTC.
+    `indent`    Depth level of the exit in a chain of trait change dispatch.
+    `handler`   The traits change handler that is called.
+    `exception` The exception type (if one took place).
+    ----------- ------------------------------------------------------------
 
     """
 
