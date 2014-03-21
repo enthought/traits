@@ -36,37 +36,30 @@ EXITMSG = (
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
-class BaseMessageRecord(object):
-    """ Default message record class
-
-    All message record (sub)classes accept only keywords arguments as defined
-    in the __slots__ attribute.
+class SentinelRecord(object):
+    """ Sentinel record to separate groups of chained change event dispatches.
 
     """
-
     __slots__ = ()
-
-    def __init__(self, **kwargs):
-        if sorted(kwargs.keys()) == sorted(self.__slots__):
-            for attr, value in kwargs.iteritems():
-                setattr(self, attr, value)
-        else:
-            msg = (
-                '{0} expects only these keywords {1} at initialization but'
-                'received values for {2}')
-            raise TypeError(
-                msg.format(type(self), self.__slots__, kwargs.keys()))
 
     def __unicode__(self):
         return u'\n'
 
 
-class ChangeMessageRecord(BaseMessageRecord):
+class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
     """
 
     __slots__ = ('time', 'indent', 'name', 'old', 'new', 'class_name')
+
+    def __init__(self, time, indent, name, old, new, class_name):
+        self.time = time
+        self.indent = indent
+        self.name = name
+        self.old = old
+        self.new = new
+        self.class_name = class_name
 
     def __unicode__(self):
         length = self.indent * 2
@@ -81,12 +74,19 @@ class ChangeMessageRecord(BaseMessageRecord):
         )
 
 
-class CallingMessageRecord(BaseMessageRecord):
+class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
     """
 
     __slots__ = ('time', 'indent', 'action', 'handler', 'source')
+
+    def __init__(self, time, indent, action, handler, source):
+        self.time = time
+        self.indent = indent
+        self.action = action
+        self.handler = handler
+        self.source = source
 
     def __unicode__(self):
         gap = self.indent * 2 + SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE
@@ -98,12 +98,18 @@ class CallingMessageRecord(BaseMessageRecord):
             gap=gap)
 
 
-class ExitMessageRecord(BaseMessageRecord):
+class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
 
     """
 
     __slots__ = ('time', 'indent', 'handler', 'exception')
+
+    def __init__(self, time, indent, handler, exception):
+        self.time = time
+        self.indent = indent
+        self.handler = handler
+        self.exception = exception
 
     def __unicode__(self):
         length = self.indent * 2
@@ -238,7 +244,7 @@ class ChangeEventRecorder(object):
         )
 
         if indent == 1:
-            container.record(BaseMessageRecord())
+            container.record(SentinelRecord())
 
 
 class MultiThreadChangeEventRecorder(object):

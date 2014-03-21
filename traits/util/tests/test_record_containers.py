@@ -16,7 +16,7 @@ import tempfile
 import threading
 import unittest
 from traits.util.event_tracer import (
-    BaseMessageRecord, RecordContainer, MultiThreadRecordContainer)
+    SentinelRecord, RecordContainer, MultiThreadRecordContainer)
 
 
 class TestRecordContainers(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestRecordContainers(unittest.TestCase):
 
         # add records
         for i in range(7):
-            container.record(BaseMessageRecord())
+            container.record(SentinelRecord())
         self.assertEqual(len(container._records), 7)
 
         # save records
@@ -49,7 +49,7 @@ class TestRecordContainers(unittest.TestCase):
         def record(container):
             thread = threading.current_thread().name
             collector = container.get_change_event_collector(thread)
-            collector.record(BaseMessageRecord())
+            collector.record(SentinelRecord())
 
         thread_1 = threading.Thread(target=record, args=(container,))
         thread_2 = threading.Thread(target=record, args=(container,))
@@ -62,7 +62,7 @@ class TestRecordContainers(unittest.TestCase):
         self.assertEqual(len(container._record_containers), 3)
         for collector in container._record_containers.itervalues():
             self.assertTrue(
-                isinstance(collector._records[0], BaseMessageRecord))
+                isinstance(collector._records[0], SentinelRecord))
             self.assertEqual(len(collector._records), 1)
 
         # save records

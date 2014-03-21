@@ -12,20 +12,20 @@
 #----------------------------------------------------------------------------
 import unittest
 from traits.util.event_tracer import (
-    BaseMessageRecord, ChangeMessageRecord, CallingMessageRecord,
+    SentinelRecord, ChangeMessageRecord, CallingMessageRecord,
     ExitMessageRecord)
 
 
 class TestMessageRecords(unittest.TestCase):
 
     def test_base_message_record(self):
-        record = BaseMessageRecord()
+        record = SentinelRecord()
 
         # Check unicode output
         self.assertEqual(unicode(record), u'\n')
 
         # Check initialization
-        self.assertRaises(TypeError, BaseMessageRecord, sdd=0)
+        self.assertRaises(TypeError, SentinelRecord, sdd=0)
 
     def test_change_message_record(self):
         record = ChangeMessageRecord(
