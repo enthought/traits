@@ -76,12 +76,11 @@ class CallingMessageRecord(object):
 
     """
 
-    __slots__ = ('time', 'indent', 'action', 'handler', 'source')
+    __slots__ = ('time', 'indent', 'handler', 'source')
 
-    def __init__(self, time, indent, action, handler, source):
+    def __init__(self, time, indent, handler, source):
         self.time = time
         self.indent = indent
-        self.action = action
         self.handler = handler
         self.source = source
 
@@ -89,7 +88,7 @@ class CallingMessageRecord(object):
         gap = self.indent * 2 + SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE
         return CALLINGMSG.format(
             time=self.time,
-            action=self.action,
+            action='CALLING',
             handler=self.handler,
             source=self.source,
             gap=gap)
@@ -227,7 +226,6 @@ class ChangeEventRecorder(object):
             CallingMessageRecord(
                 time=time,
                 indent=indent,
-                action='CALLING',
                 handler=handler.__name__,
                 source=inspect.getsourcefile(handler),
             ),

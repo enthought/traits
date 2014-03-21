@@ -53,11 +53,11 @@ class TestMessageRecords(unittest.TestCase):
 
     def test_calling_message_record(self):
         record = CallingMessageRecord(
-            time=7,  indent=5, action='run', handler='john', source='sssss')
+            time=7,  indent=5, handler='john', source='sssss')
 
         # Check unicode output
         self.assertEqual(
-            unicode(record), u"7                 run: 'john' in sssss\n")
+            unicode(record), u"7             CALLING: 'john' in sssss\n")
 
         # Check initialization
         self.assertRaises(TypeError, CallingMessageRecord, sdd=0)
