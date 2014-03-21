@@ -72,4 +72,4 @@ local folder. The file contents will be similar to the lines below::
     2014-03-21 14:11:20.782000 <- EXIT: '_add_number_to_list'
 
 
-.. |record_events| replace:: :fun:`~traits.util.event_tracer.record_events`
+.. |record_events| replace:: :func:`~traits.util.event_tracer.record_events`
