@@ -10,8 +10,6 @@
 #
 #  Thanks for using Enthought open source!
 #
-#  Author: Simon Jagoe
-#
 #------------------------------------------------------------------------------
 """ Debugging helpers to record trait change events in single and
 multi-threaded environments.
