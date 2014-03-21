@@ -11,15 +11,14 @@
 #  Thanks for using Enthought open source!
 #
 #------------------------------------------------------------------------------
-""" Debugging helpers to record trait change events in single and
-multi-threaded environments.
+""" Record trait change events in single and multi-threaded environments.
 
 """
-from contextlib import contextmanager
-from datetime import datetime
 import inspect
 import os
 import threading
+from contextlib import contextmanager
+from datetime import datetime
 
 from traits import trait_notifiers
 
@@ -149,6 +148,11 @@ class RecordContainer(object):
 class MultiThreadRecordContainer(object):
     """ A container of record containers that are used by separate threads.
 
+    Each record container is mapped to a thread name id. When a RecordContainer
+    does not exist for a specific thread a new empty RecordContainer will be
+    created on request.
+
+
     """
 
     def __init__(self):
@@ -156,6 +160,12 @@ class MultiThreadRecordContainer(object):
         self._record_containers = {}
 
     def get_change_event_collector(self, thread_name):
+        """ Return the dedicated RecordContainer for the thread.
+
+        If no RecordContainer is found for `thread_name` then a new
+        RecordContainer is created.
+
+        """
         with self._creation_lock:
             container = self._record_containers.get(thread_name)
             if container is None:
@@ -164,6 +174,12 @@ class MultiThreadRecordContainer(object):
             return container
 
     def save_to_directory(self, directory_name):
+        """ Save records files into the directory.
+
+        Each RecordContainer will dump its records on a separate file named
+        <thread_name>.trace.
+
+        """
         with self._creation_lock:
             containers = self._record_containers
             for thread_name, container in containers.iteritems():
@@ -182,8 +198,8 @@ class ChangeEventRecorder(object):
 
         Parameters
         ----------
-        fh : stream
-           An io stream to store the records for each trait change.
+        container : MultiThreadRecordContainer
+           An container to store the records for each trait change.
 
         """
         self.indent = 1
@@ -246,10 +262,10 @@ class ChangeEventRecorder(object):
 
 
 class MultiThreadChangeEventRecorder(object):
-    """ A thread aware trait change recorder
+    """ A thread aware trait change recorder.
 
-    The class manages multiple ChangeEventRecorders which record
-    trait change events for each thread in a separate file.
+    The class manages multiple ChangeEventRecorders which record trait change
+    events for each thread in a separate file.
 
     """
 
@@ -258,8 +274,9 @@ class MultiThreadChangeEventRecorder(object):
 
         Parameters
         ----------
-        container : Mulkti
-            A
+        container : MultiThreadChangeEventRecorder
+            The container of RecordContainers to keep the trait change records
+            for each thread.
 
         """
         self.tracers = {}
