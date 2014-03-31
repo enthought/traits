@@ -40,13 +40,13 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         uk_plug = self.adaptation_manager.adapt(plug, ex.UKPlug)
 
         # The adaptation manager should simply return the same object.
-        self.assert_(uk_plug is plug)
+        self.assertIs(uk_plug, plug)
 
         # Try to adapt it to an ABC that is registered for its type.
         uk_plug = self.adaptation_manager.adapt(plug, ex.UKStandard)
 
         # The adaptation manager should simply return the same object.
-        self.assert_(uk_plug is plug)
+        self.assertIs(uk_plug, plug)
 
         return
 
@@ -119,7 +119,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         japan_plug = self.adaptation_manager.adapt(uk_plug, ex.JapanStandard)
         self.assertIsNotNone(japan_plug)
         self.assertIsInstance(japan_plug, ex.EUStandardToJapanStandard)
-        self.assert_(japan_plug.adaptee.adaptee is uk_plug)
+        self.assertIs(japan_plug.adaptee.adaptee, uk_plug)
 
         return
 
@@ -162,7 +162,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         iraq_plug = self.adaptation_manager.adapt(uk_plug, ex.IraqStandard)
         self.assertIsNotNone(iraq_plug)
         self.assertIsInstance(iraq_plug, ex.EUStandardToIraqStandard)
-        self.assert_(iraq_plug.adaptee.adaptee is uk_plug)
+        self.assertIs(iraq_plug.adaptee.adaptee, uk_plug)
 
         return
 
@@ -208,7 +208,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
             type(iraq_plug),
             [ex.EUStandardToIraqStandard, ex.JapanStandardToIraqStandard]
         )
-        self.assert_(iraq_plug.adaptee.adaptee is uk_plug)
+        self.assertIs(iraq_plug.adaptee.adaptee, uk_plug)
 
         return
 
@@ -507,7 +507,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         # Adaptation to B should succeed through D
         b = self.adaptation_manager.adapt(c, B)
         self.assertIsNotNone(b)
-        self.assert_(hasattr(b, 'marker'))
+        self.assertTrue(hasattr(b, 'marker'))
 
         return
 
@@ -521,7 +521,7 @@ class TestAdaptationManagerWithABC(unittest.TestCase):
         class IB(IA):
             pass
 
-        self.assert_(self.adaptation_manager.provides_protocol(IB, IA))
+        self.assertTrue(self.adaptation_manager.provides_protocol(IB, IA))
 
         return
 

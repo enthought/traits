@@ -79,7 +79,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         del adapter_1
         del editor
 
-        self.assert_(factory.is_empty)
+        self.assertTrue(factory.is_empty)
 
         return
 
@@ -129,12 +129,12 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         adapter_2 = self.adaptation_manager.adapt(editor, ex.IPrintable)
         self.assertIsNotNone(adapter_2)
-        self.assert_(hasattr(adapter_2, 'marker'))
+        self.assertTrue(hasattr(adapter_2, 'marker'))
 
         del adapter_2
         del editor
 
-        self.assert_(factory.is_empty)
+        self.assertTrue(factory.is_empty)
 
 if __name__ == '__main__':
     unittest.main()
