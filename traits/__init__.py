@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-__version__ = '4.5.0.dev'
+__version__ = '4.5.0'
 
 
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
