@@ -21,7 +21,7 @@ from __future__ import absolute_import
 import os
 import pickle
 import sys
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
 from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
