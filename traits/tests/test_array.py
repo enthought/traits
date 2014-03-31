@@ -23,18 +23,21 @@ else:
 from ..api import Array, Bool, HasTraits
 
 
-class Foo(HasTraits):
-    a = Array()
-    event_fired = Bool(False)
+if numpy_available:
+    # Use of `Array` requires NumPy to be installed.
 
-    def _a_changed(self):
-        self.event_fired = True
+    class Foo(HasTraits):
+        a = Array()
+        event_fired = Bool(False)
+
+        def _a_changed(self):
+            self.event_fired = True
 
 
 class ArrayTestCase(unittest.TestCase):
     """ Test cases for delegated traits. """
 
-    @unittest.skipUnless(numpy_available, "test requires the NumPy package")
+    @unittest.skipUnless(numpy_available, "numpy not available")
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
         one element.
