@@ -13,7 +13,12 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from numpy import array, concatenate, zeros
+try:
+    import numpy
+except ImportError:
+    numpy_available = False
+else:
+    numpy_available = True
 
 from ..api import Array, Bool, HasTraits
 
@@ -29,17 +34,18 @@ class Foo(HasTraits):
 class ArrayTestCase(unittest.TestCase):
     """ Test cases for delegated traits. """
 
+    @unittest.skipUnless(numpy_available, "test requires the NumPy package")
     def test_zero_to_one_element(self):
         """ Test that an event fires when an Array trait changes from zero to
         one element.
         """
 
         f = Foo()
-        f.a = zeros((2,), float)
+        f.a = numpy.zeros((2,), float)
         f.event_fired = False
 
         # Change the array.
-        f.a = concatenate((f.a, array([100])))
+        f.a = numpy.concatenate((f.a, numpy.array([100])))
 
         # Confirm that the static trait handler was invoked.
         self.assertEqual(f.event_fired, True)
