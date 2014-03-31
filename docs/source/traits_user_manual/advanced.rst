@@ -678,7 +678,7 @@ by the protocol to be adapted (the one provided by the adaptee,
 
 This is the example from the previous section, were the adapter is registered::
 
-    from traits.adaptation.api import HasTraitsAdapter, Instance, provides
+    from traits.adaptation.api import Adapter, Instance, provides
 
     # Declare what interfaces this adapter implements for its client
     @provides(IName)
@@ -731,12 +731,12 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     import abc
     import numpy
     from traits.api import Array, HasTraits
-    from traits.adaptation.api import adapt, HasTraitsAdapter, register_factory
+    from traits.adaptation.api import adapt, Adapter, register_factory
 
     class ImageABC(object):
         __metaclass__ = abc.ABCMeta
 
-    class NDArrayToImage(HasTraitsAdapter):
+    class NDArrayToImage(Adapter):
         adaptee = Array
 
     # Declare that NDArrayToImage implements ImageABC.
@@ -857,7 +857,7 @@ For example, a Traits object can be written against the ``IPrintable``
 interface and be open to extensions by adaptation as follows:
 ::
 
-    from traits.api import HasTraits, HasTraitsAdapter, implements, Interface, List, register_factory, Str, Supports
+    from traits.api import Adapter, HasTraits, implements, Interface, List, register_factory, Str, Supports
 
     class IPrintable(Interface):
         def get_formatted_text(self, n_cols):
@@ -891,7 +891,7 @@ interface and be open to extensions by adaptation as follows:
         text = Str
 
     @provides(IPrintable)
-    class TextDocumentToIPrintable(HasTraitsAdapter):
+    class TextDocumentToIPrintable(Adapter):
         """ Adapt TextDocument and provide IPrintable. """
 
         def get_formatted_text(self, n_cols):
