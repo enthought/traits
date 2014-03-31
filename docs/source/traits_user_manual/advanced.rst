@@ -857,7 +857,8 @@ For example, a Traits object can be written against the ``IPrintable``
 interface and be open to extensions by adaptation as follows:
 ::
 
-    from traits.api import Adapter, HasTraits, implements, Interface, List, register_factory, Str, Supports
+    from traits.api import (Adapter, HasTraits, Interface, List, provides,
+                            register_factory, Str, Supports)
 
     class IPrintable(Interface):
         def get_formatted_text(self, n_cols):
