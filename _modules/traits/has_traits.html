@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0-rc.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -77,12 +79,12 @@
 <span class="c">#  Imports:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">copy</span> <span class="kn">as</span> <span class="nn">copy_module</span>
 <span class="kn">import</span> <span class="nn">weakref</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
 
@@ -90,7 +92,7 @@
 
 <span class="kn">from</span> <span class="nn">.adaptation.adaptation_error</span> <span class="kn">import</span> <span class="n">AdaptationError</span>
 
-<span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">CHasTraits</span><span class="p">,</span> <span class="n">CTraitMethod</span><span class="p">,</span> <span class="n">_HasTraits_monitors</span>
+<span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">CHasTraits</span><span class="p">,</span> <span class="n">_HasTraits_monitors</span>
 
 <span class="kn">from</span> <span class="nn">.traits</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CTrait</span><span class="p">,</span> <span class="n">ForwardProperty</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span> <span class="n">SpecialNames</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span>
     <span class="n">TraitFactory</span><span class="p">,</span> <span class="n">__newobj__</span><span class="p">,</span> <span class="n">generic_trait</span><span class="p">,</span> <span class="n">trait_factory</span><span class="p">)</span>
@@ -105,7 +107,7 @@
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="n">TraitType</span>
 
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Missing</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span>
-    <span class="n">add_article</span><span class="p">,</span> <span class="nb">enumerate</span><span class="p">,</span> <span class="n">is_none</span><span class="p">,</span> <span class="n">not_event</span><span class="p">,</span> <span class="n">not_false</span><span class="p">)</span>
+    <span class="n">add_article</span><span class="p">,</span> <span class="n">is_none</span><span class="p">,</span> <span class="n">not_event</span><span class="p">,</span> <span class="n">not_false</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
@@ -150,8 +152,15 @@
 <span class="n">WrapperTypes</span>   <span class="o">=</span> <span class="p">(</span> <span class="n">StaticAnyTraitChangeNotifyWrapper</span><span class="p">,</span>
                    <span class="n">StaticTraitChangeNotifyWrapper</span> <span class="p">)</span>
 
-<span class="n">MethodTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">MethodType</span><span class="p">,</span>   <span class="n">CTraitMethod</span> <span class="p">)</span>
-<span class="n">FunctionTypes</span>  <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">CTraitMethod</span> <span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="c"># in python 3, unbound methods do not exist anymore, they&#39;re just functions</span>
+    <span class="n">BoundMethodTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">MethodType</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">UnboundMethodTypes</span>  <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">BoundMethodTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">MethodType</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">UnboundMethodTypes</span>  <span class="o">=</span> <span class="p">(</span> <span class="n">MethodType</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="n">FunctionTypes</span>  <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="p">)</span>
 
 <span class="c"># Class dictionary entries used to save trait, listener and view information and</span>
 <span class="c"># definitions:</span>
@@ -205,30 +214,53 @@
 
 <span class="k">def</span> <span class="nf">_get_method</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">result</span>
     <span class="k">return</span> <span class="bp">None</span>
 
-<span class="k">def</span> <span class="nf">_get_def</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Gets the definition of a specified method (if any).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">method</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;__&#39;</span><span class="p">:</span>
-        <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">method</span> <span class="p">)</span>
 
-    <span class="n">result</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">method</span> <span class="p">)</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
-        <span class="n">is_function_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span>
-        <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_def</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the definition of a specified method (if any).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;__&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">method</span> <span class="p">)</span>
+    
+        <span class="n">result</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">method</span> <span class="p">)</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="n">is_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> \
-            <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="o">.</span><span class="n">im_func</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
+            <span class="n">is_function_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
             <span class="k">return</span> <span class="n">result</span>
-
-    <span class="k">return</span> <span class="bp">None</span>
+    
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="n">result</span>
+    
+        <span class="k">return</span> <span class="bp">None</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_def</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">method</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the definition of a specified method (if any).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">method</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;__&#39;</span><span class="p">:</span>
+            <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;_</span><span class="si">%s%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">method</span> <span class="p">)</span>
+    
+        <span class="n">result</span> <span class="o">=</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">method</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="n">is_function_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">result</span>
+    
+        <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">base</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">is_unbound_method_type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">and</span> \
+                <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span> <span class="n">result</span><span class="o">.</span><span class="n">im_func</span><span class="p">,</span> <span class="s">&#39;on_trait_change&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="n">result</span>
+    
+        <span class="k">return</span> <span class="bp">None</span>
 
 
 <span class="k">def</span> <span class="nf">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
@@ -236,9 +268,13 @@
     <span class="c"># The only way to get the type from the method with str comparison ...</span>
     <span class="k">return</span> <span class="s">&#39;cython_function_or_method&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
 
-<span class="k">def</span> <span class="nf">is_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">is_bound_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Test if the given input is a Python method or a Cython method. &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">MethodTypes</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">BoundMethodTypes</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">is_unbound_method_type</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Test if the given input is a Python method or a Cython method. &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">UnboundMethodTypes</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">is_cython_func_or_method</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">is_function_type</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Test if the given input is a Python function or a Cython method. &quot;&quot;&quot;</span>
@@ -337,53 +373,6 @@
     <span class="k">def</span> <span class="nf">__call__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">test</span>  <span class="p">):</span> <span class="k">return</span> <span class="n">test</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Checks if a function can be converted to a &#39;trait method&#39; (and converts it if</span>
-<span class="c">#  possible):</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-
-<span class="k">def</span> <span class="nf">_check_method</span> <span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span> <span class="p">):</span>
-    <span class="n">method_name</span>  <span class="o">=</span> <span class="n">name</span>
-    <span class="n">return_trait</span> <span class="o">=</span> <span class="n">Any</span>
-
-    <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span> <span class="s">&#39;__&#39;</span> <span class="p">)</span>
-    <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">type_name</span>    <span class="o">=</span> <span class="n">name</span><span class="p">[</span> <span class="p">:</span> <span class="n">col</span> <span class="p">]</span>
-        <span class="n">method_name</span>  <span class="o">=</span> <span class="n">name</span><span class="p">[</span> <span class="n">col</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:</span> <span class="p">]</span>
-
-        <span class="n">return_trait</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">type_name</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">return_trait</span><span class="p">,</span> <span class="n">CTrait</span> <span class="p">):</span>
-            <span class="n">return_trait</span> <span class="o">=</span> <span class="n">SpecialNames</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">type_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="n">return_trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">return_trait</span> <span class="o">=</span> <span class="n">Any</span>
-                <span class="n">method_name</span>  <span class="o">=</span> <span class="n">name</span>
-
-    <span class="n">has_traits</span> <span class="o">=</span> <span class="p">(</span><span class="n">method_name</span> <span class="o">!=</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">arg_traits</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">defaults</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_defaults</span>
-    <span class="k">if</span> <span class="n">defaults</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
-            <span class="n">trait</span> <span class="o">=</span> <span class="n">_check_trait</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">trait</span><span class="p">,</span> <span class="n">CTrait</span> <span class="p">):</span>
-                <span class="n">has_traits</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">trait</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
-            <span class="n">arg_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">has_traits</span><span class="p">:</span>
-        <span class="n">code</span>       <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span>
-        <span class="n">var_names</span>  <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">co_varnames</span>
-        <span class="n">arg_traits</span> <span class="o">=</span> <span class="p">(([</span> <span class="n">Missing</span> <span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">code</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span> <span class="n">arg_traits</span> <span class="p">)))</span> <span class="o">+</span>
-                      <span class="n">arg_traits</span><span class="p">)</span>
-        <span class="n">traits</span>     <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">arg_traits</span> <span class="p">):</span>
-            <span class="n">traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">var_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">)</span>
-            <span class="n">traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span>
-        <span class="k">del</span> <span class="n">class_dict</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-        <span class="n">class_dict</span><span class="p">[</span> <span class="n">method_name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">CTraitMethod</span><span class="p">(</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span>
-                                          <span class="nb">tuple</span><span class="p">(</span> <span class="p">[</span> <span class="n">return_trait</span> <span class="p">]</span> <span class="o">+</span> <span class="n">traits</span> <span class="p">)</span> <span class="p">)</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Returns either the original value or a valid CTrait if the value can be</span>
 <span class="c">#  converted to a CTrait:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
@@ -474,225 +463,10 @@
     <span class="k">return</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Defines a factory function for creating type checked methods:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-
-<div class="viewcode-block" id="trait_method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.trait_method">[docs]</a><span class="k">def</span> <span class="nf">trait_method</span> <span class="p">(</span> <span class="n">func</span><span class="p">,</span> <span class="n">return_type</span><span class="p">,</span> <span class="o">**</span><span class="n">arg_types</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Factory function for creating type-checked methods.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    func : function</span>
-<span class="sd">        The method to be type-checked.</span>
-<span class="sd">    return_type :</span>
-<span class="sd">        The return type of the method, a trait or value that can be converted</span>
-<span class="sd">        to a trait using Trait().</span>
-<span class="sd">    **arg_types :</span>
-<span class="sd">        Zero or more &#39;*keyword* = *trait*&#39; pairs, the argument names and types</span>
-<span class="sd">        of parameters of the type-checked method. The *trait* portion of each</span>
-<span class="sd">        pair must be a trait or a value that can be converted to a trait using</span>
-<span class="sd">        Trait().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># Make the sure the first argument is a function:</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">func</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">FunctionType</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">return_type</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">FunctionType</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="s">&quot;First or second argument must be a function.&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">func</span><span class="p">,</span> <span class="n">return_type</span> <span class="o">=</span> <span class="n">return_type</span><span class="p">,</span> <span class="n">func</span>
-
-    <span class="c"># Make sure the return type is a trait (if not, coerce it to one):</span>
-    <span class="n">return_type</span> <span class="o">=</span> <span class="n">_trait_for</span><span class="p">(</span> <span class="n">return_type</span> <span class="p">)</span>
-
-    <span class="c"># Make up the list of arguments defined by the function we are wrapping:</span>
-    <span class="n">code</span>       <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span>
-    <span class="n">arg_count</span>  <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">co_argcount</span>
-    <span class="n">var_names</span>  <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span> <span class="p">:</span> <span class="n">arg_count</span> <span class="p">]</span>
-    <span class="n">defaults</span>   <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_defaults</span> <span class="ow">or</span> <span class="p">()</span>
-    <span class="n">defaults</span>   <span class="o">=</span> <span class="p">(</span> <span class="n">Missing</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">arg_count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span> <span class="n">defaults</span> <span class="p">))</span> <span class="o">+</span> <span class="n">defaults</span>
-    <span class="n">arg_traits</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">var_names</span> <span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">trait</span> <span class="o">=</span> <span class="n">arg_types</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-            <span class="k">del</span> <span class="n">arg_types</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="c"># fixme: Should this be a hard error (i.e. missing parameter type?)</span>
-            <span class="n">trait</span> <span class="o">=</span> <span class="n">Any</span>
-
-        <span class="n">arg_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
-        <span class="n">arg_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Trait</span><span class="p">(</span> <span class="n">defaults</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_trait_for</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-
-    <span class="c"># Make sure there are no unaccounted for type parameters left over:</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">arg_types</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">names</span> <span class="o">=</span> <span class="n">arg_types</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">names</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; keyword defines a type for an &quot;</span>
-                               <span class="s">&quot;argument which &#39;</span><span class="si">%s</span><span class="s">&#39; does not have.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                               <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span> <span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">names</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The </span><span class="si">%s</span><span class="s"> keywords define types for arguments &quot;</span>
-                               <span class="s">&quot;which &#39;</span><span class="si">%s</span><span class="s">&#39; does not have.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                               <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span> <span class="p">),</span>
-                               <span class="n">func</span><span class="o">.</span><span class="n">func_name</span> <span class="p">))</span>
-
-    <span class="c"># Otherwise, return a method wrapper for the function:</span>
-    <span class="k">return</span> <span class="n">CTraitMethod</span><span class="p">(</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span>
-                                         <span class="nb">tuple</span><span class="p">(</span> <span class="p">[</span> <span class="n">return_type</span> <span class="p">]</span> <span class="o">+</span> <span class="n">arg_traits</span> <span class="p">)</span> <span class="p">)</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Defines a method &#39;decorator&#39; for adding type checking to methods:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
-<span class="k">def</span> <span class="nf">_add_assignment_advisor</span> <span class="p">(</span> <span class="n">callback</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a method &#39;decorator&#39; for adding type checking to methods.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">frame</span>      <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span> <span class="n">depth</span> <span class="p">)</span>
-    <span class="n">old_trace</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_trace</span> <span class="p">]</span>
-    <span class="n">old_locals</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_locals</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">tracer</span> <span class="p">(</span> <span class="n">frm</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">arg</span> <span class="p">):</span>
-
-        <span class="k">if</span> <span class="n">event</span> <span class="o">==</span> <span class="s">&#39;call&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span> <span class="n">frm</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">arg</span> <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="bp">None</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">frm</span> <span class="ow">is</span> <span class="n">frame</span> <span class="ow">and</span> <span class="n">event</span> <span class="o">!=</span> <span class="s">&#39;exception&#39;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">frm</span><span class="o">.</span><span class="n">f_locals</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">old_locals</span><span class="p">:</span>
-                        <span class="k">del</span> <span class="n">frm</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-                        <span class="k">break</span>
-                    <span class="k">elif</span> <span class="n">old_locals</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">v</span><span class="p">:</span>
-                        <span class="n">frm</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_locals</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-                        <span class="k">break</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">tracer</span>
-
-                <span class="n">callback</span><span class="p">(</span> <span class="n">frm</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="p">)</span>
-
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">](</span> <span class="n">frm</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">arg</span> <span class="p">)</span>
-
-        <span class="n">frm</span><span class="o">.</span><span class="n">f_trace</span> <span class="o">=</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">settrace</span><span class="p">(</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="n">old_trace</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="n">frame</span><span class="o">.</span><span class="n">f_trace</span> <span class="o">=</span> <span class="n">tracer</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">settrace</span><span class="p">(</span> <span class="n">tracer</span> <span class="p">)</span>
-
-<div class="viewcode-block" id="method"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.method">[docs]</a><span class="k">def</span> <span class="nf">method</span> <span class="p">(</span> <span class="n">return_type</span> <span class="o">=</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">arg_types</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg_types</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Declares that the method defined immediately following a call to this</span>
-<span class="sd">    function is type-checked.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    return_type : type</span>
-<span class="sd">        The type returned by the type-checked method. Must be either a trait</span>
-<span class="sd">        or a value that can be converted to a trait using the Trait()</span>
-<span class="sd">        function. The default of Any means that the return value is not</span>
-<span class="sd">        type-checked.</span>
-<span class="sd">    *arg_types :</span>
-<span class="sd">        Zero or more types of positional parameters of the type-checked method.</span>
-<span class="sd">        Each value must either a trait or a value that can be converted to a</span>
-<span class="sd">        trait using the Trait() function.</span>
-<span class="sd">    **kwarg_types :</span>
-<span class="sd">        Zero or more *keyword* = *type* pairs, the type names and types of</span>
-<span class="sd">        keyword parameters of the type-checked method. The *type* portion of</span>
-<span class="sd">        the parameter must be either a trait or a value that can be converted</span>
-<span class="sd">        to a trait using the Trait() function.</span>
-
-<span class="sd">    Description</span>
-<span class="sd">    -----------</span>
-<span class="sd">    Whenever the type-checked method is called, the method() function ensures</span>
-<span class="sd">    that each parameter passed to the method of the type specified by</span>
-<span class="sd">    *arg_types* and *kwarg_types*, and that the return value is of the type</span>
-<span class="sd">    specified by *return_type*. It is an error to specify both positional and</span>
-<span class="sd">    keyword definitions for the same method parameter. If a parameter defined by</span>
-<span class="sd">    the type-checked method is not referenced in the method() call, the</span>
-<span class="sd">    parameter is not type-checked (i.e., its type is implicitly set to Any).</span>
-<span class="sd">    If the call to method() signature contains an *arg_types* or *kwarg_types*</span>
-<span class="sd">    parameter that does not correspond to a parameter in the type-checked method</span>
-<span class="sd">    definition, a TraitError exception is raised.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c"># The following is a &#39;hack&#39; to get around what seems to be a Python bug</span>
-    <span class="c"># that does not pass &#39;return_type&#39; and &#39;arg_types&#39; through to the scope of</span>
-    <span class="c"># &#39;callback&#39; below:</span>
-    <span class="n">kwarg_types</span><span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="n">return_type</span><span class="p">,</span> <span class="n">arg_types</span> <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">callback</span> <span class="p">(</span> <span class="n">frame</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">func</span> <span class="p">):</span>
-
-        <span class="c"># This undoes the work of the &#39;hack&#39; described above:</span>
-        <span class="n">return_type</span><span class="p">,</span> <span class="n">arg_types</span> <span class="o">=</span> <span class="n">kwarg_types</span><span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
-        <span class="k">del</span> <span class="n">kwarg_types</span><span class="p">[</span><span class="s">&#39;&#39;</span><span class="p">]</span>
-
-        <span class="c"># Add a &#39;fake&#39; positional argument as a place holder for &#39;self&#39;:</span>
-        <span class="n">arg_types</span> <span class="o">=</span> <span class="p">(</span> <span class="n">Any</span><span class="p">,</span> <span class="p">)</span> <span class="o">+</span> <span class="n">arg_types</span>
-
-        <span class="c"># Make the sure the first argument is a function:</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">func</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">FunctionType</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;&#39;method&#39; must immediately precede a method &quot;</span>
-                              <span class="s">&quot;definition.&quot;</span><span class="p">)</span>
-
-        <span class="c"># Make sure the return type is a trait (if not, coerce it to one):</span>
-        <span class="n">return_type</span> <span class="o">=</span> <span class="n">_trait_for</span><span class="p">(</span> <span class="n">return_type</span> <span class="p">)</span>
-
-        <span class="c"># Make up the list of arguments defined by the function we are wrapping:</span>
-        <span class="n">code</span>       <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span>
-        <span class="n">func_name</span>  <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_name</span>
-        <span class="n">arg_count</span>  <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">co_argcount</span>
-        <span class="n">var_names</span>  <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">co_varnames</span><span class="p">[</span> <span class="p">:</span> <span class="n">arg_count</span> <span class="p">]</span>
-        <span class="n">defaults</span>   <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_defaults</span> <span class="ow">or</span> <span class="p">()</span>
-        <span class="n">defaults</span>   <span class="o">=</span> <span class="p">(</span> <span class="n">Missing</span><span class="p">,</span> <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">arg_count</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span> <span class="n">defaults</span> <span class="p">))</span> <span class="o">+</span> <span class="n">defaults</span>
-        <span class="n">arg_traits</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">n</span>          <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">arg_types</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span> <span class="n">var_names</span> <span class="p">):</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;Too many positional argument types specified &quot;</span>
-                               <span class="s">&quot;in the method signature for </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">func_name</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span> <span class="n">var_names</span> <span class="p">):</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">kwarg_types</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; argument is defined by both &quot;</span>
-                                       <span class="s">&quot;a positional and keyword argument in &quot;</span>
-                                       <span class="s">&quot;the method signature for </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span>
-                                       <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">func_name</span> <span class="p">)</span> <span class="p">)</span>
-                <span class="n">trait</span> <span class="o">=</span> <span class="n">arg_types</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">trait</span> <span class="o">=</span> <span class="n">kwarg_types</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-                    <span class="k">del</span> <span class="n">kwarg_types</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="c"># fixme: Should this be an error (missing parameter type?)</span>
-                    <span class="n">trait</span> <span class="o">=</span> <span class="n">Any</span>
-            <span class="n">arg_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
-            <span class="n">arg_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">Trait</span><span class="p">(</span> <span class="n">defaults</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_trait_for</span><span class="p">(</span> <span class="n">trait</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-
-        <span class="c"># Make sure there are no unaccounted for type parameters left over:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">kwarg_types</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">names</span> <span class="o">=</span> <span class="n">kwarg_types</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">names</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; method signature keyword defines &quot;</span>
-                                   <span class="s">&quot;a type for an argument which &#39;</span><span class="si">%s</span><span class="s">&#39; does not &quot;</span>
-                                   <span class="s">&quot;have.&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">func_name</span> <span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">names</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The </span><span class="si">%s</span><span class="s"> method signature keywords define &quot;</span>
-                          <span class="s">&quot;types for arguments which &#39;</span><span class="si">%s</span><span class="s">&#39; does not have.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                          <span class="s">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39;&quot;</span> <span class="o">%</span> <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span> <span class="p">]</span> <span class="p">),</span>
-                          <span class="n">func_name</span> <span class="p">))</span>
-
-        <span class="c"># Otherwise, return a method wrapper for the function:</span>
-        <span class="n">frame</span><span class="o">.</span><span class="n">f_locals</span><span class="p">[</span> <span class="n">method_name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">CTraitMethod</span><span class="p">(</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span>
-                                         <span class="nb">tuple</span><span class="p">(</span> <span class="p">[</span> <span class="n">return_type</span> <span class="p">]</span> <span class="o">+</span> <span class="n">arg_traits</span> <span class="p">)</span> <span class="p">)</span>
-
-    <span class="n">_add_assignment_advisor</span><span class="p">(</span> <span class="n">callback</span> <span class="p">)</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;MetaHasTraits&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
-<span class="c"># This really should be &#39;HasTraits&#39;, but it&#39;s not defined yet:</span></div>
+<span class="c"># This really should be &#39;HasTraits&#39;, but it&#39;s not defined yet:</span>
 <span class="n">_HasTraits</span> <span class="o">=</span> <span class="bp">None</span>
 
 <div class="viewcode-block" id="MetaHasTraits"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.MetaHasTraits">[docs]</a><span class="k">class</span> <span class="nc">MetaHasTraits</span> <span class="p">(</span> <span class="nb">type</span> <span class="p">):</span>
@@ -840,8 +614,6 @@
                 <span class="k">if</span> <span class="n">pattern</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">listeners</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="s">&#39;method&#39;</span><span class="p">,</span> <span class="n">pattern</span> <span class="p">)</span>
 
-                <span class="n">_check_method</span><span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
-
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">property</span> <span class="p">):</span>
                 <span class="n">class_traits</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">generic_trait</span>
 
@@ -959,7 +731,7 @@
         <span class="c"># Make sure the trait prefixes are sorted longest to shortest</span>
         <span class="c"># so that we can easily bind dynamic traits to the longest matching</span>
         <span class="c"># prefix:</span>
-        <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span> <span class="n">y</span> <span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span> <span class="n">x</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">prefix_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">)</span>
 
         <span class="c"># Get the list of all possible &#39;Instance&#39;/&#39;List(Instance)&#39; handlers:</span>
         <span class="n">instance_traits</span> <span class="o">=</span> <span class="n">_get_instance_handlers</span><span class="p">(</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">hastraits_bases</span> <span class="p">)</span>
@@ -1560,7 +1332,7 @@
 
             <span class="c"># Resort the list from longest to shortest (if necessary):</span>
             <span class="k">if</span> <span class="n">changed</span><span class="p">:</span>
-                <span class="n">subclass_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span> <span class="n">y</span> <span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span> <span class="n">x</span> <span class="p">)</span> <span class="p">)</span>
+                <span class="n">subclass_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span> <span class="n">x</span> <span class="p">)</span> <span class="p">)</span>
 
             <span class="c"># Merge the &#39;listeners&#39;:</span>
             <span class="n">subclass_traits</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">subclass</span><span class="p">,</span> <span class="n">ListenerTraits</span> <span class="p">)</span>
@@ -1668,7 +1440,7 @@
 <span class="sd">            def __getstate__(self):</span>
 <span class="sd">                state = super(X,self).__getstate__()</span>
 <span class="sd">                for key in [&#39;foo&#39;, &#39;bar&#39;]:</span>
-<span class="sd">                    if state.has_key(key):</span>
+<span class="sd">                    if key in state:</span>
 <span class="sd">                        del state[key]</span>
 <span class="sd">                return state</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2503,8 +2275,8 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\\</span><span class="s">n&#39;</span> <span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">...</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">[:</span> <span class="p">(</span><span class="n">maxval</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="p">],</span>
-                                          <span class="n">value</span><span class="p">[</span> <span class="o">-</span><span class="p">((</span><span class="n">maxval</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">):</span> <span class="p">]</span> <span class="p">)</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">...</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">[:</span> <span class="p">(</span><span class="n">maxval</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="p">],</span>
+                                          <span class="n">value</span><span class="p">[</span> <span class="o">-</span><span class="p">((</span><span class="n">maxval</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">):</span> <span class="p">]</span> <span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="s">&#39;&lt;undefined&gt;&#39;</span>
             <span class="n">lname</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s">&#39;:&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span> <span class="n">pad</span> <span class="p">)</span>
@@ -3087,6 +2859,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            Name of the attribute to remove.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : bool</span>
+<span class="sd">            True if the trait was successfully removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c"># Get the trait definition:</span>
         <span class="n">trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trait</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
@@ -3836,7 +3613,7 @@
 
     <span class="c"># Verify that each argument is a valid protocol.</span>
     <span class="k">for</span> <span class="n">protocol</span> <span class="ow">in</span> <span class="n">protocols</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">protocol</span><span class="o">.</span><span class="n">__metaclass__</span><span class="p">,</span> <span class="n">ABCMeta</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">protocol</span><span class="p">),</span> <span class="n">ABCMeta</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
                 <span class="s">&quot;All arguments to &#39;provides&#39; must be &quot;</span>
                 <span class="s">&quot;subclasses of Interface or be a Python ABC.&quot;</span>
@@ -3959,8 +3736,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on Apr 01, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

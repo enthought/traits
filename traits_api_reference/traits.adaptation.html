@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0-rc.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -46,7 +48,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">adaptation</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">adaptation</span></tt> Package</a></li>
   
 
       </ul>
@@ -162,62 +164,58 @@ or it can be adapted to it.</p>
 
 </dd></dl>
 
-<dl class="data">
-<dt id="traits.adaptation.adaptation_manager.adaptation_manager">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">adaptation_manager</tt><em class="property"> = &lt;traits.adaptation.adaptation_manager.AdaptationManager object at 0x103a77110&gt;</em><a class="headerlink" href="#traits.adaptation.adaptation_manager.adaptation_manager" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default global adaptation manager.</p>
+<dl class="function">
+<dt id="traits.adaptation.adaptation_manager.set_global_adaptation_manager">
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">set_global_adaptation_manager</tt><big>(</big><em>new_adaptation_manager</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#set_global_adaptation_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.set_global_adaptation_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the global adaptation manager to the given instance.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.adaptation.adaptation_manager.provides_protocol">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">provides_protocol</tt><big>(</big><em>type_</em>, <em>protocol</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.provides_protocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Does the given type provide (i.e implement) a given protocol?</p>
-<p>&#8216;<a href="#id4"><span class="problematic" id="id5">type_</span></a>&#8216;    is a Python &#8216;type&#8217;.
-&#8216;protocol&#8217; is either a regular Python class or a traits Interface.</p>
-<p>Return True if the object provides the protocol, otherwise False.</p>
+<dt id="traits.adaptation.adaptation_manager.reset_global_adaptation_manager">
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">reset_global_adaptation_manager</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#reset_global_adaptation_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.reset_global_adaptation_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the global adaptation manager to a new AdaptationManager instance.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.adaptation.adaptation_manager.get_global_adaptation_manager">
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">get_global_adaptation_manager</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#get_global_adaptation_manager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.get_global_adaptation_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a reference to the global adaptation manager.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.adaptation.adaptation_manager.adapt">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">adapt</tt><big>(</big><em>self</em>, <em>adaptee</em>, <em>to_protocol</em>, <em>default=&lt;class 'traits.adaptation.adaptation_error.AdaptationError'&gt;</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.adapt" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">adapt</tt><big>(</big><em>adaptee</em>, <em>to_protocol</em>, <em>default=&lt;class 'traits.adaptation.adaptation_error.AdaptationError'&gt;</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#adapt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.adapt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to adapt an object to a given protocol.</p>
-<p><cite>adaptee</cite>     is the object that we want to adapt.
-<cite>to_protocol</cite> is the protocol that the want to adapt the object to.</p>
-<p>If <cite>adaptee</cite> already provides (i.e. implements) the given protocol
-then it is simply returned unchanged.</p>
-<p>Otherwise, we try to build a chain of adapters that adapt <cite>adaptee</cite>
-to <cite>to_protocol</cite>.</p>
-<p>If no such adaptation is possible then either an AdaptationError is
-raised (if default=Adaptation error), or <cite>default</cite> is returned (as
-in the default value passed to &#8216;getattr&#8217; etc).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.adaptation.adaptation_manager.register_factory">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_factory</tt><big>(</big><em>self</em>, <em>factory</em>, <em>from_protocol</em>, <em>to_protocol</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_factory" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_factory</tt><big>(</big><em>factory</em>, <em>from_protocol</em>, <em>to_protocol</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#register_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_factory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register an adapter factory.</p>
-<p>This is a simply a convenience method that creates and registers an
-&#8216;AdaptationOffer&#8217; from the given arguments.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.adaptation.adaptation_manager.register_offer">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_offer</tt><big>(</big><em>self</em>, <em>offer</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_offer" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_offer</tt><big>(</big><em>offer</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#register_offer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_offer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register an offer to adapt from one protocol to another.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.adaptation.adaptation_manager.register_provides">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_provides</tt><big>(</big><em>self</em>, <em>provider_protocol</em>, <em>protocol</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_provides" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">register_provides</tt><big>(</big><em>provider_protocol</em>, <em>protocol</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#register_provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.register_provides" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register that a protocol provides another.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.adaptation.adaptation_manager.supports_protocol">
-<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">supports_protocol</tt><big>(</big><em>self</em>, <em>obj</em>, <em>protocol</em><big>)</big><a class="headerlink" href="#traits.adaptation.adaptation_manager.supports_protocol" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">supports_protocol</tt><big>(</big><em>obj</em>, <em>protocol</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#supports_protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.supports_protocol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does the object support a given protocol?</p>
-<p>An object &#8220;supports&#8221; a protocol if either it &#8220;provides&#8221; it directly,
-or it can be adapted to it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.adaptation.adaptation_manager.provides_protocol">
+<tt class="descclassname">traits.adaptation.adaptation_manager.</tt><tt class="descname">provides_protocol</tt><big>(</big><em>type_</em>, <em>protocol</em><big>)</big><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#provides_protocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.adaptation.adaptation_manager.provides_protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does the given type provide (i.e implement) a given protocol?</p>
 </dd></dl>
 
 </div>
@@ -383,7 +381,7 @@ rely on it for any other purpose.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="ustr_trait.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal"><span class="pre">ustr_trait</span></tt> Module</a></p>
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">ustr_trait</span></tt> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.etsconfig.html"
                         title="next chapter"><tt class="docutils literal"><span class="pre">etsconfig</span></tt> Package</a></p>
@@ -424,15 +422,15 @@ rely on it for any other purpose.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal"><span class="pre">adaptation</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">adaptation</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on Apr 01, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0-rc.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -72,8 +74,7 @@ attributes that use the traits you have defined.</li>
 in an attribute definition. This strategy is used in many examples in this
 guide. However, you can also define traits independently, and reuse the trait
 definitions across multiple classes and attributes (see
-<a class="reference internal" href="advanced.html#reusing-trait-definitions"><em>Reusing Trait Definitions</em></a>). Type-checked method signatures typically
-use independently defined traits.</p>
+<a class="reference internal" href="advanced.html#reusing-trait-definitions"><em>Reusing Trait Definitions</em></a>).</p>
 <p>In order to use trait attributes in a class, the class must inherit from the
 HasTraits class in the Traits package (or from a subclass of HasTraits). The
 following example defines a class called Person that has a single trait
@@ -413,83 +414,80 @@ ListUnicode</td>
 <tr class="row-even" id="index-25"><td>Method</td>
 <td>Method ([**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>missing</td>
-<td>n/a</td>
-</tr>
-<tr class="row-even"><td>Module</td>
+<tr class="row-odd"><td>Module</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Password</td>
+<tr class="row-even"><td>Password</td>
 <td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Property</td>
+<tr class="row-odd"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 ** <em>metadata</em>] )</p>
 <p class="last">See <a class="reference internal" href="advanced.html#property-traits"><em>Property Traits</em></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-odd"><td>Python</td>
+<tr class="row-even"><td>Python</td>
 <td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>PythonValue</td>
+<tr class="row-odd"><td>PythonValue</td>
 <td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Range</td>
+<tr class="row-even"><td>Range</td>
 <td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>ReadOnly</td>
+<tr class="row-odd"><td>ReadOnly</td>
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Regex</td>
+<tr class="row-even"><td>Regex</td>
 <td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
 </tr>
-<tr class="row-even"><td>RGBColor</td>
+<tr class="row-odd"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>self</td>
+<tr class="row-even"><td>self</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>Set</td>
+<tr class="row-odd"><td>Set</td>
 <td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>String</td>
+<tr class="row-even"><td>String</td>
 <td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>This</td>
+<tr class="row-odd"><td>This</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>ToolbarButton</td>
+<tr class="row-even"><td>ToolbarButton</td>
 <td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>true</td>
+<tr class="row-odd"><td>true</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>Tuple</td>
+<tr class="row-even"><td>Tuple</td>
 <td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Type</td>
+<tr class="row-odd"><td>Type</td>
 <td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>undefined</td>
+<tr class="row-even"><td>undefined</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>UStr</td>
+<tr class="row-odd"><td>UStr</td>
 <td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
 NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
-<tr class="row-odd"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
+<tr class="row-even"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
 <td>UUID( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>WeakRef</td>
+<tr class="row-odd"><td>WeakRef</td>
 <td>WeakRef( [<em>klass</em> = &#8216;traits.HasTraits&#8217;,
 <em>allow_none</em> = False, <em>adapt</em> = &#8216;yes&#8217;, **<em>metadata</em>])</td>
 </tr>
@@ -849,8 +847,8 @@ existing traits.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on Apr 01, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

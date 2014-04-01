@@ -41,14 +41,6 @@
     :undoc-members:
     :show-inheritance:
 
-:mod:`refresh` Module
----------------------
-
-.. automodule:: traits.util.refresh
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`resource` Module
 ----------------------
 

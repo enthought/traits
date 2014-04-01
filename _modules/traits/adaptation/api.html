@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0-rc.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -55,8 +57,9 @@
 <span class="kn">from</span> <span class="nn">.adaptation_error</span> <span class="kn">import</span> <span class="n">AdaptationError</span>
 
 <span class="kn">from</span> <span class="nn">.adaptation_manager</span> <span class="kn">import</span> <span class="n">adapt</span><span class="p">,</span> <span class="n">AdaptationManager</span><span class="p">,</span> \
-    <span class="n">provides_protocol</span><span class="p">,</span> <span class="n">register_factory</span><span class="p">,</span> <span class="n">register_offer</span><span class="p">,</span> <span class="n">register_provides</span><span class="p">,</span> \
-    <span class="n">supports_protocol</span>
+    <span class="n">get_global_adaptation_manager</span><span class="p">,</span> <span class="n">provides_protocol</span><span class="p">,</span> <span class="n">register_factory</span><span class="p">,</span> \
+    <span class="n">register_offer</span><span class="p">,</span> <span class="n">register_provides</span><span class="p">,</span> <span class="n">reset_global_adaptation_manager</span><span class="p">,</span> \
+    <span class="n">set_global_adaptation_manager</span><span class="p">,</span> <span class="n">supports_protocol</span>
 
 <span class="kn">from</span> <span class="nn">.adaptation_offer</span> <span class="kn">import</span> <span class="n">AdaptationOffer</span>
 </pre></div>
@@ -102,8 +105,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on Apr 01, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

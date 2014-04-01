@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0-rc.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -89,13 +91,16 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">copy_reg</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">TypeType</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
+<span class="n">TypeType</span> <span class="o">=</span> <span class="nb">type</span>
+
 <span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">ref</span>
 
-<span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">CTraitMethod</span>
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">strx</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">TypeTypes</span><span class="p">,</span> <span class="n">ClassTypes</span><span class="p">,</span>
-    <span class="n">CoercableTypes</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">class_of</span><span class="p">,</span> <span class="nb">enumerate</span><span class="p">,</span> <span class="n">Missing</span><span class="p">)</span>
+    <span class="n">CoercableTypes</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">class_of</span><span class="p">,</span> <span class="n">Missing</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">repr_type</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_py2to3</span>
 
 <span class="c"># Patched by &#39;traits.py&#39; once class is defined!</span>
 <span class="n">Trait</span> <span class="o">=</span> <span class="n">Event</span> <span class="o">=</span> <span class="bp">None</span>
@@ -115,7 +120,7 @@
 
 <span class="n">RangeTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="nb">float</span> <span class="p">)</span>
 
-<span class="n">CallableTypes</span> <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">CTraitMethod</span> <span class="p">)</span>
+<span class="n">CallableTypes</span> <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span> <span class="p">)</span>
 
 <span class="c"># Mapping from trait metadata &#39;type&#39; to CTrait &#39;type&#39;:</span>
 <span class="n">trait_types</span> <span class="o">=</span> <span class="p">{</span>
@@ -219,131 +224,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">),</span>
                           <span class="n">value</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="BaseTraitHandler.arg_error"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.arg_error">[docs]</a>    <span class="k">def</span> <span class="nf">arg_error</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Raises a TraitError exception to notify the user that a method on</span>
-<span class="sd">        an instance received a positional argument of an incorrect type.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : function</span>
-<span class="sd">            The method that encountered the error.</span>
-<span class="sd">        arg_num : int</span>
-<span class="sd">            The position of the incorrect argument in the argument list.</span>
-<span class="sd">        object : object</span>
-<span class="sd">            The object whose method was called.</span>
-<span class="sd">        name : str</span>
-<span class="sd">            The name of the parameter corresponding to the incorrect argument.</span>
-<span class="sd">        value : object</span>
-<span class="sd">            The value passed to the argument.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        This method can be called when type-checking a method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; parameter (argument </span><span class="si">%d</span><span class="s">) of the </span><span class="si">%s</span><span class="s"> method &quot;</span>
-                           <span class="s">&quot;of </span><span class="si">%s</span><span class="s"> instance must be </span><span class="si">%s</span><span class="s">, but a value of </span><span class="si">%s</span><span class="s"> was &quot;</span>
-                           <span class="s">&quot;specified.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">tm_name</span><span class="p">,</span>
-                           <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">),</span>
-                           <span class="bp">self</span><span class="o">.</span><span class="n">full_info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-                           <span class="n">repr_type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
-</div>
-<div class="viewcode-block" id="BaseTraitHandler.keyword_error"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.keyword_error">[docs]</a>    <span class="k">def</span> <span class="nf">keyword_error</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Raises a TraitError exception to notify the user that a method on</span>
-<span class="sd">        an instance received a keyword argument of an incorrect type.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : function</span>
-<span class="sd">            The method that encountered the error.</span>
-<span class="sd">        object : object</span>
-<span class="sd">            The object whose method was called.</span>
-<span class="sd">        name : str</span>
-<span class="sd">            The name of the parameter corresponding to the incorrect argument.</span>
-<span class="sd">        value :</span>
-<span class="sd">            The value passed to the argument.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        This method can be called when type-checking a method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; keyword argument of the </span><span class="si">%s</span><span class="s"> method of &quot;</span>
-                           <span class="s">&quot;</span><span class="si">%s</span><span class="s"> instance must be </span><span class="si">%s</span><span class="s">, but a value of </span><span class="si">%s</span><span class="s"> was &quot;</span>
-                           <span class="s">&quot;specified.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">tm_name</span><span class="p">,</span>
-                           <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
-                           <span class="n">repr_type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
-</div>
-<div class="viewcode-block" id="BaseTraitHandler.missing_arg_error"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.missing_arg_error">[docs]</a>    <span class="k">def</span> <span class="nf">missing_arg_error</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Raises a TraitError exception to notify the user that a method on</span>
-<span class="sd">        an instance failed to receive a required positional argument.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : function</span>
-<span class="sd">            The method that encountered the error.</span>
-<span class="sd">        arg_num : int</span>
-<span class="sd">            The position of the incorrect argument in the argument list.</span>
-<span class="sd">        object : object</span>
-<span class="sd">            The object whose method was called.</span>
-<span class="sd">        name : str</span>
-<span class="sd">            The name of the parameter corresponding to the incorrect argument.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        This method can be called when type-checking a method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; parameter (argument </span><span class="si">%d</span><span class="s">) of the </span><span class="si">%s</span><span class="s"> method &quot;</span>
-                           <span class="s">&quot;of </span><span class="si">%s</span><span class="s"> instance must be specified, but was omitted.&quot;</span>
-                           <span class="o">%</span> <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">tm_name</span><span class="p">,</span>
-                               <span class="n">class_of</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="BaseTraitHandler.dup_arg_error"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.dup_arg_error">[docs]</a>    <span class="k">def</span> <span class="nf">dup_arg_error</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Raises a TraitError exception to notify the user that a method on</span>
-<span class="sd">        an instance received an argument as both a keyword argument and a</span>
-<span class="sd">        positional argument.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : function</span>
-<span class="sd">            The method that encountered the error.</span>
-<span class="sd">        arg_num : int</span>
-<span class="sd">            The position of the incorrect argument in the argument list.</span>
-<span class="sd">        object : object</span>
-<span class="sd">            The object whose method was called.</span>
-<span class="sd">        name : str</span>
-<span class="sd">            The name of the parameter corresponding to the incorrect argument.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        This method can be called when type-checking a method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; parameter (argument </span><span class="si">%d</span><span class="s">) of the </span><span class="si">%s</span><span class="s"> method &quot;</span>
-                           <span class="s">&quot;of </span><span class="si">%s</span><span class="s"> instance was specified as both a positional &quot;</span>
-                           <span class="s">&quot;and keyword value.&quot;</span>
-                           <span class="o">%</span> <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg_num</span><span class="p">,</span> <span class="n">method</span><span class="o">.</span><span class="n">tm_name</span><span class="p">,</span>
-                               <span class="n">class_of</span><span class="p">(</span> <span class="nb">object</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="BaseTraitHandler.return_error"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.return_error">[docs]</a>    <span class="k">def</span> <span class="nf">return_error</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Raises a TraitError exception to notify the user that a method on</span>
-<span class="sd">        an instance returned a value of incorrect type.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        method : function</span>
-<span class="sd">            The method that encountered the error.</span>
-<span class="sd">        object : object</span>
-<span class="sd">            The object whose method was called.</span>
-<span class="sd">        value :</span>
-<span class="sd">            The value returned by the method.</span>
-
-<span class="sd">        Description</span>
-<span class="sd">        -----------</span>
-<span class="sd">        This method can be called when type-checking a method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="n">TraitError</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;The result of the </span><span class="si">%s</span><span class="s"> method of </span><span class="si">%s</span><span class="s"> instance must &quot;</span>
-                           <span class="s">&quot;be </span><span class="si">%s</span><span class="s">, but a value of </span><span class="si">%s</span><span class="s"> was returned.&quot;</span> <span class="o">%</span> <span class="p">(</span>
-                           <span class="n">method</span><span class="o">.</span><span class="n">tm_name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">(</span><span class="nb">object</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(),</span>
-                           <span class="n">repr_type</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
 </div>
 <div class="viewcode-block" id="BaseTraitHandler.full_info"><a class="viewcode-back" href="../../traits_api_reference/trait_handlers.html#traits.trait_handlers.BaseTraitHandler.full_info">[docs]</a>    <span class="k">def</span> <span class="nf">full_info</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a string describing the type of value accepted by the</span>
@@ -1416,7 +1296,7 @@
 <span class="sd">    TraitInstance ensures that assigned values are exactly of the type specified</span>
 <span class="sd">    (i.e., no coercion is performed).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">aClass</span><span class="p">,</span> <span class="n">allow_none</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">adapt</span> <span class="o">=</span> <span class="s">&#39;yes&#39;</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">aClass</span><span class="p">,</span> <span class="n">allow_none</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">adapt</span> <span class="o">=</span> <span class="s">&#39;no&#39;</span><span class="p">,</span>
                    <span class="n">module</span> <span class="o">=</span> <span class="s">&#39;&#39;</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Creates a TraitInstance handler.</span>
 
@@ -1643,7 +1523,7 @@
 <span class="sd">        If *aClass* is an instance, it is mapped to the class it is an instance</span>
 <span class="sd">        of.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">aClass</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">InstanceType</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">is_old_style_instance</span><span class="p">(</span><span class="n">aClass</span><span class="p">):</span>
             <span class="n">aClass</span> <span class="o">=</span> <span class="n">aClass</span><span class="o">.</span><span class="n">__class__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aClass</span> <span class="o">=</span> <span class="n">aClass</span>
 
@@ -1844,7 +1724,7 @@
 
     <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values_</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values_</span><span class="p">:</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="bp">None</span>
                 <span class="n">n</span>     <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
@@ -1930,7 +1810,7 @@
 
     <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">value</span>
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
@@ -2001,7 +1881,7 @@
 
     <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map</span><span class="p">:</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="bp">None</span>
                 <span class="n">n</span>     <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -2318,6 +2198,7 @@
             <span class="n">added</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">added</span> <span class="o">=</span> <span class="n">added</span>
 
+
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;TraitList&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
@@ -2473,7 +2354,7 @@
                 <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">value</span> <span class="o">=</span> <span class="p">[</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span> <span class="p">]</span>
 
-                <span class="nb">list</span><span class="o">.</span><span class="n">__setslice__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+                <span class="nb">list</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">value</span> <span class="p">)</span>
 
                 <span class="k">return</span>
 
@@ -2509,109 +2390,117 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
             <span class="nb">object</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+            <span class="n">validate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">item_trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
+            <span class="n">name</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)))</span>
+                <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;must assign sequence (not &quot;</span><span class="si">%s</span><span class="s">&quot;) to slice&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                                    <span class="n">values</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="p">))</span>
+                <span class="n">slice_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">//</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">values</span> <span class="p">)</span> <span class="o">-</span> <span class="n">slice_len</span>
+                <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">delta</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s">&#39;attempt to assign sequence of size </span><span class="si">%d</span><span class="s"> to extended slice of size </span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span> <span class="n">values</span> <span class="p">),</span> <span class="n">slice_len</span>
+                    <span class="p">))</span>
+                <span class="n">newlen</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">self_trait</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="n">newlen</span> <span class="o">&lt;=</span> <span class="n">self_trait</span><span class="o">.</span><span class="n">maxlen</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">len_error</span><span class="p">(</span> <span class="n">newlen</span> <span class="p">)</span>
+                    <span class="k">return</span>
+
+                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+                               <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span> <span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">values</span>
+                <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="c"># FIXME: Bug-for-bug compatibility with old __setslice__ code.</span>
+                    <span class="c"># In this case, we return a TraitListEvent with an</span>
+                    <span class="c"># index=key.start and the removed and added lists as they</span>
+                    <span class="c"># are.</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># Otherwise, we have an extended slice which was handled,</span>
+                    <span class="c"># badly, by __setitem__ before. In this case, we return the</span>
+                    <span class="c"># removed and added lists wrapped in another list.</span>
+                    <span class="n">index</span> <span class="o">=</span> <span class="n">key</span>
+                    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">values</span><span class="p">]</span>
+                    <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span><span class="n">removed</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+
+                <span class="n">values</span> <span class="o">=</span> <span class="p">[</span> <span class="n">value</span> <span class="p">]</span>
+                <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span> <span class="n">removed</span> <span class="p">]</span>
+                <span class="n">delta</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">+</span> <span class="n">key</span> <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">key</span>
 
             <span class="nb">list</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">+</span> <span class="n">key</span>
-
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">removed</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
-                        <span class="k">return</span>
-                <span class="k">except</span><span class="p">:</span>
-                    <span class="c"># Treat incomparable values as unequal:</span>
-                    <span class="k">pass</span>
-
+                <span class="k">if</span> <span class="n">delta</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">removed</span> <span class="o">==</span> <span class="n">values</span><span class="p">:</span>
+                            <span class="k">return</span>
+                    <span class="k">except</span><span class="p">:</span>
+                        <span class="c"># Treat incomparable values as equal:</span>
+                        <span class="k">pass</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                    <span class="n">TraitListEvent</span><span class="p">(</span> <span class="n">key</span><span class="p">,</span> <span class="p">[</span> <span class="n">removed</span> <span class="p">],</span> <span class="p">[</span> <span class="n">value</span> <span class="p">]</span> <span class="p">))</span>
+                    <span class="n">TraitListEvent</span><span class="p">(</span> <span class="n">index</span><span class="p">,</span> <span class="n">removed</span><span class="p">,</span> <span class="n">values</span> <span class="p">)</span> <span class="p">)</span>
+
         <span class="k">except</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">excp</span><span class="p">:</span>
             <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span> <span class="s">&#39;Each element of the&#39;</span> <span class="p">)</span>
             <span class="k">raise</span> <span class="n">excp</span>
 
-    <span class="k">def</span> <span class="nf">__setslice__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">values</span> <span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">delta</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">values</span> <span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="p">))</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="s">&#39;must assign sequence (not &quot;</span><span class="si">%s</span><span class="s">&quot;) to slice&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                             <span class="n">values</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="p">)</span>
-        <span class="n">self_trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;trait&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">self_trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="o">.</span><span class="n">__setslice__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">self_trait</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">self_trait</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="nb">object</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span>
-                <span class="n">name</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
-                <span class="n">trait</span>    <span class="o">=</span> <span class="n">self_trait</span><span class="o">.</span><span class="n">item_trait</span>
-                <span class="n">removed</span>  <span class="o">=</span> <span class="bp">self</span><span class="p">[</span> <span class="n">i</span><span class="p">:</span> <span class="n">j</span> <span class="p">]</span>
-                <span class="n">validate</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">validate</span>
-                <span class="k">if</span> <span class="n">validate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
-                               <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span> <span class="p">]</span>
-
-                <span class="nb">list</span><span class="o">.</span><span class="n">__setslice__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">values</span> <span class="p">)</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">delta</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">try</span><span class="p">:</span>
-                            <span class="k">if</span> <span class="n">removed</span> <span class="o">==</span> <span class="n">values</span><span class="p">:</span>
-                                <span class="k">return</span>
-                        <span class="k">except</span><span class="p">:</span>
-                            <span class="c"># Treat incomparable values as equal:</span>
-                            <span class="k">pass</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                        <span class="n">TraitListEvent</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="n">removed</span><span class="p">,</span> <span class="n">values</span> <span class="p">)</span> <span class="p">)</span>
-
-                <span class="k">return</span>
-
-            <span class="k">except</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">excp</span><span class="p">:</span>
-                <span class="n">excp</span><span class="o">.</span><span class="n">set_prefix</span><span class="p">(</span> <span class="s">&#39;Each element of the&#39;</span> <span class="p">)</span>
-                <span class="k">raise</span> <span class="n">excp</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">len_error</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">+</span> <span class="n">delta</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">__setslice__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">values</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__setitem__</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">),</span> <span class="n">values</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__delitem__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">):</span>
         <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;trait&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">list</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span> <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span> <span class="p">]</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="k">pass</span>
 
-            <span class="nb">list</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">[]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="nb">slice</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="o">*</span><span class="n">key</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)))</span>
+            <span class="n">slice_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="p">)</span> <span class="o">//</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span><span class="p">)</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">slice_len</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">step</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c"># FIXME: See corresponding comment in __setitem__() for</span>
+                <span class="c"># explanation.</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">start</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span><span class="n">removed</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">key</span>
+            <span class="n">removed</span> <span class="o">=</span> <span class="p">[</span> <span class="n">removed</span> <span class="p">]</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                    <span class="n">TraitListEvent</span><span class="p">(</span> <span class="n">key</span><span class="p">,</span> <span class="n">removed</span> <span class="p">)</span> <span class="p">)</span>
-
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len_error</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">len_error</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">)</span>
+        <span class="nb">list</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__delslice__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">):</span>
-        <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&#39;trait&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="o">.</span><span class="n">__delslice__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
-        <span class="n">delta</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="n">j</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="o">.</span><span class="n">minlen</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="n">delta</span><span class="p">):</span>
-            <span class="n">removed</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span> <span class="n">i</span><span class="p">:</span> <span class="n">j</span> <span class="p">]</span>
-            <span class="nb">list</span><span class="o">.</span><span class="n">__delslice__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="n">removed</span> <span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
-                    <span class="n">TraitListEvent</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span> <span class="p">),</span> <span class="n">removed</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_send_trait_items_event</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span><span class="p">,</span>
+                <span class="n">TraitListEvent</span><span class="p">(</span> <span class="n">index</span><span class="p">,</span> <span class="n">removed</span> <span class="p">)</span> <span class="p">)</span>
 
-            <span class="k">return</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">len_error</span><span class="p">(</span> <span class="nb">len</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span> <span class="o">-</span> <span class="n">delta</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">__delslice__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__delitem__</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">append</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="n">trait</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s">&#39;trait&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
@@ -3202,7 +3091,7 @@
                 <span class="n">value</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">dict</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">):</span>
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
                     <span class="n">added</span>   <span class="o">=</span> <span class="bp">None</span>
                     <span class="n">old</span>     <span class="o">=</span> <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
                     <span class="n">changed</span> <span class="o">=</span> <span class="p">{</span> <span class="n">key</span><span class="p">:</span> <span class="n">old</span> <span class="p">}</span>
@@ -3274,7 +3163,7 @@
                 <span class="nb">dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">new_dic</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setdefault</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">key</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
 
         <span class="bp">self</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
@@ -3287,7 +3176,7 @@
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">pop</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">Undefined</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span> <span class="n">key</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">)</span> <span class="ow">or</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">key</span> <span class="p">)</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -3430,8 +3319,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on Apr 01, 2014.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
