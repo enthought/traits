@@ -73,10 +73,10 @@ class TestABC(unittest.TestCase):
     def test_basic_abc(self):
         self.assertRaises(TypeError, AbstractFoo)
         concrete = ConcreteFoo()
-        self.assertEquals(concrete.foo(), 'foo')
-        self.assertEquals(concrete.bar, 'bar')
-        self.assertEquals(concrete.x, 10)
-        self.assertEquals(concrete.y, 20.0)
+        self.assertEqual(concrete.foo(), 'foo')
+        self.assertEqual(concrete.bar, 'bar')
+        self.assertEqual(concrete.x, 10)
+        self.assertEqual(concrete.y, 20.0)
         self.assertTrue(isinstance(concrete, AbstractFoo))
 
     def test_registered(self):
@@ -93,4 +93,4 @@ class TestABC(unittest.TestCase):
 
         traited = TraitedBar()
         self.assertTrue(isinstance(traited, AbstractBar))
-        self.assertEquals(traited.x, 10)
+        self.assertEqual(traited.x, 10)
