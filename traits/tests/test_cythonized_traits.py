@@ -67,7 +67,7 @@ return Test()
 
         obj = cython.inline(code)
 
-        self.assertEquals(obj.name, 'Joe')
+        self.assertEqual(obj.name, 'Joe')
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_basic_events(self):
@@ -107,7 +107,7 @@ return Test()
         with self.assertTraitChanges(obj, 'value', count=1):
             obj.name = 'changing_name'
 
-        self.assertEquals(obj.value, 1)
+        self.assertEqual(obj.value, 1)
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_on_trait_change_decorator(self):
@@ -132,7 +132,7 @@ return Test()
         with self.assertTraitChanges(obj, 'value', count=1):
             obj.name = 'changing_name'
 
-        self.assertEquals(obj.value, 1)
+        self.assertEqual(obj.value, 1)
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_properties(self):
@@ -154,11 +154,11 @@ return Test()
         obj = cython.inline(code, get_type=_always_object_type, force=True,
                             locals={}, globals={})
 
-        self.assertEquals(obj.name_len, len(obj.name))
+        self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
         obj.name = 'Bob'
-        self.assertEquals(obj.name_len, len(obj.name))
+        self.assertEqual(obj.name_len, len(obj.name))
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_properties_with_standard_getter(self):
@@ -180,11 +180,11 @@ return Test()
         obj = cython.inline(code, get_type=_always_object_type, force=True,
                             locals={}, globals={})
 
-        self.assertEquals(obj.name_len, len(obj.name))
+        self.assertEqual(obj.name_len, len(obj.name))
 
         # Assert dependency works
         obj.name = 'Bob'
-        self.assertEquals(obj.name_len, len(obj.name))
+        self.assertEqual(obj.name_len, len(obj.name))
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_aliasing(self):
@@ -211,11 +211,11 @@ return Test()
         obj = cython.inline(code, get_type=_always_object_type, force=True,
                             locals={}, globals={})
 
-        self.assertEquals(obj.funky_name, obj.name)
+        self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
         obj.name = 'Bob'
-        self.assertEquals(obj.funky_name, obj.name)
+        self.assertEqual(obj.funky_name, obj.name)
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_aliasing_different_scope(self):
@@ -239,11 +239,11 @@ return Test()
 
         obj = cython.inline(code, get_type=_always_object_type)
 
-        self.assertEquals(obj.funky_name, obj.name)
+        self.assertEqual(obj.funky_name, obj.name)
 
         # Assert dependency works
         obj.name = 'Bob'
-        self.assertEquals(obj.funky_name, obj.name)
+        self.assertEqual(obj.funky_name, obj.name)
 
     @unittest.skipIf(SKIP_TEST, 'Missing Cython and/or compiler')
     def test_on_trait_lambda_failure(self):
