@@ -34,7 +34,7 @@ Fixes
 
  * Fix crash when trying to validate a property that has been deleted. (#138)
  * Fix clearing exception when raising a TraitError (#119)
- * Fix automatic adaptation when Assigning to List trait (#147)
+ * Fix automatic adaptation when assigning to List trait (#147)
  * Fix some ctraits refcounting and exception clearing bugs (#48).  Thanks Yves
    Delley.
 
