@@ -101,3 +101,82 @@ class ListEventTestCase(unittest.TestCase):
             self.assertEqual(event.removed, [])
             self.assertGreaterEqual(event.index, 0)
             self.assertEqual(foo.l[event.index], 1729)
+
+    def test_pop_with_no_argument(self):
+        foo = MyClass()
+        item = foo.l.pop()
+        self.assertEqual(item, 3)
+        self.assertEqual(foo.l, [1, 2])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [3])
+        self.assertEqual(event.index, 2)
+
+    def test_pop(self):
+        foo = MyClass()
+        item = foo.l.pop(0)
+        self.assertEqual(item, 1)
+        self.assertEqual(foo.l, [2, 3])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [1])
+        self.assertEqual(event.index, 0)
+
+    def test_pop_with_negative_argument(self):
+        foo = MyClass()
+        item = foo.l.pop(-2)
+        self.assertEqual(item, 2)
+        self.assertEqual(foo.l, [1, 3])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [2])
+        self.assertEqual(event.index, 1)
+
+    def test_pop_out_of_range(self):
+        foo = MyClass()
+        with self.assertRaises(IndexError):
+            foo.l.pop(-4)
+        with self.assertRaises(IndexError):
+            foo.l.pop(3)
+        self.assertEqual(foo.l, [1, 2, 3])
+        self.assertEqual(len(foo.l_events), 0)
+
+    def test_remove(self):
+        foo = MyClass()
+        foo.l.remove(2)
+        self.assertEqual(foo.l, [1, 3])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [2])
+        self.assertEqual(event.index, 1)
+
+    def test_remove_item_not_present(self):
+        foo = MyClass()
+        with self.assertRaises(ValueError):
+            foo.l.remove(1729)
+        self.assertEqual(foo.l, [1, 2, 3])
+        self.assertEqual(len(foo.l_events), 0)
+
+    def test_inplace_multiply(self):
+        foo = MyClass()
+        foo.l *= 2
+        self.assertEqual(foo.l, [1, 2, 3, 1, 2, 3])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [1, 2, 3])
+        self.assertEqual(event.removed, [])
+        self.assertEqual(event.index, 3)
+
+    def test_inplace_multiply_by_zero(self):
+        foo = MyClass()
+        foo.l *= 0
+        self.assertEqual(foo.l, [])
+        self.assertEqual(len(foo.l_events), 1)
+        event = foo.l_events[0]
+        self.assertEqual(event.added, [])
+        self.assertEqual(event.removed, [1, 2, 3])
+        self.assertEqual(event.index, 0)

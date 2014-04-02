@@ -2452,6 +2452,30 @@ class TraitListObject ( list ):
         self.extend(other)
         return self
 
+    def __imul__(self, count):
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            return list.__imul__( self, count )
+
+        original_len = len( self )
+
+        if trait.minlen <= original_len * count <= trait.maxlen:
+            if self.name_items is not None:
+                removed = None if count else self[:]
+
+            result = list.__imul__(self, count)
+
+            if self.name_items is not None:
+                added = self[original_len:] if count else None
+                index = original_len if count else 0
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( index, removed, added ) )
+
+            return result
+        else:
+            self.len_error( original_len * count )
+
+
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
         if trait is None:
@@ -2492,17 +2516,17 @@ class TraitListObject ( list ):
 
                 if self.name_items is not None:
                     # Length before the insertion.
-                    old_len = len( self ) - 1
+                    original_len = len( self ) - 1
 
-                    # Indices outside [-old_len, old_len] are clipped.
+                    # Indices outside [-original_len, original_len] are clipped.
                     # This matches the behaviour of insert on the
                     # underlying list.
                     if index < 0:
-                        index += old_len
+                        index += original_len
                         if index < 0:
                             index = 0
-                    elif index > old_len:
-                        index = old_len
+                    elif index > original_len:
+                        index = original_len
 
                     self._send_trait_items_event( self.name_items,
                         TraitListEvent( index, None, [ value ] ),

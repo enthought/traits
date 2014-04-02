@@ -267,3 +267,9 @@ class ListTestCase(unittest.TestCase):
         f.l = ['4', '5', '6']
         f.l += ['1', '2', '3']
         self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+
+    def test_imul(self):
+        f = Foo()
+        f.l = list('123')
+        f.l *= 4
+        self.assertEqual(f.l, list('123123123123'))
