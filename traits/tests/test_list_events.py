@@ -89,27 +89,9 @@ class ListEventTestCase(unittest.TestCase):
         self.assertEqual(event.removed, [])
         self.assertEqual(event.index, 2)
 
-    def test_insert_at_extreme_negative_index(self):
-        foo = MyClass()
-        foo.l.insert(-100, 99)
-        self.assertEqual(foo.l, [99, 1, 2, 3])
-        self.assertEqual(len(foo.l_events), 1)
-        event = foo.l_events[0]
-        self.assertEqual(event.added, [99])
-        self.assertEqual(event.removed, [])
-        self.assertEqual(event.index, 0)
-
-    def test_insert_at_extreme_positive_index(self):
-        foo = MyClass()
-        foo.l.insert(100, 99)
-        self.assertEqual(foo.l, [1, 2, 3, 99])
-        self.assertEqual(len(foo.l_events), 1)
-        event = foo.l_events[0]
-        self.assertEqual(event.added, [99])
-        self.assertEqual(event.removed, [])
-        self.assertEqual(event.index, 3)
-
     def test_insert_index_invariants(self):
+        # Note that Python's list.insert allows indices outside
+        # the range [-len(my_list), len(my_list)].
         for index in range(-10, 10):
             foo = MyClass()
             foo.l.insert(index, 1729)
