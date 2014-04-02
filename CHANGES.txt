@@ -1,8 +1,21 @@
 Traits CHANGELOG
 ================
 
-What's new in Traits 4.5.0
---------------------------
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+
+Changes
+
+
+Fixes
+
+
+
+Release 4.5.0
+-------------
 
 Traits is now compatible with Python 3! The library now supports
 Python 3.2 and 3.3 .
@@ -11,8 +24,8 @@ The release also includes increased code coverage and automatic
 coverage report through coveralls.io .
 
 
-Change summary
-~~~~~~~~~~~~~~
+Change summary since 4.4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Enhancements
 
