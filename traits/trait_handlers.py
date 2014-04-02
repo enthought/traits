@@ -2450,6 +2450,7 @@ class TraitListObject ( list ):
 
     def __iadd__(self, other):
         self.extend(other)
+        return self
 
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
@@ -2490,8 +2491,18 @@ class TraitListObject ( list ):
                 list.insert( self, index, value )
 
                 if self.name_items is not None:
+                    # Length before the insertion.
+                    old_len = len( self ) - 1
+
+                    # Indices outside [-old_len, old_len] are clipped.
+                    # This matches the behaviour of insert on the
+                    # underlying list.
                     if index < 0:
-                        index = len( self ) + index - 1
+                        index += old_len
+                        if index < 0:
+                            index = 0
+                    elif index > old_len:
+                        index = old_len
 
                     self._send_trait_items_event( self.name_items,
                         TraitListEvent( index, None, [ value ] ),
