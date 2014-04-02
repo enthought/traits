@@ -2448,6 +2448,9 @@ class TraitListObject ( list ):
         def __delslice__ ( self, i, j ):
             self.__delitem__(slice(i,j))
 
+    def __iadd__(self, other):
+        self.extend(other)
+
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
         if trait is None:

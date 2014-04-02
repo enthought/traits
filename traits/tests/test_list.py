@@ -255,3 +255,15 @@ class ListTestCase(unittest.TestCase):
 
             f.strs = array(("abc", "def", "ghi"))
             self.failUnlessEqual(f.strs, ["abc", "def", "ghi"])
+
+    def test_extend(self):
+        f = Foo()
+        f.l = ['4', '5', '6']
+        f.l.extend(['1', '2', '3'])
+        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+
+    def test_iadd(self):
+        f = Foo()
+        f.l = ['4', '5', '6']
+        f.l += ['1', '2', '3']
+        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
