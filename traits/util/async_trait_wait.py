@@ -2,7 +2,8 @@ import threading
 
 
 def wait_for_condition(condition, obj, trait, timeout=None):
-    """Wait until the given condition is true, re-evaluating on trait change.
+    """
+    Wait until the given condition is true, re-evaluating on trait change.
 
     This is intended for use in multithreading situations where traits can be
     modified from a different thread than the calling thread.
