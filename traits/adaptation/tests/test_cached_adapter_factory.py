@@ -57,7 +57,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         return
 
-    @unittest.skip("Cache cleaning is broken")
+    @unittest.skip("Cache cleaning is broken: see GitHub issue #169")
     def test_cached_adapters_should_be_cleaned_up(self):
 
         ex = self.examples
@@ -106,7 +106,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         return
 
-    @unittest.skip("Cache cleaning is broken")
+    @unittest.skip("Cache cleaning is broken: see GitHub issue #169")
     def test_cached_adapter_that_was_garbage_collected(self):
 
         ex = self.examples
