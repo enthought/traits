@@ -3607,6 +3607,10 @@ def implements( *interfaces ):
     interface that the containing class implements. Each specified interface
     must be a subclass of **Interface**. This function should only be
     called from directly within a class body.
+
+    .. deprecated:: 4.4
+       Use the ``provides`` class decorator instead.
+
     """
 
     callback = provides(*interfaces)
