@@ -53,13 +53,13 @@ class TestCopyableTraitNames(unittest.TestCase):
         self.names = foo.copyable_trait_names()
 
     def test_events_not_copyable(self):
-        self.failIf('e' in self.names)
+        self.assertNotIn('e', self.names)
 
     def test_read_only_property_not_copyable(self):
-        self.failIf('p_ro' in self.names)
+        self.assertNotIn('p_ro', self.names)
 
     def test_write_only_property_not_copyable(self):
-        self.failIf('p_wo' in self.names)
+        self.assertNotIn('p_wo', self.names)
 
     def test_any_copyable(self):
         self.assertIn('a', self.names)
@@ -90,13 +90,13 @@ class TestCopyableTraitNameQueries(unittest.TestCase):
             'type': 'trait'
         })
 
-        self.failUnlessEqual(['a', 'b', 'i', 's'], sorted(names))
+        self.assertEqual(['a', 'b', 'i', 's'], sorted(names))
 
         names = self.foo.copyable_trait_names(**{
             'type': lambda t: t in ('trait', 'property',)
         })
 
-        self.failUnlessEqual(['a', 'b', 'i', 'p', 's'], sorted(names))
+        self.assertEqual(['a', 'b', 'i', 'p', 's'], sorted(names))
 
     def test_property_query(self):
         names = self.foo.copyable_trait_names(**{
