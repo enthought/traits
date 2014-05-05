@@ -1,32 +1,32 @@
 language: python
 python:
-    - 3.3
-    - 3.2
-    - 2.7
-    - 2.6
+  - 3.3
+  - 3.2
+  - 2.7
+  - 2.6
 virtualenv:
-    # This allows installing PyQt using apt-get and being able to import it.
-    system_site_packages: true
+  # This allows installing PyQt using apt-get and being able to import it.
+  system_site_packages: true
 before_install:
-    # On Python 2.7 we install PyQt4 and run the UI tests.
-    - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
+  # On Python 2.7 we install PyQt4 and run the UI tests.
+  - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
-    - pip install nose
-    - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
-    - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
-    - pip install cython
-    - pip install coverage
-    - pip install coveralls
-    - python setup.py install
+  - pip install nose
+  - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
+  - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
+  - pip install cython
+  - pip install coverage
+  - pip install coveralls
+  - python setup.py install
 before_script:
-    - mkdir testrunner
-    - cp .coveragerc testrunner/
-    - cd testrunner
+  - mkdir testrunner
+  - cp .coveragerc testrunner/
+  - cd testrunner
 script:
-    - coverage run -m nose.core traits --exe
+  - coverage run -m nose.core traits --exe
 notifications:
-    email:
-        - travis-ci@enthought.com
-        - hack@delley.net
+  email:
+    - travis-ci@enthought.com
+    - hack@delley.net
 after_success:
-    coveralls
+  coveralls
