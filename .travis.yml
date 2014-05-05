@@ -11,7 +11,7 @@ before_install:
   # On Python 2.7 we install PyQt4 and run the UI tests.
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
 install:
-  - pip install nose
+  - pip install -U nose
   - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
   - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
   - pip install cython
