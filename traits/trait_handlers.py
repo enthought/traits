@@ -2601,7 +2601,13 @@ class TraitListObject ( list ):
 
     def sort ( self, cmp = None, key = None, reverse = False ):
         removed = self[:]
-        list.sort( self, cmp = cmp, key = key, reverse = reverse )
+
+        if sys.version_info[0] >= 3:
+            if cmp is not None:
+                raise TypeError("'cmp' is an invalid keyword argument for this function")
+            list.sort( self, key = key, reverse = reverse )
+        else:
+            list.sort( self, cmp = cmp, key = key, reverse = reverse )
 
         if (getattr(self, 'name_items', None) is not None and
             getattr(self, 'trait', None) is not None):
