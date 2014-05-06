@@ -10,7 +10,6 @@
 #------------------------------------------------------------------------------
 import threading
 import time
-import sys
 
 from traits import _py2to3
 
@@ -305,6 +304,61 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         for t in threads:
             t.join()
+
+    def test_assert_eventually_true_fails_on_timeout(self):
+        class A(HasTraits):
+            foo = Bool(False)
+
+        a = A()
+
+        def condition(a_object):
+            return a_object.foo
+
+        with self.assertRaises(self.failureException):
+            self.assertEventuallyTrue(
+                condition=condition,
+                obj=a,
+                trait='foo',
+                timeout=1.0,
+            )
+
+    def test_assert_eventually_true_passes_when_condition_becomes_true(self):
+        class A(HasTraits):
+            foo = Bool(False)
+
+        def condition(a_object):
+            return a_object.foo
+
+        a = A()
+
+        def thread_target(a):
+            time.sleep(1.0)
+            a.foo = True
+
+        t = threading.Thread(target=thread_target, args=(a,))
+        t.start()
+        self.assertEventuallyTrue(
+            condition=condition,
+            obj=a,
+            trait='foo',
+            timeout=10.0,
+        )
+        t.join()
+
+    def test_assert_eventually_true_passes_when_condition_starts_true(self):
+        class A(HasTraits):
+            foo = Bool(True)
+
+        def condition(a_object):
+            return a_object.foo
+
+        a = A()
+        self.assertEventuallyTrue(
+            condition=condition,
+            obj=a,
+            trait='foo',
+            timeout=10.0,
+        )
 
 
 if __name__ == '__main__':

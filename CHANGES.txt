@@ -1,6 +1,22 @@
 Traits CHANGELOG
 ================
 
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+ * __iadd__ and __imul__ implemented on TraitListObjects (issue #152).
+
+Changes
+
+
+Fixes
+
+* Fixed incorrect in list events for `insert` operations with an index outside the
+  range [-len(target_list), len(target_list)]
+
+
 Release 4.5.0
 -------------
 
