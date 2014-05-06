@@ -26,6 +26,7 @@ Python 3.2 and 3.3 .
 The release also includes increased code coverage and automatic
 coverage report through coveralls.io .
 
+
 Change summary since 4.4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
