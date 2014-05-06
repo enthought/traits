@@ -1,12 +1,12 @@
 language: python
 python:
-  - 3.3
-  - 3.2
-  - 2.7
   - 2.6
-virtualenv:
-  # This allows installing PyQt using apt-get and being able to import it.
-  system_site_packages: true
+  - 2.7
+  - "2.7_with_system_site_packages"
+  - 3.2
+  - "3.2_with_system_site_packages"
+  - 3.3
+  - 3.4
 before_install:
   # On Python 2.7 we install PyQt4 and run the UI tests.
   - if [[ $TRAVIS_PYTHON_VERSION == '2.7' ]]; then source .travis_before_install; fi
@@ -27,6 +27,5 @@ script:
 notifications:
   email:
     - travis-ci@enthought.com
-    - hack@delley.net
 after_success:
   coveralls
