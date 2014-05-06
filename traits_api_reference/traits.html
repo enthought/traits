@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0-rc.1',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -245,11 +243,12 @@ cannot be assigned as a value.</td>
 None <em>can</em> be assigned as a value.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>instance</em>)</td>
-<td><div class="first last highlight-python"><pre>class MyClass:
+<td><div class="first last highlight-python"><div class="highlight"><pre>class MyClass:
    pass
 i = MyClass()
 foo =
-  Trait(i)</pre>
+  Trait(i)
+</pre></div>
 </div>
 </td>
 <td>Values must be instances of the
@@ -298,7 +297,7 @@ as the keyword. This feature lets you associate metadata with a trait.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Keywords :</th><td class="field-body"><ul class="first last">
+<tr class="field-odd field"><th class="field-name">Keywords:</th><td class="field-body"><ul class="first last">
 <li><p class="first"><strong>desc</strong> (<em>str</em>) &#8211;
 Describes the intended meaning of the trait. It is used in
 exception messages and fly-over help in user interfaces.</p>
@@ -333,8 +332,9 @@ where a detailed comparison of two objects is very expensive, or where
 you do not care whether the details of an object change, as long as the
 same object is used.</p>
 <blockquote>
-<div><p class="deprecated">
-<span class="versionmodified">Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+<div><div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+</div>
 </div></blockquote>
 </li>
 </ul>
@@ -346,7 +346,7 @@ same object is used.</p>
 
 <dl class="function">
 <dt id="traits.traits.Property">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value is a Python property.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -415,7 +415,7 @@ implicitly on the class.</p>
 
 <dl class="function">
 <dt id="traits.traits.Color">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Color</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Color</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value must be a GUI toolkit-specific color.</p>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following values:</p>
@@ -431,9 +431,11 @@ value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
 
 <dl class="function">
 <dt id="traits.traits.RGBColor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait whose value must be a GUI toolkit-specific RGB-based
-color.</p>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Returns a trait whose value must be a GUI toolkit-specific RGB-based</dt>
+<dd>color.</dd>
+</dl>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following values:</p>
 <ul class="simple">
@@ -449,7 +451,7 @@ value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
 
 <dl class="function">
 <dt id="traits.traits.Font">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Font</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Font</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value must be a GUI toolkit-specific font.</p>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following:</p>
@@ -613,8 +615,8 @@ original value.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Apr 01, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

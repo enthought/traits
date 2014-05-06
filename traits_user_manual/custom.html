@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0-rc.1',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -407,28 +405,29 @@ the traits.trait_handlers module.</p>
 values, but also any unique prefix substring of those values. The value assigned
 to the trait attribute is the full string that the substring matches.</p>
 <p id="index-25">For example:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Trait
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Trait
 &gt;&gt;&gt; from traits.api import TraitPrefixList
 &gt;&gt;&gt; class Alien(HasTraits):
-...   heads = Trait('one', TraitPrefixList(['one','two','three']))
+...   heads = Trait(&#39;one&#39;, TraitPrefixList([&#39;one&#39;,&#39;two&#39;,&#39;three&#39;]))
 ...
 &gt;&gt;&gt; alf = Alien()
-&gt;&gt;&gt; alf.heads = 'o'
+&gt;&gt;&gt; alf.heads = &#39;o&#39;
 &gt;&gt;&gt; print alf.heads
 one
-&gt;&gt;&gt; alf.heads = 'tw'
+&gt;&gt;&gt; alf.heads = &#39;tw&#39;
 &gt;&gt;&gt; print alf.heads
 two
-&gt;&gt;&gt; alf.heads = 't'  # Error, not a unique prefix
+&gt;&gt;&gt; alf.heads = &#39;t&#39;  # Error, not a unique prefix
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 1802,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 1802,
  in validate self.error( object, name, value )
-  File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
+  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'heads' trait of an Alien instance
- must be 'one' or 'two' or 'three' (or any unique prefix), but a value of 't'
- &lt;type 'str'&gt; was specified.</pre>
+traits.trait_errors.TraitError: The &#39;heads&#39; trait of an Alien instance
+ must be &#39;one&#39; or &#39;two&#39; or &#39;three&#39; (or any unique prefix), but a value of &#39;t&#39;
+ &lt;type &#39;str&#39;&gt; was specified.
+</pre></div>
 </div>
 </div>
 <div class="section" id="traitprefixmap">
@@ -610,8 +609,8 @@ BaseType version that does not have the <strong>fast_validate</strong> attribute
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Apr 01, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

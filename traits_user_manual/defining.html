@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -17,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0-rc.1',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -96,7 +94,7 @@ Python type <strong>float</strong>. The value 150.0 specifies the default value 
 <p>The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
 For example:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from minimal import Person
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from minimal import Person
 &gt;&gt;&gt; # instantiate the class
 &gt;&gt;&gt; joe = Person()
 &gt;&gt;&gt; # Show the default value
@@ -105,14 +103,15 @@ For example:</p>
 &gt;&gt;&gt; # Assign new values
 &gt;&gt;&gt; joe.weight = 161.9     # OK to assign a float
 &gt;&gt;&gt; joe.weight = 162       # OK to assign an int
-&gt;&gt;&gt; joe.weight = 'average' # Error to assign a string
+&gt;&gt;&gt; joe.weight = &#39;average&#39; # Error to assign a string
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'weight' trait of a Person
-instance must be a float, but a value of 'average' &lt;type 'str'&gt; was
-specified.</pre>
+traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
+instance must be a float, but a value of &#39;average&#39; &lt;type &#39;str&#39;&gt; was
+specified.
+</pre></div>
 </div>
 <p>In this example, <strong>joe</strong> is an instance of the Person class defined in the
 previous example. The <strong>joe</strong> object has an instance attribute <strong>weight</strong>,
@@ -260,7 +259,7 @@ Python built-in functions for type conversion:</p>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
 &gt;&gt;&gt; class Person ( HasTraits ):
 ...    weight  = Float
 ...    cweight = CFloat
@@ -268,17 +267,18 @@ casting traits:</p>
 &gt;&gt;&gt; bill = Person()
 &gt;&gt;&gt; bill.weight  = 180    # OK, coerced to 180.0
 &gt;&gt;&gt; bill.cweight = 180    # OK, cast to float(180)
-&gt;&gt;&gt; bill.weight  = '180'  # Error, invalid coercion
+&gt;&gt;&gt; bill.weight  = &#39;180&#39;  # Error, invalid coercion
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'weight' trait of a Person
-instance must be a float, but a value of '180' &lt;type 'str'&gt; was specified.
-&gt;&gt;&gt; bill.cweight = '180'  # OK, cast to float('180')
+traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
+instance must be a float, but a value of &#39;180&#39; &lt;type &#39;str&#39;&gt; was specified.
+&gt;&gt;&gt; bill.cweight = &#39;180&#39;  # OK, cast to float(&#39;180&#39;)
 &gt;&gt;&gt; print bill.cweight
 180.0
-&gt;&gt;&gt;</pre>
+&gt;&gt;&gt;
+</pre></div>
 </div>
 </div>
 </div>
@@ -553,30 +553,31 @@ value.</p>
 <p id="index-29">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
 &gt;&gt;&gt; class InventoryItem(HasTraits):
-...    name  = Str # String value, default is ''
-...    stock = Enum(None, 0, 1, 2, 3, 'many')
+...    name  = Str # String value, default is &#39;&#39;
+...    stock = Enum(None, 0, 1, 2, 3, &#39;many&#39;)
 ...            # Enumerated list, default value is
-...            #'None'
+...            #&#39;None&#39;
 ...
 &gt;&gt;&gt; hats = InventoryItem()
-&gt;&gt;&gt; hats.name = 'Stetson'
+&gt;&gt;&gt; hats.name = &#39;Stetson&#39;
 
-&gt;&gt;&gt; print '%s: %s' % (hats.name, hats.stock)
+&gt;&gt;&gt; print &#39;%s: %s&#39; % (hats.name, hats.stock)
 Stetson: None
 
 &gt;&gt;&gt; hats.stock = 2      # OK
-&gt;&gt;&gt; hats.stock = 'many' # OK
+&gt;&gt;&gt; hats.stock = &#39;many&#39; # OK
 &gt;&gt;&gt; hats.stock = 4      # Error, value is not in \
 &gt;&gt;&gt;                     # permitted list
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
-instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 &lt;type
-'int'&gt; was specified.</pre>
+traits.trait_errors.TraitError: The &#39;stock&#39; trait of an InventoryItem
+instance must be None or 0 or 1 or 2 or 3 or &#39;many&#39;, but a value of 4 &lt;type
+&#39;int&#39;&gt; was specified.
+</pre></div>
 </div>
 <p>This example defines an InventoryItem class, with two trait attributes,
 <strong>name</strong>, and <strong>stock</strong>. The name attribute is simply a string. The <strong>stock</strong>
@@ -847,8 +848,8 @@ existing traits.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Apr 01, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
