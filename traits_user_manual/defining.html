@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -72,8 +72,7 @@ attributes that use the traits you have defined.</li>
 in an attribute definition. This strategy is used in many examples in this
 guide. However, you can also define traits independently, and reuse the trait
 definitions across multiple classes and attributes (see
-<a class="reference internal" href="advanced.html#reusing-trait-definitions"><em>Reusing Trait Definitions</em></a>). Type-checked method signatures typically
-use independently defined traits.</p>
+<a class="reference internal" href="advanced.html#reusing-trait-definitions"><em>Reusing Trait Definitions</em></a>).</p>
 <p>In order to use trait attributes in a class, the class must inherit from the
 HasTraits class in the Traits package (or from a subclass of HasTraits). The
 following example defines a class called Person that has a single trait
@@ -95,7 +94,7 @@ Python type <strong>float</strong>. The value 150.0 specifies the default value 
 <p>The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
 For example:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from minimal import Person
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from minimal import Person
 &gt;&gt;&gt; # instantiate the class
 &gt;&gt;&gt; joe = Person()
 &gt;&gt;&gt; # Show the default value
@@ -104,14 +103,15 @@ For example:</p>
 &gt;&gt;&gt; # Assign new values
 &gt;&gt;&gt; joe.weight = 161.9     # OK to assign a float
 &gt;&gt;&gt; joe.weight = 162       # OK to assign an int
-&gt;&gt;&gt; joe.weight = 'average' # Error to assign a string
+&gt;&gt;&gt; joe.weight = &#39;average&#39; # Error to assign a string
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'weight' trait of a Person
-instance must be a float, but a value of 'average' &lt;type 'str'&gt; was
-specified.</pre>
+traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
+instance must be a float, but a value of &#39;average&#39; &lt;type &#39;str&#39;&gt; was
+specified.
+</pre></div>
 </div>
 <p>In this example, <strong>joe</strong> is an instance of the Person class defined in the
 previous example. The <strong>joe</strong> object has an instance attribute <strong>weight</strong>,
@@ -259,7 +259,7 @@ Python built-in functions for type conversion:</p>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
 &gt;&gt;&gt; class Person ( HasTraits ):
 ...    weight  = Float
 ...    cweight = CFloat
@@ -267,17 +267,18 @@ casting traits:</p>
 &gt;&gt;&gt; bill = Person()
 &gt;&gt;&gt; bill.weight  = 180    # OK, coerced to 180.0
 &gt;&gt;&gt; bill.cweight = 180    # OK, cast to float(180)
-&gt;&gt;&gt; bill.weight  = '180'  # Error, invalid coercion
+&gt;&gt;&gt; bill.weight  = &#39;180&#39;  # Error, invalid coercion
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'weight' trait of a Person
-instance must be a float, but a value of '180' &lt;type 'str'&gt; was specified.
-&gt;&gt;&gt; bill.cweight = '180'  # OK, cast to float('180')
+traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
+instance must be a float, but a value of &#39;180&#39; &lt;type &#39;str&#39;&gt; was specified.
+&gt;&gt;&gt; bill.cweight = &#39;180&#39;  # OK, cast to float(&#39;180&#39;)
 &gt;&gt;&gt; print bill.cweight
 180.0
-&gt;&gt;&gt;</pre>
+&gt;&gt;&gt;
+</pre></div>
 </div>
 </div>
 </div>
@@ -413,83 +414,80 @@ ListUnicode</td>
 <tr class="row-even" id="index-25"><td>Method</td>
 <td>Method ([**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>missing</td>
-<td>n/a</td>
-</tr>
-<tr class="row-even"><td>Module</td>
+<tr class="row-odd"><td>Module</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Password</td>
+<tr class="row-even"><td>Password</td>
 <td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Property</td>
+<tr class="row-odd"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 ** <em>metadata</em>] )</p>
 <p class="last">See <a class="reference internal" href="advanced.html#property-traits"><em>Property Traits</em></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-odd"><td>Python</td>
+<tr class="row-even"><td>Python</td>
 <td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>PythonValue</td>
+<tr class="row-odd"><td>PythonValue</td>
 <td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Range</td>
+<tr class="row-even"><td>Range</td>
 <td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>ReadOnly</td>
+<tr class="row-odd"><td>ReadOnly</td>
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Regex</td>
+<tr class="row-even"><td>Regex</td>
 <td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
 </tr>
-<tr class="row-even"><td>RGBColor</td>
+<tr class="row-odd"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>self</td>
+<tr class="row-even"><td>self</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>Set</td>
+<tr class="row-odd"><td>Set</td>
 <td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>String</td>
+<tr class="row-even"><td>String</td>
 <td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>This</td>
+<tr class="row-odd"><td>This</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>ToolbarButton</td>
+<tr class="row-even"><td>ToolbarButton</td>
 <td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>true</td>
+<tr class="row-odd"><td>true</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>Tuple</td>
+<tr class="row-even"><td>Tuple</td>
 <td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Type</td>
+<tr class="row-odd"><td>Type</td>
 <td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>undefined</td>
+<tr class="row-even"><td>undefined</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>UStr</td>
+<tr class="row-odd"><td>UStr</td>
 <td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
 NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
-<tr class="row-odd"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
+<tr class="row-even"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
 <td>UUID( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>WeakRef</td>
+<tr class="row-odd"><td>WeakRef</td>
 <td>WeakRef( [<em>klass</em> = &#8216;traits.HasTraits&#8217;,
 <em>allow_none</em> = False, <em>adapt</em> = &#8216;yes&#8217;, **<em>metadata</em>])</td>
 </tr>
@@ -555,30 +553,31 @@ value.</p>
 <p id="index-29">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
-<div class="highlight-python"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
+<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
 &gt;&gt;&gt; class InventoryItem(HasTraits):
-...    name  = Str # String value, default is ''
-...    stock = Enum(None, 0, 1, 2, 3, 'many')
+...    name  = Str # String value, default is &#39;&#39;
+...    stock = Enum(None, 0, 1, 2, 3, &#39;many&#39;)
 ...            # Enumerated list, default value is
-...            #'None'
+...            #&#39;None&#39;
 ...
 &gt;&gt;&gt; hats = InventoryItem()
-&gt;&gt;&gt; hats.name = 'Stetson'
+&gt;&gt;&gt; hats.name = &#39;Stetson&#39;
 
-&gt;&gt;&gt; print '%s: %s' % (hats.name, hats.stock)
+&gt;&gt;&gt; print &#39;%s: %s&#39; % (hats.name, hats.stock)
 Stetson: None
 
 &gt;&gt;&gt; hats.stock = 2      # OK
-&gt;&gt;&gt; hats.stock = 'many' # OK
+&gt;&gt;&gt; hats.stock = &#39;many&#39; # OK
 &gt;&gt;&gt; hats.stock = 4      # Error, value is not in \
 &gt;&gt;&gt;                     # permitted list
 Traceback (most recent call last):
-  File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-  File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 175,
 in error value )
-traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
-instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 &lt;type
-'int'&gt; was specified.</pre>
+traits.trait_errors.TraitError: The &#39;stock&#39; trait of an InventoryItem
+instance must be None or 0 or 1 or 2 or 3 or &#39;many&#39;, but a value of 4 &lt;type
+&#39;int&#39;&gt; was specified.
+</pre></div>
 </div>
 <p>This example defines an InventoryItem class, with two trait attributes,
 <strong>name</strong>, and <strong>stock</strong>. The name attribute is simply a string. The <strong>stock</strong>
@@ -849,8 +848,8 @@ existing traits.</td></tr>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

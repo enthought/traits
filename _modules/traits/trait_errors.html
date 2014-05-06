@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -76,25 +76,22 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">import</span> <span class="nn">exceptions</span>
-
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">InstanceType</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">class_of</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_py2to3</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Utilities</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
+
 <div class="viewcode-block" id="repr_type"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.repr_type">[docs]</a><span class="k">def</span> <span class="nf">repr_type</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Return a string representation of a value and its type for readable</span>
 <span class="sd">    error messages.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">the_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">the_type</span> <span class="ow">is</span> <span class="n">InstanceType</span><span class="p">:</span>
-        <span class="c"># Old-style class.</span>
-        <span class="n">the_type</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__class__</span>
+    <span class="n">the_type</span> <span class="o">=</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">type_w_old_style</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%r</span><span class="s"> </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">the_type</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">msg</span>
 
@@ -102,7 +99,7 @@
 <span class="c">#  &#39;TraitError&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div>
-<div class="viewcode-block" id="TraitError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitError">[docs]</a><span class="k">class</span> <span class="nc">TraitError</span> <span class="p">(</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">Exception</span> <span class="p">):</span>
+<div class="viewcode-block" id="TraitError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitError">[docs]</a><span class="k">class</span> <span class="nc">TraitError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -143,9 +140,7 @@
 
         <span class="c"># Note: self.args must be a tuple so be sure to leave the trailing</span>
         <span class="c"># commas.</span>
-        <span class="n">the_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">the_type</span> <span class="ow">is</span> <span class="n">InstanceType</span><span class="p">:</span>
-            <span class="n">the_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">__class__</span>
+        <span class="n">the_type</span> <span class="o">=</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">type_w_old_style</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> &#39;</span><span class="si">%s</span><span class="s">&#39; trait of </span><span class="si">%s</span><span class="s"> instance</span><span class="si">%s</span><span class="s"> must be </span><span class="si">%s</span><span class="s">, &quot;</span>
                          <span class="s">&quot;but a value of </span><span class="si">%s</span><span class="s"> was specified.&quot;</span> <span class="o">%</span> <span class="p">(</span>
@@ -160,7 +155,7 @@
 <span class="c">#  &#39;TraitNotificationError&#39; class:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div>
-<div class="viewcode-block" id="TraitNotificationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitNotificationError">[docs]</a><span class="k">class</span> <span class="nc">TraitNotificationError</span> <span class="p">(</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">Exception</span> <span class="p">):</span>
+<div class="viewcode-block" id="TraitNotificationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitNotificationError">[docs]</a><span class="k">class</span> <span class="nc">TraitNotificationError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
 
     <span class="k">pass</span>
 
@@ -223,8 +218,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

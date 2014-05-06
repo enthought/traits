@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -68,6 +68,8 @@
 <span class="kn">from</span> <span class="nn">heapq</span> <span class="kn">import</span> <span class="n">heappop</span><span class="p">,</span> <span class="n">heappush</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="kn">from</span> <span class="nn">traits.adaptation.adaptation_error</span> <span class="kn">import</span> <span class="n">AdaptationError</span>
 <span class="kn">from</span> <span class="nn">traits.has_traits</span> <span class="kn">import</span> <span class="n">HasTraits</span>
@@ -301,7 +303,12 @@
             <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applicable_offers</span><span class="p">(</span><span class="n">current_protocol</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
             <span class="c"># Sort by weight first, then by from_protocol type.</span>
-            <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c"># functools.cmp_to_key is available from 2.7 and 3.2</span>
+                <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">functools</span><span class="o">.</span><span class="n">cmp_to_key</span><span class="p">(</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">))</span>
+                
 
             <span class="c"># At this point, the first edges are the shortest ones. Within</span>
             <span class="c"># edges with the same distance, interfaces which are subclasses</span>
@@ -406,23 +413,73 @@
     <span class="k">return</span> <span class="mi">0</span>
 
 
-<span class="c">#: The default global adaptation manager.</span>
+<span class="c"># The default global adaptation manager.</span>
+<span class="c"># PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.</span>
+<span class="c"># If you must use a global adaptation manager, use the functions</span>
+<span class="c"># `get_global_adaptation_manager`, `reset_global_adaptation_manager`,</span>
+<span class="c"># `set_global_adaptation_manager`.</span>
 <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="set_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.set_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">set_global_adaptation_manager</span><span class="p">(</span><span class="n">new_adaptation_manager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Set the global adaptation manager to the given instance. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">adaptation_manager</span>
+    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">new_adaptation_manager</span>
+
+</div>
+<div class="viewcode-block" id="reset_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.reset_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">reset_global_adaptation_manager</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Set the global adaptation manager to a new AdaptationManager instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">adaptation_manager</span>
+    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="get_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.get_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">get_global_adaptation_manager</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Set a reference to the global adaptation manager. &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">adaptation_manager</span>
+    <span class="k">return</span> <span class="n">adaptation_manager</span>
 
 
 <span class="c"># Convenience references to methods on the default adaptation manager.</span>
 <span class="c">#</span>
 <span class="c"># If you add a public method to the adaptation manager protocol then don&#39;t</span>
 <span class="c"># forget to add a convenience function here!</span>
+</div>
+<div class="viewcode-block" id="adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt">[docs]</a><span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Attempt to adapt an object to a given protocol. &quot;&quot;&quot;</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 
-<span class="n">adapt</span>             <span class="o">=</span> <span class="n">adaptation_manager</span><span class="o">.</span><span class="n">adapt</span>
-<span class="n">register_factory</span>  <span class="o">=</span> <span class="n">adaptation_manager</span><span class="o">.</span><span class="n">register_factory</span>
-<span class="n">register_offer</span>    <span class="o">=</span> <span class="n">adaptation_manager</span><span class="o">.</span><span class="n">register_offer</span>
-<span class="n">register_provides</span> <span class="o">=</span> <span class="n">adaptation_manager</span><span class="o">.</span><span class="n">register_provides</span>
-<span class="n">supports_protocol</span> <span class="o">=</span> <span class="n">adaptation_manager</span><span class="o">.</span><span class="n">supports_protocol</span>
-<span class="n">provides_protocol</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span>
+</div>
+<div class="viewcode-block" id="register_factory"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory">[docs]</a><span class="k">def</span> <span class="nf">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Register an adapter factory. &quot;&quot;&quot;</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">)</span>
 
-<span class="c">#### EOF ######################################################################</span>
+</div>
+<div class="viewcode-block" id="register_offer"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_offer">[docs]</a><span class="k">def</span> <span class="nf">register_offer</span><span class="p">(</span><span class="n">offer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Register an offer to adapt from one protocol to another. &quot;&quot;&quot;</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_offer</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="register_provides"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_provides">[docs]</a><span class="k">def</span> <span class="nf">register_provides</span><span class="p">(</span><span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Register that a protocol provides another. &quot;&quot;&quot;</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_provides</span><span class="p">(</span><span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="supports_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.supports_protocol">[docs]</a><span class="k">def</span> <span class="nf">supports_protocol</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Does the object support a given protocol? &quot;&quot;&quot;</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">supports_protocol</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.provides_protocol">[docs]</a><span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Does the given type provide (i.e implement) a given protocol? &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+
+<span class="c">#### EOF ######################################################################</span></div>
 </pre></div>
 
           </div>
@@ -466,8 +523,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

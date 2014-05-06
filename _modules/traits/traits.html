@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -100,15 +100,15 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">NoneType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">LongType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span> <span class="n">ComplexType</span><span class="p">,</span>
-    <span class="n">StringType</span><span class="p">,</span> <span class="n">UnicodeType</span><span class="p">,</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">TupleType</span><span class="p">,</span> <span class="n">DictType</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span>
-    <span class="n">ClassType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">TypeType</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span>
+<span class="n">NoneType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>   <span class="c"># Python 3&#39;s types does not include NoneType</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trait_handlers</span>
 <span class="kn">from</span> <span class="nn">.ctraits</span> <span class="kn">import</span> <span class="n">cTrait</span>
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">Self</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">TypeTypes</span><span class="p">,</span>
-    <span class="n">add_article</span><span class="p">,</span> <span class="nb">enumerate</span><span class="p">,</span> <span class="n">BooleanType</span><span class="p">)</span>
+    <span class="n">add_article</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TraitHandler</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">,</span> <span class="n">TraitFunction</span><span class="p">,</span>
     <span class="n">TraitCoerceType</span><span class="p">,</span> <span class="n">TraitCastType</span><span class="p">,</span> <span class="n">TraitEnum</span><span class="p">,</span> <span class="n">TraitCompound</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">,</span>
@@ -465,33 +465,35 @@
 <span class="c">#  Constants:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
-<span class="n">ConstantTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">NoneType</span><span class="p">,</span> <span class="n">IntType</span><span class="p">,</span> <span class="n">LongType</span><span class="p">,</span> <span class="n">FloatType</span><span class="p">,</span> <span class="n">ComplexType</span><span class="p">,</span>
-                     <span class="n">StringType</span><span class="p">,</span> <span class="n">UnicodeType</span> <span class="p">)</span>
+<span class="n">ConstantTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">NoneType</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span> <span class="p">)</span>
 
-<span class="n">PythonTypes</span>      <span class="o">=</span> <span class="p">(</span> <span class="n">StringType</span><span class="p">,</span>   <span class="n">UnicodeType</span><span class="p">,</span>  <span class="n">IntType</span><span class="p">,</span>    <span class="n">LongType</span><span class="p">,</span>
-                     <span class="n">FloatType</span><span class="p">,</span>    <span class="n">ComplexType</span><span class="p">,</span>  <span class="n">ListType</span><span class="p">,</span>   <span class="n">TupleType</span><span class="p">,</span>
-                     <span class="n">DictType</span><span class="p">,</span>     <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span>
-                     <span class="n">InstanceType</span><span class="p">,</span> <span class="n">TypeType</span><span class="p">,</span>     <span class="n">NoneType</span> <span class="p">)</span>
+<span class="n">PythonTypes</span>      <span class="o">=</span> <span class="p">(</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">,</span>
+                     <span class="nb">dict</span><span class="p">,</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">NoneType</span> <span class="p">)</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">InstanceType</span><span class="p">,</span><span class="n">ClassType</span>
+    <span class="n">PythonTypes</span> <span class="o">=</span> <span class="n">PythonTypes</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">InstanceType</span><span class="p">,</span><span class="n">ClassType</span><span class="p">)</span> <span class="o">+</span> <span class="n">PythonTypes</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
+
 
 <span class="n">CallableTypes</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span> <span class="p">)</span>
 
 <span class="n">TraitTypes</span>       <span class="o">=</span> <span class="p">(</span> <span class="n">TraitHandler</span><span class="p">,</span> <span class="n">CTrait</span> <span class="p">)</span>
 
 <span class="n">DefaultValues</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">StringType</span><span class="p">:</span>  <span class="s">&#39;&#39;</span><span class="p">,</span>
-    <span class="n">UnicodeType</span><span class="p">:</span> <span class="s">u&#39;&#39;</span><span class="p">,</span>
-    <span class="n">IntType</span><span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>
-    <span class="n">LongType</span><span class="p">:</span>    <span class="il">0L</span><span class="p">,</span>
-    <span class="n">FloatType</span><span class="p">:</span>   <span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">ComplexType</span><span class="p">:</span> <span class="mi">0j</span><span class="p">,</span>
-    <span class="n">ListType</span><span class="p">:</span>    <span class="p">[],</span>
-    <span class="n">TupleType</span><span class="p">:</span>   <span class="p">(),</span>
-    <span class="n">DictType</span><span class="p">:</span>    <span class="p">{},</span>
-    <span class="n">BooleanType</span><span class="p">:</span> <span class="bp">False</span>
+    <span class="nb">str</span><span class="p">:</span>  <span class="s">&#39;&#39;</span><span class="p">,</span>
+    <span class="nb">unicode</span><span class="p">:</span> <span class="s">u&#39;&#39;</span><span class="p">,</span>
+    <span class="nb">int</span><span class="p">:</span>     <span class="mi">0</span><span class="p">,</span>
+    <span class="nb">long</span><span class="p">:</span>    <span class="il">0L</span><span class="p">,</span>
+    <span class="nb">float</span><span class="p">:</span>   <span class="mf">0.0</span><span class="p">,</span>
+    <span class="nb">complex</span><span class="p">:</span> <span class="mi">0j</span><span class="p">,</span>
+    <span class="nb">list</span><span class="p">:</span>    <span class="p">[],</span>
+    <span class="nb">tuple</span><span class="p">:</span>   <span class="p">(),</span>
+    <span class="nb">dict</span><span class="p">:</span>    <span class="p">{},</span>
+    <span class="nb">bool</span><span class="p">:</span> <span class="bp">False</span>
 <span class="p">}</span>
 
 <span class="n">DefaultValueSpecial</span> <span class="o">=</span> <span class="p">[</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">Self</span> <span class="p">]</span>
-<span class="n">DefaultValueTypes</span>   <span class="o">=</span> <span class="p">[</span> <span class="n">ListType</span><span class="p">,</span> <span class="n">DictType</span> <span class="p">]</span>
+<span class="n">DefaultValueTypes</span>   <span class="o">=</span> <span class="p">[</span> <span class="nb">list</span><span class="p">,</span> <span class="nb">dict</span> <span class="p">]</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Function used to unpickle new-style objects:</span>
@@ -974,7 +976,7 @@
                 <span class="k">elif</span> <span class="n">typeItem</span> <span class="ow">in</span> <span class="n">SequenceTypes</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">do_list</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">enum</span><span class="p">,</span> <span class="nb">map</span><span class="p">,</span> <span class="n">other</span> <span class="p">)</span>
 
-                <span class="k">elif</span> <span class="n">typeItem</span> <span class="ow">is</span> <span class="n">DictType</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="n">typeItem</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
                     <span class="nb">map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
 
                 <span class="k">elif</span> <span class="n">typeItem</span> <span class="ow">in</span> <span class="n">CallableTypes</span><span class="p">:</span>
@@ -1065,7 +1067,8 @@
 <span class="sd">    fset : function</span>
 <span class="sd">        The &quot;setter&quot; function for the property.</span>
 <span class="sd">    fvalidate : function</span>
-<span class="sd">        The validation function for the property.</span>
+<span class="sd">        The validation function for the property. The method should return the</span>
+<span class="sd">        value to set or raise TraitError if the new value is not valid.</span>
 <span class="sd">    force : bool</span>
 <span class="sd">        Indicates whether to use only the function definitions specified by</span>
 <span class="sd">        **fget** and **fset**, and not look elsewhere on the class.</span>
@@ -1077,17 +1080,26 @@
 
 <span class="sd">    Description</span>
 <span class="sd">    -----------</span>
-<span class="sd">    If no getter or setter functions are specified (and **force** is not True),</span>
-<span class="sd">    it is assumed that they are defined elsewhere on the class whose attribute</span>
-<span class="sd">    this trait is assigned to. For example::</span>
+<span class="sd">    If no getter, setter or validate functions are specified (and **force** is</span>
+<span class="sd">    not True), it is assumed that they are defined elsewhere on the class whose</span>
+<span class="sd">    attribute this trait is assigned to. For example::</span>
 
 <span class="sd">        class Bar(HasTraits):</span>
+<span class="sd">            </span>
+<span class="sd">            # A float traits Property that should be always positive.</span>
 <span class="sd">            foo = Property(Float)</span>
+<span class="sd">            </span>
 <span class="sd">            # Shadow trait attribute</span>
 <span class="sd">            _foo = Float</span>
 
 <span class="sd">            def _set_foo(self,x):</span>
 <span class="sd">                self._foo = x</span>
+
+<span class="sd">            def _validate_foo(self, x):</span>
+<span class="sd">                if x &lt;= 0:</span>
+<span class="sd">                    raise TraitError(</span>
+<span class="sd">                        &#39;foo property should be a positive number&#39;)</span>
+<span class="sd">                return x</span>
 
 <span class="sd">            def _get_foo(self):</span>
 <span class="sd">                return self._foo</span>
@@ -1332,8 +1344,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

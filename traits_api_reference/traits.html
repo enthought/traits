@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -46,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
   
 
       </ul>
@@ -243,11 +243,12 @@ cannot be assigned as a value.</td>
 None <em>can</em> be assigned as a value.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>instance</em>)</td>
-<td><div class="first last highlight-python"><pre>class MyClass:
+<td><div class="first last highlight-python"><div class="highlight"><pre>class MyClass:
    pass
 i = MyClass()
 foo =
-  Trait(i)</pre>
+  Trait(i)
+</pre></div>
 </div>
 </td>
 <td>Values must be instances of the
@@ -332,7 +333,7 @@ you do not care whether the details of an object change, as long as the
 same object is used.</p>
 <blockquote>
 <div><div class="deprecated">
-<p><span>Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
 </div>
 </div></blockquote>
 </li>
@@ -345,7 +346,7 @@ same object is used.</p>
 
 <dl class="function">
 <dt id="traits.traits.Property">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value is a Python property.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -354,7 +355,8 @@ same object is used.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>fget</strong> (<em>function</em>) &#8211; The &#8220;getter&#8221; function for the property.</li>
 <li><strong>fset</strong> (<em>function</em>) &#8211; The &#8220;setter&#8221; function for the property.</li>
-<li><strong>fvalidate</strong> (<em>function</em>) &#8211; The validation function for the property.</li>
+<li><strong>fvalidate</strong> (<em>function</em>) &#8211; The validation function for the property. The method should return the
+value to set or raise TraitError if the new value is not valid.</li>
 <li><strong>force</strong> (<em>bool</em>) &#8211; Indicates whether to use only the function definitions specified by
 <strong>fget</strong> and <strong>fset</strong>, and not look elsewhere on the class.</li>
 <li><strong>handler</strong> (<em>function</em>) &#8211; A trait handler function for the trait.</li>
@@ -366,16 +368,25 @@ constrains the values of the property trait.</li>
 </tbody>
 </table>
 <p class="rubric">Description</p>
-<p>If no getter or setter functions are specified (and <strong>force</strong> is not True),
-it is assumed that they are defined elsewhere on the class whose attribute
-this trait is assigned to. For example:</p>
+<p>If no getter, setter or validate functions are specified (and <strong>force</strong> is
+not True), it is assumed that they are defined elsewhere on the class whose
+attribute this trait is assigned to. For example:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    
+    <span class="c"># A float traits Property that should be always positive.</span>
     <span class="n">foo</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
+    
     <span class="c"># Shadow trait attribute</span>
     <span class="n">_foo</span> <span class="o">=</span> <span class="n">Float</span>
 
     <span class="k">def</span> <span class="nf">_set_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span> <span class="o">=</span> <span class="n">x</span>
+
+    <span class="k">def</span> <span class="nf">_validate_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
+                <span class="s">&#39;foo property should be a positive number&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
 
     <span class="k">def</span> <span class="nf">_get_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span>
@@ -404,7 +415,7 @@ implicitly on the class.</p>
 
 <dl class="function">
 <dt id="traits.traits.Color">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Color</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Color</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value must be a GUI toolkit-specific color.</p>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following values:</p>
@@ -420,7 +431,7 @@ value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
 
 <dl class="function">
 <dt id="traits.traits.RGBColor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>Returns a trait whose value must be a GUI toolkit-specific RGB-based</dt>
 <dd>color.</dd>
@@ -440,7 +451,7 @@ value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
 
 <dl class="function">
 <dt id="traits.traits.Font">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Font</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">traits.traits.</tt><tt class="descname">Font</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait whose value must be a GUI toolkit-specific font.</p>
 <p class="rubric">Description</p>
 <p>For wxPython, the returned trait accepts any of the following:</p>
@@ -559,7 +570,7 @@ original value.</p>
                         title="previous chapter">API Reference</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="adapter.html"
-                        title="next chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.txt"
@@ -597,15 +608,15 @@ original value.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

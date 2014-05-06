@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -42,7 +42,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">util</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
   
 
       </ul>
@@ -167,232 +167,6 @@ False.</li>
 <dd><p>Determine the user&#8217;s home directory.</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-traits.util.refresh">
-<span id="refresh-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">refresh</span></tt> Module<a class="headerlink" href="#module-traits.util.refresh" title="Permalink to this headline">¶</a></h2>
-<p>Live updating of objects in system from module reloads.</p>
-<p>The main function exposed by this module is:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">refresh</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Check for edited python files for modules that are live in the
-system.  If one or more are found, reload the module in such
-a way that its new class and function definitions are used
-by all pre-existing objects in the system.  This differs from
-a simple reload(module) which makes no attempt to provide the
-freshly loaded implementations of classes to objects created
-with a previous (outdated) version of the class.</p>
-<p>This feature allows you to make edits to a module
-while a program is running and not have to restart the
-program to get the new behavior in the system.  It is
-particularly handy when working on large GUI applications
-where you want to update the core code in the system
-without a lengthy restart.</p>
-<p>Example:</p>
-<div class="highlight-python"><pre># foo.py
-class Foo:
-    def method(self):
-        print "hello"
-
-$ python
-&gt;&gt;&gt; from foo import Foo
-&gt;&gt;&gt; obj = Foo()
-&gt;&gt;&gt; obj.method()
-hello
-#&lt;edit file&gt;
-# foo.py
-class Foo:
-    def method(self):
-        print "goodbye"
-#&lt;end edit&gt;
-&gt;&gt;&gt; import refresh
-&gt;&gt;&gt; refresh.refresh()
-# obj will now have the behavior of the updated Foo classes.
-&gt;&gt;&gt; obj.method()
-goodbye</pre>
-</div>
-<div class="section" id="how-it-works">
-<h3>How It works<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h3>
-<p>In python, classes and functions are mutable objects.  Importing
-a module instantiates an instance of all the classes and functions
-defined in the module.</p>
-<p>Any objects instantiated from the classes have a obj.__class__
-attribute the points to the class they are based upon.  When
-you call a method on the object in your code like so:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span><span class="o">.</span><span class="n">method</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>python actually calls the method of the __class__ object like so:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">obj</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>with obj passed in as the &#8220;self&#8221; argument.  This indirection allows
-us to dynamically change the implementation of method().</p>
-<p>When you edit a python module and then reload it in a python session,
-any classes within the module are re-instantiated within that module
-and any newly created objects created with a call to module.class()
-will have the behavior and methods of your freshly edited code.  But
-what about objects that are already &#8220;live&#8221; in the system that were
-created with a previous version of module.class?  Their __class__
-attribute is still pointing at the old version of the class, and so
-they will have the old behavior.  The quickest way to fix this is
-to find the old class object in the system and replace its attributes
-and methods with those of the freshly imported class.  This will
-instantly give all old objects in the system the new behavior.</p>
-<p>Functions are updated in a similar way.  All old versions of
-functions have their internals (func_code, etc.) replaced with
-those of the freshly loaded implementation.</p>
-</div>
-<div class="section" id="caveats">
-<h3>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h3>
-<p>Their are multiple issues with trying insert a new class definition
-back into classes.  Doing this clobbers and class scope variables that
-were set at runtime.  Also, this implementation cleans out old classes
-completely before inserting new method/attributes.  That means that
-any methods dynamically added to a class are also clobbered.  There
-are ways to potentially get around this, but it isn&#8217;t clear that
-it is worth the effort (at least for Enthought applications) as such
-tricks are not used very often in classes that are often edited.  When
-you do (or anytime you notice suspicious behavior), restart your
-application.</p>
-<p>Enthought people: While refresh() can save you time for working with
-applications, ALWAYS do a fresh restart and check that everything is
-working properly before checking edited code in.</p>
-</div>
-<div class="section" id="questions">
-<h3>Questions<a class="headerlink" href="#questions" title="Permalink to this headline">¶</a></h3>
-<ul>
-<li><p class="first">Check out why traits classes aren&#8217;t cleaned up correctly.</p>
-</li>
-<li><p class="first">Should we get rid of functions/classes that were in old version of module
-but aren&#8217;t in new one?  This could prevent problems with stale functions
-left around that really weren&#8217;t meant to be, but it might also delete
-functions that &#8220;hooked&#8221; into a module...</p>
-<p>fix me: I think we should to prevent refactor errors.</p>
-</li>
-</ul>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">copyright:</th><td class="field-body">2005, Enthought, Inc.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">author:</th><td class="field-body">Eric Jones</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">license:</th><td class="field-body">BSD</td>
-</tr>
-</tbody>
-</table>
-<dl class="function">
-<dt id="traits.util.refresh.refresh">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">refresh</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.refresh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reload edited modules &amp; update existing objects to new versions</p>
-<p>Check for edited python files for modules that are live in the
-system.  If one or more are found, reload the module in such a way
-that its new class and function definitions are used by all
-pre-existing objects in the system.  This differs from a simple
-reload(module) which makes no attempt to provide the freshly loaded
-implementations of classes to objects created with a
-previous (outdated) version of the class.</p>
-<p>This feature allows you to make edits to a module while a program is
-running and not have to restart the program to get the new behavior in
-the system.  It is particularly handy when working on large GUI
-applications where you want to update the core code in the system
-without a lengthy restart.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.util.refresh.Refresher">
-<em class="property">class </em><tt class="descclassname">traits.util.refresh.</tt><tt class="descname">Refresher</tt><big>(</big><em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#Refresher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.Refresher" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Implementation of refresh().  See referesher.refresh() function for
-more information.</p>
-<dl class="method">
-<dt id="traits.util.refresh.Refresher.refresh">
-<tt class="descname">refresh</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#Refresher.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.Refresher.refresh" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find all out-of-date modules and reload functions and classes.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.new_functions_and_classes_for_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">new_functions_and_classes_for_module</tt><big>(</big><em>mod</em>, <em>logger=None</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#new_functions_and_classes_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.new_functions_and_classes_for_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of the new class within a module</p>
-<p>Note that this reloads the module in the process.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.function_and_class_names_in_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_module</tt><big>(</big><em>mod</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parse .py file associated with module for class names (full path).</p>
-<p>The returned list contains class names without their module name
-prefix.  For example if the foo module contains a Bar class, this
-method would return [&#8216;Bar&#8217;]</p>
-<p>Nested classes are not currently supported.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.function_and_class_names_in_file">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">function_and_class_names_in_file</tt><big>(</big><em>file_name</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#function_and_class_names_in_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.function_and_class_names_in_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the names of classes contained within a file.</p>
-<p>fix me: This currently only finds top level classes.  Nested
-classes are ignored. ?? Does this really matter much ??</p>
-<p>Example:</p>
-<div class="highlight-python"><pre># foo.py
-class Foo:
-    pass
-
-class Bar:
-    pass
-
-&gt;&gt;&gt; import traits.util.refresh
-&gt;&gt;&gt; refresh.function_and_class_names_in_file('foo.py')
-[], ['Foo', 'Bar']</pre>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.source_file_for_module">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">source_file_for_module</tt><big>(</big><em>module</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#source_file_for_module"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.source_file_for_module" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find the .py file that corresponds to the module.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.filter_functions_and_classes">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions_and_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions_and_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions_and_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all class and functions objects.</p>
-<p>Returns two lists: (functions, classes)</p>
-<p>This function is faster than calling filter_functions
-and filter_classes separately because it only traverses
-the entire list once to create a sub-list containing
-both functions and classes.  This (usually much shorter)
-sublist is then traversed again to divide it into functions
-and classes</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.filter_functions">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_functions</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_functions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all function objects (not instances mind you)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.filter_classes">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">filter_classes</tt><big>(</big><em>items</em><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#filter_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.filter_classes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter items for all class objects (not instances mind you)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.util.refresh.out_of_date_modules">
-<tt class="descclassname">traits.util.refresh.</tt><tt class="descname">out_of_date_modules</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/util/refresh.html#out_of_date_modules"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.util.refresh.out_of_date_modules" title="Permalink to this definition">¶</a></dt>
-<dd><p>Find loaded modules that have been modified since they were loaded.</p>
-<p>Searches the modules in sys.modules looks for py files that have
-a newer timestamp than the associated pyc file.  Extension modules
-are ignored.</p>
-</dd></dl>
-
-</div>
 </div>
 <div class="section" id="module-traits.util.resource">
 <span id="resource-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">resource</span></tt> Module<a class="headerlink" href="#module-traits.util.resource" title="Permalink to this headline">¶</a></h2>
@@ -620,12 +394,6 @@ option set to the trait definition.</p>
 <li><a class="reference internal" href="#module-traits.util.clean_strings"><tt class="docutils literal"><span class="pre">clean_strings</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.deprecated"><tt class="docutils literal"><span class="pre">deprecated</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.home_directory"><tt class="docutils literal"><span class="pre">home_directory</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-traits.util.refresh"><tt class="docutils literal"><span class="pre">refresh</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#how-it-works">How It works</a></li>
-<li><a class="reference internal" href="#caveats">Caveats</a></li>
-<li><a class="reference internal" href="#questions">Questions</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#module-traits.util.resource"><tt class="docutils literal"><span class="pre">resource</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.import_symbol"><tt class="docutils literal"><span class="pre">import_symbol</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-traits.util.toposort"><tt class="docutils literal"><span class="pre">toposort</span></tt> Module</a></li>
@@ -636,7 +404,7 @@ option set to the trait definition.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.testing.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></p>
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/traits.util.txt"
@@ -671,15 +439,15 @@ option set to the trait definition.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">util</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -76,16 +76,17 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">operator</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">isfile</span><span class="p">,</span> <span class="n">isdir</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span><span class="p">,</span> <span class="n">ModuleType</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">MethodType</span><span class="p">,</span> <span class="n">ModuleType</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trait_handlers</span>
 
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="p">(</span><span class="n">strx</span><span class="p">,</span> <span class="n">get_module_name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">,</span> <span class="n">SequenceTypes</span><span class="p">,</span> <span class="n">TypeTypes</span><span class="p">,</span>
-        <span class="n">ClassTypes</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">Missing</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">python_version</span><span class="p">)</span>
+        <span class="n">ClassTypes</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">TraitsCache</span><span class="p">,</span> <span class="n">python_version</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="p">(</span><span class="n">TraitType</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span>
         <span class="n">TraitSetObject</span><span class="p">,</span> <span class="n">TraitSetEvent</span><span class="p">,</span> <span class="n">TraitDictObject</span><span class="p">,</span> <span class="n">TraitDictEvent</span><span class="p">,</span>
@@ -96,6 +97,7 @@
 
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitError</span>
 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_py2to3</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  Constants:</span>
@@ -108,7 +110,26 @@
 <span class="c">#  Numeric type fast validator definitions:</span>
 <span class="c">#-------------------------------------------------------------------------------</span>
 
-<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s">&#39;numpy&#39;</span> <span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+<span class="c"># A few words about the next block of code:</span>
+
+<span class="c"># Validator #11 is a generic validator for possibly coercible types</span>
+<span class="c"># (see validate_trait_coerce_type in ctraits.c).</span>
+<span class="c">#</span>
+<span class="c"># The tuples below are of the form</span>
+<span class="c"># (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])</span>
+<span class="c">#</span>
+<span class="c"># &#39;type1&#39; corresponds to the main type for the trait</span>
+<span class="c"># &#39;None&#39; acts as the separator between &#39;types&#39; and &#39;ctypes&#39; (coercible types)</span>
+<span class="c">#</span>
+<span class="c"># The validation passes if:</span>
+<span class="c"># 1) The trait value type is (a subtype of) one of &#39;type1&#39;, &#39;type2&#39;,  ...</span>
+<span class="c">#    in which case the value is returned as-is</span>
+<span class="c"># or</span>
+<span class="c"># 2) The trait value type is (a subtype of) one of &#39;ctype1&#39;, &#39;ctype2&#39;, ...</span>
+<span class="c">#    in which case the value is returned coerced to trait type using</span>
+<span class="c">#    &#39;return type1(value&#39;)</span>
+
+<span class="k">try</span><span class="p">:</span>
     <span class="c"># The numpy enhanced definitions:</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">integer</span><span class="p">,</span> <span class="n">floating</span><span class="p">,</span> <span class="n">complexfloating</span><span class="p">,</span> <span class="n">bool_</span>
 
@@ -118,7 +139,7 @@
     <span class="n">complex_fast_validate</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">complexfloating</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span>
                                   <span class="nb">float</span><span class="p">,</span> <span class="n">floating</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">integer</span> <span class="p">)</span>
     <span class="n">bool_fast_validate</span>    <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">bool_</span> <span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="c"># The standard python definitions (without numpy):</span>
     <span class="n">int_fast_validate</span>     <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span>
     <span class="n">long_fast_validate</span>    <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="nb">long</span><span class="p">,</span>    <span class="bp">None</span><span class="p">,</span> <span class="nb">int</span> <span class="p">)</span>
@@ -177,7 +198,7 @@
 <span class="c">#-------------------------------------------------------------------------------</span>
 </div>
 <div class="viewcode-block" id="BaseInt"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInt">[docs]</a><span class="k">class</span> <span class="nc">BaseInt</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be a Python int.</span>
+    <span class="sd">&quot;&quot;&quot; Defines a trait whose type must be an int or long.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c">#: The function to use for evaluating strings to this type:</span>
@@ -187,15 +208,22 @@
     <span class="n">default_value</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="c">#: A description of the type of value this trait accepts:</span>
-    <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;an integer&#39;</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;an integer (int or long)&#39;</span>
 
 <div class="viewcode-block" id="BaseInt.validate"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.BaseInt.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Validates that a specified value is valid for this trait.</span>
-
-<span class="sd">            Note: The &#39;fast validator&#39; version performs this check in C.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">int</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">long</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">int_value</span> <span class="o">=</span> <span class="n">operator</span><span class="o">.</span><span class="n">index</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">int_value</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
 </div>
@@ -206,12 +234,12 @@
 
 </div></div>
 <div class="viewcode-block" id="Int"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Int">[docs]</a><span class="k">class</span> <span class="nc">Int</span> <span class="p">(</span> <span class="n">BaseInt</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be a Python int using a C-level fast</span>
+    <span class="sd">&quot;&quot;&quot; Defines a trait whose type must be an int or long using a C-level fast</span>
 <span class="sd">        validator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c">#: The C-level fast validator to use:</span>
-    <span class="n">fast_validate</span> <span class="o">=</span> <span class="n">int_fast_validate</span>
+    <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">20</span><span class="p">,</span> <span class="p">)</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;BaseLong&#39; and &#39;Long&#39; traits:</span>
@@ -996,7 +1024,7 @@
 
     <span class="k">def</span> <span class="nf">validate_failed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="n">kind</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
-        <span class="k">if</span> <span class="n">kind</span> <span class="ow">is</span> <span class="n">InstanceType</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">is_InstanceType</span><span class="p">(</span><span class="n">kind</span><span class="p">):</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;class </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">value</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> (i.e. </span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="nb">str</span><span class="p">(</span> <span class="n">kind</span> <span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nb">repr</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="p">)</span>
@@ -1033,17 +1061,19 @@
 
     <span class="c">#: A description of the type of value this trait accepts:</span>
     <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;a method&#39;</span>
-
 </div>
-<div class="viewcode-block" id="Class"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Class">[docs]</a><span class="k">class</span> <span class="nc">Class</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be an old-style Python class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ClassType</span>
+    
+<div class="viewcode-block" id="Class"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Class">[docs]</a>    <span class="k">class</span> <span class="nc">Class</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines a trait whose value must be an old-style Python class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-    <span class="c">#: The C-level fast validator to use:</span>
-    <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="n">ClassType</span> <span class="p">)</span>
+        <span class="c">#: The C-level fast validator to use:</span>
+        <span class="n">fast_validate</span> <span class="o">=</span> <span class="p">(</span> <span class="mi">11</span><span class="p">,</span> <span class="n">ClassType</span> <span class="p">)</span>
 
-    <span class="c">#: A description of the type of value this trait accepts:</span>
-    <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;an old-style class&#39;</span>
+        <span class="c">#: A description of the type of value this trait accepts:</span>
+        <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;an old-style class&#39;</span>
 
 </div>
 <div class="viewcode-block" id="Module"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.Module">[docs]</a><span class="k">class</span> <span class="nc">Module</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
@@ -1117,25 +1147,6 @@
 
 <span class="c"># Create a singleton instance as the trait:</span></div>
 <span class="n">Disallow</span> <span class="o">=</span> <span class="n">Disallow</span><span class="p">()</span>
-
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;missing&#39; trait:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-
-<div class="viewcode-block" id="missing"><a class="viewcode-back" href="../../traits_api_reference/trait_types.html#traits.trait_types.missing">[docs]</a><span class="k">class</span> <span class="nc">missing</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Defines a trait used to indicate that a parameter is missing from a</span>
-<span class="sd">        type-checked method signature. Allows any value to be assigned; no</span>
-<span class="sd">        type-checking is performed; default value is the singleton Missing</span>
-<span class="sd">        object.</span>
-
-<span class="sd">        See the **traits.has_traits.method()**.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c">#: The default value for the trait:</span>
-    <span class="n">default_value</span> <span class="o">=</span> <span class="n">Missing</span>
-
-<span class="c"># Create a singleton instance as the trait:</span></div>
-<span class="n">missing</span> <span class="o">=</span> <span class="n">missing</span><span class="p">()</span>
 
 <span class="c">#-------------------------------------------------------------------------------</span>
 <span class="c">#  &#39;Constant&#39; trait:</span>
@@ -3442,11 +3453,14 @@
 <span class="c">#: List of method values; default value is [].</span>
 <span class="n">ListMethod</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">MethodType</span> <span class="p">)</span>
 
-<span class="c">#: List of class values; default value is [].</span>
-<span class="n">ListClass</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">ClassType</span> <span class="p">)</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ClassType</span><span class="p">,</span> <span class="n">InstanceType</span>
+    
+    <span class="c">#: List of class values; default value is [].</span>
+    <span class="n">ListClass</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">ClassType</span> <span class="p">)</span>
 
-<span class="c">#: List of instance values; default value is [].</span>
-<span class="n">ListInstance</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">InstanceType</span> <span class="p">)</span>
+    <span class="c">#: List of instance values; default value is [].</span>
+    <span class="n">ListInstance</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">InstanceType</span> <span class="p">)</span>
 
 <span class="c">#: List of container type values; default value is [].</span>
 <span class="n">ListThis</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">ThisClass</span> <span class="p">)</span>
@@ -3523,8 +3537,8 @@
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -46,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
   
 
       </ul>
@@ -864,10 +864,12 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-python"><pre>xname2[('.'|':') xname2]*</pre>
+<div class="highlight-python"><div class="highlight"><pre>xname2[(&#39;.&#39;|&#39;:&#39;) xname2]*
+</pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-python"><pre>( xname3 | '['xname3[','xname3]*']' ) ['*']</pre>
+<div class="highlight-python"><div class="highlight"><pre>( xname3 | &#39;[&#39;xname3[&#39;,&#39;xname3]*&#39;]&#39; ) [&#39;*&#39;]
+</pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
@@ -1145,10 +1147,12 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-python"><pre>xname2[('.'|':') xname2]*</pre>
+<div class="highlight-python"><div class="highlight"><pre>xname2[(&#39;.&#39;|&#39;:&#39;) xname2]*
+</pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-python"><pre>( xname3 | '['xname3[','xname3]*']' ) ['*']</pre>
+<div class="highlight-python"><div class="highlight"><pre>( xname3 | &#39;[&#39;xname3[&#39;,&#39;xname3]*&#39;]&#39; ) [&#39;*&#39;]
+</pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
@@ -1426,6 +1430,9 @@ it is equivalent to passing the entire list of values to Trait().</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of the attribute to remove.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> (<em>bool</em>) &#8211;
+True if the trait was successfully removed.</td>
 </tr>
 </tbody>
 </table>
@@ -1706,68 +1713,6 @@ delegate trait.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.has_traits.trait_method">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">trait_method</tt><big>(</big><em>func</em>, <em>return_type</em>, <em>**arg_types</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#trait_method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.trait_method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Factory function for creating type-checked methods.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>func</strong> (<em>function</em>) &#8211; The method to be type-checked.</li>
-<li><strong>return_type</strong> &#8211; The return type of the method, a trait or value that can be converted
-to a trait using Trait().</li>
-<li><strong>**arg_types</strong> &#8211; Zero or more &#8216;<em>keyword</em> = <em>trait</em>&#8216; pairs, the argument names and types
-of parameters of the type-checked method. The <em>trait</em> portion of each
-pair must be a trait or a value that can be converted to a trait using
-Trait().</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits.method">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">method</tt><big>(</big><em>return_type=&lt;class 'traits.trait_types.Any'&gt;</em>, <em>*arg_types</em>, <em>**kwarg_types</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#method"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.method" title="Permalink to this definition">¶</a></dt>
-<dd><p>Declares that the method defined immediately following a call to this
-function is type-checked.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>return_type</strong> (<em>type</em>) &#8211; The type returned by the type-checked method. Must be either a trait
-or a value that can be converted to a trait using the Trait()
-function. The default of Any means that the return value is not
-type-checked.</li>
-<li><strong>*arg_types</strong> &#8211; Zero or more types of positional parameters of the type-checked method.
-Each value must either a trait or a value that can be converted to a
-trait using the Trait() function.</li>
-<li><strong>**kwarg_types</strong> &#8211; Zero or more <em>keyword</em> = <em>type</em> pairs, the type names and types of
-keyword parameters of the type-checked method. The <em>type</em> portion of
-the parameter must be either a trait or a value that can be converted
-to a trait using the Trait() function.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Description</p>
-<p>Whenever the type-checked method is called, the method() function ensures
-that each parameter passed to the method of the type specified by
-<em>arg_types</em> and <em>kwarg_types</em>, and that the return value is of the type
-specified by <em>return_type</em>. It is an error to specify both positional and
-keyword definitions for the same method parameter. If a parameter defined by
-the type-checked method is not referenced in the method() call, the
-parameter is not type-checked (i.e., its type is implicitly set to Any).
-If the call to method() signature contains an <em>arg_types</em> or <em>kwarg_types</em>
-parameter that does not correspond to a parameter in the type-checked method
-definition, a TraitError exception is raised.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="traits.has_traits.weak_arg">
 <tt class="descclassname">traits.has_traits.</tt><tt class="descname">weak_arg</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#weak_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.weak_arg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a weak reference to arg and wrap the function so that the
@@ -1898,10 +1843,10 @@ called from directly within a class body.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="category.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">category</span></tt> Module</a></p>
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="has_dynamic_views.html"
-                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/traits_api_reference/has_traits.txt"
@@ -1939,15 +1884,15 @@ called from directly within a class body.</p>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

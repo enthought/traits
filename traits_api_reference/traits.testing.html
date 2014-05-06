@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.5.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -46,7 +46,7 @@
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></li>
   
 
       </ul>
@@ -271,9 +271,10 @@ least <cite>count</cite> times within the given timeout, as a result of
 execution of the body of the corresponding with block.</p>
 <p>The trait changes are permitted to occur asynchronously.</p>
 <p><strong>Example usage</strong>:</p>
-<div class="highlight-python"><pre>with self.assertTraitChangesAsync(my_object, 'SomeEvent', count=4):
+<div class="highlight-python"><div class="highlight"><pre>with self.assertTraitChangesAsync(my_object, &#39;SomeEvent&#39;, count=4):
     &lt;do stuff that should cause my_object.SomeEvent to be
-    fired at least 4 times within the next 5 seconds&gt;</pre>
+    fired at least 4 times within the next 5 seconds&gt;
+</pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -342,7 +343,7 @@ become true.  None can be used to indicate no timeout.</li>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="traits.protocols.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal docutils literal"><span class="pre">protocols</span></tt> Package</a></p>
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">protocols</span></tt> Package</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="traits.util.html"
                         title="next chapter"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></p>
@@ -383,15 +384,15 @@ become true.  None can be used to indicate no timeout.</li>
         <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
           <li><a href="index.html" >API Reference</a> &raquo;</li>
   
-    <li><a href="#"><tt class="docutils literal docutils literal docutils literal"><span class="pre">testing</span></tt> Package</a></li>
+    <li><a href="#"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></li>
   
 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2008-2011, Enthought.
-      Last updated on Nov 26, 2013.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b3.
+      Last updated on May 06, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

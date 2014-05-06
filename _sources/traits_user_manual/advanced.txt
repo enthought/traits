@@ -20,7 +20,6 @@ validation features of the Traits package.
 * Overriding default values
 * Reusing trait definitions
 * Trait attribute definition strategies
-* Type-checked methods
 
 .. index:: initialization; dynamic
 
@@ -379,60 +378,6 @@ attribute (either a trait attribute or a regular attribute) simply by assigning
 to it, as is normally the case in Python. In this case, add_trait() is the only
 way to create a new attribute for the class outside of the class definition.
 
-.. index:: methods; type-checking, type-checking methods
-
-.. _type-checked-methods:
-
-Type-Checked Methods
-````````````````````
-
-In addition type-checked attributes, the Traits package provides the ability to
-create type-checked methods.
-
-.. index::
-   pair: examples; type-checking methods
-
-A type-checked method is created by writing a normal method definition within a
-class, preceded by a method() signature function call, as shown in the following
-example::
-
-    # type_checked_methods.py --- Example of traits-based method type
-    #                             checking
-    from traits.api import HasTraits, method, Tuple
-
-    Color = Tuple(int, int, int, int)
-
-    class Palette(HasTraits):
-
-        method(Color, color1=Color, color2=Color)
-        def blend (self, color1, color2):
-            return ((color1[0] + color2[0]) / 2,
-                    (color1[1] + color2[1]) / 2,
-                    (color1[2] + color2[2]) / 2,
-                    (color1[3] + color2[3]) / 2 )
-
-        method(Color, Color, Color)
-        def max (self, color1, color2):
-            return (max( color1[0], color2[0]),
-                    max( color1[1], color2[1]),
-                    max( color1[2], color2[2]),
-                    max( color1[3], color2[3]) )
-
-In this example, Color is defined to be a trait that accepts tuples of four
-integer values. The method() signature function appearing before the definition
-of the blend() method ensures that the two arguments to blend() both match the
-Color trait definition, as does the result returned by blend(). The method
-signature appearing before the max() method does exactly the same thing, but
-uses positional rather than keyword arguments. When
-
-Use of the method() signature function is optional. Methods not preceded by a
-method() function have standard Python behavior (i.e., no type-checking of
-arguments or results is performed). Also, the method() function can be used in
-classes that do not subclass from HasTraits, because the resulting method
-performs the type checking directly. And finally, when the method() function is
-used, it must directly precede the definition of the method whose type signature
-it defines. (However, white space is allowed.) If it does not, a TraitError is
-raised.
 
 .. index:: interfaces
 
@@ -724,7 +669,7 @@ The signature of :func:`~traits.adaptation.api.register_factory` is:
 
 The :func:`~traits.adaptation.adaptation_manager.register_factory` function
 takes as first argument
-the adapter class (or an `adapter factory <adapter-factories>`_), followed
+the adapter class (or an :ref:`adapter factory <adapter-factories>`), followed
 by the protocol to be adapted (the one provided by the adaptee,
 :attr:`from_protocol`), and the protocol that it provides
 (:attr:`to_protocol`).
@@ -733,7 +678,7 @@ by the protocol to be adapted (the one provided by the adaptee,
 
 This is the example from the previous section, were the adapter is registered::
 
-    from traits.adaptation.api import HasTraitsAdapter, Instance, provides
+    from traits.adaptation.api import Adapter, Instance, provides
 
     # Declare what interfaces this adapter implements for its client
     @provides(IName)
@@ -786,12 +731,12 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     import abc
     import numpy
     from traits.api import Array, HasTraits
-    from traits.adaptation.api import adapt, HasTraitsAdapter, register_factory
+    from traits.adaptation.api import adapt, Adapter, register_factory
 
     class ImageABC(object):
         __metaclass__ = abc.ABCMeta
 
-    class NDArrayToImage(HasTraitsAdapter):
+    class NDArrayToImage(Adapter):
         adaptee = Array
 
     # Declare that NDArrayToImage implements ImageABC.
@@ -912,7 +857,8 @@ For example, a Traits object can be written against the ``IPrintable``
 interface and be open to extensions by adaptation as follows:
 ::
 
-    from traits.api import HasTraits, HasTraitsAdapter, implements, Interface, List, register_factory, Str, Supports
+    from traits.api import (Adapter, HasTraits, Interface, List, provides,
+                            register_factory, Str, Supports)
 
     class IPrintable(Interface):
         def get_formatted_text(self, n_cols):
@@ -946,7 +892,7 @@ interface and be open to extensions by adaptation as follows:
         text = Str
 
     @provides(IPrintable)
-    class TextDocumentToIPrintable(HasTraitsAdapter):
+    class TextDocumentToIPrintable(Adapter):
         """ Adapt TextDocument and provide IPrintable. """
 
         def get_formatted_text(self, n_cols):
@@ -1072,6 +1018,25 @@ Gotchas
    the classes involved in adaptation are typically subclasses of
    :class:`~.HasTraits`, in which case this is not an issue.
 
+2) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
+   :func:`~traits.adaptation.adaptation_manager.adapt`,
+   etc. use a global adaptation manager, which is accessible through the
+   function
+   :func:`~traits.adaptation.adaptation_manager.get_global_adaptation_manager`.
+   The traits automatic adaptation features also use the global manager.
+   Having a global adaptation manager can get you into trouble, for the usual
+   reasons related to having a global state. If you want to have more control
+   over adaptation, we recommend creating a new
+   :class:`~traits.adaptation.adaptation_manager.AdaptationManager`
+   instance, use it directly in your application, and set it as the global
+   manager using
+   :func:`~traits.adaptation.adaptation_manager.set_global_adaptation_manager`.
+   A common issue with the global manager arises in unittesting, where adapters
+   registered in one test influence the outcome of other tests downstream.
+   Tests relying on adaptation should make sure to reset the state of the
+   global adapter using
+   :func:`~traits.adaptation.adaptation_manager.reset_global_adaptation_manager`.
+
 Recommended readings about adaptation
 `````````````````````````````````````
 
@@ -1108,11 +1073,12 @@ The Property() function has the following signature:
 
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
-All parameters are optional, including the *fget* "getter" and *fset* "setter"
-methods. If no parameters are specified, then the trait looks for and uses
-methods on the same class as the attribute that the trait is assigned to, with
-names of the form _get_\ *name*\ () and _set_\ *name*\ (), where *name* is the
-name of the trait attribute.
+All parameters are optional, including the *fget* "getter", *fvalidate*
+"validator"  and *fset* "setter" methods. If no parameters are specified, then
+the trait looks for and uses methods on the same class as the attribute that
+the trait is assigned to, with names of the form _get_\ *name*\ (),
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the
+trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
 that trait's handler supersedes the *handler* argument, if any. Because the
@@ -1281,7 +1247,7 @@ to override __getstate__() to remove items that should not be persisted::
         state = super( XXX, self ).__getstate__()
 
         for key in [ 'foo', 'bar' ]:
-            if state.has_key( key ):
+            if key in state:
                 del state[ key ]
 
         return state
@@ -1503,6 +1469,3 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
-
-
-
