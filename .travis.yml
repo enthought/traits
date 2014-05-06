@@ -6,7 +6,7 @@ python:
   - 3.3
   - 3.4
 install:
-  - pip install nose
+  - pip install -U nose
   - if ! [[ $TRAVIS_PYTHON_VERSION > '2.6' ]]; then pip install unittest2 ; fi
   - if [[ $TRAVIS_PYTHON_VERSION > '3.' ]]; then pip install numpy ; fi
   - pip install cython
