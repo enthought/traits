@@ -24,7 +24,7 @@ def get_home_directory():
     # The above seems to work on both Windows and Unixes though the docs
     # indicate it might not work as well on Macs.
     for name in ['HOME', 'USERPROFILE']:
-        if os.environ.has_key(name):
+        if name in os.environ:
             # Make sure that the path ends with a path separator.
             path = os.environ[name]
             if path[-1] != os.path.sep:

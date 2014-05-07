@@ -24,6 +24,10 @@ def wait_for_condition(condition, obj, trait, timeout=None):
     re-evaluated.  The condition will also be evaluated on entering
     this function.
 
+    Note that in cases of unusual timing it's possible for the condition to be
+    evaluated one more time *after* the ``wait_for_condition`` call has
+    returned.
+
     """
     condition_satisfied = threading.Event()
 

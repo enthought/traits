@@ -1,4 +1,3 @@
-#------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,22 +9,19 @@
 #
 # Author: David C. Morrill Date: 10/22/2003 Description: Unit test case for
 # Traits event notification handling.
-# ------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 from ..api import HasTraits
 
-#------------------------------------------------------------------------------
 
-class TestBase ( HasTraits ):
-
+class TestBase(HasTraits):
     __traits__ = {
         't1': 0,
         't2': 0
     }
 
-    def test ( self ):
+    def test(self):
         print '---------- Begin %s test ----------' % self.__class__.__name__
         print 'normal changes'
         self.t1 = 1
@@ -33,102 +29,93 @@ class TestBase ( HasTraits ):
 
         print '---------- End %s test ----------\n' % self.__class__.__name__
 
-#------------------------------------------------------------------------------
 
-class Test1 ( TestBase ):
+class Test1(TestBase):
 
-    def t1_changed ( self, old, new ):
+    def t1_changed(self, old, new):
         print 't1 changed:', old, new
 
-    def t2_changed ( self, old, new ):
+    def t2_changed(self, old, new):
         print 't2 changed:', old, new
 
-#------------------------------------------------------------------------------
 
-class Test2 ( Test1 ):
+class Test2(Test1):
 
-    def anytrait_changed ( self, name, old, new ):
+    def anytrait_changed(self, name, old, new):
         print 'anytrait changed:', name, old, new
 
-#------------------------------------------------------------------------------
 
-class Test3 ( TestBase ):
+class Test3(TestBase):
 
-    def anytrait_changed ( self, name, old, new ):
+    def anytrait_changed(self, name, old, new):
         print 'anytrait changed:', name, old, new
 
-#------------------------------------------------------------------------------
 
-class Test4 ( TestBase ):
+class Test4(TestBase):
 
-    def __init__ ( self, **traits ):
-        TestBase.__init__( self, **traits )
-        self.on_trait_change( self.on_anytrait )
+    def __init__(self, **traits):
+        TestBase.__init__(self, **traits)
+        self.on_trait_change(self.on_anytrait)
 
-    def on_anytrait ( self, object, name, old, new ):
+    def on_anytrait(self, object, name, old, new):
         print 'on anytrait changed:', name, old, new
 
-#------------------------------------------------------------------------------
 
-class Test5 ( TestBase ):
+class Test5(TestBase):
 
-    def __init__ ( self, **traits ):
-        TestBase.__init__( self, **traits )
-        self.on_trait_change( self.t1_trait, 't1' )
-        self.on_trait_change( self.t2_trait, 't2' )
+    def __init__(self, **traits):
+        TestBase.__init__(self, **traits)
+        self.on_trait_change(self.t1_trait, 't1')
+        self.on_trait_change(self.t2_trait, 't2')
 
-    def t1_trait ( self, object, name, old, new ):
+    def t1_trait(self, object, name, old, new):
         print 'on t1 changed:', old, new
 
-    def t2_trait ( self, object, name, old, new ):
+    def t2_trait(self, object, name, old, new):
         print 'on t2 changed:', old, new
 
-#------------------------------------------------------------------------------
 
-class Test6 ( Test5 ):
+class Test6(Test5):
 
-    def __init__ ( self, **traits ):
-        Test5.__init__( self, **traits )
-        self.on_trait_change( self.on_anytrait )
+    def __init__(self, **traits):
+        Test5.__init__(self, **traits)
+        self.on_trait_change(self.on_anytrait)
 
-    def on_anytrait ( self, object, name, old, new ):
+    def on_anytrait(self, object, name, old, new):
         print 'on anytrait changed:', name, old, new
 
-#------------------------------------------------------------------------------
 
-class Test7 ( Test1 ):
+class Test7(Test1):
 
-    def __init__ ( self, **traits ):
-        Test1.__init__( self, **traits )
-        self.on_trait_change( self.t1_trait, 't1' )
-        self.on_trait_change( self.t2_trait, 't2' )
+    def __init__(self, **traits):
+        Test1.__init__(self, **traits)
+        self.on_trait_change(self.t1_trait, 't1')
+        self.on_trait_change(self.t2_trait, 't2')
 
-    def t1_trait ( self, object, name, old, new ):
+    def t1_trait(self, object, name, old, new):
         print 'on t1 changed:', old, new
 
-    def t2_trait ( self, object, name, old, new ):
+    def t2_trait(self, object, name, old, new):
         print 'on t2 changed:', old, new
 
-#------------------------------------------------------------------------------
 
-class Test8 ( Test2 ):
+class Test8(Test2):
 
-    def __init__ ( self, **traits ):
-        Test1.__init__( self, **traits )
-        self.on_trait_change( self.t1_trait, 't1' )
-        self.on_trait_change( self.t2_trait, 't2' )
-        self.on_trait_change( self.on_anytrait )
+    def __init__(self, **traits):
+        Test1.__init__(self, **traits)
+        self.on_trait_change(self.t1_trait, 't1')
+        self.on_trait_change(self.t2_trait, 't2')
+        self.on_trait_change(self.on_anytrait)
 
-    def on_anytrait ( self, object, name, old, new ):
+    def on_anytrait(self, object, name, old, new):
         print 'on anytrait changed:', name, old, new
 
-    def t1_trait ( self, object, name, old, new ):
+    def t1_trait(self, object, name, old, new):
         print 'on t1 changed:', old, new
 
-    def t2_trait ( self, object, name, old, new ):
+    def t2_trait(self, object, name, old, new):
         print 'on t2 changed:', old, new
 
-#------------------------------------------------------------------------------
 
 test1 = Test1()
 test1.test()

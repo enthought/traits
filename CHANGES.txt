@@ -1,10 +1,116 @@
 Traits CHANGELOG
 ================
 
-Since 4.3.0:
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* The adaptation mechanism in Traits, formerly based on the 'traits.protocols'
+Enhancements
+
+ * __iadd__ and __imul__ implemented on TraitListObjects (issue #152).
+
+Changes
+
+
+Fixes
+
+* Fixed incorrect in list events for `insert` operations with an index outside the
+  range [-len(target_list), len(target_list)]
+
+
+Release 4.5.0
+-------------
+
+Traits is now compatible with Python 3! The library now supports
+Python 3.2 and 3.3 .
+
+The release also includes increased code coverage and automatic
+coverage report through coveralls.io .
+
+
+Change summary since 4.4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+ * Test files cleanups (#108, #111, #121)
+ * Add automatic coverage reports (#110, #122)
+ * Removed obsolete code (#109, #112, #113)
+ * Increased test coverage (#114, #118)
+ * Python 3 support (#115).  Thanks Yves Delley.
+ * Allow setting and resetting the global adaptation manager (#145)
+ * Various documentation improvements (#132, #133, #148, #154).
+
+Changes
+
+ * The Int trait type now accepts Python ints *and* Python longs, as well as
+   instances of any Python type that implements the `__index__` method.
+   Previously, long instances were not accepted. (#104, #123).
+
+Fixes
+
+ * Fix crash when trying to validate a property that has been deleted. (#138)
+ * Fix clearing exception when raising a TraitError (#119)
+ * Fix automatic adaptation when assigning to List trait (#147)
+ * Fix some ctraits refcounting and exception clearing bugs (#48).  Thanks Yves
+   Delley.
+
+
+Release 4.4.0
+-------------
+
+The major new feature in this release is a new adaptation mechanism in the
+``traits.adaptation`` package.  The new mechanism is intended to replace the
+older traits.protocols package.  Code written against ``traits.protocols`` will
+continue to work, although the ``traits.protocols`` API has been deprecated,
+and a warning will be logged on first use of ``traits.protocols``.  See the
+'Advanced Topics' section of the user manual for more details.
+
+The release also includes improved support for using Cython with `HasTraits`
+classes, some new helper utilities for writing unit tests for Traits events,
+and a variety of bug fixes, stability enhancements, and internal code
+improvements.
+
+
+Change summary since 4.3.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+New features
+
+ * The adaptation mechanism in Traits, formerly based on the 'traits.protocols'
   package, has been replaced with the more robust 'traits.adaptation'
-  package.
-* Added utility function for importing symbols (name, classes, functions)
-  by name: 'traits.util.api.import_symbol'.
+  package. (#51)
+ * Added utility function for importing symbols (name, classes, functions)
+  by name: 'traits.util.api.import_symbol'. (#51)
+ * Users can set a global tracer, which receives all traits change events:
+  `traits.trait_notifiers.set_change_event_tracers`. (#79)
+
+Enhancements
+
+ * Update benchmark script. (#54)
+ * traits.util.deprecated: use module logger instead of root logger. (#59)
+ * Provide an informative message in AdaptationError. (#62)
+ * Allow HasTraits classes to be cythonized. (#73)
+ * Improve tests for cythonization support. (#75)
+ * Extending various trait testing helpers (#53)
+
+Refactoring
+
+ * The Traits notification code has been reworked to remove code duplication,
+   and test coverage of that code has been significantly improved. (#79)
+
+Fixes
+
+ * Fix race condition when removing a traits listener. (#57)
+ * Fix ugly interaction between DelegatesTo change handlers, dynamic change
+   handlers and two levels of dynamic intialization. (#63)
+ * Use a NullHandler for all 'traits' loggers. (#64)
+ * Fix race condition in TraitChangeNotifyWrapper.listener_deleted (#66)
+ * Fix leaking notifiers. (#68)
+ * Fix failing special instance trait events. (#78)
+ * Fix hiding KeyError exception inside trait default initialize method.
+   (#81)
+ * Fix Adapter object initialization. (#93)
+ * Fix cyclic garbage arising from use of the WeakRef trait type. (#95)
+ * `TraitSetObject.copy` now returns a plain rather than an
+   uninitialized `TraitSetObject` instance. (#97)
+ * Fix cyclic garbage arising from dynamic trait change handlers. (#101)

@@ -67,18 +67,16 @@ ABC classes
 Functions
 ---------
 
+.. autofunction:: cached_property
+
 .. autofunction:: get_delegate_pattern
 
-.. autofunction:: trait_method
-
-.. autofunction:: method
-
-.. autofunction:: weak_arg
-
-.. autofunction:: property_depends_on
-
-.. autofunction:: cached_property
+.. autofunction:: implements
 
 .. autofunction:: on_trait_change
 
-.. autofunction:: implements
+.. autofunction:: property_depends_on
+
+.. autofunction:: provides
+
+.. autofunction:: weak_arg

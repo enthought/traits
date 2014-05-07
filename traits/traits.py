@@ -48,15 +48,15 @@ Visualization:
 
 from __future__ import absolute_import
 
-from types import (NoneType, IntType, LongType, FloatType, ComplexType,
-    StringType, UnicodeType, ListType, TupleType, DictType, FunctionType,
-    ClassType, MethodType, InstanceType, TypeType)
+import sys
+from types import FunctionType, MethodType
+NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
 from .ctraits import cTrait
 from .trait_errors import TraitError
 from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
-    add_article, enumerate, BooleanType)
+    add_article)
 
 from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
@@ -413,33 +413,35 @@ ctraits._ctrait( CTrait )
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, IntType, LongType, FloatType, ComplexType,
-                     StringType, UnicodeType )
+ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
 
-PythonTypes      = ( StringType,   UnicodeType,  IntType,    LongType,
-                     FloatType,    ComplexType,  ListType,   TupleType,
-                     DictType,     FunctionType, MethodType, ClassType,
-                     InstanceType, TypeType,     NoneType )
+PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
+                     dict, FunctionType, MethodType, type, NoneType )
+
+if sys.version_info[0] < 3:
+    from types import InstanceType,ClassType
+    PythonTypes = PythonTypes[:-2] + (InstanceType,ClassType) + PythonTypes[2:]
+
 
 CallableTypes    = ( FunctionType, MethodType )
 
 TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
-    StringType:  '',
-    UnicodeType: u'',
-    IntType:     0,
-    LongType:    0L,
-    FloatType:   0.0,
-    ComplexType: 0j,
-    ListType:    [],
-    TupleType:   (),
-    DictType:    {},
-    BooleanType: False
+    str:  '',
+    unicode: u'',
+    int:     0,
+    long:    0L,
+    float:   0.0,
+    complex: 0j,
+    list:    [],
+    tuple:   (),
+    dict:    {},
+    bool: False
 }
 
 DefaultValueSpecial = [ Missing, Self ]
-DefaultValueTypes   = [ ListType, DictType ]
+DefaultValueTypes   = [ list, dict ]
 
 #-------------------------------------------------------------------------------
 #  Function used to unpickle new-style objects:
@@ -922,7 +924,7 @@ class _TraitMaker ( object ):
                 elif typeItem in SequenceTypes:
                     self.do_list( item, enum, map, other )
 
-                elif typeItem is DictType:
+                elif typeItem is dict:
                     map.update( item )
 
                 elif typeItem in CallableTypes:
@@ -1013,7 +1015,8 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     fset : function
         The "setter" function for the property.
     fvalidate : function
-        The validation function for the property.
+        The validation function for the property. The method should return the
+        value to set or raise TraitError if the new value is not valid.
     force : bool
         Indicates whether to use only the function definitions specified by
         **fget** and **fset**, and not look elsewhere on the class.
@@ -1025,17 +1028,26 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
 
     Description
     -----------
-    If no getter or setter functions are specified (and **force** is not True),
-    it is assumed that they are defined elsewhere on the class whose attribute
-    this trait is assigned to. For example::
+    If no getter, setter or validate functions are specified (and **force** is
+    not True), it is assumed that they are defined elsewhere on the class whose
+    attribute this trait is assigned to. For example::
 
         class Bar(HasTraits):
+            
+            # A float traits Property that should be always positive.
             foo = Property(Float)
+            
             # Shadow trait attribute
             _foo = Float
 
             def _set_foo(self,x):
                 self._foo = x
+
+            def _validate_foo(self, x):
+                if x <= 0:
+                    raise TraitError(
+                        'foo property should be a positive number')
+                return x
 
             def _get_foo(self):
                 return self._foo

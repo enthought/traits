@@ -24,27 +24,28 @@
 
 from __future__ import absolute_import
 
-import sys
-import re
 import datetime
-from weakref import ref
+import operator
+import re
+import sys
 from os.path import isfile, isdir
-from types import FunctionType, MethodType, ClassType, InstanceType, ModuleType
+from types import FunctionType, MethodType, ModuleType
 
 from . import trait_handlers
 
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
-        ClassTypes, Undefined, Missing, TraitsCache, python_version)
+        ClassTypes, Undefined, TraitsCache, python_version)
 
 from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
-        ThisClass, items_event, RangeTypes)
+        ThisClass, items_event, RangeTypes, HandleWeakRef)
 
 from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
         html_editor, password_editor, shell_editor, date_editor, time_editor)
 
 from .trait_errors import TraitError
 
+from . import _py2to3
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -57,7 +58,26 @@ SetTypes     = SequenceTypes + ( set, )
 #  Numeric type fast validator definitions:
 #-------------------------------------------------------------------------------
 
-if sys.modules.get( 'numpy' ) is not None:
+# A few words about the next block of code:
+
+# Validator #11 is a generic validator for possibly coercible types
+# (see validate_trait_coerce_type in ctraits.c).
+#
+# The tuples below are of the form
+# (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])
+#
+# 'type1' corresponds to the main type for the trait
+# 'None' acts as the separator between 'types' and 'ctypes' (coercible types)
+#
+# The validation passes if:
+# 1) The trait value type is (a subtype of) one of 'type1', 'type2',  ...
+#    in which case the value is returned as-is
+# or
+# 2) The trait value type is (a subtype of) one of 'ctype1', 'ctype2', ...
+#    in which case the value is returned coerced to trait type using
+#    'return type1(value')
+
+try:
     # The numpy enhanced definitions:
     from numpy import integer, floating, complexfloating, bool_
 
@@ -67,7 +87,7 @@ if sys.modules.get( 'numpy' ) is not None:
     complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
     bool_fast_validate    = ( 11, bool, bool_ )
-else:
+except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate     = ( 11, int )
     long_fast_validate    = ( 11, long,    None, int )
@@ -126,7 +146,7 @@ class Generic ( Any ):
 #-------------------------------------------------------------------------------
 
 class BaseInt ( TraitType ):
-    """ Defines a trait whose value must be a Python int.
+    """ Defines a trait whose type must be an int or long.
     """
 
     #: The function to use for evaluating strings to this type:
@@ -136,15 +156,22 @@ class BaseInt ( TraitType ):
     default_value = 0
 
     #: A description of the type of value this trait accepts:
-    info_text = 'an integer'
+    info_text = 'an integer (int or long)'
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
-
-            Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, int ):
+        if type(value) is int:
             return value
+        elif type(value) is long:
+            return int(value)
+
+        try:
+            int_value = operator.index( value )
+        except TypeError:
+            pass
+        else:
+            return int(int_value)
 
         self.error( object, name, value )
 
@@ -155,12 +182,12 @@ class BaseInt ( TraitType ):
 
 
 class Int ( BaseInt ):
-    """ Defines a trait whose value must be a Python int using a C-level fast
+    """ Defines a trait whose type must be an int or long using a C-level fast
         validator.
     """
 
     #: The C-level fast validator to use:
-    fast_validate = int_fast_validate
+    fast_validate = ( 20, )
 
 #-------------------------------------------------------------------------------
 #  'BaseLong' and 'Long' traits:
@@ -945,7 +972,7 @@ class This ( BaseType ):
 
     def validate_failed ( self, object, name, value ):
         kind = type( value )
-        if kind is InstanceType:
+        if _py2to3.is_InstanceType(kind):
             msg = 'class %s' % value.__class__.__name__
         else:
             msg = '%s (i.e. %s)' % ( str( kind )[1:-1], repr( value ) )
@@ -983,16 +1010,18 @@ class Method ( TraitType ):
     #: A description of the type of value this trait accepts:
     info_text = 'a method'
 
+if sys.version_info[0] < 3:
+    from types import ClassType
+    
+    class Class ( TraitType ):
+        """ Defines a trait whose value must be an old-style Python class.
+        """
 
-class Class ( TraitType ):
-    """ Defines a trait whose value must be an old-style Python class.
-    """
+        #: The C-level fast validator to use:
+        fast_validate = ( 11, ClassType )
 
-    #: The C-level fast validator to use:
-    fast_validate = ( 11, ClassType )
-
-    #: A description of the type of value this trait accepts:
-    info_text = 'an old-style class'
+        #: A description of the type of value this trait accepts:
+        info_text = 'an old-style class'
 
 
 class Module ( TraitType ):
@@ -1066,25 +1095,6 @@ class Disallow ( TraitType ):
 
 # Create a singleton instance as the trait:
 Disallow = Disallow()
-
-#-------------------------------------------------------------------------------
-#  'missing' trait:
-#-------------------------------------------------------------------------------
-
-class missing ( TraitType ):
-    """ Defines a trait used to indicate that a parameter is missing from a
-        type-checked method signature. Allows any value to be assigned; no
-        type-checking is performed; default value is the singleton Missing
-        object.
-
-        See the **traits.has_traits.method()**.
-    """
-
-    #: The default value for the trait:
-    default_value = Missing
-
-# Create a singleton instance as the trait:
-missing = missing()
 
 #-------------------------------------------------------------------------------
 #  'Constant' trait:
@@ -2176,6 +2186,12 @@ class List ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid list.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if (isinstance( value, list ) and
            (self.minlen <= len( value ) <= self.maxlen)):
@@ -2306,6 +2322,12 @@ class Set ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the values is a valid set.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if isinstance( value, set ):
             if object is None:
@@ -2455,9 +2477,15 @@ class Dict ( TraitType ):
 
     def validate ( self, object, name, value ):
         """ Validates that the value is a valid dictionary.
+
+        .. note::
+
+            `object` can be None when validating a default value (see e.g.
+            :meth:`~traits.trait_handlers.TraitType.clone`)
+
         """
         if isinstance( value, dict ):
-            if value is None:
+            if object is None:
                 return value
             return TraitDictObject( self, object, name, value )
 
@@ -3324,20 +3352,6 @@ class WeakRef ( Instance ):
 
         self.klass = klass
 
-#-- Private Class --------------------------------------------------------------
-
-class HandleWeakRef ( object ):
-
-    def __init__ ( self, object, name, value ):
-        self.object = ref( object )
-        self.name   = name
-        self.value  = ref( value, self._value_freed )
-
-    def _value_freed ( self, ref ):
-        object = self.object()
-        if object is not None:
-            object.trait_property_changed( self.name, Undefined, None )
-
 
 #-- Date Trait definition ----------------------------------------------------
 Date = BaseInstance(datetime.date, editor=date_editor)
@@ -3387,11 +3401,14 @@ ListFunction = List( FunctionType )
 #: List of method values; default value is [].
 ListMethod = List( MethodType )
 
-#: List of class values; default value is [].
-ListClass = List( ClassType )
+if sys.version_info[0] < 3:
+    from types import ClassType, InstanceType
+    
+    #: List of class values; default value is [].
+    ListClass = List( ClassType )
 
-#: List of instance values; default value is [].
-ListInstance = List( InstanceType )
+    #: List of instance values; default value is [].
+    ListInstance = List( InstanceType )
 
 #: List of container type values; default value is [].
 ListThis = List( ThisClass )

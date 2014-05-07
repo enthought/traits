@@ -4,16 +4,24 @@
 from os.path import join
 from setuptools import setup, Extension, find_packages
 
-
 d = {}
-execfile(join('traits', '__init__.py'), d)
-
+traits_init = join('traits', '__init__.py')
+exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 
 ctraits = Extension(
     'traits.ctraits',
     sources = ['traits/ctraits.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3'],
+    extra_compile_args = ['-DNDEBUG=1', '-O3' ]#, '-DPy_LIMITED_API'],
     )
+
+
+def additional_commands():
+    try:
+        from sphinx.setup_command import BuildDoc
+    except ImportError:
+        return {}
+    else:
+        return {'documentation': BuildDoc}
 
 
 setup(
@@ -50,4 +58,8 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    use_2to3 = True,
+    # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
+    use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next'],
+    cmdclass=additional_commands(),
 )

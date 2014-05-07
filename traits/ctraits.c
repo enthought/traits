@@ -24,6 +24,8 @@
 #include "Python.h"
 #include "structmember.h"
 
+#include "py2to3.h"
+
 /*-----------------------------------------------------------------------------
 |  Constants:
 +----------------------------------------------------------------------------*/
@@ -78,7 +80,7 @@ do { \
 } while (0)
 #endif
 
-#define DEFERRED_ADDRESS(ADDR) 0
+#define DEFERRED_ADDRESS(ADDR) NULL
 #define PyTrait_CheckExact(op) ((op)->ob_type == ctrait_type)
 
 #define PyHasTraits_Check(op) PyObject_TypeCheck(op, &has_traits_type)
@@ -86,26 +88,18 @@ do { \
 
 /* Trait method related: */
 
+#if PY_MAJOR_VERSION < 3
 #define TP_DESCR_GET(t) \
     (PyType_HasFeature(t, Py_TPFLAGS_HAVE_CLASS) ? (t)->tp_descr_get : NULL)
-#define OFF(x) offsetof(trait_method_object, x)
+#else
+#define TP_DESCR_GET(t) \
+    ((t)->tp_descr_get)
+#endif
 
 /* Notification related: */
 #define has_notifiers(tnotifiers,onotifiers) \
     ((((tnotifiers) != NULL) && (PyList_GET_SIZE((tnotifiers))>0)) || \
      (((onotifiers) != NULL) && (PyList_GET_SIZE((onotifiers))>0)))
-
-/* Field accessors: */
-#define trait_method_GET_NAME(meth) \
-    (((trait_method_object *) meth)->tm_name)
-#define trait_method_GET_FUNCTION(meth) \
-    (((trait_method_object *) meth)->tm_func)
-#define trait_method_GET_SELF(meth) \
-        (((trait_method_object *) meth)->tm_self)
-#define trait_method_GET_TRAITS(meth) \
-        (((trait_method_object *) meth)->tm_traits)
-#define trait_method_GET_CLASS(meth) \
-        (((trait_method_object *) meth)->tm_class)
 
 /* Python version dependent macros: */
 #if ( (PY_MAJOR_VERSION == 2) && (PY_MINOR_VERSION < 3) )
@@ -127,7 +121,6 @@ typedef int Py_ssize_t;
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject trait_type;
-static PyTypeObject trait_method_type;
 static PyTypeObject has_traits_type;
 
 /*-----------------------------------------------------------------------------
@@ -288,9 +281,14 @@ static int setattr_disallow ( trait_object      * traito,
 static PyObject *
 raise_trait_error ( trait_object * trait, has_traits_object * obj,
                                     PyObject * name, PyObject * value ) {
+    PyObject * result;
 
-    PyObject * result = PyObject_CallMethod( trait->handler,
-                                          "error", "(OOO)", obj, name, value );
+    /* Clear any current exception. We are handling it by raising
+     * a TraitError. */
+    PyErr_Clear();
+
+    result = PyObject_CallMethod( trait->handler,
+                                  "error", "(OOO)", obj, name, value );
     Py_XDECREF( result );
     return NULL;
 }
@@ -364,14 +362,18 @@ bad_trait_value_error ( void ) {
 static int
 bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-            "The '%.400s' attribute of a '%.50s' object delegates to an attribute which is not a defined trait.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
-
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "The '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object"
+            " delegates to an attribute which is not a defined trait.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -381,14 +383,19 @@ bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 static int
 bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-            "The '%.400s' attribute of a '%.50s' object has a delegate which does not have traits.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "The '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object"
+            " has a delegate which does not have traits.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -398,27 +405,38 @@ bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-                          "Delegation recursion limit exceeded while setting the '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "Delegation recursion limit exceeded while setting"
+            " the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 static int
 delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( DelegationError,
-                          "Delegation recursion limit exceeded while getting the definition of the '%.400s' trait of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        DelegationError,
+        "Delegation recursion limit exceeded while getting"
+            " the definition of"
+            " the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -428,14 +446,18 @@ delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 static int
 delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot delete the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot delete the read only '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -445,14 +467,18 @@ delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot modify the read only '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot modify the read only '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -462,14 +488,18 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                          "Cannot set the undefined '%.400s' attribute of a '%.50s' object.",
-                          PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot set the undefined '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " attribute of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -479,14 +509,18 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( PyString_Check( name ) ) {
-        PyErr_Format( TraitError,
-                "Cannot delete the '%.400s' property of a '%.50s' object.",
-                PyString_AS_STRING( name ), obj->ob_type->tp_name );
-        return -1;
+    if ( !Py2to3_SimpleString_Check( name ) ) {
+        return invalid_attribute_error();
     }
 
-    return invalid_attribute_error();
+    PyErr_Format(
+        TraitError,
+        "Cannot delete the '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " property of a '%.50s' object.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py_TYPE(obj)->tp_name
+    );
+    return -1;
 }
 
 /*-----------------------------------------------------------------------------
@@ -496,9 +530,12 @@ set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 static void
 unknown_attribute_error ( has_traits_object * obj, PyObject * name ) {
 
-    PyErr_Format( PyExc_AttributeError,
-                  "'%.50s' object has no attribute '%.400s'",
-                  obj->ob_type->tp_name, PyString_AS_STRING( name ) );
+    PyErr_Format(
+        PyExc_AttributeError,
+        "'%.50s' object has no attribute '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'",
+        Py_TYPE(obj)->tp_name,
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name )
+    );
 }
 
 /*-----------------------------------------------------------------------------
@@ -515,131 +552,21 @@ dictionary_error ( void ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Raise an exception when a trait method argument is of the wrong type:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-argument_error ( trait_object * trait, PyObject * meth, int arg,
-                 PyObject * obj, PyObject * name, PyObject * value ) {
-
-    PyObject * arg_num = PyInt_FromLong( arg );
-    if ( arg_num != NULL ) {
-        PyObject * result = PyObject_CallMethod( trait->handler,
-                     "arg_error", "(OOOOO)", meth, arg_num, obj, name, value );
-        Py_XDECREF( result );
-        Py_XDECREF( arg_num );
-    }
-
-    return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Raise an exception when a trait method keyword argument is the wrong type:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-keyword_argument_error ( trait_object * trait, PyObject * meth,
-                         PyObject * obj, PyObject * name, PyObject * value ) {
-
-    PyObject * result = PyObject_CallMethod( trait->handler,
-                           "keyword_error", "(OOOO)", meth, obj, name, value );
-    Py_XDECREF( result );
-
-    return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Raise an exception when a trait method keyword argument is the wrong type:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-dup_argument_error ( trait_object * trait, PyObject * meth, int arg,
-                     PyObject * obj, PyObject * name ) {
-
-    PyObject * arg_num = PyInt_FromLong( arg );
-    if ( arg_num != NULL ) {
-        PyObject * result = PyObject_CallMethod( trait->handler,
-                       "dup_arg_error", "(OOOO)", meth, arg_num, obj, name );
-        Py_XDECREF( result );
-        Py_XDECREF( arg_num );
-    }
-
-    return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Raise an exception when a required trait method argument is missing:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-missing_argument_error ( trait_object * trait, PyObject * meth, int arg,
-                         PyObject * obj, PyObject * name ) {
-
-    PyObject * arg_num = PyInt_FromLong( arg );
-    if ( arg_num != NULL ) {
-        PyObject * result = PyObject_CallMethod( trait->handler,
-                     "missing_arg_error", "(OOOO)", meth, arg_num, obj, name );
-        Py_XDECREF( result );
-        Py_XDECREF( arg_num );
-    }
-
-    return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Raise an exception when a required trait method argument is missing:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-too_may_args_error ( PyObject * name, int wanted, int received ) {
-
-    switch ( wanted ) {
-        case 0:
-            PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes no arguments (%.3d given)",
-                  PyString_AS_STRING( name ), received );
-            break;
-        case 1:
-            PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes exactly 1 argument (%.3d given)",
-                  PyString_AS_STRING( name ), received );
-            break;
-        default:
-            PyErr_Format( PyExc_TypeError,
-                  "%.400s() takes exactly %.3d arguments (%.3d given)",
-                  PyString_AS_STRING( name ), wanted, received );
-            break;
-    }
-
-    return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Raise an exception when a trait method argument is of the wrong type:
-+----------------------------------------------------------------------------*/
-
-static void
-invalid_result_error ( trait_object * trait, PyObject * meth, PyObject * obj,
-                       PyObject * value ) {
-
-    PyObject * result = PyObject_CallMethod( trait->handler,
-                                   "return_error", "(OOO)", meth, obj, value );
-    Py_XDECREF( result );
-}
-
-/*-----------------------------------------------------------------------------
 |  Gets/Sets a possibly NULL (or callable) value:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 get_callable_value ( PyObject * value ) {
     PyObject * tuple, * temp;
-    if ( value == NULL )
+    if ( value == NULL ) {
         value = Py_None;
-    else if ( PyCallable_Check( value ) )
+        Py_INCREF( value );
+    } else if ( PyCallable_Check( value ) ) {
         value = is_callable;
-    else if ( PyTuple_Check( value ) &&
-              (PyInt_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
+        Py_INCREF( value );
+    } else if ( PyTuple_Check( value ) &&
+              ( PyTuple_GET_SIZE( value ) >= 3 ) &&
+              ( Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( value, 0 ) ) == 10) ) {
         tuple = PyTuple_New( 3 );
         if ( tuple != NULL ) {
             PyTuple_SET_ITEM( tuple, 0, temp = PyTuple_GET_ITEM( value, 0 ) );
@@ -649,9 +576,12 @@ get_callable_value ( PyObject * value ) {
             PyTuple_SET_ITEM( tuple, 2, is_callable );
             Py_INCREF( is_callable );
             value = tuple;
+        } else {
+            value = NULL;
         }
+    } else {
+        Py_INCREF( value );
     }
-    Py_INCREF( value );
     return value;
 }
 
@@ -704,21 +634,23 @@ call_class ( PyObject * class, trait_object * trait, has_traits_object * obj,
 
 static PyObject *
 dict_getitem ( PyDictObject * dict, PyObject *key ) {
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
+    Py_hash_t hash;
+#endif
 
-        long hash;
+    assert( PyDict_Check( dict ) );
 
-        assert( PyDict_Check( dict ) );
+#if !defined(Py_LIMITED_API) && (PY_MAJOR_VERSION < 3 || PY_MINOR_VERSION < 3)
+    hash = Py2to3_GetHash_wCache( key );
+    if ( hash == -1 ) {
+        PyErr_Clear();
+        return NULL;
+    }
 
-        if ( !PyString_CheckExact( key ) ||
-         ((hash = ((PyStringObject *) key)->ob_shash) == -1) ) {
-                hash = PyObject_Hash( key );
-                if ( hash == -1 ) {
-                        PyErr_Clear();
-            return NULL;
-                }
-        }
-
-        return (dict->ma_lookup)( dict, key, hash )->me_value;
+    return (dict->ma_lookup)( dict, key, hash )->me_value;
+#else
+    return PyDict_GetItem((PyObject *)dict,key);
+#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -873,7 +805,7 @@ has_traits_setattro ( has_traits_object * obj,
 
 PyObject *
 has_traits_new ( PyTypeObject * type, PyObject * args, PyObject * kwds ) {
-    
+
     // Call PyBaseObject_Type.tp_new to do the actual construction.
     // This allows things like ABCMeta machinery to work correctly
     // which is implemented at the C level.
@@ -1001,7 +933,7 @@ has_traits_dealloc ( has_traits_object * obj ) {
     PyObject_GC_UnTrack(obj);
     Py_TRASHCAN_SAFE_BEGIN(obj);
     has_traits_clear( obj );
-    obj->ob_type->tp_free( (PyObject *) obj );
+    Py_TYPE(obj)->tp_free( (PyObject *) obj );
     Py_TRASHCAN_SAFE_END(obj);
 }
 
@@ -1021,125 +953,37 @@ has_traits_traverse ( has_traits_object * obj, visitproc visit, void * arg ) {
 }
 
 /*-----------------------------------------------------------------------------
-|  Returns whether an object's '__dict__' value is defined or not:
-+----------------------------------------------------------------------------*/
-
-static int
-has_value_for ( has_traits_object * obj, PyObject * name ) {
-
-    PyObject * uname;
-    long hash;
-    int  rc;
-
-    PyDictObject * dict = (PyDictObject *) obj->obj_dict;
-
-        if ( dict == NULL )
-        return 0;
-
-    assert( PyDict_Check( dict ) );
-
-    if ( PyString_CheckExact( name ) ) {
-         if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
-             hash = PyObject_Hash( name );
-             return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL);
-    }
-
-    if ( PyString_Check( name ) ) {
-        hash = PyObject_Hash( name );
-        if ( hash == -1 ) {
-            PyErr_Clear();
-            return 0;
-        }
-        return ((dict->ma_lookup)( dict, name, hash )->me_value != NULL );
-    }
-#ifdef Py_USING_UNICODE
-    if ( !PyUnicode_Check( name ) )
-        return 0;
-
-    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
-    if ( uname == NULL ) {
-        PyErr_Clear();
-            return 0;
-    }
-
-        hash = PyObject_Hash( uname );
-        if ( hash == -1 ) {
-        Py_DECREF( uname );
-        PyErr_Clear();
-        return 0;
-    }
-
-    rc = ((dict->ma_lookup)( dict, uname, hash )->me_value != NULL);
-    Py_DECREF( uname );
-    return rc;
-#else
-    return 0;
-#endif
-}
-
-/*-----------------------------------------------------------------------------
 |  Handles the 'getattr' operation on a 'CHasTraits' instance:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
 has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
 
+    trait_object * trait;
+    PyObject *value;
+    PyObject *bad_attr_marker;
     /* The following is a performance hack to short-circuit the normal
-       look-up when the value is in the object's dictionary. */
-        trait_object * trait;
-        PyObject     * value;
-    PyObject     * uname;
-    long hash;
-
+       look-up when the value is in the object's dictionary.
+*/
     PyDictObject * dict = (PyDictObject *) obj->obj_dict;
 
-        if ( dict != NULL ) {
-         assert( PyDict_Check( dict ) );
-         if ( PyString_CheckExact( name ) ) {
-              if ( (hash = ((PyStringObject *) name)->ob_shash) == -1 )
-                  hash = PyObject_Hash( name );
-                 value = (dict->ma_lookup)( dict, name, hash )->me_value;
-             if ( value != NULL ) {
-                 Py_INCREF( value );
-                 return value;
-             }
-         } else {
-            if ( PyString_Check( name ) ) {
-                    hash = PyObject_Hash( name );
-                    if ( hash == -1 )
-                            return NULL;
-                    value = (dict->ma_lookup)( dict, name, hash )->me_value;
-                if ( value != NULL ) {
-                    Py_INCREF( value );
-                    return value;
-                }
-            } else {
-#ifdef Py_USING_UNICODE
-                if ( PyUnicode_Check( name ) ) {
-                    uname = PyUnicode_AsEncodedString( name, NULL, NULL );
-                    if ( uname == NULL )
-                            return NULL;
-                } else {
-                    invalid_attribute_error();
-                    return NULL;
-                }
-                    hash = PyObject_Hash( uname );
-                    if ( hash == -1 ) {
-                    Py_DECREF( uname );
-                            return NULL;
-                }
-                    value = (dict->ma_lookup)( dict, uname, hash )->me_value;
-                Py_DECREF( uname );
-                if ( value != NULL ) {
-                    Py_INCREF( value );
-                    return value;
-                }
-#else
-                invalid_attribute_error();
-                return NULL;
-#endif
-            }
-         }
+    if ( dict != NULL ) {
+        assert( PyDict_Check( dict ) );
+
+        bad_attr_marker = name;
+        value = Py2to3_GetAttrDictValue(dict, name, bad_attr_marker);
+        // there is a slight performance-hit here:
+        // Py2to3_GetAttrDictValue cannot signal invalid attributes
+        // unambiguously, so we have to reckeck in case the marker value is
+        // returned. Make sure to pick an unlikely marker value.
+        if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
+            invalid_attribute_error();
+            return NULL;
+        }
+        if( value != NULL ){
+            Py_INCREF( value );
+            return value;
+        }
     }
     /* End of performance hack */
 
@@ -1333,7 +1177,7 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
             break;
         }
 
-        if ( trait->ob_type != ctrait_type ) {
+        if ( Py_TYPE(trait) != ctrait_type ) {
             fatal_trait_error();
             break;
         }
@@ -1436,7 +1280,7 @@ _has_traits_items_event ( has_traits_object * obj, PyObject * args ) {
         return NULL;
     }
 
-    if ( !PyString_Check( name ) ) {
+    if ( !Py2to3_AttrNameCheck( name ) ) {
         invalid_attribute_error();
         return NULL;
     }
@@ -1678,8 +1522,7 @@ static PyGetSetDef has_traits_properties[] = {
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject has_traits_type = {
-        PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
-        0,
+        PyVarObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ), 0)
         "traits.ctraits.CHasTraits",
         sizeof( has_traits_object ),
         0,
@@ -1811,8 +1654,9 @@ getattr_event ( trait_object      * trait,
                 PyObject          * name ) {
 
     PyErr_Format( PyExc_AttributeError,
-        "The %.400s trait of a %.50s instance is an 'event', which is write only.",
-        PyString_AS_STRING( name ), obj->ob_type->tp_name );
+        "The %.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR
+            " trait of a %.50s instance is an 'event', which is write only.",
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ), Py_TYPE(obj)->tp_name );
 
     return NULL;
 }
@@ -1830,17 +1674,18 @@ getattr_trait ( trait_object      * trait,
     PyListObject * tnotifiers;
     PyListObject * onotifiers;
     PyObject * result;
+    PyObject * nname;
     PyObject * dict = obj->obj_dict;
 
-        if ( dict == NULL ) {
-                dict = PyDict_New();
-                if ( dict == NULL )
+    if ( dict == NULL ) {
+        dict = PyDict_New();
+        if ( dict == NULL )
             return NULL;
 
-                obj->obj_dict = dict;
+        obj->obj_dict = dict;
         }
 
-        if ( PyString_Check( name ) ) {
+        if ( Py2to3_SimpleString_Check( name ) ) {
         if ( (result = default_value_for( trait, obj, name )) != NULL ) {
             if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
 
@@ -1862,39 +1707,33 @@ getattr_trait ( trait_object      * trait,
             Py_DECREF( result );
         }
 
-        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
-
         return NULL;
     }
 
-#ifdef Py_USING_UNICODE
-    if ( PyUnicode_Check( name ) ) {
-        name = PyUnicode_AsEncodedString( name, NULL, NULL );
-        if ( name == NULL )
-                    return NULL;
-    } else {
+    nname = Py2to3_NormaliseAttrName(name);
+
+    if( nname == NULL ){
         invalid_attribute_error();
         return NULL;
     }
 
-    if ( (result = default_value_for( trait, obj, name )) != NULL ) {
-        if ( PyDict_SetItem( dict, name, result ) >= 0 ) {
+    if ( (result = default_value_for( trait, obj, nname )) != NULL ) {
+        if ( PyDict_SetItem( dict, nname, result ) >= 0 ) {
 
             rc = 0;
             if ( (trait->post_setattr != NULL) &&
                  ((trait->flags & TRAIT_IS_MAPPED) == 0) )
-                rc = trait->post_setattr( trait, obj, name, result );
+                rc = trait->post_setattr( trait, obj, nname, result );
 
             if (rc == 0) {
                 tnotifiers = trait->notifiers;
                 onotifiers = obj->notifiers;
                 if ( has_notifiers( tnotifiers, onotifiers ) )
-                    rc = call_notifiers( tnotifiers, onotifiers, obj, name,
+                    rc = call_notifiers( tnotifiers, onotifiers, obj, nname,
                                          Uninitialized, result );
             }
-            if ( rc == 0 ) {
-                Py_DECREF( name );
+            if ( rc == 0 ){
+                Py2to3_FinishNormaliseAttrName(name,nname);
                 return result;
             }
         }
@@ -1902,14 +1741,11 @@ getattr_trait ( trait_object      * trait,
     }
 
     if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                PyErr_SetObject( PyExc_AttributeError, name );
+        PyErr_SetObject( PyExc_AttributeError, nname );
 
+    Py2to3_FinishNormaliseAttrName(name,nname);
     Py_DECREF( name );
     return NULL;
-#else
-    invalid_attribute_error();
-    return NULL;
-#endif
 }
 
 /*-----------------------------------------------------------------------------
@@ -1921,10 +1757,11 @@ getattr_delegate ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-        PyTypeObject * tp;
+    PyTypeObject * tp;
     PyObject     * delegate_attr_name;
     PyObject     * delegate;
     PyObject     * result;
+    PyObject     * nname;
     PyObject     * dict = obj->obj_dict;
 
     if ( (dict == NULL) ||
@@ -1938,82 +1775,51 @@ getattr_delegate ( trait_object      * trait,
         Py_INCREF( delegate );
     }
 
-        if ( PyString_Check( name ) ) {
-        delegate_attr_name = trait->delegate_attr_name( trait, obj, name );
-        tp = delegate->ob_type;
+    nname = Py2to3_NormaliseAttrName(name);
 
-        if ( tp->tp_getattro != NULL ) {
-                result = (*tp->tp_getattro)( delegate, delegate_attr_name );
-            goto done2;
-        }
-
-        if ( tp->tp_getattr != NULL ) {
-                result = (*tp->tp_getattr)( delegate,
-                                     PyString_AS_STRING( delegate_attr_name ) );
-            goto done2;
-        }
-
-        PyErr_Format( DelegationError,
-            "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
-                obj->ob_type->tp_name, PyString_AS_STRING( name ),
-            tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
-        result = NULL;
-        goto done2;
-    }
-
-#ifdef Py_USING_UNICODE
-    if ( PyUnicode_Check( name ) ) {
-        name = PyUnicode_AsEncodedString( name, NULL, NULL );
-        if ( name == NULL ) {
-            Py_DECREF( delegate );
-                    return NULL;
-        }
-    } else {
+    if( nname == NULL ){
         invalid_attribute_error();
         Py_DECREF( delegate );
-
         return NULL;
     }
 
-    delegate_attr_name = trait->delegate_attr_name( trait, obj, name );
-        tp = delegate->ob_type;
+    delegate_attr_name = trait->delegate_attr_name( trait, obj, nname );
+    tp = Py_TYPE(delegate);
 
-        if ( tp->tp_getattro != NULL ) {
-                result = (*tp->tp_getattro)( delegate, delegate_attr_name );
+    if ( tp->tp_getattro != NULL ) {
+        result = (*tp->tp_getattro)( delegate, delegate_attr_name );
         goto done;
     }
 
-        if ( tp->tp_getattr != NULL ) {
-                result = (*tp->tp_getattr)( delegate,
-                                    PyString_AS_STRING( delegate_attr_name ) );
-        goto done;
+    if ( tp->tp_getattr != NULL ) {
+        PyObject *delegate_attr_name_c_str = Py2to3_AttrNameCStr( delegate_attr_name );
+        if(delegate_attr_name_c_str == NULL){
+            result = NULL;
+        } else {
+            result = (*tp->tp_getattr)( delegate,
+                             Py2to3_AttrName_AS_STRING( delegate_attr_name_c_str ) );
+            Py2to3_FinishAttrNameCStr(delegate_attr_name_c_str);
+            goto done;
+        }
     }
 
-        PyErr_Format( DelegationError,
-            "The '%.50s' object has no attribute '%.400s' because its %.50s delegate has no attribute '%.400s'.",
-                obj->ob_type->tp_name, PyString_AS_STRING( name ),
-        tp->tp_name, PyString_AS_STRING( delegate_attr_name ) );
+    PyErr_Format( DelegationError,
+        "The '%.50s' object has no attribute '%.400"
+            Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+            " because its %.50s delegate has no attribute '%.400"
+            Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'.",
+        Py_TYPE(obj)->tp_name,
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        tp->tp_name,
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( delegate_attr_name )
+    );
     result = NULL;
 
 done:
-    Py_DECREF( name );
-done2:
     Py_DECREF( delegate_attr_name );
+    Py2to3_FinishNormaliseAttrName(name,nname);
     Py_DECREF( delegate );
-
-        return result;
-#else
-    invalid_attribute_error();
-    Py_DECREF( delegate );
-
-    return NULL;
-
-done2:
-    Py_DECREF( delegate_attr_name );
-    Py_DECREF( delegate );
-
-        return result;
-#endif
+    return result;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2025,7 +1831,7 @@ getattr_disallow ( trait_object      * trait,
                    has_traits_object * obj,
                    PyObject          * name ) {
 
-    if ( PyString_Check( name ) )
+    if ( Py2to3_SimpleString_Check( name ) )
         unknown_attribute_error( obj, name );
     else
         invalid_attribute_error();
@@ -2136,7 +1942,7 @@ setattr_python ( trait_object      * traito,
                  PyObject          * name,
                  PyObject          * value ) {
 
-    int rc;
+    PyObject *nname;
     PyObject * dict = obj->obj_dict;
 
     if ( value != NULL ) {
@@ -2146,63 +1952,40 @@ setattr_python ( trait_object      * traito,
                 return -1;
                 obj->obj_dict = dict;
         }
-        if ( PyString_Check( name ) ) {
-            if ( PyDict_SetItem( dict, name, value ) >= 0 )
-                return 0;
-                if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                        PyErr_SetObject( PyExc_AttributeError, name );
-            return -1;
-        }
-#ifdef Py_USING_UNICODE
-        if ( PyUnicode_Check( name ) ) {
-            name = PyUnicode_AsEncodedString( name, NULL, NULL );
-            if ( name == NULL )
-                    return -1;
-        } else
+
+        nname = Py2to3_NormaliseAttrName( name );
+        if( nname == NULL )
             return invalid_attribute_error();
 
-        rc = PyDict_SetItem( dict, name, value );
-        if ( (rc < 0) && PyErr_ExceptionMatches( PyExc_KeyError ) )
-             PyErr_SetObject( PyExc_AttributeError, name );
-        Py_DECREF( name );
+        if ( PyDict_SetItem( dict, nname, value ) >= 0 ){
+            Py2to3_FinishNormaliseAttrName(name,nname);
+            return 0;
+        }
+        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
+            PyErr_SetObject( PyExc_AttributeError, nname );
 
-        return rc;
-#else
-        return invalid_attribute_error();
-#endif
+        Py2to3_FinishNormaliseAttrName(name,nname);
+        return -1;
     }
 
     if ( dict != NULL ) {
-        if ( PyString_Check( name ) ) {
-            if ( PyDict_DelItem( dict, name ) >= 0 )
-                return 0;
-
-            if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-                unknown_attribute_error( obj, name );
-
-            return -1;
-        }
-#ifdef Py_USING_UNICODE
-        if ( PyUnicode_Check( name ) ) {
-            name = PyUnicode_AsEncodedString( name, NULL, NULL );
-            if ( name == NULL )
-                    return -1;
-        } else
+        PyObject *nname = Py2to3_NormaliseAttrName( name );
+        if( nname == NULL )
             return invalid_attribute_error();
 
-        rc = PyDict_DelItem( dict, name );
-        if ( (rc < 0) && PyErr_ExceptionMatches( PyExc_KeyError ) )
-            unknown_attribute_error( obj, name );
+        if ( PyDict_DelItem( dict, nname ) >= 0 ){
+            Py2to3_FinishNormaliseAttrName(name,nname);
+            return 0;
+        }
 
-        Py_DECREF( name );
+        if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
+            unknown_attribute_error( obj, nname );
 
-        return rc;
-#else
-        return invalid_attribute_error();
-#endif
+        Py2to3_FinishNormaliseAttrName(name,nname);
+        return -1;
     }
 
-    if ( PyString_Check( name ) ) {
+    if ( Py2to3_SimpleString_Check( name ) ) {
         unknown_attribute_error( obj, name );
 
         return -1;
@@ -2424,7 +2207,10 @@ setattr_trait ( trait_object      * traito,
     PyObject     * original_value;
     PyObject     * new_value;
 
+    PyObject *nname;
+
     PyObject * dict = obj->obj_dict;
+
 
     changed = (traitd->flags & TRAIT_NO_VALUE_TEST);
 
@@ -2432,87 +2218,63 @@ setattr_trait ( trait_object      * traito,
         if ( dict == NULL )
             return 0;
 
-        if ( PyString_Check( name ) ) {
-            old_value = PyDict_GetItem( dict, name );
-            if ( old_value == NULL )
-                return 0;
-
-            Py_INCREF( old_value );
-            if ( PyDict_DelItem( dict, name ) < 0 ) {
-                Py_DECREF( old_value );
-                return -1;
-            }
-
-            Py_INCREF( name );
-notify:
-            rc = 0;
-            if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
-                tnotifiers = traito->notifiers;
-                onotifiers = obj->notifiers;
-                if ( (tnotifiers != NULL) || (onotifiers != NULL) ) {
-                    value = traito->getattr( traito, obj, name );
-                    if ( value == NULL ) {
-                        Py_DECREF( old_value );
-                        Py_DECREF( name );
-                        return -1;
-                    }
-
-                    if ( !changed ) {
-                        changed = (old_value != value );
-                        if ( changed &&
-                             ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
-                            changed = PyObject_RichCompareBool( old_value,
-                                                                value, Py_NE );
-                            if ( changed == -1 ) {
-                                PyErr_Clear();
-                            }
-                        }
-                    }
-
-                    if ( changed ) {
-                        if ( traitd->post_setattr != NULL )
-                            rc = traitd->post_setattr( traitd, obj, name,
-                                                       value );
-                        if ( (rc == 0) &&
-                             has_notifiers( tnotifiers, onotifiers ) )
-                            rc = call_notifiers( tnotifiers, onotifiers,
-                                                 obj, name, old_value, value );
-                    }
-
-                    Py_DECREF( value );
-                }
-            }
-            Py_DECREF( name );
-            Py_DECREF( old_value );
-            return rc;
-        }
-#ifdef Py_USING_UNICODE
-        if ( PyUnicode_Check( name ) ) {
-            name = PyUnicode_AsEncodedString( name, NULL, NULL );
-            if ( name == NULL ) {
-                    return -1;
-            }
-        } else {
+        nname = Py2to3_NormaliseAttrName(name);
+        if( nname == NULL )
             return invalid_attribute_error();
-        }
 
-        old_value = PyDict_GetItem( dict, name );
+        old_value = PyDict_GetItem( dict, nname );
         if ( old_value == NULL ) {
-            Py_DECREF( name );
+            Py2to3_FinishNormaliseAttrName( name, nname );
             return 0;
         }
 
         Py_INCREF( old_value );
-        if ( PyDict_DelItem( dict, name ) < 0 ) {
+        if ( PyDict_DelItem( dict, nname ) < 0 ) {
             Py_DECREF( old_value );
-            Py_DECREF( name );
+            Py2to3_FinishNormaliseAttrName( name, nname );
             return -1;
         }
 
-        goto notify;
-#else
-        return invalid_attribute_error();
-#endif
+        rc = 0;
+        if ( (obj->flags & HASTRAITS_NO_NOTIFY) == 0 ) {
+            tnotifiers = traito->notifiers;
+            onotifiers = obj->notifiers;
+            if ( (tnotifiers != NULL) || (onotifiers != NULL) ) {
+                value = traito->getattr( traito, obj, nname );
+                if ( value == NULL ) {
+                    Py_DECREF( old_value );
+                    Py2to3_FinishNormaliseAttrName( name, nname );
+                    return -1;
+                }
+
+                if ( !changed ) {
+                    changed = (old_value != value );
+                    if ( changed &&
+                         ((traitd->flags & TRAIT_OBJECT_IDENTITY) == 0) ) {
+                        changed = PyObject_RichCompareBool( old_value,
+                                                            value, Py_NE );
+                        if ( changed == -1 ) {
+                            PyErr_Clear();
+                        }
+                    }
+                }
+
+                if ( changed ) {
+                    if ( traitd->post_setattr != NULL )
+                        rc = traitd->post_setattr( traitd, obj, nname,
+                                                   value );
+                    if ( (rc == 0) &&
+                         has_notifiers( tnotifiers, onotifiers ) )
+                        rc = call_notifiers( tnotifiers, onotifiers,
+                                             obj, nname, old_value, value );
+                }
+
+                Py_DECREF( value );
+            }
+        }
+        Py_DECREF( old_value );
+        Py2to3_FinishNormaliseAttrName( name, nname );
+        return rc;
     }
 
     original_value = value;
@@ -2536,24 +2298,12 @@ notify:
         }
     }
 
-    if ( !PyString_Check( name ) ) {
-#ifdef Py_USING_UNICODE
-        if ( PyUnicode_Check( name ) ) {
-            name = PyUnicode_AsEncodedString( name, NULL, NULL );
-            if ( name == NULL ) {
-                Py_DECREF( value );
-                        return -1;
-            }
-        } else {
-            Py_DECREF( value );
-            return invalid_attribute_error();
-        }
-#else
+
+
+    nname = Py2to3_NormaliseAttrName(name);
+    if( nname == NULL ){
         Py_DECREF( value );
         return invalid_attribute_error();
-#endif
-    } else {
-        Py_INCREF( name );
     }
 
     new_value    = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)?
@@ -2566,15 +2316,15 @@ notify:
 
     post_setattr = traitd->post_setattr;
     if ( (post_setattr != NULL) || do_notifiers ) {
-        old_value = PyDict_GetItem( dict, name );
+        old_value = PyDict_GetItem( dict, nname );
         if ( old_value == NULL ) {
             if ( traitd != traito ) {
-                old_value = traito->getattr( traito, obj, name );
+                old_value = traito->getattr( traito, obj, nname );
             } else {
-                old_value = default_value_for( traitd, obj, name );
+                old_value = default_value_for( traitd, obj, nname );
             }
             if ( old_value == NULL ) {
-                Py_DECREF( name );
+                Py2to3_FinishNormaliseAttrName( name, nname );
                 Py_DECREF( value );
 
                 return -1;
@@ -2595,11 +2345,12 @@ notify:
         }
     }
 
-    if ( PyDict_SetItem( dict, name, new_value ) < 0 ) {
+    if ( PyDict_SetItem( dict, nname, new_value ) < 0 ) {
         if ( PyErr_ExceptionMatches( PyExc_KeyError ) )
-            PyErr_SetObject( PyExc_AttributeError, name );
+            PyErr_SetObject( PyExc_AttributeError, nname );
         Py_XDECREF( old_value );
         Py_DECREF( name );
+        Py2to3_FinishNormaliseAttrName( name, nname );
         Py_DECREF( value );
 
         return -1;
@@ -2609,17 +2360,17 @@ notify:
 
     if ( changed ) {
         if ( post_setattr != NULL )
-            rc = post_setattr( traitd, obj, name,
+            rc = post_setattr( traitd, obj, nname,
                     (traitd->flags & TRAIT_POST_SETATTR_ORIGINAL_VALUE)?
                     original_value: value );
 
         if ( (rc == 0) && do_notifiers )
-            rc = call_notifiers( tnotifiers, onotifiers, obj, name,
+            rc = call_notifiers( tnotifiers, onotifiers, obj, nname,
                                  old_value, new_value );
     }
 
     Py_XDECREF( old_value );
-    Py_DECREF( name );
+    Py2to3_FinishNormaliseAttrName( name, nname );
     Py_DECREF( value );
 
     return rc;
@@ -2685,7 +2436,7 @@ setattr_delegate ( trait_object      * traito,
             return bad_delegate_error( obj, name );
         }
 
-        if ( traitd->ob_type != ctrait_type ) {
+        if ( Py_TYPE(traitd) != ctrait_type ) {
             Py_DECREF( daname );
             return fatal_trait_error();
         }
@@ -2843,8 +2594,12 @@ setattr_validate_property ( trait_object      * traito,
                             PyObject          * value ) {
 
     int result;
+    PyObject * validated;
 
-    PyObject * validated = traitd->validate( traitd, obj, name, value );
+    if ( value == NULL )
+        return set_delete_property_error( obj, name );
+
+    validated = traitd->validate( traitd, obj, name, value );
     if ( validated == NULL )
         return -1;
     result = ((trait_setattr) traitd->post_setattr)( traito, traitd, obj, name,
@@ -2953,6 +2708,8 @@ setattr_readonly ( trait_object      * traito,
 
     PyObject * dict;
     PyObject * result;
+    PyObject * nname;
+    int rc;
 
     if ( value == NULL )
         return delete_readonly_error( obj, name );
@@ -2964,27 +2721,19 @@ setattr_readonly ( trait_object      * traito,
     if ( dict == NULL )
         return setattr_python( traito, traitd, obj, name, value );
 
-    if ( !PyString_Check( name ) ) {
-#ifdef Py_USING_UNICODE
-        if ( PyUnicode_Check( name ) ) {
-            name = PyUnicode_AsEncodedString( name, NULL, NULL );
-            if ( name == NULL )
-                    return -1;
-        } else
-            return invalid_attribute_error();
-
-#else
+    nname = Py2to3_NormaliseAttrName(name);
+    if( nname == NULL ){
         return invalid_attribute_error();
-#endif
-    } else
-        Py_INCREF( name );
+    }
 
-    result = PyDict_GetItem( dict, name );
-    Py_DECREF( name );
+    result = PyDict_GetItem( dict, nname );
     if ( (result == NULL) || (result == Undefined) )
-        return setattr_python( traito, traitd, obj, name, value );
+        rc = setattr_python( traito, traitd, obj, nname, value );
+    else
+        rc = set_readonly_error( obj, nname );
 
-    return set_readonly_error( obj, name );
+    Py2to3_FinishNormaliseAttrName(name,nname);
+    return rc;
 }
 
 /*-----------------------------------------------------------------------------
@@ -2998,10 +2747,14 @@ setattr_constant ( trait_object      * traito,
                    PyObject          * name,
                    PyObject          * value ) {
 
-    if ( PyString_Check( name ) ) {
-            PyErr_Format( TraitError,
-                      "Cannot modify the constant '%.400s' attribute of a '%.50s' object.",
-                      PyString_AS_STRING( name ), obj->ob_type->tp_name );
+    if ( Py2to3_SimpleString_Check( name ) ) {
+        PyErr_Format( TraitError,
+            "Cannot modify the constant '%.400"
+                Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
+                " attribute of a '%.50s' object.",
+            Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+            Py_TYPE(obj)->tp_name
+        );
         return -1;
     }
     return invalid_attribute_error();
@@ -3078,7 +2831,7 @@ trait_dealloc ( trait_object * trait ) {
     PyObject_GC_UnTrack(trait);
     Py_TRASHCAN_SAFE_BEGIN(trait);
     trait_clear( trait );
-    trait->ob_type->tp_free( (PyObject *) trait );
+    Py_TYPE(trait)->tp_free( (PyObject *) trait );
     Py_TRASHCAN_SAFE_END(trait);
 }
 
@@ -3149,10 +2902,11 @@ _trait_cast ( trait_object * trait, PyObject * args ) {
     if ( result == NULL ) {
         PyErr_Clear();
         info = PyObject_CallMethod( trait->handler, "info", NULL );
-        if ( (info != NULL) && PyString_Check( info ) )
+        if ( (info != NULL) && Py2to3_SimpleString_Check( info ) )
             PyErr_Format( PyExc_ValueError,
-                "Invalid value for trait, the value should be %s.",
-                PyString_AS_STRING( info ) );
+                "Invalid value for trait, the value should be %"
+                Py2to3_PYERR_SIMPLE_STRING_FMTCHR ".",
+                Py2to3_PYERR_PREPARE_SIMPLE_STRING( info ) );
         else
             PyErr_Format( PyExc_ValueError, "Invalid value for trait." );
         Py_XDECREF( info );
@@ -3361,7 +3115,7 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 
     if ( ((PyTuple_GET_SIZE( trait->py_validate ) == 2) &&
           (value == Py_None)) ||
-          PyObject_TypeCheck( value, obj->ob_type ) ) {
+          PyObject_TypeCheck( value, Py_TYPE(obj) ) ) {
         Py_INCREF( value );
         return value;
     }
@@ -3369,10 +3123,12 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
     return raise_trait_error( trait, obj, name, value );
 }
 
+
+
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is an int within a specified range:
 +----------------------------------------------------------------------------*/
-
+#if PY_MAJOR_VERSION < 3
 static PyObject *
 validate_trait_int ( trait_object * trait, has_traits_object * obj,
                      PyObject * name, PyObject * value ) {
@@ -3415,6 +3171,72 @@ validate_trait_int ( trait_object * trait, has_traits_object * obj,
 error:
     return raise_trait_error( trait, obj, name, value );
 }
+#endif  // #if PY_MAJOR_VERSION < 3
+
+/*-----------------------------------------------------------------------------
+|  Verifies a Python value is a Python integer (an int or long)
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_integer ( trait_object * trait, has_traits_object * obj,
+                         PyObject * name, PyObject * value ) {
+    PyObject *int_value, *result;
+
+    /* Fast paths for the most common cases. */
+#if PY_MAJOR_VERSION < 3
+    if (PyInt_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+    else if (PyLong_CheckExact(value)) {
+        long x;
+        x = PyLong_AsLong(value);
+        if (x == -1 && PyErr_Occurred()) {
+            if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                PyErr_Clear();
+                Py_INCREF(value);
+                return value;
+            }
+            return NULL;
+        }
+        else {
+            return PyInt_FromLong(x);
+        }
+    }
+#else
+    if (PyLong_CheckExact(value)) {
+      Py_INCREF(value);
+      return value;
+    }
+#endif // #if PY_MAJOR_VERSION < 3
+
+    /* General case.  The effect is supposed to be that of
+       int(operator.index(value)).  The extra call to 'int' is necessary
+       because in Python 2, operator.index (somewhat controversially) does
+       *not* always return something of type int or long, but can return
+       instances of subclasses of int or long. */
+    int_value = PyNumber_Index(value);
+    if (int_value == NULL) {
+        /* Translate a TypeError to a TraitError, but pass
+           on other exceptions. */
+        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+            PyErr_Clear();
+            goto error;
+        }
+        return NULL;
+    }
+
+#if PY_MAJOR_VERSION < 3
+    result = PyNumber_Int(int_value);
+#else
+    result = PyNumber_Long(int_value);
+#endif // #if PY_MAJOR_VERSION < 3
+    Py_DECREF(int_value);
+    return result;
+
+error:
+    return raise_trait_error( trait, obj, name, value );
+}
 
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is a float within a specified range:
@@ -3432,9 +3254,9 @@ validate_trait_float ( trait_object * trait, has_traits_object * obj,
     PyObject * type_info = trait->py_validate;
 
     if ( !PyFloat_Check( value ) ) {
-        if ( !PyInt_Check( value ) )
+        float_value = Py2to3_PyNum_AsDouble( value );
+        if( float_value==-1 && PyErr_Occurred() )
             goto error;
-        float_value = (double) PyInt_AS_LONG( value );
         value       = PyFloat_FromDouble( float_value );
         if ( value == NULL )
             goto error;
@@ -3445,7 +3267,14 @@ validate_trait_float ( trait_object * trait, has_traits_object * obj,
 
     low          = PyTuple_GET_ITEM( type_info, 1 );
     high         = PyTuple_GET_ITEM( type_info, 2 );
+#if PY_MAJOR_VERSION < 3
     exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
+#else
+    exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
+    if( exclude_mask==-1 && PyErr_Occurred()){
+        goto error;
+    }
+#endif  // #if PY_MAJOR_VERSION < 3
 
     if ( low != Py_None ) {
         if ( (exclude_mask & 1) != 0 ) {
@@ -3674,8 +3503,6 @@ validate_trait_function ( trait_object * trait, has_traits_object * obj,
     if ( result != NULL )
         return result;
 
-    PyErr_Clear();
-
     return raise_trait_error( trait, obj, name, value );
 }
 
@@ -3694,7 +3521,14 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     long mode, rc;
 
     if ( value == Py_None ) {
+#if PY_MAJOR_VERSION < 3
         if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) ) {
+#else
+        mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
+        if( mode==-1 && PyErr_Occurred())
+            return NULL;
+        if ( mode ) {
+#endif // #if PY_MAJOR_VERSION < 3
             Py_INCREF( value );
             return value;
         }
@@ -3702,7 +3536,13 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     }
 
     type = PyTuple_GET_ITEM( type_info, 1 );
+#if PY_MAJOR_VERSION < 3
     mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+#else
+    mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
+    if( mode==-1 && PyErr_Occurred())
+        return NULL;
+#endif // #if PY_MAJOR_VERSION < 3
 
     if ( mode == 2 ) {
         args = PyTuple_New( 3 );
@@ -3734,9 +3574,18 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
 
         Py_DECREF( result );
         result = PyObject_Call( validate_implements, args, NULL );
+#if PY_MAJOR_VERSION < 3
         rc     = PyInt_AS_LONG( result );
+#else
+        rc     = PyLong_AsLong( result );
+#endif
         Py_DECREF( args );
         Py_DECREF( result );
+#if PY_MAJOR_VERSION >= 3
+        if( rc==-1 && PyErr_Occurred()){
+            return NULL;
+        }
+#endif
         if ( rc ) {
             Py_INCREF( value );
             return value;
@@ -3752,9 +3601,18 @@ validate_trait_adapt ( trait_object * trait, has_traits_object * obj,
     PyErr_Clear();
 check_implements:
     result = PyObject_Call( validate_implements, args, NULL );
+#if PY_MAJOR_VERSION < 3
     rc     = PyInt_AS_LONG( result );
+#else
+    rc     = PyLong_AsLong( result );
+#endif
     Py_DECREF( args );
     Py_DECREF( result );
+#if PY_MAJOR_VERSION >= 3
+    if( rc==-1 && PyErr_Occurred()){
+        return NULL;
+    }
+#endif
     if ( rc ) {
         Py_INCREF( value );
         return value;
@@ -3772,9 +3630,10 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
     int    i, j, k, kind;
-    long   int_value, exclude_mask, mode, rc;
+    long   exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
+    PyObject * int_value;
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -3782,7 +3641,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
         type_info = PyTuple_GET_ITEM( list_type_info, i );
 
-        switch ( PyInt_AsLong( PyTuple_GET_ITEM( type_info, 0 ) ) ) {
+        switch ( Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( type_info, 0 ) ) ) {
 
             case 0:  /* Type check: */
                 kind = PyTuple_GET_SIZE( type_info );
@@ -3803,12 +3662,14 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
             case 2:  /* Self type check: */
                 if ( ((PyTuple_GET_SIZE( type_info ) == 2) &&
                       (value == Py_None)) ||
-                      PyObject_TypeCheck( value, obj->ob_type ) )
+                      PyObject_TypeCheck( value, Py_TYPE(obj) ) )
                     goto done;
                 break;
 
+#if PY_MAJOR_VERSION < 3
             case 3:  /* Integer range check: */
                 if ( PyInt_Check( value ) ) {
+                    long int_value;
                     int_value    = PyInt_AS_LONG( value );
                     low          = PyTuple_GET_ITEM( type_info, 1 );
                     high         = PyTuple_GET_ITEM( type_info, 2 );
@@ -3835,13 +3696,16 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     goto done;
                 }
                 break;
+#endif
 
             case 4:  /* Floating point range check: */
                 if ( !PyFloat_Check( value ) ) {
-                    if ( !PyInt_Check( value ) )
+                    float_value = Py2to3_PyNum_AsDouble( value );
+                    if( float_value==-1 && PyErr_Occurred() ){
+                        PyErr_Clear();
                         break;
+                    }
 
-                    float_value = (double) PyInt_AS_LONG( value );
                     value       = PyFloat_FromDouble( float_value );
                     if ( value == NULL ) {
                         PyErr_Clear();
@@ -3853,8 +3717,17 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 }
                 low          = PyTuple_GET_ITEM( type_info, 1 );
                 high         = PyTuple_GET_ITEM( type_info, 2 );
-                exclude_mask = PyInt_AS_LONG(
-                                   PyTuple_GET_ITEM( type_info, 3 ) );
+#if PY_MAJOR_VERSION < 3
+                exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
+#else
+                exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
+                if( exclude_mask==-1 && PyErr_Occurred()){
+                    PyErr_Clear();
+                    break;
+                }
+#endif  // #if PY_MAJOR_VERSION < 3
+
+
                 if ( low != Py_None ) {
                     if ( (exclude_mask & 1) != 0 ) {
                         if ( float_value <= PyFloat_AS_DOUBLE( low ) )
@@ -3968,12 +3841,25 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
             case 19:  /* PyProtocols 'adapt' check: */
                 if ( value == Py_None ) {
+#if PY_MAJOR_VERSION < 3
                     if ( PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) ) )
+#else
+                    mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
+                    if( mode==-1 && PyErr_Occurred())
+                        return NULL;
+                    if( mode )
+#endif // #if PY_MAJOR_VERSION < 3
                         goto done;
                     break;
                 }
                 type = PyTuple_GET_ITEM( type_info, 1 );
+#if PY_MAJOR_VERSION < 3
                 mode = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 2 ) );
+#else
+                mode = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 2 ) );
+                if( mode==-1 && PyErr_Occurred())
+                    return NULL;
+#endif // #if PY_MAJOR_VERSION < 3
                 if ( mode == 2 ) {
                     args = PyTuple_New( 3 );
                     if ( args == NULL )
@@ -4004,7 +3890,17 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
 
                     Py_DECREF( result );
                     result = PyObject_Call( validate_implements, args, NULL );
-                    rc     = PyInt_AS_LONG( result );
+#if PY_MAJOR_VERSION < 3
+                    rc = PyInt_AS_LONG( result );
+#else
+                    rc = PyLong_AsLong( result );
+                    if( rc==-1 && PyErr_Occurred()){
+                        PyErr_Clear();
+                        Py_DECREF( args );
+                        Py_DECREF( result );
+                        break;
+                    }
+#endif // #if PY_MAJOR_VERSION < 3
                     Py_DECREF( args );
                     Py_DECREF( result );
                     if ( rc )
@@ -4019,12 +3915,70 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 PyErr_Clear();
 check_implements:
                 result = PyObject_Call( validate_implements, args, NULL );
-                rc     = PyInt_AS_LONG( result );
+#if PY_MAJOR_VERSION < 3
+                rc = PyInt_AS_LONG( result );
+#else
+                rc = PyLong_AsLong( result );
+                if( rc==-1 && PyErr_Occurred()){
+                    PyErr_Clear();
+                    Py_DECREF( args );
+                    Py_DECREF( result );
+                    break;
+                }
+#endif // #if PY_MAJOR_VERSION < 3
                 Py_DECREF( args );
                 Py_DECREF( result );
                 if ( rc )
                     goto done;
                 break;
+
+            case 20:  /* Integer check: */
+
+                /* Fast paths for the most common cases. */
+#if PY_MAJOR_VERSION < 3
+                if (PyInt_CheckExact(value)) {
+                    Py_INCREF(value);
+                    return value;
+                }
+                else if (PyLong_CheckExact(value)) {
+                    long x;
+                    x = PyLong_AsLong(value);
+                    if (x == -1 && PyErr_Occurred()) {
+                        if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                            PyErr_Clear();
+                            Py_INCREF(value);
+                            return value;
+                        }
+                        return NULL;
+                    }
+                    else {
+                        return PyInt_FromLong(x);
+                    }
+                }
+#else
+                if (PyLong_CheckExact(value)) {
+                    Py_INCREF(value);
+                    return value;
+                }
+#endif // #if PY_MAJOR_VERSION < 3
+                /* General case. */
+                int_value = PyNumber_Index(value);
+                if (int_value == NULL) {
+                    /* Translate a TypeError to a TraitError, but pass
+                       on other exceptions. */
+                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        PyErr_Clear();
+                        break;
+                    }
+                    return NULL;
+                }
+#if PY_MAJOR_VERSION < 3
+                result = PyNumber_Int(int_value);
+#else
+                result = PyNumber_Long(int_value);
+#endif // #if PY_MAJOR_VERSION < 3
+                Py_DECREF(int_value);
+                return result;
 
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
@@ -4044,7 +3998,11 @@ done2:
 
 static trait_validate validate_handlers[] = {
     validate_trait_type,        validate_trait_instance,
+#if PY_MAJOR_VERSION < 3
     validate_trait_self_type,   validate_trait_int,
+#else
+    validate_trait_self_type,   NULL,
+#endif // #if PY_MAJOR_VERSION < 3
     validate_trait_float,       validate_trait_enum,
     validate_trait_map,         validate_trait_complex,
     NULL,                       validate_trait_tuple,
@@ -4055,7 +4013,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate0,           setattr_validate1,
     setattr_validate2,           setattr_validate3,
 /*  ...End of __getstate__ method entries */
-    validate_trait_adapt
+    validate_trait_adapt,        validate_trait_integer,
 };
 
 static PyObject *
@@ -4077,7 +4035,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
         n = PyTuple_GET_SIZE( validate );
         if ( n > 0 ) {
 
-            kind = PyInt_AsLong( PyTuple_GET_ITEM( validate, 0 ) );
+            kind = Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( validate, 0 ) );
 
             switch ( kind ) {
                 case 0:  /* Type check: */
@@ -4102,6 +4060,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         goto done;
                     break;
 
+#if PY_MAJOR_VERSION < 3
                 case 3:  /* Integer range check: */
                     if ( n == 4 ) {
                         v1 = PyTuple_GET_ITEM( validate, 1 );
@@ -4113,6 +4072,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                             goto done;
                     }
                     break;
+#endif // #if PY_MAJOR_VERSION < 3
 
                 case 4:  /* Floating point range check: */
                     if ( n == 4 ) {
@@ -4121,7 +4081,7 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         v3 = PyTuple_GET_ITEM( validate, 3 );
                         if ( ((v1 == Py_None) || PyFloat_Check( v1 )) &&
                              ((v2 == Py_None) || PyFloat_Check( v2 )) &&
-                             PyInt_Check( v3 ) )
+                             Py2to3_PyNum_Check( v3 ) )
                             goto done;
                     }
                     break;
@@ -4193,13 +4153,18 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                        strictly classes or types (e.g. VTK), and yet they work
                        correctly with the rest of the Instance code */
                     if ( (n == 4) &&
-                         PyInt_Check(  PyTuple_GET_ITEM( validate, 2 ) )  &&
+                         Py2to3_PyNum_Check(  PyTuple_GET_ITEM( validate, 2 ) )  &&
                          PyBool_Check( PyTuple_GET_ITEM( validate, 3 ) ) ) {
                         goto done;
                     }
                     break;
+
+                case 20:  /* Integer check: */
+                    if ( n == 1 )
+                        goto done;
+                    break;
             }
-                }
+        }
     }
 
     PyErr_SetString( PyExc_ValueError,
@@ -4310,8 +4275,9 @@ delegate_attr_name_prefix_name ( trait_object      * trait,
                                  has_traits_object * obj,
                                  PyObject          * name ) {
 
-    char * p;
 
+#if PY_MAJOR_VERSION < 3
+    char * p;
     int prefix_len    = PyString_GET_SIZE( trait->delegate_prefix );
     int name_len      = PyString_GET_SIZE( name );
     int total_len     = prefix_len + name_len;
@@ -4325,6 +4291,9 @@ delegate_attr_name_prefix_name ( trait_object      * trait,
     p = PyString_AS_STRING( result );
     memcpy( p, PyString_AS_STRING( trait->delegate_prefix ), prefix_len );
     memcpy( p + prefix_len, PyString_AS_STRING( name ), name_len );
+#else
+    PyObject *result = PyUnicode_Concat( trait->delegate_prefix, name );
+#endif
 
     return result;
 }
@@ -4334,19 +4303,22 @@ delegate_attr_name_class_name ( trait_object      * trait,
                                 has_traits_object * obj,
                                 PyObject          * name ) {
 
-        PyObject * prefix, * result;
-    char     * p;
+    PyObject * prefix, * result;
+#if PY_MAJOR_VERSION < 3
+    char * p;
     int prefix_len, name_len, total_len;
+#endif
 
-        prefix = PyObject_GetAttr( (PyObject *) obj->ob_type, class_prefix );
-    // fixme: Should verify that prefix is a string...
-        if ( prefix == NULL ) {
-                PyErr_Clear();
+    prefix = PyObject_GetAttr( (PyObject *) Py_TYPE(obj), class_prefix );
+// fixme: Should verify that prefix is a string...
+    if ( prefix == NULL ) {
+            PyErr_Clear();
 
-        Py_INCREF( name );
-                return name;
-        }
+    Py_INCREF( name );
+            return name;
+    }
 
+#if PY_MAJOR_VERSION < 3
     prefix_len = PyString_GET_SIZE( prefix );
     name_len   = PyString_GET_SIZE( name );
     total_len  = prefix_len + name_len;
@@ -4359,6 +4331,9 @@ delegate_attr_name_class_name ( trait_object      * trait,
     p = PyString_AS_STRING( result );
     memcpy( p, PyString_AS_STRING( prefix ), prefix_len );
     memcpy( p + prefix_len, PyString_AS_STRING( name ), name_len );
+#else
+    result = PyUnicode_Concat( prefix, name );
+#endif
     Py_DECREF( prefix );
     return result;
 }
@@ -4381,11 +4356,30 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
     int prefix_type;
     int modify_delegate;
 
-    if ( !PyArg_ParseTuple( args, "O!O!ii",
-                            &PyString_Type, &delegate_name,
-                            &PyString_Type, &delegate_prefix,
+#if PY_MAJOR_VERSION < 3
+    {
+        const char *delegate_name_str;
+        const char *delegate_prefix_str;
+        if ( !PyArg_ParseTuple( args, "ssii",
+                                &delegate_name_str, &delegate_prefix_str,
+                                &prefix_type,   &modify_delegate ) )
+            return NULL;
+        delegate_name = PyString_FromString(delegate_name_str);
+        delegate_prefix = PyString_FromString(delegate_prefix_str);
+        if(!delegate_name || !delegate_prefix){
+            Py_XDECREF(delegate_name);
+            Py_XDECREF(delegate_prefix);
+            return NULL;
+        }
+    }
+#else
+    if ( !PyArg_ParseTuple( args, "UUii",
+                            &delegate_name, &delegate_prefix,
                             &prefix_type,   &modify_delegate ) )
         return NULL;
+    Py_INCREF( delegate_name );
+    Py_INCREF( delegate_prefix );
+#endif
 
     if ( modify_delegate ) {
         trait->flags |= TRAIT_MODIFY_DELEGATE;
@@ -4395,8 +4389,6 @@ _trait_delegate ( trait_object * trait, PyObject * args ) {
 
     trait->delegate_name   = delegate_name;
     trait->delegate_prefix = delegate_prefix;
-    Py_INCREF( delegate_name );
-    Py_INCREF( delegate_prefix );
     if ( (prefix_type < 0) || (prefix_type > 3) )
         prefix_type = 0;
 
@@ -4725,23 +4717,23 @@ _trait_getstate ( trait_object * trait, PyObject * args ) {
     if ( result == NULL )
         return NULL;
 
-    PyTuple_SET_ITEM( result,  0, PyInt_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  0, Py2to3_PyNum_FromLong( func_index(
                   (void *) trait->getattr, (void **) getattr_handlers ) ) );
-    PyTuple_SET_ITEM( result,  1, PyInt_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  1, Py2to3_PyNum_FromLong( func_index(
                   (void *) trait->setattr, (void **) setattr_handlers ) ) );
-    PyTuple_SET_ITEM( result,  2, PyInt_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  2, Py2to3_PyNum_FromLong( func_index(
                   (void *) trait->post_setattr,
                   (void **) setattr_property_handlers ) ) );
     PyTuple_SET_ITEM( result,  3, get_callable_value( trait->py_post_setattr ));
-    PyTuple_SET_ITEM( result,  4, PyInt_FromLong( func_index(
+    PyTuple_SET_ITEM( result,  4, Py2to3_PyNum_FromLong( func_index(
                   (void *) trait->validate, (void **) validate_handlers ) ) );
     PyTuple_SET_ITEM( result,  5, get_callable_value( trait->py_validate ) );
-    PyTuple_SET_ITEM( result,  6, PyInt_FromLong( trait->default_value_type ) );
+    PyTuple_SET_ITEM( result,  6, Py2to3_PyNum_FromLong( trait->default_value_type ) );
     PyTuple_SET_ITEM( result,  7, get_value( trait->default_value ) );
-    PyTuple_SET_ITEM( result,  8, PyInt_FromLong( trait->flags ) );
+    PyTuple_SET_ITEM( result,  8, Py2to3_PyNum_FromLong( trait->flags ) );
     PyTuple_SET_ITEM( result,  9, get_value( trait->delegate_name ) );
     PyTuple_SET_ITEM( result, 10, get_value( trait->delegate_prefix ) );
-    PyTuple_SET_ITEM( result, 11, PyInt_FromLong( func_index(
+    PyTuple_SET_ITEM( result, 11, Py2to3_PyNum_FromLong( func_index(
                   (void *) trait->delegate_attr_name,
                   (void **) delegate_attr_name_handlers ) ) );
     PyTuple_SET_ITEM( result, 12, get_value( NULL ) ); /* trait->notifiers */
@@ -4784,18 +4776,18 @@ _trait_setstate ( trait_object * trait, PyObject * args ) {
     /* Convert any references to callable methods on the handler back into
        bound methods: */
     temp = trait->py_validate;
-    if ( PyInt_Check( temp ) )
+    if ( Py2to3_PyNum_Check( temp ) )
         trait->py_validate = PyObject_GetAttrString( trait->handler,
                                                      "validate" );
     else if ( PyTuple_Check( temp ) &&
-              (PyInt_AsLong( PyTuple_GET_ITEM( temp, 0 ) ) == 10) ) {
+              (Py2to3_PyNum_AsLong( PyTuple_GET_ITEM( temp, 0 ) ) == 10) ) {
         temp2 = PyObject_GetAttrString( trait->handler, "validate" );
         Py_INCREF( temp2 );
         Py_DECREF( PyTuple_GET_ITEM( temp, 2 ) );
         PyTuple_SET_ITEM( temp, 2, temp2 );
     }
 
-    if ( PyInt_Check( trait->py_post_setattr ) )
+    if ( Py2to3_PyNum_Check( trait->py_post_setattr ) )
         trait->py_post_setattr = PyObject_GetAttrString( trait->handler,
                                                          "post_setattr" );
 
@@ -4952,8 +4944,7 @@ static PyGetSetDef trait_properties[] = {
 +----------------------------------------------------------------------------*/
 
 static PyTypeObject trait_type = {
-    PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
-    0,
+    PyVarObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ), 0 )
     "traits.ctraits.cTrait",
     sizeof( trait_object ),
     0,
@@ -5166,718 +5157,72 @@ static PyMethodDef ctraits_methods[] = {
 };
 
 /*-----------------------------------------------------------------------------
-|  Trait method object definition:
-+----------------------------------------------------------------------------*/
-
-typedef struct {
-    PyObject_HEAD
-    PyObject * tm_name;        /* The name of the method */
-    PyObject * tm_func;        /* The callable object implementing the method*/
-    PyObject * tm_self;        /* The instance it is bound to, or NULL */
-    PyObject * tm_traits;      /* Tuple containing return/arguments traits */
-    PyObject * tm_class;       /* The class that asked for the method */
-    PyObject * tm_weakreflist; /* List of weak references */
-} trait_method_object;
-
-/*-----------------------------------------------------------------------------
-|  Instance method objects are used for two purposes:
-|  (a) as bound instance methods (returned by instancename.methodname)
-|  (b) as unbound methods (returned by ClassName.methodname)
-|  In case (b), tm_self is NULL
-+----------------------------------------------------------------------------*/
-
-static trait_method_object * free_list;
-
-/*-----------------------------------------------------------------------------
-|  Creates a new trait method instance:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-create_trait_method ( PyObject * name, PyObject * func, PyObject * self,
-                      PyObject * traits,PyObject * class_obj ) {
-
-        register trait_method_object * im;
-
-        assert( PyCallable_Check( func ) );
-
-        im = free_list;
-        if ( im != NULL ) {
-                free_list = (trait_method_object *)(im->tm_self);
-                PyObject_INIT( im, &trait_method_type );
-        } else {
-        // fixme: Should we use this form of New if the other 'fixme's are
-        // commented out?...
-                im = PyObject_GC_New( trait_method_object, &trait_method_type );
-                if ( im == NULL )
-                        return NULL;
-        }
-        im->tm_weakreflist = NULL;
-        Py_INCREF( name );
-        im->tm_name = name;
-        Py_INCREF( func );
-        im->tm_func = func;
-        Py_XINCREF( self );
-        im->tm_self = self;
-        Py_INCREF( traits );
-        im->tm_traits = traits;
-        Py_XINCREF( class_obj );
-        im->tm_class = class_obj;
-    // fixme: The following line doesn't link into a separate DLL:
-        //_PyObject_GC_TRACK( im );
-        return (PyObject *) im;
-}
-
-/*-----------------------------------------------------------------------------
-|  Gets the value of a trait method attribute:
-|
-|  The getattr() implementation for trait method objects is similar to
-|  PyObject_GenericGetAttr(), but instead of looking in __dict__ it
-|  asks tm_self for the attribute.  Then the error handling is a bit
-|  different because we want to preserve the exception raised by the
-|  delegate, unless we have an alternative from our class.
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-trait_method_getattro ( PyObject * obj, PyObject * name ) {
-
-        trait_method_object *im = (trait_method_object *) obj;
-        PyTypeObject * tp       = obj->ob_type;
-        PyObject     * descr    = NULL, * res;
-        descrgetfunc f          = NULL;
-
-        if ( PyType_HasFeature( tp, Py_TPFLAGS_HAVE_CLASS ) ) {
-                if ( tp->tp_dict == NULL ) {
-                        if ( PyType_Ready(tp) < 0 )
-                                return NULL;
-                }
-                descr = _PyType_Lookup( tp, name );
-        }
-
-        f = NULL;
-        if ( descr != NULL ) {
-                f = TP_DESCR_GET( descr->ob_type );
-                if ( (f != NULL) && PyDescr_IsData( descr ) )
-                        return f( descr, obj, (PyObject *) obj->ob_type );
-        }
-
-        res = PyObject_GetAttr( im->tm_func, name );
-        if ( (res != NULL) || !PyErr_ExceptionMatches( PyExc_AttributeError ) )
-                return res;
-
-        if ( f != NULL ) {
-                PyErr_Clear();
-                return f( descr, obj, (PyObject *) obj->ob_type );
-        }
-
-        if ( descr != NULL ) {
-                PyErr_Clear();
-                Py_INCREF( descr );
-                return descr;
-        }
-
-        assert( PyErr_Occurred() );
-        return NULL;
-}
-
-/*-----------------------------------------------------------------------------
-|  Creates a new trait method:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-trait_method_new ( PyTypeObject * type, PyObject * args, PyObject * kw ) {
-
-        PyObject * name;
-        PyObject * func;
-    PyObject * traits;
-
-        if ( !PyArg_UnpackTuple( args, "traitmethod", 3, 3,
-                             &name, &func, &traits ) )
-                return NULL;
-        if ( !PyCallable_Check( func ) ) {
-                PyErr_SetString( PyExc_TypeError, "second argument must be callable" );
-                return NULL;
-        }
-    // fixme: Should we sanity check the 'traits' argument here?...
-        return create_trait_method( name, func, NULL, traits, NULL );
-}
-
-/*-----------------------------------------------------------------------------
-|  Deallocates a trait method:
-+----------------------------------------------------------------------------*/
-
-static void
-trait_method_dealloc ( register trait_method_object * tm ) {
-
-    // fixme: The following line complements the _PyObject_GC_TRACK( im )
-    // line commented out above...
-        //_PyObject_GC_UNTRACK( tm );
-        if ( tm->tm_weakreflist != NULL )
-                PyObject_ClearWeakRefs( (PyObject *) tm );
-        Py_DECREF(  tm->tm_name );
-        Py_DECREF(  tm->tm_func );
-        Py_XDECREF( tm->tm_self );
-        Py_DECREF(  tm->tm_traits );
-        Py_XDECREF( tm->tm_class );
-        tm->tm_self = (PyObject *) free_list;
-        free_list   = tm;
-}
-
-/*-----------------------------------------------------------------------------
-|  Compare two trait methods:
-+----------------------------------------------------------------------------*/
-
-static int
-trait_method_compare ( trait_method_object * a, trait_method_object * b ) {
-
-        if ( a->tm_self != b->tm_self )
-                return (a->tm_self < b->tm_self) ? -1 : 1;
-        return PyObject_Compare( a->tm_func, b->tm_func );
-}
-
-/*-----------------------------------------------------------------------------
-|  Returns the string representation of a trait method:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-trait_method_repr ( trait_method_object * a ) {
-
-        PyObject * self     = a->tm_self;
-        PyObject * func     = a->tm_func;
-        PyObject * klass    = a->tm_class;
-        PyObject * funcname = NULL, * klassname  = NULL, * result = NULL;
-        char     * sfuncname = "?", * sklassname = "?";
-
-        funcname = PyObject_GetAttrString( func, "__name__" );
-        if ( funcname == NULL ) {
-                if ( !PyErr_ExceptionMatches( PyExc_AttributeError ) )
-                        return NULL;
-                PyErr_Clear();
-        } else if ( !PyString_Check( funcname ) ) {
-                Py_DECREF( funcname );
-                funcname = NULL;
-        } else
-                sfuncname = PyString_AS_STRING( funcname );
-
-        if ( klass == NULL )
-                klassname = NULL;
-        else {
-                klassname = PyObject_GetAttrString( klass, "__name__" );
-                if (klassname == NULL) {
-                        if ( !PyErr_ExceptionMatches( PyExc_AttributeError ) )
-                                return NULL;
-                        PyErr_Clear();
-                } else if ( !PyString_Check( klassname ) ) {
-                        Py_DECREF( klassname );
-                        klassname = NULL;
-                } else
-                        sklassname = PyString_AS_STRING( klassname );
-        }
-
-        if ( self == NULL )
-                result = PyString_FromFormat( "<unbound method %s.%s>",
-                                                          sklassname, sfuncname );
-        else {
-                /* fixme: Shouldn't use repr() here! */
-                PyObject * selfrepr = PyObject_Repr( self );
-                if ( selfrepr == NULL )
-                        goto fail;
-                if ( !PyString_Check( selfrepr ) ) {
-                        Py_DECREF( selfrepr );
-                        goto fail;
-                }
-                result = PyString_FromFormat( "<bound method %s.%s of %s>",
-                                                          sklassname, sfuncname,
-                                                          PyString_AS_STRING( selfrepr ) );
-                Py_DECREF( selfrepr );
-        }
-
-  fail:
-        Py_XDECREF( funcname );
-        Py_XDECREF( klassname );
-        return result;
-}
-
-
-/*-----------------------------------------------------------------------------
-|  Computes the hash of a trait method:
-+----------------------------------------------------------------------------*/
-
-static long
-trait_method_hash ( trait_method_object * a ) {
-
-        long x, y;
-        if ( a->tm_self == NULL )
-                x = PyObject_Hash( Py_None );
-        else
-                x = PyObject_Hash( a->tm_self );
-        if ( x == -1 )
-                return -1;
-        y = PyObject_Hash( a->tm_func );
-        if ( y == -1 )
-                return -1;
-        return x ^ y;
-}
-
-/*-----------------------------------------------------------------------------
-|  Garbage collector traversal method:
-+----------------------------------------------------------------------------*/
-
-static int
-trait_method_traverse ( trait_method_object * tm, visitproc visit,
-                        void * arg ) {
-
-    Py_VISIT( tm->tm_func );
-    Py_VISIT( tm->tm_self );
-    Py_VISIT( tm->tm_traits );
-    Py_VISIT( tm->tm_class );
-        return 0;
-}
-
-
-/*-----------------------------------------------------------------------------
-|  Garbage collector object clearing method:
-+----------------------------------------------------------------------------*/
-
-static int
-trait_method_clear ( trait_method_object * tm ) {
-
-    Py_CLEAR( tm->tm_func );
-    Py_CLEAR( tm->tm_self );
-    Py_CLEAR( tm->tm_traits );
-    Py_CLEAR( tm->tm_class );
-        return 0;
-}
-
-
-
-/*-----------------------------------------------------------------------------
-|  Returns the class name of the class:
-+----------------------------------------------------------------------------*/
-
-static void
-getclassname ( PyObject * class, char * buf, int bufsize ) {
-
-        PyObject * name;
-
-        assert( bufsize > 1 );
-        strcpy( buf, "?" ); /* Default outcome */
-        if ( class == NULL )
-                return;
-        name = PyObject_GetAttrString( class, "__name__" );
-        if ( name == NULL ) {
-                /* This function cannot return an exception: */
-                PyErr_Clear();
-                return;
-        }
-        if ( PyString_Check( name ) ) {
-                strncpy( buf, PyString_AS_STRING( name ), bufsize );
-                buf[ bufsize - 1 ] = '\0';
-        }
-        Py_DECREF( name );
-}
-
-/*-----------------------------------------------------------------------------
-|  Returns the class name of an instance:
-+----------------------------------------------------------------------------*/
-
-static void
-getinstclassname ( PyObject * inst, char * buf, int bufsize ) {
-
-        PyObject *class;
-
-        if ( inst == NULL ) {
-                assert( (bufsize > 0) && ((size_t) bufsize > strlen( "nothing" )) );
-                strcpy( buf, "nothing" );
-                return;
-        }
-
-        class = PyObject_GetAttrString( inst, "__class__" );
-        if ( class == NULL ) {
-                /* This function cannot return an exception */
-                PyErr_Clear();
-                class = (PyObject *)(inst->ob_type);
-                Py_INCREF( class );
-        }
-        getclassname( class, buf, bufsize );
-        Py_XDECREF( class );
-}
-
-/*-----------------------------------------------------------------------------
-|  Calls the trait methods and type checks the arguments and result:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-trait_method_call ( PyObject * meth, PyObject * arg, PyObject * kw ) {
-
-        PyObject     * class,  * result, * self, * new_arg, * func, * value = NULL,
-                 * traits, * valid_result, * name = NULL, * dv, * tkw, * tuple;
-    trait_object * trait;
-        int from, to, to_args, traits_len, ntraits, ti;
-
-    int nargs = PyTuple_GET_SIZE( arg );
-
-    /* Determine if this is an 'unbound' method call: */
-    if ( (self = trait_method_GET_SELF( meth )) == NULL ) {
-                char clsbuf[256];
-                char instbuf[256];
-                int  ok;
-
-        /* Unbound methods must be called with an instance of the class
-           (or a derived class) as first argument: */
-        from = 1;
-        class = trait_method_GET_CLASS( meth );
-        if (class == NULL) {
-            PyErr_Format(PyExc_TypeError,
-                         "unable to determine the class for the method %s",
-                         PyString_AS_STRING(trait_method_GET_NAME(meth)));
-            return NULL;
-        }
-        if ( nargs >= 1 ) {
-            self = PyTuple_GET_ITEM( arg, 0 );
-            assert( self != NULL );
-
-            ok = PyObject_IsInstance( self, class );
-            if ( ok > 0 ) {
-                to_args = nargs;
-                goto build_args;
-            } else if ( ok < 0 )
-                return NULL;
-        }
-        func = trait_method_GET_FUNCTION( meth );
-                getclassname( class, clsbuf, sizeof( clsbuf ) );
-                getinstclassname( self, instbuf, sizeof( instbuf ) );
-                PyErr_Format( PyExc_TypeError,
-                             "unbound method %s%s must be called with "
-                             "%s instance as first argument "
-                             "(got %s%s instead)",
-                 PyString_AS_STRING( trait_method_GET_NAME( meth ) ),
-                             PyEval_GetFuncDesc( func ),
-                             clsbuf, instbuf, (self == NULL)? "" : " instance" );
-                return NULL;
-        }
-    from    = 0;
-    to_args = nargs + 1;
-
-build_args:
-    /* Build the argument list, type checking all arguments as needed: */
-    traits     = trait_method_GET_TRAITS( meth );
-    traits_len = PyTuple_GET_SIZE( traits );
-    ntraits    = traits_len >> 1;
-    if ( to_args > ntraits )
-        return too_may_args_error( trait_method_GET_NAME( meth ),
-                                   ntraits, to_args );
-        new_arg = PyTuple_New( ntraits );
-        if ( new_arg == NULL )
-                return NULL;
-        Py_INCREF( self );
-        PyTuple_SET_ITEM( new_arg, 0, self );
-        for ( to = 1, ti = 3; from < nargs; to++, from++, ti += 2 ) {
-                value = PyTuple_GET_ITEM( arg, from );
-        assert( value != NULL );
-        name  = PyTuple_GET_ITEM( traits, ti );
-        trait = (trait_object *) PyTuple_GET_ITEM( traits, ti + 1 );
-        if ( kw != NULL ) {
-            if ( PyDict_GetItem( kw, name ) != NULL ) {
-                Py_DECREF( new_arg );
-                return dup_argument_error( trait, meth, from + 1, self,
-                                           name );
-            }
-        }
-        if ( trait->validate == NULL ) {
-            Py_INCREF( value );
-            PyTuple_SET_ITEM( new_arg, to, value );
-            continue;
-        }
-        value = trait->validate( trait, (has_traits_object *) self, name,
-                                 value );
-        if ( value != NULL ) {
-            PyTuple_SET_ITEM( new_arg, to, value );
-            continue;
-        }
-        Py_DECREF( new_arg );
-        return argument_error( trait, meth, from + 1, self, name,
-                               PyTuple_GET_ITEM( arg, from ) );
-        }
-
-    /* Substitute default values for any missing arguments: */
-    for ( ; ti < traits_len; to++, from++, ti += 2 ) {
-        trait = (trait_object *) PyTuple_GET_ITEM( traits, ti + 1 );
-        if ( kw != NULL ) {
-            name  = PyTuple_GET_ITEM( traits, ti );
-            value = PyDict_GetItem( kw, name );
-            if ( value != NULL ) {
-                if ( trait->validate != NULL ) {
-                    valid_result = trait->validate( trait,
-                                     (has_traits_object *) self, name, value );
-                    if ( valid_result == NULL ) {
-                        Py_DECREF( new_arg );
-                        return keyword_argument_error( trait, meth, self, name,
-                                                       value );
-                    }
-                    value = valid_result;
-                } else
-                    Py_INCREF( value );
-                PyTuple_SET_ITEM( new_arg, to, value );
-                if ( PyDict_DelItem( kw, name ) < 0 ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                continue;
-            }
-        }
-        switch ( trait->default_value_type ) {
-            case 0:
-                value = trait->default_value;
-                Py_INCREF( value );
-                break;
-            case 1:
-                Py_DECREF( new_arg );
-                return missing_argument_error( trait, meth, from + 1, self,
-                                              PyTuple_GET_ITEM( traits, ti ) );
-            case 2:
-                value = (PyObject *) self;
-                Py_INCREF( value );
-                break;
-            case 3:
-            case 5:
-                value = PySequence_List( trait->default_value );
-                if ( value == NULL ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                break;
-            case 4:
-            case 6:
-                value = PyDict_Copy( trait->default_value );
-                if ( value == NULL ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                break;
-            case 7:
-                dv  = trait->default_value;
-                tkw = PyTuple_GET_ITEM( dv, 2 );
-                if ( tkw == Py_None )
-                    tkw = NULL;
-                value = PyObject_Call( PyTuple_GET_ITEM( dv, 0 ),
-                                       PyTuple_GET_ITEM( dv, 1 ), tkw );
-                if ( value == NULL ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                break;
-            case 8:
-                if ( (tuple = PyTuple_New( 1 )) == NULL ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                PyTuple_SET_ITEM( tuple, 0, self );
-                Py_INCREF( self );
-                Py_INCREF( tuple );
-                value = PyObject_Call( trait->default_value, tuple, NULL );
-                Py_DECREF( tuple );
-                if ( value == NULL ) {
-                    Py_DECREF( new_arg );
-                    return NULL;
-                }
-                if ( trait->validate != NULL ) {
-                    result = trait->validate( trait,
-                                                         (has_traits_object *) self, name, value );
-                    Py_DECREF( value );
-                    if ( result == NULL ) {
-                        Py_DECREF( new_arg );
-                        return NULL;
-                    }
-                    value = result;
-                }
-                break;
-        }
-                PyTuple_SET_ITEM( new_arg, to, value );
-    }
-
-    /* Invoke the method: */
-        result = PyObject_Call( trait_method_GET_FUNCTION( meth ), new_arg, kw );
-        Py_DECREF( new_arg );
-
-    /* Type check the method result (if valid and it was requested): */
-    if ( result != NULL ) {
-        trait = (trait_object *) PyTuple_GET_ITEM( traits, 0 );
-        if ( trait->validate != NULL ) {
-            valid_result = trait->validate( trait, (has_traits_object *) self,
-                                            Py_None, result );
-            if ( valid_result != NULL ) {
-                Py_DECREF( result );
-                return valid_result;
-            }
-            invalid_result_error( trait, meth, self, result );
-            Py_DECREF( result );
-            return NULL;
-        }
-    }
-
-    /* Finally, return the result: */
-        return result;
-}
-
-/*-----------------------------------------------------------------------------
-|  'get' handler that converts from 'unbound' to 'bound' method:
-+----------------------------------------------------------------------------*/
-
-static PyObject *
-trait_method_descr_get ( PyObject * meth, PyObject * obj, PyObject * cls ) {
-
-        return create_trait_method( trait_method_GET_NAME( meth ),
-                                    trait_method_GET_FUNCTION( meth ),
-                                (obj == Py_None)? NULL: obj,
-                                trait_method_GET_TRAITS( meth ), cls );
-}
-
-/*-----------------------------------------------------------------------------
-|  Descriptors for trait method attributes:
-+----------------------------------------------------------------------------*/
-
-static PyMemberDef trait_method_memberlist[] = {
-    { "tm_name",     T_OBJECT,   OFF( tm_name ),    READONLY | RESTRICTED,
-      "the name of the method" },
-    { "tm_func",     T_OBJECT,   OFF( tm_func ),    READONLY | RESTRICTED,
-      "the function (or other callable) implementing a method" },
-    { "tm_self",     T_OBJECT,   OFF( tm_self ),    READONLY | RESTRICTED,
-      "the instance to which a method is bound; None for unbound methods" },
-    { "tm_traits",   T_OBJECT,   OFF( tm_traits ),  READONLY | RESTRICTED,
-      "the traits associated with a method" },
-    { "tm_class",    T_OBJECT,   OFF( tm_class ),   READONLY | RESTRICTED,
-      "the class associated with a method" },
-    { NULL }    /* Sentinel */
-};
-
-/*-----------------------------------------------------------------------------
-|  'CTraitMethod' __doc__ string:
-+----------------------------------------------------------------------------*/
-
-PyDoc_STRVAR( trait_method_doc,
-"traitmethod(function, traits)\n\
-\n\
-Create a type checked instance method object.");
-
-/*-----------------------------------------------------------------------------
-|  'CTraitMethod' type definition:
-+----------------------------------------------------------------------------*/
-
-static PyTypeObject trait_method_type = {
-        PyObject_HEAD_INIT( DEFERRED_ADDRESS( &PyType_Type ) )
-        0,
-        "traitmethod",
-        sizeof( trait_method_object ),
-        0,
-        (destructor) trait_method_dealloc,               /* tp_dealloc */
-        0,                                               /* tp_print */
-        0,                                               /* tp_getattr */
-        0,                                               /* tp_setattr */
-        (cmpfunc) trait_method_compare,                  /* tp_compare */
-        (reprfunc) trait_method_repr,                    /* tp_repr */
-        0,                                               /* tp_as_number */
-        0,                                               /* tp_as_sequence */
-        0,                                               /* tp_as_mapping */
-        (hashfunc) trait_method_hash,                    /* tp_hash */
-        trait_method_call,                               /* tp_call */
-        0,                                               /* tp_str */
-        (getattrofunc) trait_method_getattro,            /* tp_getattro */
-    DEFERRED_ADDRESS( PyObject_GenericSetAttr ),     /* tp_setattro */
-        0,                                                                   /* tp_as_buffer */
-        Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_GC,         /* tp_flags */
-        trait_method_doc,                                /* tp_doc */
-        (traverseproc) trait_method_traverse,            /* tp_traverse */
-        (inquiry) trait_method_clear,                    /* tp_clear */
-        0,                                               /* tp_richcompare */
-        offsetof( trait_method_object, tm_weakreflist ), /* tp_weaklistoffset */
-        0,                                                               /* tp_iter */
-        0,                                                               /* tp_iternext */
-        0,                                                               /* tp_methods */
-    trait_method_memberlist,                         /* tp_members */
-        0,                                                               /* tp_getset */
-        0,                                                               /* tp_base */
-        0,                                                               /* tp_dict */
-        trait_method_descr_get,                              /* tp_descr_get */
-        0,                                                                   /* tp_descr_set */
-        0,                                                                   /* tp_dictoffset */
-        0,                                                                   /* tp_init */
-        0,                                                                   /* tp_alloc */
-        trait_method_new,                                        /* tp_new */
-};
-
-/*-----------------------------------------------------------------------------
 |  Performs module and type initialization:
 +----------------------------------------------------------------------------*/
 
-PyMODINIT_FUNC
-initctraits ( void ) {
+Py2to3_MOD_INIT(ctraits) {
+    PyObject * tmp;
 
-        PyObject * tmp;
+    /* Create the 'ctraits' module: */
+    PyObject * module;
 
-        /* Create the 'ctraits' module: */
-        PyObject * module = Py_InitModule3( "ctraits", ctraits_methods,
-                                        ctraits__doc__ );
-        if ( module == NULL )
-                return;
+    Py2to3_MOD_DEF(
+        module,
+        "ctraits",
+        ctraits__doc__,
+        ctraits_methods
+    );
 
-        /* Create the 'CHasTraits' type: */
-        has_traits_type.tp_base  = &PyBaseObject_Type;
-        has_traits_type.tp_alloc = PyType_GenericAlloc;
-        if ( PyType_Ready( &has_traits_type ) < 0 )
-                return;
+    if ( module == NULL )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &has_traits_type );
-        if ( PyModule_AddObject( module, "CHasTraits",
-                             (PyObject *) &has_traits_type ) < 0 )
-        return;
+    /* Create the 'CHasTraits' type: */
+    has_traits_type.tp_base  = &PyBaseObject_Type;
+    has_traits_type.tp_alloc = PyType_GenericAlloc;
+    if ( PyType_Ready( &has_traits_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        /* Create the 'CTrait' type: */
-        trait_type.tp_base  = &PyBaseObject_Type;
-        trait_type.tp_alloc = PyType_GenericAlloc;
-        trait_type.tp_new   = PyType_GenericNew;
-        if ( PyType_Ready( &trait_type ) < 0 )
-                return;
+    Py_INCREF( &has_traits_type );
+    if ( PyModule_AddObject( module, "CHasTraits",
+                         (PyObject *) &has_traits_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &trait_type );
-        if ( PyModule_AddObject( module, "cTrait",
-                             (PyObject *) &trait_type ) < 0 )
-        return;
+    /* Create the 'CTrait' type: */
+    trait_type.tp_base  = &PyBaseObject_Type;
+    trait_type.tp_alloc = PyType_GenericAlloc;
+    trait_type.tp_new   = PyType_GenericNew;
+    if ( PyType_Ready( &trait_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        /* Create the 'CTraitMethod' type: */
-        trait_method_type.tp_base     = &PyBaseObject_Type;
-        trait_method_type.tp_setattro = PyObject_GenericSetAttr;
-        if ( PyType_Ready( &trait_method_type ) < 0 )
-                return;
+    Py_INCREF( &trait_type );
+    if ( PyModule_AddObject( module, "cTrait",
+                         (PyObject *) &trait_type ) < 0 )
+       return Py2to3_MOD_ERROR_VAL;
 
-        Py_INCREF( &trait_method_type );
-        if ( PyModule_AddObject( module, "CTraitMethod",
-                             (PyObject *) &trait_method_type ) < 0 )
-        return;
+    /* Create the 'HasTraitsMonitor' list: */
+    tmp = PyList_New( 0 );
+    Py_INCREF( tmp );
+    if ( PyModule_AddObject( module, "_HasTraits_monitors",
+                             (PyObject*) tmp) < 0 ) {
+       return Py2to3_MOD_ERROR_VAL;
+    }
 
-        /* Create the 'HasTraitsMonitor' list: */
-        tmp = PyList_New( 0 );
-        Py_INCREF( tmp );
-        if ( PyModule_AddObject( module, "_HasTraits_monitors",
-                                 (PyObject*) tmp) < 0 ) {
-            return;
-        }
-
-        _HasTraits_monitors = tmp;
+    _HasTraits_monitors = tmp;
 
     /* Predefine a Python string == "__class_traits__": */
-    class_traits = PyString_FromString( "__class_traits__" );
+    class_traits = Py2to3_SimpleString_FromString( "__class_traits__" );
 
     /* Predefine a Python string == "__listener_traits__": */
-    listener_traits = PyString_FromString( "__listener_traits__" );
+    listener_traits = Py2to3_SimpleString_FromString( "__listener_traits__" );
 
     /* Predefine a Python string == "editor": */
-    editor_property = PyString_FromString( "editor" );
+    editor_property = Py2to3_SimpleString_FromString( "editor" );
 
     /* Predefine a Python string == "__prefix__": */
-    class_prefix = PyString_FromString( "__prefix__" );
+    class_prefix = Py2to3_SimpleString_FromString( "__prefix__" );
 
     /* Predefine a Python string == "trait_added": */
-    trait_added = PyString_FromString( "trait_added" );
+    trait_added = Py2to3_SimpleString_FromString( "trait_added" );
 
     /* Create an empty tuple: */
     empty_tuple = PyTuple_New( 0 );
@@ -5886,6 +5231,7 @@ initctraits ( void ) {
     empty_dict = PyDict_New();
 
     /* Create the 'is_callable' marker: */
-    is_callable = PyInt_FromLong( -1 );
-}
+    is_callable = Py2to3_PyNum_FromLong( -1 );
 
+    return Py2to3_MOD_SUCCESS_VAL(module);
+}
