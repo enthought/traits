@@ -25,7 +25,7 @@ from traits import trait_notifiers
 
 CHANGEMSG = (
     u"{time} {direction:-{direction}{length}} {name!r} changed from "
-    u"{old!r} to {new!r} in '{class_name}'\n")
+    u"{old!r} to {new!r} in {class_name!r}\n")
 CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
     u"{time} {direction:-{direction}{length}} "
