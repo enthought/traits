@@ -106,4 +106,6 @@ info:
 
 docset:
 	$(SPHINXBUILD) -b html -c source/docset_resources $(ALLSPHINXOPTS) $(BUILDDIR)/docset_html
+	@echo "Creating docset with doc2dash"
 	doc2dash -f -d $(BUILDDIR) -i $(BUILDDIR)/docset_html/_static/e-logo-rev.png -n Traits $(BUILDDIR)/docset_html
+	@echo "Traits docset is available in $(BUILDDIR)/Traits.docset"
