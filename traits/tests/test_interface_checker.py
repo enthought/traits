@@ -101,7 +101,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def foo(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -116,7 +116,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
         return
 
     def test_single_interface_with_missing_method(self):
@@ -131,7 +131,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -189,7 +189,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def baz(self, x):
                 pass
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -214,7 +214,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
             y = Int
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -245,7 +245,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def bar(self):
                 pass
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -305,7 +305,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def baz(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -328,7 +328,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
             y = Int
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -357,7 +357,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def bar(self):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 

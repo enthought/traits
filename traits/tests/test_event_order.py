@@ -35,7 +35,7 @@ class TestEventOrder(unittest.TestCase):
                 'Baz._effect_changed',
                 'Baz._caused_changed']
 
-        self.failUnlessEqual(self.events_delivered, lifo)
+        self.assertEqual(self.events_delivered, lifo)
         return
 
     def test_not_fifo_order(self):
@@ -43,7 +43,7 @@ class TestEventOrder(unittest.TestCase):
                 'Baz._caused_changed',
                 'Baz._effect_changed']
 
-        self.failIfEqual(self.events_delivered, fifo)
+        self.assertNotEqual(self.events_delivered, fifo)
         return
 
 

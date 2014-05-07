@@ -56,13 +56,13 @@ class ArgCheckSimple(ArgCheckBase):
 
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self)
+        self.tc.assertIs(object, self)
         self.tc.assertEqual(name, 'value')
         self.tc.assertEqual(new, self.value)
 
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self)
+        self.tc.assertIs(object, self)
         self.tc.assertEqual(name, 'value')
         self.tc.assertEqual(old, (self.value - 1))
         self.tc.assertEqual(new, self.value)
@@ -88,14 +88,14 @@ class ArgCheckDecorator(ArgCheckBase):
     @on_trait_change('value')
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self)
+        self.tc.assertIs(object, self)
         self.tc.assertEqual(name, 'value')
         self.tc.assertEqual(new, self.value)
 
     @on_trait_change('value')
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self)
+        self.tc.assertIs(object, self)
         self.tc.assertEqual(name, 'value')
         self.tc.assertEqual(old, (self.value - 1))
         self.tc.assertEqual(new, self.value)
@@ -132,14 +132,14 @@ class Instance1(HasTraits):
     @on_trait_change('ref.value')
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(new, self.exp_new)
 
     @on_trait_change('ref.value')
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(old, self.exp_old)
         self.tc.assertEqual(new, self.exp_new)
@@ -165,26 +165,26 @@ class List1(HasTraits):
     @on_trait_change('refs.value')
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         if self.type_new is None:
             self.tc.assertEqual(new, self.exp_new)
         else:
-            self.tc.assert_(isinstance(new, self.type_new))
+            self.tc.assertIsInstance(new, self.type_new)
 
     @on_trait_change('refs.value')
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         if self.type_old is None:
             self.tc.assertEqual(old, self.exp_old)
         else:
-            self.tc.assert_(isinstance(old, self.type_old))
+            self.tc.assertIsInstance(old, self.type_old)
         if self.type_new is None:
             self.tc.assertEqual(new, self.exp_new)
         else:
-            self.tc.assert_(isinstance(new, self.type_new))
+            self.tc.assertIsInstance(new, self.type_new)
 
 
 class List2(HasTraits):
@@ -284,13 +284,13 @@ class Complex(HasTraits):
 
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(new, self.exp_new)
 
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(old, self.exp_old)
         self.tc.assertEqual(new, self.exp_new)
@@ -330,13 +330,13 @@ class LinkTest(HasTraits):
 
     def arg_check3(self, object, name, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(new, self.exp_new)
 
     def arg_check4(self, object, name, old, new):
         self.calls += 1
-        self.tc.assert_(object is self.exp_object)
+        self.tc.assertIs(object, self.exp_object)
         self.tc.assertEqual(name, self.exp_name)
         self.tc.assertEqual(old, self.exp_old)
         self.tc.assertEqual(new, self.exp_new)
@@ -384,7 +384,7 @@ class OnTraitChangeTest(unittest.TestCase):
         ac.on_trait_change(ac.arg_check4, 'value')
         for i in range(3):
             ac.value += 1
-        self.assert_(ac.calls == (3 * 5))
+        self.assertEqual(ac.calls, (3 * 5))
         ac.on_trait_change(ac.arg_check0, 'value', remove=True)
         ac.on_trait_change(ac.arg_check1, 'value', remove=True)
         ac.on_trait_change(ac.arg_check2, 'value', remove=True)

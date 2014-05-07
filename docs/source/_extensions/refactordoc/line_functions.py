@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------
 #  file: line_functions.py
 #  License: LICENSE.TXT
@@ -23,7 +23,7 @@ NEW_LINE = ''
 
 
 #------------------------------------------------------------------------------
-#  Functions to manage indention
+#  Functions to manage indentation
 #------------------------------------------------------------------------------
 
 def add_indent(lines, indent=4):
@@ -70,11 +70,11 @@ def remove_indent(lines):
 
 
 def trim_indent(lines):
-    """ Trim global intention level from lines.
+    """ Trim global indentation level from lines.
 
     """
     non_empty_lines = filter(lambda x: not is_empty(x), lines)
-    indent = {len(get_indent(line)) for line in non_empty_lines}
+    indent = set(len(get_indent(line)) for line in non_empty_lines)
     indent.discard(0)
     global_indent = min(indent)
     return [line[global_indent:] for line in lines]

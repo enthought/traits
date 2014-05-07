@@ -649,7 +649,7 @@ dict_getitem ( PyDictObject * dict, PyObject *key ) {
 
     return (dict->ma_lookup)( dict, key, hash )->me_value;
 #else
-    return PyDict_GetItem(dict,key);
+    return PyDict_GetItem((PyObject *)dict,key);
 #endif
 }
 

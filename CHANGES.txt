@@ -1,8 +1,24 @@
 Traits CHANGELOG
 ================
 
-What's new in Traits 4.5.0
---------------------------
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+ * __iadd__ and __imul__ implemented on TraitListObjects (issue #152).
+
+Changes
+
+
+Fixes
+
+* Fixed incorrect in list events for `insert` operations with an index outside the
+  range [-len(target_list), len(target_list)]
+
+
+Release 4.5.0
+-------------
 
 Traits is now compatible with Python 3! The library now supports
 Python 3.2 and 3.3 .
@@ -10,22 +26,33 @@ Python 3.2 and 3.3 .
 The release also includes increased code coverage and automatic
 coverage report through coveralls.io .
 
-Change summary
-~~~~~~~~~~~~~~
+
+Change summary since 4.4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Enhancements
 
- * Test files cleanups (#108,#111)
- * Add automatic coverage reports (#110,#122)
- * Removed obsolete code (#112,#113)
- * Increased test coverage (#114)
- * Python 3 support (#115)
+ * Test files cleanups (#108, #111, #121)
+ * Add automatic coverage reports (#110, #122)
+ * Removed obsolete code (#109, #112, #113)
+ * Increased test coverage (#114, #118)
+ * Python 3 support (#115).  Thanks Yves Delley.
  * Allow setting and resetting the global adaptation manager (#145)
+ * Various documentation improvements (#132, #133, #148, #154).
+
+Changes
+
+ * The Int trait type now accepts Python ints *and* Python longs, as well as
+   instances of any Python type that implements the `__index__` method.
+   Previously, long instances were not accepted. (#104, #123).
 
 Fixes
 
+ * Fix crash when trying to validate a property that has been deleted. (#138)
  * Fix clearing exception when raising a TraitError (#119)
- * Fix automatic adaptation when Assigning to List trait (#147)
+ * Fix automatic adaptation when assigning to List trait (#147)
+ * Fix some ctraits refcounting and exception clearing bugs (#48).  Thanks Yves
+   Delley.
 
 
 Release 4.4.0
