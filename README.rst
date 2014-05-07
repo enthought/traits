@@ -50,5 +50,5 @@ Dependencies
 
 Traits has the following optional dependencies:
 
-* `Numpy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
+* `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
