@@ -61,7 +61,7 @@ class ChangeMessageRecord(object):
         self.old = old
         #: The new value.
         self.new = new
-        #: The name of the class that the trati change took place.
+        #: The name of the class that the trait change took place.
         self.class_name = class_name
 
     def __unicode__(self):
