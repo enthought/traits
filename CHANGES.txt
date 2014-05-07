@@ -6,6 +6,7 @@ Change summary since 4.5.0
 
 Enhancements
 
+ * Added Trait change recorder to aid in debugging event-driven code (#139).
  * __iadd__ and __imul__ implemented on TraitListObjects (issue #152).
 
 Changes

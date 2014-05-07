@@ -80,3 +80,10 @@
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`event_tracer` Module
+------------------------------
+
+.. automodule:: traits.util.event_tracer
+    :members:
+    :undoc-members:
