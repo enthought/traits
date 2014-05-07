@@ -5,7 +5,7 @@ Tracing Traits Change Events
 ============================
 
 Occasionally it is necessary to find the chain of event dispatches in traits
-classes. To help with debugging a |record_events| context manager is provided
+classes. To help with debugging, a |record_events| context manager is provided
 in mod:`traits.util.event_tracer`. Trait change events taking place inside the
 context block will be recorded in a change event container (see example below)
 and can be saved to files (a file for each thread) for further inspection.
