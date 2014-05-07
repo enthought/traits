@@ -87,3 +87,7 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+
+docset:
+	$(SPHINXBUILD) -b html -c source/docset_resources $(ALLSPHINXOPTS) $(BUILDDIR)/docset_html
+	doc2dash -f -d $(BUILDDIR) -i $(BUILDDIR)/docset_html/_static/e-logo-rev.png -n Traits $(BUILDDIR)/docset_html
