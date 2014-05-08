@@ -11,6 +11,7 @@ Enhancements
 
 Changes
 
+ * Remove outdated ImportSpy and ImportManager utilities (#188).
 
 Fixes
 
