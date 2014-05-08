@@ -2599,16 +2599,18 @@ class TraitListObject ( list ):
         else:
             self.len_error( len( self ) - 1 )
 
-    def sort ( self, cmp = None, key = None, reverse = False ):
-        removed = self[:]
-
-        if sys.version_info[0] >= 3:
-            if cmp is not None:
-                raise TypeError("'cmp' is an invalid keyword argument for this function")
-            list.sort( self, key = key, reverse = reverse )
-        else:
+    if sys.version_info[0] < 3:
+        def sort ( self, cmp = None, key = None, reverse = False ):
+            removed = self[:]
             list.sort( self, cmp = cmp, key = key, reverse = reverse )
+            self._sort_common(removed)
+    else:
+        def sort ( self, key = None, reverse = False ):
+            removed = self[:]
+            list.sort( self, key = key, reverse = reverse )
+            self._sort_common(removed)
 
+    def _sort_common ( self, removed ):
         if (getattr(self, 'name_items', None) is not None and
             getattr(self, 'trait', None) is not None):
             self._send_trait_items_event( self.name_items,
