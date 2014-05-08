@@ -80,7 +80,7 @@ class TestCopyTraitsSetup(CopyTraitsBase):
         self.assertIs(self.baz2.shared, self.shared2)
 
 
-class CopyTraits:
+class CopyTraits(object):
 
     def test_baz2_s(self):
         self.assertEqual(self.baz2.s, 'baz')
@@ -116,7 +116,7 @@ class CopyTraits:
         self.assertIsNot(self.baz2.bar.foo, self.baz.bar.foo)
 
 
-class CopyTraitsSharedCopyNone:
+class CopyTraitsSharedCopyNone(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is not the same object as the source.
@@ -209,7 +209,7 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
         return
 
 
-class CopyTraitsSharedCopyRef:
+class CopyTraitsSharedCopyRef(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is the same object as the source.
