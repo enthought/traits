@@ -37,8 +37,8 @@ class TraitIntRangeLong(unittest.TestCase):
         a = A()
         a.r = 256
         a.r = 20L
-        self.assertRaises(TraitError, a.set, r=1L)
-        self.assertRaises(TraitError, a.set, r=9223372036854775808L)
+        self.assertRaises(TraitError, a.trait_set, r=1L)
+        self.assertRaises(TraitError, a.trait_set, r=9223372036854775808L)
 
 if __name__ == '__main__':
     unittest.main()

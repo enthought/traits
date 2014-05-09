@@ -528,12 +528,12 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_pattern_list5(self):
         c = Complex(tc=self)
         c.on_trait_change(c.arg_check1, 'ref.[int1,int2,int3]')
-        self.assertRaises(TraitError, c.set, ref=ArgCheckBase())
+        self.assertRaises(TraitError, c.trait_set, ref=ArgCheckBase())
 
     def test_pattern_list6(self):
         c = Complex(tc=self)
         c.on_trait_change(c.arg_check2, 'ref.[int1,int2,int3]')
-        self.assertRaises(TraitError, c.set, ref=ArgCheckBase())
+        self.assertRaises(TraitError, c.trait_set, ref=ArgCheckBase())
 
     def test_pattern_list7(self):
         c = Complex(tc=self)
@@ -672,7 +672,7 @@ class OnTraitChangeTest(unittest.TestCase):
         for i in range(3):
             self.assertEqual(l.refs[i].value, 0)
         refs = [ArgCheckBase(), ArgCheckBase(), ArgCheckBase()]
-        self.assertRaises(TraitError, l.set, refs=refs)
+        self.assertRaises(TraitError, l.trait_set, refs=refs)
         self.assertEqual(l.calls, 0)
         for i in range(3):
             self.assertEqual(l.refs[i].value, 0)
@@ -692,7 +692,7 @@ class OnTraitChangeTest(unittest.TestCase):
         for i in range(3):
             self.assertEqual(d.refs[i].value, 0)
         refs = {0: ArgCheckBase(), 1: ArgCheckBase(), 2: ArgCheckBase()}
-        self.assertRaises(TraitError, d.set, refs=refs)
+        self.assertRaises(TraitError, d.trait_set, refs=refs)
         self.assertEqual(d.calls, 0)
         for i in range(3):
             self.assertEqual(d.refs[i].value, 0)
