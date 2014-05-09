@@ -2575,12 +2575,12 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
-                listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler_ref = weakref.ref(lnw),
-                              type            = lnw.type,
-                              dispatch        = dispatch,
-                              priority        = priority,
-                              deferred        = deferred )
+                listener.trait_set( handler         = ListenerHandler( handler ),
+                                    wrapped_handler_ref = weakref.ref(lnw),
+                                    type            = lnw.type,
+                                    dispatch        = dispatch,
+                                    priority        = priority,
+                                    deferred        = deferred )
                 listener.register( self )
 
     # A synonym for 'on_trait_change'
