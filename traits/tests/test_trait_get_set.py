@@ -30,7 +30,7 @@ class TraitsObject(HasTraits):
 class ListHandler(logging.Handler):
 
     def __init__(self):
-        super(ListHandler, self).__init__()
+        logging.Handler.__init__(self)
         self.records = []
 
     def emit(self, record):
