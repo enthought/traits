@@ -378,8 +378,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         self.failUnlessRaises(InterfaceError, check_implements, Bar, IFoo, 2)
 
-        return
-
     # Make sure interfaces and adaptation etc still work with the 'HasTraits'
     # version of 'Interface'!
     def test_instance(self):
