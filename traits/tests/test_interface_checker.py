@@ -40,11 +40,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         return
 
-    def tearDown(self):
-        """ Called immediately after each test method has been called. """
-
-        return
-
     ###########################################################################
     # Tests.
     ###########################################################################
