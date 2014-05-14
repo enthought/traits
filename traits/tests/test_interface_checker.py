@@ -361,6 +361,30 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         return
 
+    def test_subclasses_with_wrong_signature_methods(self):
+        """ Subclasses with incorrect method signatures """
+
+        class IFoo(Interface):
+
+            def foo(self, argument):
+                pass
+
+        @provides(IFoo)
+        class Foo(HasTraits):
+
+            def foo(self, argument):
+                pass
+
+
+        class Bar(Foo):
+
+            def foo(self):
+                pass
+
+        self.failUnlessRaises(InterfaceError, check_implements, Bar, IFoo, 2)
+
+        return
+
     # Make sure interfaces and adaptation etc still work with the 'HasTraits'
     # version of 'Interface'!
     def test_instance(self):
