@@ -25,7 +25,7 @@ def deprecated(message):
             function_name = fn.__name__
 
             if (module_name, function_name) not in _cache:
-                logging.getLogger(module_name).warn(
+                logging.getLogger(module_name).warning(
                     'DEPRECATED: %s.%s, %s' % (
                         module_name, function_name, message
                     )
