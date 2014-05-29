@@ -16,7 +16,7 @@
 import sys
 import os
 
-# The docset version will use slightly different formatting rules
+# The docset build will use slightly different formatting rules
 BUILD_DOCSET = bool(os.environ.get('BUILD_DOCSET'))
 
 # If your extensions are in another directory, add it here. If the directory
