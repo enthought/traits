@@ -3,10 +3,12 @@
 # Traits documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul 22 10:52:03 2008.
 #
-# This file is execfile()d with the current directory set to its containing dir.
+# This file is execfile()d with the current directory set to its containing
+# dir.
 #
 # The contents of this file are pickled, so don't put values in the namespace
-# that aren't pickleable (module imports are okay, they're removed automatically).
+# that aren't pickleable (module imports are okay, they're removed
+# automatically).
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
@@ -22,12 +24,12 @@ sys.path.append(os.path.abspath('../../'))
 # General configuration
 # ---------------------
 
-# Add any Sphinx extension module names here, as strings. They can be extensions
-# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [ 'refactordoc',
-               'sphinx.ext.viewcode',
-               'sphinx.ext.autosummary',
-               'traits.util.trait_documenter']
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+extensions = ['refactordoc',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.autosummary',
+              'traits.util.trait_documenter']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -57,11 +59,12 @@ today_fmt = '%B %d, %Y'
 # List of documents that shouldn't be included in the build.
 #unused_docs = []
 
-# List of directories, relative to source directories, that shouldn't be searched
-# for source files.
+# List of directories, relative to source directories, that shouldn't be
+# searched for source files.
 #exclude_dirs = []
 
-# The reST default role (used for this markup: `text`) to use for all documents.
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
@@ -79,7 +82,7 @@ today_fmt = '%B %d, %Y'
 pygments_style = 'sphinx'
 
 # Options for the autodoc extension.
-autodoc_default_flags =['members']
+autodoc_default_flags = ['members']
 
 autodoc_member_order = 'bysource'
 
@@ -162,7 +165,8 @@ htmlhelp_basename = 'Traitsdoc'
 #latex_font_size = '10pt'
 
 # Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title, author, document class [howto/manual]).
+# (source start file, target name, title, author,
+#  document class [howto/manual]).
 latex_documents = [
   ('index', 'Traits.tex', 'Traits 4 User Manual', 'Enthought, Inc.', 'manual'),
 ]
