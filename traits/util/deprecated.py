@@ -51,15 +51,9 @@ def clear_deprecation_cache():
     """ Clear the deprecation cache.
 
     We clean the traits deprecation cache, which is related to *logging*, not
-    warnings. We also remove each module in the cache from Python's
-    ``sys.modules`` cache, which is usually enough to clear the warnings cache.
+    warnings. Cleaning the ``warnings`` cache is not possible in a robust way.
     """
     global _cache
-
-    for module_name, function_name in _cache:
-        # The same module could be present multiple times, hence the default
-        # value.
-        sys.modules.pop(module_name, None)
     _cache = set()
 
 #### EOF ######################################################################
