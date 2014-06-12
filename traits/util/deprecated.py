@@ -4,7 +4,6 @@
 # Standard library imports.
 from functools import wraps
 import logging
-import sys
 import warnings
 
 
