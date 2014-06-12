@@ -1,8 +1,8 @@
 import logging
 from logging.handlers import BufferingHandler
-import unittest
 import warnings
 
+from traits.testing.unittest_tools import unittest
 from traits.util.deprecated import clear_deprecation_cache
 
 from .deprecated_things import Bar, Foo, func
