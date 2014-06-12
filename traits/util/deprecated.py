@@ -33,7 +33,7 @@ def deprecated(message):
                 logger.warning(txt)
 
                 _cache.add((module_name, function_name))
-                warnings.warn(message, DeprecationWarning)
+                warnings.warn(message, DeprecationWarning, stacklevel=2)
 
             return fn(*args, **kw)
 
