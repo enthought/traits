@@ -116,3 +116,4 @@ Fixes
  * `TraitSetObject.copy` now returns a plain rather than an
    uninitialized `TraitSetObject` instance. (#97)
  * Fix cyclic garbage arising from dynamic trait change handlers. (#101)
+ * Fix error when trying to listen to traits using list bracket notation (#195)
