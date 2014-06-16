@@ -373,10 +373,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         # Fail when the deprecation message is wrong
         with self.assertRaises(AssertionError):
-            self.assertDeprecated(deprecated_func, msg='wrong msg', args=(0, 0))
+            self.assertDeprecated(
+                deprecated_func, msg='wrong msg', args=(0, 0))
 
     def test_assert_deprecated_with_other_warning(self):
-        # Fail when the function raises a warning other than a DeprecationWarning
+        # Fail when the function raises a warning other than a
+        # DeprecationWarning
         def func():
             warnings.warn('', Warning)
 
