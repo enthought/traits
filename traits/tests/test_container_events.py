@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------
 
 """
-Tests for Dict and List items_changed events
+Tests for Dict items_changed events
 """
 
 from __future__ import absolute_import
@@ -21,11 +21,6 @@ from __future__ import absolute_import
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Dict
-
-
-class ListEventTestCase(unittest.TestCase):
-    # TODO: Implement this!
-    pass
 
 
 class MyClass(HasTraits):
