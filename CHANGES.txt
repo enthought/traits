@@ -17,6 +17,7 @@ Fixes
 
 * Fixed incorrect in list events for `insert` operations with an index outside the
   range [-len(target_list), len(target_list)]
+* Fix incorrect behaviour of check_implements for overridden methods. (#192)
 
 
 Release 4.5.0
