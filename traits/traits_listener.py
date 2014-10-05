@@ -32,7 +32,7 @@ from weakref import WeakKeyDictionary
 from string import whitespace
 from types import MethodType
 
-from .has_traits import HasPrivateTraits
+from .has_traits import HasPrivateTraits, HasTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
@@ -341,7 +341,7 @@ class ListenerItem ( ListenerBase ):
         """
         # Make sure we actually have an object to set listeners on and that it
         # has not already been registered (cycle breaking):
-        if (new is None) or (new is Undefined) or (new in self.active):
+        if (new is None) or (new is Undefined) or (new in self.active) or not isinstance(new, HasTraits):
             return INVALID_DESTINATION
 
         # Create a dictionary of {name: trait_values} that match the object's

@@ -81,3 +81,38 @@ def test_property_notifications():
     test_7.on_trait_change(on_value_changed, 'value')
     test_7.on_trait_change(on_anyvalue_changed)
     test_7.value = 'test 7'
+
+from traits.api import HasTraits, List, Int, cached_property, Property
+
+class Entity(HasTraits):
+    val = Int
+
+class WrongEntity(HasTraits):
+    val2 = Int
+
+class WithList(HasTraits):
+    mylist = List
+    prop = Property(depends_on='mylist[], mylist.val')
+
+    @cached_property
+    def _get_prop(self):
+        return sum(i.val for i in self.mylist if isinstance(i, Entity))
+
+def test_property_notification_with_lists():
+    v1 = Entity(val=1)
+    v2 = Entity(val=2)
+    sl = WithList()
+    assert sl.prop == 0
+
+    sl.mylist = [v1, v2]
+    assert sl.prop == 3
+
+    v3 = WrongEntity(val2=3)  #Entity without proper attribute should not trigger property notification
+    sl.mylist.append(v3)
+    assert sl.prop == 3
+
+    sl.mylist = [v1,v2, v3, 2] #please do not mind if non-HasTraits object is in list
+    assert sl.prop == 3
+
+    sl.mylist.append(v1)
+    assert sl.prop == 4
