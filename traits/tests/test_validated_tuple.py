@@ -1,13 +1,19 @@
+#------------------------------------------------------------------------------
 #
-# Enthought product code
+#  Copyright (c) 2007, Enthought, Inc.
+#  All rights reserved.
 #
-# (C) Copyright 2014 Enthought, Inc., Austin, TX
-# All right reserved.
+#  This software is provided without warranty under the terms of the BSD
+#  license included in enthought/LICENSE.txt and may be redistributed only
+#  under the conditions described in the aforementioned license.  The license
+#  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-# This file is confidential and NOT open source.  Do not distribute.
+#  Thanks for using Enthought open source!
 #
-import unittest
+#
+#------------------------------------------------------------------------------
 from traits.api import HasStrictTraits, Int, TraitError
+from traits.tests import test_tuple
 
 from geophysics.util.validated_tuple import ValidatedTuple
 
@@ -18,7 +24,7 @@ class Simple(HasStrictTraits):
         Int(0), Int(1), validation=lambda x: x[0] < x[1])
 
 
-class TestValidatedTuple(unittest.TestCase):
+class TestValidatedTuple(test_tuple.TestTuple):
 
     def test_initialization(self):
         simple = Simple()
@@ -30,17 +36,13 @@ class TestValidatedTuple(unittest.TestCase):
                 scalar_range = ValidatedTuple(
                     Int(1), Int(0), validation=lambda x: x[0] < x[1])
 
-    def test_normal_validation(self):
+    def test_custom_validation(self):
         simple = Simple()
 
+        # This should pass
         simple.scalar_range = (2, 5)
         self.assertEqual(simple.scalar_range, (2, 5))
 
         with self.assertRaises(TraitError):
-            simple.scalar_range = (2.0, 5)
-
-    def test_custom_validation(self):
-        simple = Simple()
-
-        with self.assertRaises(TraitError):
+            # This should raise
             simple.scalar_range = (5, 2)

@@ -15,7 +15,7 @@ class E(HasTraits):
     t2 = Tuple(*VALUES)
 
 
-class TupleTestCase(unittest.TestCase, UnittestTools):
+class TestTuple(unittest.TestCase, UnittestTools):
 
     def test_default_values(self):
         # Check that the default values for t1 and t2 are correctly
