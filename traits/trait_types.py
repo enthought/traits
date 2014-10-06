@@ -1012,7 +1012,7 @@ class Method ( TraitType ):
 
 if sys.version_info[0] < 3:
     from types import ClassType
-    
+
     class Class ( TraitType ):
         """ Defines a trait whose value must be an old-style Python class.
         """
@@ -2128,6 +2128,45 @@ class Tuple ( BaseTuple ):
         super( Tuple, self ).init_fast_validator( *args )
 
         self.fast_validate = args
+
+class ValidatedTuple(BaseTuple):
+    """ A Tuple trait that support custom validation.
+
+    Initializing the trait with a ``validation`` keyword set to a function
+    will define a custom validation to take place during the ``validate``
+    state of the Trait. The validation function should accept the tuple
+    value and return True/False for validation.
+
+    """
+
+    def __init__(self, *types, **metadata):
+        """ Returns a TupleFloatRange trait
+
+        """
+        if 'validation' not in metadata:
+            self.validation = None
+        super(ValidatedTuple, self).__init__(*types, **metadata)
+        self.validate(object, 'ValidateTuple', self.default_value)
+
+    def validate(self, object, name, value):
+        """ Validates that the value is a valid tuple.
+        """
+        try:
+            values = super(ValidatedTuple, self).validate(object, name, value)
+            # use the extra validation step if necessary.
+            if self.validation is None or self.validation(values):
+                return values
+        except Exception:  # This follows the traits logic and behaviour!
+            pass
+
+        self.error(object, name, value)
+
+    def full_info(self, object, name, value):
+        """ Returns a description of the trait.
+        """
+        return 'a tuple of the form: (%s) that passes custom validation' % (
+            ', '.join(
+                [type.full_info(object, name, value) for type in self.types]))
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
@@ -3403,7 +3442,7 @@ ListMethod = List( MethodType )
 
 if sys.version_info[0] < 3:
     from types import ClassType, InstanceType
-    
+
     #: List of class values; default value is [].
     ListClass = List( ClassType )
 
