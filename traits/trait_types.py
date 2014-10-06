@@ -2129,7 +2129,7 @@ class Tuple ( BaseTuple ):
 
         self.fast_validate = args
 
-class ValidatedTuple(BaseTuple):
+class ValidatedTuple( BaseTuple ):
     """ A Tuple trait that support custom validation.
 
     Initializing the trait with a ``validation`` keyword set to a function
@@ -2139,34 +2139,36 @@ class ValidatedTuple(BaseTuple):
 
     """
 
-    def __init__(self, *types, **metadata):
+    def __init__( self, *types, **metadata ):
         """ Returns a TupleFloatRange trait
 
         """
         if 'validation' not in metadata:
             self.validation = None
-        super(ValidatedTuple, self).__init__(*types, **metadata)
-        self.validate(object, 'ValidateTuple', self.default_value)
+        super( ValidatedTuple, self ).__init__( *types, **metadata )
+        self.validate( object, 'ValidateTuple', self.default_value )
 
-    def validate(self, object, name, value):
+    def validate( self, object, name, value ):
         """ Validates that the value is a valid tuple.
         """
         try:
-            values = super(ValidatedTuple, self).validate(object, name, value)
+            values = super(
+                ValidatedTuple, self ).validate( object, name, value )
             # use the extra validation step if necessary.
-            if self.validation is None or self.validation(values):
+            if self.validation is None or self.validation( values ):
                 return values
         except Exception:  # This follows the traits logic and behaviour!
             pass
 
-        self.error(object, name, value)
+        self.error( object, name, value )
 
-    def full_info(self, object, name, value):
+    def full_info( self, object, name, value ):
         """ Returns a description of the trait.
         """
         return 'a tuple of the form: (%s) that passes custom validation' % (
-            ', '.join(
-                [type.full_info(object, name, value) for type in self.types]))
+            ', '.join([
+                type.full_info( object, name, value )
+                for type in self.types ]))
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
