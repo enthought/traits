@@ -2151,10 +2151,8 @@ class ValidatedTuple( BaseTuple ):
     def validate( self, object, name, value ):
         """ Validates that the value is a valid tuple.
         """
+        values = super(ValidatedTuple, self ).validate( object, name, value )
         try:
-            values = super(
-                ValidatedTuple, self ).validate( object, name, value )
-            # use the extra validation step if necessary.
             if self.validation is None or self.validation( values ):
                 return values
         except Exception:  # This follows the traits logic and behaviour!
