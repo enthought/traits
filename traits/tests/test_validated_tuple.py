@@ -10,13 +10,9 @@
 #
 #  Thanks for using Enthought open source!
 #
-#
 #------------------------------------------------------------------------------
 from traits.api import HasStrictTraits, Int, TraitError
 from traits.tests import test_tuple
-
-from geophysics.util.validated_tuple import ValidatedTuple
-
 
 class Simple(HasStrictTraits):
 
