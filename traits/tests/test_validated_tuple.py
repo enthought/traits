@@ -13,6 +13,7 @@
 #------------------------------------------------------------------------------
 from traits.api import HasStrictTraits, Int, TraitError
 from traits.tests import test_tuple
+from traits.trait_types import ValidatedTuple
 
 class Simple(HasStrictTraits):
 
