@@ -2147,9 +2147,14 @@ class ValidatedTuple( BaseTuple ):
             A callable to provide the additional custom validation for the tuple.
             The callable will be passed the tuple value and should return
             True/False.
+        fvalidate_info : string,
+            A string describing the custom validation to use for the error
+            messages.
         """
         if 'fvalidate' not in metadata:
             self.fvalidate = None
+        if 'fvalidate_info' not in metadata:
+            self.fvalidate_info = None
         super( ValidatedTuple, self ).__init__( *types, **metadata )
         self.validate( object, 'ValidateTuple', self.default_value )
 
@@ -2167,10 +2172,16 @@ class ValidatedTuple( BaseTuple ):
     def full_info( self, object, name, value ):
         """ Returns a description of the trait.
         """
-        return 'a tuple of the form: (%s) that passes custom validation' % (
-            ', '.join([
-                type.full_info( object, name, value )
-                for type in self.types ]))
+
+        message = 'a tuple of the form: ({0}) that passes custom validation{1}'
+        types_info = ', '.join( [ type_.full_info( object, name, value )
+                                  for type_ in self.types ] )
+        if self.fvalidate_info is not None:
+            fvalidate_info = ': {0}'.format(self.fvalidate_info)
+        else:
+            fvalidate_info = ''
+        return message.format(types_info, fvalidate_info)
+
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
