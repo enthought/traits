@@ -159,7 +159,7 @@ class BaseInt ( TraitType ):
     info_text = 'an integer (int or long)'
 
     def validate ( self, object, name, value ):
-        """ Validates that a specified value is valid for this trait.
+        """ Validate that a specified value is valid for this trait.
         """
         if type(value) is int:
             return value
@@ -2149,6 +2149,16 @@ class ValidatedTuple( BaseTuple ):
         fvalidate_info : string,
             A string describing the custom validation to use for the error
             messages.
+
+        Example
+        -------
+
+        Defining a trait as follows::
+
+            value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
+
+        Will accept only tuples containing two integers (a, b) that satisfy a < b.
+
         """
         if 'fvalidate' not in metadata:
             self.fvalidate = None
