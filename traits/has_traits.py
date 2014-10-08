@@ -831,15 +831,14 @@ def _trait_monitor_index ( cls, handler ):
 #  'HasTraits' decorators:
 #-------------------------------------------------------------------------------
 
-def on_trait_change ( name, post_init = False, dispatch = 'same',
-                      priority = False ):
+def on_trait_change ( name, post_init = False, dispatch = 'same' ):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
 
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for
-        the *name* argument and the semantics of the *dispatch* and
-        *priority* keyword arguments.
+        the *name* argument and the semantics of the *dispatch* keyword
+        argument.
 
         A handler defined using this decorator is normally effective
         immediately. However, if *post_init* is **True**, then the handler only
@@ -851,8 +850,7 @@ def on_trait_change ( name, post_init = False, dispatch = 'same',
 
         function.on_trait_change = {'pattern': name,
                                     'post_init': post_init,
-                                    'dispatch': dispatch,
-                                    'priority': priority}
+                                    'dispatch': dispatch}
 
         return function
 
@@ -3277,8 +3275,7 @@ class HasTraits ( CHasTraits ):
                     self.on_trait_change( getattr( self, name ),
                                           config['pattern'],
                                           deferred = True,
-                                          dispatch=config['dispatch'],
-                                          priority=config['priority'])
+                                          dispatch=config['dispatch'])
 
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically
@@ -3295,8 +3292,7 @@ class HasTraits ( CHasTraits ):
         if not config['post_init']:
             self.on_trait_change( getattr( self, name ), config['pattern'],
                                   deferred = True,
-                                  dispatch=config['dispatch'],
-                                  priority=config['priority'])
+                                  dispatch=config['dispatch'])
 
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.

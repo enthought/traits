@@ -73,19 +73,15 @@ class DynamicNotifiers(HasTraits):
         self.exceptions_from.append(4)
         raise Exception('error')
 
-    @on_trait_change('priority_test')
     def low_priority_first(self):
         self.prioritized_notifications.append(0)
 
-    @on_trait_change('priority_test', priority=True)
     def high_priority_first(self):
         self.prioritized_notifications.append(1)
 
-    @on_trait_change('priority_test')
     def low_priority_second(self):
         self.prioritized_notifications.append(2)
 
-    @on_trait_change('priority_test', priority=True)
     def high_priority_second(self):
         self.prioritized_notifications.append(3)
 
@@ -229,6 +225,13 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         expected_high = set([1, 3])
         expected_low = set([0, 2])
+
+        obj.on_trait_change(obj.low_priority_first, 'priority_test')
+        obj.on_trait_change(obj.high_priority_first, 'priority_test',
+                            priority=True)
+        obj.on_trait_change(obj.low_priority_second, 'priority_test')
+        obj.on_trait_change(obj.high_priority_second, 'priority_test',
+                            priority=True)
 
         obj.priority_test = None
 
