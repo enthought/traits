@@ -831,7 +831,8 @@ def _trait_monitor_index ( cls, handler ):
 #  'HasTraits' decorators:
 #-------------------------------------------------------------------------------
 
-def on_trait_change ( name, post_init = False, dispatch='same' ):
+def on_trait_change ( name, post_init = False, dispatch = 'same',
+                      priority = False ):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
 
@@ -850,7 +851,8 @@ def on_trait_change ( name, post_init = False, dispatch='same' ):
 
         function.on_trait_change = {'pattern': name,
                                     'post_init': post_init,
-                                    'dispatch': dispatch}
+                                    'dispatch': dispatch,
+                                    'priority': priority}
 
         return function
 
@@ -3275,7 +3277,8 @@ class HasTraits ( CHasTraits ):
                     self.on_trait_change( getattr( self, name ),
                                           config['pattern'],
                                           deferred = True,
-                                          dispatch=config['dispatch'] )
+                                          dispatch=config['dispatch'],
+                                          priority=config['priority'])
 
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically
@@ -3293,7 +3296,8 @@ class HasTraits ( CHasTraits ):
         if not config['post_init']:
             self.on_trait_change( getattr( self, name ), config['pattern'],
                                   deferred = True,
-                                  dispatch=config['dispatch'] )
+                                  dispatch=config['dispatch'],
+                                  priority=config['priority'])
 
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.
