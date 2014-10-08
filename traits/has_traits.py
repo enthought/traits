@@ -831,27 +831,26 @@ def _trait_monitor_index ( cls, handler ):
 #  'HasTraits' decorators:
 #-------------------------------------------------------------------------------
 
-def on_trait_change ( name, post_init = False, *names ):
+def on_trait_change ( name, post_init = False, dispatch='same' ):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
 
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for
-        the *name(s)* argument.
+        the *name(s)* argument and the semantics of the *dispatch* keyword
+        argument.
 
         A handler defined using this decorator is normally effective
         immediately. However, if *post_init* is **True**, then the handler only
-        become effective after all object constructor arguments have been
+        becomes effective after all object constructor arguments have been
         processed. That is, trait values assigned as part of object construction
         will not cause the handler to be invoked.
     """
     def decorator ( function ):
-        prefix = '<'
-        if post_init:
-            prefix = '>'
 
-        function.on_trait_change = prefix + \
-                                   (','.join( [ name ] + list( names ) ))
+        function.on_trait_change = {'pattern': name,
+                                    'post_init': post_init,
+                                    'dispatch': dispatch}
 
         return function
 
@@ -3271,10 +3270,12 @@ class HasTraits ( CHasTraits ):
         """
         for name, data in self.__class__.__listener_traits__.items():
             if data[0] == 'method':
-                pattern = data[1]
-                if pattern[:1] == '>':
-                    self.on_trait_change( getattr( self, name ), pattern[1:],
-                                          deferred = True )
+                config = data[1]
+                if config['post_init']:
+                    self.on_trait_change( getattr( self, name ),
+                                          config['pattern'],
+                                          deferred = True,
+                                          dispatch=config['dispatch'] )
 
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically
@@ -3284,13 +3285,15 @@ class HasTraits ( CHasTraits ):
         for name, data in self.__class__.__listener_traits__.items():
             getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
 
-    def _init_trait_method_listener ( self, name, kind, pattern ):
+    def _init_trait_method_listener ( self, name, kind, config ):
         """ Sets up the listener for a method with the @on_trait_change
             decorator.
         """
-        if pattern[:1] == '<':
-            self.on_trait_change( getattr( self, name ), pattern[1:],
-                                  deferred = True )
+        print self, name, kind, config
+        if not config['post_init']:
+            self.on_trait_change( getattr( self, name ), config['pattern'],
+                                  deferred = True,
+                                  dispatch=config['dispatch'] )
 
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.
