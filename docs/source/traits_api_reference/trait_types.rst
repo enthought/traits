@@ -133,6 +133,8 @@ Traits
 
 .. autoclass:: Tuple
 
+.. autoclass:: ValidatedTuple
+
 .. autoclass:: List
 
 .. autoclass:: CList
@@ -219,4 +221,3 @@ Functions
 ---------
 
 .. autofunction:: default_text_editor
-
