@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,15 +10,16 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 from traits.api import HasStrictTraits, Int, TraitError
 from traits.tests import test_tuple
 from traits.trait_types import ValidatedTuple
 
+
 class Simple(HasStrictTraits):
 
     scalar_range = ValidatedTuple(
-        Int(0), Int(1), validation=lambda x: x[0] < x[1])
+        Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
 
 class TestValidatedTuple(test_tuple.TestTuple):
@@ -29,17 +30,34 @@ class TestValidatedTuple(test_tuple.TestTuple):
 
     def test_invalid_definition(self):
         with self.assertRaises(TraitError):
-            class InValidSimple(HasStrictTraits):
+            class InvalidSimple(HasStrictTraits):
                 scalar_range = ValidatedTuple(
-                    Int(1), Int(0), validation=lambda x: x[0] < x[1])
+                    Int(1),
+                    Int(0),
+                    fvalidate=lambda x: x[0] < x[1],
+                    fvalidate_info='x[0] < x[1]')
 
     def test_custom_validation(self):
         simple = Simple()
 
-        # This should pass
         simple.scalar_range = (2, 5)
         self.assertEqual(simple.scalar_range, (2, 5))
 
         with self.assertRaises(TraitError):
-            # This should raise
+            simple.scalar_range = (5, 2)
+
+    def test_error_during_custom_validation(self):
+
+        def fvalidate(x):
+            if x == (5, 2):
+                raise RuntimeError()
+            return True
+
+        class Simple(HasStrictTraits):
+
+            scalar_range = ValidatedTuple(Int(0), Int(1), fvalidate=fvalidate)
+
+        simple = Simple()
+
+        with self.assertRaises(RuntimeError):
             simple.scalar_range = (5, 2)
