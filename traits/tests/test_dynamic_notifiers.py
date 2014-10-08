@@ -227,11 +227,16 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         obj = DynamicNotifiers()
 
-        expected_sequence = [1, 3, 2, 0]
+        expected_high = set([1, 3])
+        expected_low = set([0, 2])
 
         obj.priority_test = None
 
-        self.assertListEqual(expected_sequence, obj.prioritized_notifications)
+        high = set(obj.prioritized_notifications[:2])
+        low = set(obj.prioritized_notifications[2:])
+
+        self.assertSetEqual(expected_high, high)
+        self.assertSetEqual(expected_low, low)
 
 
     def test_dynamic_notifiers_functions_failing(self):
