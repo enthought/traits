@@ -33,18 +33,29 @@ import thread
 from threading import Thread
 import time
 
-from traits.api import Float, HasTraits
+from traits.api import Callable, Float, HasTraits, on_trait_change
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
 
 
-class Foo(HasTraits):
+class CalledAsMethod(HasTraits):
     foo = Float
 
 
-class TestUINotifiers(unittest.TestCase):
-    """ Tests for dynamic notifiers with `dispatch='ui'`. """
+class CalledAsDecorator(HasTraits):
+    foo = Float
+
+    callback = Callable
+
+    @on_trait_change('foo', dispatch='ui')
+    def on_foo_change(self, obj, name, old, new):
+        self.callback(obj, name, old, new)
+
+
+class BaseTestUINotifiers(object):
+    """ Tests for dynamic notifiers with `dispatch='ui'`.
+    """
 
     #### 'TestCase' protocol ##################################################
 
@@ -69,8 +80,7 @@ class TestUINotifiers(unittest.TestCase):
         not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_main_thread(self):
 
-        obj = Foo()
-        obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
+        obj = self.obj_factory()
 
         obj.foo = 3
         self.flush_event_loop()
@@ -88,8 +98,7 @@ class TestUINotifiers(unittest.TestCase):
         not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_separate_thread(self):
 
-        obj = Foo()
-        obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
+        obj = self.obj_factory()
 
         # Set obj.foo to 3 on a separate thread.
         def set_foo_to_3(obj):
@@ -110,6 +119,23 @@ class TestUINotifiers(unittest.TestCase):
 
         ui_thread = trait_notifiers.ui_thread
         self.assertEqual(thread_id, ui_thread)
+
+
+class TestMethodUINotifiers(BaseTestUINotifiers, unittest.TestCase):
+    """ Tests for dynamic notifiers with `dispatch='ui'` set by method call.
+    """
+
+    def obj_factory(self):
+        obj = CalledAsMethod()
+        obj.on_trait_change(self.on_foo_notifications, 'foo', dispatch='ui')
+        return obj
+
+
+class TestDecoratorUINotifiers(BaseTestUINotifiers, unittest.TestCase):
+    """ Tests for dynamic notifiers with `dispatch='ui'` set by decorator. """
+
+    def obj_factory(self):
+        return CalledAsDecorator(callback=self.on_foo_notifications)
 
 
 if __name__ == '__main__':
