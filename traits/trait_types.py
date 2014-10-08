@@ -2140,13 +2140,12 @@ class ValidatedTuple( BaseTuple ):
         Parameters
         ----------
         types : zero or more arguments
-            Definition of the default and allowed tuples. If the first item of
-            *types* is a tuple, it is used as the default value. (see
+            Definition of the default and allowed tuples. (see
             :class:`~.BaseTuple` for more details)
         fvalidate : callable, optional
-            A callable to provide the additional custom validation for the tuple.
-            The callable will be passed the tuple value and should return
-            True/False.
+            A callable to provide the additional custom validation for the
+            tuple. The callable will be passed the tuple value and should
+            return True/False.
         fvalidate_info : string,
             A string describing the custom validation to use for the error
             messages.
@@ -3496,4 +3495,3 @@ DictStrBool = Dict( str, bool )
 #: Only a dictionary of string:list values can be assigned; only string keys
 #: with list values can be assigned. The default value is {}.
 DictStrList = Dict( str, list )
-
