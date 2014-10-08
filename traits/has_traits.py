@@ -838,8 +838,8 @@ def on_trait_change ( name, post_init = False, dispatch = 'same',
 
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for
-        the *name(s)* argument and the semantics of the *dispatch* keyword
-        argument.
+        the *name(s)* argument and the semantics of the *dispatch* and 
+        *priority* keyword arguments.
 
         A handler defined using this decorator is normally effective
         immediately. However, if *post_init* is **True**, then the handler only
