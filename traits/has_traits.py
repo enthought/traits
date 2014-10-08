@@ -3275,7 +3275,7 @@ class HasTraits ( CHasTraits ):
                     self.on_trait_change( getattr( self, name ),
                                           config['pattern'],
                                           deferred = True,
-                                          dispatch=config['dispatch'])
+                                          dispatch=config['dispatch'] )
 
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically
@@ -3290,9 +3290,10 @@ class HasTraits ( CHasTraits ):
             decorator.
         """
         if not config['post_init']:
-            self.on_trait_change( getattr( self, name ), config['pattern'],
+            self.on_trait_change( getattr( self, name ),
+                                  config['pattern'],
                                   deferred = True,
-                                  dispatch=config['dispatch'])
+                                  dispatch=config['dispatch'] )
 
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.
