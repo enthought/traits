@@ -3292,7 +3292,6 @@ class HasTraits ( CHasTraits ):
         """ Sets up the listener for a method with the @on_trait_change
             decorator.
         """
-        print self, name, kind, config
         if not config['post_init']:
             self.on_trait_change( getattr( self, name ), config['pattern'],
                                   deferred = True,
