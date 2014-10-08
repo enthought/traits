@@ -2130,21 +2130,26 @@ class Tuple ( BaseTuple ):
         self.fast_validate = args
 
 class ValidatedTuple( BaseTuple ):
-    """ A Tuple trait that support custom validation.
-
-    Initializing the trait with a ``validation`` keyword set to a function
-    will define a custom validation to take place during the ``validate``
-    state of the Trait. The validation function should accept the tuple
-    value and return True/False for validation.
+    """ A Tuple trait that supports custom validation.
 
     """
 
     def __init__( self, *types, **metadata ):
-        """ Returns a TupleFloatRange trait
+        """ Returns a ValidatedTuple trait
 
+        Parameters
+        ----------
+        types : zero or more arguments
+            Definition of the default and allowed tuples. If the first item of
+            *types* is a tuple, it is used as the default value. (see
+            :class:`~.BaseTuple` for more details)
+        fvalidate : callable, optional
+            A callable to provide the additional custom validation for the tuple.
+            The callable will be passed the tuple value and should return
+            True/False.
         """
-        if 'validation' not in metadata:
-            self.validation = None
+        if 'fvalidate' not in metadata:
+            self.fvalidate = None
         super( ValidatedTuple, self ).__init__( *types, **metadata )
         self.validate( object, 'ValidateTuple', self.default_value )
 
