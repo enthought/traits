@@ -3,7 +3,7 @@ import gc
 
 from traits import _py2to3
 
-from traits.api import Float, HasTraits, List, on_trait_change
+from traits.api import Event, Float, HasTraits, List, on_trait_change
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
@@ -13,6 +13,7 @@ class DynamicNotifiers(HasTraits):
 
     ok = Float
     fail = Float
+    priority_test = Event
 
     # Lists where we accumulate the arguments of calls to the traits notifiers.
     rebind_calls_0 = List
@@ -21,6 +22,7 @@ class DynamicNotifiers(HasTraits):
     rebind_calls_3 = List
     rebind_calls_4 = List
     exceptions_from = List
+    prioritized_notifications = List
 
     #### 'ok' trait listeners
 
@@ -71,6 +73,21 @@ class DynamicNotifiers(HasTraits):
         self.exceptions_from.append(4)
         raise Exception('error')
 
+    @on_trait_change('priority_test')
+    def low_priority_first(self):
+        self.prioritized_notifications.append(0)
+
+    @on_trait_change('priority_test', priority=True)
+    def high_priority_first(self):
+        self.prioritized_notifications.append(1)
+
+    @on_trait_change('priority_test')
+    def low_priority_second(self):
+        self.prioritized_notifications.append(2)
+
+    @on_trait_change('priority_test', priority=True)
+    def high_priority_second(self):
+        self.prioritized_notifications.append(3)
 
 # 'ok' function listeners
 
@@ -205,6 +222,17 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         expected_4 = [(obj, 'ok', 0, 2), (obj, 'ok', 2, 3)]
         self.assertEqual(expected_4, calls_4)
+
+    def test_priority_notifiers_first(self):
+
+        obj = DynamicNotifiers()
+
+        expected_sequence = [1, 3, 2, 0]
+
+        obj.priority_test = None
+
+        self.assertListEqual(expected_sequence, obj.prioritized_notifications)
+
 
     def test_dynamic_notifiers_functions_failing(self):
         obj = DynamicNotifiers()
