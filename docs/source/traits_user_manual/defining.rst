@@ -245,6 +245,15 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
+.. index:: Color(), CSet(), Constant(), Dict()
+.. index:: Directory(), Disallow, Either(), Enum()
+.. index:: Event(), Expression(), false, File(), Font()
+.. index:: Instance(), List(), Method(), Module()
+.. index:: Password(), Property(), Python()
+.. index:: PythonValue(), Range(), ReadOnly(), Regex()
+.. index:: RGBColor(), Set() String(), This,
+.. index:: ToolbarButton(), true, Tuple(), ValidatedTuple()
+.. index:: Type(), undefined, UUID(), WeakRef()
 
 .. _predefined-traits-beyond-simple-types-table:
 
@@ -274,17 +283,17 @@ the table.
 +------------------+----------------------------------------------------------+
 | Color            | Color( [\*\ *args*, \*\*\ *metadata*] )                  |
 +------------------+----------------------------------------------------------+
-| CSet             |CSet( [*trait* = None, *value* = None, *items* = True,    |
-|                  |\*\*\ *metadata*] )                                       |
+| CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | n/a              | Constant( *value*[, \*\*\ *metadata*] )                  |
 +------------------+----------------------------------------------------------+
-| Dict, DictStrAny,|Dict( [*key_trait* = None, *value_trait* = None,          |
-| DictStrBool,     |*value* = None, *items* = True, \*\*\ *metadata*] )       |
+| Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
+| DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
 | DictStrFloat,    |                                                          |
-| DictStrInt,      |.. index:: Color(), CSet(), Constant(), Dict()            |
-| DictStrList,     |.. index:: Directory(), Disallow, Either(), Enum()        |
-| DictStrLong,     |.. index:: Event(), Expression(), false, File(), Font()   |
+| DictStrInt,      |                                                          |
+| DictStrList,     |                                                          |
+| DictStrLong,     |                                                          |
 | DictStrStr       |                                                          |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
@@ -292,7 +301,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| n/a              |Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] ) |
+| n/a              | Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] )|
 +------------------+----------------------------------------------------------+
 | Enum             | Enum( *values*[, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
@@ -320,15 +329,15 @@ the table.
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List, ListBool,  |List([*trait* = None, *value* = None, *minlen* = 0,       |
-| ListClass,       |*maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*]) |
+| List, ListBool,  | List([*trait* = None, *value* = None, *minlen* = 0,      |
+| ListClass,       | *maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*])|
 | ListComplex,     |                                                          |
-| ListFloat,       |.. index:: Function(), Generic(), generic_trait, HTML()   |
-| ListFunction,    |.. index:: Instance(), List(), Method(), Module()         |
-| ListInstance,    |.. index:: Password(), Property(), Python(), PythonValue()|
-| ListInt,         |.. index:: Range(), ReadOnly(), Regex(), RGBColor(), Set()|
-| ListMethod,      |.. index:: String(), This, ToolbarButton(), true, Tuple() |
-| ListStr,         |.. index:: Type(), undefined, UUID(), WeakRef()           |
+| ListFloat,       |                                                          |
+| ListFunction,    |                                                          |
+| ListInstance,    |                                                          |
+| ListInt,         |                                                          |
+| ListMethod,      |                                                          |
+| ListStr,         |                                                          |
 | ListThis,        |                                                          |
 | ListUnicode      |                                                          |
 +------------------+----------------------------------------------------------+
@@ -376,6 +385,9 @@ the table.
 | true             | n/a                                                      |
 +------------------+----------------------------------------------------------+
 | Tuple            | Tuple( [\*\ *traits*, \*\*\ *metadata*] )                |
++------------------+----------------------------------------------------------+
+| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, fvalidate = None,         |
+|                  | fvalidate_info = '' , \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
@@ -690,4 +702,3 @@ the metadata attribute::
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
 .. [3] Available in Python 2.5.
-
