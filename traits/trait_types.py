@@ -2010,13 +2010,13 @@ class BaseTuple ( TraitType ):
 
         Default Value
         -------------
-         1. If no arguments are specified, the default value is ().
-         2. If a tuple is specified as the first argument, it is the default
-            value.
-         3. If a tuple is not specified as the first argument, the default
-            value is a tuple whose length is the length of the argument list,
-            and whose values are the default values for the corresponding trait
-            types.
+        1. If no arguments are specified, the default value is ().
+        2. If a tuple is specified as the first argument, it is the default
+           value.
+        3. If a tuple is not specified as the first argument, the default
+           value is a tuple whose length is the length of the argument list,
+           and whose values are the default values for the corresponding trait
+           types.
 
         Example for case #2::
 
@@ -2146,18 +2146,16 @@ class ValidatedTuple( BaseTuple ):
             A callable to provide the additional custom validation for the
             tuple. The callable will be passed the tuple value and should
             return True/False.
-        fvalidate_info : string,
+        fvalidate_info : string, optional
             A string describing the custom validation to use for the error
             messages.
 
-        Example
-        -------
+        For example::
 
-        Defining a trait as follows::
+          value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
-            value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
-
-        Will accept only tuples containing two integers (a, b) that satisfy a < b.
+        This definition will accept only tuples containing two integers (a, b)
+        that satisfy a < b.
 
         """
         if 'fvalidate' not in metadata:
