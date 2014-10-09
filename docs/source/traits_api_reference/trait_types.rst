@@ -130,10 +130,12 @@ Traits
 .. autoclass:: Enum
 
 .. autoclass:: BaseTuple
+   :special-members: __init__
 
 .. autoclass:: Tuple
 
 .. autoclass:: ValidatedTuple
+   :special-members: __init__
 
 .. autoclass:: List
 
