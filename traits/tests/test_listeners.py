@@ -27,7 +27,7 @@ import time
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Str, Int, Float, Any, Event
+from ..api import HasTraits, Str, Int, Float, Any, Event, Instance
 from ..api import push_exception_handler, pop_exception_handler
 
 
@@ -212,6 +212,61 @@ class TestRaceCondition(unittest.TestCase):
 
         self.assertNotIn('Exception', s.getvalue())
 
+class UnhashableHasTraits(HasTraits):
+    a = Any
+    def __eq__(self,other):
+        return (
+            (type(self) == type(other))
+            and (self.a == other.a)
+        )
+    # On python 3, __hash__ is implicitely set to None when a class
+    # defines __eq__ but not hash (see: https://docs.python.org/3/reference/datamodel.html#object.__hash__)
+    # On python 2, we need to do this manually to make this class unhashable.
+    __hash__ = None
+        
+
+class Container(HasTraits):
+    sub = Instance(UnhashableHasTraits)
+
+class TestUnhashableHasTraits(unittest.TestCase):
+    def setUp(self):
+        push_exception_handler(
+            handler=lambda *args: None,
+            reraise_exceptions=True,
+            main=True,
+            )
+
+    def tearDown(self):
+        pop_exception_handler()
+
+    def test_unhashable_is_unhashable(self):
+        obj = UnhashableHasTraits()
+        with self.assertRaises(TypeError):
+            hash(obj)
+        
+    def test_can_listen_to_unhashable(self):
+        obj = UnhashableHasTraits()
+        events = []
+        def obj_a_changed(new):
+            events.append(new)
+        obj.on_trait_change(obj_a_changed,'a')
+        obj.a = 3
+        self.assertSequenceEqual(events,[3])
+    
+    def test_unshashable_intermediate(self):
+        obj = Container(sub = UnhashableHasTraits(a=1))
+        events = []
+        def obj_sub_a_changed(new):
+            events.append(new)
+        def obj_sub_a2_changed(new):
+            events.append(new)
+        obj.on_trait_change(obj_sub_a_changed,'sub.a')
+        obj.sub.a = 2
+        # this one would raise an exception in traits 4.5.0, as the listener
+        # machinery would try to put 'obj' into a dict.
+        obj.sub = UnhashableHasTraits(a=3)
+        obj.sub.a = 4
+        self.assertSequenceEqual(events,[2,3,4])
 
 # Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':
