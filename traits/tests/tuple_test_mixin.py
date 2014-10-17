@@ -18,10 +18,10 @@ VALUES = ('value1', 33, None)
 
 
 class TupleTestMixin(UnittestTools):
-    """ A mixin class for tuple like traits.
+    """ A mixin class for testing tuple like traits.
 
-    TestCases should set the self.trait attribute during setUp in order for
-    the tests to run.
+    TestCases should set the self.trait attribute during setUp for the tests
+    to run.
 
     """
 
