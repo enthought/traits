@@ -2145,7 +2145,7 @@ class ValidatedTuple( BaseTuple ):
         fvalidate : callable, optional
             A callable to provide the additional custom validation for the
             tuple. The callable will be passed the tuple value and should
-            return True/False.
+            return True or False.
         fvalidate_info : string, optional
             A string describing the custom validation to use for the error
             messages.
