@@ -12,7 +12,8 @@
 #
 # -----------------------------------------------------------------------------
 from traits.api import HasStrictTraits, Int, TraitError
-from traits.tests import test_tuple
+from traits.testing.unittest_tools import unittest
+from traits.tests.tuple_test_mixin import TupleTestMixin
 from traits.trait_types import ValidatedTuple
 
 
@@ -22,20 +23,14 @@ class Simple(HasStrictTraits):
         Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
 
-class TestValidatedTuple(test_tuple.TestTuple):
+class ValidatedTupleTestCase(TupleTestMixin, unittest.TestCase):
+
+    def setUp(self):
+        self.trait = ValidatedTuple
 
     def test_initialization(self):
         simple = Simple()
         self.assertEqual(simple.scalar_range, (0, 1))
-
-    def test_invalid_definition(self):
-        with self.assertRaises(TraitError):
-            class InvalidSimple(HasStrictTraits):
-                scalar_range = ValidatedTuple(
-                    Int(1),
-                    Int(0),
-                    fvalidate=lambda x: x[0] < x[1],
-                    fvalidate_info='x[0] < x[1]')
 
     def test_custom_validation(self):
         simple = Simple()
