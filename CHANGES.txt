@@ -1,6 +1,25 @@
 Traits CHANGELOG
 ================
 
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+ * Added Trait change recorder to aid in debugging event-driven code (#139).
+ * __iadd__ and __imul__ implemented on TraitListObjects (issue #152).
+
+Changes
+
+ * Remove outdated ImportSpy and ImportManager utilities (#188).
+
+Fixes
+
+* Fixed incorrect in list events for `insert` operations with an index outside the
+  range [-len(target_list), len(target_list)]
+* Fix incorrect behaviour of check_implements for overridden methods. (#192)
+
+
 Release 4.5.0
 -------------
 
@@ -9,6 +28,7 @@ Python 3.2 and 3.3 .
 
 The release also includes increased code coverage and automatic
 coverage report through coveralls.io .
+
 
 Change summary since 4.4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,3 +117,4 @@ Fixes
  * `TraitSetObject.copy` now returns a plain rather than an
    uninitialized `TraitSetObject` instance. (#97)
  * Fix cyclic garbage arising from dynamic trait change handlers. (#101)
+ * Fix error when trying to listen to traits using list bracket notation (#195)

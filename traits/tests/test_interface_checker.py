@@ -40,11 +40,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         return
 
-    def tearDown(self):
-        """ Called immediately after each test method has been called. """
-
-        return
-
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -101,7 +96,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def foo(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -116,7 +111,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
         return
 
     def test_single_interface_with_missing_method(self):
@@ -131,7 +126,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         class Foo(HasTraits):
             pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IFoo, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IFoo, 2)
 
         return
 
@@ -189,7 +184,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def baz(self, x):
                 pass
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -214,7 +209,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
             y = Int
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -245,7 +240,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def bar(self):
                 pass
 
-        self.failUnlessRaises(
+        self.assertRaises(
             InterfaceError, check_implements, Foo, [IFoo, IBar, IBaz], 2
         )
 
@@ -305,7 +300,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def baz(self, x):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -328,7 +323,7 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             x = Int
             y = Int
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
 
@@ -357,9 +352,31 @@ class InterfaceCheckerTestCase(unittest.TestCase):
             def bar(self):
                 pass
 
-        self.failUnlessRaises(InterfaceError, check_implements, Foo, IBaz, 2)
+        self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
+
+    def test_subclasses_with_wrong_signature_methods(self):
+        """ Subclasses with incorrect method signatures """
+
+        class IFoo(Interface):
+
+            def foo(self, argument):
+                pass
+
+        @provides(IFoo)
+        class Foo(HasTraits):
+
+            def foo(self, argument):
+                pass
+
+
+        class Bar(Foo):
+
+            def foo(self):
+                pass
+
+        self.assertRaises(InterfaceError, check_implements, Bar, IFoo, 2)
 
     # Make sure interfaces and adaptation etc still work with the 'HasTraits'
     # version of 'Interface'!
