@@ -159,7 +159,7 @@ class BaseInt ( TraitType ):
     info_text = 'an integer (int or long)'
 
     def validate ( self, object, name, value ):
-        """ Validate that a specified value is valid for this trait.
+        """ Validates that a specified value is valid for this trait.
         """
         if type(value) is int:
             return value
