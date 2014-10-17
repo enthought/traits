@@ -1987,7 +1987,7 @@ class Enum ( BaseEnum ):
         self.fast_validate = args
 
 #-------------------------------------------------------------------------------
-#  'BaseTuple' and 'Tuple' traits:
+#  'BaseTuple' and 'Tuple' and 'ValidatedTuple' traits:
 #-------------------------------------------------------------------------------
 
 class BaseTuple ( TraitType ):
@@ -2131,7 +2131,6 @@ class Tuple ( BaseTuple ):
 
 class ValidatedTuple( BaseTuple ):
     """ A Tuple trait that supports custom validation.
-
     """
 
     def __init__( self, *types, **metadata ):
@@ -2156,7 +2155,6 @@ class ValidatedTuple( BaseTuple ):
 
         This definition will accept only tuples containing two integers (a, b)
         that satisfy a < b.
-
         """
         metadata.setdefault('fvalidate', None)
         metadata.setdefault('fvalidate_info', '')
@@ -2165,7 +2163,7 @@ class ValidatedTuple( BaseTuple ):
     def validate( self, object, name, value ):
         """ Validates that the value is a valid tuple.
         """
-        values = super(ValidatedTuple, self ).validate( object, name, value )
+        values = super( ValidatedTuple, self ).validate( object, name, value )
         # Exceptions in the fvalidate function will not result in a TraitError
         # but will be allowed to propagate up the frame stacks.
         if self.fvalidate is None or self.fvalidate( values ):
@@ -2176,7 +2174,6 @@ class ValidatedTuple( BaseTuple ):
     def full_info( self, object, name, value ):
         """ Returns a description of the trait.
         """
-
         message = 'a tuple of the form: ({0}) that passes custom validation{1}'
         types_info = ', '.join( [ type_.full_info( object, name, value )
                                   for type_ in self.types ] )
@@ -2185,7 +2182,6 @@ class ValidatedTuple( BaseTuple ):
         else:
             fvalidate_info = ''
         return message.format(types_info, fvalidate_info)
-
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
