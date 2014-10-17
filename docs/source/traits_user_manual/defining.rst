@@ -252,8 +252,8 @@ the table.
 .. index:: Password(), Property(), Python()
 .. index:: PythonValue(), Range(), ReadOnly(), Regex()
 .. index:: RGBColor(), Set() String(), This,
-.. index:: ToolbarButton(), true, Tuple(), ValidatedTuple()
-.. index:: Type(), undefined, UUID(), WeakRef()
+.. index:: ToolbarButton(), true, Tuple(), Type()
+.. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
 
 .. _predefined-traits-beyond-simple-types-table:
 
@@ -386,9 +386,6 @@ the table.
 +------------------+----------------------------------------------------------+
 | Tuple            | Tuple( [\*\ *traits*, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
-| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, fvalidate = None,         |
-|                  | fvalidate_info = '' , \*\*\ *metadata*] )                |
-+------------------+----------------------------------------------------------+
 | Type             | Type( [*value* = None, *klass* = None, *allow_none* =    |
 |                  | True, \*\*\ *metadata*] )                                |
 +------------------+----------------------------------------------------------+
@@ -398,6 +395,9 @@ the table.
 |                  | NoDefaultSpecified, \*\*\ *metadata*])                   |
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
++------------------+----------------------------------------------------------+
+| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, fvalidate = None,         |
+|                  | fvalidate_info = '' , \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | WeakRef          | WeakRef( [*klass* = 'traits.HasTraits',                  |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
