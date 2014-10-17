@@ -2161,7 +2161,6 @@ class ValidatedTuple( BaseTuple ):
         metadata.setdefault('fvalidate', None)
         metadata.setdefault('fvalidate_info', '')
         super( ValidatedTuple, self ).__init__( *types, **metadata )
-        self.validate( object, 'ValidateTuple', self.default_value )
 
     def validate( self, object, name, value ):
         """ Validates that the value is a valid tuple.
