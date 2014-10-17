@@ -2158,10 +2158,8 @@ class ValidatedTuple( BaseTuple ):
         that satisfy a < b.
 
         """
-        if 'fvalidate' not in metadata:
-            self.fvalidate = None
-        if 'fvalidate_info' not in metadata:
-            self.fvalidate_info = None
+        metadata.setdefault('fvalidate', None)
+        metadata.setdefault('fvalidate_info', '')
         super( ValidatedTuple, self ).__init__( *types, **metadata )
         self.validate( object, 'ValidateTuple', self.default_value )
 
