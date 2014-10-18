@@ -215,10 +215,7 @@ class TestRaceCondition(unittest.TestCase):
 class UnhashableHasTraits(HasTraits):
     a = Any
     def __eq__(self,other):
-        return (
-            (type(self) == type(other))
-            and (self.a == other.a)
-        )
+        return type(self) == type(other)
     # On python 3, __hash__ is implicitely set to None when a class
     # defines __eq__ but not hash (see: https://docs.python.org/3/reference/datamodel.html#object.__hash__)
     # On python 2, we need to do this manually to make this class unhashable.
