@@ -2129,6 +2129,7 @@ class Tuple ( BaseTuple ):
 
         self.fast_validate = args
 
+
 class ValidatedTuple( BaseTuple ):
     """ A Tuple trait that supports custom validation.
     """
