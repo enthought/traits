@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-from ..api import HasTraits, Property, List, Int, cached_property, Property
+from ..api import HasTraits, Property, List, Int, cached_property
 
 
 class Test(HasTraits):
