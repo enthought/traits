@@ -14,7 +14,7 @@
 
 from __future__ import absolute_import
 
-from ..api import HasTraits, Property
+from ..api import HasTraits, Property, List, Int, cached_property, Property
 
 
 class Test(HasTraits):
@@ -82,7 +82,6 @@ def test_property_notifications():
     test_7.on_trait_change(on_anyvalue_changed)
     test_7.value = 'test 7'
 
-from traits.api import HasTraits, List, Int, cached_property, Property
 
 class Entity(HasTraits):
     val = Int
