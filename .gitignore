@@ -11,3 +11,5 @@
 build/
 dist/
 docs/build/
+
+traits/_version.py
