@@ -2,7 +2,7 @@
 traits: explicitly typed attributes for Python
 ==============================================
 
-http://github.enthought.com/traits
+http://docs.enthought.com/traits
 
 .. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
    :target: https://travis-ci.org/enthought/traits
