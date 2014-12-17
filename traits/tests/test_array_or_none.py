@@ -57,6 +57,10 @@ class TestArrayOrNone(unittest.TestCase, UnittestTools):
         foo = Foo()
         self.assertIsNone(foo.maybe_array)
 
+    def test_explicit_default(self):
+        foo = Foo()
+        self.assertIsInstance(foo.maybe_array_with_default, numpy.ndarray)
+
     def test_setting_array_from_array(self):
         foo = Foo()
         test_array = numpy.arange(5)

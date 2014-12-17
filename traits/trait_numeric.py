@@ -122,23 +122,7 @@ class AbstractArray ( TraitType ):
                 raise TraitError, "shape should be a list or tuple"
 
         if value is None:
-            if dtype is None:
-                # Compatibility with the default of Traits 2.0
-                dt = int
-            else:
-                dt = dtype
-            if shape is None:
-                value = zeros( ( 0, ), dt )
-            else:
-                size = []
-                for item in shape:
-                    if item is None:
-                        item = 1
-                    elif type( item ) in SequenceTypes:
-                        # XXX: what is this supposed to do?
-                        item = item[0]
-                    size.append( item )
-                value = zeros( size, dt )
+            value = self._invent_default(dtype, shape)
 
         self.dtype  = dtype
         self.shape  = shape
@@ -259,6 +243,30 @@ class AbstractArray ( TraitType ):
         """
         return value.copy()
 
+    def _invent_default(self, dtype, shape):
+        """ Invent a suitable default value given a dtype and shape. """
+        from numpy import zeros
+
+        if dtype is None:
+            # Compatibility with the default of Traits 2.0
+            dt = int
+        else:
+            dt = dtype
+        if shape is None:
+            value = zeros( ( 0, ), dt )
+        else:
+            size = []
+            for item in shape:
+                if item is None:
+                    item = 1
+                elif type( item ) in SequenceTypes:
+                    # XXX: what is this supposed to do?
+                    item = item[0]
+                size.append( item )
+            value = zeros( size, dt )
+        return value
+
+
 #-------------------------------------------------------------------------------
 #  'Array' trait:
 #-------------------------------------------------------------------------------
@@ -374,4 +382,12 @@ class ArrayOrNone ( CArray ):
         return super(ArrayOrNone, self).validate(object, name, value)
 
     def get_default_value(self):
-        return (0, None)
+        dv = self.default_value
+        if dv is None:
+            return (0, None)
+        else:
+            return ( 7, ( self.copy_default_value,
+                          ( self.validate( None, None, dv ), ), None ) )
+
+    def _invent_default(self, dtype, shape):
+        return None
