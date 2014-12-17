@@ -122,7 +122,7 @@ class AbstractArray ( TraitType ):
                 raise TraitError, "shape should be a list or tuple"
 
         if value is None:
-            value = self._default_for_dtype_and_shape(dtype, shape)
+            value = self._default_for_dtype_and_shape( dtype, shape )
 
         self.dtype  = dtype
         self.shape  = shape
@@ -243,7 +243,7 @@ class AbstractArray ( TraitType ):
         """
         return value.copy()
 
-    def _default_for_dtype_and_shape(self, dtype, shape):
+    def _default_for_dtype_and_shape ( self, dtype, shape ):
         """ Invent a suitable default value for a given dtype and shape. """
         from numpy import zeros
 
@@ -372,17 +372,17 @@ class ArrayOrNone ( CArray ):
     """ A trait whose value may be either a NumPy array or None, with
         casting allowed.  The default is None.
     """
-    def __init__(self, *args, **metadata):
+    def __init__ ( self, *args, **metadata ):
         # Normally use object identity to detect array values changing:
         metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
-        super(ArrayOrNone, self).__init__(*args, **metadata)
+        super( ArrayOrNone, self ).__init__( *args, **metadata )
 
-    def validate(self, object, name, value):
+    def validate (self, object, name, value ):
         if value is None:
             return value
-        return super(ArrayOrNone, self).validate(object, name, value)
+        return super( ArrayOrNone, self ).validate( object, name, value )
 
-    def get_default_value(self):
+    def get_default_value ( self ):
         dv = self.default_value
         if dv is None:
             return ( 0, dv )
@@ -390,7 +390,7 @@ class ArrayOrNone ( CArray ):
             return ( 7, ( self.copy_default_value,
                           ( self.validate( None, None, dv ), ), None ) )
 
-    def _default_for_dtype_and_shape(self, dtype, shape):
+    def _default_for_dtype_and_shape ( self, dtype, shape ):
         # For ArrayOrNone, if no default is explicitly specified, we
         # always default to `None`.
         return None
