@@ -260,7 +260,8 @@ class AbstractArray ( TraitType ):
                 if item is None:
                     item = 1
                 elif type( item ) in SequenceTypes:
-                    # XXX: what is this supposed to do?
+                    # Given a (minimum-allowed-length, maximum-allowed_length)
+                    # pair for a particular axis, use the minimum.
                     item = item[0]
                 size.append( item )
             value = zeros( size, dt )
