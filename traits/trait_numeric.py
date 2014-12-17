@@ -80,7 +80,7 @@ class AbstractArray ( TraitType ):
             raise TraitError( "Using Array or CArray trait types requires the "
                               "numpy package to be installed." )
 
-        from numpy import array, asarray, ndarray, zeros
+        from numpy import asarray, ndarray
 
         # Mark this as being an 'array' trait:
         metadata[ 'array' ] = True
@@ -122,7 +122,7 @@ class AbstractArray ( TraitType ):
                 raise TraitError, "shape should be a list or tuple"
 
         if value is None:
-            value = self._invent_default(dtype, shape)
+            value = self._default_for_dtype_and_shape(dtype, shape)
 
         self.dtype  = dtype
         self.shape  = shape
@@ -243,8 +243,8 @@ class AbstractArray ( TraitType ):
         """
         return value.copy()
 
-    def _invent_default(self, dtype, shape):
-        """ Invent a suitable default value given a dtype and shape. """
+    def _default_for_dtype_and_shape(self, dtype, shape):
+        """ Invent a suitable default value for a given dtype and shape. """
         from numpy import zeros
 
         if dtype is None:
@@ -384,10 +384,12 @@ class ArrayOrNone ( CArray ):
     def get_default_value(self):
         dv = self.default_value
         if dv is None:
-            return (0, None)
+            return ( 0, dv )
         else:
             return ( 7, ( self.copy_default_value,
                           ( self.validate( None, None, dv ), ), None ) )
 
-    def _invent_default(self, dtype, shape):
+    def _default_for_dtype_and_shape(self, dtype, shape):
+        # For ArrayOrNone, if no default is explicitly specified, we
+        # always default to `None`.
         return None
