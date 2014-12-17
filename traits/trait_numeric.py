@@ -354,3 +354,23 @@ class CArray ( AbstractArray ):
         super( CArray, self ).__init__( dtype, shape, value, True,
                                         typecode = typecode, **metadata )
 
+
+#-------------------------------------------------------------------------------
+#  'ArrayOrNone' trait
+#-------------------------------------------------------------------------------
+
+class ArrayOrNone ( CArray ):
+    """ A trait whose value may be either a NumPy array or None, with
+        casting allowed.  The default is None.
+    """
+    def __init__(self, *args, **metadata):
+        metadata['comparison_mode'] = OBJECT_IDENTITY_COMPARE
+        super(ArrayOrNone, self).__init__(*args, **metadata)
+
+    def validate(self, object, name, value):
+        if value is None:
+            return value
+        return super(ArrayOrNone, self).validate(object, name, value)
+
+    def get_default_value(self):
+        return (0, None)
