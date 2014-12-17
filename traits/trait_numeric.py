@@ -364,7 +364,8 @@ class ArrayOrNone ( CArray ):
         casting allowed.  The default is None.
     """
     def __init__(self, *args, **metadata):
-        metadata['comparison_mode'] = OBJECT_IDENTITY_COMPARE
+        # Normally use object identity to detect array values changing:
+        metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
         super(ArrayOrNone, self).__init__(*args, **metadata)
 
     def validate(self, object, name, value):

@@ -28,7 +28,8 @@ else:
     numpy_available = True
 
 from traits.testing.unittest_tools import UnittestTools
-from ..api import ArrayOrNone, HasTraits, List, on_trait_change, TraitError
+from ..api import (ArrayOrNone, HasTraits, List, NO_COMPARE, on_trait_change,
+    TraitError)
 
 
 if numpy_available:
@@ -40,6 +41,10 @@ if numpy_available:
         maybe_float_array = ArrayOrNone(dtype=float)
 
         maybe_two_d_array = ArrayOrNone(shape=(None, None))
+
+        maybe_array_with_default = ArrayOrNone(value=[1, 2, 3])
+
+        maybe_array_no_compare = ArrayOrNone(comparison_mode=NO_COMPARE)
 
 
 @unittest.skipUnless(numpy_available, "numpy not available")
@@ -124,3 +129,16 @@ class TestArrayOrNone(unittest.TestCase, UnittestTools):
         # Set back to None; we should get an event.
         with self.assertTraitChanges(foo, 'maybe_array'):
             foo.maybe_array = None
+
+    def test_comparison_mode_override(self):
+        foo = Foo()
+        test_array = numpy.arange(-7, 2)
+
+        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+            foo.maybe_array_no_compare = None
+
+        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+            foo.maybe_array_no_compare = test_array
+
+        with self.assertTraitChanges(foo, 'maybe_array_no_compare'):
+            foo.maybe_array_no_compare = test_array
