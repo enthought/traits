@@ -370,11 +370,16 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             timeout=10.0,
         )
 
-    def test_issues_deprecation_warning(self):
+    def test_assert_deprecated(self):
         with self.assertDeprecated():
             old_and_dull()
 
-    def test_issues_deprecation_warning_when_already_issued(self):
+    def test_assert_deprecated_failures(self):
+        with self.assertRaises(self.failureException):
+            with self.assertDeprecated():
+                pass
+
+    def test_assert_deprecated_when_warning_already_issued(self):
         # Exercise a problematic case where previous calls to a function or
         # method that issues a DeprecationWarning have already polluted the
         # __warningregistry__.  For this, we need a single call-point to
