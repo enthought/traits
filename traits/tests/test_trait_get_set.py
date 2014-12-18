@@ -16,7 +16,7 @@ from contextlib import contextmanager
 import logging
 
 import traits.has_traits
-from traits.testing.unittest_tools import unittest
+from traits.testing.unittest_tools import unittest, UnittestTools
 
 from ..api import HasTraits, Str, Int
 
@@ -50,7 +50,7 @@ def catch_logs(module_name):
         logger.propagate = True
 
 
-class TestTraitGet(unittest.TestCase):
+class TestTraitGet(UnittestTools, unittest.TestCase):
 
     def test_trait_set(self):
         obj = TraitsObject()
@@ -67,42 +67,24 @@ class TestTraitGet(unittest.TestCase):
     def test_trait_set_deprecated(self):
         obj = TraitsObject()
 
-        with catch_logs(traits.has_traits.__name__) as handler:
+        with self.assertNotDeprecated():
             obj.trait_set(integer=1)
-        self.assertEqual(len(handler.records), 0)
 
-        with catch_logs(traits.has_traits.__name__) as handler:
+        with self.assertDeprecated():
             obj.set(string='foo')
 
         self.assertEqual(obj.string, 'foo')
         self.assertEqual(obj.integer, 1)
-
-        self.assertEqual(len(handler.records), 1)
-        record = handler.records[0]
-        self.assertEqual(
-            record.levelname, logging.getLevelName(logging.WARNING))
-        message = ('DEPRECATED: traits.has_traits.set, use '
-                   '"HasTraits.trait_set" instead')
-        self.assertEqual(record.getMessage(), message)
 
     def test_trait_get_deprecated(self):
         obj = TraitsObject()
         obj.string = 'foo'
         obj.integer = 1
 
-        with catch_logs(traits.has_traits.__name__) as handler:
+        with self.assertNotDeprecated():
             values = obj.trait_get('integer')
-        self.assertEqual(len(handler.records), 0)
         self.assertEqual(values, {'integer': 1})
 
-        with catch_logs(traits.has_traits.__name__) as handler:
+        with self.assertDeprecated():
             values = obj.get('string')
         self.assertEqual(values, {'string': 'foo'})
-
-        self.assertEqual(len(handler.records), 1)
-        record = handler.records[0]
-        self.assertEqual(
-            record.levelname, logging.getLevelName(logging.WARNING))
-        message = ('DEPRECATED: traits.has_traits.get, use '
-                   '"HasTraits.trait_get" instead')
-        self.assertEqual(record.getMessage(), message)
