@@ -10,6 +10,7 @@
 #------------------------------------------------------------------------------
 import threading
 import time
+import warnings
 
 from traits import _py2to3
 
@@ -17,6 +18,15 @@ from traits.testing.unittest_tools import unittest
 from traits.api import (Bool, Event, Float, HasTraits, Int, List,
                         on_trait_change)
 from traits.testing.api import UnittestTools
+from traits.util.api import deprecated
+
+
+@deprecated("This function is outdated. Use 'shiny' instead!")
+def old_and_dull():
+    """ A deprecated function, for use in assertIssuesDeprecationWarning tests.
+
+    """
+    pass
 
 
 class TestObject(HasTraits):
@@ -359,6 +369,24 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             trait='foo',
             timeout=10.0,
         )
+
+    def test_issues_deprecation_warning(self):
+        with self.assertIssuesDeprecationWarning():
+            old_and_dull()
+
+    def test_issues_deprecation_warning_when_already_issued(self):
+        # Exercise a problematic case where previous calls a function or method
+        # that issues a DeprecationWarning have already polluted the
+        # __warningregistry__.  For this, we need a single call-point to
+        # old_and_dull, since distinct call-points have separate entries in the
+        # warnings registries.
+        def old_and_dull_caller():
+            old_and_dull()
+
+        # Pollute the registry by pre-calling the function.
+        old_and_dull_caller()
+        with self.assertIssuesDeprecationWarning():
+            old_and_dull_caller()
 
 
 if __name__ == '__main__':

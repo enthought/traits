@@ -15,13 +15,14 @@ Classes.
 
 import contextlib
 import threading
+import sys
+import warnings
 
 from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
         Property, Str)
 from traits.util.async_trait_wait import wait_for_condition
 
 # Compatibility layer for Python 2.6: try loading unittest2
-import sys
 from traits import _py2to3
 if sys.version_info[:2] == (2, 6):
     import unittest2 as unittest
@@ -439,3 +440,22 @@ class UnittestTools(object):
             self.fail(
                 "Timed out waiting for condition. "
                 "At timeout, condition was {0}.".format(condition_at_timeout))
+
+    @contextlib.contextmanager
+    def assertIssuesDeprecationWarning(self):
+        """
+        Assert that the code inside the with block issues a DeprecationWarning.
+
+        """
+        # Ugly hack copied from the core Python code (see
+        # Lib/test/test_support.py) to reset the warnings registry
+        # for the module making use of this context manager.
+        registry = sys._getframe(2).f_globals.get('__warningregistry__')
+        if registry:
+            registry.clear()
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', DeprecationWarning)
+            yield w
+        self.assertGreater(len(w), 0, msg="Expected a DeprecationWarning, "
+                           "but none was issued")
