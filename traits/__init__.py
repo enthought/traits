@@ -1,9 +1,6 @@
 from __future__ import absolute_import
 
-try:
-    from ._version import full_version as __version__
-except ImportError:
-    __version__ = "no-built"
+from ._version import full_version as __version__
 
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
 import logging
