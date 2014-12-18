@@ -451,6 +451,9 @@ class UnittestTools(object):
         # Ugly hack copied from the core Python code (see
         # Lib/test/test_support.py) to reset the warnings registry
         # for the module making use of this context manager.
+        #
+        # Note that this hack is unnecessary in Python 3.4 and later; see
+        # http://bugs.python.org/issue4180 for the background.
         registry = sys._getframe(2).f_globals.get('__warningregistry__')
         if registry:
             registry.clear()
