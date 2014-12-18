@@ -39,7 +39,7 @@ class TestRecordContainers(unittest.TestCase):
         # save records
         container.save_to_file(self.filename)
 
-        with open(self.filename, 'Ur') as handle:
+        with open(self.filename, 'r') as handle:
             lines = handle.readlines()
         self.assertEqual(lines, ['\n'] * 7)
 
@@ -69,7 +69,7 @@ class TestRecordContainers(unittest.TestCase):
         container.save_to_directory(self.directory)
         for name in container._record_containers:
             filename = os.path.join(self.directory, '{0}.trace'.format(name))
-            with open(filename, 'Ur') as handle:
+            with open(filename, 'r') as handle:
                 lines = handle.readlines()
             self.assertEqual(lines, ['\n'])
 

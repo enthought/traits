@@ -3,7 +3,7 @@ import gc
 import sys
 
 from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import Bool, DelegatesTo, Instance, Int
+from ..trait_types import Bool, DelegatesTo, Instance, Int, List
 from ..testing.unittest_tools import unittest
 
 
@@ -53,6 +53,16 @@ class Presenter(HasTraits):
 
     def _get_y(self):
         return self.obj.x
+
+
+class ListUpdatesTest(HasTraits):
+    a = List
+    b = List
+    events_received = Int(0)
+
+    @on_trait_change('a[], b[]')
+    def _receive_events(self):
+        self.events_received += 1
 
 
 class TestRegression(unittest.TestCase):
@@ -105,6 +115,18 @@ class TestRegression(unittest.TestCase):
         self.assertEqual(len(ctrait._notifiers(1)), 1)
         del presenter
         self.assertEqual(len(ctrait._notifiers(1)), 0)
+
+    def test_init_list_depends(self):
+        """ Using two lists with bracket notation in extended name notation
+        should not raise an error.
+        """
+        list_test = ListUpdatesTest()
+        # Updates to list items and the list trait itself should be counted.
+        list_test.a.append(0)
+        list_test.b = [1, 2, 3]
+        list_test.b[0] = 0
+        self.assertEqual(list_test.events_received, 3)
+
 
 if __name__ == '__main__':
     unittest.main()

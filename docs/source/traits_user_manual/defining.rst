@@ -258,6 +258,9 @@ the table.
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
+| ArrayOrNone      | ArrayOrNone( [*dtype* = None, *shape* = None,            |
+|                  | *value* = None, *typecode* = None, \*\*\ *metadata*] )   |
++------------------+----------------------------------------------------------+
 | Button           | Button( [*label* = '', *image* = None, *style* =         |
 |                  | 'button', *orientation* = 'vertical', *width_padding* =  |
 |                  | 7, *height_padding* = 5, \*\*\ *metadata*] )             |
