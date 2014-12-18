@@ -395,6 +395,32 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertDeprecated():
             old_and_dull_caller()
 
+    def test_assert_not_deprecated(self):
+        with self.assertRaises(self.failureException):
+            with self.assertNotDeprecated():
+                old_and_dull()
+
+    def test_assert_not_deprecated_failures(self):
+        with self.assertNotDeprecated():
+            pass
+
+    def test_assert_not_deprecated_when_warning_already_issued(self):
+        # Exercise a problematic case where previous calls to a function or
+        # method that issues a DeprecationWarning have already polluted the
+        # __warningregistry__.  For this, we need a single call-point to
+        # old_and_dull, since distinct call-points have separate entries in
+        # __warningregistry__.
+        def old_and_dull_caller():
+            old_and_dull()
+
+        # Pollute the registry by pre-calling the function.
+        old_and_dull_caller()
+
+        # Check that we can still detect the DeprecationWarning.
+        with self.assertRaises(self.failureException):
+            with self.assertNotDeprecated():
+                old_and_dull_caller()
+
 
 if __name__ == '__main__':
     unittest.main()
