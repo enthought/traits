@@ -12,6 +12,10 @@ Enhancements
 Changes
 
  * Remove outdated ImportSpy and ImportManager utilities (#188).
+ * The ``deprecated`` decorator now issues a DeprecationWarning (using
+   the Python ``warnings`` module) rather than logging a warning via
+   the ``logging`` machinery.  It no longer tries to remember when
+   a warning has been previously issued.  (#220)
 
 Fixes
 
