@@ -19,6 +19,7 @@ Changes
   the Python ``warnings`` module) rather than logging a warning via
   the ``logging`` machinery.  It no longer tries to remember when
   a warning has been previously issued. (#220)
+* Deprecated ``HasTraits.get()`` and ``HasTraits.set()`` (#190).
 
 Fixes
 

@@ -338,7 +338,6 @@ class UnittestTools(object):
             for trait in traits_not_modified:
                 args.append(self.assertTraitDoesNotChange(obj, trait))
         return _py2to3.nested_context_mgrs(*args)
-        
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):
@@ -442,24 +441,41 @@ class UnittestTools(object):
                 "At timeout, condition was {0}.".format(condition_at_timeout))
 
     @contextlib.contextmanager
-    def assertDeprecated(self):
-        """
-        Assert that the code inside the with block is deprecated.  Intended
-        for testing uses of traits.util.deprecated.deprecated.
-
-        """
+    def _catch_warnings(self):
         # Ugly hack copied from the core Python code (see
         # Lib/test/test_support.py) to reset the warnings registry
         # for the module making use of this context manager.
         #
         # Note that this hack is unnecessary in Python 3.4 and later; see
         # http://bugs.python.org/issue4180 for the background.
-        registry = sys._getframe(2).f_globals.get('__warningregistry__')
+        registry = sys._getframe(4).f_globals.get('__warningregistry__')
         if registry:
             registry.clear()
 
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter('always', DeprecationWarning)
             yield w
+
+    @contextlib.contextmanager
+    def assertDeprecated(self):
+        """
+        Assert that the code inside the with block is deprecated.  Intended
+        for testing uses of traits.util.deprecated.deprecated.
+
+        """
+        with self._catch_warnings() as w:
+            yield w
         self.assertGreater(len(w), 0, msg="Expected a DeprecationWarning, "
                            "but none was issued")
+
+    @contextlib.contextmanager
+    def assertNotDeprecated(self):
+        """
+        Assert that the code inside the with block is not deprecated.  Intended
+        for testing uses of traits.util.deprecated.deprecated.
+
+        """
+        with self._catch_warnings() as w:
+            yield w
+        self.assertEqual(len(w), 0, msg="Expected no DeprecationWarning, "
+                         "but at least one was issued")
