@@ -10,13 +10,14 @@
 #------------------------------------------------------------------------------
 import threading
 import time
+import warnings
 
 from traits import _py2to3
-
-from traits.testing.unittest_tools import unittest
 from traits.api import (Bool, Event, Float, HasTraits, Int, List,
                         on_trait_change)
 from traits.testing.api import UnittestTools
+from traits.testing.unittest_tools import unittest
+from traits.util.deprecated import deprecated, clear_deprecation_cache
 
 
 class TestObject(HasTraits):
@@ -359,6 +360,37 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             trait='foo',
             timeout=10.0,
         )
+
+    def test_assert_deprecated(self):
+        @deprecated('deprecated function')
+        def deprecated_func(x, y=3):
+            """Function docstring."""
+
+        self.assertDeprecated(deprecated_func, msg='cated func', args=(0,))
+        clear_deprecation_cache()
+        self.assertDeprecated(deprecated_func, msg='cated func', args=(0,),
+                              kwargs={'y': 3})
+
+        # Fail when the deprecation message is wrong
+        with self.assertRaises(AssertionError):
+            self.assertDeprecated(
+                deprecated_func, msg='wrong msg', args=(0, 0))
+
+    def test_assert_deprecated_with_other_warning(self):
+        # Fail when the function raises a warning other than a
+        # DeprecationWarning
+        def func():
+            warnings.warn('', Warning)
+
+        with self.assertRaises(AssertionError):
+            self.assertDeprecated(func)
+
+    def test_assert_deprecated_when_not_deprecated(self):
+        def not_deprecated():
+            pass
+
+        with self.assertRaises(AssertionError):
+            self.assertDeprecated(not_deprecated)
 
 
 if __name__ == '__main__':

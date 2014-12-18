@@ -15,6 +15,7 @@ Classes.
 
 import contextlib
 import threading
+import warnings
 
 from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
         Property, Str)
@@ -188,6 +189,34 @@ class UnittestTools(object):
     related assert methods.
 
     """
+
+    def assertDeprecated(self, callable, msg='', args=None, kwargs=None):
+        """ Assert that a callable raises exactly one DeprecationWarning.
+
+        Parameters
+        ----------
+        callable : callable
+            The callable that
+        """
+        args = args if args is not None else []
+        kwargs = kwargs if kwargs is not None else {}
+
+        with warnings.catch_warnings(record=True) as all_warnings:
+            warnings.simplefilter('always')
+            callable(*args, **kwargs)
+
+        deprecation_warnings = [w for w in all_warnings
+                                if issubclass(w.category, DeprecationWarning)]
+
+        if len(deprecation_warnings) == 0:
+            msg = "No DeprecationWarnings raised."
+            raise self.failureException(msg)
+
+        if len(deprecation_warnings) > 1:
+            msg = "Too many DeprecationWarnings raised."
+            raise self.failureException(msg)
+
+        self.assertIn(msg, str(deprecation_warnings[0]))
 
     def assertTraitChanges(self, obj, trait, count=None, callableObj=None,
                            *args, **kwargs):
