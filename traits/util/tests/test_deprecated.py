@@ -20,7 +20,7 @@ def my_deprecated_addition(x, y):
     return x + y
 
 
-@deprecated("Broken code.  Use something else.")
+@deprecated("Broken code. Use something else.")
 def my_bad_function():
     1 / 0
 
@@ -30,10 +30,9 @@ class ClassWithDeprecatedBits(object):
     def bits(self):
         return 42
 
-    @deprecated('bytes are deprecated too.  Use base 10.')
+    @deprecated('bytes are deprecated too. Use base 10.')
     def bytes(self, required_arg, *args, **kwargs):
         return required_arg, args, kwargs
-
 
 
 class TestDeprecated(unittest.TestCase, UnittestTools):
@@ -46,7 +45,7 @@ class TestDeprecated(unittest.TestCase, UnittestTools):
         with self.assertRaises(ZeroDivisionError):
             with self.assertDeprecated():
                 my_bad_function()
-        
+
     def test_deprecated_method(self):
         obj = ClassWithDeprecatedBits()
         with self.assertDeprecated():
