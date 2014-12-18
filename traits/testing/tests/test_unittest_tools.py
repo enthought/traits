@@ -23,7 +23,7 @@ from traits.util.api import deprecated
 
 @deprecated("This function is outdated. Use 'shiny' instead!")
 def old_and_dull():
-    """ A deprecated function, for use in assertIssuesDeprecationWarning tests.
+    """ A deprecated function, for use in assertDeprecated tests.
 
     """
     pass
@@ -371,7 +371,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         )
 
     def test_issues_deprecation_warning(self):
-        with self.assertIssuesDeprecationWarning():
+        with self.assertDeprecated():
             old_and_dull()
 
     def test_issues_deprecation_warning_when_already_issued(self):
@@ -387,7 +387,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         old_and_dull_caller()
 
         # Check that we can still detect the DeprecationWarning.
-        with self.assertIssuesDeprecationWarning():
+        with self.assertDeprecated():
             old_and_dull_caller()
 
 

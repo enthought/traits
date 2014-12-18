@@ -442,9 +442,10 @@ class UnittestTools(object):
                 "At timeout, condition was {0}.".format(condition_at_timeout))
 
     @contextlib.contextmanager
-    def assertIssuesDeprecationWarning(self):
+    def assertDeprecated(self):
         """
-        Assert that the code inside the with block issues a DeprecationWarning.
+        Assert that the code inside the with block is deprecated.  Intended
+        for testing uses of traits.util.deprecated.deprecated.
 
         """
         # Ugly hack copied from the core Python code (see
