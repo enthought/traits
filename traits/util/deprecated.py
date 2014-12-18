@@ -1,11 +1,19 @@
+#------------------------------------------------------------------------------
+# Copyright (c) 2005-2014, Enthought, Inc.
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in /LICENSE.txt and may be redistributed only
+# under the conditions described in the aforementioned license.  The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+# Thanks for using Enthought open source!
+#------------------------------------------------------------------------------
+
 """ A decorator for marking methods/functions as deprecated. """
 
-
 # Standard library imports.
-import logging
-
-# We only warn about each function or method once!
-_cache = {}
+import functools
+import warnings
 
 
 def deprecated(message):
@@ -16,27 +24,12 @@ def deprecated(message):
     def decorator(fn):
         """ A decorator for marking methods/functions as deprecated. """
 
+        @functools.wraps(fn)
         def wrapper(*args, **kw):
             """ The method/function wrapper. """
 
-            global _cache
-
-            module_name = fn.__module__
-            function_name = fn.__name__
-
-            if (module_name, function_name) not in _cache:
-                logging.getLogger(module_name).warning(
-                    'DEPRECATED: %s.%s, %s' % (
-                        module_name, function_name, message
-                    )
-                )
-
-                _cache[(module_name, function_name)] = True
-
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
             return fn(*args, **kw)
-
-        wrapper.__doc__  = fn.__doc__
-        wrapper.__name__ = fn.__name__
 
         return wrapper
 
