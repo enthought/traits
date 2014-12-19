@@ -395,12 +395,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertDeprecated():
             old_and_dull_caller()
 
-    def test_assert_not_deprecated(self):
+    def test_assert_not_deprecated_failures(self):
         with self.assertRaises(self.failureException):
             with self.assertNotDeprecated():
                 old_and_dull()
 
-    def test_assert_not_deprecated_failures(self):
+    def test_assert_not_deprecated(self):
         with self.assertNotDeprecated():
             pass
 
