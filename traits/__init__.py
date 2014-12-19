@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from ._version import full_version as __version__
+from traits._version import full_version as __version__
 
 # Add a NullHandler so 'traits' loggers don't complain when they get used.
 import logging
