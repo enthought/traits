@@ -55,7 +55,7 @@ attributes, giving the attributes some additional characteristics:
   toolkit be installed. However, if this feature is not used, the Traits package
   does not otherwise require GUI support. For details on the visualization
   features of Traits, see the `TraitsUI User Manual
-  <http://github.enthought.com/traitsui/index.html>`_.
+  <http://docs.enthought.com/traitsui/traitsui_user_manual/index.html>`_.
 
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
