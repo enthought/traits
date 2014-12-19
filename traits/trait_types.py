@@ -2414,7 +2414,7 @@ class CSet ( Set ):
             except ( ValueError, TypeError ):
                 value = set( [ value ] )
 
-        return super( CList, self ).validate( object, name, value )
+        return super( CSet, self ).validate( object, name, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.

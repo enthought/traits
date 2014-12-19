@@ -10,6 +10,7 @@
 #------------------------------------------------------------------------------
 import threading
 import time
+import warnings
 
 from traits import _py2to3
 
@@ -17,6 +18,15 @@ from traits.testing.unittest_tools import unittest
 from traits.api import (Bool, Event, Float, HasTraits, Int, List,
                         on_trait_change)
 from traits.testing.api import UnittestTools
+from traits.util.api import deprecated
+
+
+@deprecated("This function is outdated. Use 'shiny' instead!")
+def old_and_dull():
+    """ A deprecated function, for use in assertDeprecated tests.
+
+    """
+    pass
 
 
 class TestObject(HasTraits):
@@ -359,6 +369,57 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
             trait='foo',
             timeout=10.0,
         )
+
+    def test_assert_deprecated(self):
+        with self.assertDeprecated():
+            old_and_dull()
+
+    def test_assert_deprecated_failures(self):
+        with self.assertRaises(self.failureException):
+            with self.assertDeprecated():
+                pass
+
+    def test_assert_deprecated_when_warning_already_issued(self):
+        # Exercise a problematic case where previous calls to a function or
+        # method that issues a DeprecationWarning have already polluted the
+        # __warningregistry__.  For this, we need a single call-point to
+        # old_and_dull, since distinct call-points have separate entries in
+        # __warningregistry__.
+        def old_and_dull_caller():
+            old_and_dull()
+
+        # Pollute the registry by pre-calling the function.
+        old_and_dull_caller()
+
+        # Check that we can still detect the DeprecationWarning.
+        with self.assertDeprecated():
+            old_and_dull_caller()
+
+    def test_assert_not_deprecated_failures(self):
+        with self.assertRaises(self.failureException):
+            with self.assertNotDeprecated():
+                old_and_dull()
+
+    def test_assert_not_deprecated(self):
+        with self.assertNotDeprecated():
+            pass
+
+    def test_assert_not_deprecated_when_warning_already_issued(self):
+        # Exercise a problematic case where previous calls to a function or
+        # method that issues a DeprecationWarning have already polluted the
+        # __warningregistry__.  For this, we need a single call-point to
+        # old_and_dull, since distinct call-points have separate entries in
+        # __warningregistry__.
+        def old_and_dull_caller():
+            old_and_dull()
+
+        # Pollute the registry by pre-calling the function.
+        old_and_dull_caller()
+
+        # Check that we can still detect the DeprecationWarning.
+        with self.assertRaises(self.failureException):
+            with self.assertNotDeprecated():
+                old_and_dull_caller()
 
 
 if __name__ == '__main__':

@@ -40,11 +40,6 @@ class InterfaceCheckerTestCase(unittest.TestCase):
 
         return
 
-    def tearDown(self):
-        """ Called immediately after each test method has been called. """
-
-        return
-
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -360,6 +355,28 @@ class InterfaceCheckerTestCase(unittest.TestCase):
         self.assertRaises(InterfaceError, check_implements, Foo, IBaz, 2)
 
         return
+
+    def test_subclasses_with_wrong_signature_methods(self):
+        """ Subclasses with incorrect method signatures """
+
+        class IFoo(Interface):
+
+            def foo(self, argument):
+                pass
+
+        @provides(IFoo)
+        class Foo(HasTraits):
+
+            def foo(self, argument):
+                pass
+
+
+        class Bar(Foo):
+
+            def foo(self):
+                pass
+
+        self.assertRaises(InterfaceError, check_implements, Bar, IFoo, 2)
 
     # Make sure interfaces and adaptation etc still work with the 'HasTraits'
     # version of 'Interface'!

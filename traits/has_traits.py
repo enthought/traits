@@ -1489,7 +1489,11 @@ class HasTraits ( CHasTraits ):
         return result
 
     # Defines the deprecated alias for 'trait_get'
-    get = trait_get
+    @deprecated('use "HasTraits.trait_get" instead')
+    def get( self, *names, **metadata ):
+        return self.trait_get( *names, **metadata )
+
+    get.__doc__ = trait_get.__doc__
 
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
@@ -1543,7 +1547,12 @@ class HasTraits ( CHasTraits ):
         return self
 
     # Defines the deprecated alias for 'trait_set'
-    set = trait_set
+    @deprecated('use "HasTraits.trait_set" instead')
+    def set ( self, trait_change_notify = True, **traits ):
+        return self.trait_set(
+            trait_change_notify=trait_change_notify, **traits)
+
+    set.__doc__ = trait_set.__doc__
 
     def trait_setq ( self, **traits ):
         """ Shortcut for setting object trait attributes.
@@ -2575,12 +2584,12 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
-                listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler_ref = weakref.ref(lnw),
-                              type            = lnw.type,
-                              dispatch        = dispatch,
-                              priority        = priority,
-                              deferred        = deferred )
+                listener.trait_set( handler         = ListenerHandler( handler ),
+                                    wrapped_handler_ref = weakref.ref(lnw),
+                                    type            = lnw.type,
+                                    dispatch        = dispatch,
+                                    priority        = priority,
+                                    deferred        = deferred )
                 listener.register( self )
 
     # A synonym for 'on_trait_change'

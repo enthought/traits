@@ -273,3 +273,41 @@ class ListTestCase(unittest.TestCase):
         f.l = list('123')
         f.l *= 4
         self.assertEqual(f.l, list('123123123123'))
+
+    def test_sort_no_args(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort()
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    def test_sort_key(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x))
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(reverse=True)
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_key_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x), reverse=True)
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] >= 3, "Not for Python 3")
+    def test_sort_cmp(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] < 3, "Not for Python 2")
+    def test_sort_cmp_error(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        with self.assertRaises(TypeError):
+            f.l.sort(cmp=lambda x, y: ord(x) - ord(y))

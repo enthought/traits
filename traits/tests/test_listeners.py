@@ -85,12 +85,12 @@ class Test_Listeners(unittest.TestCase):
         le = ListenEvents()
 
         # Starting test: No Listeners
-        ge.set(name='Joe', age=22, weight=152.0)
+        ge.trait_set(name='Joe', age=22, weight=152.0)
 
         # Adding default listener
         ge.add_trait_listener(le)
         events = {}
-        ge.set(name='Mike', age=34, weight=178.0)
+        ge.trait_set(name='Mike', age=34, weight=178.0)
         self.assertEqual(events, {
             '_age_changed': ('age', 22, 34),
             '_weight_changed': ('weight', 152.0, 178.0),
@@ -100,7 +100,7 @@ class Test_Listeners(unittest.TestCase):
         # Adding alternate listener
         ge.add_trait_listener(le, 'alt')
         events = {}
-        ge.set(name='Gertrude', age=39, weight=108.0)
+        ge.trait_set(name='Gertrude', age=39, weight=108.0)
         self.assertEqual(events, {
             '_age_changed': ('age', 34, 39),
             '_name_changed': ('name', 'Mike', 'Gertrude'),
@@ -112,7 +112,7 @@ class Test_Listeners(unittest.TestCase):
         # Removing default listener
         ge.remove_trait_listener(le)
         events = {}
-        ge.set(name='Sally', age=46, weight=118.0)
+        ge.trait_set(name='Sally', age=46, weight=118.0)
         self.assertEqual(events, {
             'alt_name_changed': ('name', 'Gertrude', 'Sally'),
             'alt_weight_changed': ('weight', 108.0, 118.0),
@@ -121,7 +121,7 @@ class Test_Listeners(unittest.TestCase):
         # Removing alternate listener
         ge.remove_trait_listener(le, 'alt')
         events = {}
-        ge.set(name='Ralph', age=29, weight=198.0)
+        ge.trait_set(name='Ralph', age=29, weight=198.0)
         self.assertEqual(events, {})
 
 
