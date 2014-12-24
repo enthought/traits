@@ -1267,6 +1267,12 @@ strategy has the advantage of generating trait change notifications for each
 attribute. These notifications are important for classes that rely on them to
 ensure that their internal object state remains consistent and up to date.
 
+**Notice:** the output dictionary of __getstate__() automatically contains
+a '__traits_version__' entry which presence is important for the
+__setstate__() method to work properly.
+If absent, the __setstate__() method falls back to a compatibility mode which
+won't restore the trait notifications properly.
+
 .. index:: __setstate__(); overriding
 
 .. _overriding-setstate:
