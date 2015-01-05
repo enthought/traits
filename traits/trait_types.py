@@ -2130,11 +2130,11 @@ class Tuple ( BaseTuple ):
         self.fast_validate = args
 
 
-class ValidatedTuple( BaseTuple ):
+class ValidatedTuple ( BaseTuple ):
     """ A Tuple trait that supports custom validation.
     """
 
-    def __init__( self, *types, **metadata ):
+    def __init__ ( self, *types, **metadata ):
         """ Returns a ValidatedTuple trait
 
         Parameters
@@ -2157,11 +2157,11 @@ class ValidatedTuple( BaseTuple ):
         This definition will accept only tuples ``(a, b)`` containing two integers
         that satisfy ``a < b``.
         """
-        metadata.setdefault('fvalidate', None)
-        metadata.setdefault('fvalidate_info', '')
+        metadata.setdefault( 'fvalidate', None )
+        metadata.setdefault( 'fvalidate_info', '' )
         super( ValidatedTuple, self ).__init__( *types, **metadata )
 
-    def validate( self, object, name, value ):
+    def validate ( self, object, name, value ):
         """ Validates that the value is a valid tuple.
         """
         values = super( ValidatedTuple, self ).validate( object, name, value )
@@ -2172,17 +2172,17 @@ class ValidatedTuple( BaseTuple ):
         else:
             self.error( object, name, value )
 
-    def full_info( self, object, name, value ):
+    def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
         """
         message = 'a tuple of the form: ({0}) that passes custom validation{1}'
         types_info = ', '.join( [ type_.full_info( object, name, value )
                                   for type_ in self.types ] )
         if self.fvalidate_info is not None:
-            fvalidate_info = ': {0}'.format(self.fvalidate_info)
+            fvalidate_info = ': {0}'.format( self.fvalidate_info )
         else:
             fvalidate_info = ''
-        return message.format(types_info, fvalidate_info)
+        return message.format( types_info, fvalidate_info )
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
