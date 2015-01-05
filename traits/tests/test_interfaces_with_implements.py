@@ -224,9 +224,9 @@ class InterfacesTest(unittest.TestCase):
 
         # These are not instances of the IAverage interface, and therefore
         # cannot be set to the trait.
-        self.assertRaises(TraitError, ta.set, a_no=SampleList())
-        self.assertRaises(TraitError, ta.set, a_no=Sample())
-        self.assertRaises(TraitError, ta.set, a_no=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleList())
+        self.assertRaises(TraitError, ta.trait_set, a_no=Sample())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleBad())
 
     def test_instance_adapt_yes(self):
         ta = TraitsHolder()
@@ -246,7 +246,7 @@ class InterfacesTest(unittest.TestCase):
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_yes_'))
 
-        self.assertRaises(TraitError, ta.set, a_yes=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_yes=SampleBad())
 
     def test_instance_adapt_default(self):
         ta = TraitsHolder()

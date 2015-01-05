@@ -1338,7 +1338,7 @@ corresponding to each keyword to the matching value. This shorthand is useful
 when a number of trait attributes need to be set on an object, or a trait
 attribute value needs to be set in a lambda function. For example::
 
-    person.set(name='Bill', age=27)
+    person.trait_set(name='Bill', age=27)
 
 The statement above is equivalent to the following::
 
