@@ -11,7 +11,7 @@ Enhancements
 * Added new ``ArrayOrNone`` trait type to replace the
   ``Either(None, Array)`` idiom.  The old idiom results in warnings
   on NumPy >= 1.9. (#219)
-* Added a new ValidatedTuple trait that supports custom validation (#205).
+* Added a new ValidatedTuple trait that supports custom validation. (#205)
 
 Changes
 
