@@ -399,8 +399,8 @@ the table.
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
 +------------------+----------------------------------------------------------+
-| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, fvalidate = None,         |
-|                  | fvalidate_info = '' , \*\*\ *metadata*] )                |
+| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
+|                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
 +------------------+----------------------------------------------------------+
 | WeakRef          | WeakRef( [*klass* = 'traits.HasTraits',                  |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
