@@ -2024,7 +2024,7 @@ class BaseTuple ( TraitType ):
 
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
-        default value is ('Fred', 'Betty', 5).
+        default value is ``('Fred', 'Betty', 5)``.
 
         Example for case #3::
 
@@ -2032,7 +2032,7 @@ class BaseTuple ( TraitType ):
 
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
-        default value is ('','',0).
+        default value is ``('','',0)``.
         """
         if len( types ) == 0:
             self.init_fast_validator( 11, tuple, None, list )
@@ -2154,8 +2154,8 @@ class ValidatedTuple( BaseTuple ):
 
           value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
 
-        This definition will accept only tuples containing two integers (a, b)
-        that satisfy a < b.
+        This definition will accept only tuples ``(a, b)`` containing two integers
+        that satisfy ``a < b``.
         """
         metadata.setdefault('fvalidate', None)
         metadata.setdefault('fvalidate_info', '')
