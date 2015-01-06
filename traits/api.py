@@ -45,7 +45,7 @@ from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
-        ListComplex, ListBool, ListFunction, ListMethod, 
+        ListComplex, ListBool, ListFunction, ListMethod,
         ListThis, DictStrAny, DictStrStr, DictStrInt,
         DictStrLong, DictStrFloat, DictStrBool, DictStrList)
 
@@ -62,7 +62,7 @@ from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
         BaseCStr, BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange,
         BaseEnum, BaseTuple, BaseInstance)
 
-from .trait_types import UUID
+from .trait_types import UUID, ValidatedTuple
 
 from .has_traits import (HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
