@@ -13,4 +13,5 @@ recursive-exclude examples *.pyc
 include traits/ctraits.c
 include traits/py2to3.h
 include traits/protocols/README.txt
+recursive-include fixers *.py
 recursive-include traits *.py
