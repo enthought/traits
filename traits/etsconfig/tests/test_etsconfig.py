@@ -57,6 +57,7 @@ class ETSConfigTestCase(unittest.TestCase):
         Prepares the test fixture before each test method is called.
 
         """
+
         # Make a fresh instance each time.
         self.ETSConfig = type(ETSConfig)()
 
