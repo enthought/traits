@@ -2,13 +2,46 @@
 
 
 # Standard library imports.
-import os, time, unittest
+import contextlib
+import os
+import shutil
+import sys
+import tempfile
+import time
+import unittest
 
 # Enthought library imports.
 from traits.etsconfig.api import ETSConfig
 
 
-# FIXME: Unit tests should not touch files/directories outside of a staging area.
+@contextlib.contextmanager
+def temporary_home_directory():
+    """
+    Context manager that temporarily remaps HOME / APPDATA
+    to a temporary directory.
+
+    """
+    temp_home = tempfile.mkdtemp()
+    try:
+        # Use the same recipe as in ETSConfig._initialize_application_data
+        # to determine the home directory.
+        if sys.platform == 'win32':
+            home_var = 'APPDATA'
+        else:
+            home_var = 'HOME'
+
+        old_home = os.environ.get(home_var, None)
+        try:
+            os.environ[home_var] = temp_home
+            yield temp_home
+        finally:
+            if old_home is None:
+                os.environ.pop(home_var, None)
+            else:
+                os.environ[home_var] = old_home
+    finally:
+        shutil.rmtree(temp_home)
+
 
 class ETSConfigTestCase(unittest.TestCase):
     """ Tests the 'ETSConfig' configuration object. """
@@ -24,9 +57,13 @@ class ETSConfigTestCase(unittest.TestCase):
         Prepares the test fixture before each test method is called.
 
         """
-
         # Make a fresh instance each time.
         self.ETSConfig = type(ETSConfig)()
+
+    def run(self, result=None):
+        # Extend TestCase.run to use a temporary home directory.
+        with temporary_home_directory():
+            super(ETSConfigTestCase, self).run(result)
 
     ###########################################################################
     # 'ETSConfigTestCase' interface.
@@ -225,8 +262,8 @@ class ETSConfigTestCase(unittest.TestCase):
 # For running as an individual set of tests.
 if __name__ == '__main__':
 
-    # Add the non-default test of application_home...non-default because it must
-    # be run using this module as a script to be valid.
+    # Add the non-default test of application_home...non-default because it
+    # must be run using this module as a script to be valid.
     suite = unittest.TestLoader().loadTestsFromTestCase(ETSConfigTestCase)
     suite.addTest(ETSConfigTestCase('_test_default_application_home'))
 
