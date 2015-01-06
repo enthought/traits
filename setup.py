@@ -140,7 +140,6 @@ if __name__ == "__main__":
             'http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
             __version__),
         ext_modules=[ctraits],
-        include_package_data=True,
         license='BSD',
         maintainer='ETS Developers',
         maintainer_email='enthought-dev@enthought.com',
