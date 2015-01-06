@@ -15,32 +15,51 @@ from traits.etsconfig.api import ETSConfig
 
 
 @contextlib.contextmanager
+def temporary_directory():
+    """
+    Context manager to create and clean up a temporary directory.
+
+    """
+    temp_dir = tempfile.mkdtemp()
+    try:
+        yield temp_dir
+    finally:
+        shutil.rmtree(temp_dir)
+
+
+@contextlib.contextmanager
+def restore_mapping_entry(mapping, key):
+    """
+    Context manager that restores a mapping entry to its previous
+    state on exit.
+
+    """
+    missing = object()
+    old_value = mapping.get(key, missing)
+    try:
+        yield
+    finally:
+        if old_value is missing:
+            mapping.pop(key, None)
+        else:
+            mapping[key] = old_value
+
+
+@contextlib.contextmanager
 def temporary_home_directory():
     """
     Context manager that temporarily remaps HOME / APPDATA
     to a temporary directory.
 
     """
-    temp_home = tempfile.mkdtemp()
-    try:
-        # Use the same recipe as in ETSConfig._initialize_application_data
-        # to determine the home directory.
-        if sys.platform == 'win32':
-            home_var = 'APPDATA'
-        else:
-            home_var = 'HOME'
+    # Use the same recipe as in ETSConfig._initialize_application_data
+    # to determine the home directory.
+    home_var = 'APPDATA' if sys.platform == 'win32' else 'HOME'
 
-        old_home = os.environ.get(home_var, None)
-        try:
+    with temporary_directory() as temp_home:
+        with restore_mapping_entry(os.environ, home_var):
             os.environ[home_var] = temp_home
-            yield temp_home
-        finally:
-            if old_home is None:
-                os.environ.pop(home_var, None)
-            else:
-                os.environ[home_var] = old_home
-    finally:
-        shutil.rmtree(temp_home)
+            yield
 
 
 class ETSConfigTestCase(unittest.TestCase):
