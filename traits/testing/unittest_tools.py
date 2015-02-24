@@ -192,7 +192,7 @@ class UnittestTools(object):
 
     def assertTraitChanges(self, obj, trait, count=None, callableObj=None,
                            *args, **kwargs):
-        """Assert an object trait changes a given number of times.
+        """ Assert an object trait changes a given number of times.
 
         Assert that the class trait changes exactly `count` times during
         execution of the provided function.
