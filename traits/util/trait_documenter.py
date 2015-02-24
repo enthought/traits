@@ -135,7 +135,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         for type, name, start, stop, line in tokens:
             if type == token.NEWLINE:
                 break
-            item = (type, name, (0, start[1]), (0, stop[1]), line)
+            item = (type, name, (1, start[1]), (1, stop[1]), line)
             definition_tokens.append(item)
 
         return tokenize.untokenize(definition_tokens).strip()
