@@ -2961,7 +2961,7 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
-        traits.update( self.__instance_traits__.copy() )
+        traits.update( self._instance_traits().copy() )
 
         for name in self.__dict__.keys():
             if name not in traits:
