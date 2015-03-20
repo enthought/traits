@@ -49,7 +49,8 @@ In this example, the attribute named **weight** specifies that the class has a
 corresponding trait called **weight**. The value associated with the attribute
 **weight** (i.e., ``Float(150.0)``) specifies a predefined trait provided with
 the Traits package, which requires that values assigned be of the standard
-Python type **float**. The value 150.0 specifies the default value of the trait.
+Python type **float**. The value 150.0 specifies the default value of the
+trait.
 
 The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
@@ -66,12 +67,9 @@ For example::
     >>> joe.weight = 162       # OK to assign an int
     >>> joe.weight = 'average' # Error to assign a string
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'weight' trait of a Person
-    instance must be a float, but a value of 'average' <type 'str'> was
-    specified.
+        ...
+    traits.trait_errors.TraitError: The 'weight' trait of a Person instance
+    must be a float, but a value of 'average' <type 'str'> was specified.
 
 In this example, **joe** is an instance of the Person class defined in the
 previous example. The **joe** object has an instance attribute **weight**,
@@ -221,11 +219,9 @@ casting traits::
     >>> bill.cweight = 180    # OK, cast to float(180)
     >>> bill.weight  = '180'  # Error, invalid coercion
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'weight' trait of a Person
-    instance must be a float, but a value of '180' <type 'str'> was specified.
+        ...
+    traits.trait_errors.TraitError: The 'weight' trait of a Person instance
+    must be a float, but a value of '180' <type 'str'> was specified.
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print bill.cweight
     180.0
@@ -500,13 +496,11 @@ it is also a valid value for assignment.
     >>> hats.stock = 'many' # OK
     >>> hats.stock = 4      # Error, value is not in \
     >>>                     # permitted list
-    ---------------------------------------------------------------------------
-    TraitError                                Traceback (most recent call last)
-    <ipython-input-9-8b73565e1633> in <module>()
-    ----> 1 hats.stock = 4
-    (...)
-    TraitError: The 'stock' trait of an InventoryItem instance must be None or
-    0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
+    Traceback (most recent call last):
+        ...
+    traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4
+    <type 'int'> was specified.
 
 
 This defines an :py:class:`InventoryItem` class, with two trait attributes,
@@ -520,7 +514,7 @@ one can specify **another trait** that holds the list of possible values::
 
     >>> from traits.api import Enum, HasTraits, List
     >>> class InventoryItem(HasTraits):
-    ...    possible_stock_states  = List([None, 0, 1, 2, 3, 'many'])
+    ...    possible_stock_states = List([None, 0, 1, 2, 3, 'many'])
     ...    stock = Enum(0, values="possible_stock_states")
     ...            # Enumerated list, default value is 0. The list of
     ...            # allowed values is whatever possible_stock_states holds
@@ -531,13 +525,11 @@ one can specify **another trait** that holds the list of possible values::
     0
     >>> hats.stock = 2      # OK
     >>> hats.stock = 4      # TraitError like above
-    ---------------------------------------------------------------------------
-    TraitError                                Traceback (most recent call last)
-    <ipython-input-9-8b73565e1633> in <module>()
-    ----> 1 hats.stock = 4
-    (...)
-    TraitError: The 'stock' trait of an InventoryItem instance must be None
-    or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
+    Traceback (most recent call last):
+        ...
+    traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4
+    <type 'int'> was specified.
 
     >>> hats.possible_stock_states.append(4)  # Add 4 to list of allowed values
     >>> hats.stock = 4      # OK
