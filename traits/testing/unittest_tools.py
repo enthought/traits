@@ -197,7 +197,7 @@ class UnittestTools(object):
         Assert that the class trait changes exactly `count` times during
         execution of the provided function.
 
-        Method can also be used in a with statement to assert that the
+        This method can also be used in a with statement to assert that
         a class trait has changed during the execution of the code inside
         the with statement (similar to the assertRaises method). Please note
         that in that case the context manager returns itself and the user
@@ -208,6 +208,11 @@ class UnittestTools(object):
 
         - All the fired events by accessing the ``events`` attribute of
           the return object.
+
+        Note that in the case of chained properties (trait 'foo' depends on
+        'bar', which in turn depends on 'baz'), the order in which the
+        corresponding trait events appear in the ``events`` attribute is
+        not well-defined, and may depend on dictionary ordering.
 
         **Example**::
 
