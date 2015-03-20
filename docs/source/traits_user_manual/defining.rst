@@ -480,7 +480,8 @@ value.
 
 A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
-it is also a valid value for assignment::
+it is also a valid value for assignment.
+::
 
     >>> from traits.api import Enum, HasTraits, Str
     >>> class InventoryItem(HasTraits):
@@ -504,7 +505,8 @@ it is also a valid value for assignment::
     <ipython-input-9-8b73565e1633> in <module>()
     ----> 1 hats.stock = 4
     (...)
-    TraitError: The 'stock' trait of an InventoryItem instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
+    TraitError: The 'stock' trait of an InventoryItem instance must be None or
+    0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
 
 
 This defines an :py:class:`InventoryItem` class, with two trait attributes,
@@ -514,18 +516,19 @@ attribute has an initial value of None, and can be assigned the values None, 0,
 class named **hats**, and assigns values to its attributes.
 
 When the list of possible values can change during the lifetime of the object,
-one can specifies **another trait** that holds the list of possible values as
-so::
+one can specify **another trait** that holds the list of possible values::
 
     >>> from traits.api import Enum, HasTraits, List
     >>> class InventoryItem(HasTraits):
     ...    possible_stock_states  = List([None, 0, 1, 2, 3, 'many'])
-    ...    stock = Enum(None, values="possible_stock_states")
-    ...            # Enumerated list, default value is 'None'. The list of
+    ...    stock = Enum(0, values="possible_stock_states")
+    ...            # Enumerated list, default value is 0. The list of
     ...            # allowed values is whatever possible_stock_states holds
     ...
 
     >>> hats = InventoryItem()
+    >>> hats.stock
+    0
     >>> hats.stock = 2      # OK
     >>> hats.stock = 4      # TraitError like above
     ---------------------------------------------------------------------------
@@ -533,7 +536,8 @@ so::
     <ipython-input-9-8b73565e1633> in <module>()
     ----> 1 hats.stock = 4
     (...)
-    TraitError: The 'stock' trait of an InventoryItem instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
+    TraitError: The 'stock' trait of an InventoryItem instance must be None
+    or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type 'int'> was specified.
 
     >>> hats.possible_stock_states.append(4)  # Add 4 to list of allowed values
     >>> hats.stock = 4      # OK
