@@ -78,10 +78,18 @@ class AdaptationManager(HasTraits):
     def provides_protocol(type_, protocol):
         """ Does the given type provide (i.e implement) a given protocol?
 
-        'type_'    is a Python 'type'.
-        'protocol' is either a regular Python class or a traits Interface.
+        Parameters
+        ----------
+        type_ :
+          Python 'type'.
 
-        Return True if the object provides the protocol, otherwise False.
+        protocol :
+          Either a regular Python class or a traits Interface.
+
+        Returns
+        -------
+        result : bool
+          True if the object provides the protocol, otherwise False.
 
         """
 
@@ -94,8 +102,13 @@ class AdaptationManager(HasTraits):
     def adapt(self, adaptee, to_protocol, default=AdaptationError):
         """ Attempt to adapt an object to a given protocol.
 
-        `adaptee`     is the object that we want to adapt.
-        `to_protocol` is the protocol that the want to adapt the object to.
+        Parameters
+        ----------
+        adaptee :
+          The object that we want to adapt.
+
+        to_protocol :
+          The protocol that the want to adapt the object to.
 
         If `adaptee` already provides (i.e. implements) the given protocol
         then it is simply returned unchanged.
@@ -256,7 +269,7 @@ class AdaptationManager(HasTraits):
             else:
                 # functools.cmp_to_key is available from 2.7 and 3.2
                 edges.sort(key=functools.cmp_to_key(_by_weight_then_from_protocol_specificity))
-                
+
 
             # At this point, the first edges are the shortest ones. Within
             # edges with the same distance, interfaces which are subclasses
@@ -361,11 +374,11 @@ def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
     return 0
 
 
-# The default global adaptation manager.
-# PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.
-# If you must use a global adaptation manager, use the functions
-# `get_global_adaptation_manager`, `reset_global_adaptation_manager`,
-# `set_global_adaptation_manager`.
+#: The default global adaptation manager.
+#: PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.
+#: If you must use a global adaptation manager, use the functions
+#: `get_global_adaptation_manager`, `reset_global_adaptation_manager`,
+#: `set_global_adaptation_manager`.
 adaptation_manager = AdaptationManager()
 
 
