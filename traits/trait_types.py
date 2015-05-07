@@ -2934,7 +2934,7 @@ class Supports( Instance ):
     or is an adapter otherwise).
 
     The original, unadapted value is stored in a "shadow" attribute with
-    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    the same name followed by an underscore (e.g., ``foo`` and ``foo_``).
     """
 
     adapt_default = 'yes'
@@ -2968,7 +2968,7 @@ class AdaptsTo ( Supports ):
     The value of the trait after assignment is the original, unadapted value.
 
     A possibly adapted value is stored in a "shadow" attribute with
-    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    the same name followed by an underscore (e.g., ``foo`` and ``foo_``).
     """
 
     def modify_ctrait ( self, ctrait ):
