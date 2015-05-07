@@ -19,6 +19,58 @@ import sys, os
 sys.path.append(os.path.abspath('_extensions'))
 sys.path.append(os.path.abspath('../../'))
 
+
+def mock_modules():
+    try:
+        from mock import MagicMock
+    except ImportError:
+        print 'No modules can be mocked'
+        return
+
+    MOCK_MODULES = []
+    MOCK_TYPES = []
+
+    try:
+        import traitsui
+    except ImportError:
+        MOCK_MODULES = [
+            'traitsui', 'traitsui.api', 'traitsui.delegating_handler']
+
+        from traits.api import HasTraits, HasPrivateTraits
+        MOCK_TYPES.append(
+            ('traitsui.delegating_handler',
+             'DelegatingHandler', (HasTraits,)))
+        MOCK_TYPES.append(
+            ('traitsui.view_element',
+             'ViewSubElement', (HasPrivateTraits,)))
+
+    class Mock(MagicMock):
+
+        TYPES = {
+            mock_type: type(mock_type, bases, {'__module__': path})
+            for path, mock_type, bases in MOCK_TYPES}
+
+        @classmethod
+        def __getattr__(self, name):
+            if name in ('__file__', '__path__'):
+                return '/dev/null'
+            else:
+                return Mock.TYPES.get(name, Mock(mocked_name=name))
+
+        def __call__(self, *args, **kwards):
+            return Mock()
+
+        @property
+        def __name__(self):
+            return self.mocked_name
+
+    sys.modules.update(
+        (mod_name, Mock(mocked_name=mod_name)) for mod_name in MOCK_MODULES)
+    print 'mocking modules {0} and types {1}'.format(
+        MOCK_MODULES, [mocked[1] for mocked in MOCK_TYPES])
+
+mock_modules()
+
 # General configuration
 # ---------------------
 
@@ -27,7 +79,7 @@ sys.path.append(os.path.abspath('../../'))
 extensions = [ 'refactordoc',
                'sphinx.ext.viewcode',
                'sphinx.ext.autosummary',
-               'traits.util.trait_documenter']
+               'trait_documenter']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
