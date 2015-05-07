@@ -375,10 +375,13 @@ def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
 
 
 #: The default global adaptation manager.
+#:
 #: PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.
 #: If you must use a global adaptation manager, use the functions
-#: `get_global_adaptation_manager`, `reset_global_adaptation_manager`,
-#: `set_global_adaptation_manager`.
+#: :class:`get_global_adaptation_manager`,
+#: :class:`reset_global_adaptation_manager`,
+#: :class:`set_global_adaptation_manager`.
+
 adaptation_manager = AdaptationManager()
 
 
