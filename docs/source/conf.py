@@ -79,7 +79,7 @@ mock_modules()
 extensions = [ 'refactordoc',
                'sphinx.ext.viewcode',
                'sphinx.ext.autosummary',
-               'trait_documenter']
+               'traits.util.trait_documenter']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
