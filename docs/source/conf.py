@@ -31,7 +31,10 @@ def mock_modules():
     documentation can be built without the traitui optional dependency
     installed.
 
-    .. note:: The mock library is needed in order to mock the
+    .. note::
+
+       The mock library is needed in order to mock the traitsui
+       package.
 
     """
 
@@ -64,7 +67,7 @@ def mock_modules():
     except ImportError:
         if len(MOCK_MODULES) != 0:
             print(
-                'TraitsUI is not installed and mock is not available to '
+                'NOTE: TraitsUI is not installed and mock is not available to '
                 'mock the missing modules, some classes will not be documented')
             return
 
