@@ -315,11 +315,12 @@ invalid_attribute_error ( PyObject * name ) {
     // Build error message by collecting the type of the object received
     PyTypeObject* obj_type = name->ob_type;
     const char* type_name = obj_type->tp_name;
-    char err_msg[60] = "attribute name must be string. Got ";
+    PyObject * ob_repr = PyObject_Repr(name);
+    const char* obj_repr_str = PyString_AsString(ob_repr);
+    const char* fmt = "attribute name must be string. Got %s (%s).";
+    PyObject * err_msg = PyString_FromFormat(fmt, obj_repr_str, type_name);
 
-    strncat(err_msg, type_name, 20);
-
-    PyErr_SetString( PyExc_TypeError, err_msg );
+    PyErr_SetObject( PyExc_TypeError, err_msg );
 
     return -1;
 }
