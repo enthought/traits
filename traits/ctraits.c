@@ -318,9 +318,8 @@ invalid_attribute_error ( PyObject * name ) {
     PyObject * ob_repr = PyObject_Repr(name);
     const char* obj_repr_str = PyString_AsString(ob_repr);
     const char* fmt = "attribute name must be string. Got %s (%s).";
-    PyObject * err_msg = PyString_FromFormat(fmt, obj_repr_str, type_name);
 
-    PyErr_SetObject( PyExc_TypeError, err_msg );
+    PyErr_Format( PyExc_TypeError, fmt, obj_repr_str, type_name );
 
     return -1;
 }
