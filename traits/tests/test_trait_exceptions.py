@@ -29,5 +29,6 @@ class TestGetAttr(unittest.TestCase):
             self.a.__getattribute__(2)
 
         # Error message contains value and type of bad attribute name
-        self.assertIn("2", e.exception.message)
-        self.assertIn("int", e.exception.message)
+        exception_msg = str(e.exception)
+        self.assertIn("2", exception_msg)
+        self.assertIn("int", exception_msg)
