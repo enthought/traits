@@ -319,14 +319,14 @@ invalid_attribute_error ( PyObject * name ) {
 
 #if PY_MAJOR_VERSION >= 3
 
-    const char* fmt = "attribute name must be string. Got %R (%s).";
+    const char* fmt = "attribute name must be string. Got %R (%.200s).";
 
     PyErr_Format( PyExc_TypeError, fmt, ob_repr, type_name );
 
 #else
 
     const char* obj_repr_str = PyString_AsString(ob_repr);
-    const char* fmt = "attribute name must be string. Got %s (%s).";
+    const char* fmt = "attribute name must be string. Got %.200s (%.200s).";
 
     PyErr_Format( PyExc_TypeError, fmt, obj_repr_str, type_name );
 
