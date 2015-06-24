@@ -1,0 +1,28 @@
+build: false
+shallow_clone: true
+environment:
+
+  global:
+    distutils_use_sdk: 1
+    sdkver: "v7.0"
+    python: "C:/Python27-x64"
+
+cache:
+  - c:\egg_cache
+
+init:
+  - ps: $Env:sdkbin: "C:\Program Files\Microsoft SDKs\Windows\" + $Env:sdkver + "\Bin"
+  - ps: $Env:sdkverpath = "C:/Program Files/Microsoft SDKs/Windows/" + $Env:sdkver + "/Setup/WindowsSdkVer.exe"
+  - ps: $Env:path = $Env:python + ";" + $Env:python + "\scripts;" + $Env:sdkbin + ";" + $Env:path
+install:
+  - ps: if ((Test-Path "c:/egg_cache") -eq 0) { mkdir c:/egg_cache }
+  - ps: (new-object net.webclient).DownloadFile('https://raw.github.com/pypa/pip/master/contrib/get-pip.py', 'c:/get-pip.py')
+  - ps: python c:/get-pip.py
+  - ps: pip --version
+  - cmd /v:on /e:on /c ".\appveyor-install.cmd"
+test_script:
+  - mkdir testrunner
+  - copy .coveragerc testrun
+  - cd testrun
+  - coverage run -m nose.core traits --exe
+  - coverage report
