@@ -32,5 +32,5 @@ test_script:
   - mkdir testrun
   - copy .coveragerc testrun
   - cd testrun
-  - coverage run -m nose.core traits --exe
+  - coverage run -m nose.core -v traits --exe
   - coverage report
