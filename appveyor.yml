@@ -11,7 +11,7 @@ cache:
   - c:\egg_cache
 
 init:
-  - ps: $Env:sdkbin: "C:\Program Files\Microsoft SDKs\Windows\" + $Env:sdkver + "\Bin"
+  - ps: $Env:sdkbin = "C:\Program Files\Microsoft SDKs\Windows\" + $Env:sdkver + "\Bin"
   - ps: $Env:sdkverpath = "C:/Program Files/Microsoft SDKs/Windows/" + $Env:sdkver + "/Setup/WindowsSdkVer.exe"
   - ps: $Env:path = $Env:python + ";" + $Env:python + "\scripts;" + $Env:sdkbin + ";" + $Env:path
 install:
