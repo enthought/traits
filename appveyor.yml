@@ -21,7 +21,7 @@ install:
   - ps: pip --version
   - cmd /v:on /e:on /c ".\appveyor-install.cmd"
 test_script:
-  - mkdir testrunner
+  - mkdir testrun
   - copy .coveragerc testrun
   - cd testrun
   - coverage run -m nose.core traits --exe
