@@ -52,3 +52,10 @@ Traits has the following optional dependencies:
 
 * `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
+* `Traitsui <https://pypi.python.org/pypi/traitsui>`_ to support Gui
+  Views.
+
+To build the full documentation one needs:
+
+* sphinx > 1.2.3
+* mock (optional if traitsui is not available)
