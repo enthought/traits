@@ -141,7 +141,6 @@ class TestRegression(unittest.TestCase):
         for _ in xrange(10):
             f()
             gc.collect()
-            gc.get_objects()
 
         refs = len(gc.get_objects())
         f()
