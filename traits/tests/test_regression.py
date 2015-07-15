@@ -127,6 +127,28 @@ class TestRegression(unittest.TestCase):
         list_test.b[0] = 0
         self.assertEqual(list_test.events_received, 3)
 
+    def test_has_traits_notifiers_refleak(self):
+        # Regression test for issue described in
+        # https://github.com/enthought/traits/pull/248
+        def handler():
+            pass
+
+        def f():
+            obj = HasTraits()
+            obj.on_trait_change(handler)
+
+        # Warmup.
+        for _ in xrange(10):
+            f()
+            gc.collect()
+            gc.get_objects()
+
+        refs = len(gc.get_objects())
+        f()
+        gc.collect()
+        refs2 = len(gc.get_objects())
+        self.assertEqual(refs, refs2)
+
 
 if __name__ == '__main__':
     unittest.main()
