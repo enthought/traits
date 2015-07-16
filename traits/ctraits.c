@@ -1428,19 +1428,23 @@ _has_traits_notifiers ( has_traits_object * obj, PyObject * args ) {
     PyObject * list;
     int force_create;
 
-        if ( !PyArg_ParseTuple( args, "i", &force_create ) )
+    if ( !PyArg_ParseTuple( args, "i", &force_create ) )
         return NULL;
 
     result = (PyObject *) obj->notifiers;
     if ( result == NULL ) {
-        result = Py_None;
-        if ( force_create && ((list = PyList_New( 0 )) != NULL) ) {
-            obj->notifiers = (PyListObject *) (result = list);
-            Py_INCREF( result );
+        if ( force_create ) {
+            list = PyList_New(0);
+            if (list == NULL)
+                return NULL;
+            obj->notifiers = (PyListObject *)list;
+            result = list;
+        }
+        else {
+            result = Py_None;
         }
     }
     Py_INCREF( result );
-
     return result;
 }
 
