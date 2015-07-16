@@ -29,6 +29,7 @@ Fixes
 * Fix incorrect behaviour of ``check_implements`` for overridden methods.
   (#192)
 * Fix error when trying to listen to traits using list bracket notation. (#195)
+* Fix reference leak in ``CHasTraits._notifiers``. (#248)
 
 
 Release 4.5.0
