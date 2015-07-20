@@ -131,20 +131,35 @@ class TraitDocumenter(ClassLevelDocumenter):
                 name_found = True
 
         # Retrieve the trait definition.
-        definition_tokens = []
-        line = 1
-        for type, name, start, stop, line_text in tokens:
-            if type == token.NEWLINE:
-                break
-
-            item = (type, name, (line, start[1]), (line, stop[1]), line_text)
-            definition_tokens.append(item)
-
-            if type == tokenize.NL:
-                line += 1
-
+        definition_tokens = _get_definition_tokens(tokens)
         return tokenize.untokenize(definition_tokens).strip()
 
+def _get_definition_tokens(tokens):
+    """ Given the tokens, extracts the definition tokens.
+
+    Parameters
+    ----------
+    tokens : list
+        A list of tokens.
+
+    Returns
+    -------
+    A list of tokens for the definition.
+    """
+    # Retrieve the trait definition.
+    definition_tokens = []
+    line = 1
+    for type, name, start, stop, line_text in tokens:
+        if type == token.NEWLINE:
+            break
+
+        item = (type, name, (line, start[1]), (line, stop[1]), line_text)
+        definition_tokens.append(item)
+
+        if type == tokenize.NL:
+            line += 1
+
+    return definition_tokens
 
 def setup(app):
     """ Add the TraitDocumenter in the current sphinx autodoc instance. """
