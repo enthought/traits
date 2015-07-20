@@ -1,9 +1,29 @@
 """ Tests for the trait documenter. """
 
+import contextlib
+import sys
 import tokenize
+import types
+from mock import Mock
 
-from traits.util.trait_documenter import _get_definition_tokens
 from traits.testing.unittest_tools import unittest
+
+@contextlib.contextmanager
+def sphinx_mock_import():
+    try:
+        from sphinx.ext.autodoc import ClassLevelDocumenter
+    except ImportError:
+        sphinx = types.ModuleType("sphinx")
+        sphinx.ext = types.ModuleType("sphinx.ext")
+        sphinx.ext.autodoc = types.ModuleType("sphinx.ext.autodoc")
+        sys.modules["sphinx"] = sphinx
+        sys.modules["sphinx.ext"] = sphinx.ext
+        sys.modules["sphinx.ext.autodoc"] = sphinx.ext.autodoc
+        sphinx.ext.autodoc.__dict__["ClassLevelDocumenter"] = Mock()
+
+    yield
+
+    del sys.modules["sphinx.ext.autodoc"]
 
 
 class TestTraitDocumenter(unittest.TestCase):
@@ -43,10 +63,13 @@ class TestTraitDocumenter(unittest.TestCase):
              '                              depends_on="_depth_interval")\n')]
 
     def test_get_definition_tokens(self):
-        definition_tokens = _get_definition_tokens(self.tokens)
+        with sphinx_mock_import():
+            from traits.util.trait_documenter import _get_definition_tokens
 
-        # Check if they are correctly untokenized. This should not raise.
-        tokenize.untokenize(definition_tokens)
+            definition_tokens = _get_definition_tokens(self.tokens)
+
+            # Check if they are correctly untokenized. This should not raise.
+            tokenize.untokenize(definition_tokens)
 
 if __name__ == '__main__':
     unittest.main()
