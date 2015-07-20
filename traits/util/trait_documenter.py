@@ -132,11 +132,16 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Retrieve the trait definition.
         definition_tokens = []
-        for type, name, start, stop, line in tokens:
+        line = 1
+        for type, name, start, stop, line_text in tokens:
             if type == token.NEWLINE:
                 break
-            item = (type, name, (1, start[1]), (1, stop[1]), line)
+
+            item = (type, name, (line, start[1]), (line, stop[1]), line_text)
             definition_tokens.append(item)
+
+            if type == tokenize.NL:
+                line += 1
 
         return tokenize.untokenize(definition_tokens).strip()
 
