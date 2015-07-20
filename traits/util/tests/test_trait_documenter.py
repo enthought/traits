@@ -23,6 +23,8 @@ def sphinx_mock_import():
 
     yield
 
+    del sys.modules["sphinx"]
+    del sys.modules["sphinx.ext"]
     del sys.modules["sphinx.ext.autodoc"]
 
 
