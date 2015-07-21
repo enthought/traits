@@ -6,21 +6,23 @@ import tokenize
 
 from traits.testing.unittest_tools import unittest
 
-def _sphinx_present():
 
+def _sphinx_present():
     try:
-        import sphinx
+        import sphinx  # noqa
     except ImportError:
         return False
 
     return True
 
+
 def python_version_is_32():
     return sys.version_info[:2] == (3, 2)
 
+
 # Skipping for python 3.2 because sphinx does not work on it.
 @unittest.skipIf(not _sphinx_present() or python_version_is_32(),
-        "Sphinx not available. Cannot test documenter")
+                 "Sphinx not available. Cannot test documenter")
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
 

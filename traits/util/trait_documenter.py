@@ -41,7 +41,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     """
 
-    ### ClassLevelDocumenter interface #####################################
+    # ClassLevelDocumenter interface #####################################
 
     objtype = 'traitattribute'
     directivetype = 'attribute'
@@ -94,7 +94,7 @@ class TraitDocumenter(ClassLevelDocumenter):
             msg = ('autodoc can\'t import/find {0} {r1}, it reported error: '
                    '"{2}", please check your spelling and sys.path')
             self.directive.warn(msg.format(self.objtype, str(self.fullname),
-                                                                        err))
+                                err))
             self.env.note_reread()
             return False
 
@@ -108,7 +108,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         self.add_line(u'   :annotation: = {0}'.format(definition),
                       '<autodoc>')
 
-    ### Private Interface #####################################################
+    # Private Interface #####################################################
 
     def _get_trait_definition(self):
         """ Retrieve the Trait attribute definition
@@ -133,6 +133,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
         return tokenize.untokenize(definition_tokens).strip()
+
 
 def _get_definition_tokens(tokens):
     """ Given the tokens, extracts the definition tokens.
@@ -166,6 +167,7 @@ def _get_definition_tokens(tokens):
         definition_tokens.append(item)
 
     return definition_tokens
+
 
 def setup(app):
     """ Add the TraitDocumenter in the current sphinx autodoc instance. """
