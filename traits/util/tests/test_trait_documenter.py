@@ -3,12 +3,11 @@
 import StringIO
 import sys
 import tokenize
-from unittest import skipIf
 
 from traits.testing.unittest_tools import unittest
 
-
 def _sphinx_present():
+
     try:
         import sphinx
     except ImportError:
@@ -16,14 +15,11 @@ def _sphinx_present():
 
     return True
 
-# Skipping for python 3.2 because sphinx does not work on it.
 def python_version_is_32():
-    return "{}.{}".format(
-        sys.version_info.major,
-        sys.version_info.minor) == "3.2"
+    return sys.version_info[:2] == (3, 2)
 
-
-@skipIf(not _sphinx_present() or python_version_is_32(),
+# Skipping for python 3.2 because sphinx does not work on it.
+@unittest.skipIf(not _sphinx_present() or python_version_is_32(),
         "Sphinx not available. Cannot test documenter")
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
