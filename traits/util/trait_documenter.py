@@ -139,8 +139,8 @@ def _get_definition_tokens(tokens):
 
     Parameters
     ----------
-    tokens : list
-        A list of tokens.
+    tokens : iterator
+        An iterator producing tokens.
 
     Returns
     -------
@@ -148,16 +148,22 @@ def _get_definition_tokens(tokens):
     """
     # Retrieve the trait definition.
     definition_tokens = []
-    line = 1
+    first_line = None
+
     for type, name, start, stop, line_text in tokens:
+        if first_line is None:
+            first_line = start[0]
+
         if type == token.NEWLINE:
             break
 
-        item = (type, name, (line, start[1]), (line, stop[1]), line_text)
-        definition_tokens.append(item)
+        item = (type,
+                name,
+                (start[0] - first_line + 1, start[1]),
+                (stop[0] - first_line + 1, stop[1]),
+                line_text)
 
-        if type == tokenize.NL:
-            line += 1
+        definition_tokens.append(item)
 
     return definition_tokens
 
