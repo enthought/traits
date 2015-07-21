@@ -3,6 +3,7 @@
 import os
 import re
 import subprocess
+import sys
 
 from setuptools import setup, Extension, find_packages
 
@@ -105,6 +106,11 @@ if __name__ == "__main__":
         )
 
     def additional_commands():
+        # Pygments 2 isn't supported on Python 3 versions earlier than 3.3, so
+        # don't make the documentation command available there.
+        if (3,) <= sys.version_info < (3, 3):
+            return {}
+
         try:
             from sphinx.setup_command import BuildDoc
         except ImportError:
