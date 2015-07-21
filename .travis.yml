@@ -15,7 +15,7 @@ before_install:
   - export PATH=/usr/lib/ccache:${PATH}
   - pip install --upgrade pip
 install:
-  - pip install -r travis-ci-requirements.txt
+  - pip install --upgrade -r travis-ci-requirements.txt
   - python setup.py develop
 before_script:
   - mkdir testrunner
