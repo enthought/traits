@@ -1120,7 +1120,7 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
     PyObject          * name;
     PyObject          * daname;
     PyObject          * daname2;
-        PyObject          * dict;
+    PyObject          * dict;
     int i, instance;
 
     /* Parse arguments, which specify the trait name and whether or not an
@@ -1147,16 +1147,26 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
         }
 
         dict = delegate->obj_dict;
-        if ( ((dict == NULL) ||
-              ((temp_delegate = (has_traits_object *) PyDict_GetItem( dict,
-                                          trait->delegate_name )) == NULL)) &&
-              ((temp_delegate = (has_traits_object *) has_traits_getattro(
-                  delegate, trait->delegate_name )) == NULL) )
-            break;
 
+        temp_delegate = NULL;
+        if (dict != NULL) {
+            temp_delegate = (has_traits_object *) PyDict_GetItem(
+                dict, trait->delegate_name );
+            /* PyDict_GetItem returns a borrowed reference,
+               so we need to INCREF. */
+            Py_XINCREF( temp_delegate );
+        }
+        if (temp_delegate == NULL) {
+            /* has_traits_getattro returns a new reference,
+               so no need to INCREF. */
+            temp_delegate = (has_traits_object *) has_traits_getattro(
+                delegate, trait->delegate_name );
+        }
+        if (temp_delegate == NULL) {
+            break;
+        }
         Py_DECREF( delegate );
         delegate = temp_delegate;
-        Py_INCREF( delegate );
 
         if ( !PyHasTraits_Check( delegate ) ) {
             bad_delegate_error2( obj, name );
