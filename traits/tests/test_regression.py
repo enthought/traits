@@ -54,8 +54,6 @@ class DelegateLeak(HasTraits):
 
     flag = Instance(Dummy, kw={'x': 42})
 
-    dummy = Bool(True)
-
 
 class Presenter(HasTraits):
     obj = Instance(Dummy)
