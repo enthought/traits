@@ -162,11 +162,11 @@ class TestRegression(unittest.TestCase):
         counts = []
 
         for _ in xrange(warmup_cycles):
-            obj = DelegateLeak()
+            DelegateLeak()
             gc.collect()
 
         for _ in xrange(cycles):
-            obj = DelegateLeak()
+            DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))
 
