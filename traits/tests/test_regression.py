@@ -47,6 +47,14 @@ class DelegateMess(HasTraits):
             getattr(self, '_init_trait_%s_listener' % data[0])(name, *data)
 
 
+class DelegateLeak(HasTraits):
+    visible = Property(Bool, depends_on='can_enable')
+
+    can_enable = DelegatesTo('flag', prefix='x')
+
+    flag = Instance(Dummy, kw={'x': 42})
+
+
 class Presenter(HasTraits):
     obj = Instance(Dummy)
     y = Property(Int(), depends_on='obj.x')
@@ -147,6 +155,24 @@ class TestRegression(unittest.TestCase):
         gc.collect()
         refs2 = len(gc.get_objects())
         self.assertEqual(refs, refs2)
+
+    def test_delegation_refleak(self):
+        warmup_cycles = 5
+        cycles = 5
+        counts = []
+
+        for _ in xrange(warmup_cycles):
+            DelegateLeak()
+            gc.collect()
+
+        for _ in xrange(cycles):
+            DelegateLeak()
+            gc.collect()
+            counts.append(len(gc.get_objects()))
+
+        # All the counts should be the same.
+        for old_count, new_count in zip(counts[:-1], counts[1:]):
+            self.assertEqual(old_count, new_count)
 
 
 if __name__ == '__main__':
