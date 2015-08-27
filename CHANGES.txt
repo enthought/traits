@@ -30,6 +30,7 @@ Fixes
   (#192)
 * Fix error when trying to listen to traits using list bracket notation. (#195)
 * Fix reference leak in ``CHasTraits._notifiers``. (#248)
+* Fix reference leak from use of ``DelegatesTo``. (#260)
 
 
 Release 4.5.0
