@@ -1152,14 +1152,9 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
         if (dict != NULL) {
             temp_delegate = (has_traits_object *) PyDict_GetItem(
                 dict, trait->delegate_name );
-            if (temp_delegate == NULL) {
-                PyErr_Clear();
-            }
-            else {
-                /* PyDict_GetItem returns a borrowed reference,
-                   so we need to INCREF. */
-                Py_INCREF( temp_delegate );
-            }
+            /* PyDict_GetItem returns a borrowed reference,
+               so we need to INCREF. */
+            Py_XINCREF( temp_delegate );
         }
         if (temp_delegate == NULL) {
             /* has_traits_getattro returns a new reference,
