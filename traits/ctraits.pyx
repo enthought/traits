@@ -1316,8 +1316,8 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
     if isinstance(name, str):
-        return AttributeError(
-            "'%.50s' object has no attribute '%.400s'".format(type(obj), name)
+        raise AttributeError(
+            "'{:.50s}' object has no attribute '{:.400s}'".format(type(obj), name)
         )
     else:
         raise TypeError('Attribute name must be a string')
@@ -1474,6 +1474,12 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     cdef int rc
 
+    if not isinstance(name, str):
+        raise AttributeError(
+              "'%.50s' object has no attribute '%.400s'".format(
+                  type(obj), name
+            )
+        )
     if value is not NullObject:
         if obj.obj_dict is None:
             obj.obj_dict = {}
@@ -1481,12 +1487,14 @@ cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object nam
         obj.obj_dict[name] = value
 
         return 0
+    else:
+        del obj.obj_dict[name]
 
     if obj.obj_dict is not None:
         if name not in obj.obj_dict:
             raise AttributeError('Unknown attribute %s in %s' % (name, obj))
 
-    raise AttributeError('Unknown attribute %s in %s' % (name, obj))
+    return 0
 
 cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
