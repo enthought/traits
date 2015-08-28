@@ -2,6 +2,7 @@
 define the core performance oriented portions of the Traits package.
 
 """
+from cython.operator cimport dereference as deref
 from cpython.dict cimport PyDict_GetItem, PyDict_Check
 from cpython.int cimport PyInt_Check, PyInt_AS_LONG
 from cpython.exc cimport PyErr_Clear
@@ -607,17 +608,18 @@ cdef class CHasTraits:
      'notifiers' list.
 
     '''
-    cdef dict ctrait_dict  # Class traits dictionary
-    cdef dict itrait_dict   # Instance traits dictionary
+    # Define the class attributes
+    __class_traits__ = {}
+    __base_traits__ = {}
+    __prefix_traits__ = {'*':[]}
+    __listener_traits__ = {}
+    __instance_traits__ = {}
+    __implements__ = object # will be initialized to __NoInterface__ by HasTraits
+
+    cdef dict itrait_dict  # Instance traits dictionary
     cdef list notifiers    # List of any trait changed notification handler
     cdef int flags         # Behavior modification flags
     cdef dict obj_dict     # Object attribute dictionary ('__dict__')
-
-    def __cinit__(self):
-        cdef  PyTypeObject* pytype = Py_TYPE(self)
-        cdef PyObject* class_traits_dict = PyDict_GetItem(<object>pytype.tp_dict, class_traits)
-        # FIXME: add checks from has_traits_new !!!
-        self.ctrait_dict = <dict>class_traits_dict
 
     def __dealloc__(self):
         # see has_traits_dealloc
@@ -629,6 +631,14 @@ cdef class CHasTraits:
         #self.ob_type.tp_free(<object>obj)
         #Py_TRASHCAN_SAFE_END(self)
 
+    def __cinit__(self):
+
+        # Initializers for instance attributes
+        self.obj_dict = {}
+        self.notifiers = []
+        self.itrait_dict = {}
+
+
     def __init__(self, *args, **kwargs):
 
         # Make sure no non-keyword arguments were specified 
@@ -636,7 +646,9 @@ cdef class CHasTraits:
             raise ValueError('Do not use positional arguments in constructor.')
 
         # Make sure all of the object's listeners have been set up
-        has_listeners = len(getattr(type(self), listener_traits)) > 0
+        has_listeners = False
+        if listener_traits in self.__class_traits__:
+            has_listeners = len(self.__class_traits__[listener_traits]) > 0
 
         if has_listeners:
             self._init_trait_listeners()
@@ -684,7 +696,7 @@ cdef class CHasTraits:
 
         # __prefix_trait has been added by HasTraits class
         trait = getattr(self, '__prefix_trait__')(name, is_set)
-        self.ctrait_dict[name] = trait
+        self.__class_traits__[name] = trait
         result = self._internal_setattr(trait_added, name)
         if result >= 0:
             trait = self.get_trait(name, 0)
@@ -715,8 +727,8 @@ cdef class CHasTraits:
 
         # Otherwise, get the class specific version of the trait (creating a
         # trait class version if necessary)
-        if name in self.ctrait_dict:
-            trait = self.ctrait_dict.get(name)
+        if name in self.__class_traits__:
+            trait = self.__class_traits__.get(name)
         elif instance == 0:
             return None
         else:
@@ -806,8 +818,8 @@ cdef class CHasTraits:
         trait = None
         if self.itrait_dict is not None and name in self.itrait_dict:
                 trait = self.itrait_dict.get(name)
-        elif name in self.ctrait_dict:
-            trait = self.ctrait_dict.get(name)
+        elif name in self.__class_traits__:
+            trait = self.__class_traits__.get(name)
 
         if trait is not None:
             if trait.getattr is NULL:
@@ -842,7 +854,7 @@ cdef class CHasTraits:
             trait = None
 
         if trait is None:
-            trait = self.ctrait_dict.get(name, None)
+            trait = self.__class_traits__.get(name, None)
             if trait is None:
                 prefix_trait = self.get_prefix_trait(name, 1)
                 if prefix_trait is None:
@@ -906,7 +918,7 @@ cdef class CHasTraits:
             raise TypeError('Attribute name must be a string.')
 
         if (self.itrait_dict is None or name not in self.itrait_dict) and \
-            name not in self.ctrait_dict:
+            name not in self.__class_traits__:
 
             if not can_retry:
                 raise TraitError("Can't set a collection's '_items' trait.")
@@ -919,7 +931,7 @@ cdef class CHasTraits:
             else:
                 trait = None
             if trait is None:
-                trait = self.ctrait_dict.get(name, None)
+                trait = self.__class_traits__.get(name, None)
 
             if trait.setattr == setattr_dissalow:
                 raise NotImplementedError('Check logic in C code')
@@ -1007,7 +1019,7 @@ cdef class CHasTraits:
             if delegate.itrait_dict is not None:
                 trait = delegate.itrait_dict.get(daname, None)
             else:
-                trait = delegate.ctrait_dict.get(daname, None)
+                trait = delegate.__class_traits__.get(daname, None)
             if trait is None:
                 trait = delegate.get_prefix_trait(daname2, 0)
                 if trait is None:
@@ -1273,7 +1285,12 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 
 
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError('getattr disallow NOT IMPL.')
+    if isinstance(name, str):
+        return AttributeError(
+            "'%.50s' object has no attribute '%.400s'".format(type(obj), name)
+        )
+    else:
+        raise TypeError('Attribute name must be a string')
 
 cdef object getattr_constant(cTrait trait, CHasTraits obj, object name):
     raise NotImplementedError('getattr constant NOT IMPL.')
@@ -1371,11 +1388,8 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     if traitd.validate is not NULL and value is not Undefined:
         value = traitd.validate(traitd, obj, name, value)
 
-    if obj.obj_dict is None:
-        obj.obj_dict = {}
-
     # FIXME: support unicode
-    if not PyString_Check(name):
+    if not isinstance(name, str):
         raise ValueError('Attribute name must be a string.')
 
     # TRAIT_SETATTR_ORIGINAL_VALUE: Make 'setattr' store the original
@@ -1500,8 +1514,8 @@ cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object n
                 traitd = delegate.itrait_dict[daname]
         else:
             try:
-                if daname in delegate.ctrait_dict:
-                    traitd = delegate.ctrait_dict[daname]
+                if daname in delegate.__class_traits__:
+                    traitd = delegate.__class_traits__[daname]
                 else:
                     traitd = delegate.get_prefix_trait(daname, 1)
             except:
@@ -1671,7 +1685,7 @@ cdef class cTrait:
 
     def value_allowed(self, int value_allowed):
         if value_allowed:
-            self.flags |= TRAIT_NO_VALUE_TEST
+            self.flags |= TRAIT_VALUE_ALLOWED
         else:
             self.flags &= ~TRAIT_VALUE_ALLOWED
 
