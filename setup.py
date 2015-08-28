@@ -1,13 +1,13 @@
-# Copyright (c) 2008-2012 by Enthought, Inc.
+# Copyright (c) 2008-2013 by Enthought, Inc.
 # All rights reserved.
 
 from os.path import join
 from setuptools import setup, Extension, find_packages
 from Cython.Distutils import build_ext
 
-
 d = {}
-execfile(join('traits', '__init__.py'), d)
+traits_init = join('traits', '__init__.py')
+exec(compile(open(traits_init).read(), traits_init, 'exec'), d)
 
 
 ctraits = Extension(
@@ -15,15 +15,6 @@ ctraits = Extension(
     sources = ['traits/ctraits.pyx'],
     extra_compile_args = ['-DNDEBUG=1', '-O3'],
 )
-
-
-speedups = Extension(
-    'traits.protocols._speedups',
-    # fixme: Use the generated sources until Pyrex 0.9.6 and setuptools can
-    # play with each other. See #1364
-    sources = ['traits/protocols/_speedups.c'],
-    extra_compile_args = ['-DNDEBUG=1', '-O3'],
-    )
 
 
 setup(
@@ -52,14 +43,15 @@ setup(
     long_description = open('README.rst').read(),
     download_url = ('http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
                     d['__version__']),
-    ext_modules = [ctraits, speedups],
+    ext_modules = [ctraits],
     include_package_data = True,
-    package_data = {'traits': ['protocols/_speedups.pyx']},
     license = 'BSD',
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    use_2to3 = True,
+    use_2to3_exclude_fixers = ['lib2to3.fixes.fix_next'],   # traits_listener.ListenerItem has a trait *next* which gets wrongly renamed
     cmdclass = {'build_ext': build_ext},
 )

@@ -99,11 +99,11 @@ def indent ( text, first_line = True, n = 1, width = 4 ):
     text : str
         The text to indent.
     first_line : bool, optional
-        If False, then the first line will not be indented.
+        If False, then the first line will not be indented (default: True).
     n : int, optional
-        The level of indentation.
+        The level of indentation (default: 1).
     width : int, optional
-        The number of spaces in each level of indentation.
+        The number of spaces in each level of indentation (default: 4).
 
     Returns
     -------
@@ -239,55 +239,55 @@ class ListenerItem ( ListenerBase ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
-    # The name of the trait to listen to:
+    #: The name of the trait to listen to:
     name = Str
 
-    # The name of any metadata that must be present (or not present):
+    #: The name of any metadata that must be present (or not present):
     metadata_name = Str
 
-    # Does the specified metadata need to be defined (True) or not defined
-    # (False)?
+    #: Does the specified metadata need to be defined (True) or not defined
+    #: (False)?
     metadata_defined = Bool( True )
 
-    # The handler to be called when any listened-to trait is changed:
+    #: The handler to be called when any listened-to trait is changed:
     handler = Any
 
-    # A weakref 'wrapped' version of 'handler':
+    #: A weakref 'wrapped' version of 'handler':
     wrapped_handler_ref = Any
 
-    # The dispatch mechanism to use when invoking the handler:
+    #: The dispatch mechanism to use when invoking the handler:
     dispatch = Str
 
-    # Does the handler go at the beginning (True) or end (False) of the
-    # notification handlers list?
+    #: Does the handler go at the beginning (True) or end (False) of the
+    #: notification handlers list?
     priority = Bool( False )
 
-    # The next level (if any) of ListenerBase object to be called when any of
-    # this object's listened-to traits is changed:
+    #: The next level (if any) of ListenerBase object to be called when any of
+    #: this object's listened-to traits is changed:
     next = Instance( ListenerBase )
 
-    # The type of handler being used:
+    #: The type of handler being used:
     type = Enum( ANY_LISTENER, SRC_LISTENER, DST_LISTENER )
 
-    # Should changes to this item generate a notification to the handler?
+    #: Should changes to this item generate a notification to the handler?
     notify = Bool( True )
 
-    # Should registering listeners for items reachable from this listener item
-    # be deferred until the associated trait is first read or set?
+    #: Should registering listeners for items reachable from this listener item
+    #: be deferred until the associated trait is first read or set?
     deferred = Bool( False )
 
-    # Is this an 'any_trait' change listener, or does it create explicit
-    # listeners for each individual trait?
+    #: Is this an 'any_trait' change listener, or does it create explicit
+    #: listeners for each individual trait?
     is_any_trait = Bool( False )
 
-    # Is the associated handler a special list handler that handles both
-    # 'foo' and 'foo_items' events by receiving a list of 'deleted' and 'added'
-    # items as the 'old' and 'new' arguments?
+    #: Is the associated handler a special list handler that handles both
+    #: 'foo' and 'foo_items' events by receiving a list of 'deleted' and 'added'
+    #: items as the 'old' and 'new' arguments?
     is_list_handler = Bool( False )
 
-    # A dictionary mapping objects to a list of all current active
-    # (*name*, *type*) listener pairs, where *type* defines the type of
-    # listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
+    #: A dictionary mapping objects to a list of all current active
+    #: (*name*, *type*) listener pairs, where *type* defines the type of
+    #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
     active = Instance( WeakKeyDictionary, () )
 
     #-- 'ListenerBase' Class Method Implementations ----------------------------
@@ -548,7 +548,7 @@ class ListenerItem ( ListenerBase ):
             # '_items' trait?
             if name.endswith('_items'):
                 name = name[:-len('_items')]
-                
+
             dict = getattr( object, name )
             unregister = self.next.unregister
             register = self.next.register
@@ -622,9 +622,13 @@ class ListenerItem ( ListenerBase ):
         """
         handler = self.handler()
         if handler is not Undefined:
-            object._on_trait_change( handler, remove   = remove,
-                                              dispatch = self.dispatch,
-                                              priority = self.priority )
+            object._on_trait_change(
+                handler,
+                remove=remove,
+                dispatch=self.dispatch,
+                priority=self.priority,
+                target=self._get_target(),
+            )
 
         return ( object, name )
 
@@ -639,10 +643,14 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
             return ( object, name )
 
@@ -657,20 +665,39 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             return next.unregister( getattr( object, name ) )
 
-        if not self.deferred:
+        if not self.deferred or name in object.__dict__:
+            # Sometimes, the trait may already be assigned. This can happen when
+            # there are chains of dynamic initializers and 'delegate'
+            # notifications. If 'trait_a' and 'trait_b' have dynamic
+            # initializers and 'trait_a's initializer creates 'trait_b', *and*
+            # we have a DelegatesTo trait that delegates to 'trait_a', then the
+            # listener that implements the delegate will create 'trait_a' and
+            # thus 'trait_b'. If we are creating an extended trait change
+            # listener on 'trait_b.something', and the 'trait_a' delegate
+            # listeners just happen to get hooked up before this one, then
+            # 'trait_b' will have been initialized already, and the registration
+            # that we are deferring will never happen.
             return next.register( getattr( object, name ) )
 
         return ( object, name )
@@ -686,23 +713,34 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
                 if self.is_list_handler:
-                    object._on_trait_change( self.handle_list_items_special,
-                                             name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        self.handle_list_items_special,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                 elif self.type == ANY_LISTENER:
-                    object._on_trait_change( handler, name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
             return ( object, name )
 
@@ -714,32 +752,51 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                     if self.is_list_handler:
-                        object._on_trait_change( self.handle_list_items_special,
-                                               name + '_items',
-                                               remove   = remove,
-                                               dispatch = self.dispatch,
-                                               priority = self.priority )
+                        object._on_trait_change(
+                            self.handle_list_items_special,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
                     elif self.type == ANY_LISTENER:
-                        object._on_trait_change( handler, name + '_items',
-                                                 remove   = remove,
-                                                 dispatch = self.dispatch,
-                                                 priority = self.priority )
+                        object._on_trait_change(
+                            handler,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
-        object._on_trait_change( tl_handler_items, name + '_items',
-                                 remove   = remove,
-                                 dispatch = 'extended',
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler_items,
+            name + '_items',
+            remove=remove,
+            dispatch='extended',
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             handler = next.unregister
@@ -774,16 +831,24 @@ class ListenerItem ( ListenerBase ):
         if next is None:
             handler = self.handler()
             if handler is not Undefined:
-                object._on_trait_change( handler, name,
-                                         remove   = remove,
-                                         dispatch = self.dispatch,
-                                         priority = self.priority )
+                object._on_trait_change(
+                    handler,
+                    name,
+                    remove=remove,
+                    dispatch=self.dispatch,
+                    priority=self.priority,
+                    target=self._get_target(),
+                )
 
                 if self.type == ANY_LISTENER:
-                    object._on_trait_change( handler, name + '_items',
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name + '_items',
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
             return ( object, name )
 
@@ -795,26 +860,42 @@ class ListenerItem ( ListenerBase ):
             else:
                 handler = self.handler()
                 if handler is not Undefined:
-                    object._on_trait_change( handler, name,
-                                             remove   = remove,
-                                             dispatch = self.dispatch,
-                                             priority = self.priority )
+                    object._on_trait_change(
+                        handler,
+                        name,
+                        remove=remove,
+                        dispatch=self.dispatch,
+                        priority=self.priority,
+                        target=self._get_target(),
+                    )
 
                     if self.type == ANY_LISTENER:
-                        object._on_trait_change( handler, name + '_items',
-                                                 remove   = remove,
-                                                 dispatch = self.dispatch,
-                                                 priority = self.priority )
+                        object._on_trait_change(
+                            handler,
+                            name + '_items',
+                            remove=remove,
+                            dispatch=self.dispatch,
+                            priority=self.priority,
+                            target=self._get_target(),
+                        )
 
-        object._on_trait_change( tl_handler, name,
-                                 remove   = remove,
-                                 dispatch = self.dispatch,
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler,
+            name,
+            remove=remove,
+            dispatch=self.dispatch,
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
-        object._on_trait_change( tl_handler_items, name + '_items',
-                                 remove   = remove,
-                                 dispatch = self.dispatch,
-                                 priority = self.priority )
+        object._on_trait_change(
+            tl_handler_items,
+            name + '_items',
+            remove=remove,
+            dispatch=self.dispatch,
+            priority=self.priority,
+            target=self._get_target(),
+        )
 
         if remove:
             handler = next.unregister
@@ -857,6 +938,18 @@ class ListenerItem ( ListenerBase ):
             # new trait:
             getattr( self, type )( object, new_trait, False )
 
+    def _get_target(self):
+        """ Get the target object from the ListenerNotifyWrapper.
+        """
+        target = None
+        lnw = self.wrapped_handler_ref()
+        if lnw is not None:
+            target_ref = getattr(lnw, 'object', None)
+            if target_ref is not None:
+                target = target_ref()
+        return target
+
+
 #-------------------------------------------------------------------------------
 #  'ListenerGroup' class:
 #-------------------------------------------------------------------------------
@@ -880,31 +973,31 @@ class ListenerGroup ( ListenerBase ):
     #  Trait definitions:
     #---------------------------------------------------------------------------
 
-    # The handler to be called when any listened-to trait is changed
+    #: The handler to be called when any listened-to trait is changed
     handler = Property
 
-    # A weakref 'wrapped' version of 'handler':
+    #: A weakref 'wrapped' version of 'handler':
     wrapped_handler_ref = Property
 
-    # The dispatch mechanism to use when invoking the handler:
+    #: The dispatch mechanism to use when invoking the handler:
     dispatch = Property
 
-    # Does the handler go at the beginning (True) or end (False) of the
-    # notification handlers list?
+    #: Does the handler go at the beginning (True) or end (False) of the
+    #: notification handlers list?
     priority = ListProperty
 
-    # The next level (if any) of ListenerBase object to be called when any of
-    # this object's listened-to traits is changed
+    #: The next level (if any) of ListenerBase object to be called when any of
+    #: this object's listened-to traits is changed
     next = ListProperty
 
-    # The type of handler being used:
+    #: The type of handler being used:
     type = ListProperty
 
-    # Should changes to this item generate a notification to the handler?
+    #: Should changes to this item generate a notification to the handler?
     notify = ListProperty
 
-    # Should registering listeners for items reachable from this listener item
-    # be deferred until the associated trait is first read or set?
+    #: Should registering listeners for items reachable from this listener item
+    #: be deferred until the associated trait is first read or set?
     deferred = ListProperty
 
     # The list of ListenerBase objects in the group
@@ -993,28 +1086,28 @@ class ListenerParser ( HasPrivateTraits ):
     #  Trait definitions:
     #-------------------------------------------------------------------------------
 
-    # The string being parsed
+    #: The string being parsed
     text = Str
 
-    # The length of the string being parsed.
+    #: The length of the string being parsed.
     len_text = Int
 
-    # The current parse index within the string
+    #: The current parse index within the string
     index = Int
 
-    # The next character from the string being parsed
+    #: The next character from the string being parsed
     next = Property
 
-    # The next Python attribute name within the string:
+    #: The next Python attribute name within the string:
     name = Property
 
-    # The next non-whitespace character
+    #: The next non-whitespace character
     skip_ws = Property
 
-    # Backspaces to the last character processed
+    #: Backspaces to the last character processed
     backspace = Property
 
-    # The ListenerBase object resulting from parsing **text**
+    #: The ListenerBase object resulting from parsing **text**
     listener = Instance( ListenerBase )
 
     #-- Property Implementations -----------------------------------------------
@@ -1090,7 +1183,7 @@ class ListenerParser ( HasPrivateTraits ):
             items.append( self.parse_item( terminator ) )
 
             c = self.skip_ws
-            if c is terminator:
+            if c == terminator:
                 break
 
             if c != ',':

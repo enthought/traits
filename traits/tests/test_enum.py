@@ -1,4 +1,4 @@
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from traits.api import Enum, HasTraits, List, Property, TraitError
 

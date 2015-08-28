@@ -93,7 +93,7 @@ not be persisted::
         state = super( XXX, self ).__getstate__()
 
         for key in [ 'foo', 'bar' ]:
-            if state.has_key( key ):
+            if key in state:
                 del state[ key ]
 
         return state

@@ -101,8 +101,6 @@ Traits
 
 .. autoclass:: Disallow
 
-.. autoclass:: missing
-
 .. autoclass:: Constant
 
 .. autoclass:: Delegate
@@ -151,7 +149,7 @@ Traits
 
 .. autoclass:: Instance
 
-.. autoclass:: AdaptedTo
+.. autoclass:: Supports
 
 .. autoclass:: AdaptsTo
 

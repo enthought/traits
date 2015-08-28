@@ -9,7 +9,8 @@ Class
 
 .. autoclass:: Adapter
 
-.. autoclass:: DefaultAdapterFactory
+    .. automethod:: __init__
+
 
 Function
 --------
