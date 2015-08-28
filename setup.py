@@ -44,6 +44,8 @@ def git_version():
         out = _minimal_ext_cmd(['git', 'describe', '--tags'])
     except OSError:
         out = ''
+
+    git_description = out.strip().decode('ascii')
     expr = r'.*?\-(?P<count>\d+)-g(?P<hash>[a-fA-F0-9]+)'
     match = re.match(expr, git_description)
     if match is None:
@@ -61,7 +63,6 @@ version = '{version}'
 full_version = '{full_version}'
 git_revision = '{git_revision}'
 is_released = {is_released}
->>>>>>> master
 
 if not is_released:
     version = full_version
@@ -105,17 +106,19 @@ if __name__ == "__main__":
     from traits import __version__
 
     def additional_commands():
+        default = {'build_ext': build_ext}
         # Pygments 2 isn't supported on Python 3 versions earlier than 3.3, so
         # don't make the documentation command available there.
         if (3,) <= sys.version_info < (3, 3):
-            return {}
+            return default
 
         try:
             from sphinx.setup_command import BuildDoc
         except ImportError:
-            return {}
+            return default
         else:
-            return {'documentation': BuildDoc}
+            default['documentation'] = BuildDoc
+            return default
 
     setup(
         name='traits',
@@ -158,4 +161,3 @@ if __name__ == "__main__":
         use_2to3_exclude_fixers=['lib2to3.fixes.fix_next'],
         cmdclass=additional_commands(),
     )
->>>>>>> master
