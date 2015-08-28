@@ -1,65 +1,80 @@
+##############################################################################
+# Copyright 2014 Enthought, Inc.
+##############################################################################
+
 """ Tests for the static notifiers. """
 from traits.api import Float, HasTraits
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
 
-
 calls_0 = []
+
+
 class StaticNotifiers0(HasTraits):
     ok = Float
+
     def _ok_changed():
         calls_0.append(True)
 
     fail = Float
+
     def _fail_changed():
         raise Exception('error')
 
 
 class StaticNotifiers1(HasTraits):
     ok = Float
+
     def _ok_changed(self):
         if not hasattr(self, 'calls'):
             self.calls = []
         self.calls.append(True)
 
     fail = Float
+
     def _fail_changed(self):
         raise Exception('error')
 
 
 class StaticNotifiers2(HasTraits):
     ok = Float
+
     def _ok_changed(self, new):
         if not hasattr(self, 'calls'):
             self.calls = []
         self.calls.append(new)
 
     fail = Float
+
     def _fail_changed(self, new):
         raise Exception('error')
 
 
 class StaticNotifiers3(HasTraits):
     ok = Float
+
     def _ok_changed(self, old, new):
         if not hasattr(self, 'calls'):
             self.calls = []
         self.calls.append((old, new))
 
     fail = Float
+
     def _fail_changed(self, old, new):
         raise Exception('error')
 
 
 class StaticNotifiers4(HasTraits):
     ok = Float
+
     def _ok_changed(self, name, old, new):
         if not hasattr(self, 'calls'):
             self.calls = []
         self.calls.append((name, old, new))
 
     fail = Float
+
     def _fail_changed(self, name, old, new):
         raise Exception('error')
 
@@ -68,8 +83,6 @@ class TestNotifiers(unittest.TestCase):
     """ Tests for the static notifiers, and the "anytrait" static notifiers.
     """
 
-    #### 'TestCase' protocol ##################################################
-
     def setUp(self):
         self.exceptions = []
         trait_notifiers.push_exception_handler(self._handle_exception)
@@ -77,12 +90,8 @@ class TestNotifiers(unittest.TestCase):
     def tearDown(self):
         trait_notifiers.pop_exception_handler()
 
-    #### Private protocol #####################################################
-
     def _handle_exception(self, obj, name, old, new):
         self.exceptions.append((obj, name, old, new))
-
-    #### Tests ################################################################
 
     def test_static_notifiers_0(self):
         obj = StaticNotifiers0(ok=2)

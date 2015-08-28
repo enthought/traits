@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,10 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
-
-
-
+#------------------------------------------------------------------------------
 """ Test whether HasTraits objects with cycles can be garbage collected.
 """
 
@@ -26,6 +23,7 @@ from traits.testing.unittest_tools import unittest
 # Enthought library imports
 from ..api import HasTraits, Any, DelegatesTo, Instance, Int
 
+
 class TestCase(unittest.TestCase):
     def _simple_cycle_helper(self, foo_class):
         """ Can the garbage collector clean up a cycle with traits objects?
@@ -34,10 +32,10 @@ class TestCase(unittest.TestCase):
         # Create two Foo objects that refer to each other.
         first = foo_class()
         second = foo_class(child=first)
-        first.child=second
+        first.child = second
 
         # get their ids
-        foo_ids =  [id(first), id(second)]
+        foo_ids = [id(first), id(second)]
 
         # delete the items so that they can be garbage collected
         del first, second
@@ -56,7 +54,7 @@ class TestCase(unittest.TestCase):
         """ Can the garbage collector clean up a cycle with old style class?
         """
         class Foo:
-            def __init__(self,child=None):
+            def __init__(self, child=None):
                 self.child = child
 
         self._simple_cycle_helper(Foo)
@@ -65,7 +63,7 @@ class TestCase(unittest.TestCase):
         """ Can the garbage collector clean up a cycle with new style class?
         """
         class Foo(object):
-            def __init__(self,child=None):
+            def __init__(self, child=None):
                 self.child = child
 
         self._simple_cycle_helper(Foo)
@@ -91,13 +89,14 @@ class TestCase(unittest.TestCase):
 
         foo = Foo()
 
-        # It seems like foo sometimes has not finished construction yet, so the
-        # frame found by referrers is not _exactly_ the same as Foo(). For more
-        # information, see the gc doc: http://docs.python.org/lib/module-gc.html
+        # It seems like foo sometimes has not finished construction yet, so
+        # the frame found by referrers is not _exactly_ the same as Foo(). For
+        # more information, see the gc doc: http://docs.python.org/lib/module-
+        # gc.html
         #
-        # The documentation says that this (get_referrers) should be used for no
-        # purpose other than debugging, so this is really not a good way to test
-        # the code.
+        # The documentation says that this (get_referrers) should be used for
+        # no purpose other than debugging, so this is really not a good way to
+        # test the code.
 
         time.sleep(0.1)
         referrers = gc.get_referrers(foo.__dict__)
@@ -112,7 +111,6 @@ class TestCase(unittest.TestCase):
             """ Object we are delegating to. """
 
             i = Int
-
 
         class Delegates(HasTraits):
             """ Object that delegates. """
@@ -131,8 +129,8 @@ class TestCase(unittest.TestCase):
             gc.collect(2)
 
         # See if we still have a Delegates
-        ds = [ obj for obj in gc.get_objects() if isinstance(obj, Delegates) ]
-        self.assert_(ds == [])
+        ds = [obj for obj in gc.get_objects() if isinstance(obj, Delegates)]
+        self.assertEqual(ds, [])
 
 if __name__ == '__main__':
     unittest.main()

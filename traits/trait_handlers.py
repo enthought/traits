@@ -1242,7 +1242,7 @@ class TraitInstance ( ThisClass ):
     TraitInstance ensures that assigned values are exactly of the type specified
     (i.e., no coercion is performed).
     """
-    def __init__ ( self, aClass, allow_none = True, adapt = 'yes',
+    def __init__ ( self, aClass, allow_none = True, adapt = 'no',
                    module = '' ):
         """Creates a TraitInstance handler.
 
@@ -2448,6 +2448,34 @@ class TraitListObject ( list ):
         def __delslice__ ( self, i, j ):
             self.__delitem__(slice(i,j))
 
+    def __iadd__(self, other):
+        self.extend(other)
+        return self
+
+    def __imul__(self, count):
+        trait = getattr( self, 'trait', None )
+        if trait is None:
+            return list.__imul__( self, count )
+
+        original_len = len( self )
+
+        if trait.minlen <= original_len * count <= trait.maxlen:
+            if self.name_items is not None:
+                removed = None if count else self[:]
+
+            result = list.__imul__(self, count)
+
+            if self.name_items is not None:
+                added = self[original_len:] if count else None
+                index = original_len if count else 0
+                self._send_trait_items_event( self.name_items,
+                    TraitListEvent( index, removed, added ) )
+
+            return result
+        else:
+            self.len_error( original_len * count )
+
+
     def append ( self, value ):
         trait = getattr( self, 'trait', None )
         if trait is None:
@@ -2487,8 +2515,18 @@ class TraitListObject ( list ):
                 list.insert( self, index, value )
 
                 if self.name_items is not None:
+                    # Length before the insertion.
+                    original_len = len( self ) - 1
+
+                    # Indices outside [-original_len, original_len] are clipped.
+                    # This matches the behaviour of insert on the
+                    # underlying list.
                     if index < 0:
-                        index = len( self ) + index - 1
+                        index += original_len
+                        if index < 0:
+                            index = 0
+                    elif index > original_len:
+                        index = original_len
 
                     self._send_trait_items_event( self.name_items,
                         TraitListEvent( index, None, [ value ] ),
@@ -2561,10 +2599,18 @@ class TraitListObject ( list ):
         else:
             self.len_error( len( self ) - 1 )
 
-    def sort ( self, cmp = None, key = None, reverse = False ):
-        removed = self[:]
-        list.sort( self, cmp = cmp, key = key, reverse = reverse )
+    if sys.version_info[0] < 3:
+        def sort ( self, cmp = None, key = None, reverse = False ):
+            removed = self[:]
+            list.sort( self, cmp = cmp, key = key, reverse = reverse )
+            self._sort_common(removed)
+    else:
+        def sort ( self, key = None, reverse = False ):
+            removed = self[:]
+            list.sort( self, key = key, reverse = reverse )
+            self._sort_common(removed)
 
+    def _sort_common ( self, removed ):
         if (getattr(self, 'name_items', None) is not None and
             getattr(self, 'trait', None) is not None):
             self._send_trait_items_event( self.name_items,

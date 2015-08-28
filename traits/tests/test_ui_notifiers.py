@@ -65,7 +65,6 @@ class TestUINotifiers(unittest.TestCase):
 
     #### Tests ################################################################
 
-
     @unittest.skipIf(
         not QT_FOUND, "Qt event loop not found, UI dispatch not possible.")
     def test_notification_from_main_thread(self):

@@ -17,20 +17,20 @@ Classes
 
 .. autoclass:: Default
 
-.. autoclass:: Trait
-
-.. autofunction:: Property
+.. autoclass:: Property
 
 .. autoclass:: ForwardProperty
 
-.. autofunction:: Color
+.. autoclass:: Color
 
-.. autofunction:: RGBColor
+.. autoclass:: RGBColor
 
-.. autofunction:: Font
+.. autoclass:: Font
 
 Functions
 ---------
+
+.. autofunction:: Trait
 
 .. autofunction:: password_editor
 
@@ -59,4 +59,3 @@ Private Classes
 .. autoclass:: traits.traits._InstanceArgs
 
 .. autoclass:: traits.traits._TraitMaker
-

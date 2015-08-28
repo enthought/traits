@@ -4,22 +4,26 @@ from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
 
-
 anycalls_0 = []
+
+
 class AnytraitStaticNotifiers0(HasTraits):
     ok = Float
+
     def _anytrait_changed():
         anycalls_0.append(True)
 
 
 class AnytraitStaticNotifiers0Fail(HasTraits):
     fail = Float
+
     def _anytrait_changed():
         raise Exception('error')
 
 
 class AnytraitStaticNotifiers1(HasTraits):
     ok = Float
+
     def _anytrait_changed(self):
         if not hasattr(self, 'anycalls'):
             self.anycalls = []
@@ -28,12 +32,14 @@ class AnytraitStaticNotifiers1(HasTraits):
 
 class AnytraitStaticNotifiers1Fail(HasTraits):
     fail = Float
+
     def _anytrait_changed(self):
         raise Exception('error')
 
 
 class AnytraitStaticNotifiers2(HasTraits):
     ok = Float
+
     def _anytrait_changed(self, name):
         if not hasattr(self, 'anycalls'):
             self.anycalls = []
@@ -42,12 +48,14 @@ class AnytraitStaticNotifiers2(HasTraits):
 
 class AnytraitStaticNotifiers2Fail(HasTraits):
     fail = Float
+
     def _anytrait_changed(self, name):
         raise Exception('error')
 
 
 class AnytraitStaticNotifiers3(HasTraits):
     ok = Float
+
     def _anytrait_changed(self, name, new):
         if not hasattr(self, 'anycalls'):
             self.anycalls = []
@@ -56,12 +64,14 @@ class AnytraitStaticNotifiers3(HasTraits):
 
 class AnytraitStaticNotifiers3Fail(HasTraits):
     fail = Float
+
     def _anytrait_changed(self, name, new):
         raise Exception('error')
 
 
 class AnytraitStaticNotifiers4(HasTraits):
     ok = Float
+
     def _anytrait_changed(self, name, old, new):
         if not hasattr(self, 'anycalls'):
             self.anycalls = []
@@ -70,6 +80,7 @@ class AnytraitStaticNotifiers4(HasTraits):
 
 class AnytraitStaticNotifiers4Fail(HasTraits):
     fail = Float
+
     def _anytrait_changed(self, name, old, new):
         raise Exception('error')
 

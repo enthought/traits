@@ -1488,6 +1488,13 @@ class HasTraits ( CHasTraits ):
 
         return result
 
+    # Defines the deprecated alias for 'trait_get'
+    @deprecated('use "HasTraits.trait_get" instead')
+    def get( self, *names, **metadata ):
+        return self.trait_get( *names, **metadata )
+
+    get.__doc__ = trait_get.__doc__
+
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
     #---------------------------------------------------------------------------
@@ -1538,6 +1545,15 @@ class HasTraits ( CHasTraits ):
                 setattr( self, name, value )
 
         return self
+
+
+    # Defines the deprecated alias for 'trait_set'
+    @deprecated('use "HasTraits.trait_set" instead')
+    def set ( self, trait_change_notify = True, **traits ):
+        return self.trait_set(
+            trait_change_notify=trait_change_notify, **traits)
+
+    set.__doc__ = trait_set.__doc__
 
     def trait_setq ( self, **traits ):
         """ Shortcut for setting object trait attributes.
@@ -3601,6 +3617,10 @@ def implements( *interfaces ):
     interface that the containing class implements. Each specified interface
     must be a subclass of **Interface**. This function should only be
     called from directly within a class body.
+
+    .. deprecated:: 4.4
+       Use the ``provides`` class decorator instead.
+
     """
 
     callback = provides(*interfaces)

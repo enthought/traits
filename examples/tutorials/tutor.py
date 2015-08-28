@@ -657,16 +657,14 @@ class ASection ( HasPrivateTraits ):
                 if len( names ) == 1:
                     dir = os.path.join( path, names[0] )
                     if os.path.isdir( dir ):
-                        subsections[i] = SectionFactory(
-                            title  = title,
-                            parent = self ).trait_set( path = dir ).section
+
+                        factory = SectionFactory(title=title, parent=self)
+                        subsections[i] = factory.trait_set(path=dir).section
                         continue
 
                 # Otherwise, create a section from the list of matching files:
-                subsections[i] = SectionFactory(
-                    title  = title,
-                    parent = self,
-                    files  = names ).trait_set( path = path ).section
+                factory = SectionFactory(title=title, parent=self, files=names)
+                subsections[i] = factory.trait_set(path=path).section
 
         # Set the subsections to the non-None values that are left:
         self._subsections = [ subsection for subsection in subsections
@@ -1748,8 +1746,7 @@ class Tutor ( HasPrivateTraits ):
         """
         path    = self.path
         title   = title_for( os.path.splitext( os.path.basename( path ) )[0] )
-        section = SectionFactory( title = title ).trait_set(
-            path = path ).section
+        section = SectionFactory(title=title).trait_set(path=path).section
         if section is not None:
             self.section = self.root = section
 
