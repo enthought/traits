@@ -26,6 +26,7 @@ from __future__ import absolute_import
 
 import datetime
 import operator
+import keyword
 import re
 import sys
 from os.path import isfile, isdir
@@ -363,6 +364,30 @@ class Str ( BaseStr ):
 
     #: The C-level fast validator to use:
     fast_validate = ( 11, basestring )
+
+
+class IdentifierStr(BaseStr):
+    #: A description of the type of value this trait accepts:
+    info_text = 'an ASCII identifier string'
+
+    #: The default value when first created
+    default_value = Undefined
+
+    # Regexp for identifier recognition
+    _identifier_regex = re.compile("[_A-Za-z][_a-zA-Z0-9]*$")
+
+    def validate ( self, object, name, value ):
+        """ Validates that a specified value is valid for this trait.
+        """
+
+        if (isinstance( value, str ) and
+                len(value) > 0 and
+                not keyword.iskeyword(value) and
+                self._identifier_regex.match(value)):
+
+            return value
+
+        self.error( object, name, value )
 
 
 class Title ( Str ):
@@ -825,6 +850,8 @@ class String ( TraitType ):
         """
         self.__dict__.update( state )
         self._init()
+
+
 
 #-------------------------------------------------------------------------------
 #  'Regex' trait:

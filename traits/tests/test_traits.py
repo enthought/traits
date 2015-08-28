@@ -20,9 +20,10 @@ import sys
 from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
-                   Instance, Int, List, Long, Str, Trait, TraitError,
-                   TraitList, TraitPrefixList, TraitPrefixMap, TraitRange,
-                   Tuple, pop_exception_handler, push_exception_handler)
+                   IdentifierStr, Instance, Int, List, Long, Str, Trait,
+                   TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
+                   TraitRange, Tuple, Undefined, pop_exception_handler,
+                   push_exception_handler)
 
 #  Base unit test classes:
 
@@ -302,6 +303,21 @@ class StringTest(AnyTraitTest):
                     '-10L', '10.1', '-10.1', 'string', u'string', 1j, [10],
                     ['ten'], {'ten': 10}, (10,), None]
     _bad_values = []
+
+    def coerce(self, value):
+        return str(value)
+
+
+class IdentifierStrTrait(HasTraits):
+    value = IdentifierStr
+
+
+class IdentifierStrTest(AnyTraitTest):
+    obj = IdentifierStrTrait()
+
+    _default_value = Undefined
+    _good_values = ['i', '_i', 'foo_bar']
+    _bad_values = [None, '1', 1, u'unicode', 'for', "0chupacabra", '']
 
     def coerce(self, value):
         return str(value)
