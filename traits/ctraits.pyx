@@ -1726,6 +1726,7 @@ cdef class cTrait:
 
     cdef traits_clear(self):
         # FIXME: what do we need to do here?
+        pass
 
     def value_allowed(self, int value_allowed):
         if value_allowed:
