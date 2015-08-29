@@ -25,6 +25,10 @@ cdef extern from 'Python.h':
     ctypedef struct PyTypeObject:
         PyObject* tp_dict
 
+    void PyObject_GC_UnTrack(void *op)
+    void Py_TRASHCAN_SAFE_BEGIN(PyObject* op)
+    void Py_TRASHCAN_SAFE_END(PyObject* op)
+
 # Constants
 cdef object class_traits = "__class_traits__"
 cdef object listener_traits = "__listener_traits__"
@@ -652,14 +656,13 @@ cdef class CHasTraits:
     cdef dict obj_dict     # Object attribute dictionary ('__dict__')
 
     def __dealloc__(self):
-        # see has_traits_dealloc
         # FIXME: make sure to clean up this method
-        # Do we really need to do this? Or can we rely on Cython ?
-        #PyObject_GC_UnTrack(self)
-        #Py_TRASHCAN_SAFE_BEGIN(obj)
+        # What do we really need to do here? Cython should do the job for us!
         self.has_traits_clear()
-        #self.ob_type.tp_free(<object>obj)
-        #Py_TRASHCAN_SAFE_END(self)
+
+    cdef has_traits_clear(self):
+        # FIXME: Do we need to do anything special here?
+        pass
 
     def __cinit__(self):
 
@@ -704,11 +707,7 @@ cdef class CHasTraits:
         # Indicate that the object has finished being initialized: */
         self.flags |= HASTRAITS_INITED
 
-    cdef has_traits_clear(self):
-        # FIXME:
-        # Supposed to Py_CLEAR the members ... do we really want to do that? Or
-        # will Cython do it for us?
-        pass
+
 
     cdef cTrait get_prefix_trait(self, str name, int is_set):
         ''' Gets the definition of the matching prefix based trait for a
@@ -834,6 +833,7 @@ cdef class CHasTraits:
             del self.obj_dict[name]
 
     def __getattr__(self, name):
+        print 'GETATTR ', name
         # has_traits_getattro function in C
         cdef object obj_value
         cdef object value
@@ -852,8 +852,6 @@ cdef class CHasTraits:
             trait = self.__class_traits__.get(name)
 
         if trait is not None:
-            if trait.getattr is NULL:
-                raise ValueError('getattr cannot be null ...')
             value = trait.getattr(trait, self, name)
         else:
             result = PyObject_GenericGetAttr(<PyObject*>self, <PyObject*>name)
@@ -1260,7 +1258,7 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
 cdef object getattr_event(cTrait trait, CHasTraits obj, object name):
     """  Returns the value assigned to an event trait. """
     raise AttributeError(
-        "The %.400s trait of a %.50s instance is an 'event', which is write"
+        "GE The %.400s trait of a %.50s instance is an 'event', which is write"
         " only." % (name, type(obj))
     )
 
@@ -1317,7 +1315,7 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
     if isinstance(name, str):
         raise AttributeError(
-            "'{:.50s}' object has no attribute '{:.400s}'".format(type(obj), name)
+            "'GD {:.50s}' object has no attribute '{:.400s}'".format(type(obj), name)
         )
     else:
         raise TypeError('Attribute name must be a string')
@@ -1476,7 +1474,7 @@ cdef int setattr_python(cTrait traito, cTrait traitd, CHasTraits obj, object nam
 
     if not isinstance(name, str):
         raise AttributeError(
-              "'%.50s' object has no attribute '%.400s'".format(
+              "'SP %.50s' object has no attribute '%.400s'".format(
                   type(obj), name
             )
         )
@@ -1720,6 +1718,14 @@ cdef class cTrait:
         if kind >= 0 and kind <= 8:
             self.getattr = getattr_handlers[kind]
             self.setattr = setattr_handlers[kind]
+
+    def __dealloc__(self):
+        # see has_traits_dealloc
+        # FIXME: make sure to clean up this method
+        self.traits_clear()
+
+    cdef traits_clear(self):
+        # FIXME: what do we need to do here?
 
     def value_allowed(self, int value_allowed):
         if value_allowed:
