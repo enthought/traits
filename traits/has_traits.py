@@ -2684,6 +2684,8 @@ class HasTraits ( CHasTraits ):
 
     def _sync_trait_modified ( self, object, name, old, new ):
         info   = self.__sync_trait__
+        if name not in info:
+            return
         locked = info[ '' ]
         locked[ name ] = None
         for object, object_name in info[ name ].values():
