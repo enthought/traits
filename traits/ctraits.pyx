@@ -273,9 +273,10 @@ cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, objec
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     cdef object type_info = trait.py_validate
-    if value in type_info[1]:
-        return value
-    else:
+    try:
+        if value in type_info[1]:
+            return value
+    except:
         raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
@@ -707,7 +708,8 @@ cdef class CHasTraits:
         # Indicate that the object has finished being initialized: */
         self.flags |= HASTRAITS_INITED
 
-
+    def _instance_traits(self):
+        return self.itrait_dict
 
     cdef cTrait get_prefix_trait(self, str name, int is_set):
         ''' Gets the definition of the matching prefix based trait for a
@@ -1215,8 +1217,7 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
         dv = trait.internal_default_value
         return PyObject_Call(dv[0], dv[1], dv[2])
     elif vtype == 8:
-        tuple_ = (obj,)
-        result = PyObject_Call(trait.internal_default_value, tuple_, None)
+        result = trait.internal_default_value(obj)
         if result is not None and trait.validate is not NULL:
             value = trait.validate(trait, obj, name, result)
             return value
