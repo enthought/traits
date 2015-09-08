@@ -60,7 +60,7 @@ class GetTraitTestCase(unittest.TestCase):
     
     def test_trait_names_returned_by_visible_traits(self):
         b = Bar()
-        self.failUnlessEqual( b.visible_traits(), ["PubT1", "PrivT2"] )
+        self.failUnlessEqual( sorted(b.visible_traits()), sorted(["PubT1", "PrivT2"]) )
         return
 
 
