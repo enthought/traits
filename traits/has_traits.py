@@ -2193,13 +2193,13 @@ class HasTraits ( CHasTraits ):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object, that should be GUI visible
         """
-        return self.trait_names( type = not_event, editable = not_false, visible = not_false )
+        return self.trait_names( type = not_event, visible = not_false )
 
     def class_visible_traits ( cls ):
         """Returns an alphabetically sorted list of the names of non-event
-        trait attributes associated with the current class.
+        trait attributes associated with the current class, that should be GUI visible
         """
-        return cls.class_trait_names( type = not_event, editable = not_false, visible = not_false )
+        return cls.class_trait_names( type = not_event, visible = not_false )
 
     class_visible_traits = classmethod( class_visible_traits )
 
