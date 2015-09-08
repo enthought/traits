@@ -25,7 +25,7 @@ class Foo(HasTraits):
 
 class Bar(HasTraits):
     PubT1   = Str                     #Default is public visible
-    PubT1   = Str( visible=False )    #Change to invisible
+    PubT2   = Str( visible=False )    #Change to invisible
     PrivT1  = Str( private=True )     #New behavior sets private Traits invisible
     PrivT2  = Str( private=True, visible=True ) #Make private traits visible
     
