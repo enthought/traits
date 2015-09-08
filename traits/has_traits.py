@@ -2750,7 +2750,6 @@ class HasTraits ( CHasTraits ):
             it is equivalent to passing the entire list of values to Trait().
 
         """
-
         # Make sure a trait argument was specified:
         if len( trait ) == 0:
             raise ValueError, 'No trait definition was specified.'
