@@ -2960,7 +2960,11 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
-        traits.update( self._instance_traits().copy() )
+        
+        #Update with instance defined traits
+        for name, trt in self._instance_traits().items():
+            if name[-6:] != "_items":
+                traits[name] = trt
 
         for name in self.__dict__.keys():
             if name not in traits:
