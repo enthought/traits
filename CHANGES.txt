@@ -1,6 +1,19 @@
 Traits CHANGELOG
 ================
 
+Change summary since 4.5.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Changes
+
+ * default View shows all (non-event) traits whose property *Visible*
+   is not_false. Private traits are set Visible=false by default (#234)
+ 
+Fixes
+
+ * Instance traits wouldn't be included in the result of traits() (#234)
+
+
 Release 4.5.0
 -------------
 
