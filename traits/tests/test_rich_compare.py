@@ -44,11 +44,11 @@ class RichCompareTests:
         self.changed_count = 0
 
     def check_tracker(self, object, trait, old, new, count):
-        self.failUnlessEqual(count, self.changed_count)
-        self.failUnless(object is self.changed_object)
-        self.failUnlessEqual(trait, self.changed_trait)
-        self.failUnless(old is self.changed_old)
-        self.failUnless(new is self.changed_new)
+        self.assertEqual(count, self.changed_count)
+        self.assertIs(object, self.changed_object)
+        self.assertEqual(trait, self.changed_trait)
+        self.assertIs(old, self.changed_old)
+        self.assertIs(new, self.changed_new)
         return
 
     def test_id_first_assignment(self):
@@ -182,10 +182,10 @@ class RichCompareHasTraitsTestCase(unittest.TestCase, RichCompareTests):
         return
 
     def test_assumptions(self):
-        self.failIf(self.a is self.same_as_a)
-        self.failIf(self.a is self.different_from_a)
+        self.assertIsNot(self.a, self.same_as_a)
+        self.assertIsNot(self.a, self.different_from_a)
 
-        self.failUnless(self.a.name == self.same_as_a.name)
-        self.failIf(self.a.name == self.different_from_a.name)
+        self.assertEqual(self.a.name, self.same_as_a.name)
+        self.assertNotEqual(self.a.name, self.different_from_a.name)
         return
 ### EOF

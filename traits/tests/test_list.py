@@ -48,60 +48,60 @@ class ListTestCase(unittest.TestCase):
 
     def test_initialized(self):
         f = Foo()
-        self.failIfEqual(f.l, None)
-        self.failUnlessEqual(len(f.l), 0)
+        self.assertNotEqual(f.l, None)
+        self.assertEqual(len(f.l), 0)
         return
 
     def test_initializer(self):
         f = Foo(l=['a', 'list'])
-        self.failIfEqual(f.l, None)
-        self.failUnlessEqual(f.l, ['a', 'list'])
+        self.assertNotEqual(f.l, None)
+        self.assertEqual(f.l, ['a', 'list'])
         return
 
     def test_type_check(self):
         f = Foo()
         f.l.append('string')
 
-        self.failUnlessRaises(TraitError, f.l.append, 123.456)
+        self.assertRaises(TraitError, f.l.append, 123.456)
         return
 
     def test_append(self):
         f = Foo()
         f.l.append('bar')
-        self.failUnlessEqual(f.l, ['bar'])
+        self.assertEqual(f.l, ['bar'])
         return
 
     def test_remove(self):
         f = Foo()
         f.l.append('bar')
         f.l.remove('bar')
-        self.failUnlessEqual(f.l, [])
+        self.assertEqual(f.l, [])
         return
 
     def test_slice(self):
         f = Foo(l=['zero', 'one', 'two', 'three'])
-        self.failUnlessEqual(f.l[0], 'zero')
-        self.failUnlessEqual(f.l[:0], [])
-        self.failUnlessEqual(f.l[:1], ['zero'])
-        self.failUnlessEqual(f.l[0:1], ['zero'])
-        self.failUnlessEqual(f.l[1:], ['one', 'two', 'three'])
-        self.failUnlessEqual(f.l[-1], 'three')
-        self.failUnlessEqual(f.l[-2], 'two')
-        self.failUnlessEqual(f.l[:-1], ['zero', 'one', 'two'])
+        self.assertEqual(f.l[0], 'zero')
+        self.assertEqual(f.l[:0], [])
+        self.assertEqual(f.l[:1], ['zero'])
+        self.assertEqual(f.l[0:1], ['zero'])
+        self.assertEqual(f.l[1:], ['one', 'two', 'three'])
+        self.assertEqual(f.l[-1], 'three')
+        self.assertEqual(f.l[-2], 'two')
+        self.assertEqual(f.l[:-1], ['zero', 'one', 'two'])
         return
 
     def test_retrieve_reference(self):
         f = Foo(l=['initial', 'value'])
 
         l = f.l
-        self.failUnless(l is f.l)
+        self.assertIs(l, f.l)
 
         # no copy on change behavior, l is always a reference
         l.append('change')
-        self.failUnlessEqual(f.l, ['initial', 'value', 'change'])
+        self.assertEqual(f.l, ['initial', 'value', 'change'])
 
         f.l.append('more change')
-        self.failUnlessEqual(l, ['initial', 'value', 'change', 'more change'])
+        self.assertEqual(l, ['initial', 'value', 'change', 'more change'])
         return
 
     def test_assignment_makes_copy(self):
@@ -110,17 +110,17 @@ class ListTestCase(unittest.TestCase):
 
         f.l = l
         # same content
-        self.failUnlessEqual(l, f.l)
+        self.assertEqual(l, f.l)
 
         # different objects
-        self.failIf(l is f.l)
+        self.assertIsNot(l, f.l)
 
         # which means behaviorally...
         l.append('l change')
-        self.failIf('l change' in f.l)
+        self.assertNotIn('l change', f.l)
 
         f.l.append('f.l change')
-        self.failIf('f.l change' in l)
+        self.assertNotIn('f.l change', l)
 
         return
 
@@ -140,18 +140,18 @@ class ListTestCase(unittest.TestCase):
         # Clone will clone baz, the bars list, and the objects in the list
         baz_copy = baz.clone_traits()
 
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.bars is baz.bars)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.bars, baz.bars)
 
-        self.failUnlessEqual(len(baz_copy.bars), len(baz.bars))
+        self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
-            self.failIf(bar in baz_copy.bars)
+            self.assertNotIn(bar, baz_copy.bars)
 
         baz_bar_names = [bar.name for bar in baz.bars]
         baz_copy_bar_names = [bar.name for bar in baz_copy.bars]
         baz_bar_names.sort()
         baz_copy_bar_names.sort()
-        self.failUnlessEqual(baz_copy_bar_names, baz_bar_names)
+        self.assertEqual(baz_copy_bar_names, baz_bar_names)
 
         return
 
@@ -164,12 +164,12 @@ class ListTestCase(unittest.TestCase):
         # will not be cloned because the copy metatrait of the List is 'ref'
         baz_copy = baz.clone_traits()
 
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.bars is baz.bars)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.bars, baz.bars)
 
-        self.failUnlessEqual(len(baz_copy.bars), len(baz.bars))
+        self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
-            self.failUnless(bar in baz_copy.bars)
+            self.assertIn(bar, baz_copy.bars)
 
         return
 
@@ -184,23 +184,23 @@ class ListTestCase(unittest.TestCase):
         # and the objects in the list
         deep_baz_copy = deep_baz.clone_traits()
 
-        self.failIf(deep_baz_copy is deep_baz)
-        self.failIf(deep_baz_copy.baz is deep_baz.baz)
+        self.assertIsNot(deep_baz_copy, deep_baz)
+        self.assertIsNot(deep_baz_copy.baz, deep_baz.baz)
 
         baz_copy = deep_baz_copy.baz
 
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.bars is baz.bars)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.bars, baz.bars)
 
-        self.failUnlessEqual(len(baz_copy.bars), len(baz.bars))
+        self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
-            self.failIf(bar in baz_copy.bars)
+            self.assertNotIn(bar, baz_copy.bars)
 
         baz_bar_names = [bar.name for bar in baz.bars]
         baz_copy_bar_names = [bar.name for bar in baz_copy.bars]
         baz_bar_names.sort()
         baz_copy_bar_names.sort()
-        self.failUnlessEqual(baz_copy_bar_names, baz_bar_names)
+        self.assertEqual(baz_copy_bar_names, baz_bar_names)
         return
 
     def test_clone_deep_baz_ref(self):
@@ -212,17 +212,17 @@ class ListTestCase(unittest.TestCase):
 
         deep_baz_copy = deep_baz.clone_traits()
 
-        self.failIf(deep_baz_copy is deep_baz)
-        self.failIf(deep_baz_copy.baz is deep_baz.baz)
+        self.assertIsNot(deep_baz_copy, deep_baz)
+        self.assertIsNot(deep_baz_copy.baz, deep_baz.baz)
 
         baz_copy = deep_baz_copy.baz
 
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.bars is baz.bars)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.bars, baz.bars)
 
-        self.failUnlessEqual(len(baz_copy.bars), len(baz.bars))
+        self.assertEqual(len(baz_copy.bars), len(baz.bars))
         for bar in baz.bars:
-            self.failUnless(bar in baz_copy.bars)
+            self.assertIn(bar, baz_copy.bars)
         return
 
     def test_coercion(self):
@@ -231,14 +231,14 @@ class ListTestCase(unittest.TestCase):
         # Test coercion from basic built-in types
         f.ints = [1, 2, 3]
         desired = [1, 2, 3]
-        self.failUnlessEqual(f.ints, desired)
+        self.assertEqual(f.ints, desired)
         f.ints = (1, 2, 3)
-        self.failUnlessEqual(f.ints, desired)
+        self.assertEqual(f.ints, desired)
 
         f.strs = ("abc", "def", "ghi")
-        self.failUnlessEqual(f.strs, ["abc", "def", "ghi"])
+        self.assertEqual(f.strs, ["abc", "def", "ghi"])
         f.strs = "abcdef"
-        self.failUnlessEqual(f.strs, list("abcdef"))
+        self.assertEqual(f.strs, list("abcdef"))
 
         try:
             from numpy import array
@@ -247,11 +247,67 @@ class ListTestCase(unittest.TestCase):
         else:
             if sys.version_info[0] < 3:
                 f.ints = array([1, 2, 3])
-                self.failUnlessEqual(f.ints, [1, 2, 3])
+                self.assertEqual(f.ints, [1, 2, 3])
             else:
                 # These would fail due to np.int_ being an invalid vallue
                 # for the Int-trait.
                 pass
 
             f.strs = array(("abc", "def", "ghi"))
-            self.failUnlessEqual(f.strs, ["abc", "def", "ghi"])
+            self.assertEqual(f.strs, ["abc", "def", "ghi"])
+
+    def test_extend(self):
+        f = Foo()
+        f.l = ['4', '5', '6']
+        f.l.extend(['1', '2', '3'])
+        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+
+    def test_iadd(self):
+        f = Foo()
+        f.l = ['4', '5', '6']
+        f.l += ['1', '2', '3']
+        self.assertEqual(f.l, ['4', '5', '6', '1', '2', '3'])
+
+    def test_imul(self):
+        f = Foo()
+        f.l = list('123')
+        f.l *= 4
+        self.assertEqual(f.l, list('123123123123'))
+
+    def test_sort_no_args(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort()
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    def test_sort_key(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x))
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(reverse=True)
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_key_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x), reverse=True)
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] >= 3, "Not for Python 3")
+    def test_sort_cmp(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] < 3, "Not for Python 2")
+    def test_sort_cmp_error(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        with self.assertRaises(TypeError):
+            f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
