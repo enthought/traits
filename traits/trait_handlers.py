@@ -404,13 +404,13 @@ class TraitType ( BaseTraitHandler ):
                 self._metadata.update( metadata )
             else:
                 self._metadata = metadata
-            #defaults that private traits are not visible
-            if self._metadata.get('private') and self._metadata.get('visible') is None:
+            # By default, private traits are not visible.
+            if (self._metadata.get('private') and
+                    self._metadata.get('visible') is None):
                 self._metadata['visible'] = False
-            
         else:
             self._metadata = self.metadata.copy()
-        
+
         self.init()
 
     def init ( self ):
