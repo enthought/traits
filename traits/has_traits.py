@@ -1921,12 +1921,12 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
-                            self.editable_traits, self )
+                            self.visible_traits, self )
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
                   cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_editable_traits, None )
+                  cls.class_visible_traits, None )
 
     class_trait_view = classmethod( class_trait_view )
 
@@ -1935,7 +1935,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           editable_traits, handler ):
+                           trait_selector_f, handler ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
@@ -1997,7 +1997,7 @@ class HasTraits ( CHasTraits ):
         # traits defined for the object:
         from traitsui.api import View
 
-        return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
+        return View( trait_selector_f(), buttons = [ 'OK', 'Cancel' ] )
 
     _trait_view = classmethod( _trait_view )
 
@@ -2197,6 +2197,20 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
+    
+    def visible_traits ( self ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current object, that should be GUI visible
+        """
+        return self.trait_names( type = not_event, visible = not_false )
+
+    def class_visible_traits ( cls ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current class, that should be GUI visible
+        """
+        return cls.class_trait_names( type = not_event, visible = not_false )
+
+    class_visible_traits = classmethod( class_visible_traits )
 
     #---------------------------------------------------------------------------
     #  Pretty print the traits of an object:
@@ -2956,6 +2970,12 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
+        
+        # Update with instance-defined traits.
+        for name, trt in self._instance_traits().items():
+            if name[-6:] != "_items":
+                traits[name] = trt
+
         for name in self.__dict__.keys():
             if name not in traits:
                 trait = self.trait( name )
