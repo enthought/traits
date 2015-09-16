@@ -15,8 +15,6 @@
 Tests for the String trait type.
 
 """
-import unittest
-
 try:
     import numpy
 except ImportError:
@@ -24,7 +22,9 @@ except ImportError:
 else:
     numpy_available = True
 
-from traits.api import HasTraits, String
+from traits.testing.unittest_tools import unittest
+
+from ..api import HasTraits, String
 
 
 class A(HasTraits):
