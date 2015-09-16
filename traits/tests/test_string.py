@@ -34,7 +34,7 @@ class A(HasTraits):
 class TestString(unittest.TestCase):
     @unittest.skipUnless(numpy_available, "numpy not available")
     def test_accepts_numpy_string(self):
-        numpy_string = numpy.string_("this is a numpy string!")
+        numpy_string = numpy.str_("this is a numpy string!")
         a = A()
         a.string = numpy_string
         self.assertEqual(a.string, numpy_string)
