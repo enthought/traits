@@ -38,3 +38,4 @@ class TestString(unittest.TestCase):
         a = A()
         a.string = numpy_string
         self.assertEqual(a.string, numpy_string)
+        self.assertIs(type(a.string), str)
