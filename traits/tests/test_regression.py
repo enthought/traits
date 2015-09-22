@@ -154,7 +154,7 @@ class TestRegression(unittest.TestCase):
         for _ in xrange(cycles):
             f()
             gc.collect()
-            counts.append(len(gc.get_objects())
+            counts.append(len(gc.get_objects()))
 
         # All the counts beyond the warmup period should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup+1:])
