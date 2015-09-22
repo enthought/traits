@@ -26,6 +26,8 @@ Changes
  
 Fixes
 
+* Fix so that ``sys.exc_info()`` works as expected in exception handlers in
+  Python 3 (#266)
 * Fix ``String`` trait to accept ``str`` subclasses (like ``numpy.str_``).
   (#267)
 * Fixed incorrect in list events for ``insert`` operations with an index
