@@ -157,7 +157,7 @@ class TestRegression(unittest.TestCase):
         self.assertEqual(refs, refs2)
 
     def test_delegation_refleak(self):
-        warmup_cycles = 5
+        warmup_cycles = 10
         cycles = 5
         counts = []
 
