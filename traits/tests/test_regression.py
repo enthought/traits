@@ -157,13 +157,9 @@ class TestRegression(unittest.TestCase):
         self.assertEqual(refs, refs2)
 
     def test_delegation_refleak(self):
-        warmup_cycles = 10
-        cycles = 5
+        warmup = 5
+        cycles = 10
         counts = []
-
-        for _ in xrange(warmup_cycles):
-            DelegateLeak()
-            gc.collect()
 
         for _ in xrange(cycles):
             DelegateLeak()
@@ -171,7 +167,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        self.assertEqual(counts[:-1], counts[1:])
+        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
 
 
 if __name__ == '__main__':
