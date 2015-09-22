@@ -171,8 +171,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        for old_count, new_count in zip(counts[:-1], counts[1:]):
-            self.assertEqual(old_count, new_count)
+        self.assertEqual(counts[:-1], counts[1:])
 
 
 if __name__ == '__main__':
