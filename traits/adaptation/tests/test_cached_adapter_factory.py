@@ -57,7 +57,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         return
 
-    @unittest.skip("Cache cleaning is broken")
+    @unittest.skip("Cache cleaning is broken: see GitHub issue #169")
     def test_cached_adapters_should_be_cleaned_up(self):
 
         ex = self.examples
@@ -79,7 +79,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
         del adapter_1
         del editor
 
-        self.assert_(factory.is_empty)
+        self.assertTrue(factory.is_empty)
 
         return
 
@@ -106,7 +106,7 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         return
 
-    @unittest.skip("Cache cleaning is broken")
+    @unittest.skip("Cache cleaning is broken: see GitHub issue #169")
     def test_cached_adapter_that_was_garbage_collected(self):
 
         ex = self.examples
@@ -129,12 +129,12 @@ class TestCachedAdapterFactory(unittest.TestCase):
 
         adapter_2 = self.adaptation_manager.adapt(editor, ex.IPrintable)
         self.assertIsNotNone(adapter_2)
-        self.assert_(hasattr(adapter_2, 'marker'))
+        self.assertTrue(hasattr(adapter_2, 'marker'))
 
         del adapter_2
         del editor
 
-        self.assert_(factory.is_empty)
+        self.assertTrue(factory.is_empty)
 
 if __name__ == '__main__':
     unittest.main()

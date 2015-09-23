@@ -9,6 +9,14 @@
     :undoc-members:
     :show-inheritance:
 
+:mod:`async_trait_wait` Module
+------------------------------
+
+.. automodule:: traits.util.async_trait_wait
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`camel_case` Module
 ------------------------
 
@@ -72,3 +80,10 @@
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`event_tracer` Module
+------------------------------
+
+.. automodule:: traits.util.event_tracer
+    :members:
+    :undoc-members:

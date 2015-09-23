@@ -1489,7 +1489,11 @@ class HasTraits ( CHasTraits ):
         return result
 
     # Defines the deprecated alias for 'trait_get'
-    get = trait_get
+    @deprecated('use "HasTraits.trait_get" instead')
+    def get( self, *names, **metadata ):
+        return self.trait_get( *names, **metadata )
+
+    get.__doc__ = trait_get.__doc__
 
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
@@ -1543,7 +1547,12 @@ class HasTraits ( CHasTraits ):
         return self
 
     # Defines the deprecated alias for 'trait_set'
-    set = trait_set
+    @deprecated('use "HasTraits.trait_set" instead')
+    def set ( self, trait_change_notify = True, **traits ):
+        return self.trait_set(
+            trait_change_notify=trait_change_notify, **traits)
+
+    set.__doc__ = trait_set.__doc__
 
     def trait_setq ( self, **traits ):
         """ Shortcut for setting object trait attributes.
@@ -1849,6 +1858,10 @@ class HasTraits ( CHasTraits ):
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
+
+        Returns
+        -------
+        A UI object.
         """
         if context is None:
             context = self
@@ -1912,12 +1925,12 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
-                            self.editable_traits, self )
+                            self.visible_traits, self )
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
                   cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_editable_traits, None )
+                  cls.class_visible_traits, None )
 
     class_trait_view = classmethod( class_trait_view )
 
@@ -1926,7 +1939,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           editable_traits, handler ):
+                           trait_selector_f, handler ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
@@ -1988,7 +2001,7 @@ class HasTraits ( CHasTraits ):
         # traits defined for the object:
         from traitsui.api import View
 
-        return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
+        return View( trait_selector_f(), buttons = [ 'OK', 'Cancel' ] )
 
     _trait_view = classmethod( _trait_view )
 
@@ -2119,6 +2132,10 @@ class HasTraits ( CHasTraits ):
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
 
+        Returns
+        -------
+        True on success.
+
         Description
         -----------
         This method is intended for use in applications that do not normally
@@ -2188,6 +2205,20 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
+    
+    def visible_traits ( self ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current object, that should be GUI visible
+        """
+        return self.trait_names( type = not_event, visible = not_false )
+
+    def class_visible_traits ( cls ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current class, that should be GUI visible
+        """
+        return cls.class_trait_names( type = not_event, visible = not_false )
+
+    class_visible_traits = classmethod( class_visible_traits )
 
     #---------------------------------------------------------------------------
     #  Pretty print the traits of an object:
@@ -2575,12 +2606,12 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
-                listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler_ref = weakref.ref(lnw),
-                              type            = lnw.type,
-                              dispatch        = dispatch,
-                              priority        = priority,
-                              deferred        = deferred )
+                listener.trait_set( handler         = ListenerHandler( handler ),
+                                    wrapped_handler_ref = weakref.ref(lnw),
+                                    type            = lnw.type,
+                                    dispatch        = dispatch,
+                                    priority        = priority,
+                                    deferred        = deferred )
                 listener.register( self )
 
     # A synonym for 'on_trait_change'
@@ -2947,6 +2978,12 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
+        
+        # Update with instance-defined traits.
+        for name, trt in self._instance_traits().items():
+            if name[-6:] != "_items":
+                traits[name] = trt
+
         for name in self.__dict__.keys():
             if name not in traits:
                 trait = self.trait( name )
@@ -3607,6 +3644,10 @@ def implements( *interfaces ):
     interface that the containing class implements. Each specified interface
     must be a subclass of **Interface**. This function should only be
     called from directly within a class body.
+
+    .. deprecated:: 4.4
+       Use the ``provides`` class decorator instead.
+
     """
 
     callback = provides(*interfaces)

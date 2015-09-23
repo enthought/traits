@@ -25,12 +25,6 @@
     :undoc-members:
     :show-inheritance:
 
-.. autofunction:: adapt
-.. autofunction:: register_factory
-.. autofunction:: register_offer
-.. autofunction:: register_provides
-.. autofunction:: supports_protocol
-
 
 :mod:`adaptation_offer` Module
 ------------------------------

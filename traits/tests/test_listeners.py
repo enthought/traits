@@ -75,6 +75,11 @@ class ListenEvents(HasTraits):
         events["alt_weight_changed"] = (name, old, new)
 
 
+class GenerateFailingEvents(HasTraits):
+    name = Str
+    def _name_changed(self):
+        raise RuntimeError
+
 class Test_Listeners(unittest.TestCase):
 
     def test(self):
@@ -85,12 +90,12 @@ class Test_Listeners(unittest.TestCase):
         le = ListenEvents()
 
         # Starting test: No Listeners
-        ge.set(name='Joe', age=22, weight=152.0)
+        ge.trait_set(name='Joe', age=22, weight=152.0)
 
         # Adding default listener
         ge.add_trait_listener(le)
         events = {}
-        ge.set(name='Mike', age=34, weight=178.0)
+        ge.trait_set(name='Mike', age=34, weight=178.0)
         self.assertEqual(events, {
             '_age_changed': ('age', 22, 34),
             '_weight_changed': ('weight', 152.0, 178.0),
@@ -100,7 +105,7 @@ class Test_Listeners(unittest.TestCase):
         # Adding alternate listener
         ge.add_trait_listener(le, 'alt')
         events = {}
-        ge.set(name='Gertrude', age=39, weight=108.0)
+        ge.trait_set(name='Gertrude', age=39, weight=108.0)
         self.assertEqual(events, {
             '_age_changed': ('age', 34, 39),
             '_name_changed': ('name', 'Mike', 'Gertrude'),
@@ -112,7 +117,7 @@ class Test_Listeners(unittest.TestCase):
         # Removing default listener
         ge.remove_trait_listener(le)
         events = {}
-        ge.set(name='Sally', age=46, weight=118.0)
+        ge.trait_set(name='Sally', age=46, weight=118.0)
         self.assertEqual(events, {
             'alt_name_changed': ('name', 'Gertrude', 'Sally'),
             'alt_weight_changed': ('weight', 108.0, 118.0),
@@ -121,9 +126,27 @@ class Test_Listeners(unittest.TestCase):
         # Removing alternate listener
         ge.remove_trait_listener(le, 'alt')
         events = {}
-        ge.set(name='Ralph', age=29, weight=198.0)
+        ge.trait_set(name='Ralph', age=29, weight=198.0)
         self.assertEqual(events, {})
 
+    def test_trait_exception_handler_can_access_exception(self):
+        """ Tests if trait exception handlers can access the traceback of the exception.
+        """
+        import traceback
+
+        from traits import trait_notifiers
+        def _handle_exception(obj,name,old,new):
+            self.assertIsNotNone(sys.exc_info()[0])
+        ge = GenerateFailingEvents()
+        try:
+            trait_notifiers.push_exception_handler(
+                _handle_exception,
+                reraise_exceptions=False,
+                main=True
+            )
+            ge.trait_set(name='John Cleese')
+        finally:
+            trait_notifiers.pop_exception_handler()
 
 class A(HasTraits):
     exception = Any

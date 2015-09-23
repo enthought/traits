@@ -318,7 +318,7 @@ def strx ( arg ):
     """ Wraps the built-in str() function to raise a TypeError if the
     argument is not of a type in StringTypes.
     """
-    if type( arg ) in StringTypes:
+    if isinstance( arg, StringTypes ):
        return str( arg )
     raise TypeError
 
