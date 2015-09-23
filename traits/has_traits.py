@@ -1858,6 +1858,10 @@ class HasTraits ( CHasTraits ):
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
+
+        Returns
+        -------
+        A UI object.
         """
         if context is None:
             context = self
@@ -2127,6 +2131,10 @@ class HasTraits ( CHasTraits ):
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
+
+        Returns
+        -------
+        True on success.
 
         Description
         -----------
