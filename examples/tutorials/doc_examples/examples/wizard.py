@@ -4,6 +4,7 @@
 # wizard.py ---Example of a traits-based wizard UI
 from traits.api import HasTraits, Int, Str
 
+
 class Person(HasTraits):
     name = Str
     age = Int

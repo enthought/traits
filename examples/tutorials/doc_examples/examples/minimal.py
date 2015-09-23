@@ -3,16 +3,16 @@
 
 # minimal.py --- Minimal example of using traits.
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Float, TraitError
 
-#--[Code]-----------------------------------------------------------------------
 
+#--[Code]----------------------------------------------------------------------
 class Person(HasTraits):
     weight = Float(150.0)
 
-#--[Example*]-------------------------------------------------------------------
 
+#--[Example*]------------------------------------------------------------------
 # instantiate the class
 joe = Person()
 
@@ -28,9 +28,7 @@ print joe.weight
 
 # The following line causes a traceback:
 try:
-    joe.weight = 'average' # Error to assign a string
+    joe.weight = 'average'  # Error to assign a string
     print "You should not see this message."
 except TraitError:
     print "You can't assign a string to the 'weight' trait."
-
-
