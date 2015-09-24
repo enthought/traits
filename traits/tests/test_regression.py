@@ -138,6 +138,11 @@ class TestRegression(unittest.TestCase):
     def test_has_traits_notifiers_refleak(self):
         # Regression test for issue described in
         # https://github.com/enthought/traits/pull/248
+
+        warmup = 5
+        cycles = 10
+        counts = []
+
         def handler():
             pass
 
@@ -146,24 +151,18 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in xrange(10):
+        for _ in xrange(cycles):
             f()
             gc.collect()
+            counts.append(len(gc.get_objects()))
 
-        refs = len(gc.get_objects())
-        f()
-        gc.collect()
-        refs2 = len(gc.get_objects())
-        self.assertEqual(refs, refs2)
+        # All the counts beyond the warmup period should be the same.
+        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
 
     def test_delegation_refleak(self):
-        warmup_cycles = 5
-        cycles = 5
+        warmup = 5
+        cycles = 10
         counts = []
-
-        for _ in xrange(warmup_cycles):
-            DelegateLeak()
-            gc.collect()
 
         for _ in xrange(cycles):
             DelegateLeak()
@@ -171,8 +170,7 @@ class TestRegression(unittest.TestCase):
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
-        for old_count, new_count in zip(counts[:-1], counts[1:]):
-            self.assertEqual(old_count, new_count)
+        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
 
 
 if __name__ == '__main__':

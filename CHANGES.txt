@@ -21,9 +21,15 @@ Changes
   the ``logging`` machinery.  It no longer tries to remember when
   a warning has been previously issued. (#220)
 * Deprecated ``HasTraits.get()`` and ``HasTraits.set()`` (#190).
-
+* The default ``View`` shows all (non-event) traits whose ``visible`` property
+  is not ``False``. Private traits are set ``visible=False`` by default. (#234)
+ 
 Fixes
 
+* Fix so that ``sys.exc_info()`` works as expected in exception handlers in
+  Python 3 (#266)
+* Fix ``String`` trait to accept ``str`` subclasses (like ``numpy.str_``).
+  (#267)
 * Fixed incorrect in list events for ``insert`` operations with an index
   outside the range [``-len(target_list)``, ``len(target_list)``]. (#165)
 * Fix incorrect behaviour of ``check_implements`` for overridden methods.
@@ -31,6 +37,7 @@ Fixes
 * Fix error when trying to listen to traits using list bracket notation. (#195)
 * Fix reference leak in ``CHasTraits._notifiers``. (#248)
 * Fix reference leak from use of ``DelegatesTo``. (#260)
+* Instance traits weren't included in the result of ``traits()``. (#234)
 
 
 Release 4.5.0

@@ -75,6 +75,11 @@ class ListenEvents(HasTraits):
         events["alt_weight_changed"] = (name, old, new)
 
 
+class GenerateFailingEvents(HasTraits):
+    name = Str
+    def _name_changed(self):
+        raise RuntimeError
+
 class Test_Listeners(unittest.TestCase):
 
     def test(self):
@@ -125,6 +130,24 @@ class Test_Listeners(unittest.TestCase):
         ge.trait_set(name='Ralph', age=29, weight=198.0)
         self.assertEqual(events, {})
 
+    def test_trait_exception_handler_can_access_exception(self):
+        """ Tests if trait exception handlers can access the traceback of the exception.
+        """
+        import traceback
+
+        from traits import trait_notifiers
+        def _handle_exception(obj,name,old,new):
+            self.assertIsNotNone(sys.exc_info()[0])
+        ge = GenerateFailingEvents()
+        try:
+            trait_notifiers.push_exception_handler(
+                _handle_exception,
+                reraise_exceptions=False,
+                main=True
+            )
+            ge.trait_set(name='John Cleese')
+        finally:
+            trait_notifiers.pop_exception_handler()
 
 class A(HasTraits):
     exception = Any

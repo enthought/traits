@@ -3,11 +3,11 @@
 
 # trait_subclass.py -- Example of subclassing a trait class
 
-#--[Imports]--------------------------------------------------------------------
 from traits.api import BaseInt
 
-#--[Code]-----------------------------------------------------------------------
-class OddInt ( BaseInt ):
+
+#--[Code]----------------------------------------------------------------------
+class OddInt(BaseInt):
 
     # Define the default value
     default_value = 1
@@ -15,10 +15,9 @@ class OddInt ( BaseInt ):
     # Describe the trait type
     info_text = 'an odd integer'
 
-    def validate ( self, object, name, value ):
+    def validate(self, object, name, value):
         value = super(OddInt, self).validate(object, name, value)
         if (value % 2) == 1:
             return value
 
-        self.error( object, name, value )
-
+        self.error(object, name, value)
