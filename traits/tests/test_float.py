@@ -19,33 +19,38 @@ import sys
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Float
+from ..api import BaseFloat, Float, HasTraits
 
 
-class A(HasTraits):
+class FloatModel(HasTraits):
     value = Float
 
 
-class TestFloat(unittest.TestCase):
+class BaseFloatModel(HasTraits):
+    value = BaseFloat
+
+
+class CommonFloatTests(object):
+    """ Common tests for Float and BaseFloat """
     def test_default(self):
-        a = A()
+        a = self.test_class()
         self.assertEqual(a.value, 0.0)
 
     def test_accepts_float(self):
-        a = A()
+        a = self.test_class()
         a.value = 5.6
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 5.6)
 
     def test_accepts_int(self):
-        a = A()
+        a = self.test_class()
         a.value = 2
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
 
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
-        a = A()
+        a = self.test_class()
         # Value large enough to be a long on Python 2.
         a.value = long(2)
         self.assertIs(type(a.value), float)
@@ -53,7 +58,17 @@ class TestFloat(unittest.TestCase):
 
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_large_long(self):
-        a = A()
+        a = self.test_class()
         a.value = 2**64
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2**64)
+
+
+class TestFloat(unittest.TestCase, CommonFloatTests):
+    def setUp(self):
+        self.test_class = FloatModel
+
+
+class TestBaseFloat(unittest.TestCase, CommonFloatTests):
+    def setUp(self):
+        self.test_class = BaseFloatModel

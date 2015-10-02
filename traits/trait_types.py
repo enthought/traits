@@ -257,7 +257,7 @@ class BaseFloat ( TraitType ):
         if isinstance( value, float ):
             return value
 
-        if isinstance( value, int ):
+        if isinstance( value, ( int, long ) ):
             return float( value )
 
         self.error( object, name, value )
