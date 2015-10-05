@@ -1,6 +1,6 @@
 # -----------------------------------------------------------------------------
 #
-#  Copyright (c) 2013, Enthought, Inc.
+#  Copyright (c) 2015, Enthought, Inc.
 #  All rights reserved.
 #
 #  This software is provided without warranty under the terms of the BSD
@@ -51,7 +51,6 @@ class CommonFloatTests(object):
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
         a = self.test_class()
-        # Value large enough to be a long on Python 2.
         a.value = long(2)
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
@@ -59,6 +58,7 @@ class CommonFloatTests(object):
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_large_long(self):
         a = self.test_class()
+        # Value large enough to be a long on Python 2.
         a.value = 2**64
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2**64)
