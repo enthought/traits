@@ -45,7 +45,7 @@ from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
-        ListComplex, ListBool, ListFunction, ListMethod, 
+        ListComplex, ListBool, ListFunction, ListMethod,
         ListThis, DictStrAny, DictStrStr, DictStrInt,
         DictStrLong, DictStrFloat, DictStrBool, DictStrList)
 
@@ -62,7 +62,7 @@ from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
         BaseCStr, BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange,
         BaseEnum, BaseTuple, BaseInstance)
 
-from .trait_types import UUID
+from .trait_types import UUID, ValidatedTuple
 
 from .has_traits import (HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
@@ -91,7 +91,7 @@ from .adaptation.adaptation_error import AdaptationError
 from .adaptation.adaptation_manager import adapt, register_factory, \
      register_provides
 
-from .trait_numeric import Array, CArray
+from .trait_numeric import Array, ArrayOrNone, CArray
 
 try:
     from . import has_traits as has_traits

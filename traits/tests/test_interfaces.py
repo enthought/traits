@@ -20,6 +20,7 @@ from traits.testing.unittest_tools import unittest
 
 from traits.api import (HasTraits, Adapter, AdaptsTo, Instance, Int, Interface,
                         List, provides, register_factory, Supports, TraitError)
+from traits.adaptation.api import reset_global_adaptation_manager
 
 
 class IFoo(Interface):
@@ -144,13 +145,21 @@ class FooPlusAdapter(object):
     def get_foo_plus(self):
         return (self.obj.get_foo() + 1)
 
-register_factory(SampleListAdapter, Sample, IList)
-register_factory(ListAverageAdapter, IList, IAverage)
-register_factory(SampleFooAdapter, Sample, IFoo)
-register_factory(FooPlusAdapter, IFoo, IFooPlus)
-
 
 class InterfacesTest(unittest.TestCase):
+
+    #### 'TestCase' protocol ##################################################
+
+    def setUp(self):
+        reset_global_adaptation_manager()
+
+        # Register adapters.
+        register_factory(SampleListAdapter, Sample, IList)
+        register_factory(ListAverageAdapter, IList, IAverage)
+        register_factory(SampleFooAdapter, Sample, IFoo)
+        register_factory(FooPlusAdapter, IFoo, IFooPlus)
+
+    #### Tests ################################################################
 
     def test_provides_none(self):
         @provides()
@@ -196,46 +205,46 @@ class InterfacesTest(unittest.TestCase):
 
         # These are not instances of the IAverage interface, and therefore
         # cannot be set to the trait.
-        self.assertRaises(TraitError, ta.set, a_no=SampleList())
-        self.assertRaises(TraitError, ta.set, a_no=Sample())
-        self.assertRaises(TraitError, ta.set, a_no=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleList())
+        self.assertRaises(TraitError, ta.trait_set, a_no=Sample())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleBad())
 
     def test_instance_adapt_yes(self):
         ta = TraitsHolder()
 
         ta.a_yes = object = SampleAverage()
         self.assertEqual(ta.a_yes.get_average(), 200.0)
-        self.assert_(isinstance(ta.a_yes, SampleAverage))
+        self.assertIsInstance(ta.a_yes, SampleAverage)
         self.assertFalse(hasattr(ta, 'a_yes_'))
 
         ta.a_yes = object = SampleList()
         self.assertEqual(ta.a_yes.get_average(), 20.0)
-        self.assert_(isinstance(ta.a_yes, ListAverageAdapter))
+        self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_yes_'))
 
         ta.a_yes = object = Sample()
         self.assertEqual(ta.a_yes.get_average(), 2.0)
-        self.assert_(isinstance(ta.a_yes, ListAverageAdapter))
+        self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_yes_'))
 
-        self.assertRaises(TraitError, ta.set, a_yes=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_yes=SampleBad())
 
     def test_instance_adapt_default(self):
         ta = TraitsHolder()
 
         ta.a_default = object = SampleAverage()
         self.assertEqual(ta.a_default.get_average(), 200.0)
-        self.assert_(isinstance(ta.a_default, SampleAverage))
+        self.assertIsInstance(ta.a_default, SampleAverage)
         self.assertFalse(hasattr(ta, 'a_default_'))
 
         ta.a_default = object = SampleList()
         self.assertEqual(ta.a_default.get_average(), 20.0)
-        self.assert_(isinstance(ta.a_default, ListAverageAdapter))
+        self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_default_'))
 
         ta.a_default = object = Sample()
         self.assertEqual(ta.a_default.get_average(), 2.0)
-        self.assert_(isinstance(ta.a_default, ListAverageAdapter))
+        self.assertIsInstance(ta.a_default, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_default_'))
 
         ta.a_default = object = SampleBad()
@@ -249,19 +258,19 @@ class InterfacesTest(unittest.TestCase):
         result = ta.list_adapted_to.get_list()
         self.assertEqual(len(result), 3)
         for n in [1, 2, 3]:
-            self.assert_(n in result)
-        self.assert_(isinstance(ta.list_adapted_to, SampleListAdapter))
+            self.assertIn(n, result)
+        self.assertIsInstance(ta.list_adapted_to, SampleListAdapter)
         self.assertEqual(ta.list_adapted_to_, object)
 
         ta.foo_adapted_to = object = Sample()
         self.assertEqual(ta.foo_adapted_to.get_foo(), 6)
-        self.assert_(isinstance(ta.foo_adapted_to, SampleFooAdapter))
+        self.assertIsInstance(ta.foo_adapted_to, SampleFooAdapter)
         self.assertEqual(ta.foo_adapted_to_, object)
 
         ta.foo_plus_adapted_to = object = Sample(s1=5, s2=10, s3=15)
         self.assertEqual(ta.foo_plus_adapted_to.get_foo(), 30)
         self.assertEqual(ta.foo_plus_adapted_to.get_foo_plus(), 31)
-        self.assert_(isinstance(ta.foo_plus_adapted_to, FooPlusAdapter))
+        self.assertIsInstance(ta.foo_plus_adapted_to, FooPlusAdapter)
         self.assertEqual(ta.foo_plus_adapted_to_, object)
 
     def test_adapts_to(self):
@@ -272,19 +281,19 @@ class InterfacesTest(unittest.TestCase):
         result = ta.list_adapts_to_.get_list()
         self.assertEqual(len(result), 3)
         for n in [1, 2, 3]:
-            self.assert_(n in result)
-        self.assert_(isinstance(ta.list_adapts_to_, SampleListAdapter))
+            self.assertIn(n, result)
+        self.assertIsInstance(ta.list_adapts_to_, SampleListAdapter)
 
         ta.foo_adapts_to = object = Sample()
         self.assertEqual(ta.foo_adapts_to, object)
         self.assertEqual(ta.foo_adapts_to_.get_foo(), 6)
-        self.assert_(isinstance(ta.foo_adapts_to_, SampleFooAdapter))
+        self.assertIsInstance(ta.foo_adapts_to_, SampleFooAdapter)
 
         ta.foo_plus_adapts_to = object = Sample(s1=5, s2=10, s3=15)
         self.assertEqual(ta.foo_plus_adapts_to, object)
         self.assertEqual(ta.foo_plus_adapts_to_.get_foo(), 30)
         self.assertEqual(ta.foo_plus_adapts_to_.get_foo_plus(), 31)
-        self.assert_(isinstance(ta.foo_plus_adapts_to_, FooPlusAdapter))
+        self.assertIsInstance(ta.foo_plus_adapts_to_, FooPlusAdapter)
 
     def test_decorated_class_name_and_docstring(self):
         self.assertEqual(SampleList.__name__, 'SampleList')

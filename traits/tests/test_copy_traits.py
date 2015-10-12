@@ -40,7 +40,6 @@ class CopyTraitsBase(unittest.TestCase):
     __test__ = False
 
     def setUp(self):
-        print '\n**CopyTraitsBase.setUp ',
         super(CopyTraitsBase, self).setUp()
         self.shared = Shared(s='shared')
         self.foo = Foo(shared=self.shared, s='foo')
@@ -54,26 +53,11 @@ class CopyTraitsBase(unittest.TestCase):
 
         return
 
-    def print_copy(self):
-        print '\nfoo.copy:', self.foo.base_trait('shared').copy
-        print 'bar.copy:', self.bar.base_trait('shared').copy
-        print 'baz.copy:', self.baz.base_trait('shared').copy
-        print 'foo2.copy:', self.foo2.base_trait('shared').copy
-        print 'bar2.copy:', self.bar2.base_trait('shared').copy
-        print 'baz2.copy:', self.baz2.base_trait('shared').copy
-
     def set_shared_copy(self, value):
         """ Change the copy style for the 'shared' traits. """
-        #self.print_copy()
         self.foo.base_trait('shared').copy = value
         self.bar.base_trait('shared').copy = value
         self.baz.base_trait('shared').copy = value
-
-        # copy is metadata and therefore a shared  a class attribute
-        # self.foo2.base_trait('shared').copy = value
-        # self.bar2.base_trait('shared').copy = value
-        # self.baz2.base_trait('shared').copy = value
-        #self.print_copy()
 
 
 class TestCopyTraitsSetup(CopyTraitsBase):
@@ -81,76 +65,65 @@ class TestCopyTraitsSetup(CopyTraitsBase):
 
     def setUp(self):
         super(TestCopyTraitsSetup, self).setUp()
-        print '\nshared', self.shared
-        print 'foo', self.foo
-        print 'bar', self.bar
-        print 'baz', self.baz
-        print '\nshared2', self.shared2
-        print 'foo2', self.foo2
-        print 'bar2', self.bar2
-        print 'baz2', self.baz2
-
-        return
 
     def test_setup(self):
-        self.failUnless(self.foo is self.bar.foo)
-        self.failUnless(self.bar is self.baz.bar)
-        self.failUnless(self.foo.shared is self.shared)
-        self.failUnless(self.bar.shared is self.shared)
-        self.failUnless(self.baz.shared is self.shared)
+        self.assertIs(self.foo, self.bar.foo)
+        self.assertIs(self.bar, self.baz.bar)
+        self.assertIs(self.foo.shared, self.shared)
+        self.assertIs(self.bar.shared, self.shared)
+        self.assertIs(self.baz.shared, self.shared)
 
-        self.failUnless(self.foo2 is self.bar2.foo)
-        self.failUnless(self.bar2 is self.baz2.bar)
-        self.failUnless(self.foo2.shared is self.shared2)
-        self.failUnless(self.bar2.shared is self.shared2)
-        self.failUnless(self.baz2.shared is self.shared2)
-        return
+        self.assertIs(self.foo2, self.bar2.foo)
+        self.assertIs(self.bar2, self.baz2.bar)
+        self.assertIs(self.foo2.shared, self.shared2)
+        self.assertIs(self.bar2.shared, self.shared2)
+        self.assertIs(self.baz2.shared, self.shared2)
 
 
-class CopyTraits:
+class CopyTraits(object):
 
     def test_baz2_s(self):
-        self.failUnlessEqual(self.baz2.s, 'baz')
-        self.failUnlessEqual(self.baz2.s, self.baz.s)
+        self.assertEqual(self.baz2.s, 'baz')
+        self.assertEqual(self.baz2.s, self.baz.s)
 
     def test_baz2_bar_s(self):
-        self.failUnlessEqual(self.baz2.bar.s, 'bar')
-        self.failUnlessEqual(self.baz2.bar.s, self.baz.bar.s)
+        self.assertEqual(self.baz2.bar.s, 'bar')
+        self.assertEqual(self.baz2.bar.s, self.baz.bar.s)
 
     def test_baz2_bar_foo_s(self):
-        self.failUnlessEqual(self.baz2.bar.foo.s, 'foo')
-        self.failUnlessEqual(self.baz2.bar.foo.s, self.baz.bar.foo.s)
+        self.assertEqual(self.baz2.bar.foo.s, 'foo')
+        self.assertEqual(self.baz2.bar.foo.s, self.baz.bar.foo.s)
 
     def test_baz2_shared_s(self):
-        self.failUnlessEqual(self.baz2.shared.s, 'shared')
-        self.failUnlessEqual(self.baz2.bar.shared.s, 'shared')
-        self.failUnlessEqual(self.baz2.bar.foo.shared.s, 'shared')
+        self.assertEqual(self.baz2.shared.s, 'shared')
+        self.assertEqual(self.baz2.bar.shared.s, 'shared')
+        self.assertEqual(self.baz2.bar.foo.shared.s, 'shared')
 
     def test_baz2_bar(self):
         # First hand Instance trait is different and
         # is not the same object as the source.
 
-        self.failIf(self.baz2.bar is None)
-        self.failIf(self.baz2.bar is self.bar2)
-        self.failIf(self.baz2.bar is self.baz.bar)
+        self.assertIsNot(self.baz2.bar, None)
+        self.assertIsNot(self.baz2.bar, self.bar2)
+        self.assertIsNot(self.baz2.bar, self.baz.bar)
 
     def test_baz2_bar_foo(self):
         # Second hand Instance trait is a different object and
         # is not the same object as the source.
 
-        self.failIf(self.baz2.bar.foo is None)
-        self.failIf(self.baz2.bar.foo is self.foo2)
-        self.failIf(self.baz2.bar.foo is self.baz.bar.foo)
+        self.assertIsNot(self.baz2.bar.foo, None)
+        self.assertIsNot(self.baz2.bar.foo, self.foo2)
+        self.assertIsNot(self.baz2.bar.foo, self.baz.bar.foo)
 
 
-class CopyTraitsSharedCopyNone:
+class CopyTraitsSharedCopyNone(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is not the same object as the source.
 
-        self.failIf(self.baz2.shared is None)
-        self.failIf(self.baz2.shared is self.shared2)
-        self.failIf(self.baz2.shared is self.shared)
+        self.assertIsNot(self.baz2.shared, None)
+        self.assertIsNot(self.baz2.shared, self.shared2)
+        self.assertIsNot(self.baz2.shared, self.shared)
 
     def test_baz2_bar_shared(self):
         # Second hand Instance that was shared is a different object and
@@ -158,10 +131,10 @@ class CopyTraitsSharedCopyNone:
         # not the same object as the new first hand instance that was the same.
         # I.e. There are now (at least) two copies of one original object.
 
-        self.failIf(self.baz2.bar.shared is None)
-        self.failIf(self.baz2.bar.shared is self.shared2)
-        self.failIf(self.baz2.bar.shared is self.shared)
-        self.failIf(self.baz2.bar.shared is self.baz2.shared)
+        self.assertIsNot(self.baz2.bar.shared, None)
+        self.assertIsNot(self.baz2.bar.shared, self.shared2)
+        self.assertIsNot(self.baz2.bar.shared, self.shared)
+        self.assertIsNot(self.baz2.bar.shared, self.baz2.shared)
 
     def test_baz2_bar_foo_shared(self):
         # Third hand Instance that was shared is a different object and
@@ -169,10 +142,10 @@ class CopyTraitsSharedCopyNone:
         # not the same object as the new first hand instance that was the same.
         # I.e. There are now (at least) two copies of one original object.
 
-        self.failIf(self.baz2.bar.foo.shared is None)
-        self.failIf(self.baz2.bar.foo.shared is self.shared2)
-        self.failIf(self.baz2.bar.foo.shared is self.shared)
-        self.failIf(self.baz2.bar.foo.shared is self.baz2.shared)
+        self.assertIsNot(self.baz2.bar.foo.shared, None)
+        self.assertIsNot(self.baz2.bar.foo.shared, self.shared2)
+        self.assertIsNot(self.baz2.bar.foo.shared, self.shared)
+        self.assertIsNot(self.baz2.bar.foo.shared, self.baz2.shared)
 
     def test_baz2_bar_and_foo_shared(self):
         #
@@ -186,8 +159,8 @@ class CopyTraitsSharedCopyNone:
         # first hand reference which is a different copy.
         # I.e. The shared relationship has been fubarred by copy_traits: it's
         # not maintained, but not completely destroyed.
-        self.failUnless(self.baz2.bar.shared is self.baz2.bar.foo.shared)
-        self.failIf(self.baz2.shared is self.baz2.bar.foo.shared)
+        self.assertIs(self.baz2.bar.shared, self.baz2.bar.foo.shared)
+        self.assertIsNot(self.baz2.shared, self.baz2.bar.foo.shared)
 
 
 class TestCopyTraitsSharedCopyNone(CopyTraits,
@@ -195,7 +168,6 @@ class TestCopyTraitsSharedCopyNone(CopyTraits,
     __test__ = False
 
     def setUp(self):
-        print '\n***TestCopyTraitsSharedCopyNone',
         #super(TestCopyTraitsSharedCopyNone,self).setUp()
 
         # deep is the default value for Instance trait copy
@@ -208,7 +180,6 @@ class TestCopyTraitsCopyNotSpecified(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyNotSpecified',
 #        super(TestCopyTraitsCopyNotSpecified,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -220,7 +191,6 @@ class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyShallow',
 #        super(TestCopyTraitsCopyShallow,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -232,7 +202,6 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyDeep',
 #        super(TestCopyTraitsCopyDeep,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -240,30 +209,30 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
         return
 
 
-class CopyTraitsSharedCopyRef:
+class CopyTraitsSharedCopyRef(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is the same object as the source.
 
-        self.failIf(self.baz2.shared is None)
-        self.failIf(self.baz2.shared is self.shared2)
-        self.failUnless(self.baz2.shared is self.shared)
+        self.assertIsNot(self.baz2.shared, None)
+        self.assertIsNot(self.baz2.shared, self.shared2)
+        self.assertIs(self.baz2.shared, self.shared)
 
     def test_baz2_bar_shared(self):
-        self.failIf(self.baz2.bar.shared is None)
-        self.failIf(self.baz2.bar.shared is self.shared2)
-        self.failUnless(self.baz2.bar.shared is self.shared)
-        self.failUnless(self.baz2.bar.shared is self.baz2.shared)
+        self.assertIsNot(self.baz2.bar.shared, None)
+        self.assertIsNot(self.baz2.bar.shared, self.shared2)
+        self.assertIs(self.baz2.bar.shared, self.shared)
+        self.assertIs(self.baz2.bar.shared, self.baz2.shared)
 
     def test_baz2_bar_foo_shared(self):
-        self.failIf(self.baz2.bar.foo.shared is None)
-        self.failIf(self.baz2.bar.foo.shared is self.shared2)
-        self.failUnless(self.baz2.bar.foo.shared is self.shared)
-        self.failUnless(self.baz2.bar.foo.shared is self.baz2.shared)
+        self.assertIsNot(self.baz2.bar.foo.shared, None)
+        self.assertIsNot(self.baz2.bar.foo.shared, self.shared2)
+        self.assertIs(self.baz2.bar.foo.shared, self.shared)
+        self.assertIs(self.baz2.bar.foo.shared, self.baz2.shared)
 
     def test_baz2_bar_and_foo_shared(self):
-        self.failUnless(self.baz2.bar.shared is self.baz2.bar.foo.shared)
-        self.failUnless(self.baz2.shared is self.baz2.bar.foo.shared)
+        self.assertIs(self.baz2.bar.shared, self.baz2.bar.foo.shared)
+        self.assertIs(self.baz2.shared, self.baz2.bar.foo.shared)
 
 
 class TestCopyTraitsSharedCopyRef(CopyTraits,
@@ -271,7 +240,6 @@ class TestCopyTraitsSharedCopyRef(CopyTraits,
     __test__ = False
 
     def setUp(self):
-        print '\n***TestCopyTraitsSharedCopyRef.setUp ',
         #super(TestCopyTraitsSharedCopyRef,self).setUp()
         self.set_shared_copy('ref')
         return
@@ -285,7 +253,6 @@ class TestCopyTraitsCopyNotSpecifiedSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyNotSpecifiedSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz)
@@ -297,7 +264,6 @@ class TestCopyTraitsCopyShallowSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyShallowSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy='shallow')
@@ -309,7 +275,6 @@ class TestCopyTraitsCopyDeepSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyDeepSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy='deep')

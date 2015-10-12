@@ -28,13 +28,11 @@ class Foo(HasTraits):
     u = Str('foo.u')
 
     def _s_changed(self, name, old, new):
-        print 'Foo._s_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global foo_s_handler_self
         foo_s_handler_self = self
         return
 
     def _t_changed(self, name, old, new):
-        print 'Foo._t_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global foo_t_handler_self
         foo_t_handler_self = self
         return
@@ -53,25 +51,21 @@ class BazModify(HasTraits):
 
     def _s_changed(self, name, old, new):
         # should never be called
-        print 'BazModify._s_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_s_handler_self
         baz_s_handler_self = self
         return
 
     def _sd_changed(self, name, old, new):
-        print 'BazModify._sd_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_sd_handler_self
         baz_sd_handler_self = self
         return
 
     def _t_changed(self, name, old, new):
-        print 'BazModify._t_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_t_handler_self
         baz_t_handler_self = self
         return
 
     def _u_changed(self, name, old, new):
-        print 'BazModify._u_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_u_handler_self
         baz_u_handler_self = self
         return
@@ -84,26 +78,21 @@ class BazNoModify(HasTraits):
     u = Delegate('foo', listenable=False)
 
     def _s_changed(self, name, old, new):
-        print 'BazNoModify._s_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_s_handler_self
         baz_s_handler_self = self
         return
 
     def _sd_changed(self, name, old, new):
-        print 'BazNoModify._sd_changed(%s, %s, %s, %s)' % (self, name, old,
-                                                           new)
         global baz_sd_handler_self
         baz_sd_handler_self = self
         return
 
     def _t_changed(self, name, old, new):
-        print 'BazNoModify._t_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_t_handler_self
         baz_t_handler_self = self
         return
 
     def _u_changed(self, name, old, new):
-        print 'BazNoModify._u_changed(%s, %s, %s, %s)' % (self, name, old, new)
         global baz_u_handler_self
         baz_u_handler_self = self
         return

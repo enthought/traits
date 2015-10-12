@@ -15,7 +15,7 @@ class TestSpecialEvent(unittest.TestCase):
         self.foo.val = 'CHANGE'
 
         values = ['CHANGE']
-        self.failUnlessEqual(self.change_events, values)
+        self.assertEqual(self.change_events, values)
 
     def test_instance_events(self):
         foo = self.foo
@@ -23,7 +23,7 @@ class TestSpecialEvent(unittest.TestCase):
         foo.val2 = 'CHANGE2'
 
         values = ['CHANGE2']
-        self.failUnlessEqual(self.change_events, values)
+        self.assertEqual(self.change_events, values)
 
 
 class Foo(HasStrictTraits):

@@ -669,7 +669,7 @@ The signature of :func:`~traits.adaptation.api.register_factory` is:
 
 The :func:`~traits.adaptation.adaptation_manager.register_factory` function
 takes as first argument
-the adapter class (or an `adapter factory <adapter-factories>`_), followed
+the adapter class (or an :ref:`adapter factory <adapter-factories>`), followed
 by the protocol to be adapted (the one provided by the adaptee,
 :attr:`from_protocol`), and the protocol that it provides
 (:attr:`to_protocol`).
@@ -678,7 +678,7 @@ by the protocol to be adapted (the one provided by the adaptee,
 
 This is the example from the previous section, were the adapter is registered::
 
-    from traits.adaptation.api import HasTraitsAdapter, Instance, provides
+    from traits.adaptation.api import Adapter, Instance, provides
 
     # Declare what interfaces this adapter implements for its client
     @provides(IName)
@@ -731,12 +731,12 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)
     import abc
     import numpy
     from traits.api import Array, HasTraits
-    from traits.adaptation.api import adapt, HasTraitsAdapter, register_factory
+    from traits.adaptation.api import adapt, Adapter, register_factory
 
     class ImageABC(object):
         __metaclass__ = abc.ABCMeta
 
-    class NDArrayToImage(HasTraitsAdapter):
+    class NDArrayToImage(Adapter):
         adaptee = Array
 
     # Declare that NDArrayToImage implements ImageABC.
@@ -857,7 +857,8 @@ For example, a Traits object can be written against the ``IPrintable``
 interface and be open to extensions by adaptation as follows:
 ::
 
-    from traits.api import HasTraits, HasTraitsAdapter, implements, Interface, List, register_factory, Str, Supports
+    from traits.api import (Adapter, HasTraits, Interface, List, provides,
+                            register_factory, Str, Supports)
 
     class IPrintable(Interface):
         def get_formatted_text(self, n_cols):
@@ -891,7 +892,7 @@ interface and be open to extensions by adaptation as follows:
         text = Str
 
     @provides(IPrintable)
-    class TextDocumentToIPrintable(HasTraitsAdapter):
+    class TextDocumentToIPrintable(Adapter):
         """ Adapt TextDocument and provide IPrintable. """
 
         def get_formatted_text(self, n_cols):
@@ -1017,6 +1018,25 @@ Gotchas
    the classes involved in adaptation are typically subclasses of
    :class:`~.HasTraits`, in which case this is not an issue.
 
+2) The methods :func:`~traits.adaptation.adaptation_manager.register_factory`,
+   :func:`~traits.adaptation.adaptation_manager.adapt`,
+   etc. use a global adaptation manager, which is accessible through the
+   function
+   :func:`~traits.adaptation.adaptation_manager.get_global_adaptation_manager`.
+   The traits automatic adaptation features also use the global manager.
+   Having a global adaptation manager can get you into trouble, for the usual
+   reasons related to having a global state. If you want to have more control
+   over adaptation, we recommend creating a new
+   :class:`~traits.adaptation.adaptation_manager.AdaptationManager`
+   instance, use it directly in your application, and set it as the global
+   manager using
+   :func:`~traits.adaptation.adaptation_manager.set_global_adaptation_manager`.
+   A common issue with the global manager arises in unittesting, where adapters
+   registered in one test influence the outcome of other tests downstream.
+   Tests relying on adaptation should make sure to reset the state of the
+   global adapter using
+   :func:`~traits.adaptation.adaptation_manager.reset_global_adaptation_manager`.
+
 Recommended readings about adaptation
 `````````````````````````````````````
 
@@ -1053,11 +1073,12 @@ The Property() function has the following signature:
 
 .. function:: Property( [fget=None, fset=None, fvalidate=None, force=False, handler=None, trait=None, **metadata] )
 
-All parameters are optional, including the *fget* "getter" and *fset* "setter"
-methods. If no parameters are specified, then the trait looks for and uses
-methods on the same class as the attribute that the trait is assigned to, with
-names of the form _get_\ *name*\ () and _set_\ *name*\ (), where *name* is the
-name of the trait attribute.
+All parameters are optional, including the *fget* "getter", *fvalidate*
+"validator"  and *fset* "setter" methods. If no parameters are specified, then
+the trait looks for and uses methods on the same class as the attribute that
+the trait is assigned to, with names of the form _get_\ *name*\ (),
+_validate_\ *name*\ () and _set_\ *name*\ (), where *name* is the name of the
+trait attribute.
 
 If you specify a trait as either the *fget* parameter or the *trait* parameter,
 that trait's handler supersedes the *handler* argument, if any. Because the
@@ -1246,6 +1267,16 @@ strategy has the advantage of generating trait change notifications for each
 attribute. These notifications are important for classes that rely on them to
 ensure that their internal object state remains consistent and up to date.
 
+.. note:: If you're manually creating state dictionaries for consumption by
+   __setstate__(), you should be aware of an additional implementation detail:
+   when pickling, the HasTraits __getstate__() method returns a dictionary with
+   an extra ``'__traits_version__'`` key giving the version of Traits used at
+   pickling time.  If this key is not present when unpickling, the HasTraits
+   __setstate__() method falls back to a compatibility mode and may not restore
+   the state correctly.  For the same reason, if you're overriding
+   __getstate__(), you should be careful to make the appropriate ``super(...,
+   self).__getstate__()`` call.
+
 .. index:: __setstate__(); overriding
 
 .. _overriding-setstate:
@@ -1317,7 +1348,7 @@ corresponding to each keyword to the matching value. This shorthand is useful
 when a number of trait attributes need to be set on an object, or a trait
 attribute value needs to be set in a lambda function. For example::
 
-    person.set(name='Bill', age=27)
+    person.trait_set(name='Bill', age=27)
 
 The statement above is equivalent to the following::
 
@@ -1448,6 +1479,3 @@ course, this is offset by the convenience and flexibility provided by the
 deferral model. As with any powerful tool, it is best to understand its
 strengths and weaknesses and apply that understanding in determining when use of
 the tool is justified and appropriate.
-
-
-

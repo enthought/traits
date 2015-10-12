@@ -12,10 +12,10 @@ Traits 4 User Manual
     custom.rst
     advanced.rst
     testing.rst
+    debugging.rst
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`search`
-

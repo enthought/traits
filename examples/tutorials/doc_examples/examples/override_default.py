@@ -4,34 +4,31 @@
 # override_default.py -- Example of overriding a default value for
 #                        a trait attribute in a subclass
 
-#--[Imports]--------------------------------------------------------------------
+from traits.api import HasTraits, Range, Str
 
-from traits.api \
-    import HasTraits, Range, Str
 
-#--[Code]-----------------------------------------------------------------------
-
+#--[Code]----------------------------------------------------------------------
 # Example of overriding a default value for a trait in a subclass:
 
-# Define the base class:
-class Employee ( HasTraits ):
 
-    name         = Str
-    salary_grade = Range( value = 1, low = 1, high = 10 )
+# Define the base class:
+class Employee(HasTraits):
+
+    name = Str
+    salary_grade = Range(value=1, low=1, high=10)
+
 
 # Define a subclass:
-class Manager ( Employee ):
+class Manager(Employee):
 
     # Override the default value for the inherited 'salary_grade' trait:
     salary_grade = 5
 
-#--[Example*]-------------------------------------------------------------------
-
+#--[Example*]------------------------------------------------------------------
 # Create an employee and display its initial contents:
-joe = Employee( name = 'Joe' )
+joe = Employee(name='Joe')
 joe.print_traits()
 
 # Now do the same thing for a manager object:
-mike = Manager( name = 'Mike' )
+mike = Manager(name='Mike')
 mike.print_traits()
-

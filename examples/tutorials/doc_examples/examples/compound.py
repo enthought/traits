@@ -1,25 +1,24 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-
 # compound.py -- Example of multiple criteria in a trait definition
 
-#--[Imports]--------------------------------------------------------------------
 
+#--[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Range, Trait, TraitError
 
-#--[Code]-----------------------------------------------------------------------
 
+#--[Code]----------------------------------------------------------------------
 # Shows the definition of a compound trait.
 
-class Die ( HasTraits ):
+class Die(HasTraits):
 
     # Define a compound trait definition:
-    value = Trait( 1, Range( 1, 6 ),
-                  'one', 'two', 'three', 'four', 'five', 'six' )
+    value = Trait(1, Range(1, 6),
+                  'one', 'two', 'three', 'four', 'five', 'six')
 
-#--[Example*]-------------------------------------------------------------------
 
+#--[Example*]------------------------------------------------------------------
 # Create a sample Die:
 die = Die()
 
@@ -39,4 +38,3 @@ try:
     die.value = 'zero'
 except TraitError, excp:
     print excp
-
