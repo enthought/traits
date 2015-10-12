@@ -2695,8 +2695,8 @@ class HasTraits ( CHasTraits ):
                     for name, value in dic.items():
                         if ref is value[0]:
                             del dic[ name ]
-                            if len( dic ) == 0:
-                                del info[ key ]
+                    if len( dic ) == 0:
+                        del info[ key ]
 
         info = self._get_sync_trait_info()
         dic   = info.setdefault( trait_name, {} )
