@@ -2683,12 +2683,6 @@ class HasTraits ( CHasTraits ):
         # Callback to use when the synced object goes out of scope. In order
         # to avoid reference cycles, this must not be a member function. See
         # Github issue #69 for more detail.
-
-        # FIXME: This callback removes the synced object from the
-        # `__sync_trait__` dictionary, but does not unregister the
-        # `_sync_trait_modified` trait listener if there are no more objects to
-        # sync with.
-
         def _sync_trait_listener_deleted (ref, info):
             for key, dic in info.items():
                 if key != '':
