@@ -2680,10 +2680,25 @@ class HasTraits ( CHasTraits ):
 
             return
 
-        value = ( weakref.ref( object, self._sync_trait_listener_deleted ),
-                  alias )
-        dic   = self._get_sync_trait_info().setdefault( trait_name, {} )
+        # Callback to use when the synced object goes out of scope. In order
+        # to avoid reference cycles, this must not be a member function. See
+        # Github issue #69 for more detail.
+        def _sync_trait_listener_deleted (ref, info):
+            for key, dic in info.items():
+                if key != '':
+                    for name, value in dic.items():
+                        if ref is value[0]:
+                            del dic[ name ]
+                    if len( dic ) == 0:
+                        del info[ key ]
+
+        info = self._get_sync_trait_info()
+        dic   = info.setdefault( trait_name, {} )
         key   = ( id( object ), alias )
+
+        callback = lambda ref: _sync_trait_listener_deleted(ref, info)
+        value = ( weakref.ref( object, callback ), alias )
+
         if key not in dic:
             if len( dic ) == 0:
                 self._on_trait_change( self._sync_trait_modified, trait_name )
@@ -2706,6 +2721,8 @@ class HasTraits ( CHasTraits ):
 
     def _sync_trait_modified ( self, object, name, old, new ):
         info   = self.__sync_trait__
+        if name not in info:
+            return
         locked = info[ '' ]
         locked[ name ] = None
         for object, object_name in info[ name ].values():
@@ -2734,16 +2751,6 @@ class HasTraits ( CHasTraits ):
                     pass
 
         del locked[ name ]
-
-    def _sync_trait_listener_deleted ( self, ref ):
-        info = self.__sync_trait__
-        for key, dic in info.items():
-            if key != '':
-                for name, value in dic.items():
-                    if ref is value[0]:
-                        del dic[ name ]
-                        if len( dic ) == 0:
-                            del info[ key ]
 
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
