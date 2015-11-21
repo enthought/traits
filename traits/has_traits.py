@@ -1858,6 +1858,10 @@ class HasTraits ( CHasTraits ):
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
+
+        Returns
+        -------
+        A UI object.
         """
         if context is None:
             context = self
@@ -1921,12 +1925,12 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
-                            self.editable_traits, self )
+                            self.visible_traits, self )
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
                   cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_editable_traits, None )
+                  cls.class_visible_traits, None )
 
     class_trait_view = classmethod( class_trait_view )
 
@@ -1935,7 +1939,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           editable_traits, handler ):
+                           trait_selector_f, handler ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
@@ -1997,7 +2001,7 @@ class HasTraits ( CHasTraits ):
         # traits defined for the object:
         from traitsui.api import View
 
-        return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
+        return View( trait_selector_f(), buttons = [ 'OK', 'Cancel' ] )
 
     _trait_view = classmethod( _trait_view )
 
@@ -2128,6 +2132,10 @@ class HasTraits ( CHasTraits ):
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
 
+        Returns
+        -------
+        True on success.
+
         Description
         -----------
         This method is intended for use in applications that do not normally
@@ -2197,6 +2205,20 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
+    
+    def visible_traits ( self ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current object, that should be GUI visible
+        """
+        return self.trait_names( type = not_event, visible = not_false )
+
+    def class_visible_traits ( cls ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current class, that should be GUI visible
+        """
+        return cls.class_trait_names( type = not_event, visible = not_false )
+
+    class_visible_traits = classmethod( class_visible_traits )
 
     #---------------------------------------------------------------------------
     #  Pretty print the traits of an object:
@@ -2658,10 +2680,25 @@ class HasTraits ( CHasTraits ):
 
             return
 
-        value = ( weakref.ref( object, self._sync_trait_listener_deleted ),
-                  alias )
-        dic   = self._get_sync_trait_info().setdefault( trait_name, {} )
+        # Callback to use when the synced object goes out of scope. In order
+        # to avoid reference cycles, this must not be a member function. See
+        # Github issue #69 for more detail.
+        def _sync_trait_listener_deleted (ref, info):
+            for key, dic in info.items():
+                if key != '':
+                    for name, value in dic.items():
+                        if ref is value[0]:
+                            del dic[ name ]
+                    if len( dic ) == 0:
+                        del info[ key ]
+
+        info = self._get_sync_trait_info()
+        dic   = info.setdefault( trait_name, {} )
         key   = ( id( object ), alias )
+
+        callback = lambda ref: _sync_trait_listener_deleted(ref, info)
+        value = ( weakref.ref( object, callback ), alias )
+
         if key not in dic:
             if len( dic ) == 0:
                 self._on_trait_change( self._sync_trait_modified, trait_name )
@@ -2684,6 +2721,8 @@ class HasTraits ( CHasTraits ):
 
     def _sync_trait_modified ( self, object, name, old, new ):
         info   = self.__sync_trait__
+        if name not in info:
+            return
         locked = info[ '' ]
         locked[ name ] = None
         for object, object_name in info[ name ].values():
@@ -2712,16 +2751,6 @@ class HasTraits ( CHasTraits ):
                     pass
 
         del locked[ name ]
-
-    def _sync_trait_listener_deleted ( self, ref ):
-        info = self.__sync_trait__
-        for key, dic in info.items():
-            if key != '':
-                for name, value in dic.items():
-                    if ref is value[0]:
-                        del dic[ name ]
-                        if len( dic ) == 0:
-                            del info[ key ]
 
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
@@ -2956,6 +2985,12 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
+        
+        # Update with instance-defined traits.
+        for name, trt in self._instance_traits().items():
+            if name[-6:] != "_items":
+                traits[name] = trt
+
         for name in self.__dict__.keys():
             if name not in traits:
                 trait = self.trait( name )

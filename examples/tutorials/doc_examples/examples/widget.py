@@ -3,13 +3,15 @@
 
 from traits.api import Float, HasTraits, Trait
 
+
 class Part(HasTraits):
     cost = Trait(0.0)
+
 
 class Widget(HasTraits):
     part1 = Trait(Part)
     part2 = Trait(Part)
-    cost  = Float(0.0)
+    cost = Float(0.0)
 
     def __init__(self):
         self.part1 = Part()
@@ -19,5 +21,3 @@ class Widget(HasTraits):
 
     def update_cost(self):
         self.cost = self.part1.cost + self.part2.cost
-
-

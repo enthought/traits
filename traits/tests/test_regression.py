@@ -47,6 +47,14 @@ class DelegateMess(HasTraits):
             getattr(self, '_init_trait_%s_listener' % data[0])(name, *data)
 
 
+class DelegateLeak(HasTraits):
+    visible = Property(Bool, depends_on='can_enable')
+
+    can_enable = DelegatesTo('flag', prefix='x')
+
+    flag = Instance(Dummy, kw={'x': 42})
+
+
 class Presenter(HasTraits):
     obj = Instance(Dummy)
     y = Property(Int(), depends_on='obj.x')
@@ -126,6 +134,43 @@ class TestRegression(unittest.TestCase):
         list_test.b = [1, 2, 3]
         list_test.b[0] = 0
         self.assertEqual(list_test.events_received, 3)
+
+    def test_has_traits_notifiers_refleak(self):
+        # Regression test for issue described in
+        # https://github.com/enthought/traits/pull/248
+
+        warmup = 5
+        cycles = 10
+        counts = []
+
+        def handler():
+            pass
+
+        def f():
+            obj = HasTraits()
+            obj.on_trait_change(handler)
+
+        # Warmup.
+        for _ in xrange(cycles):
+            f()
+            gc.collect()
+            counts.append(len(gc.get_objects()))
+
+        # All the counts beyond the warmup period should be the same.
+        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+
+    def test_delegation_refleak(self):
+        warmup = 5
+        cycles = 10
+        counts = []
+
+        for _ in xrange(cycles):
+            DelegateLeak()
+            gc.collect()
+            counts.append(len(gc.get_objects()))
+
+        # All the counts should be the same.
+        self.assertEqual(counts[warmup:-1], counts[warmup+1:])
 
 
 if __name__ == '__main__':

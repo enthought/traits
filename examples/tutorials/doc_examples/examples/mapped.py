@@ -3,32 +3,33 @@
 
 # mapped.py --- Example of a mapped trait
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Trait
 
-#--[Code]-----------------------------------------------------------------------
-standard_color = Trait ('black', {
-    'black':       ( 0.0, 0.0, 0.0, 1.0 ),
-    'blue':        ( 0.0, 0.0, 1.0, 1.0 ),
-    'cyan':        ( 0.0, 1.0, 1.0, 1.0 ),
-    'green':       ( 0.0, 1.0, 0.0, 1.0 ),
-    'magenta':     ( 1.0, 0.0, 1.0, 1.0 ),
-    'orange':      ( 0.8, 0.196, 0.196, 1.0 ),
-    'purple':      ( 0.69, 0.0, 1.0, 1.0 ),
-    'red':         ( 1.0, 0.0, 0.0, 1.0 ),
-    'violet':      ( 0.31, 0.184, 0.31, 1.0 ),
-    'yellow':      ( 1.0, 1.0, 0.0, 1.0 ),
-    'white':       ( 1.0, 1.0, 1.0, 1.0 ),
-    'transparent': ( 1.0, 1.0, 1.0, 0.0 )
-} )
+#--[Code]----------------------------------------------------------------------
+standard_color = Trait('black', {
+    'black': (0.0, 0.0, 0.0, 1.0),
+    'blue': (0.0, 0.0, 1.0, 1.0),
+    'cyan': (0.0, 1.0, 1.0, 1.0),
+    'green': (0.0, 1.0, 0.0, 1.0),
+    'magenta': (1.0, 0.0, 1.0, 1.0),
+    'orange': (0.8, 0.196, 0.196, 1.0),
+    'purple': (0.69, 0.0, 1.0, 1.0),
+    'red': (1.0, 0.0, 0.0, 1.0),
+    'violet': (0.31, 0.184, 0.31, 1.0),
+    'yellow': (1.0, 1.0, 0.0, 1.0),
+    'white': (1.0, 1.0, 1.0, 1.0),
+    'transparent': (1.0, 1.0, 1.0, 0.0)
+})
 
-red_color = Trait( 'red', standard_color )
+red_color = Trait('red', standard_color)
 
-class GraphicShape( HasTraits ):
+
+class GraphicShape(HasTraits):
     line_color = standard_color
     fill_color = red_color
 
-#--[Example*]-------------------------------------------------------------------
+#--[Example*]------------------------------------------------------------------
 
 my_shape1 = GraphicShape()
 
@@ -50,4 +51,3 @@ print my_shape2.line_color, my_shape2.fill_color
 
 print my_shape2.line_color_, my_shape2.fill_color_
 # Output: (0.0, 0.0, 1.0, 1.0) (0.0, 1.0, 0.0, 1.0)
-

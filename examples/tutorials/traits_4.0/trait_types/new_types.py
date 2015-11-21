@@ -1,16 +1,16 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Creating New Trait Types)---------------------------------------------------
+#--(Creating New Trait Types)--------------------------------------------------
 """
 Creating New Trait Types
 ========================
 
 You create a *new style* trait type by subclassing the **TraitType** class or
-one of its subclasses, such as **Float** or **Str**. **TraitType** provides the
-infrastructure for creating a trait type and allows subclasses to define
-specific methods and class constants used to create either a new trait *type* or
-*property*.
+one of its subclasses, such as **Float** or **Str**. **TraitType** provides
+the infrastructure for creating a trait type and allows subclasses to define
+specific methods and class constants used to create either a new trait *type*
+or *property*.
 
 In the next section, we'll cover the methods and class constants used to define
 a new trait *type*, and in the section following that we'll show how to define
@@ -23,11 +23,11 @@ The thing that distinguishes a trait *type* from a *property* is the existence
 of a *validate* method in the subclass. The *validate* method should have the
 following signature:
 
-validate ( self, object, name, value )
-    This method validates, coerces, or adapts the specified *value* as the value
-    of the *name* trait of the *object* object. This method is called when a
-    value is assigned to an object trait that is based on this subclass of
-    *TraitType* and the class does not  contain a definition for either the
+validate(self, object, name, value)
+    This method validates, coerces, or adapts the specified *value* as the
+    value of the *name* trait of the *object* object. This method is called
+    when a value is assigned to an object trait that is based on this subclass
+    of *TraitType* and the class does not  contain a definition for either the
     *get()* or *set()* methods.
 
     The method must return the original *value* or any suitably coerced or
@@ -39,7 +39,7 @@ validate ( self, object, name, value )
 In addition to *validate*, the subclass can also define the *post_setattr*
 method, which should have the following signature:
 
-post_setattr ( self, object, name, value )
+post_setattr(self, object, name, value)
     This method allows the trait to do additional processing after *value* has
     been successfully assigned to the *name* trait of the *object* object. For
     most traits there is no additional processing that needs to be done, and
@@ -47,10 +47,10 @@ post_setattr ( self, object, name, value )
     (i.e., *mapped* traits), but other uses may arise as well. This method does
     not need to return a value, and should normally not raise any exceptions.
 
-The subclass can also define a constant default value by setting the class-level
-*default_value* attribute to the desired constant value. For example::
+The subclass can also define a constant default value by setting the class-
+level *default_value* attribute to the desired constant value. For example::
 
-    class OddInt ( Int ):
+    class OddInt(Int):
 
         default_value = 1
 
@@ -64,7 +64,7 @@ If you have a constant string that can be used as the type's *info* value, you
 can provide it by simple setting the string as the value of the class-level
 *info_text* attribute::
 
-    class OddInt ( Int ):
+    class OddInt(Int):
 
         info_text = 'an odd integer'
 
@@ -80,9 +80,9 @@ when the trait type is created, you can also override the **TraitType** class's
 *init* method. This method has no arguments and is automatically called from
 the **TraitType** class constructor.
 
-If you would like to specify a default Traits UI editor for your new trait type,
-you can also override the **TraitType** class's *create_editor* method, which
-has no arguments and should return the default **TraitEditor** for any
+If you would like to specify a default Traits UI editor for your new trait
+type, you can also override the **TraitType** class's *create_editor* method,
+which has no arguments and should return the default **TraitEditor** for any
 instances of the type to use.
 
 This provides a basic overview of the basic methods and class constants needed
@@ -98,7 +98,7 @@ one of its subclasses. A *property* is distinguished from a *type* by the
 existence of a *get* and/or *set* method in the **TraitType** subclass. The
 signature for these two methods is as follows:
 
-get ( self, object, name )
+get(self, object, name)
     This is the *getter* method of a trait that behaves like a property. It has
     the following arguments:
 
@@ -108,10 +108,10 @@ get ( self, object, name )
         The name of the *object* property.
 
     If this method is not defined, but the *set* method is defined, the trait
-    behaves like a *write-only* property. This method should return the value of
-    the *name* property for the *object* object.
+    behaves like a *write-only* property. This method should return the value
+    of the *name* property for the *object* object.
 
-set ( self, object, name, value )
+set(self, object, name, value)
     This is the *setter* method of a trait that behaves like a property. It has
     the following arguments:
 
@@ -136,17 +136,17 @@ to the preceding section on defining a trait type for additional information
 that applies to properties as well.
 """
 
-#--<Imports>--------------------------------------------------------------------
+#--<Imports>-------------------------------------------------------------------
 
 from traits.api import *
 
-#--[DiceRoll Type]--------------------------------------------------------------
 
+#--[DiceRoll Type]-------------------------------------------------------------
 # Define a type whose value represents the roll of a pair of dice:
-class DiceRoll ( TraitType ):
+class DiceRoll(TraitType):
 
     # Set default value to 'snake-eyes':
-    default_value = ( 1, 1 )
+    default_value = (1, 1)
 
     # Describe the type:
     info_text = ('a tuple of the form (n,m), where both n and m are integers '
@@ -155,58 +155,60 @@ class DiceRoll ( TraitType ):
 
     # Validate any value assigned to the trait to make sure it is a valid
     # dice roll:
-    def validate ( self, object, name, value ):
-        if (isinstance( value, tuple ) and (len( value ) == 2) and
-            (1 <= value[0] <= 6) and (1 <= value[1] <= 6)):
+    def validate(self, object, name, value):
+        if (isinstance(value, tuple) and (len(value) == 2) and
+                (1 <= value[0] <= 6) and (1 <= value[1] <= 6)):
             return value
 
-        self.error( object, name, value )
+        self.error(object, name, value)
 
-#--[RandInt Property]-----------------------------------------------------------
+#--[RandInt Property]----------------------------------------------------------
 
 from random import randint
 
+
 # Define a read-only property whose value is a random integer in a specified
 # range:
-class RandInt ( TraitType ):
+class RandInt(TraitType):
 
     # Define the type's constructor:
-    def __init__( self, low = 1, high = 10, **metadata ):
-        super( RandInt, self ).__init__( **metadata )
-        self.low  = int( low )
-        self.high = int( high )
+    def __init__(self, low=1, high=10, **metadata):
+        super(RandInt, self).__init__(**metadata)
+        self.low = int(low)
+        self.high = int(high)
 
     # Define the property's getter:
-    def get ( self ):
-        return randint( self.low, self.high )
+    def get(self):
+        return randint(self.low, self.high)
 
     # Define the type's type information:
-    def info ( self ):
+    def info(self):
         return ('a random integer in the range from %d to %d' %
-                ( self.low, self.high))
+               (self.low, self.high))
 
-#--[Craps Class]----------------------------------------------------------------
+#--[Craps Class]---------------------------------------------------------------
+
 
 # Define a test class containing both new trait types/properties:
-class Craps ( HasTraits ):
+class Craps(HasTraits):
 
-    rolls = List( DiceRoll )
-    die   = RandInt( 1, 6 )
+    rolls = List(DiceRoll)
+    die = RandInt(1, 6)
 
-#--[Example*]--------------------------------------------------------------------
+#--[Example*]------------------------------------------------------------------
 
 # Create a test object:
 craps = Craps()
 
 # Add a number of test dice rolls:
-for i in range( 10 ):
-    craps.rolls.append( ( craps.die, craps.die ) )
+for i in range(10):
+    craps.rolls.append((craps.die, craps.die))
 
 # Display the results:
 print craps.rolls
 
 # Try to assign an invalid dice roll:
 try:
-    craps.rolls.append( ( 0, 0 ) )
+    craps.rolls.append((0, 0))
 except TraitError:
     print 'Assigning an invalid dice roll failed.'

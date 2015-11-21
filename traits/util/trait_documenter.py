@@ -41,7 +41,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
     """
 
-    ### ClassLevelDocumenter interface #####################################
+    # ClassLevelDocumenter interface #####################################
 
     objtype = 'traitattribute'
     directivetype = 'attribute'
@@ -94,7 +94,7 @@ class TraitDocumenter(ClassLevelDocumenter):
             msg = ('autodoc can\'t import/find {0} {r1}, it reported error: '
                    '"{2}", please check your spelling and sys.path')
             self.directive.warn(msg.format(self.objtype, str(self.fullname),
-                                                                        err))
+                                err))
             self.env.note_reread()
             return False
 
@@ -108,7 +108,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         self.add_line(u'   :annotation: = {0}'.format(definition),
                       '<autodoc>')
 
-    ### Private Interface #####################################################
+    # Private Interface #####################################################
 
     def _get_trait_definition(self):
         """ Retrieve the Trait attribute definition
@@ -131,14 +131,42 @@ class TraitDocumenter(ClassLevelDocumenter):
                 name_found = True
 
         # Retrieve the trait definition.
-        definition_tokens = []
-        for type, name, start, stop, line in tokens:
-            if type == token.NEWLINE:
-                break
-            item = (type, name, (1, start[1]), (1, stop[1]), line)
-            definition_tokens.append(item)
-
+        definition_tokens = _get_definition_tokens(tokens)
         return tokenize.untokenize(definition_tokens).strip()
+
+
+def _get_definition_tokens(tokens):
+    """ Given the tokens, extracts the definition tokens.
+
+    Parameters
+    ----------
+    tokens : iterator
+        An iterator producing tokens.
+
+    Returns
+    -------
+    A list of tokens for the definition.
+    """
+    # Retrieve the trait definition.
+    definition_tokens = []
+    first_line = None
+
+    for type, name, start, stop, line_text in tokens:
+        if first_line is None:
+            first_line = start[0]
+
+        if type == token.NEWLINE:
+            break
+
+        item = (type,
+                name,
+                (start[0] - first_line + 1, start[1]),
+                (stop[0] - first_line + 1, stop[1]),
+                line_text)
+
+        definition_tokens.append(item)
+
+    return definition_tokens
 
 
 def setup(app):
