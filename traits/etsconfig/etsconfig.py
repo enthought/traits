@@ -206,7 +206,7 @@ class ETSConfig(object):
             If the toolkit attribute is already set, then an AttributeError
             will be raised when entering the context manager.
         """
-        if not self.toolkit:
+        if self.toolkit:
             raise AttributeError("ETSConfig toolkit is already set")
         self.toolkit = toolkit
         try:

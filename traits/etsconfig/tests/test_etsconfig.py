@@ -277,6 +277,54 @@ class ETSConfigTestCase(unittest.TestCase):
                          ['something', '-toolkit', 'test_args',
                           'something_else'])
 
+    def test_provisional_toolkit(self):
+        test_args = []
+        test_environ = {}
+
+        with mock_sys_argv(test_args):
+            with mock_os_environ(test_environ):
+                print repr(self.ETSConfig.toolkit)
+                with self.ETSConfig.provisional_toolkit('test_direct'):
+                    toolkit = self.ETSConfig.toolkit
+                    self.assertEqual(toolkit, 'test_direct')
+
+        # should stay set, since no exception raised
+        toolkit = self.ETSConfig.toolkit
+        self.assertEqual(toolkit, 'test_direct')
+
+    def test_provisional_toolkit_exception(self):
+        test_args = []
+        test_environ = {'ETS_TOOLKIT': ''}
+
+        with mock_sys_argv(test_args):
+            with mock_os_environ(test_environ):
+                try:
+                    with self.ETSConfig.provisional_toolkit('test_direct'):
+                        toolkit = self.ETSConfig.toolkit
+                        self.assertEqual(toolkit, 'test_direct')
+                        raise Exception("Test exception")
+                except Exception as exc:
+                    if not exc.message == "Test exception":
+                        raise
+
+                # should be reset, since exception raised
+                toolkit = self.ETSConfig.toolkit
+                self.assertEqual(toolkit, '')
+
+    def test_provisional_toolkit_already_set(self):
+        test_args = []
+        test_environ = {'ETS_TOOLKIT': 'test_environ'}
+
+        with mock_sys_argv(test_args):
+            with mock_os_environ(test_environ):
+                with self.assertRaises(AttributeError):
+                    with self.ETSConfig.provisional_toolkit('test_direct'):
+                        pass
+
+                # should come from the environment
+                toolkit = self.ETSConfig.toolkit
+                self.assertEqual(toolkit, 'test_environ')
+
     def test_user_data(self):
         """
         user data
