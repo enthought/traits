@@ -448,7 +448,7 @@ class ETSConfig(object):
                 raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
 
             # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 1]
+            del sys.argv[opt_idx:opt_idx + 2]
         else:
             opt_toolkit = None
 
