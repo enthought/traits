@@ -231,7 +231,7 @@ class ETSConfig(object):
             will be raised when entering the context manager.
         """
         if self.toolkit:
-            msg = "ETSConfig toolkit is already set to '{}'"
+            msg = "ETSConfig toolkit is already set to '{0}'"
             raise ETSToolkitError(msg.format(self.toolkit))
         self.toolkit = toolkit
         try:
