@@ -8,6 +8,30 @@ from os import path
 from contextlib import contextmanager
 
 
+class ETSToolkitError(RuntimeError):
+    """ Error raised by issues importing ETS toolkits
+
+    Attributes
+    ----------
+    message : str
+        The message detailing the error.
+
+    toolkit : str or None
+        The toolkit associated with the error.
+    """
+
+    def __init__(self, message='', toolkit=None, *args):
+        if not message and toolkit:
+            message = "could not import toolkit '{}'".format(toolkit)
+        self.toolkit = toolkit
+        self.message = message
+        if message:
+            if toolkit:
+                args = (toolkit,) + args
+            args = (message,) + args
+        self.args = args
+
+
 class ETSConfig(object):
     """
     Enthought Tool Suite configuration information.
@@ -202,12 +226,13 @@ class ETSConfig(object):
 
         Raises
         ------
-        AttributeError
-            If the toolkit attribute is already set, then an AttributeError
+        ETSToolkitError
+            If the toolkit attribute is already set, then an ETSToolkitError
             will be raised when entering the context manager.
         """
         if self.toolkit:
-            raise AttributeError("ETSConfig toolkit is already set")
+            msg = "ETSConfig toolkit is already set to '{}'"
+            raise ETSToolkitError(msg.format(self.toolkit))
         self.toolkit = toolkit
         try:
             yield

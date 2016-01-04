@@ -14,7 +14,7 @@ else:
     import unittest
 
 # Enthought library imports.
-from traits.etsconfig.api import ETSConfig
+from traits.etsconfig.etsconfig import ETSConfig, ETSToolkitError
 
 
 @contextlib.contextmanager
@@ -305,8 +305,8 @@ class ETSConfigTestCase(unittest.TestCase):
                     with self.ETSConfig.provisional_toolkit('test_direct'):
                         toolkit = self.ETSConfig.toolkit
                         self.assertEqual(toolkit, 'test_direct')
-                        raise Exception("Test exception")
-                except Exception as exc:
+                        raise ETSToolkitError("Test exception")
+                except ETSToolkitError as exc:
                     if not exc.message == "Test exception":
                         raise
 
@@ -320,7 +320,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
-                with self.assertRaises(AttributeError):
+                with self.assertRaises(ETSToolkitError):
                     with self.ETSConfig.provisional_toolkit('test_direct'):
                         pass
 
