@@ -22,7 +22,7 @@ class ETSToolkitError(RuntimeError):
 
     def __init__(self, message='', toolkit=None, *args):
         if not message and toolkit:
-            message = "could not import toolkit '{}'".format(toolkit)
+            message = "could not import toolkit '{0}'".format(toolkit)
         self.toolkit = toolkit
         self.message = message
         if message:
