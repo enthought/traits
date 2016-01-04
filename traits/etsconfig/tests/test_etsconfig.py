@@ -8,7 +8,10 @@ import shutil
 import sys
 import tempfile
 import time
-import unittest
+if sys.version_info[:2] == (2, 6):
+    import unittest2 as unittest
+else:
+    import unittest
 
 # Enthought library imports.
 from traits.etsconfig.api import ETSConfig
