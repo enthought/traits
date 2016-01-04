@@ -5,6 +5,7 @@
 import sys
 import os
 from os import path
+from contextlib import contextmanager
 
 
 class ETSConfig(object):
@@ -182,6 +183,38 @@ class ETSConfig(object):
 
 
     company = property(_get_company, _set_company)
+
+
+    @contextmanager
+    def provisional_toolkit(self, toolkit):
+        """ Perform an operation with toolkit provisionally set
+
+        This sets the toolkit attribute of the ETSConfig object set to the
+        provided value. If the operation fails with an exception, the toolkit
+        is reset to nothing.
+
+        This method should only be called if the toolkit is not currently set.
+
+        Parameters
+        ----------
+        toolkit : string
+            The name of the toolkit to provisionally use.
+
+        Raises
+        ------
+        AttributeError
+            If the toolkit attribute is already set, then an AttributeError
+            will be raised when entering the context manager.
+        """
+        if not self.toolkit:
+            raise AttributeError("ETSConfig toolkit is already set")
+        self.toolkit = toolkit
+        try:
+            yield
+        except:
+            # reset the toolkit state
+            self._toolkit = ''
+            raise
 
 
     def _get_toolkit(self):
