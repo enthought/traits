@@ -5,6 +5,31 @@
 import sys
 import os
 from os import path
+from contextlib import contextmanager
+
+
+class ETSToolkitError(RuntimeError):
+    """ Error raised by issues importing ETS toolkits
+
+    Attributes
+    ----------
+    message : str
+        The message detailing the error.
+
+    toolkit : str or None
+        The toolkit associated with the error.
+    """
+
+    def __init__(self, message='', toolkit=None, *args):
+        if not message and toolkit:
+            message = "could not import toolkit '{0}'".format(toolkit)
+        self.toolkit = toolkit
+        self.message = message
+        if message:
+            if toolkit:
+                args = (toolkit,) + args
+            args = (message,) + args
+        self.args = args
 
 
 class ETSConfig(object):
@@ -182,6 +207,39 @@ class ETSConfig(object):
 
 
     company = property(_get_company, _set_company)
+
+
+    @contextmanager
+    def provisional_toolkit(self, toolkit):
+        """ Perform an operation with toolkit provisionally set
+
+        This sets the toolkit attribute of the ETSConfig object set to the
+        provided value. If the operation fails with an exception, the toolkit
+        is reset to nothing.
+
+        This method should only be called if the toolkit is not currently set.
+
+        Parameters
+        ----------
+        toolkit : string
+            The name of the toolkit to provisionally use.
+
+        Raises
+        ------
+        ETSToolkitError
+            If the toolkit attribute is already set, then an ETSToolkitError
+            will be raised when entering the context manager.
+        """
+        if self.toolkit:
+            msg = "ETSConfig toolkit is already set to '{0}'"
+            raise ETSToolkitError(msg.format(self.toolkit))
+        self.toolkit = toolkit
+        try:
+            yield
+        except:
+            # reset the toolkit state
+            self._toolkit = ''
+            raise
 
 
     def _get_toolkit(self):
@@ -415,7 +473,7 @@ class ETSConfig(object):
                 raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
 
             # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 1]
+            del sys.argv[opt_idx:opt_idx + 2]
         else:
             opt_toolkit = None
 
