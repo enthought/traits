@@ -24,8 +24,8 @@ init:
   - ps: $Env:path = $Env:python + ";" + $Env:python + "\scripts;" + $Env:sdkbin + ";" + $Env:path
 install:
   - ps: if ((Test-Path "c:/egg_cache") -eq 0) { mkdir c:/egg_cache }
-  - ps: (new-object net.webclient).DownloadFile('https://raw.github.com/pypa/pip/master/contrib/get-pip.py', 'c:/get-pip.py')
-  - ps: python c:/get-pip.py
+  - ps: python -m pip install --upgrade --no-use-wheel pip
+  - ps: pip install --upgrade wheel
   - ps: pip --version
   - cmd /v:on /e:on /c ".\appveyor-install.cmd"
 test_script:
