@@ -90,6 +90,36 @@ class ListTestCase(unittest.TestCase):
         self.assertEqual(f.l[:-1], ['zero', 'one', 'two'])
         return
 
+    def test_slice_assignment(self):
+        # Exhaustive testing.
+        starts = stops = [None] + range(-10, 11)
+        steps = list(starts)
+        steps.remove(0)
+        test_slices = [slice(start, stop, step)
+                       for start in starts for stop in stops for step in steps]
+
+        for test_slice in test_slices:
+            f = Foo(l=['zero', 'one', 'two', 'three', 'four'])
+            plain_l = list(f.l)
+            length = len(plain_l[test_slice])
+            replacements = map(str, range(length))
+
+            # Plain Python list and Traits list behaviour should match.
+            plain_l[test_slice] = replacements
+            f.l[test_slice] = replacements
+            self.assertEqual(
+                f.l, plain_l, "failed for slice {0!r}".format(test_slice))
+
+    def test_slice_deletion_bad_length_computation(self):
+        # Regression test for enthought/traits#283.
+        class IHasConstrainedList(HasTraits):
+            foo = List(Str, minlen=3)
+
+        f = IHasConstrainedList(foo=['zero', 'one', 'two', 'three'])
+        # We're deleting two items; this should raise.
+        with self.assertRaises(TraitError):
+            del f.foo[::3]
+
     def test_retrieve_reference(self):
         f = Foo(l=['initial', 'value'])
 
