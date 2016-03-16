@@ -115,3 +115,15 @@ def test_pickle_whole():
     loads(dumps(a))
     b = B(dict=dict(a=a))
     loads(dumps(b))
+
+
+def test_trait_set_object_operations():
+    a = A()
+    a.aset.update({10: 'a'})
+    assert a.aset == {0, 1, 2, 3, 4, 10}
+    a.aset.intersection_update({3: 'b', 4: 'b', 10: 'a', 11: 'b'})
+    assert a.aset == {3, 4, 10}
+    a.aset.difference_update({10: 'a', 11: 'b'})
+    assert a.aset == {3, 4}
+    a.aset.symmetric_difference_update({10: 'a', 4: 'b'})
+    assert a.aset == {3, 10}
