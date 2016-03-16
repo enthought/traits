@@ -131,7 +131,7 @@ def test_trait_set_object_operations():
 
 def test_trait_set_object_inplace():
     a = A()
-    a.aset |= {10}
+    a.aset |= set([10])
     assert a.aset == set([0, 1, 2, 3, 4, 10])
     a.aset &= set([3, 4, 10, 11])
     assert a.aset == set([3, 4, 10])
