@@ -127,3 +127,15 @@ def test_trait_set_object_operations():
     assert a.aset == {3, 4}
     a.aset.symmetric_difference_update({10: 'a', 4: 'b'})
     assert a.aset == {3, 10}
+
+
+def test_trait_set_object_inplace():
+    a = A()
+    a.aset |= {10}
+    assert a.aset == {0, 1, 2, 3, 4, 10}
+    a.aset &= {3, 4, 10, 11}
+    assert a.aset == {3, 4, 10}
+    a.aset -= {10, 11}
+    assert a.aset == {3, 4}
+    a.aset ^= {10, 4}
+    assert a.aset == {3, 10}
