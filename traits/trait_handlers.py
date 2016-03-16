@@ -2893,6 +2893,21 @@ class TraitSetObject ( set ):
 
         self.__dict__.update( state )
 
+    def __ior__(self, value):
+        self.update(value)
+        return self
+
+    def __iand__(self, value):
+        self.intersection_update(value)
+        return self
+
+    def __ixor__(self, value):
+        self.symmetric_difference_update(value)
+        return self
+
+    def __isub__(self, value):
+        self.difference_update(value)
+        return self
 
 #-------------------------------------------------------------------------------
 #  'TraitDictEvent' class:
