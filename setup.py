@@ -142,16 +142,14 @@ if __name__ == "__main__":
             """.splitlines() if len(c.strip()) > 0],
         description='explicitly typed attributes for Python',
         long_description=open('README.rst').read(),
-        download_url=(
-            'http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
-            __version__),
+        download_url='https://github.com/enthought/traits',
         ext_modules=[ctraits],
         license='BSD',
         maintainer='ETS Developers',
         maintainer_email='enthought-dev@enthought.com',
         packages=find_packages(exclude=['fixers']),
         platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-        zip_safe= False,
+        zip_safe=False,
         use_2to3=True,
         use_2to3_fixers=['fixers'],
         # traits_listener.ListenerItem has a trait *next* which gets
