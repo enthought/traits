@@ -142,9 +142,7 @@ if __name__ == "__main__":
             """.splitlines() if len(c.strip()) > 0],
         description='explicitly typed attributes for Python',
         long_description=open('README.rst').read(),
-        download_url=(
-            'http://www.enthought.com/repo/ets/traits-%s.tar.gz' %
-            __version__),
+        download_url=('https://github.com/enthought/traits'),
         ext_modules=[ctraits],
         license='BSD',
         maintainer='ETS Developers',
