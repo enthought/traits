@@ -12,7 +12,7 @@ from cpython.object cimport (
     PyCallable_Check, PyObject_TypeCheck,
     PyObject_Call, PyObject_RichCompareBool, Py_NE, PyObject_GetAttr
 )
-from cpython.ref cimport PyObject, Py_TYPE, PyTypeObject
+from cpython.ref cimport PyObject, Py_TYPE
 from cpython.string cimport PyString_Check
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM, PyTuple_SET_ITEM, PyTuple_New, PyTuple_Check
 from cpython.type cimport PyType_Check, PyType_GenericAlloc
