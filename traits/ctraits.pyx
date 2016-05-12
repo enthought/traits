@@ -152,7 +152,7 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
 
     # FIXME: where defined as register in the C code
     cdef object low, high
-    cdef long exlude_mask
+    cdef long exclude_mask
     cdef double float_value, float_low, float_high
 
     cdef object type_info = trait.py_validate
@@ -1905,7 +1905,7 @@ cdef class cTrait:
 
         def __set__(self, value):
             if not isinstance(value, dict):
-                raise ValueError('__dict__ maust be a dictionary. ')
+                raise ValueError('__dict__ must be a dictionary. ')
             self.obj_dict = value
 
     property handler:
