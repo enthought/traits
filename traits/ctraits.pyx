@@ -1668,12 +1668,6 @@ cdef object call_class(object class_, cTrait trait, CHasTraits obj, object name,
     result = PyObject_Call(class_, args, None)
     return result
 
-cdef int has_value_for(CHasTraits obj, str name):
-    """ Returns whether an object's '__dict__' value is defined or not. """
-    if obj.obj_dict.has_key(name):
-        return 1
-    else:
-        return 0
 
 cdef class cTrait:
 
@@ -1901,11 +1895,7 @@ cdef class cTrait:
             name.
 
         """
-
-        if ((self.flags & TRAIT_PROPERTY)  != 0) or has_value_for(<CHasTraits>obj, name):
-            return default_value_for(self, obj, name)
-
-        return self.getattr(self, obj, name)
+        return default_value_for(self, obj, name)
 
     property __dict__:
         def __get__(self):
