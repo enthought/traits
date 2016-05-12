@@ -1266,6 +1266,12 @@ cdef object getattr_python(cTrait trait, CHasTraits obj, object name):
     cdef PyObject* result = PyObject_GenericGetAttr(<PyObject*>obj, <PyObject*>name)
     if result is not NULL:
         return <object>result
+    else:
+        # Clear the error flag and raise the exception on the Cython side.
+        PyErr_Clear()
+        raise AttributeError("%r object has no attribute %r" %
+                             (obj.__class__.__name__, name))
+
 
 cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
     """ Returns the value assigned to a generic Python attribute. """
