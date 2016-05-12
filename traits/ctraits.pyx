@@ -900,6 +900,11 @@ cdef class CHasTraits:
 
         return self.notifiers
 
+    def _instance_traits(self):
+        if self.itrait_dict is None:
+            self.itrait_dict = {}
+        return self.itrait_dict
+
     property __dict__:
         def __get__(self):
             if self.obj_dict is None:
