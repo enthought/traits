@@ -23,6 +23,7 @@ cdef extern from 'Python.h':
 
     ctypedef struct PyTypeObject:
         PyObject* tp_dict
+        long tp_dictoffset
 
 # Constants
 cdef object class_traits = "__class_traits__"
@@ -641,7 +642,10 @@ cdef class CHasTraits:
     cdef dict itrait_dict   # Instance traits dictionary
     cdef list notifiers    # List of any trait changed notification handler
     cdef int flags         # Behavior modification flags
-    cdef dict obj_dict     # Object attribute dictionary ('__dict__')
+    cdef dict obj_dict     # Object attribute dictionary ('__dict__'). Note:
+                           # this *must* be the last cdef attribute, otherwise
+                           # tp_dictoffset will be off and attribute lookup
+                           # will stop working!
 
     def __cinit__(self):
         cdef  PyTypeObject* pytype = Py_TYPE(self)
@@ -1060,6 +1064,10 @@ cdef class CHasTraits:
                         name, type(self))
                 )
 
+
+# Adjust tp_dictoffset to point to CHasTraits.obj_dict, the last cdef attribute
+# on the class. This is needed for PyObject_GenericGetAttr.
+(<PyTypeObject*> CHasTraits).tp_dictoffset = sizeof(CHasTraits) - sizeof(PyObject*)
 
 # Assigns a value to a specified property trait attribute
 cdef object getattr_property0(cTrait trait, CHasTraits obj, object name):
@@ -1687,7 +1695,9 @@ cdef class cTrait:
     cdef delegate_attr_name_func delegate_attr_name # Optional routirne to return the computed delegate attribute name
     cdef list notifiers # Optional list of notification handlers
     cdef object _handler # Associated trait handler object
-    cdef dict obj_dict # Standard Python object dict
+    cdef dict obj_dict # Standard Python object dict. Note: this *must* be the
+                       # last attribute on the class, otherwise attribute
+                       # lookup will fail!
 
     def __init__(self, int kind):
 
@@ -2003,6 +2013,9 @@ cdef class cTrait:
             PyErr_Clear()
             return None
 
+# Adjust tp_dictoffset to point to cTrait.obj_dict, the last cdef attribute
+# on the class. This is needed for PyObject_GenericGetAttr.
+(<PyTypeObject*> cTrait).tp_dictoffset = sizeof(cTrait) - sizeof(PyObject*)
 
 def _undefined(Undefined_, Uninitialized_):
     """ Sets the global Undefined and Uninitialized values. """
