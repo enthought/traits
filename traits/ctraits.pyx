@@ -1206,7 +1206,7 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
         return PyObject_Call(dv[0], dv[1], dv[2])
     elif vtype == 8:
         tuple_ = (obj,)
-        result = PyObject_Call(trait.internal_default_value, tuple_, None)
+        result = PyObject_Call(trait.internal_default_value, tuple_, <object>NULL)
         if result is not None and trait.validate is not NULL:
             value = trait.validate(trait, obj, name, result)
             return value
