@@ -1269,6 +1269,8 @@ cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
     cdef PyObject* result = PyObject_GenericGetAttr(_obj, _name)
     if result is NULL:
         raise_trait_error(trait, obj, name, None)
+    else:
+        return <object>result
 
 cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 
