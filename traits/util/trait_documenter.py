@@ -123,7 +123,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         trait_found = False
         name_found = False
         while not trait_found:
-            item = tokens.next()
+            item = next(tokens)
             if name_found and item[:2] == (token.OP, '='):
                 trait_found = True
                 continue
