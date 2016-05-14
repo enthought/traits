@@ -1545,6 +1545,7 @@ class HasTraits ( CHasTraits ):
 
         return self
 
+
     # Defines the deprecated alias for 'trait_set'
     @deprecated('use "HasTraits.trait_set" instead')
     def set ( self, trait_change_notify = True, **traits ):

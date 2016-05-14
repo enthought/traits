@@ -61,7 +61,7 @@ SetTypes     = SequenceTypes + ( set, )
 # A few words about the next block of code:
 
 # Validator #11 is a generic validator for possibly coercible types
-# (see validate_trait_coerce_type in ctraits.c).
+# (see validate_trait_coerce_type in ctraits.pyx).
 #
 # The tuples below are of the form
 # (11, type1, [type2, type3, ...], [None, ctype1, [ctype2, ...]])

@@ -399,6 +399,7 @@ class OnTraitChangeTest(unittest.TestCase):
         ac = ArgCheckDecorator(tc=self)
         for i in range(3):
             ac.value += 1
+
         self.assertEqual(ac.calls, (3 * 5))
         self.assertEqual(ac.value, 3)
 
@@ -411,6 +412,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(i1.calls, (3 * 5))
         self.assertEqual(i1.ref.value, 3)
         ref = ArgCheckBase()
+
         i1.trait_set(exp_object=i1, exp_name='ref', dst_name='value',
                      exp_old=i1.ref, exp_new=ref, dst_new=0)
         i1.ref = ref
@@ -437,6 +439,7 @@ class OnTraitChangeTest(unittest.TestCase):
         l1.trait_set(exp_object=l1, exp_name='refs', type_old=None,
                      exp_old=l1.refs, type_new=TraitListObject)
         l1.refs = refs
+
         #self.assertEqual(l1.calls, (4 * 3))
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
@@ -460,9 +463,11 @@ class OnTraitChangeTest(unittest.TestCase):
         d1 = Dict1(tc=self)
         for i in range(3):
             ac = ArgCheckBase()
+
             d1.trait_set(exp_object=d1, exp_name='refs_items', type_old=None,
                          exp_old=Undefined, type_new=TraitDictEvent)
             d1.refs[i] = ac
+
         #self.assertEqual(d1.calls, (3 * 3))  # FIXME
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
@@ -470,6 +475,7 @@ class OnTraitChangeTest(unittest.TestCase):
         d1.trait_set(exp_object=d1, exp_name='refs', type_old=None,
                      exp_old=d1.refs, type_new=TraitDictObject)
         d1.refs = refs
+
         #self.assertEqual(d1.calls, (4 * 3))
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
@@ -515,8 +521,10 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(c, handlers, pattern)
         r0 = c.ref
         r1 = ArgCheckBase()
+
         c.trait_set(exp_object=c, exp_name='ref', exp_old=r0, exp_new=r1)
         c.ref = r1
+
         c.trait_set(exp_old=r1, exp_new=r0)
         c.ref = r0
         self.assertEqual(c.calls, 2 * n)
@@ -582,6 +590,7 @@ class OnTraitChangeTest(unittest.TestCase):
         nh = len(handlers)
         self.multi_register(lt, handlers, 'head.next*.value')
         cur = lt.head
+
         for i in range(4):
             lt.trait_set(exp_object=cur, exp_name='value', exp_old=10 * i,
                          exp_new=(10 * i) + 1)
@@ -602,11 +611,13 @@ class OnTraitChangeTest(unittest.TestCase):
         nh = len(handlers)
         self.multi_register(lt, handlers, 'head.[next,prev]*.value')
         cur = lt.head
+
         for i in range(4):
             lt.trait_set(exp_object=cur, exp_name='value', exp_old=10 * i,
                          exp_new=(10 * i) + 1)
             cur.value = (10 * i) + 1
             cur = cur.next
+
         self.assertEqual(lt.calls, 4 * nh)
         self.multi_register(lt, handlers, 'head.[next,prev]*.value',
                             remove=True)
@@ -632,6 +643,7 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_property(self):
         pdo = PropertyDependsOn(tc=self)
         sum = pdo.sum
+
         self.assertEqual(sum, 0)
         for n in ['int1', 'int2', 'int3']:
             for i in range(3):
@@ -642,6 +654,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(pdo.calls, 3 * 3)
         for i in range(10):
             x = pdo.sum
+
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
         pdo.trait_set(exp_old=sum, exp_new=60)
         old_ref = pdo.ref
@@ -649,6 +662,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(pdo.pcalls, (3 * 3) + 2)
         self.assertEqual(pdo.calls, (3 * 3) + 1)
         sum = 60
+
         for n in ['int1', 'int2', 'int3']:
             for i in range(3):
                 pdo.trait_set(exp_old=sum, exp_new=sum + 1)
@@ -712,10 +726,12 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(c, handlers, pattern)
         for i in range(3):
             for n in names:
+
                 c.trait_set(exp_object=r, exp_name=n, exp_old=i,
                             exp_new=(i + 1))
                 setattr(r, n, i + 1)
             for n in other:
+
                 c.trait_set(exp_object=r, exp_name=n, exp_old=i,
                             exp_new=(i + 1))
                 setattr(r, n, i + 1)
@@ -730,6 +746,7 @@ class OnTraitChangeTest(unittest.TestCase):
 
     def multi_register(self, object, handlers, pattern, remove=False):
         for handler in handlers:
+
             object.on_trait_change(handler, pattern, remove=remove)
 
     def build_list(self):
@@ -746,6 +763,7 @@ class OnTraitChangeTest(unittest.TestCase):
     def new_link(self, lt, cur, value):
         link = Link(value=value, next=cur.next, prev=cur)
         cur.next.prev = link
+
         lt.trait_set(exp_object=cur, exp_name='next', exp_old=cur.next,
                      exp_new=link)
         cur.next = link

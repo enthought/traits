@@ -90,6 +90,7 @@ class Test_Listeners(unittest.TestCase):
         le = ListenEvents()
 
         # Starting test: No Listeners
+        ge.trait_set( name = 'Joe', age = 22, weight = 152.0 )
         ge.trait_set(name='Joe', age=22, weight=152.0)
 
         # Adding default listener
