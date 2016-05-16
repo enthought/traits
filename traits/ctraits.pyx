@@ -429,7 +429,7 @@ cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name
             for i in xrange(n):
                 bitem = value[i]
                 itrait = trait[i]
-                if itrait.validate is NULL:
+                if itrait.validate_ is NULL:
                     aitem = bitem
                 else:
                     aitem = itrait.valiate(itrait, obj, name, bitem)
@@ -1104,7 +1104,7 @@ getattr_property_handlers[3] = getattr_property3
 cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     cdef int result
-    cdef object validated = traitd.validate(traitd, obj, name, value)
+    cdef object validated = traitd.validate_(traitd, obj, name, value)
     if validated is not None:
         result = (<trait_setattr> traitd._post_setattr)(traito, traitd, obj, name, validated)
     return result
@@ -1228,8 +1228,8 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
     elif vtype == 8:
         tuple_ = (obj,)
         result = PyObject_Call(trait.internal_default_value, tuple_, <object>NULL)
-        if result is not None and trait.validate is not NULL:
-            value = trait.validate(trait, obj, name, result)
+        if result is not None and trait.validate_ is not NULL:
+            value = trait.validate_(trait, obj, name, result)
             return value
     elif vtype == 9:
         return TraitSetObject(trait.handler, obj, name,
@@ -1427,8 +1427,8 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     original_value = value
     # If the object's value is Undefined, then do not call the validate
     # method (as the object's value has not yet been set).
-    if traitd.validate is not NULL and value is not Undefined:
-        value = traitd.validate(traitd, obj, name, value)
+    if traitd.validate_ is not NULL and value is not Undefined:
+        value = traitd.validate_(traitd, obj, name, value)
 
     if obj.obj_dict is None:
         obj.obj_dict = {}
@@ -1509,8 +1509,8 @@ cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef list tnotifiers, onotifiers
 
     if value is not None:
-        if traitd.validate is not NULL:
-            value = traitd.validate(traitd, obj, name, value)
+        if traitd.validate_ is not NULL:
+            value = traitd.validate_(traitd, obj, name, value)
             if value is None:
                 return -1
 
@@ -1705,7 +1705,7 @@ cdef class cTrait:
     cdef trait_setattr setattr
     cdef trait_post_setattr _post_setattr
     cdef object py_post_setattr # Python-based post 'setattr' handler
-    cdef trait_validate validate
+    cdef trait_validate validate_
     cdef object py_validate # Python-based validate value handler
     cdef int default_value_type # Type of default value: see the default_value_for function
     cdef object internal_default_value # Default value for Trait
@@ -1853,13 +1853,18 @@ cdef class cTrait:
                 else:
                     raise NotImplementedError('Work in progress. {}'.format(kind))
 
-        self.validate = validate_handlers[kind]
+        self.validate_ = validate_handlers[kind]
         self.py_validate = validate
 
 
     def get_validate(self):
-        if self.validate is not NULL:
+        if self.validate_ is not NULL:
             return self.py_validate
+
+    def validate(self, obj, name, value):
+        if self.validate_ is NULL:
+            return value
+        return self.validate_(self, obj, name, value)
 
     def clone(self, cTrait source):
        trait_clone(self, source)
@@ -1891,7 +1896,7 @@ cdef class cTrait:
             if (validate is not None):
                 self.setattr = setattr_validate_property
                 self._post_setattr = <trait_post_setattr> setattr_property_handlers[set_n]
-                self.validate = setattr_validate_handlers[validate_n]
+                self.validate_ = setattr_validate_handlers[validate_n]
             else:
                 self.setattr = setattr_property_handlers[set_n]
 
@@ -2094,7 +2099,7 @@ cdef void trait_clone(cTrait target, cTrait source):
     target.setattr = source.setattr
     target._post_setattr = source._post_setattr
     target.py_post_setattr = source.py_post_setattr
-    target.validate = source.validate
+    target.validate_ = source.validate_
     target.py_validate = source.py_validate
     target.default_value_type = source.default_value_type
     target.internal_default_value = source.internal_default_value
