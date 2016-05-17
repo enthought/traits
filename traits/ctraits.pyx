@@ -776,7 +776,7 @@ cdef class CHasTraits:
             self.itrait_dict = {}
 
         # Create a new instance trait and clone the class trait into it
-        itrait = cTrait(kind=-1)
+        itrait = (<object>ctrait_type)(0)
         trait_clone(itrait, trait)
         itrait.obj_dict = trait.obj_dict
 
@@ -1065,7 +1065,7 @@ cdef class CHasTraits:
                     )
 
             if not isinstance(trait, cTrait):
-                raise TraitError('Non-trait found in a trait dictionnary. Got '
+                raise TraitError('Non-trait found in a trait dictionary. Got '
                     '{} with type {}'.format(trait, type(trait))
                 )
 
