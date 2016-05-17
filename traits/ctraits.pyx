@@ -830,8 +830,7 @@ cdef class CHasTraits:
         return 0
 
     def __delattr__(self, name):
-        if name in self.obj_dict:
-            del self.obj_dict[name]
+        self._internal_setattr(name, NullObject)
 
     def __getattr__(self, name):
         # has_traits_getattro function in C
@@ -1104,17 +1103,20 @@ getattr_property_handlers[3] = getattr_property3
 cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     cdef int result
+    if value is NullObject:
+        raise_delete_property_error(obj, name)
+
     cdef object validated = traitd.validate_(traitd, obj, name, value)
     if validated is not None:
         result = (<trait_setattr> traitd._post_setattr)(traito, traitd, obj, name, validated)
     return result
 
-cdef void raise_delete_property_error(object obj, object name):
-    raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (obj, name))
+def raise_delete_property_error(object obj, object name):
+    raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (name, obj))
 
 cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = tuple()
@@ -1128,7 +1130,7 @@ cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object 
 
 cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = (value)
@@ -1142,7 +1144,7 @@ cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object 
 
 cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = (obj, value)
@@ -1387,42 +1389,41 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
     cdef int rc
 
-    # FIXME This block is value == NULL in C. Do we really have calls to this
-    # function with a NULL pointer?
-    #if value is None:
-    #    if object_dict is None:
-    #        return 0
-    #
-    #    if PyString_Check(name):
-    #        old_value = object_dict[name]
-    #
-    #        del object_dict[name]
-    #
-    #        # notify
-    #        rc = 0
-    #        if obj.flags & HASTRAITS_NO_NOTIFY == 0:
-    #            tnotifiers = traito.notifiers
-    #            onotifiers = obj.notifiers
-    #            if tnotifiers is not None or onotifiers is not None:
-    #                value = traito.getattr(traito, obj, name)
-    #                if value is None:
-    #                    return -1
-    #
-    #                if not changed:
-    #                    changed = old_value != value
-    #                    if changed and (traitd.flags & TRAIT_OBJECT_IDENTITY == 0):
-    #                        changed = old_value == value
-    #
-    #                if changed:
-    #                    if traitd._post_setattr is not NULL:
-    #                        rc = traitd._post_setattr(traitd, obj, name, value)
-    #                    if rc ==0 and has_notifiers(tnotifiers, onotifiers):
-    #                        rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
-    #
-    #        return rc
-    #    # FIXME: add support for unicode
-    #
-    #else:
+    if value is NullObject:
+        # This gets called when calling del on a delegate trait.
+
+        if object_dict is None:
+            return 0
+
+        if PyString_Check(name):
+            old_value = object_dict[name]
+
+            del object_dict[name]
+
+            # notify
+            rc = 0
+            if obj.flags & HASTRAITS_NO_NOTIFY == 0:
+                tnotifiers = traito.notifiers
+                onotifiers = obj.notifiers
+                if tnotifiers is not None or onotifiers is not None:
+                    value = traito.getattr(traito, obj, name)
+                    if value is None:
+                        return -1
+
+                    if not changed:
+                        changed = old_value != value
+                        if changed and (traitd.flags & TRAIT_OBJECT_IDENTITY == 0):
+                            changed = old_value == value
+
+                    if changed:
+                        if traitd._post_setattr is not NULL:
+                            rc = traitd._post_setattr(traitd, obj, name, value)
+                        if rc ==0 and has_notifiers(tnotifiers, onotifiers):
+                            rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
+
+            return rc
+    # FIXME: add support for unicode
+
 
     original_value = value
     # If the object's value is Undefined, then do not call the validate
