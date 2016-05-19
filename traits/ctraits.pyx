@@ -413,9 +413,14 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
     raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
-    return validate_trait_tuple_check(trait.py_validate[1], obj, name, value)
+    cdef object result =  validate_trait_tuple_check(
+        trait.py_validate[1], obj, name, value
+    )
+    if result is not None:
+        return result
+    raise_trait_error(trait, obj, name, value)
 
-cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name, object value):
+cdef object validate_trait_tuple_check(object trait, CHasTraits obj, object name, object value):
     "" "Verifies a Python value is a tuple of a specified type and content. """
 
     cdef cTrait itrait
@@ -426,13 +431,14 @@ cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name
     if PyTuple_Check(trait):
         n = len(trait)
         if n == len(value):
+            tuple_ = None
             for i in xrange(n):
                 bitem = value[i]
                 itrait = trait[i]
                 if itrait.validate_ is NULL:
                     aitem = bitem
                 else:
-                    aitem = itrait.valiate(itrait, obj, name, bitem)
+                    aitem = itrait.validate_(itrait, obj, name, bitem)
                 if tuple_ is not None:
                     PyTuple_SET_ITEM(tuple_, i, aitem)
                 elif aitem != bitem:
@@ -1817,6 +1823,12 @@ cdef class cTrait:
                         if not isinstance(v1, tuple):
                             raise ValueError('The argument must be a tuple or callable.')
 
+                # case 8: 'Slow' validate check
+                elif kind == 9:  # TupleOf item check
+                    if n == 2:
+                        v1 = validate[1]
+                        if not isinstance(v1, tuple):
+                            raise ValueError('The argument must be a tuple or callable.')                   
                 elif kind == 10: # Prefix map item check
                     if n == 3:
                         if PyDict_Check(validate[1]):
