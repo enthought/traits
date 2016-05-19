@@ -54,6 +54,8 @@ cdef object NullObject = object()
 # Python side.
 PY_NULL = object()
 
+is_callable = -1
+
 _HasTraits_monitors = []        # Object creation monitors. */
 
 # Object has been intialized
@@ -107,6 +109,27 @@ ctypedef object (*trait_getattr)(cTrait, CHasTraits, object)
 ctypedef int (*trait_setattr)(cTrait, cTrait, CHasTraits, object , object) except? -1
 ctypedef int (*trait_post_setattr)(cTrait, CHasTraits, object , object) except? -1
 ctypedef object (*delegate_attr_name_func)(cTrait, CHasTraits, object)
+
+
+cdef object get_callable_value(object value):
+    if value is None:
+        return None
+    elif callable(value):
+        return is_callable
+    elif isinstance(value, tuple) and len(value) >= 3 and value[0] == 10:
+        return (value[0], value[1], is_callable)
+    else:
+        return value
+
+
+cdef int func_index(void* fun, void** lst):
+    # Yes, this stinks
+    cdef int i = 0
+    while True:
+        if fun == lst[i]:
+            return i
+        i += 1
+
 
 cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
 
@@ -1828,7 +1851,7 @@ cdef class cTrait:
                     if n == 2:
                         v1 = validate[1]
                         if not isinstance(v1, tuple):
-                            raise ValueError('The argument must be a tuple or callable.')                   
+                            raise ValueError('The argument must be a tuple or callable.')
                 elif kind == 10: # Prefix map item check
                     if n == 3:
                         if PyDict_Check(validate[1]):
@@ -1988,10 +2011,83 @@ cdef class cTrait:
         self.delegate_attr_name = delegate_attr_name_handlers[prefix_type]
 
     def __setstate__(self, state):
-        raise NotImplementedError('Work in progress')
+        print('!!! setstate !!!')
+        cdef:
+            int getattr_index = state[0]
+            int setattr_index = state[1]
+            int post_setattr_index = state[2]
+            object py_post_setattr = state[3]
+            int validate_index = state[4]
+            object py_validate = state[5]
+
+            int delegate_attr_name_index = state[11]
+            object trait_handler = state[13]
+
+        self.py_validate = py_validate
+        self.handler = trait_handler
+        self.py_post_setattr = py_post_setattr
+        self.default_value_type = state[6]                 # 6
+        self.default_value = state[7]                       # 7
+        self.flags = state[8]                               # 8
+        self.delegate_name = state[9]                     # 9
+        self.delegate_prefix = state[10]                     # 10
+        self.obj_dict = state[14]
+
+        self.getattr = getattr_handlers[getattr_index]
+        self.setattr = setattr_handlers[setattr_index]
+        self._post_setattr = \
+            <trait_post_setattr>setattr_property_handlers[post_setattr_index]
+        self.validate_ = validate_handlers[validate_index]
+        self.delegate_attr_name = \
+            delegate_attr_name_handlers[delegate_attr_name_index]
+
+        if isinstance(py_validate, long):
+            self.py_validate = trait_handler.validate
+        elif isinstance(py_validate, tuple) and py_validate[0] == 10:
+            py_validate[2] = trait_handler.validate
+
+        if isinstance(py_post_setattr, long):
+            self.py_post_setattr = self.handler.post_setattr
+
+
+
+
 
     def __getstate__(self):
-        raise NotImplementedError('Work in progress')
+        # This returns a tuple for backwards compatibility. Perhaps a
+        # dictionary would be more maintainable?
+        print('!!! getstate !!!')
+        cdef:
+            int getattr_index = func_index(<void*>self.getattr,
+                                           <void**>getattr_handlers)
+            int setattr_index = func_index(<void*>self.setattr,
+                                           <void**>setattr_handlers)
+            int post_setattr_index = func_index(<void*>self._post_setattr,
+                                                <void**>setattr_property_handlers)
+            int validate_index = func_index(<void*>self.validate_,
+                                            <void**>validate_handlers)
+            int delegate_attr_name_index = func_index(<void*>self.delegate_attr_name,
+                                                      <void**>delegate_attr_name_handlers)
+
+        state = (
+            getattr_index,                            # 0
+            setattr_index,                            # 1
+            post_setattr_index,                       # 2
+            get_callable_value(self.py_post_setattr), # 3
+            validate_index,                           # 4
+            get_callable_value(self.py_validate),     # 5
+            self.default_value_type,                  # 6
+            self.default_value,                       # 7
+            self.flags,                               # 8
+            self.delegate_name,                       # 9
+            self.delegate_prefix,                     # 10
+            delegate_attr_name_index,                 # 11
+            None,                                     # 12
+            self.trait_handler,                       # 13
+            self.obj_dict                             # 14
+        )
+
+        return state
 
     def get_validate(self):
         raise NotImplementedError('Work in progress')
