@@ -1538,7 +1538,7 @@ cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef int rc = 0
     cdef list tnotifiers, onotifiers
 
-    if value is not None:
+    if value is not NullObject:
         if traitd.validate_ is not NULL:
             value = traitd.validate_(traitd, obj, name, value)
             if value is None:
