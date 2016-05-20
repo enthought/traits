@@ -1,4 +1,9 @@
-""" Test the persistence behavior of TraitListObjects, TraitDictObjects and TraitSetObjects.
+##############################################################################
+# Copyright 2014 Enthought, Inc.
+##############################################################################
+
+""" Test the persistence behavior of TraitListObjects, TraitDictObjects and
+TraitSetObjects.
 """
 
 from __future__ import absolute_import
@@ -21,6 +26,7 @@ class A(HasTraits):
     def _receive_events(self, object, name, old, new):
         self.events.append((name, new))
 
+
 class B(HasTraits):
     dict = Dict(Str, Instance(A))
 
@@ -36,6 +42,7 @@ def test_trait_list_object_persists():
     list2 = loads(dumps(list))
     assert list2.object() is None
 
+
 def test_trait_dict_object_persists():
     a = A()
     dict = loads(dumps(a.adict))
@@ -47,6 +54,7 @@ def test_trait_dict_object_persists():
     dict2 = loads(dumps(dict))
     assert dict2.object() is None
 
+
 def test_trait_set_object_persists():
     a = A()
     set = loads(dumps(a.aset))
@@ -57,6 +65,7 @@ def test_trait_set_object_persists():
     assert len(a.events) == 1
     set2 = loads(dumps(set))
     assert set2.object() is None
+
 
 def test_trait_list_object_copies():
     a = A()
@@ -70,6 +79,7 @@ def test_trait_list_object_copies():
     list2.append(30)
     assert list2.object() is None
 
+
 def test_trait_dict_object_copies():
     a = A()
     dict = copy.deepcopy(a.adict)
@@ -81,6 +91,7 @@ def test_trait_dict_object_copies():
     dict2 = copy.deepcopy(dict)
     dict2['key2'] = 20
     assert dict2.object() is None
+
 
 def test_trait_set_object_copies():
     a = A()
@@ -97,6 +108,7 @@ def test_trait_set_object_copies():
     assert type(set3) is set
     # Should not raise an AttributeError:
     set3.remove(20)
+
 
 def test_pickle_whole():
     a = A()

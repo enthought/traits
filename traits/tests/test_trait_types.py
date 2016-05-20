@@ -1,5 +1,3 @@
-#-------------------------------------------------------------------------------
-#
 #  Unit test case for testing trait types created by subclassing TraitType.
 #
 #  Written by: David C. Morrill
@@ -16,7 +14,6 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
 
 """ Unit test case for testing trait types created by subclassing TraitType.
 """
@@ -25,7 +22,8 @@ from traits.testing.unittest_tools import unittest
 
 from traits.api import Float, TraitType
 
-class TraitTypesTest ( unittest.TestCase ):
+
+class TraitTypesTest(unittest.TestCase):
 
     def test_traits_shared_transient(self):
         # Regression test for a bug in traits where the same _metadata
@@ -63,4 +61,3 @@ class TraitTypesTest ( unittest.TestCase ):
 # Run the unit tests (if invoked from the command line):
 if __name__ == '__main__':
     unittest.main()
-

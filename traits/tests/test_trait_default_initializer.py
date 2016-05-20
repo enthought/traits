@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2013, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
@@ -26,6 +26,7 @@ class Foo(HasTraits):
 
     def _bar_default(self):
         return 4
+
 
 class TestTraitDefaultInitializer(unittest.TestCase):
     """ Test basic usage of the default method.

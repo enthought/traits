@@ -165,8 +165,9 @@ class InterfaceChecker ( HasTraits ):
 
             for name, value in c.__dict__.items():
                 if ((not name.startswith( '_' )) and
-                    (type( value ) is FunctionType)):
-                    public_methods[ name ] = value
+                        (type( value ) is FunctionType)):
+                    if name not in public_methods:
+                        public_methods[ name ] = value
 
         return public_methods
 

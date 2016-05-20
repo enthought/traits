@@ -3,7 +3,7 @@ import gc
 
 from traits import _py2to3
 
-from traits.api import Float, HasTraits, List, on_trait_change
+from traits.api import Event, Float, HasTraits, List, on_trait_change
 from traits.testing.unittest_tools import unittest
 
 from traits import trait_notifiers
@@ -13,6 +13,7 @@ class DynamicNotifiers(HasTraits):
 
     ok = Float
     fail = Float
+    priority_test = Event
 
     # Lists where we accumulate the arguments of calls to the traits notifiers.
     rebind_calls_0 = List
@@ -21,6 +22,7 @@ class DynamicNotifiers(HasTraits):
     rebind_calls_3 = List
     rebind_calls_4 = List
     exceptions_from = List
+    prioritized_notifications = List
 
     #### 'ok' trait listeners
 
@@ -71,26 +73,51 @@ class DynamicNotifiers(HasTraits):
         self.exceptions_from.append(4)
         raise Exception('error')
 
+    def low_priority_first(self):
+        self.prioritized_notifications.append(0)
+
+    def high_priority_first(self):
+        self.prioritized_notifications.append(1)
+
+    def low_priority_second(self):
+        self.prioritized_notifications.append(2)
+
+    def high_priority_second(self):
+        self.prioritized_notifications.append(3)
 
 # 'ok' function listeners
 
 calls_0 = []
+
+
 def function_listener_0():
     calls_0.append(True)
 
+
 calls_1 = []
+
+
 def function_listener_1(new):
     calls_1.append(new)
 
+
 calls_2 = []
+
+
 def function_listener_2(name, new):
     calls_2.append((name, new))
 
+
 calls_3 = []
+
+
 def function_listener_3(obj, name, new):
     calls_3.append((obj, name, new))
 
+
 calls_4 = []
+
+
 def function_listener_4(obj, name, old, new):
     calls_4.append((obj, name, old, new))
 
@@ -99,21 +126,26 @@ def function_listener_4(obj, name, old, new):
 
 exceptions_from = []
 
+
 def failing_function_listener_0():
     exceptions_from.append(0)
     raise Exception('error')
+
 
 def failing_function_listener_1(new):
     exceptions_from.append(1)
     raise Exception('error')
 
+
 def failing_function_listener_2(name, new):
     exceptions_from.append(2)
     raise Exception('error')
 
+
 def failing_function_listener_3(obj, name, new):
     exceptions_from.append(3)
     raise Exception('error')
+
 
 def failing_function_listener_4(obj, name, old, new):
     exceptions_from.append(4)
@@ -160,7 +192,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         obj = DynamicNotifiers()
         obj.fail = 1
 
-        _py2to3.assertCountEqual(self, [0,1,2,3,4], obj.exceptions_from)
+        _py2to3.assertCountEqual(self, [0, 1, 2, 3, 4], obj.exceptions_from)
         self.assertEqual([(obj, 'fail', 0, 1)]*5, self.exceptions)
 
     def test_dynamic_notifiers_functions(self):
@@ -187,6 +219,29 @@ class TestDynamicNotifiers(unittest.TestCase):
         expected_4 = [(obj, 'ok', 0, 2), (obj, 'ok', 2, 3)]
         self.assertEqual(expected_4, calls_4)
 
+    def test_priority_notifiers_first(self):
+
+        obj = DynamicNotifiers()
+
+        expected_high = set([1, 3])
+        expected_low = set([0, 2])
+
+        obj.on_trait_change(obj.low_priority_first, 'priority_test')
+        obj.on_trait_change(obj.high_priority_first, 'priority_test',
+                            priority=True)
+        obj.on_trait_change(obj.low_priority_second, 'priority_test')
+        obj.on_trait_change(obj.high_priority_second, 'priority_test',
+                            priority=True)
+
+        obj.priority_test = None
+
+        high = set(obj.prioritized_notifications[:2])
+        low = set(obj.prioritized_notifications[2:])
+
+        self.assertSetEqual(expected_high, high)
+        self.assertSetEqual(expected_low, low)
+
+
     def test_dynamic_notifiers_functions_failing(self):
         obj = DynamicNotifiers()
 
@@ -198,10 +253,10 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         obj.fail = 1
 
-        _py2to3.assertCountEqual(self, [0,1,2,3,4], obj.exceptions_from)
+        _py2to3.assertCountEqual(self, [0, 1, 2, 3, 4], obj.exceptions_from)
         # 10 failures: 5 are from the internal dynamic listeners, see
         # test_dynamic_notifiers_methods_failing
-        self.assertEqual([(obj, 'fail', 0, 1)]*10, self.exceptions)
+        self.assertEqual([(obj, 'fail', 0, 1)] * 10, self.exceptions)
 
     def test_object_can_be_garbage_collected(self):
         # Make sure that a trait object can be garbage collected even though
@@ -215,6 +270,7 @@ class TestDynamicNotifiers(unittest.TestCase):
         # Create a weak reference to `obj` with a callback that flags when the
         # object is finalized.
         obj_collected = []
+
         def obj_collected_callback(weakref):
             obj_collected.append(True)
 

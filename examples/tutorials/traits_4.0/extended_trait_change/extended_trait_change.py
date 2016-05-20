@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(on_trait_change Method Enhancements)----------------------------------------
+#--(on_trait_change Method Enhancements)---------------------------------------
 """
 on_trait_change Method Enhancements
 ===================================
@@ -20,7 +20,7 @@ Omitted, None, or 'anytrait'
 name
     The notification handler applies to the trait on the object called *name*.
 
-[ name1, ..., namen ]
+[name1, ..., namen]
     The notification handler applies to each of the traits on the object with
     the specified names.
 
@@ -39,7 +39,7 @@ an *xname* is an extended name of the form::
 
 An *xname2* is of the form::
 
-    ( xname3 | '['xname3[','xname3]*'] ) ['*']
+   (xname3 | '['xname3[','xname3]*']) ['*']
 
 An *xname3* is of the form::
 
@@ -48,7 +48,7 @@ An *xname3* is of the form::
 A *name* is any valid Python attribute name. The semantic meaning of this
 notation is as follows:
 
-[ item, item, ..., item ]
+[item, item, ..., item]
     A list which matches any of the specified items. Note that at the topmost
     level, the surrounding square brackets are optional.
 
@@ -148,8 +148,8 @@ intermediate traits are processed. The five valid handler signatures are:
 
 For signatures 1, 4 and 5, any change to any element of a path being listened
 to invokes the handler with information about the particular element that was
-modified (e.g., if the item being  monitored is 'foo.bar.baz', a change to 'bar'
-will call *handler* with the following information:
+modified (e.g., if the item being  monitored is 'foo.bar.baz', a change to
+'bar' will call *handler* with the following information:
 
 object
     object.foo
@@ -165,31 +165,27 @@ If one of the intermediate links is a **List** or **Dict**, the call to
 example, *bar* is a **List**, and a new item is added to *bar*, then
 the information passed to *handler* would be:
 
-object
-    object.foo
-name
-    bar_items
-old
-    **Undefined**
-new
-    **TraitListEvent** whose *added* trait contains the new item added to *bar*.
+object object.foo name bar_items old **Undefined** new **TraitListEvent**
+    whose *added* trait contains the new item added to *bar*.
 
 For signatures 2 and 3, the *handler* does not receive enough information to
 discern between a change to the final trait being listened to and a change to
 an intermediate link. In this case, the event dispatcher will attempt to map a
-change to an intermediate link to its effective change on the final trait. This
-only works if all of the intermediate links are single values (such as an
+change to an intermediate link to its effective change on the final trait.
+This only works if all of the intermediate links are single values (such as an
 **Instance** or **Any** trait) and not **Lists** or **Dicts**. If the modified
 intermediate trait or any subsequent intermediate trait preceding the final
 trait is a **List** or **Dict**, then a **TraitError** is raised, since the
-effective value for the final trait cannot in general be resolved unambiguously.
+effective value for the final trait cannot in general be resolved
+unambiguously.
 
-Handler signature 1 also has the special characteristic that if a final trait is
-a **List** or **Dict**, it will automatically handle *_items* changed events for
-the final trait as well. This can be useful in cases where the *handler* only
-needs to know that some aspect of the final trait has been changed. For all
-other *handler* signatures, you must explicitly specify the *xxx_items* trait
-if you want to be notified of changes to any of the items of the *xxx* trait.
+Handler signature 1 also has the special characteristic that if a final trait
+is a **List** or **Dict**, it will automatically handle *_items* changed
+events for the final trait as well. This can be useful in cases where the
+*handler* only needs to know that some aspect of the final trait has been
+changed. For all other *handler* signatures, you must explicitly specify the
+*xxx_items* trait if you want to be notified of changes to any of the items of
+the *xxx* trait.
 
 Backward Compatibility
 ----------------------
@@ -198,24 +194,25 @@ The new extended trait name support in Traits 3.0 has one slight semantic
 difference with the pre-Traits 3.0 *on_trait_change* method.
 
 Prior to Traits 3.0, it was necessary to make two separate calls to
-*on_trait_change* in order to set up listeners on a **List** or **Dict** trait's
-value and the contents of its value, as shown in the following example::
+*on_trait_change* in order to set up listeners on a **List** or **Dict**
+trait's value and the contents of its value, as shown in the following
+example::
 
-    class Department ( HasTraits ):
+    class Department(HasTraits):
 
-        employees = List( Employee )
+        employees = List(Employee)
 
         ...
 
-    a_department.on_trait_change( some_listener, 'employees' )
-    a_department.on_trait_change( some_listener_items, 'employees_items' )
+    a_department.on_trait_change(some_listener, 'employees')
+    a_department.on_trait_change(some_listener_items, 'employees_items')
 
 In Traits 3.0, this is still the case if the *some_listener* function has one
-or more arguments. However, if it has no arguments, the *on_trait_change* method
-will automatically call the function either when the trait's value or its
-value's contents change. So in Traits 3.0 it is only necessary to write::
+or more arguments. However, if it has no arguments, the *on_trait_change*
+method will automatically call the function either when the trait's value or
+its value's contents change. So in Traits 3.0 it is only necessary to write::
 
-    a_department.on_trait_change( some_listener, 'employees' )
+    a_department.on_trait_change(some_listener, 'employees')
 
 if the *some_listener* (and *some_listener_items*) function has no arguments.
 
@@ -236,26 +233,24 @@ the new extended trait name syntax.
 For example, either of the following lines would cause *new style* semantics to
 be applied to the *employees* trait::
 
-    a_department.on_trait_change( some_listener, ' employees' )
+    a_department.on_trait_change(some_listener, ' employees')
 
-    a_department.on_trait_change( some_listener, '[employees]' )
+    a_department.on_trait_change(some_listener, '[employees]')
 
 A Complete Example
 ------------------
 
 Refer to the code tabs of this lesson for a complete example using
 *on_trait_change* with an extended trait name. In particular, check near the
-bottom of the **Example** tab for the code that sets up an extended trait change
-notification handler using *on_trait_change*.
+bottom of the **Example** tab for the code that sets up an extended trait
+change notification handler using *on_trait_change*.
 """
-
-#--<Imports>--------------------------------------------------------------------
 
 from traits.api import *
 
-#--[Employee Class]-------------------------------------------------------------
 
-class Employee ( HasTraits ):
+#--[Employee Class]------------------------------------------------------------
+class Employee(HasTraits):
 
     # The name of the employee:
     name = Str
@@ -263,62 +258,62 @@ class Employee ( HasTraits ):
     # The number of sick days they have taken this year:
     sick_days = Int
 
-#--[Department Class]-----------------------------------------------------------
 
-class Department ( HasTraits ):
+#--[Department Class]----------------------------------------------------------
+class Department(HasTraits):
 
     # The name of the department:
     name = Str
 
     # The employees in the department:
-    employees = List( Employee )
+    employees = List(Employee)
 
-#--[Corporation Class]----------------------------------------------------------
 
-class Corporation ( HasTraits ):
+#--[Corporation Class]---------------------------------------------------------
+class Corporation(HasTraits):
 
     # The name of the corporation:
     name = Str
 
     # The departments within the corporation:
-    departments = List( Department )
+    departments = List(Department)
 
-#--[Example*]-------------------------------------------------------------------
 
+#--[Example*]------------------------------------------------------------------
 # Create some sample employees:
-millie   = Employee( name = 'Millie',   sick_days = 2 )
-ralph    = Employee( name = 'Ralph',    sick_days = 3 )
-tom      = Employee( name = 'Tom',      sick_days = 1 )
-slick    = Employee( name = 'Slick',    sick_days = 16 )
-marcelle = Employee( name = 'Marcelle', sick_days = 7 )
-reggie   = Employee( name = 'Reggie',   sick_days = 11 )
-dave     = Employee( name = 'Dave',     sick_days = 0 )
-bob      = Employee( name = 'Bob',      sick_days = 1 )
-alphonse = Employee( name = 'Alphonse', sick_days = 5 )
+millie = Employee(name='Millie', sick_days=2)
+ralph = Employee(name='Ralph', sick_days=3)
+tom = Employee(name='Tom', sick_days=1)
+slick = Employee(name='Slick', sick_days=16)
+marcelle = Employee(name='Marcelle', sick_days=7)
+reggie = Employee(name='Reggie', sick_days=11)
+dave = Employee(name='Dave', sick_days=0)
+bob = Employee(name='Bob', sick_days=1)
+alphonse = Employee(name='Alphonse', sick_days=5)
 
 # Create some sample departments:
-accounting = Department( name      = 'accounting',
-                         employees = [ millie, ralph, tom ] )
+accounting = Department(name='accounting',
+                        employees=[millie, ralph, tom])
 
-sales = Department( name      = 'Sales',
-                    employees = [ slick, marcelle, reggie ] )
+sales = Department(name='Sales',
+                   employees=[slick, marcelle, reggie])
 
-development = Department( name      = 'Development',
-                          employees = [ dave, bob, alphonse ] )
+development = Department(name='Development',
+                         employees=[dave, bob, alphonse])
 
 # Create a sample corporation:
-acme = Corporation( name        = 'Acme, Inc.',
-                    departments = [ accounting, sales, development ] )
+acme = Corporation(name='Acme, Inc.',
+                   departments=[accounting, sales, development])
+
 
 # Define a corporate 'whistle blower' function:
-def sick_again ( object, name, old, new ):
+def sick_again(object, name, old, new):
     print '%s just took sick day number %d for this year!' % (
-          object.name, new )
+          object.name, new)
 
 # Set up the function as a listener:
-acme.on_trait_change( sick_again, 'departments.employees.sick_days' )
+acme.on_trait_change(sick_again, 'departments.employees.sick_days')
 
 # Now let's try it out:
-slick.sick_days  += 1
+slick.sick_days += 1
 reggie.sick_days += 1
-

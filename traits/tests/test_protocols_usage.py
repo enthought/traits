@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 """ Tests for protocols usage. """
 
@@ -18,22 +18,18 @@ from __future__ import absolute_import
 
 
 # Standard library imports.
-import pickle, unittest, os, sys
+import os
+import pickle
+import sys
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
 from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
-        Property)
+                   Property)
 
 # NOTE: There is a File class in apptools.io module, but since we want to
 # eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
-
-if sys.version_info[0] >= 3:
-    import nose
-    raise nose.SkipTest("""
-        Currently, under Python 3, class advisors do not work anymore.
-        This is due to the new way of specifying metaclasses.
-    """)
 
 
 # Test class
@@ -64,8 +60,12 @@ class Person(HasTraits):
     """ A person! """
 
     name = Str
-    age  = Int
+    age = Int
 
+
+@unittest.skipUnless(sys.version_info < (3,),
+                     "The 'adapts' and 'implements' class advisors "
+                     "are not supported in Python 3.")
 class ProtocolsUsageTestCase(unittest.TestCase):
     """ Tests for protocols usage. """
     def test_adapts(self):
@@ -129,11 +129,11 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
         f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
-        self.assert_(f.is_file)
+        self.assertTrue(f.is_file)
 
         # A reference to the parent folder
         g = File(path='..')
-        self.assert_(g.is_folder)
+        self.assertTrue(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
         self.assertNotEqual(None, IInputStream(f, None))
@@ -144,7 +144,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # Make sure we can use the stream (this reads this module and makes
         # sure that it contains the right doc string).
         stream = IInputStream(f).get_input_stream()
-        self.assert_('"""' + __doc__ in stream.read())
+        self.assertIn('"""' + __doc__, stream.read())
 
         return
 
@@ -174,11 +174,11 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # Create a reference to this file
         cwd = os.path.dirname(os.path.abspath(__file__))
         f = File(path=os.path.join(cwd, 'test_protocols_usage.py'))
-        self.assert_(f.is_file)
+        self.assertTrue(f.is_file)
 
         # A reference to the parent folder
         g = File(path='..')
-        self.assert_(g.is_folder)
+        self.assertTrue(g.is_folder)
 
         # We should be able to adapt the file to an input stream...
         self.assertNotEqual(None, IInputStream(f, None))
@@ -189,7 +189,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
         # Make sure we can use the stream (this reads this module and makes
         # sure that it contains the right doc string).
         stream = IInputStream(f).get_input_stream()
-        self.assert_('"""' + __doc__ in stream.read())
+        self.assertIn('"""' + __doc__, stream.read())
 
         return
 
@@ -204,7 +204,6 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
             def save(self, output_stream):
                 """ Save the object to an output stream. """
-
 
         class HasTraitsToISaveableAdapter(Adapter):
             """ An adapter from 'HasTraits' to 'ISaveable'. """
@@ -247,7 +246,7 @@ class ProtocolsUsageTestCase(unittest.TestCase):
                 return
 
         # Create some people!
-        fred  = Person(name='fred', age=42)
+        fred = Person(name='fred', age=42)
         wilma = Person(name='wilma', age=35)
 
         fred_saveable = ISaveable(fred)
@@ -272,8 +271,8 @@ class ProtocolsUsageTestCase(unittest.TestCase):
 
         # Clean up.
         for path in ['fred.pickle', 'wilma.pickle']:
-           if os.access(path, os.W_OK):
-               os.remove(path)
+            if os.access(path, os.W_OK):
+                os.remove(path)
 
         return
 

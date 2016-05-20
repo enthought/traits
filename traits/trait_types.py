@@ -83,7 +83,7 @@ try:
 
     int_fast_validate     = ( 11, int, integer )
     long_fast_validate    = ( 11, long, None, int, integer )
-    float_fast_validate   = ( 11, float, floating, None, int, integer )
+    float_fast_validate   = ( 11, float, floating, None, int, long, integer )
     complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
     bool_fast_validate    = ( 11, bool, bool_ )
@@ -91,7 +91,7 @@ except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate     = ( 11, int )
     long_fast_validate    = ( 11, long,    None, int )
-    float_fast_validate   = ( 11, float,   None, int )
+    float_fast_validate   = ( 11, float,   None, int, long )
     complex_fast_validate = ( 11, complex, None, float, int )
     bool_fast_validate    = ( 11, bool )
 
@@ -257,7 +257,7 @@ class BaseFloat ( TraitType ):
         if isinstance( value, float ):
             return value
 
-        if isinstance( value, int ):
+        if isinstance( value, ( int, long ) ):
             return float( value )
 
         self.error( object, name, value )
@@ -1987,7 +1987,7 @@ class Enum ( BaseEnum ):
         self.fast_validate = args
 
 #-------------------------------------------------------------------------------
-#  'BaseTuple' and 'Tuple' traits:
+#  'BaseTuple' and 'Tuple' and 'ValidatedTuple' traits:
 #-------------------------------------------------------------------------------
 
 class BaseTuple ( TraitType ):
@@ -2010,13 +2010,13 @@ class BaseTuple ( TraitType ):
 
         Default Value
         -------------
-         1. If no arguments are specified, the default value is ().
-         2. If a tuple is specified as the first argument, it is the default
-            value.
-         3. If a tuple is not specified as the first argument, the default
-            value is a tuple whose length is the length of the argument list,
-            and whose values are the default values for the corresponding trait
-            types.
+        1. If no arguments are specified, the default value is ().
+        2. If a tuple is specified as the first argument, it is the default
+           value.
+        3. If a tuple is not specified as the first argument, the default
+           value is a tuple whose length is the length of the argument list,
+           and whose values are the default values for the corresponding trait
+           types.
 
         Example for case #2::
 
@@ -2024,7 +2024,7 @@ class BaseTuple ( TraitType ):
 
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
-        default value is ('Fred', 'Betty', 5).
+        default value is ``('Fred', 'Betty', 5)``.
 
         Example for case #3::
 
@@ -2032,7 +2032,7 @@ class BaseTuple ( TraitType ):
 
         The trait's value must be a 3-element tuple whose first and second
         elements are strings, and whose third element is an integer. The
-        default value is ('','',0).
+        default value is ``('','',0)``.
         """
         if len( types ) == 0:
             self.init_fast_validator( 11, tuple, None, list )
@@ -2128,6 +2128,61 @@ class Tuple ( BaseTuple ):
         super( Tuple, self ).init_fast_validator( *args )
 
         self.fast_validate = args
+
+
+class ValidatedTuple ( BaseTuple ):
+    """ A Tuple trait that supports custom validation.
+    """
+
+    def __init__ ( self, *types, **metadata ):
+        """ Returns a ValidatedTuple trait
+
+        Parameters
+        ----------
+        types : zero or more arguments
+            Definition of the default and allowed tuples. (see
+            :class:`~.BaseTuple` for more details)
+        fvalidate : callable, optional
+            A callable to provide the additional custom validation for the
+            tuple. The callable will be passed the tuple value and should
+            return True or False.
+        fvalidate_info : string, optional
+            A string describing the custom validation to use for the error
+            messages.
+
+        For example::
+
+          value_range = ValidatedTuple(Int(0), Int(1), fvalidate=lambda x: x[0] < x[1])
+
+        This definition will accept only tuples ``(a, b)`` containing two integers
+        that satisfy ``a < b``.
+        """
+        metadata.setdefault( 'fvalidate', None )
+        metadata.setdefault( 'fvalidate_info', '' )
+        super( ValidatedTuple, self ).__init__( *types, **metadata )
+
+    def validate ( self, object, name, value ):
+        """ Validates that the value is a valid tuple.
+        """
+        values = super( ValidatedTuple, self ).validate( object, name, value )
+        # Exceptions in the fvalidate function will not result in a TraitError
+        # but will be allowed to propagate up the frame stacks.
+        if self.fvalidate is None or self.fvalidate( values ):
+            return values
+        else:
+            self.error( object, name, value )
+
+    def full_info ( self, object, name, value ):
+        """ Returns a description of the trait.
+        """
+        message = 'a tuple of the form: ({0}) that passes custom validation{1}'
+        types_info = ', '.join( [ type_.full_info( object, name, value )
+                                  for type_ in self.types ] )
+        if self.fvalidate_info is not None:
+            fvalidate_info = ': {0}'.format( self.fvalidate_info )
+        else:
+            fvalidate_info = ''
+        return message.format( types_info, fvalidate_info )
 
 #-------------------------------------------------------------------------------
 #  'List' trait:
@@ -2414,7 +2469,7 @@ class CSet ( Set ):
             except ( ValueError, TypeError ):
                 value = set( [ value ] )
 
-        return super( CList, self ).validate( object, name, value )
+        return super( CSet, self ).validate( object, name, value )
 
     def full_info ( self, object, name, value ):
         """ Returns a description of the trait.
@@ -2879,7 +2934,7 @@ class Supports( Instance ):
     or is an adapter otherwise).
 
     The original, unadapted value is stored in a "shadow" attribute with
-    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    the same name followed by an underscore (e.g., ``foo`` and ``foo_``).
     """
 
     adapt_default = 'yes'
@@ -2913,7 +2968,7 @@ class AdaptsTo ( Supports ):
     The value of the trait after assignment is the original, unadapted value.
 
     A possibly adapted value is stored in a "shadow" attribute with
-    the same name followed by an underscore (e.g., 'foo' and 'foo_').
+    the same name followed by an underscore (e.g., ``foo`` and ``foo_``).
     """
 
     def modify_ctrait ( self, ctrait ):
