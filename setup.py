@@ -6,12 +6,14 @@ import subprocess
 import sys
 
 from setuptools import setup, Extension, find_packages
+from Cython.Distutils import build_ext
 
 MAJOR = 4
 MINOR = 6
 MICRO = 0
 
 IS_RELEASED = False
+
 
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
@@ -101,22 +103,24 @@ if __name__ == "__main__":
 
     ctraits = Extension(
         'traits.ctraits',
-        sources=['traits/ctraits.c'],
+        sources=['traits/ctraits.pyx'],
         extra_compile_args=['-DNDEBUG=1', '-O3'],
-        )
+    )
 
     def additional_commands():
+        default = {'build_ext': build_ext}
         # Pygments 2 isn't supported on Python 3 versions earlier than 3.3, so
         # don't make the documentation command available there.
         if (3,) <= sys.version_info < (3, 3):
-            return {}
+            return default
 
         try:
             from sphinx.setup_command import BuildDoc
         except ImportError:
-            return {}
+            return default
         else:
-            return {'documentation': BuildDoc}
+            default['documentation'] = BuildDoc
+            return default
 
     setup(
         name='traits',
