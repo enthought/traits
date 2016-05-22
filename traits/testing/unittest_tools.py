@@ -15,13 +15,14 @@ Classes.
 
 import contextlib
 import threading
+import sys
+import warnings
 
 from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
         Property, Str)
 from traits.util.async_trait_wait import wait_for_condition
 
 # Compatibility layer for Python 2.6: try loading unittest2
-import sys
 from traits import _py2to3
 if sys.version_info[:2] == (2, 6):
     import unittest2 as unittest
@@ -196,7 +197,7 @@ class UnittestTools(object):
         Assert that the class trait changes exactly `count` times during
         execution of the provided function.
 
-        Method can also be used in a with statement to assert that the
+        This method can also be used in a with statement to assert that
         a class trait has changed during the execution of the code inside
         the with statement (similar to the assertRaises method). Please note
         that in that case the context manager returns itself and the user
@@ -207,6 +208,11 @@ class UnittestTools(object):
 
         - All the fired events by accessing the ``events`` attribute of
           the return object.
+
+        Note that in the case of chained properties (trait 'foo' depends on
+        'bar', which in turn depends on 'baz'), the order in which the
+        corresponding trait events appear in the ``events`` attribute is
+        not well-defined, and may depend on dictionary ordering.
 
         **Example**::
 
@@ -337,7 +343,6 @@ class UnittestTools(object):
             for trait in traits_not_modified:
                 args.append(self.assertTraitDoesNotChange(obj, trait))
         return _py2to3.nested_context_mgrs(*args)
-        
 
     @contextlib.contextmanager
     def assertTraitChangesAsync(self, obj, trait, count=1, timeout=5.0):
@@ -439,3 +444,43 @@ class UnittestTools(object):
             self.fail(
                 "Timed out waiting for condition. "
                 "At timeout, condition was {0}.".format(condition_at_timeout))
+
+    @contextlib.contextmanager
+    def _catch_warnings(self):
+        # Ugly hack copied from the core Python code (see
+        # Lib/test/test_support.py) to reset the warnings registry
+        # for the module making use of this context manager.
+        #
+        # Note that this hack is unnecessary in Python 3.4 and later; see
+        # http://bugs.python.org/issue4180 for the background.
+        registry = sys._getframe(4).f_globals.get('__warningregistry__')
+        if registry:
+            registry.clear()
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always', DeprecationWarning)
+            yield w
+
+    @contextlib.contextmanager
+    def assertDeprecated(self):
+        """
+        Assert that the code inside the with block is deprecated.  Intended
+        for testing uses of traits.util.deprecated.deprecated.
+
+        """
+        with self._catch_warnings() as w:
+            yield w
+        self.assertGreater(len(w), 0, msg="Expected a DeprecationWarning, "
+                           "but none was issued")
+
+    @contextlib.contextmanager
+    def assertNotDeprecated(self):
+        """
+        Assert that the code inside the with block is not deprecated.  Intended
+        for testing uses of traits.util.deprecated.deprecated.
+
+        """
+        with self._catch_warnings() as w:
+            yield w
+        self.assertEqual(len(w), 0, msg="Expected no DeprecationWarning, "
+                         "but at least one was issued")

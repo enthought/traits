@@ -3,16 +3,15 @@
 
 # transient_metadata.py - Example of using 'transient' metadata
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, File, Any
 
-#--[Code]-----------------------------------------------------------------------
 
-class DataBase ( HasTraits ):
+#--[Code]----------------------------------------------------------------------
+class DataBase(HasTraits):
 
     # The name of the data base file:
     file_name = File
 
     # The open file handle used to access the data base:
-    file = Any( transient = True )
-
+    file = Any(transient=True)

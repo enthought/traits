@@ -12,7 +12,7 @@ from cpython.object cimport (
     PyCallable_Check, PyObject_TypeCheck,
     PyObject_Call, PyObject_RichCompareBool, Py_NE, PyObject_GetAttr
 )
-from cpython.ref cimport PyObject, Py_TYPE, PyTypeObject
+from cpython.ref cimport PyObject, Py_TYPE
 from cpython.string cimport PyString_Check
 from cpython.tuple cimport PyTuple_CheckExact, PyTuple_GET_SIZE, PyTuple_GET_ITEM, PyTuple_SET_ITEM, PyTuple_New, PyTuple_Check
 from cpython.type cimport PyType_Check, PyType_GenericAlloc
@@ -23,6 +23,7 @@ cdef extern from 'Python.h':
 
     ctypedef struct PyTypeObject:
         PyObject* tp_dict
+        long tp_dictoffset
 
 # Constants
 cdef object class_traits = "__class_traits__"
@@ -52,6 +53,8 @@ cdef object NullObject = object()
 # Needed to make sense out of the C NULL returns on the C side and None on the
 # Python side.
 PY_NULL = object()
+
+is_callable = -1
 
 _HasTraits_monitors = []        # Object creation monitors. */
 
@@ -107,6 +110,28 @@ ctypedef int (*trait_setattr)(cTrait, cTrait, CHasTraits, object , object) excep
 ctypedef int (*trait_post_setattr)(cTrait, CHasTraits, object , object) except? -1
 ctypedef object (*delegate_attr_name_func)(cTrait, CHasTraits, object)
 
+
+cdef object get_callable_value(object value):
+    if value is None:
+        return None
+    elif callable(value):
+        return is_callable
+    elif isinstance(value, tuple) and len(value) >= 3 and value[0] == 10:
+        return (value[0], value[1], is_callable)
+    else:
+        return value
+
+
+cdef int func_index(void* fun, void** lst):
+    # TODO: this is cribbed from the C version, there's probably a better
+    # Cython way of doing this.
+    cdef int i = 0
+    while True:
+        if fun == lst[i]:
+            return i
+        i += 1
+
+
 cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
 
     cdef object result = trait.handler.error(obj, name, value)
@@ -152,7 +177,7 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
 
     # FIXME: where defined as register in the C code
     cdef object low, high
-    cdef long exlude_mask
+    cdef long exclude_mask
     cdef double float_value, float_low, float_high
 
     cdef object type_info = trait.py_validate
@@ -268,7 +293,15 @@ cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, objec
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
     cdef object type_info = trait.py_validate
-    if value in type_info[1]:
+    cdef int has_value = 0
+
+    try:
+        has_value = value in type_info[1]
+    except TypeError:
+        # Unhashable object. Do we need to check for more?
+        pass
+
+    if has_value:
         return value
     else:
         raise_trait_error(trait, obj, name, value)
@@ -404,9 +437,14 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
     raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
-    return validate_trait_tuple_check(trait.py_validate[1], obj, name, value)
+    cdef object result =  validate_trait_tuple_check(
+        trait.py_validate[1], obj, name, value
+    )
+    if result is not None:
+        return result
+    raise_trait_error(trait, obj, name, value)
 
-cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name, object value):
+cdef object validate_trait_tuple_check(object trait, CHasTraits obj, object name, object value):
     "" "Verifies a Python value is a tuple of a specified type and content. """
 
     cdef cTrait itrait
@@ -417,13 +455,14 @@ cdef object validate_trait_tuple_check(cTrait trait, CHasTraits obj, object name
     if PyTuple_Check(trait):
         n = len(trait)
         if n == len(value):
+            tuple_ = None
             for i in xrange(n):
                 bitem = value[i]
                 itrait = trait[i]
-                if itrait.validate is NULL:
+                if itrait.validate_ is NULL:
                     aitem = bitem
                 else:
-                    aitem = itrait.valiate(itrait, obj, name, bitem)
+                    aitem = itrait.validate_(itrait, obj, name, bitem)
                 if tuple_ is not None:
                     PyTuple_SET_ITEM(tuple_, i, aitem)
                 elif aitem != bitem:
@@ -641,7 +680,10 @@ cdef class CHasTraits:
     cdef dict itrait_dict   # Instance traits dictionary
     cdef list notifiers    # List of any trait changed notification handler
     cdef int flags         # Behavior modification flags
-    cdef dict obj_dict     # Object attribute dictionary ('__dict__')
+    cdef dict obj_dict     # Object attribute dictionary ('__dict__'). Note:
+                           # this *must* be the last cdef attribute, otherwise
+                           # tp_dictoffset will be off and attribute lookup
+                           # will stop working!
 
     def __cinit__(self):
         cdef  PyTypeObject* pytype = Py_TYPE(self)
@@ -764,7 +806,7 @@ cdef class CHasTraits:
             self.itrait_dict = {}
 
         # Create a new instance trait and clone the class trait into it
-        itrait = cTrait(kind=-1)
+        itrait = (<object>ctrait_type)(0)
         trait_clone(itrait, trait)
         itrait.obj_dict = trait.obj_dict
 
@@ -818,8 +860,7 @@ cdef class CHasTraits:
         return 0
 
     def __delattr__(self, name):
-        if name in self.obj_dict:
-            del self.obj_dict[name]
+        self._internal_setattr(name, NullObject)
 
     def __getattr__(self, name):
         # has_traits_getattro function in C
@@ -895,6 +936,11 @@ cdef class CHasTraits:
             self.notifiers = []
 
         return self.notifiers
+
+    def _instance_traits(self):
+        if self.itrait_dict is None:
+            self.itrait_dict = {}
+        return self.itrait_dict
 
     property __dict__:
         def __get__(self):
@@ -1048,7 +1094,7 @@ cdef class CHasTraits:
                     )
 
             if not isinstance(trait, cTrait):
-                raise TraitError('Non-trait found in a trait dictionnary. Got '
+                raise TraitError('Non-trait found in a trait dictionary. Got '
                     '{} with type {}'.format(trait, type(trait))
                 )
 
@@ -1060,6 +1106,10 @@ cdef class CHasTraits:
                         name, type(self))
                 )
 
+
+# Adjust tp_dictoffset to point to CHasTraits.obj_dict, the last cdef attribute
+# on the class. This is needed for PyObject_GenericGetAttr.
+(<PyTypeObject*> CHasTraits).tp_dictoffset = sizeof(CHasTraits) - sizeof(PyObject*)
 
 # Assigns a value to a specified property trait attribute
 cdef object getattr_property0(cTrait trait, CHasTraits obj, object name):
@@ -1083,17 +1133,20 @@ getattr_property_handlers[3] = getattr_property3
 cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
     cdef int result
-    cdef object validated = traitd.validate(traitd, obj, name, value)
+    if value is NullObject:
+        raise_delete_property_error(obj, name)
+
+    cdef object validated = traitd.validate_(traitd, obj, name, value)
     if validated is not None:
         result = (<trait_setattr> traitd._post_setattr)(traito, traitd, obj, name, validated)
     return result
 
-cdef void raise_delete_property_error(object obj, object name):
-    raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (obj, name))
+def raise_delete_property_error(object obj, object name):
+    raise TraitError("Cannot delete the '%.400s' property of '%.50s' object " % (name, obj))
 
 cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = tuple()
@@ -1107,7 +1160,7 @@ cdef int setattr_property0(cTrait traito, cTrait traitd, CHasTraits obj, object 
 
 cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = (value)
@@ -1121,7 +1174,7 @@ cdef int setattr_property1(cTrait traito, cTrait traitd, CHasTraits obj, object 
 
 cdef int setattr_property2(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    if value is None:
+    if value is NullObject:
         raise_delete_property_error(obj, name)
 
     cdef object args = (obj, value)
@@ -1206,9 +1259,9 @@ cdef object default_value_for(cTrait trait, CHasTraits obj, str name):
         return PyObject_Call(dv[0], dv[1], dv[2])
     elif vtype == 8:
         tuple_ = (obj,)
-        result = PyObject_Call(trait.internal_default_value, tuple_, None)
-        if result is not None and trait.validate is not NULL:
-            value = trait.validate(trait, obj, name, result)
+        result = PyObject_Call(trait.internal_default_value, tuple_, <object>NULL)
+        if result is not None and trait.validate_ is not NULL:
+            value = trait.validate_(trait, obj, name, result)
             return value
     elif vtype == 9:
         return TraitSetObject(trait.handler, obj, name,
@@ -1258,6 +1311,12 @@ cdef object getattr_python(cTrait trait, CHasTraits obj, object name):
     cdef PyObject* result = PyObject_GenericGetAttr(<PyObject*>obj, <PyObject*>name)
     if result is not NULL:
         return <object>result
+    else:
+        # Clear the error flag and raise the exception on the Cython side.
+        PyErr_Clear()
+        raise AttributeError("%r object has no attribute %r" %
+                             (obj.__class__.__name__, name))
+
 
 cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
     """ Returns the value assigned to a generic Python attribute. """
@@ -1269,6 +1328,8 @@ cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
     cdef PyObject* result = PyObject_GenericGetAttr(_obj, _name)
     if result is NULL:
         raise_trait_error(trait, obj, name, None)
+    else:
+        return <object>result
 
 cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
 
@@ -1358,48 +1419,47 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef int changed = traitd.flags & TRAIT_NO_VALUE_TEST
     cdef int rc
 
-    # FIXME This block is value == NULL in C. Do we really have calls to this
-    # function with a NULL pointer?
-    #if value is None:
-    #    if object_dict is None:
-    #        return 0
-    #
-    #    if PyString_Check(name):
-    #        old_value = object_dict[name]
-    #
-    #        del object_dict[name]
-    #
-    #        # notify
-    #        rc = 0
-    #        if obj.flags & HASTRAITS_NO_NOTIFY == 0:
-    #            tnotifiers = traito.notifiers
-    #            onotifiers = obj.notifiers
-    #            if tnotifiers is not None or onotifiers is not None:
-    #                value = traito.getattr(traito, obj, name)
-    #                if value is None:
-    #                    return -1
-    #
-    #                if not changed:
-    #                    changed = old_value != value
-    #                    if changed and (traitd.flags & TRAIT_OBJECT_IDENTITY == 0):
-    #                        changed = old_value == value
-    #
-    #                if changed:
-    #                    if traitd._post_setattr is not NULL:
-    #                        rc = traitd._post_setattr(traitd, obj, name, value)
-    #                    if rc ==0 and has_notifiers(tnotifiers, onotifiers):
-    #                        rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
-    #
-    #        return rc
-    #    # FIXME: add support for unicode
-    #
-    #else:
+    if value is NullObject:
+        # This gets called when calling del on a delegate trait.
+
+        if object_dict is None:
+            return 0
+
+        if PyString_Check(name):
+            old_value = object_dict[name]
+
+            del object_dict[name]
+
+            # notify
+            rc = 0
+            if obj.flags & HASTRAITS_NO_NOTIFY == 0:
+                tnotifiers = traito.notifiers
+                onotifiers = obj.notifiers
+                if tnotifiers is not None or onotifiers is not None:
+                    value = traito.getattr(traito, obj, name)
+                    if value is None:
+                        return -1
+
+                    if not changed:
+                        changed = old_value != value
+                        if changed and (traitd.flags & TRAIT_OBJECT_IDENTITY == 0):
+                            changed = old_value == value
+
+                    if changed:
+                        if traitd._post_setattr is not NULL:
+                            rc = traitd._post_setattr(traitd, obj, name, value)
+                        if rc ==0 and has_notifiers(tnotifiers, onotifiers):
+                            rc = call_notifiers(tnotifiers, onotifiers, obj, name, old_value, value)
+
+            return rc
+    # FIXME: add support for unicode
+
 
     original_value = value
     # If the object's value is Undefined, then do not call the validate
     # method (as the object's value has not yet been set).
-    if traitd.validate is not NULL and value is not Undefined:
-        value = traitd.validate(traitd, obj, name, value)
+    if traitd.validate_ is not NULL and value is not Undefined:
+        value = traitd.validate_(traitd, obj, name, value)
 
     if obj.obj_dict is None:
         obj.obj_dict = {}
@@ -1479,9 +1539,9 @@ cdef int setattr_event(cTrait traito, cTrait traitd, CHasTraits obj, object name
     cdef int rc = 0
     cdef list tnotifiers, onotifiers
 
-    if value is not None:
-        if traitd.validate is not NULL:
-            value = traitd.validate(traitd, obj, name, value)
+    if value is not NullObject:
+        if traitd.validate_ is not NULL:
+            value = traitd.validate_(traitd, obj, name, value)
             if value is None:
                 return -1
 
@@ -1668,12 +1728,6 @@ cdef object call_class(object class_, cTrait trait, CHasTraits obj, object name,
     result = PyObject_Call(class_, args, None)
     return result
 
-cdef int has_value_for(CHasTraits obj, str name):
-    """ Returns whether an object's '__dict__' value is defined or not. """
-    if obj.obj_dict.has_key(name):
-        return 1
-    else:
-        return 0
 
 cdef class cTrait:
 
@@ -1682,7 +1736,7 @@ cdef class cTrait:
     cdef trait_setattr setattr
     cdef trait_post_setattr _post_setattr
     cdef object py_post_setattr # Python-based post 'setattr' handler
-    cdef trait_validate validate
+    cdef trait_validate validate_
     cdef object py_validate # Python-based validate value handler
     cdef int default_value_type # Type of default value: see the default_value_for function
     cdef object internal_default_value # Default value for Trait
@@ -1691,7 +1745,9 @@ cdef class cTrait:
     cdef delegate_attr_name_func delegate_attr_name # Optional routirne to return the computed delegate attribute name
     cdef list notifiers # Optional list of notification handlers
     cdef object _handler # Associated trait handler object
-    cdef dict obj_dict # Standard Python object dict
+    cdef dict obj_dict # Standard Python object dict. Note: this *must* be the
+                       # last attribute on the class, otherwise attribute
+                       # lookup will fail!
 
     def __init__(self, int kind):
 
@@ -1717,7 +1773,7 @@ cdef class cTrait:
         """
         if value_type is None and value is None:
             if self.internal_default_value is None:
-                return None
+                return (0, None)
             else:
                 return (self.default_value_type, self.internal_default_value)
         if value_type < 0 or value_type > 9:
@@ -1791,6 +1847,12 @@ cdef class cTrait:
                         if not isinstance(v1, tuple):
                             raise ValueError('The argument must be a tuple or callable.')
 
+                # case 8: 'Slow' validate check
+                elif kind == 9:  # TupleOf item check
+                    if n == 2:
+                        v1 = validate[1]
+                        if not isinstance(v1, tuple):
+                            raise ValueError('The argument must be a tuple or callable.')
                 elif kind == 10: # Prefix map item check
                     if n == 3:
                         if PyDict_Check(validate[1]):
@@ -1828,13 +1890,18 @@ cdef class cTrait:
                 else:
                     raise NotImplementedError('Work in progress. {}'.format(kind))
 
-        self.validate = validate_handlers[kind]
+        self.validate_ = validate_handlers[kind]
         self.py_validate = validate
 
 
     def get_validate(self):
-        if self.validate is not NULL:
+        if self.validate_ is not NULL:
             return self.py_validate
+
+    def validate(self, obj, name, value):
+        if self.validate_ is NULL:
+            return value
+        return self.validate_(self, obj, name, value)
 
     def clone(self, cTrait source):
        trait_clone(self, source)
@@ -1866,7 +1933,7 @@ cdef class cTrait:
             if (validate is not None):
                 self.setattr = setattr_validate_property
                 self._post_setattr = <trait_post_setattr> setattr_property_handlers[set_n]
-                self.validate = setattr_validate_handlers[validate_n]
+                self.validate_ = setattr_validate_handlers[validate_n]
             else:
                 self.setattr = setattr_property_handlers[set_n]
 
@@ -1901,11 +1968,7 @@ cdef class cTrait:
             name.
 
         """
-
-        if ((self.flags & TRAIT_PROPERTY)  != 0) or has_value_for(<CHasTraits>obj, name):
-            return default_value_for(self, obj, name)
-
-        return self.getattr(self, obj, name)
+        return default_value_for(self, obj, name)
 
     property __dict__:
         def __get__(self):
@@ -1915,7 +1978,7 @@ cdef class cTrait:
 
         def __set__(self, value):
             if not isinstance(value, dict):
-                raise ValueError('__dict__ maust be a dictionary. ')
+                raise ValueError('__dict__ must be a dictionary. ')
             self.obj_dict = value
 
     property handler:
@@ -1949,10 +2012,77 @@ cdef class cTrait:
         self.delegate_attr_name = delegate_attr_name_handlers[prefix_type]
 
     def __setstate__(self, state):
-        raise NotImplementedError('Work in progress')
+        cdef:
+            int getattr_index = state[0]
+            int setattr_index = state[1]
+            int post_setattr_index = state[2]
+            object py_post_setattr = state[3]
+            int validate_index = state[4]
+            object py_validate = state[5]
+
+            int delegate_attr_name_index = state[11]
+            object trait_handler = state[13]
+
+        self.py_validate = py_validate
+        self.handler = trait_handler
+        self.py_post_setattr = py_post_setattr
+        self.default_value_type = state[6]
+        self.default_value = state[7]
+        self.flags = state[8]
+        self.delegate_name = state[9]
+        self.delegate_prefix = state[10]
+        self.obj_dict = state[14]
+
+        self.getattr = getattr_handlers[getattr_index]
+        self.setattr = setattr_handlers[setattr_index]
+        self._post_setattr = \
+            <trait_post_setattr>setattr_property_handlers[post_setattr_index]
+        self.validate_ = validate_handlers[validate_index]
+        self.delegate_attr_name = \
+            delegate_attr_name_handlers[delegate_attr_name_index]
+
+        if isinstance(py_validate, long):
+            self.py_validate = trait_handler.validate
+        elif isinstance(py_validate, tuple) and py_validate[0] == 10:
+            py_validate[2] = trait_handler.validate
+
+        if isinstance(py_post_setattr, long):
+            self.py_post_setattr = self.handler.post_setattr
 
     def __getstate__(self):
-        raise NotImplementedError('Work in progress')
+        # This returns a tuple for backwards compatibility. Perhaps a
+        # dictionary would be more maintainable?
+        cdef:
+            int getattr_index = func_index(<void*>self.getattr,
+                                           <void**>getattr_handlers)
+            int setattr_index = func_index(<void*>self.setattr,
+                                           <void**>setattr_handlers)
+            int post_setattr_index = func_index(<void*>self._post_setattr,
+                                                <void**>setattr_property_handlers)
+            int validate_index = func_index(<void*>self.validate_,
+                                            <void**>validate_handlers)
+            int delegate_attr_name_index = func_index(<void*>self.delegate_attr_name,
+                                                      <void**>delegate_attr_name_handlers)
+
+        state = (
+            getattr_index,                            # 0
+            setattr_index,                            # 1
+            post_setattr_index,                       # 2
+            get_callable_value(self.py_post_setattr), # 3
+            validate_index,                           # 4
+            get_callable_value(self.py_validate),     # 5
+            self.default_value_type,                  # 6
+            self.default_value,                       # 7
+            self.flags,                               # 8
+            self.delegate_name,                       # 9
+            self.delegate_prefix,                     # 10
+            delegate_attr_name_index,                 # 11
+            None,                                     # 12
+            self.trait_handler,                       # 13
+            self.obj_dict                             # 14
+        )
+
+        return state
 
     def get_validate(self):
         raise NotImplementedError('Work in progress')
@@ -2011,6 +2141,9 @@ cdef class cTrait:
             PyErr_Clear()
             return None
 
+# Adjust tp_dictoffset to point to cTrait.obj_dict, the last cdef attribute
+# on the class. This is needed for PyObject_GenericGetAttr.
+(<PyTypeObject*> cTrait).tp_dictoffset = sizeof(cTrait) - sizeof(PyObject*)
 
 def _undefined(Undefined_, Uninitialized_):
     """ Sets the global Undefined and Uninitialized values. """
@@ -2070,7 +2203,7 @@ cdef void trait_clone(cTrait target, cTrait source):
     target.setattr = source.setattr
     target._post_setattr = source._post_setattr
     target.py_post_setattr = source.py_post_setattr
-    target.validate = source.validate
+    target.validate_ = source.validate_
     target.py_validate = source.py_validate
     target.default_value_type = source.default_value_type
     target.internal_default_value = source.internal_default_value

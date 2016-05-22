@@ -78,10 +78,18 @@ class AdaptationManager(HasTraits):
     def provides_protocol(type_, protocol):
         """ Does the given type provide (i.e implement) a given protocol?
 
-        'type_'    is a Python 'type'.
-        'protocol' is either a regular Python class or a traits Interface.
+        Parameters
+        ----------
+        type_ :
+          Python 'type'.
 
-        Return True if the object provides the protocol, otherwise False.
+        protocol :
+          Either a regular Python class or a traits Interface.
+
+        Returns
+        -------
+        result : bool
+          True if the object provides the protocol, otherwise False.
 
         """
 
@@ -94,8 +102,13 @@ class AdaptationManager(HasTraits):
     def adapt(self, adaptee, to_protocol, default=AdaptationError):
         """ Attempt to adapt an object to a given protocol.
 
-        `adaptee`     is the object that we want to adapt.
-        `to_protocol` is the protocol that the want to adapt the object to.
+        Parameters
+        ----------
+        adaptee :
+          The object that we want to adapt.
+
+        to_protocol :
+          The protocol that the want to adapt the object to.
 
         If `adaptee` already provides (i.e. implements) the given protocol
         then it is simply returned unchanged.
@@ -256,7 +269,7 @@ class AdaptationManager(HasTraits):
             else:
                 # functools.cmp_to_key is available from 2.7 and 3.2
                 edges.sort(key=functools.cmp_to_key(_by_weight_then_from_protocol_specificity))
-                
+
 
             # At this point, the first edges are the shortest ones. Within
             # edges with the same distance, interfaces which are subclasses
@@ -362,7 +375,33 @@ def _by_weight_then_from_protocol_specificity(edge_1, edge_2):
 
 
 #: The default global adaptation manager.
+#:
+#: PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.
+#: If you must use a global adaptation manager, use the functions
+#: :class:`get_global_adaptation_manager`,
+#: :class:`reset_global_adaptation_manager`,
+#: :class:`set_global_adaptation_manager`.
+
 adaptation_manager = AdaptationManager()
+
+
+def set_global_adaptation_manager(new_adaptation_manager):
+    """ Set the global adaptation manager to the given instance. """
+    global adaptation_manager
+    adaptation_manager = new_adaptation_manager
+
+
+def reset_global_adaptation_manager():
+    """ Set the global adaptation manager to a new AdaptationManager instance.
+    """
+    global adaptation_manager
+    adaptation_manager = AdaptationManager()
+
+
+def get_global_adaptation_manager():
+    """ Set a reference to the global adaptation manager. """
+    global adaptation_manager
+    return adaptation_manager
 
 
 # Convenience references to methods on the default adaptation manager.
@@ -370,11 +409,38 @@ adaptation_manager = AdaptationManager()
 # If you add a public method to the adaptation manager protocol then don't
 # forget to add a convenience function here!
 
-adapt             = adaptation_manager.adapt
-register_factory  = adaptation_manager.register_factory
-register_offer    = adaptation_manager.register_offer
-register_provides = adaptation_manager.register_provides
-supports_protocol = adaptation_manager.supports_protocol
-provides_protocol = AdaptationManager.provides_protocol
+def adapt(adaptee, to_protocol, default=AdaptationError):
+    """ Attempt to adapt an object to a given protocol. """
+    manager = get_global_adaptation_manager()
+    return manager.adapt(adaptee, to_protocol, default)
+
+
+def register_factory(factory, from_protocol, to_protocol):
+    """ Register an adapter factory. """
+    manager = get_global_adaptation_manager()
+    return manager.register_factory(factory, from_protocol, to_protocol)
+
+
+def register_offer(offer):
+    """ Register an offer to adapt from one protocol to another. """
+    manager = get_global_adaptation_manager()
+    return manager.register_offer(offer)
+
+
+def register_provides(provider_protocol, protocol):
+    """ Register that a protocol provides another. """
+    manager = get_global_adaptation_manager()
+    return manager.register_provides(provider_protocol, protocol)
+
+
+def supports_protocol(obj, protocol):
+    """ Does the object support a given protocol? """
+    manager = get_global_adaptation_manager()
+    return manager.supports_protocol(obj, protocol)
+
+
+def provides_protocol(type_, protocol):
+    """ Does the given type provide (i.e implement) a given protocol? """
+    return AdaptationManager.provides_protocol(type_, protocol)
 
 #### EOF ######################################################################

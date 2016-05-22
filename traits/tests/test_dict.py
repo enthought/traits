@@ -1,5 +1,3 @@
-#------------------------------------------------------------------------------
-#
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
 #
@@ -7,10 +5,6 @@
 #  license included in /LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
-#
-#  Thanks for using Enthought open source!
-#
-#------------------------------------------------------------------------------
 """ Test cases for dictionary (Dict) traits. """
 
 from __future__ import absolute_import
@@ -29,17 +23,16 @@ def create_listener():
 
     def listener(obj, trait_name, old, new):
 
-        listener.obj        = obj
+        listener.obj = obj
         listener.trait_name = trait_name
-        listener.new        = new
-        listener.old        = old
-        listener.called     += 1
-
+        listener.new = new
+        listener.old = old
+        listener.called += 1
         return
 
-    listener.initialize = lambda : initialize_listener(listener)
-
+    listener.initialize = lambda: initialize_listener(listener)
     return initialize_listener(listener)
+
 
 def initialize_listener(listener):
     """ Initialize a listener so it looks like it hasn't been called.
@@ -49,13 +42,13 @@ def initialize_listener(listener):
 
     """
 
-    listener.obj        = None
+    listener.obj = None
     listener.trait_name = None
-    listener.old        = None
-    listener.new        = None
-    listener.called     = 0
+    listener.old = None
+    listener.new = None
+    listener.called = 0
 
-    return listener # For convenience
+    return listener  # For convenience
 
 
 class TestDict(unittest.TestCase):
@@ -86,7 +79,7 @@ class TestDict(unittest.TestCase):
         bar.on_trait_change(listener, 'modified')
 
         # Assign a completely new dictionary.
-        bar.foos = {'dino' : Foo(name='dino')}
+        bar.foos = {'dino': Foo(name='dino')}
         self.assertEqual(1, listener.called)
         self.assertEqual('modified', listener.trait_name)
 

@@ -18,7 +18,7 @@ import gc
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..trait_types import Instance, List, Str, WeakRef
+from ..trait_types import Str, WeakRef
 from ..has_traits import HasTraits
 
 
@@ -28,7 +28,6 @@ class Eggs(HasTraits):
 
 class Spam(HasTraits):
     eggs = WeakRef(Eggs)
-
 
 
 @contextlib.contextmanager

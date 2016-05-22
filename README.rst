@@ -2,7 +2,7 @@
 traits: explicitly typed attributes for Python
 ==============================================
 
-http://github.enthought.com/traits
+http://docs.enthought.com/traits
 
 .. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
    :target: https://travis-ci.org/enthought/traits
@@ -50,5 +50,12 @@ Dependencies
 
 Traits has the following optional dependencies:
 
-* `Numpy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
+* `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
+* `Traitsui <https://pypi.python.org/pypi/traitsui>`_ to support Gui
+  Views.
+
+To build the full documentation one needs:
+
+* sphinx > 1.2.3
+* mock (optional if traitsui is not available)

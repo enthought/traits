@@ -3,14 +3,14 @@
 
 # trait_reuse.py --- Example of reusing trait definitions
 
-#--[Imports]--------------------------------------------------------------------
 from traits.api import HasTraits, Range
 
-#--[Code]-----------------------------------------------------------------------
+#--[Code]----------------------------------------------------------------------
 coefficient = Range(-1.0, 1.0, 0.0)
+
 
 class quadratic(HasTraits):
     c2 = coefficient
     c1 = coefficient
     c0 = coefficient
-    x  = Range(-100.0, 100.0, 0.0)
+    x = Range(-100.0, 100.0, 0.0)
