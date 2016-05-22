@@ -105,7 +105,7 @@ if __name__ == "__main__":
         'traits.ctraits',
         sources=['traits/ctraits.pyx'],
         extra_compile_args=['-DNDEBUG=1', '-O3'],
-        )
+    )
 
     def additional_commands():
         default = {'build_ext': build_ext}
