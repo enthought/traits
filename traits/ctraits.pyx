@@ -123,7 +123,8 @@ cdef object get_callable_value(object value):
 
 
 cdef int func_index(void* fun, void** lst):
-    # Yes, this stinks
+    # TODO: this is cribbed from the C version, there's probably a better
+    # Cython way of doing this.
     cdef int i = 0
     while True:
         if fun == lst[i]:
@@ -2011,7 +2012,6 @@ cdef class cTrait:
         self.delegate_attr_name = delegate_attr_name_handlers[prefix_type]
 
     def __setstate__(self, state):
-        print('!!! setstate !!!')
         cdef:
             int getattr_index = state[0]
             int setattr_index = state[1]
@@ -2026,11 +2026,11 @@ cdef class cTrait:
         self.py_validate = py_validate
         self.handler = trait_handler
         self.py_post_setattr = py_post_setattr
-        self.default_value_type = state[6]                 # 6
-        self.default_value = state[7]                       # 7
-        self.flags = state[8]                               # 8
-        self.delegate_name = state[9]                     # 9
-        self.delegate_prefix = state[10]                     # 10
+        self.default_value_type = state[6]
+        self.default_value = state[7]
+        self.flags = state[8]
+        self.delegate_name = state[9]
+        self.delegate_prefix = state[10]
         self.obj_dict = state[14]
 
         self.getattr = getattr_handlers[getattr_index]
@@ -2049,14 +2049,9 @@ cdef class cTrait:
         if isinstance(py_post_setattr, long):
             self.py_post_setattr = self.handler.post_setattr
 
-
-
-
-
     def __getstate__(self):
         # This returns a tuple for backwards compatibility. Perhaps a
         # dictionary would be more maintainable?
-        print('!!! getstate !!!')
         cdef:
             int getattr_index = func_index(<void*>self.getattr,
                                            <void**>getattr_handlers)
