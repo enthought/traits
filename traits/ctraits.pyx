@@ -54,7 +54,7 @@ cdef object NullObject = object()
 # Python side.
 PY_NULL = object()
 
-is_callable = -1
+IS_CALLABLE = -1
 
 _HasTraits_monitors = []        # Object creation monitors. */
 
@@ -115,9 +115,9 @@ cdef object get_callable_value(object value):
     if value is None:
         return None
     elif callable(value):
-        return is_callable
+        return IS_CALLABLE
     elif isinstance(value, tuple) and len(value) >= 3 and value[0] == 10:
-        return (value[0], value[1], is_callable)
+        return (value[0], value[1], IS_CALLABLE)
     else:
         return value
 
