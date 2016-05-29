@@ -1255,7 +1255,10 @@ class ListenerParser ( HasPrivateTraits ):
             return result
 
         if c == '[':
-            if (self.skip_ws == ']') and (self.skip_ws == terminator):
+            is_closing_bracket = (self.skip_ws == ']')
+            next_char = self.skip_ws
+            item_complete = (next_char == terminator or next_char == ',')
+            if is_closing_bracket and item_complete:
                 self.backspace
                 result.is_list_handler = True
             else:

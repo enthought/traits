@@ -339,17 +339,16 @@ class AbstractStaticChangeNotifyWrapper(object):
                 # Call the handler.
                 self.handler( *args )
             except Exception as e:
-                exception = e
-            else:
-                exception = None
-            finally:
                 if _post_change_event_tracer is not None:
                     _post_change_event_tracer( object, trait_name, old, new,
                                                self.handler,
-                                               exception=exception )
-
-            if exception is not None:
+                                               exception=e )
                 handle_exception( object, trait_name, old, new )
+            else:
+                if _post_change_event_tracer is not None:
+                    _post_change_event_tracer( object, trait_name, old, new,
+                                               self.handler,
+                                               exception=None )
 
     def equals ( self, handler ):
         return False

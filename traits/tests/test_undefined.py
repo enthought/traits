@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2007, Enthought, Inc.
 #  All rights reserved.
@@ -10,13 +10,14 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Str, Undefined, ReadOnly, Float
+
 
 class Foo(HasTraits):
     name = Str()
@@ -29,34 +30,36 @@ class Foo(HasTraits):
         if self.original_name is Undefined:
             self.original_name = self.name
 
+
 class Bar(HasTraits):
     name = Str(Undefined)
+
 
 class UndefinedTestCase(unittest.TestCase):
     def test_initial_value(self):
         b = Bar()
-        self.failUnlessEqual( b.name, Undefined )
+        self.assertEqual(b.name, Undefined)
         return
 
     def test_name_change(self):
         b = Bar()
         b.name = 'first'
-        self.failUnlessEqual( b.name, 'first' )
+        self.assertEqual(b.name, 'first')
         return
 
     def test_read_only_write_once(self):
         f = Foo()
 
-        self.failUnlessEqual(f.name, '')
-        self.failUnless(f.original_name is Undefined)
+        self.assertEqual(f.name, '')
+        self.assertIs(f.original_name, Undefined)
 
         f.name = 'first'
-        self.failUnlessEqual(f.name, 'first')
-        self.failUnlessEqual(f.original_name, 'first')
+        self.assertEqual(f.name, 'first')
+        self.assertEqual(f.original_name, 'first')
 
         f.name = 'second'
-        self.failUnlessEqual(f.name, 'second')
-        self.failUnlessEqual(f.original_name, 'first')
+        self.assertEqual(f.name, 'second')
+        self.assertEqual(f.original_name, 'first')
 
         return
 
@@ -64,12 +67,12 @@ class UndefinedTestCase(unittest.TestCase):
         f = Foo(name='first')
 
         f.name = 'first'
-        self.failUnlessEqual(f.name, 'first')
-        self.failUnlessEqual(f.original_name, 'first')
+        self.assertEqual(f.name, 'first')
+        self.assertEqual(f.original_name, 'first')
 
         f.name = 'second'
-        self.failUnlessEqual(f.name, 'second')
-        self.failUnlessEqual(f.original_name, 'first')
+        self.assertEqual(f.name, 'second')
+        self.assertEqual(f.original_name, 'first')
 
         return
 

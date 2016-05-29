@@ -11,6 +11,8 @@ Classes
 
 .. autoclass:: Array
 
+.. autoclass:: ArrayOrNone
+
 .. autoclass:: CArray
 
 Function

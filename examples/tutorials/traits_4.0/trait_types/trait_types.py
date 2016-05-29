@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(New Trait Definition Style)-------------------------------------------------
+#--(New Trait Definition Style)------------------------------------------------
 """
 New Trait Definition Style
 ==========================
@@ -16,20 +16,20 @@ typically involved creating a new **TraitHandler** subclass and invoking the
 **Trait** function to define a new trait based on that subclass, as shown in
 the following example::
 
-    class OddIntHandler ( TraitHandler ):
+    class OddIntHandler(TraitHandler):
 
-        def validate ( self, object, name, value ):
-            if isinstance( value, int ) and ((value % 2) == 1):
+        def validate(self, object, name, value):
+            if isinstance(value, int) and ((value % 2) == 1):
                 return value
 
-            self.error( object, name, value )
+            self.error(object, name, value)
 
-        def info ( self ):
+        def info(self):
             return 'an odd integer'
 
-    OddInt = Trait( 1, OddIntHandler )
+    OddInt = Trait(1, OddIntHandler)
 
-    OddInt = TraitFactory( OddInt )
+    OddInt = TraitFactory(OddInt)
 
 While not overly complex, nevertheless several developers have complained that
 that:
@@ -51,7 +51,7 @@ OddInt Redux
 Using the new style of defining traits, we can rewrite our previous **OddInt**
 example as follows::
 
-    class OddInt ( Int ):
+    class OddInt(Int):
 
         # Define the default value:
         default_value = 1
@@ -59,12 +59,12 @@ example as follows::
         # Describe the trait type:
         info_text = 'an odd integer'
 
-        def validate ( self, object, name, value ):
-            value = super( OddInt, self ).validate( object, name, value )
+        def validate(self, object, name, value):
+            value = super(OddInt, self).validate(object, name, value)
             if (value % 2) == 1:
                 return value
 
-            self.error( object, name, value )
+            self.error(object, name, value)
 
 This provides the exact same functionality as the previous definition of
 **OddInt**. There are several points to make about the new definition however:
@@ -91,13 +91,13 @@ This provides the exact same functionality as the previous definition of
   creating a new trait type a little more understandable to a wider group of
   developers.
 """
-#--<Imports>--------------------------------------------------------------------
+#--<Imports>-------------------------------------------------------------------
 
 from traits.api import *
 
-#--[OddInt Definition]----------------------------------------------------------
 
-class OddInt ( Int ):
+#--[OddInt Definition]---------------------------------------------------------
+class OddInt(Int):
 
     # Define the default value:
     default_value = 1
@@ -105,21 +105,21 @@ class OddInt ( Int ):
     # Describe the trait type:
     info_text = 'an odd integer'
 
-    def validate ( self, object, name, value ):
-        value = super( OddInt, self ).validate( object, name, value )
+    def validate(self, object, name, value):
+        value = super(OddInt, self).validate(object, name, value)
         if (value % 2) == 1:
             return value
 
-        self.error( object, name, value )
+        self.error(object, name, value)
 
-#--[Test Class]-----------------------------------------------------------------
 
-class Test ( HasTraits ):
+#--[Test Class]----------------------------------------------------------------
+class Test(HasTraits):
 
     any_int = Int
     odd_int = OddInt
 
-#--[Example*]-------------------------------------------------------------------
+#--[Example*]------------------------------------------------------------------
 
 # Create a test object:
 t = Test()
@@ -136,5 +136,4 @@ t.any_int = 2
 print "t.any_int:", t.any_int
 
 t.odd_int = 2
-print "t.odd_int:", t.odd_int # Should never get here!
-
+print "t.odd_int:", t.odd_int  # Should never get here!

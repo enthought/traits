@@ -3,13 +3,12 @@
 
 # interface_definition.py - Example of defining an interface
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import Interface
 
-#--[Code]-----------------------------------------------------------------------
 
+#--[Code]----------------------------------------------------------------------
 class IName(Interface):
 
     def get_name(self):
         """ Returns a string which is the name of an object. """
-
