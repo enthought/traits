@@ -165,9 +165,9 @@ class CloneTestCase(unittest.TestCase):
 
         bar_copy = bar.clone_traits()
 
-        self.failIf(bar_copy is bar)
-        self.failUnless(bar_copy.other is baz)
-        self.failUnless(bar_copy.other.other is bar)
+        self.assertIsNot(bar_copy, bar)
+        self.assertIs(bar_copy.other, baz)
+        self.assertIs(bar_copy.other.other, bar)
 
     def test_Any_circular_references_deep(self):
 
@@ -179,10 +179,10 @@ class CloneTestCase(unittest.TestCase):
 
         bar_copy = bar.clone_traits(copy='deep')
 
-        self.failIf(bar_copy is bar)
-        self.failIf(bar_copy.other is baz)
-        self.failIf(bar_copy.other.other is bar)
-        self.failUnless(bar_copy.other.other is bar_copy)
+        self.assertIsNot(bar_copy, bar)
+        self.assertIsNot(bar_copy.other, baz)
+        self.assertIsNot(bar_copy.other.other, bar)
+        self.assertIs(bar_copy.other.other, bar_copy)
 
     def test_Instance_circular_references(self):
 
@@ -207,34 +207,34 @@ class CloneTestCase(unittest.TestCase):
         baz_copy = baz.clone_traits()
 
         # Check Baz and Baz attributes....
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.other is bar)
-        self.failIf(baz_copy.unique is baz.unique)
-        self.failIf(baz_copy.shared is baz.shared)
-        self.failUnless(baz_copy.ref is ref)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.other, bar)
+        self.assertIsNot(baz_copy.unique, baz.unique)
+        self.assertIsNot(baz_copy.shared, baz.shared)
+        self.assertIs(baz_copy.ref, ref)
 
         # Check Bar and Bar attributes....
         bar_copy = baz_copy.other
 
         # Check the Bar owned object
-        self.failIf(bar_copy.unique is bar.unique)
+        self.assertIsNot(bar_copy.unique, bar.unique)
 
         # Check the Bar reference to an object 'outside' the cloned graph.
-        self.failUnless(bar_copy.ref is ref)
+        self.assertIs(bar_copy.ref, ref)
 
         # Check references to objects that where cloned, they should reference
         # the new clones not the original objects, except when copy is set
         # to 'ref' (as in the case of the 'other' trait).
         # When copy is set to ref, the trait does not get cloned. Therefore,
         # baz_copy.other.other is baz (and not baz_copy).
-        self.failIf(bar_copy.other is baz_copy)
-        self.failUnless(bar_copy.other is baz)
+        self.assertIsNot(bar_copy.other, baz_copy)
+        self.assertIs(bar_copy.other, baz)
 
         # 'shared' does not have copy set to 'ref', and so bar_copy.shared
         # should reference the new clone.
         # should reference the new clones
-        self.failIf(bar_copy.shared is baz.shared)
-        self.failUnless(bar_copy.shared is baz_copy.shared)
+        self.assertIsNot(bar_copy.shared, baz.shared)
+        self.assertIs(bar_copy.shared, baz_copy.shared)
 
     def test_Instance_circular_references_deep(self):
 
@@ -259,37 +259,37 @@ class CloneTestCase(unittest.TestCase):
         baz_copy = baz.clone_traits(copy='deep')
 
         # Check Baz and Baz attributes....
-        self.failIf(baz_copy is baz)
-        self.failIf(baz_copy.other is bar)
-        self.failIf(baz_copy.unique is baz.unique)
-        self.failIf(baz_copy.shared is baz.shared)
+        self.assertIsNot(baz_copy, baz)
+        self.assertIsNot(baz_copy.other, bar)
+        self.assertIsNot(baz_copy.unique, baz.unique)
+        self.assertIsNot(baz_copy.shared, baz.shared)
         # baz_copy.ref is checked below with bar_copy.ref.
 
         # Check Bar and Bar attributes....
         bar_copy = baz_copy.other
 
         # Check the Bar owned object
-        self.failIf(bar_copy.unique is bar.unique)
+        self.assertIsNot(bar_copy.unique, bar.unique)
 
         # Since the two original 'ref' links were to a shared object,
         # the cloned links should be to a shared object. Also, the shared
         # object should be the original 'ref' object, since copy was set to
         # 'ref'.
-        self.failUnless(baz_copy.ref is bar_copy.ref)
-        self.failUnless(bar_copy.ref is ref)
+        self.assertIs(baz_copy.ref, bar_copy.ref)
+        self.assertIs(bar_copy.ref,ref)
 
         # Check references to objects that where cloned, they should reference
         # the new clones not the original objects, except when copy is set
         # to 'ref' (as in the case of the 'other' trait). That is, the 'deep'
         # flag on clone_traits should not override the 'copy' metadata on
         # the trait.
-        self.failIf(bar_copy.other is baz_copy)
-        self.failUnless(bar_copy.other is baz)
+        self.assertIsNot(bar_copy.other, baz_copy)
+        self.assertIs(bar_copy.other, baz)
 
         # 'shared' does not have copy set to 'ref', and so bar_copy.shared
         # should reference the new clone.
-        self.failIf(bar_copy.shared is baz.shared)
-        self.failUnless(bar_copy.shared is baz_copy.shared)
+        self.assertIsNot(bar_copy.shared, baz.shared)
+        self.assertIs(bar_copy.shared, baz_copy.shared)
 
 #
 # support running this test individually, from the command-line as a script

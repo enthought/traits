@@ -831,27 +831,26 @@ def _trait_monitor_index ( cls, handler ):
 #  'HasTraits' decorators:
 #-------------------------------------------------------------------------------
 
-def on_trait_change ( name, post_init = False, *names ):
+def on_trait_change ( name, post_init = False, dispatch = 'same' ):
     """ Marks the following method definition as being a handler for the
         extended trait change specified by *name(s)*.
 
         Refer to the documentation for the on_trait_change() method of
         the **HasTraits** class for information on the correct syntax for
-        the *name(s)* argument.
+        the *name* argument and the semantics of the *dispatch* keyword
+        argument.
 
         A handler defined using this decorator is normally effective
         immediately. However, if *post_init* is **True**, then the handler only
-        become effective after all object constructor arguments have been
+        becomes effective after all object constructor arguments have been
         processed. That is, trait values assigned as part of object construction
         will not cause the handler to be invoked.
     """
     def decorator ( function ):
-        prefix = '<'
-        if post_init:
-            prefix = '>'
 
-        function.on_trait_change = prefix + \
-                                   (','.join( [ name ] + list( names ) ))
+        function.on_trait_change = {'pattern': name,
+                                    'post_init': post_init,
+                                    'dispatch': dispatch}
 
         return function
 
@@ -1490,7 +1489,11 @@ class HasTraits ( CHasTraits ):
         return result
 
     # Defines the deprecated alias for 'trait_get'
-    get = trait_get
+    @deprecated('use "HasTraits.trait_get" instead')
+    def get( self, *names, **metadata ):
+        return self.trait_get( *names, **metadata )
+
+    get.__doc__ = trait_get.__doc__
 
     #---------------------------------------------------------------------------
     #  Shortcut for setting object traits:
@@ -1544,7 +1547,12 @@ class HasTraits ( CHasTraits ):
         return self
 
     # Defines the deprecated alias for 'trait_set'
-    set = trait_set
+    @deprecated('use "HasTraits.trait_set" instead')
+    def set ( self, trait_change_notify = True, **traits ):
+        return self.trait_set(
+            trait_change_notify=trait_change_notify, **traits)
+
+    set.__doc__ = trait_set.__doc__
 
     def trait_setq ( self, **traits ):
         """ Shortcut for setting object trait attributes.
@@ -1850,6 +1858,10 @@ class HasTraits ( CHasTraits ):
             Indicates whether the dialog box should be scrollable. When set to
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
+
+        Returns
+        -------
+        A UI object.
         """
         if context is None:
             context = self
@@ -1913,12 +1925,12 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class__._trait_view( name, view_element,
                             self.default_traits_view, self.trait_view_elements,
-                            self.editable_traits, self )
+                            self.visible_traits, self )
 
     def class_trait_view ( cls, name = None, view_element = None ):
         return cls._trait_view( name, view_element,
                   cls.class_default_traits_view, cls.class_trait_view_elements,
-                  cls.class_editable_traits, None )
+                  cls.class_visible_traits, None )
 
     class_trait_view = classmethod( class_trait_view )
 
@@ -1927,7 +1939,7 @@ class HasTraits ( CHasTraits ):
     #---------------------------------------------------------------------------
 
     def _trait_view ( cls, name, view_element, default_name, view_elements,
-                           editable_traits, handler ):
+                           trait_selector_f, handler ):
         """ Gets or sets a ViewElement associated with an object's class.
         """
         # If a view element was passed instead of a name or None, return it:
@@ -1989,7 +2001,7 @@ class HasTraits ( CHasTraits ):
         # traits defined for the object:
         from traitsui.api import View
 
-        return View( editable_traits(), buttons = [ 'OK', 'Cancel' ] )
+        return View( trait_selector_f(), buttons = [ 'OK', 'Cancel' ] )
 
     _trait_view = classmethod( _trait_view )
 
@@ -2120,6 +2132,10 @@ class HasTraits ( CHasTraits ):
             True, scroll bars appear on the dialog box if it is not large enough
             to display all of the items in the view at one time.
 
+        Returns
+        -------
+        True on success.
+
         Description
         -----------
         This method is intended for use in applications that do not normally
@@ -2189,6 +2205,20 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
+    
+    def visible_traits ( self ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current object, that should be GUI visible
+        """
+        return self.trait_names( type = not_event, visible = not_false )
+
+    def class_visible_traits ( cls ):
+        """Returns an alphabetically sorted list of the names of non-event
+        trait attributes associated with the current class, that should be GUI visible
+        """
+        return cls.class_trait_names( type = not_event, visible = not_false )
+
+    class_visible_traits = classmethod( class_visible_traits )
 
     #---------------------------------------------------------------------------
     #  Pretty print the traits of an object:
@@ -2577,12 +2607,12 @@ class HasTraits ( CHasTraits ):
                 listener = ListenerParser( name ).listener
                 lnw = ListenerNotifyWrapper( handler, self, name, listener, target )
                 listeners.append( lnw )
-                listener.set( handler         = ListenerHandler( handler ),
-                              wrapped_handler_ref = weakref.ref(lnw),
-                              type            = lnw.type,
-                              dispatch        = dispatch,
-                              priority        = priority,
-                              deferred        = deferred )
+                listener.trait_set( handler         = ListenerHandler( handler ),
+                                    wrapped_handler_ref = weakref.ref(lnw),
+                                    type            = lnw.type,
+                                    dispatch        = dispatch,
+                                    priority        = priority,
+                                    deferred        = deferred )
                 listener.register( self )
 
     # A synonym for 'on_trait_change'
@@ -2651,10 +2681,25 @@ class HasTraits ( CHasTraits ):
 
             return
 
-        value = ( weakref.ref( object, self._sync_trait_listener_deleted ),
-                  alias )
-        dic   = self._get_sync_trait_info().setdefault( trait_name, {} )
+        # Callback to use when the synced object goes out of scope. In order
+        # to avoid reference cycles, this must not be a member function. See
+        # Github issue #69 for more detail.
+        def _sync_trait_listener_deleted (ref, info):
+            for key, dic in info.items():
+                if key != '':
+                    for name, value in dic.items():
+                        if ref is value[0]:
+                            del dic[ name ]
+                    if len( dic ) == 0:
+                        del info[ key ]
+
+        info = self._get_sync_trait_info()
+        dic   = info.setdefault( trait_name, {} )
         key   = ( id( object ), alias )
+
+        callback = lambda ref: _sync_trait_listener_deleted(ref, info)
+        value = ( weakref.ref( object, callback ), alias )
+
         if key not in dic:
             if len( dic ) == 0:
                 self._on_trait_change( self._sync_trait_modified, trait_name )
@@ -2677,6 +2722,8 @@ class HasTraits ( CHasTraits ):
 
     def _sync_trait_modified ( self, object, name, old, new ):
         info   = self.__sync_trait__
+        if name not in info:
+            return
         locked = info[ '' ]
         locked[ name ] = None
         for object, object_name in info[ name ].values():
@@ -2705,16 +2752,6 @@ class HasTraits ( CHasTraits ):
                     pass
 
         del locked[ name ]
-
-    def _sync_trait_listener_deleted ( self, ref ):
-        info = self.__sync_trait__
-        for key, dic in info.items():
-            if key != '':
-                for name, value in dic.items():
-                    if ref is value[0]:
-                        del dic[ name ]
-                        if len( dic ) == 0:
-                            del info[ key ]
 
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
@@ -2949,6 +2986,12 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
+        
+        # Update with instance-defined traits.
+        for name, trt in self._instance_traits().items():
+            if name[-6:] != "_items":
+                traits[name] = trt
+
         for name in self.__dict__.keys():
             if name not in traits:
                 trait = self.trait( name )
@@ -3273,10 +3316,12 @@ class HasTraits ( CHasTraits ):
         """
         for name, data in self.__class__.__listener_traits__.items():
             if data[0] == 'method':
-                pattern = data[1]
-                if pattern[:1] == '>':
-                    self.on_trait_change( getattr( self, name ), pattern[1:],
-                                          deferred = True )
+                config = data[1]
+                if config['post_init']:
+                    self.on_trait_change( getattr( self, name ),
+                                          config['pattern'],
+                                          deferred = True,
+                                          dispatch=config['dispatch'] )
 
     def _init_trait_listeners ( self ):
         """ Initializes the object's statically parsed, but dynamically
@@ -3286,13 +3331,15 @@ class HasTraits ( CHasTraits ):
         for name, data in self.__class__.__listener_traits__.items():
             getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
 
-    def _init_trait_method_listener ( self, name, kind, pattern ):
+    def _init_trait_method_listener ( self, name, kind, config ):
         """ Sets up the listener for a method with the @on_trait_change
             decorator.
         """
-        if pattern[:1] == '<':
-            self.on_trait_change( getattr( self, name ), pattern[1:],
-                                  deferred = True )
+        if not config['post_init']:
+            self.on_trait_change( getattr( self, name ),
+                                  config['pattern'],
+                                  deferred = True,
+                                  dispatch=config['dispatch'] )
 
     def _init_trait_event_listener ( self, name, kind, pattern ):
         """ Sets up the listener for an event with on_trait_change metadata.
@@ -3609,6 +3656,10 @@ def implements( *interfaces ):
     interface that the containing class implements. Each specified interface
     must be a subclass of **Interface**. This function should only be
     called from directly within a class body.
+
+    .. deprecated:: 4.4
+       Use the ``provides`` class decorator instead.
+
     """
 
     callback = provides(*interfaces)

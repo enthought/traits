@@ -63,25 +63,25 @@ class StrHandlerCase(unittest.TestCase):
 
     def test_validator_function(self):
         f = Foo()
-        self.failUnlessEqual(f.s, '')
+        self.assertEqual(f.s, '')
 
         f.s = 'ok'
-        self.failUnlessEqual(f.s, 'ok')
+        self.assertEqual(f.s, 'ok')
 
-        self.failUnlessRaises(TraitError, setattr, f, 's', 'should fail.')
-        self.failUnlessEqual(f.s, 'ok')
+        self.assertRaises(TraitError, setattr, f, 's', 'should fail.')
+        self.assertEqual(f.s, 'ok')
 
         return
 
     def test_validator_handler(self):
         b = Bar()
-        self.failUnlessEqual(b.s, '')
+        self.assertEqual(b.s, '')
 
         b.s = 'ok'
-        self.failUnlessEqual(b.s, 'ok')
+        self.assertEqual(b.s, 'ok')
 
-        self.failUnlessRaises(TraitError, setattr, b, 's', 'should fail.')
-        self.failUnlessEqual(b.s, 'ok')
+        self.assertRaises(TraitError, setattr, b, 's', 'should fail.')
+        self.assertEqual(b.s, 'ok')
 
         return
 

@@ -208,7 +208,7 @@ PyObject *Py2to3_GetAttrDictValue(PyDictObject * dict, PyObject *name, PyObject 
     if( !PyUnicode_Check(name) )
         return bad_attr;
 
-    return PyDict_GetItem(dict, name);
+    return PyDict_GetItem((PyObject *)dict, name);
 }
 
 #endif // #if PY_MAJOR_VERSION < 3

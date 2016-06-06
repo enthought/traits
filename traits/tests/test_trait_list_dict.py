@@ -115,3 +115,29 @@ def test_pickle_whole():
     loads(dumps(a))
     b = B(dict=dict(a=a))
     loads(dumps(b))
+
+
+def test_trait_set_object_operations():
+    # Regression test for update methods not coercing in the same way as
+    # standard set objects (github issue #288)
+    a = A()
+    a.aset.update({10: 'a'})
+    assert a.aset == set([0, 1, 2, 3, 4, 10])
+    a.aset.intersection_update({3: 'b', 4: 'b', 10: 'a', 11: 'b'})
+    assert a.aset == set([3, 4, 10])
+    a.aset.difference_update({10: 'a', 11: 'b'})
+    assert a.aset == set([3, 4])
+    a.aset.symmetric_difference_update({10: 'a', 4: 'b'})
+    assert a.aset == set([3, 10])
+
+
+def test_trait_set_object_inplace():
+    a = A()
+    a.aset |= set([10])
+    assert a.aset == set([0, 1, 2, 3, 4, 10])
+    a.aset &= set([3, 4, 10, 11])
+    assert a.aset == set([3, 4, 10])
+    a.aset -= set([10, 11])
+    assert a.aset == set([3, 4])
+    a.aset ^= set([10, 4])
+    assert a.aset == set([3, 10])
