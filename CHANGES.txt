@@ -12,6 +12,7 @@ Enhancements
   ``Either(None, Array)`` idiom.  The old idiom results in warnings
   on NumPy >= 1.9. (#219)
 * Added a new ValidatedTuple trait that supports custom validation. (#205)
+* Support traits change dispatch using gevents (experimental). (#130)
 
 Changes
 
@@ -23,7 +24,7 @@ Changes
 * Deprecated ``HasTraits.get()`` and ``HasTraits.set()`` (#190).
 * The default ``View`` shows all (non-event) traits whose ``visible`` property
   is not ``False``. Private traits are set ``visible=False`` by default. (#234)
- 
+
 Fixes
 
 * Fix so that ``sys.exc_info()`` works as expected in exception handlers in
