@@ -1026,9 +1026,9 @@ cdef class CHasTraits:
         return None
 
     def traits_inited(self, traits_inited=False):
-        # _has_traits_inited fucntion in C code
+        # _has_traits_inited function in C code
         if traits_inited:
-            self.flags != HASTRAITS_INITED
+            self.flags |= HASTRAITS_INITED
         if self.flags & HASTRAITS_INITED:
             return True
         else:
