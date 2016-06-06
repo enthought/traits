@@ -2757,7 +2757,8 @@ class TraitSetObject ( set ):
         if not hasattr(self, 'trait'):
             return set.update(self, value)
         try:
-            value = set(value)
+            if not isinstance(value, set):
+                value = set(value)
             added = value.difference( self )
             if len( added ) > 0:
                 object   = self.object()
@@ -2797,7 +2798,8 @@ class TraitSetObject ( set ):
     def symmetric_difference_update ( self, value ):
         if not hasattr(self, 'trait'):
             return set.symmetric_difference_update(self, value)
-        value = set(value)
+        if not isinstance(value, set):
+            value = set(value)
         removed = self.intersection( value )
         added   = value.difference( self )
         if (len( removed ) > 0) or (len( added ) > 0):
