@@ -19,7 +19,7 @@ from cpython.type cimport PyType_Check, PyType_GenericAlloc
 
 cdef extern from 'Python.h':
     PyObject* PyObject_GenericGetAttr(PyObject*, PyObject*)
-    PyObject* PyObject_GenericSetAttr(PyObject*, PyObject*, PyObject*)
+    int PyObject_GenericSetAttr(PyObject*, PyObject*, PyObject*)
 
     ctypedef struct PyTypeObject:
         PyObject* tp_dict
@@ -1655,10 +1655,7 @@ cdef int setattr_constant(cTrait traito, cTrait traitd, CHasTraits obj, object n
 
 cdef int setattr_generic(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     """Assigns a value to a specified generic Python attribute . """
-
-    cdef PyObject* result
-    result = PyObject_GenericSetAttr(<PyObject*>obj, <PyObject*>name, <PyObject*>value)
-    return <object> result
+    return PyObject_GenericSetAttr(<PyObject*>obj, <PyObject*>name, <PyObject*>value)
 
 cdef trait_validate setattr_validate_handlers[4]
 setattr_validate_handlers[0] = setattr_validate0
