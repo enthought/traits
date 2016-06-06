@@ -119,7 +119,7 @@ def test_pickle_whole():
 
 def test_trait_set_object_operations():
     # Regression test for update methods not coercing in the same way as
-    # standard set objects (github issue #289)
+    # standard set objects (github issue #288)
     a = A()
     a.aset.update({10: 'a'})
     assert a.aset == set([0, 1, 2, 3, 4, 10])
