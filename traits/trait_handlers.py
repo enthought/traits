@@ -2757,6 +2757,8 @@ class TraitSetObject ( set ):
         if not hasattr(self, 'trait'):
             return set.update(self, value)
         try:
+            if not isinstance(value, set):
+                value = set(value)
             added = value.difference( self )
             if len( added ) > 0:
                 object   = self.object()
@@ -2796,6 +2798,8 @@ class TraitSetObject ( set ):
     def symmetric_difference_update ( self, value ):
         if not hasattr(self, 'trait'):
             return set.symmetric_difference_update(self, value)
+        if not isinstance(value, set):
+            value = set(value)
         removed = self.intersection( value )
         added   = value.difference( self )
         if (len( removed ) > 0) or (len( added ) > 0):
@@ -2891,6 +2895,21 @@ class TraitSetObject ( set ):
 
         self.__dict__.update( state )
 
+    def __ior__(self, value):
+        self.update(value)
+        return self
+
+    def __iand__(self, value):
+        self.intersection_update(value)
+        return self
+
+    def __ixor__(self, value):
+        self.symmetric_difference_update(value)
+        return self
+
+    def __isub__(self, value):
+        self.difference_update(value)
+        return self
 
 #-------------------------------------------------------------------------------
 #  'TraitDictEvent' class:
