@@ -1132,7 +1132,7 @@ getattr_property_handlers[3] = getattr_property3
 
 cdef int setattr_validate_property(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
 
-    cdef int result
+    cdef int result = -1
     if value is NullObject:
         raise_delete_property_error(obj, name)
 
@@ -1784,7 +1784,7 @@ cdef class cTrait:
 
     def set_validate(self, validate):
         """ Sets the value of the 'validate' field of a CTrait instance. """
-        cdef int n, kind
+        cdef int n, kind = -1
 
         if PyCallable_Check(validate):
             kind = 14
@@ -1889,6 +1889,9 @@ cdef class cTrait:
                         raise ValueError('The argument must be a tuple or callable.')
                 else:
                     raise NotImplementedError('Work in progress. {}'.format(kind))
+
+        if kind == -1:
+            raise ValueError("The argument must be a tuple or callable.")
 
         self.validate_ = validate_handlers[kind]
         self.py_validate = validate
