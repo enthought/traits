@@ -1367,7 +1367,7 @@ cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
     raise NotImplementedError('getattr disallow NOT IMPL.')
 
 cdef object getattr_constant(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError('getattr constant NOT IMPL.')
+    return trait.internal_default_value
 
 cdef bint has_notifiers(object tnotifiers, object onotifiers):
     if (tnotifiers is not None and len(tnotifiers) > 0) or \
