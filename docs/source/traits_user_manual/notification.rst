@@ -66,10 +66,10 @@ In these signatures:
              place. (Default value)
   `extended` Extended dispatch mechanism for container trait type. For internal
              use only.
-  `new`      Asynchronous dipatch on a new thread.
-  `fast_ui`  if we are not already running of the event loop thread the
-             dispatch will take place sychronously, in all other cases the
-             the change handler execution dispatched in the ui event loop.
+  `new`      Asynchronous dispatch on a new thread.
+  `fast_ui`  if we are not already running the event loop thread the
+             dispatch will take place synchronously, in all other cases the
+             change handler execution dispatched in the ui event loop.
   `ui`       Alias to `fast_ui`.
   `gevent`   Asynchronous dispatch of a new greenlet on the gevent event loop.
   ========== ==================================================================

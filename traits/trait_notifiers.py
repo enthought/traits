@@ -647,5 +647,5 @@ class GEventTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
         # lazy import to avoid import errors when gevent is not used
         import gevent
 
-        # Shoule we use `spawn_raw` as an optimization?
+        # Should we use `spawn_raw` as an optimization?
         gevent.spawn(handler, *args)
