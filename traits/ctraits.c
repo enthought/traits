@@ -317,14 +317,14 @@ invalid_attribute_error ( PyObject * name ) {
     const char* type_name = obj_type->tp_name;
     PyObject * ob_repr = PyObject_Repr( name );
 
-    if( ob_repr == NULL ) {
-        return -1;
-    }
-
 #if PY_MAJOR_VERSION >= 3
 
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %R (%.200s).";
+
+    if( ob_repr == NULL ) {
+        return -1;
+    }
 
     PyErr_Format( PyExc_TypeError, fmt, ob_repr, type_name );
 
@@ -333,6 +333,10 @@ invalid_attribute_error ( PyObject * name ) {
     const char* obj_repr_str = PyString_AsString(ob_repr);
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %.200s (%.200s).";
+
+    if( ob_repr == NULL ) {
+        return -1;
+    }
 
     PyErr_Format( PyExc_TypeError, fmt, obj_repr_str, type_name );
 
