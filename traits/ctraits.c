@@ -311,30 +311,27 @@ fatal_trait_error ( void ) {
 
 static int
 invalid_attribute_error ( PyObject * name ) {
+
 #if PY_MAJOR_VERSION >= 3
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %R (%.200s).";
-#else
-    const char* fmt = "attribute name must be an instance of <type 'str'>. "
-                      "Got %.200s (%.200s).";
-    PyObject *obj_repr;
-#endif
-
-#if PY_MAJOR_VERSION >= 3
     PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
 #else
     // Python 2.6 doesn't support %R in PyErr_Format, so we compute and
     // insert the repr explicitly.
+    const char* fmt = "attribute name must be an instance of <type 'str'>. "
+                      "Got %.200s (%.200s).";
+    PyObject *obj_repr;
+
     obj_repr = PyObject_Repr(name);
     if ( obj_repr == NULL ) {
         return -1;
     }
-    PyErr_Format(
-        PyExc_TypeError, fmt,
-        PyString_AsString(obj_repr),
-        name->ob_type->tp_name);
+    PyErr_Format(PyExc_TypeError, fmt, PyString_AsString(obj_repr),
+                 name->ob_type->tp_name);
     Py_DECREF( obj_repr );
 #endif
+
     return -1;
 }
 
