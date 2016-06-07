@@ -311,38 +311,30 @@ fatal_trait_error ( void ) {
 
 static int
 invalid_attribute_error ( PyObject * name ) {
-
-    // Build error message by collecting the type of the object received
-    PyTypeObject* obj_type = name->ob_type;
-    const char* type_name = obj_type->tp_name;
-    PyObject * ob_repr = PyObject_Repr( name );
-
 #if PY_MAJOR_VERSION >= 3
-
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %R (%.200s).";
-
-    if( ob_repr == NULL ) {
-        return -1;
-    }
-
-    PyErr_Format( PyExc_TypeError, fmt, ob_repr, type_name );
-
 #else
-
-    const char* obj_repr_str = PyString_AsString(ob_repr);
     const char* fmt = "attribute name must be an instance of <type 'str'>. "
                       "Got %.200s (%.200s).";
-
-    if( ob_repr == NULL ) {
-        return -1;
-    }
-
-    PyErr_Format( PyExc_TypeError, fmt, obj_repr_str, type_name );
-
+    PyObject *obj_repr;
 #endif
 
-    Py_DECREF( ob_repr );
+#if PY_MAJOR_VERSION >= 3
+    PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
+#else
+    // Python 2.6 doesn't support %R in PyErr_Format, so we compute and
+    // insert the repr explicitly.
+    obj_repr = PyObject_Repr(name);
+    if ( obj_repr == NULL ) {
+        return -1;
+    }
+    PyErr_Format(
+        PyExc_TypeError, fmt,
+        PyString_AsString(obj_repr),
+        name->ob_type->tp_name);
+    Py_DECREF( obj_repr );
+#endif
     return -1;
 }
 
