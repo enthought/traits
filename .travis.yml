@@ -17,7 +17,7 @@ branches:
     master
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python 3; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python3; fi
   - export PATH=/usr/lib/ccache:${PATH}
   - pip install --upgrade pip
 install:
