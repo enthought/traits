@@ -159,7 +159,7 @@ cdef object invalid_attribute_error():
 
 cdef object unknown_attribute_error(obj, name):
     raise AttributeError(
-        u"'{:.50}' object has no attribute '{:.400}'".format(
+        u"'{0:.50}' object has no attribute '{1:.400}'".format(
             str(type(obj)), name
         )
     )
@@ -172,8 +172,8 @@ cdef int set_disallow_error(obj, name) except? -1:
         invalid_attribute_error()
     else:
         raise TraitError(
-            (u"Cannot set the undefined '{:.400}' attribute of a "
-             u"'{:.50}' object.").format(name, str(type(obj)))
+            (u"Cannot set the undefined '{0:.400}' attribute of a "
+             u"'{1:.50}' object.").format(name, str(type(obj)))
         )
     return -1
 
