@@ -158,6 +158,26 @@ cdef object invalid_attribute_error():
     raise TypeError('Attribute name must be a string.')
 
 
+cdef object unknown_attribute_error(obj, name):
+    raise AttributeError(
+        u"'{0:.50}' object has no attribute '{1:.400}'".format(
+            str(type(obj)), name
+        )
+    )
+
+
+cdef int set_disallow_error(obj, name) except? -1:
+    """Raises an undefined attribute error.
+    """
+    if not isinstance(name, basestring):
+        invalid_attribute_error()
+    else:
+        raise TraitError(
+            (u"Cannot set the undefined '{0:.400}' attribute of a "
+             u"'{1:.50}' object.").format(name, str(type(obj)))
+        )
+    return -1
+
 
 cdef object validate_trait_type(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is of a specified type (or None). """
@@ -997,7 +1017,7 @@ cdef class CHasTraits:
             if trait is None:
                 trait = self.ctrait_dict.get(name, None)
 
-            if trait.setattr == setattr_dissalow:
+            if trait.setattr == setattr_disallow:
                 raise NotImplementedError('Check logic in C code')
             if trait.setattr(trait, trait, self, name, event_object) > 0:
                 return None
@@ -1362,12 +1382,16 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
     raise TypeError('Attribute name must be a string.')
 
 
-
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
-    raise NotImplementedError('getattr disallow NOT IMPL.')
+    if isinstance(name, basestring):
+        unknown_attribute_error(obj, name)
+    else:
+        invalid_attribute_error()
+
 
 cdef object getattr_constant(cTrait trait, CHasTraits obj, object name):
     return trait.internal_default_value
+
 
 cdef bint has_notifiers(object tnotifiers, object onotifiers):
     if (tnotifiers is not None and len(tnotifiers) > 0) or \
@@ -1375,6 +1399,7 @@ cdef bint has_notifiers(object tnotifiers, object onotifiers):
         return 1
     else:
         return 0
+
 
 cdef int call_notifiers(list tnotifiers, list onotifiers, CHasTraits obj,
                         object name, object old_value, object new_value) except? -1:
@@ -1622,9 +1647,9 @@ cdef int setattr_delegate(cTrait traito, cTrait traitd, CHasTraits obj, object n
             )
 
 
+cdef int setattr_disallow(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
+    return set_disallow_error(obj, name)
 
-cdef int setattr_dissalow(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
-    raise NotImplementedError('No support for dissalow')
 
 cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object name, object value) except? -1:
     """ Assigns a value to a specified read-only trait attribute. """
@@ -1684,7 +1709,7 @@ setattr_handlers[1] = setattr_python
 setattr_handlers[2] = setattr_event
 setattr_handlers[3] = setattr_delegate
 setattr_handlers[4] = setattr_event
-setattr_handlers[5] = setattr_dissalow
+setattr_handlers[5] = setattr_disallow
 setattr_handlers[6] = setattr_readonly
 setattr_handlers[7] = setattr_constant
 setattr_handlers[8] = setattr_generic
