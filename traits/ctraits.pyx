@@ -157,6 +157,7 @@ cdef object invalid_attribute_error():
 
     raise TypeError('Attribute name must be a string.')
 
+
 cdef object unknown_attribute_error(obj, name):
     raise AttributeError(
         u"'{0:.50}' object has no attribute '{1:.400}'".format(
