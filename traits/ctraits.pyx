@@ -157,14 +157,14 @@ cdef object invalid_attribute_error(name):
     """ Raise an "attribute is not a string" error. """
     raise TypeError(
         (u"attribute name must be an instance of <type 'str'>. "
-         u"Got {0:!r} ({1:.200}).").format(name, str(type(name)))
+         u"Got {0!r:.200} ({1!s:.200}).").format(name, type(name))
     )
 
 
 cdef object unknown_attribute_error(obj, name):
     raise AttributeError(
-        u"'{0:.50}' object has no attribute '{1:.400}'".format(
-            str(type(obj)), name
+        u"'{0!s:.50}' object has no attribute '{1:.400}'".format(
+            type(obj), name
         )
     )
 
