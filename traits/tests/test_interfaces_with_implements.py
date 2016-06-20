@@ -36,150 +36,148 @@ from traits.api import HasTraits, Adapter, adapts, AdaptsTo, \
 _adaptation_manager = get_global_adaptation_manager()
 
 
-if sys.version_info[0] >= 3:
-    import nose
-    raise nose.SkipTest("""
-        Currently, under Python 3, class advisors do not work anymore.
-        Therefore, this test will fail due to the use of "adapts".
-    """)
-
-
 #------------------------------------------------------------------------------
 #  Test 'Interface' definitions:
 #------------------------------------------------------------------------------
 
-class IFoo(Interface):
+# 'adapts' and 'implements' are not supported in Python 3.
+if sys.version_info < (3,):
 
-    def get_foo(self):
-        """ Returns the current foo. """
+    class IFoo(Interface):
 
-
-class IFooPlus(IFoo):
-
-    def get_foo_plus(self):
-        """ Returns even more foo. """
+        def get_foo(self):
+            """ Returns the current foo. """
 
 
-class IAverage(Interface):
+    class IFooPlus(IFoo):
 
-    def get_average(self):
-        """ Returns the average value for the object. """
-
-
-class IList(Interface):
-
-    def get_list(self):
-        """ Returns the list value for the object. """
+        def get_foo_plus(self):
+            """ Returns even more foo. """
 
 
-class Sample(HasTraits):
-    s1 = Int(1, sample=True)
-    s2 = Int(2, sample=True)
-    s3 = Int(3, sample=True)
-    i1 = Int(4)
-    i2 = Int(5)
-    i3 = Int(6)
+    class IAverage(Interface):
+
+        def get_average(self):
+            """ Returns the average value for the object. """
 
 
-class SampleList(HasTraits):
+    class IList(Interface):
 
-    implements(IList)
-
-    data = List(Int, [10, 20, 30])
-
-    def get_list(self):
-        return self.data
+        def get_list(self):
+            """ Returns the list value for the object. """
 
 
-class SampleAverage(HasTraits):
-
-    implements(IList, IAverage)
-
-    data = List(Int, [100, 200, 300])
-
-    def get_list(self):
-        return self.data
-
-    def get_average(self):
-        value = self.get_list()
-        if len(value) == 0:
-            return 0.0
-
-        average = 0.0
-        for item in value:
-            average += item
-        return (average / len(value))
+    class Sample(HasTraits):
+        s1 = Int(1, sample=True)
+        s2 = Int(2, sample=True)
+        s3 = Int(3, sample=True)
+        i1 = Int(4)
+        i2 = Int(5)
+        i3 = Int(6)
 
 
-class SampleBad(HasTraits):
-    pass
+    class SampleList(HasTraits):
+
+        implements(IList)
+
+        data = List(Int, [10, 20, 30])
+
+        def get_list(self):
+            return self.data
 
 
-class TraitsHolder(HasTraits):
+    class SampleAverage(HasTraits):
 
-    a_no = Instance(IAverage, adapt='no')
-    a_yes = Instance(IAverage, adapt='yes')
-    a_default = Instance(IAverage, adapt='default')
-    list_adapted_to = Supports(IList)
-    foo_adapted_to = Supports(IFoo)
-    foo_plus_adapted_to = Supports(IFooPlus)
-    list_adapts_to = AdaptsTo(IList)
-    foo_adapts_to = AdaptsTo(IFoo)
-    foo_plus_adapts_to = AdaptsTo(IFooPlus)
+        implements(IList, IAverage)
 
+        data = List(Int, [100, 200, 300])
 
-class SampleListAdapter(Adapter):
-    adapts(Sample, IList)
+        def get_list(self):
+            return self.data
 
-    def get_list(self):
-        obj = self.adaptee
-        return [getattr(obj, name)
-                for name in obj.trait_names(sample=True)]
+        def get_average(self):
+            value = self.get_list()
+            if len(value) == 0:
+                return 0.0
+
+            average = 0.0
+            for item in value:
+                average += item
+            return (average / len(value))
 
 
-class ListAverageAdapter(Adapter):
-
-    adapts(IList, IAverage)
-
-    def get_average(self):
-        value = self.adaptee.get_list()
-        if len(value) == 0:
-            return 0.0
-
-        average = 0.0
-        for item in value:
-            average += item
-        return (average / len(value))
+    class SampleBad(HasTraits):
+        pass
 
 
-class SampleFooAdapter(HasTraits):
+    class TraitsHolder(HasTraits):
 
-    adapts(Sample, IFoo)
-
-    object = Instance(Sample)
-
-    def __init__(self, object):
-        self.object = object
-
-    def get_foo(self):
-        object = self.object
-        return (object.s1 + object.s2 + object.s3)
-
-
-class FooPlusAdapter(object):
-
-    def __init__(self, obj):
-        self.obj = obj
-
-    def get_foo(self):
-        return self.obj.get_foo()
-
-    def get_foo_plus(self):
-        return (self.obj.get_foo() + 1)
-
-adapts(FooPlusAdapter, IFoo, IFooPlus)
+        a_no = Instance(IAverage, adapt='no')
+        a_yes = Instance(IAverage, adapt='yes')
+        a_default = Instance(IAverage, adapt='default')
+        list_adapted_to = Supports(IList)
+        foo_adapted_to = Supports(IFoo)
+        foo_plus_adapted_to = Supports(IFooPlus)
+        list_adapts_to = AdaptsTo(IList)
+        foo_adapts_to = AdaptsTo(IFoo)
+        foo_plus_adapts_to = AdaptsTo(IFooPlus)
 
 
+    class SampleListAdapter(Adapter):
+        adapts(Sample, IList)
+
+        def get_list(self):
+            obj = self.adaptee
+            return [getattr(obj, name)
+                    for name in obj.trait_names(sample=True)]
+
+
+    class ListAverageAdapter(Adapter):
+
+        adapts(IList, IAverage)
+
+        def get_average(self):
+            value = self.adaptee.get_list()
+            if len(value) == 0:
+                return 0.0
+
+            average = 0.0
+            for item in value:
+                average += item
+            return (average / len(value))
+
+
+    class SampleFooAdapter(HasTraits):
+
+        adapts(Sample, IFoo)
+
+        object = Instance(Sample)
+
+        def __init__(self, object):
+            self.object = object
+
+        def get_foo(self):
+            object = self.object
+            return (object.s1 + object.s2 + object.s3)
+
+
+    class FooPlusAdapter(object):
+
+        def __init__(self, obj):
+            self.obj = obj
+
+        def get_foo(self):
+            return self.obj.get_foo()
+
+        def get_foo_plus(self):
+            return (self.obj.get_foo() + 1)
+
+    adapts(FooPlusAdapter, IFoo, IFooPlus)
+
+
+@unittest.skipUnless(sys.version_info < (3,),
+                     "The 'adapts' and 'implements' class advisors "
+                     "are not supported in Python 3.")
 class InterfacesTest(unittest.TestCase):
 
     #### 'TestCase' protocol ##################################################
@@ -226,9 +224,9 @@ class InterfacesTest(unittest.TestCase):
 
         # These are not instances of the IAverage interface, and therefore
         # cannot be set to the trait.
-        self.assertRaises(TraitError, ta.set, a_no=SampleList())
-        self.assertRaises(TraitError, ta.set, a_no=Sample())
-        self.assertRaises(TraitError, ta.set, a_no=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleList())
+        self.assertRaises(TraitError, ta.trait_set, a_no=Sample())
+        self.assertRaises(TraitError, ta.trait_set, a_no=SampleBad())
 
     def test_instance_adapt_yes(self):
         ta = TraitsHolder()
@@ -248,7 +246,7 @@ class InterfacesTest(unittest.TestCase):
         self.assertIsInstance(ta.a_yes, ListAverageAdapter)
         self.assertFalse(hasattr(ta, 'a_yes_'))
 
-        self.assertRaises(TraitError, ta.set, a_yes=SampleBad())
+        self.assertRaises(TraitError, ta.trait_set, a_yes=SampleBad())
 
     def test_instance_adapt_default(self):
         ta = TraitsHolder()

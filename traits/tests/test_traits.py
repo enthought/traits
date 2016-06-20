@@ -255,9 +255,7 @@ class FloatTest(AnyTraitTest):
                    u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
 
     if sys.version_info[0] < 3:
-        # 2to3 will remove the L suffix and therfore make them actually good
-        # ones!
-        _bad_values.extend([-10L, 10L])
+        _good_values.extend([long(-10), long(10)])
 
     def coerce(self, value):
         try:

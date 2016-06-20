@@ -3,11 +3,11 @@
 
 # configure_traits.py -- Sample code to demonstrate configure_traits()
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import HasTraits, Str, Int
 
-#--[Code]-----------------------------------------------------------------------
 
+#--[Code]----------------------------------------------------------------------
 class SimpleEmployee(HasTraits):
     first_name = Str
     last_name = Str
@@ -18,4 +18,3 @@ class SimpleEmployee(HasTraits):
 
 sam = SimpleEmployee()
 sam.configure_traits()
-

@@ -1,1 +1,1 @@
-from etsconfig import ETSConfig
+from etsconfig import ETSConfig, ETSToolkitError

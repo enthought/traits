@@ -31,13 +31,6 @@ from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
 # eliminate dependencies of Traits on other modules, we create another
 # minimal File class here to test the adapter implementation.
 
-if sys.version_info[0] >= 3:
-    import nose
-    raise nose.SkipTest("""
-        Currently, under Python 3, class advisors do not work anymore.
-        This is due to the new way of specifying metaclasses.
-    """)
-
 
 # Test class
 class File(HasTraits):
@@ -70,6 +63,9 @@ class Person(HasTraits):
     age = Int
 
 
+@unittest.skipUnless(sys.version_info < (3,),
+                     "The 'adapts' and 'implements' class advisors "
+                     "are not supported in Python 3.")
 class ProtocolsUsageTestCase(unittest.TestCase):
     """ Tests for protocols usage. """
     def test_adapts(self):
