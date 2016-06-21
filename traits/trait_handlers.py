@@ -2348,14 +2348,11 @@ class TraitListObject ( list ):
 
             if isinstance(key, slice):
                 values = value
-                try:
-                    key = slice(*key.indices(len( self )))
-                except (ValueError, TypeError):
-                    raise TypeError('must assign sequence (not "%s") to slice' % (
-                                    values.__class__.__name__ ))
-                slice_len = max(0, (key.stop - key.start) // key.step)
+                slice_len = len(removed)
+
                 delta = len( values ) - slice_len
-                if key.step != 1 and delta != 0:
+                step = 1 if key.step is None else key.step
+                if step != 1 and delta != 0:
                     raise ValueError(
                         'attempt to assign sequence of size %d to extended slice of size %d' % (
                         len( values ), slice_len
@@ -2369,7 +2366,7 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 value = values
-                if key.step == 1:
+                if step == 1:
                     # FIXME: Bug-for-bug compatibility with old __setslice__ code.
                     # In this case, we return a TraitListEvent with an
                     # index=key.start and the removed and added lists as they
@@ -2423,10 +2420,10 @@ class TraitListObject ( list ):
             removed = []
 
         if isinstance(key,slice):
-            key = slice(*key.indices(len( self )))
-            slice_len = max(0, (key.stop - key.start) // key.step)
+            slice_len = len(removed)
             delta = slice_len
-            if key.step == 1:
+            step = 1 if key.step is None else key.step
+            if step == 1:
                 # FIXME: See corresponding comment in __setitem__() for
                 # explanation.
                 index = key.start

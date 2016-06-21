@@ -152,16 +152,19 @@ cdef object set_readonly_error(obj, name):
         "object.".format(name, type(obj))
     )
 
-cdef object invalid_attribute_error():
-    """ Raise an "attribute is not a string" error. """
 
-    raise TypeError('Attribute name must be a string.')
+cdef object invalid_attribute_error(name):
+    """ Raise an "attribute is not a string" error. """
+    raise TypeError(
+        (u"attribute name must be an instance of <type 'str'>. "
+         u"Got {0!r:.200} ({1!s:.200}).").format(name, type(name))
+    )
 
 
 cdef object unknown_attribute_error(obj, name):
     raise AttributeError(
-        u"'{0:.50}' object has no attribute '{1:.400}'".format(
-            str(type(obj)), name
+        u"'{0!s:.50}' object has no attribute '{1:.400}'".format(
+            type(obj), name
         )
     )
 
@@ -170,7 +173,7 @@ cdef int set_disallow_error(obj, name) except? -1:
     """Raises an undefined attribute error.
     """
     if not isinstance(name, basestring):
-        invalid_attribute_error()
+        invalid_attribute_error(name)
     else:
         raise TraitError(
             (u"Cannot set the undefined '{0:.400}' attribute of a "
@@ -999,7 +1002,7 @@ cdef class CHasTraits:
             raise TraitError('Invalid argment to trait constructor.')
 
         if not PyString_Check(name):
-            raise TypeError('Attribute name must be a string.')
+            invalid_attribute_error(name)
 
         if (self.itrait_dict is None or name not in self.itrait_dict) and \
             name not in self.ctrait_dict:
@@ -1316,7 +1319,7 @@ cdef object getattr_trait(cTrait trait, CHasTraits obj, object name):
         if rc == 0:
             return result
     else:
-        raise TypeError('Attribute name must be a string')
+        invalid_attribute_error(name)
 
 cdef object getattr_event(cTrait trait, CHasTraits obj, object name):
     """  Returns the value assigned to an event trait. """
@@ -1378,15 +1381,14 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
                     " '%.400s'." % (type(obj), name, tp, delegate_attr_name))
 
     # FIXME: needs support for unicode
-
-    raise TypeError('Attribute name must be a string.')
+    invalid_attribute_error(name)
 
 
 cdef object getattr_disallow(cTrait trait, CHasTraits obj, object name):
     if isinstance(name, basestring):
         unknown_attribute_error(obj, name)
     else:
-        invalid_attribute_error()
+        invalid_attribute_error(name)
 
 
 cdef object getattr_constant(cTrait trait, CHasTraits obj, object name):
@@ -1491,7 +1493,7 @@ cdef int setattr_trait(cTrait traito, cTrait traitd, CHasTraits obj, object name
 
     # FIXME: support unicode
     if not PyString_Check(name):
-        raise ValueError('Attribute name must be a string.')
+        invalid_attribute_error(name)
 
     # TRAIT_SETATTR_ORIGINAL_VALUE: Make 'setattr' store the original
     # unvalidated value
@@ -1666,7 +1668,7 @@ cdef int setattr_readonly(cTrait traito, cTrait traitd, CHasTraits obj, object n
 
     # FIXME: add support for Unicode
     if not PyString_Check(name):
-        raise invalid_attribute_error()
+        raise invalid_attribute_error(name)
 
     cdef PyObject* result = PyDict_GetItem(obj.obj_dict, name)
     if result is NULL or result == <PyObject*>Undefined:
