@@ -25,6 +25,10 @@ class TestDisallow(unittest.TestCase):
         with self.assertRaises(TraitError):
             a.x = 123
 
+        # Check that other attributes can be get/set.
+        a.some_attribute = 'foo'
+        self.assertEqual(a.some_attribute, 'foo')
+
     def test_wildcard_get_set(self):
         b = B()
 
