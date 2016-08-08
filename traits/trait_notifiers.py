@@ -100,8 +100,8 @@ class NotificationExceptionHandler ( object ):
                 The new exception handler, which should be a callable or
                 None. If None (the default), then the default traits
                 notification exception handler is used. If *handler* is not
-                None, then it must be a callable which can accept four
-                arguments: object, trait_name, old_value, new_value.
+                None, then it must be a callable which can accept five 
+                arguments: object, trait_name, old_value, new_value, excp.
             reraise_exceptions : bool
                 Indicates whether exceptions should be reraised after the
                 exception handler has executed. If True, exceptions will be
@@ -153,16 +153,20 @@ class NotificationExceptionHandler ( object ):
                       'Attempted to pop an empty traits notification exception '
                       'handler stack.' )
 
-    def _handle_exception ( self, object, trait_name, old, new  ):
+    def _handle_exception ( self, object, trait_name, old, new, excp  ):
         """ Handles a traits notification exception using the handler defined
             by the topmost stack entry for the corresponding thread.
         """
-        excp_class, excp = sys.exc_info()[:2]
         handler_info     = self._get_handlers()[-1]
-        handler_info.handler( object, trait_name, old, new )
+
+        try:
+            handler_info.handler( object, trait_name, old, new, excp )
+        except TypeError:
+            handler_info.handler( object, trait_name, old, new )
+
         if (handler_info.reraise_exceptions or
             isinstance( excp, TraitNotificationError )):
-            raise
+            raise excp
 
     def _get_handlers ( self ):
         """ Returns the handler stack associated with the currently executing
@@ -343,7 +347,7 @@ class AbstractStaticChangeNotifyWrapper(object):
                     _post_change_event_tracer( object, trait_name, old, new,
                                                self.handler,
                                                exception=e )
-                handle_exception( object, trait_name, old, new )
+                handle_exception( object, trait_name, old, new, e )
             else:
                 if _post_change_event_tracer is not None:
                     _post_change_event_tracer( object, trait_name, old, new,
@@ -523,7 +527,7 @@ class TraitChangeNotifyWrapper(object):
                                            handler, exception=e )
             # This call needs to be made inside the `except` block in case
             # the handler wants to re-raise the exception.
-            handle_exception( object, trait_name, old, new )
+            handle_exception( object, trait_name, old, new, e )
         else:
             if _post_change_event_tracer is not None:
                 _post_change_event_tracer( object, trait_name, old, new,
@@ -574,8 +578,8 @@ class ExtendedTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         # Dispatch the event to the listener.
         try:
             self.dispatch( handler, *args )
-        except Exception:
-            handle_exception( object, trait_name, old, new )
+        except Exception as e:
+            handle_exception( object, trait_name, old, new, e )
 
     def _notify_method_listener(self, object, trait_name, old, new):
         """ Dispatch a trait change event to a method listener. """
