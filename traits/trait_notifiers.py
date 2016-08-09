@@ -209,7 +209,7 @@ class NotificationExceptionHandler ( object ):
     #  It logs any exceptions generated in a trait notification handler.
     #---------------------------------------------------------------------------
 
-    def _log_exception ( self, object, trait_name, old, new ):
+    def _log_exception ( self, object, trait_name, old, new, excp ):
         """ Logs any exceptions generated in a trait notification handler.
         """
         # When the stack depth is too great, the logger can't always log the
