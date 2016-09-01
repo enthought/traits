@@ -242,7 +242,7 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(toolkit, '')
 
     def test_set_toolkit(self):
-        test_args = ['something', '-toolkit', 'test_args', 'something_else']
+        test_args = []
         test_environ = {'ETS_TOOLKIT': 'test_environ'}
 
         with mock_sys_argv(test_args):
@@ -251,10 +251,6 @@ class ETSConfigTestCase(unittest.TestCase):
                 toolkit = self.ETSConfig.toolkit
 
         self.assertEqual(toolkit, 'test_direct')
-        # XXX this is a bit of a dodgy outcome...
-        self.assertEqual(test_args,
-                         ['something', '-toolkit', 'test_args',
-                          'something_else'])
 
     def test_provisional_toolkit(self):
         test_args = []

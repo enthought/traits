@@ -97,7 +97,6 @@ except:
             """
             Property getter for the GUI toolkit.  The value returned is, in
             order of preference: the value set by the application; the value
-            passed on the command line using the '-toolkit' option; the value
             specified by the 'ETS_TOOLKIT' environment variable; otherwise the
             empty string.
             """
@@ -161,27 +160,8 @@ except:
         def _initialize_toolkit ( self ):
             """ Initializes the toolkit.
             """
-            # We handle the command line option even though it doesn't have the
-            # highest precedence because we always want to remove it from the
-            # command line:
-            if '-toolkit' in sys.argv:
-                opt_idx = sys.argv.index( '-toolkit' )
-
-                try:
-                    opt_toolkit = sys.argv[ opt_idx + 1 ]
-                except IndexError:
-                    raise ValueError( 'The -toolkit command line argument must '
-                                      'be followed by a toolkit name' )
-
-                # Remove the option:
-                del sys.argv[ opt_idx: opt_idx + 1 ]
-            else:
-                opt_toolkit = None
-
             if self._toolkit is not None:
                 toolkit = self._toolkit
-            elif opt_toolkit is not None:
-                toolkit = opt_toolkit
             else:
                 toolkit = os.environ.get( 'ETS_TOOLKIT', '' )
 

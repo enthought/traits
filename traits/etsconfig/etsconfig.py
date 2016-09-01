@@ -245,8 +245,7 @@ class ETSConfig(object):
     def _get_toolkit(self):
         """
         Property getter for the GUI toolkit.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ETS_TOOLKIT' environment variable; otherwise the empty string.
 
         """
@@ -282,8 +281,7 @@ class ETSConfig(object):
         Deprecated: This property is no longer used.
 
         Property getter for the Enable backend.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
         """
         from warnings import warn
