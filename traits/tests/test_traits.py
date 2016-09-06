@@ -326,7 +326,9 @@ class UnicodeTest(StringTest):
 class BytesTrait(HasTraits):
     value = Bytes(b'bytes')
 
+
 version_dependent = ['', 'string']
+
 
 class BytesTest(StringTest):
 
@@ -334,10 +336,10 @@ class BytesTest(StringTest):
 
     _default_value = b'bytes'
     _good_values = [b'', b'10', b'-10'] + (version_dependent
-        if sys.version_info.major == 2 else [])
+        if sys.version_info[0] == 2 else [])
     _bad_values = [10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
         {b'ten': b'10'}, (b'',), None, True] + (version_dependent
-        if sys.version_info.major == 3 else [])
+        if sys.version_info[0] == 3 else [])
 
     def coerce(self, value):
         return bytes(value)
