@@ -36,9 +36,9 @@ from .traits import (CTrait, Trait, Property, TraitFactory, Default, Color,
         RGBColor, Font)
 
 from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
-        Unicode, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode, CBool,
-        String, Regex, Code, HTML, Password, Callable, This, self, Function,
-        Method, Module, Python, ReadOnly, Disallow, Constant,
+        Unicode, Bytes, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode,
+        CBool, String, Regex, Code, HTML, Password, Callable, This, self,
+        Function, Method, Module, Python, ReadOnly, Disallow, Constant,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,

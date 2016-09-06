@@ -19,7 +19,7 @@ import sys
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
+from ..api import (Any, Bytes, CFloat, CInt, CLong, Delegate, Float, HasTraits,
                    Instance, Int, List, Long, Str, Trait, TraitError,
                    TraitList, TraitPrefixList, TraitPrefixMap, TraitRange,
                    Tuple, pop_exception_handler, push_exception_handler)
@@ -321,6 +321,26 @@ class UnicodeTest(StringTest):
 
     def coerce(self, value):
         return str(value)
+
+
+class BytesTrait(HasTraits):
+    value = Bytes(b'bytes')
+
+version_dependent = ['', 'string']
+
+class BytesTest(StringTest):
+
+    obj = BytesTrait()
+
+    _default_value = b'bytes'
+    _good_values = [b'', b'10', b'-10'] + (version_dependent
+        if sys.version_info.major == 2 else [])
+    _bad_values = [10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
+        {b'ten': b'10'}, (b'',), None, True] + (version_dependent
+        if sys.version_info.major == 3 else [])
+
+    def coerce(self, value):
+        return bytes(value)
 
 
 class EnumTrait(HasTraits):
