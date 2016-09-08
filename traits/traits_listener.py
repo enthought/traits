@@ -1143,6 +1143,7 @@ class ListenerParser ( HasPrivateTraits ):
     #-- object Method Overrides ------------------------------------------------
 
     def __init__ ( self, text = '', **traits ):
+        print(text)
         self.text = text
         super( ListenerParser, self ).__init__( **traits )
 

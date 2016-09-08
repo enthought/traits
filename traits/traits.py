@@ -735,7 +735,6 @@ def Trait ( *value_type, **metadata ):
 
 
     """
-    print(value_type, metadata)
     return _TraitMaker( *value_type, **metadata ).as_ctrait()
 
 #  Handle circular module dependencies:
@@ -969,7 +968,6 @@ class _TraitMaker ( object ):
             validate      = getattr( handler, 'fast_validate', None )
             if validate is None:
                 validate = handler.validate
-            print("before validate", validate)
             trait.set_validate( validate )
 
             post_setattr = getattr( handler, 'post_setattr', None )

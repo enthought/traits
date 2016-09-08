@@ -3090,7 +3090,7 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return self.traits( **metadata ).keys()
+        return list(six.iterkeys(self.traits( **metadata )))
 
     def class_trait_names ( cls, **metadata ):
         """Returns a list of the names of all trait attributes whose definitions
@@ -3106,7 +3106,7 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return cls.class_traits( **metadata ).keys()
+        return list(six.iterkeys(cls.class_traits( **metadata )))
 
     class_trait_names = classmethod( class_trait_names )
 

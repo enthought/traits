@@ -39,7 +39,7 @@ def captured_stderr():
     Return a context manager that directs all stderr output to a string.
 
     """
-    new_stderr = sm.cStringIO.StringIO()
+    new_stderr = sm.cStringIO()
     original_stderr = sys.stderr
     sys.stderr = new_stderr
     try:
