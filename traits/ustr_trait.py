@@ -26,6 +26,8 @@
 
 from __future__ import absolute_import
 
+import six
+
 from .trait_base import is_str
 from .has_traits import HasTraits
 from .trait_value import TraitValue, TypeValue
@@ -66,7 +68,7 @@ class UStr ( TraitType ):
     def validate ( self, object, name, value ):
         """ Ensures that a value being assigned to a trait is a unique string.
         """
-        if isinstance( value, basestring ):
+        if isinstance( value, six.string_types ):
             names    = self.names
             old_name = getattr( object, name )
             if names.get( old_name ) is object:
@@ -167,7 +169,7 @@ class HasUniqueStrings ( HasTraits ):
         """
         super( HasUniqueStrings, self ).traits_init()
 
-        for name, trait in self.traits( unique_string = is_str ).items():
+        for name, trait in six.iteritems(self.traits( unique_string = is_str )):
             for str_name in trait.unique_string.split( ',' ):
                 self._ustr_traits.append( UStr( self, name, str_name.strip() ) )
 

@@ -32,6 +32,8 @@ from weakref import WeakKeyDictionary
 from string import whitespace
 from types import MethodType
 
+import six
+
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
@@ -415,7 +417,7 @@ class ListenerItem ( ListenerBase ):
 
         # For each item, determine its type (simple, list, dict):
         self.active[ new ] = active = []
-        for name, trait in traits.items():
+        for name, trait in six.iteritems(traits):
 
             # Determine whether the trait type is simple, list, set or
             # dictionary:
@@ -524,11 +526,11 @@ class ListenerItem ( ListenerBase ):
         """
         if old is not Uninitialized:
             unregister = self.next.unregister
-            for obj in old.values():
+            for obj in six.itervalues(old):
                 unregister( obj )
 
         register = self.next.register
-        for obj in new.values():
+        for obj in six.itervalues(new):
             register( obj )
 
     #---------------------------------------------------------------------------
@@ -552,7 +554,7 @@ class ListenerItem ( ListenerBase ):
             dict = getattr( object, name )
             unregister = self.next.unregister
             register = self.next.register
-            for key, obj in new.changed.items():
+            for key, obj in six.iteritems(new.changed):
                 unregister( obj )
                 register( dict[ key ] )
 
@@ -904,7 +906,7 @@ class ListenerItem ( ListenerBase ):
         else:
             handler = next.register
 
-        for obj in getattr( object, name ).values():
+        for obj in six.itervalues(getattr( object, name )):
             handler( obj )
 
         return INVALID_DESTINATION
@@ -919,7 +921,7 @@ class ListenerItem ( ListenerBase ):
         # Set if the new trait matches our prefix and metadata:
         if new_trait.startswith( self.name[:-1] ):
             trait = object.base_trait( new_trait )
-            for meta_name, meta_eval in self._metadata.items():
+            for meta_name, meta_eval in six.iteritems(self._metadata):
                 if not meta_eval( getattr( trait, meta_name ) ):
                     return
 
@@ -1345,7 +1347,7 @@ class ListenerHandler ( object ):
 
     def __init__ ( self, handler ):
         if type( handler ) is MethodType:
-            object = handler.im_self
+            object = handler.__self__
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__

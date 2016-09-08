@@ -1,4 +1,7 @@
 """ Tests for the trait change event tracer. """
+
+import six
+
 from traits.api import Float, HasTraits, on_trait_change
 from traits.testing.unittest_tools import unittest
 
@@ -59,7 +62,7 @@ class TestChangeEventTracers(unittest.TestCase):
 
     def _collect_post_notification_events(self, *args, **kwargs):
         self.post_change_events.append(args)
-        self.exceptions.extend(kwargs.values())
+        self.exceptions.extend(six.itervalues(kwargs))
 
     #### Tests ################################################################
 
@@ -84,14 +87,14 @@ class TestChangeEventTracers(unittest.TestCase):
 
         expected_pre_events = [
             (foo, 'baz', 0.0, 3.0, foo._on_baz_change_notification),
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.im_func),
+            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
             (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
             (foo, 'baz', 0.0, 3.0, _on_foo_baz_changed),
         ]
         self.assertEqual(self.pre_change_events, expected_pre_events)
 
         expected_post_events = [
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.im_func),
+            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
             (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
             (foo, 'baz', 0.0, 3.0, foo._on_baz_change_notification),
             (foo, 'baz', 0.0, 3.0, _on_foo_baz_changed),
@@ -127,14 +130,14 @@ class TestChangeEventTracers(unittest.TestCase):
 
         expected_pre_events = [
             (foo, 'fuz', 0.0, 3.0, foo._on_fuz_change_notification),
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.im_func),
+            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
             (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
             (foo, 'fuz', 0.0, 3.0, _on_foo_fuz_changed),
         ]
         self.assertEqual(self.pre_change_events, expected_pre_events)
 
         expected_post_events = [
-            (foo, 'bar', 0.0, 1.0, foo._bar_changed.im_func),
+            (foo, 'bar', 0.0, 1.0, foo._bar_changed.__func__),
             (foo, 'bar', 0.0, 1.0, foo._on_bar_change_notification),
             (foo, 'fuz', 0.0, 3.0, foo._on_fuz_change_notification),
             (foo, 'fuz', 0.0, 3.0, _on_foo_fuz_changed),

@@ -5,6 +5,8 @@ Unit tests for the `HasTraits.class_traits` class function.
 
 from __future__ import absolute_import
 
+import six
+
 from traits import _py2to3
 
 from traits.testing.unittest_tools import unittest
@@ -48,7 +50,7 @@ class TestClassTraits(unittest.TestCase):
         # Retrieve all traits that have the `marked` metadata
         # attribute set to True.
         traits = C.class_traits(marked=True)
-        _py2to3.assertCountEqual(self, traits.keys(), ('y', 'name'))
+        _py2to3.assertCountEqual(self, list(six.iterkeys(traits)), ('y', 'name'))
 
         # Retrieve all traits that have a `marked` metadata attribute,
         # regardless of its value.

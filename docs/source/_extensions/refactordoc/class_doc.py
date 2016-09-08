@@ -6,9 +6,9 @@
 #  Copyright (c) 2011, Enthought, Inc.
 #  All rights reserved.
 #------------------------------------------------------------------------------
-from base_doc import BaseDoc
-from line_functions import get_indent, replace_at, add_indent
-from definition_items import (MethodItem, AttributeItem, TableLineItem,
+from .base_doc import BaseDoc
+from .line_functions import get_indent, replace_at, add_indent
+from .definition_items import (MethodItem, AttributeItem, TableLineItem,
                               max_attribute_length, max_attribute_index,
                               ListItem)
 

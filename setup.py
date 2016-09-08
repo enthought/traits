@@ -97,7 +97,7 @@ if not is_released:
 
 if __name__ == "__main__":
     write_version_py()
-    from traits import __version__
+    from traits import __version__, __requires__
 
     ctraits = Extension(
         'traits.ctraits',
@@ -143,6 +143,7 @@ if __name__ == "__main__":
         description='explicitly typed attributes for Python',
         long_description=open('README.rst').read(),
         download_url='https://github.com/enthought/traits',
+        install_requires=__requires__,
         ext_modules=[ctraits],
         license='BSD',
         maintainer='ETS Developers',

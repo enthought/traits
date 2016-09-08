@@ -29,9 +29,11 @@ else:
     QT_FOUND = True
 
 
-import thread
 from threading import Thread
 import time
+
+import six
+import six.moves as sm
 
 from traits.api import Callable, Float, HasTraits, on_trait_change
 from traits.testing.unittest_tools import unittest
@@ -70,7 +72,7 @@ class BaseTestUINotifiers(object):
         qt4_app.processEvents()
 
     def on_foo_notifications(self, obj, name, old, new):
-        thread_id = thread.get_ident()
+        thread_id = sm._thread.get_ident()
         event = (thread_id, (obj, name, old, new))
         self.notifications.append(event)
 

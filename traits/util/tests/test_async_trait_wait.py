@@ -3,6 +3,9 @@ import threading
 import time
 import unittest
 
+import six
+import six.moves as sm
+
 from traits.api import Enum, HasStrictTraits
 
 from traits.util.async_trait_wait import wait_for_condition
@@ -19,7 +22,7 @@ class TrafficLights(HasStrictTraits):
     }
 
     def make_random_changes(self, change_count):
-        for _ in xrange(change_count):
+        for _ in sm.range(change_count):
             time.sleep(random.uniform(0.1, 0.3))
             self.colour = self._next_colour[self.colour]
 

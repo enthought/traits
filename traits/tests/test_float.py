@@ -17,6 +17,13 @@ Tests for the Float trait type.
 """
 import sys
 
+import six
+
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import BaseFloat, Float, HasTraits
@@ -51,7 +58,7 @@ class CommonFloatTests(object):
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
         a = self.test_class()
-        a.value = long(2)
+        a.value = LONG_TYPE(2)
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
 

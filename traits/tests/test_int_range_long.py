@@ -8,6 +8,13 @@
 
 from __future__ import absolute_import
 
+import six
+
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Long, TraitError
@@ -16,7 +23,7 @@ from ..api import HasTraits, Int, Range, Long, TraitError
 class A(HasTraits):
     i = Int
     l = Long
-    r = Range(2L, 9223372036854775807L)
+    r = Range(LONG_TYPE(2), LONG_TYPE(9223372036854775807))
 
 
 class TraitIntRangeLong(unittest.TestCase):
@@ -24,21 +31,21 @@ class TraitIntRangeLong(unittest.TestCase):
         "Test to make sure it is legal to set an Int trait to a long value"
         a = A()
         a.i = 1
-        a.i = 10L
+        a.i = LONG_TYPE(10)
 
     def test_long(self):
         "Test if it is legal to set a Long trait to an int value"
         a = A()
         a.l = 10
-        a.l = 100L
+        a.l = LONG_TYPE(100)
 
     def test_range(self):
         "Test a range trait with longs being set to an int value"
         a = A()
         a.r = 256
-        a.r = 20L
-        self.assertRaises(TraitError, a.trait_set, r=1L)
-        self.assertRaises(TraitError, a.trait_set, r=9223372036854775808L)
+        a.r = LONG_TYPE(20)
+        self.assertRaises(TraitError, a.trait_set, r=LONG_TYPE(1))
+        self.assertRaises(TraitError, a.trait_set, r=LONG_TYPE(9223372036854775808))
 
 if __name__ == '__main__':
     unittest.main()

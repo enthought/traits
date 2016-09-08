@@ -4,6 +4,9 @@
 # Standard library imports.
 import re
 
+import six
+import six.moves as sm
+
 ###############################################################################
 # Classes
 ###############################################################################
@@ -63,4 +66,4 @@ def camel_case_to_words(s):
 
         return s + c
 
-    return reduce(add_space_between_words, s, '')
+    return sm.reduce(add_space_between_words, s, '')

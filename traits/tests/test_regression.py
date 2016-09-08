@@ -2,6 +2,9 @@
 import gc
 import sys
 
+import six
+import six.moves as sm
+
 from ..has_traits import HasTraits, Property, on_trait_change
 from ..trait_types import Bool, DelegatesTo, Instance, Int, List
 from ..testing.unittest_tools import unittest
@@ -151,7 +154,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -164,7 +167,7 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))

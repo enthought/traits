@@ -17,6 +17,8 @@
 """ A simple topological sort on a dictionary graph.
 """
 
+import six
+
 class CyclicGraph(Exception):
     """
     Exception for cyclic graphs.
@@ -45,7 +47,7 @@ def topological_sort(graph):
         explored[node] = 1
         order.append(node)
 
-    for node in graph.keys():
+    for node in six.iterkeys(graph):
         if node not in explored:
             explore(node)
     order.reverse()

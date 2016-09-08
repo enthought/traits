@@ -20,10 +20,12 @@
 from __future__ import absolute_import
 
 import contextlib
-import cStringIO
 import sys
 import threading
 import time
+
+import six
+import six.moves as sm
 
 from traits.testing.unittest_tools import unittest
 
@@ -37,7 +39,7 @@ def captured_stderr():
     Return a context manager that directs all stderr output to a string.
 
     """
-    new_stderr = cStringIO.StringIO()
+    new_stderr = sm.cStringIO.StringIO()
     original_stderr = sys.stderr
     sys.stderr = new_stderr
     try:
@@ -184,7 +186,7 @@ class TestRaceCondition(unittest.TestCase):
         t = threading.Thread(target=foo_writer, args=(a, stop_event))
         t.start()
 
-        for _ in xrange(100):
+        for _ in sm.range(100):
             a.on_trait_change(a.foo_changed_handler, 'foo')
             time.sleep(0.0001)  # encourage thread-switch
             a.on_trait_change(a.foo_changed_handler, 'foo', remove=True)

@@ -1,8 +1,10 @@
 """ Tests for the trait documenter. """
 
-import StringIO
+
 import sys
 import tokenize
+
+import six
 
 from traits.testing.unittest_tools import unittest
 
@@ -31,7 +33,7 @@ class TestTraitDocumenter(unittest.TestCase):
     depth_interval = Property(Tuple(Float, Float),
                               depends_on="_depth_interval")
 """
-        string_io = StringIO.StringIO(self.source)
+        string_io = six.StringIO(self.source)
         tokens = tokenize.generate_tokens(string_io.readline)
         self.tokens = tokens
 

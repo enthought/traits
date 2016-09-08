@@ -117,9 +117,9 @@ class AbstractArray ( TraitType ):
                            (item[0] <= item[1]))))):
                         continue
 
-                    raise TraitError, "shape should be a list or tuple"
+                    raise TraitError("shape should be a list or tuple")
             else:
-                raise TraitError, "shape should be a list or tuple"
+                raise TraitError("shape should be a list or tuple")
 
         if value is None:
             value = self._default_for_dtype_and_shape( dtype, shape )

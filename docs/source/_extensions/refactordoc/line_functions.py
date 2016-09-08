@@ -8,7 +8,8 @@
 #  All rights reserved.
 #-----------------------------------------------------------------------------
 import re
-
+import six
+import six.moves as sm
 
 #-----------------------------------------------------------------------------
 #  Pre-compiled regexes
@@ -73,7 +74,7 @@ def trim_indent(lines):
     """ Trim global indentation level from lines.
 
     """
-    non_empty_lines = filter(lambda x: not is_empty(x), lines)
+    non_empty_lines = sm.filter(lambda x: not is_empty(x), lines)
     indent = set(len(get_indent(line)) for line in non_empty_lines)
     indent.discard(0)
     global_indent = min(indent)

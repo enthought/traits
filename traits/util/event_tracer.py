@@ -20,6 +20,8 @@ import threading
 from contextlib import contextmanager
 from datetime import datetime
 
+import six
+
 from traits import trait_notifiers
 
 
@@ -33,16 +35,18 @@ EXITMSG = (
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
+@six.python_2_unicode_compatible
 class SentinelRecord(object):
     """ Sentinel record to separate groups of chained change event dispatches.
 
     """
     __slots__ = ()
 
-    def __unicode__(self):
+    def __str__(self):
         return u'\n'
 
 
+@six.python_2_unicode_compatible
 class ChangeMessageRecord(object):
     """ Message record for a change event dispatch.
 
@@ -64,7 +68,7 @@ class ChangeMessageRecord(object):
         #: The name of the class that the trait change took place.
         self.class_name = class_name
 
-    def __unicode__(self):
+    def __str__(self):
         length = self.indent * 2
         return CHANGEMSG.format(
             time=self.time,
@@ -77,6 +81,7 @@ class ChangeMessageRecord(object):
         )
 
 
+@six.python_2_unicode_compatible
 class CallingMessageRecord(object):
     """ Message record for a change handler call.
 
@@ -94,7 +99,7 @@ class CallingMessageRecord(object):
         #: The source file where the handler was defined.
         self.source = source
 
-    def __unicode__(self):
+    def __str__(self):
         gap = self.indent * 2 + SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE
         return CALLINGMSG.format(
             time=self.time,
@@ -104,6 +109,7 @@ class CallingMessageRecord(object):
             gap=gap)
 
 
+@six.python_2_unicode_compatible
 class ExitMessageRecord(object):
     """ Message record for returning from a change event dispatch.
 
@@ -121,7 +127,7 @@ class ExitMessageRecord(object):
         #: The exception type (if one took place)
         self.exception = exception
 
-    def __unicode__(self):
+    def __str__(self):
         length = self.indent * 2
         return EXITMSG.format(
             time=self.time,
@@ -155,7 +161,7 @@ class RecordContainer(object):
         """
         with open(filename, 'w') as fh:
             for record in self._records:
-                fh.write(unicode(record))
+                fh.write(six.text_type(record))
 
 
 class MultiThreadRecordContainer(object):
@@ -195,7 +201,7 @@ class MultiThreadRecordContainer(object):
         """
         with self._creation_lock:
             containers = self._record_containers
-            for thread_name, container in containers.iteritems():
+            for thread_name, container in six.iteritems(containers):
                 filename = os.path.join(
                     directory_name, '{0}.trace'.format(thread_name))
                 container.save_to_file(filename)

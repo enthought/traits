@@ -10,7 +10,7 @@
 import collections
 import re
 
-from line_functions import (add_indent, fix_star, trim_indent, NEW_LINE,
+from .line_functions import (add_indent, fix_star, trim_indent, NEW_LINE,
                             fix_trailing_underscore)
 
 header_regex = re.compile(r'\s:\s?')

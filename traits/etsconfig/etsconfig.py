@@ -267,8 +267,8 @@ class ETSConfig(object):
         """
 
         if self._toolkit and self._toolkit != toolkit:
-            raise ValueError, "cannot set toolkit to %s because it has "\
-                            "already been set to %s" % (toolkit, self._toolkit)
+            raise ValueError("cannot set toolkit to %s because it has "\
+                            "already been set to %s" % (toolkit, self._toolkit))
 
         self._toolkit = toolkit
 
@@ -318,7 +318,7 @@ class ETSConfig(object):
         value will be a reasonable default for the given enable backend.
         """
         if self._toolkit is None:
-            raise AttributeError, "The kiva_backend attribute is dependent on toolkit, which has not been set."
+            raise AttributeError("The kiva_backend attribute is dependent on toolkit, which has not been set.")
 
         if self._kiva_backend is None:
             try:
@@ -470,7 +470,7 @@ class ETSConfig(object):
             try:
                 opt_toolkit = sys.argv[opt_idx + 1]
             except IndexError:
-                raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
+                raise ValueError("the -toolkit command line argument must be followed by a toolkit name")
 
             # Remove the option.
             del sys.argv[opt_idx:opt_idx + 2]

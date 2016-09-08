@@ -3,6 +3,8 @@
 import abc
 import warnings
 
+import six
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
@@ -60,9 +62,9 @@ class FooLike(HasTraits):
 
 AbstractFoo.register(FooLike)
 
-
+@six.add_metaclass(abc.ABCMeta)
 class AbstractBar(object):
-    __metaclass__ = abc.ABCMeta
+    pass
 
     @abc.abstractmethod
     def bar(self):
@@ -84,8 +86,8 @@ class TestABC(unittest.TestCase):
         self.assertTrue(isinstance(foolike, AbstractFoo))
 
     def test_post_hoc_mixing(self):
+        @six.add_metaclass(ABCMetaHasTraits)
         class TraitedBar(HasTraits, AbstractBar):
-            __metaclass__ = ABCMetaHasTraits
             x = Int(10)
 
             def bar(self):

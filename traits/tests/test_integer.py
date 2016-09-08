@@ -21,6 +21,15 @@ from __future__ import absolute_import
 import decimal
 import sys
 
+import six
+
+if six.PY2:
+    LONG_TYPE = long
+    MAXINT = sys.maxint
+else:
+    LONG_TYPE = int
+    MAXINT = six.MAXSIZE
+
 try:
     import numpy
 except ImportError:
@@ -61,20 +70,20 @@ class TestInt(unittest.TestCase):
 
     def test_accepts_small_long(self):
         a = A()
-        a.integral = 23L
+        a.integral = LONG_TYPE(23)
         # Check that type is stored as int where possible.
         self.assertEqual(a.integral, 23)
         self.assertIs(type(a.integral), int)
 
     def test_accepts_large_long(self):
         a = A()
-        a.integral = long(sys.maxint)
-        self.assertEqual(a.integral, sys.maxint)
+        a.integral = LONG_TYPE(MAXINT)
+        self.assertEqual(a.integral, MAXINT)
         self.assertIs(type(a.integral), int)
 
-        a.integral = sys.maxint + 1
-        self.assertEqual(a.integral, sys.maxint + 1)
-        self.assertIs(type(a.integral), long)
+        a.integral = MAXINT + 1
+        self.assertEqual(a.integral, MAXINT + 1)
+        self.assertIs(type(a.integral), LONG_TYPE)
 
     def test_accepts_bool(self):
         a = A()
@@ -110,11 +119,11 @@ class TestInt(unittest.TestCase):
         a = A()
         a.integral = numpy.int32(23)
         self.assertEqual(a.integral, 23)
-        self.assertIn(type(a.integral), (int, long))
+        self.assertIn(type(a.integral), six.integer_types)
 
         a.integral = numpy.uint64(2**63 + 2)
         self.assertEqual(a.integral, 2**63 + 2)
-        self.assertIs(type(a.integral), long)
+        self.assertIs(type(a.integral), LONG_TYPE)
 
         with self.assertRaises(TraitError):
             a.integral = numpy.float32(4.0)
