@@ -231,8 +231,8 @@ class NotificationExceptionHandler ( object ):
             handler = logging.StreamHandler()
             handler.setFormatter( logging.Formatter( '%(message)s' ) )
             logger.addHandler( handler )
-            print ('Exception occurred in traits notification handler.\n'
-                   'Please check the log file for details.')
+            print('Exception occurred in traits notification handler.\n'
+                  'Please check the log file for details.')
 
         try:
             logger.exception(
@@ -315,7 +315,7 @@ class AbstractStaticChangeNotifyWrapper(object):
     arguments_transforms = {}
 
     def __init__ ( self, handler ):
-        arg_count = six.function_code(handler).co_argcount
+        arg_count = six.get_function_code(handler).co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the static anytrait change '
@@ -426,7 +426,7 @@ class TraitChangeNotifyWrapper(object):
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
                 self.owner  = owner
-                arg_count   = six.function_code(func).co_argcount - 1
+                arg_count   = six.get_function_code(func).co_argcount - 1
                 if arg_count > 4:
                     raise TraitNotificationError(
                         ('Invalid number of arguments for the dynamic trait '
@@ -446,7 +446,7 @@ class TraitChangeNotifyWrapper(object):
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
 
-        arg_count = six.function_code(handler).co_argcount
+        arg_count = six.get_function_code(handler).co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the dynamic trait change '

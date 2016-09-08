@@ -31,10 +31,10 @@ die.value = 'five'
 # Now try out some invalid values:
 try:
     die.value = 0
-except TraitError, excp:
-    print excp
+except TraitError as excp:
+    print(excp)
 
 try:
     die.value = 'zero'
-except TraitError, excp:
-    print excp
+except TraitError as excp:
+    print(excp)

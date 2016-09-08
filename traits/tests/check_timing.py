@@ -221,9 +221,9 @@ def report(name, get_time, set_time, ref_get_time, ref_set_time):
 def run_benchmark(klass, ref_get_time, ref_set_time):
     benchmark_name = klass.__name__
     get_time, set_time = klass().measure()
-    print report(benchmark_name,
+    print(report(benchmark_name,
                  get_time, set_time,
-                 ref_get_time, ref_set_time)
+                 ref_get_time, ref_set_time))
 
 
 def main():

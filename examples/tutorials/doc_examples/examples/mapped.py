@@ -34,11 +34,11 @@ class GraphicShape(HasTraits):
 my_shape1 = GraphicShape()
 
 # Default values for normal trait attributes
-print my_shape1.line_color, my_shape1.fill_color
+print(my_shape1.line_color, my_shape1.fill_color)
 # Output: black red
 
 # Default values for shadow trait attributes
-print my_shape1.line_color_, my_shape1.fill_color_
+print(my_shape1.line_color_, my_shape1.fill_color_)
 # Output: (0.0, 0.0, 0.0, 1.0) (1.0, 0.0, 0.0, 1.0)
 
 # Non-default values
@@ -46,8 +46,8 @@ my_shape2 = GraphicShape()
 my_shape2.line_color = 'blue'
 my_shape2.fill_color = 'green'
 
-print my_shape2.line_color, my_shape2.fill_color
+print(my_shape2.line_color, my_shape2.fill_color)
 # Output: blue green
 
-print my_shape2.line_color_, my_shape2.fill_color_
+print(my_shape2.line_color_, my_shape2.fill_color_)
 # Output: (0.0, 0.0, 1.0, 1.0) (0.0, 1.0, 0.0, 1.0)

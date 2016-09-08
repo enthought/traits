@@ -20,5 +20,5 @@ try:
         # 'Chicken' won't be defined yet:
         created_by = Instance(Chicken)
 
-except NameError, excp:
-    print excp
+except NameError as excp:
+    print(excp)

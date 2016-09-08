@@ -557,7 +557,7 @@ than a complete sentence::
       File "test.py", line 25, in ?
         odd_stuff.very_odd = 0
       File "C:\wrk\src\lib\enthought\traits\traits.py", line 1119, in validate
-        raise TraitError, excp
+        raise TraitError(excp)
     traits.traits.TraitError: The 'very_odd' trait of an AnOddClass instance
     must be **a positive odd integer** or -10 <= an integer <= -1, but a value
     of 0 <type 'int'> was specified.

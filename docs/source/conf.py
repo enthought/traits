@@ -108,8 +108,8 @@ def mock_modules():
         (mod_name, DocMock(mocked_name=mod_name)) for mod_name in MOCK_MODULES)
 
     # Report on what was mocked.
-    print 'mocking modules {0} and types {1}'.format(
-        MOCK_MODULES, [mocked[1] for mocked in MOCK_TYPES])
+    print('mocking modules {0} and types {1}'.format(
+        MOCK_MODULES, [mocked[1] for mocked in MOCK_TYPES]))
 
 mock_modules()
 

@@ -14,7 +14,7 @@ class Parent(HasTraits):
     last_name = Str
 
     def _last_name_changed(self, new):
-        print "Parent's last name changed to %s." % new
+        print("Parent's last name changed to %s." % new)
 
 
 class Child(HasTraits):
@@ -24,7 +24,7 @@ class Child(HasTraits):
     last_name = PrototypedFrom('father')
 
     def _last_name_changed(self, new):
-        print "Child's last name changed to %s." % new
+        print("Child's last name changed to %s." % new)
 
 
 #--[Example*]------------------------------------------------------------------

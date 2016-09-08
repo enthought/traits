@@ -63,8 +63,10 @@ logger = logging.getLogger( __name__ )
 #-------------------------------------------------------------------------------
 
 if six.PY2:
+    LONG_TYPE = long
     MAXINT = sys.maxint
 else:
+    LONG_TYPE = int
     MAXINT = sys.maxsize
 
 # Trait 'comparison_mode' enum values:
@@ -95,9 +97,9 @@ trait_from = None  # Patched by 'traits.py' when real 'trait_from' is defined
 def _arg_count ( func ):
     """ Returns the correct argument count for a specified function or method.
     """
-    if (type( func ) is MethodType) and (func.im_self is not None):
-        return func.func_code.co_argcount - 1
-    return func.func_code.co_argcount
+    if (type( func ) is MethodType) and (func.__self__ is not None):
+        return six.get_function_code(func).co_argcount - 1
+    return six.get_function_code(func).co_argcount
 
 #-------------------------------------------------------------------------------
 #  Property error handling functions:
@@ -746,7 +748,6 @@ class TraitRange ( TraitHandler ):
         specify whether the *low* and *high* values should be exclusive (or
         inclusive).
         """
-
         vtype = type( high )
         if (low is not None) and (vtype is not float):
             vtype = type( low )
@@ -762,13 +763,13 @@ class TraitRange ( TraitHandler ):
                 low = float( low )
             if high is not None:
                 high = float( high )
-        elif vtype is six.integer_types:
+        elif vtype is LONG_TYPE:
             self.validate   = self.long_validate
             self._type_desc = 'a long integer'
             if low is not None:
-                low = six.integer_types( low )
+                low = LONG_TYPE( low )
             if high is not None:
-                high = six.integer_types( high )
+                high = LONG_TYPE( high )
         else:
             self.validate = self.int_validate
             kind = 3
@@ -782,7 +783,7 @@ class TraitRange ( TraitHandler ):
             exclude_mask |= 1
         if exclude_high:
             exclude_mask |= 2
-        if vtype is not six.integer_types:
+        if vtype is not LONG_TYPE:
             self.fast_validate = ( kind, low, high, exclude_mask )
 
         # Assign type-corrected arguments to handler attributes

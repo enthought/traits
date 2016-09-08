@@ -766,7 +766,7 @@ class Lab(ASection):
                         del values[name]
 
                 # Execute the current lab code:
-                exec module[2:] in values, values
+                exec(module[2:] in values, values)
 
                 # fixme: Hack trying to update the Traits UI view of the dict.
                 self.values = {}
@@ -1617,7 +1617,7 @@ if __name__ == '__main__':
 
     # Validate the command line arguments:
     if len(sys.argv) > 2:
-        print Usage
+        print(Usage)
         sys.exit(1)
 
     # Determine the root path to use for the tutorial files:
@@ -1631,10 +1631,10 @@ if __name__ == '__main__':
     if tutor.root is not None:
         tutor.configure_traits()
     else:
-        print """No traits tutorial found in %s.
+        print("""No traits tutorial found in %s.
 
 Correct usage is: python tutor.py [tutorial_path]
 where: tutorial_path = Path to the root of the traits tutorial.
 
 If tutorial_path is omitted, the current directory is assumed to be the root of
-the tutorial.""" % path
+the tutorial.""" % path)

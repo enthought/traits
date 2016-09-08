@@ -205,10 +205,10 @@ for i in range(10):
     craps.rolls.append((craps.die, craps.die))
 
 # Display the results:
-print craps.rolls
+print(craps.rolls)
 
 # Try to assign an invalid dice roll:
 try:
     craps.rolls.append((0, 0))
 except TraitError:
-    print 'Assigning an invalid dice roll failed.'
+    print('Assigning an invalid dice roll failed.')

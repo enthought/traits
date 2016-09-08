@@ -276,7 +276,7 @@ william = Person(first_name='William', last_name='Adams')
 apt = Apartment(renter=william)
 
 # Verify that the object works correctly:
-print 'Renter is:', apt.renter.get_name()
+print('Renter is:', apt.renter.get_name())
 
 # Check the type of object actually assigned to 'renter':
-print apt.renter
+print(apt.renter)

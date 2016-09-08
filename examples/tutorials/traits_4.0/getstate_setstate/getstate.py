@@ -156,8 +156,8 @@ class Session(HasTraits):
 session = Session(name='session_1')
 
 # Display its contents:
-print 'Session name:', session.name
-print 'Session created:', session.created
+print('Session name:', session.name)
+print('Session created:', session.created)
 
 # # Simulate saving the session to a file/database:
 # saved_session = dumps(session)

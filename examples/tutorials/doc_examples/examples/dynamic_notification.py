@@ -30,5 +30,5 @@ class Widget(HasTraits):
 w = Widget()
 w.part1.cost = 2.25
 w.part2.cost = 5.31
-print w.cost
+print(w.cost)
 # Result: 7.56

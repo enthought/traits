@@ -10,6 +10,8 @@ import abc
 from pprint import pprint
 import time
 
+import six
+
 from traits.adaptation.adaptation_manager import AdaptationManager
 from traits.api import Adapter, HasTraits, Interface, provides
 
@@ -28,14 +30,14 @@ class Foo{i}(HasTraits):
     pass
 """
 for i in range(N_SOURCES):
-    exec create_classes_to_adapt.format(i=i)
+    exec(create_classes_to_adapt.format(i=i))
 
 # The object that we will try to adapt!
 foo = Foo1()
 
 # Create a lot of other interfaces that we will adapt to.
 for i in range(N_PROTOCOLS):
-    exec 'class I{i}(Interface): pass'.format(i=i)
+    exec('class I{i}(Interface): pass'.format(i=i))
 
 create_traits_adapter_class = """
 @provides(I{target})
@@ -46,7 +48,7 @@ class IFoo{source}ToI{target}(Adapter):
 #  Create adapters from each 'IFooX' to all of the interfaces.
 for source in range(N_SOURCES):
     for target in range(N_PROTOCOLS):
-        exec create_traits_adapter_class.format(source=source, target=target)
+        exec(create_traits_adapter_class.format(source=source, target=target))
 
 
 #### traits.adaptation with Interfaces ########################################
@@ -68,29 +70,39 @@ adaptation_manager.register_factory(
 # I.e., we're considering the worst case scenario.
 for source in range(N_SOURCES):
     for target in reversed(range(N_PROTOCOLS)):
-        exec register_ifoox_to_ix.format(source=source, target=target)
+        exec(register_ifoox_to_ix.format(source=source, target=target))
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, I0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
-print 'apptools using Interfaces: %.3f msec per iteration' % time_per_iter
+print('apptools using Interfaces: %.3f msec per iteration' % time_per_iter)
 
 
 #### traits.adaptation with ABCs ##############################################
 
 # Create some classes to adapt (using ABCs!).
 for i in range(N_SOURCES):
-    exec 'class FooABC{i}(object): __metaclass__ = abc.ABCMeta'.format(i=i)
-    exec 'class Foo{i}(object): pass'.format(i=i)
-    exec 'FooABC{i}.register(Foo{i})'.format(i=i)
+    exec(
+'''
+@six.add_metaclass(abc.ABCMeta)
+class FooABC{i}(object):
+    pass
+'''.format(i=i))
+    exec('class Foo{i}(object): pass'.format(i=i))
+    exec('FooABC{i}.register(Foo{i})'.format(i=i))
 
 # The object that we will try to adapt!
 foo = Foo0()
 
 # Create a lot of other ABCs!
 for i in range(N_PROTOCOLS):
-    exec 'class ABC{i}(object): __metaclass__ = abc.ABCMeta'.format(i=i)
+    exec(
+'''
+@six.add_metaclass(abc.ABCMeta)
+class ABC{i}(object):
+    pass
+'''.format(i=i))
 
 # Create adapters from 'FooABC' to all of the ABCs.
 create_abc_adapter_class = """
@@ -103,7 +115,7 @@ ABC{target}.register(FooABC{source}ToABC{target})
 
 for source in range(N_SOURCES):
     for target in range(N_PROTOCOLS):
-        exec create_abc_adapter_class.format(source=source, target=target)
+        exec(create_abc_adapter_class.format(source=source, target=target))
 
 # Register all of the adapters.
 adaptation_manager = AdaptationManager()
@@ -121,12 +133,12 @@ adaptation_manager.register_factory(
 # I.e., we're considering the worst case scenario.
 for source in range(N_SOURCES):
     for target in reversed(range(N_PROTOCOLS)):
-        exec register_fooxabc_to_abcx.format(source=source, target=target)
+        exec(register_fooxabc_to_abcx.format(source=source, target=target))
 
 start_time = time.time()
 for _ in range(N_ITERATIONS):
     adaptation_manager.adapt(foo, ABC0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
-print 'apptools using ABCs: %.3f msec per iteration' % time_per_iter
+print('apptools using ABCs: %.3f msec per iteration' % time_per_iter)
 
 #### EOF #######################################################################

@@ -27,5 +27,5 @@ class Apartment(HasTraits):
 
 william = Person(first_name='William', last_name='Adams')
 apt1 = Apartment(renter=william)
-print 'Renter is: ', apt1.renter.get_name()
+print('Renter is: ', apt1.renter.get_name())
 # Result: Renter is: William Adams

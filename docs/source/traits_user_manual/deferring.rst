@@ -88,7 +88,7 @@ DelegatesTo object. Consider the following example::
       File "<stdin>", line 1, in ?
       File "c:\src\trunk\enthought\traits\trait_handlers.py", line
     163, in error
-        raise TraitError, ( object, name, self.info(), value )
+        raise TraitError( object, name, self.info(), value )
     traits.trait_errors.TraitError:  The 'last_name' trait of a
     Parent instance must be a string, but a value of <__main__.Parent object at
     0x014D6D80> <class '__main__.Parent'> was specified.

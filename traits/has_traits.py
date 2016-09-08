@@ -34,6 +34,8 @@ import sys
 
 from types import FunctionType, MethodType
 
+import six
+
 from . import __version__ as TraitsVersion
 
 from .adaptation.adaptation_error import AdaptationError
@@ -203,7 +205,7 @@ else:
             result = getattr( base, method, None )
             if ((result is not None) and
                 is_unbound_method_type(result) and \
-                (getattr( result.im_func, 'on_trait_change', None ) is None)):
+                (getattr( result.__func__, 'on_trait_change', None ) is None)):
                 return result
     
         return None
@@ -391,7 +393,7 @@ def _add_event_handlers ( trait, cls, handlers ):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, basestring):
+        if isinstance(events, six.string_types):
             events = [ events ]
 
         for event in events:
@@ -493,7 +495,8 @@ class MetaHasTraitsObject ( object ):
 
         # Move all trait definitions from the class dictionary to the
         # appropriate trait class dictionaries:
-        for name, value in class_dict.items():
+        # Creates a copy because the values are changing during iteration
+        for name, value in list(six.iteritems(class_dict)):
             value = _check_trait( value )
             rc    = isinstance( value, CTrait )
 
@@ -548,7 +551,7 @@ class MetaHasTraitsObject ( object ):
                                            get_delegate_pattern( name, value ) )
                     elif value_type == 'event':
                         on_trait_change = value.on_trait_change
-                        if isinstance( on_trait_change, basestring ):
+                        if isinstance( on_trait_change, six.string_types ):
                             listeners[ name ] = ( 'event', on_trait_change )
                 else:
                     name = name[:-1]
@@ -614,12 +617,12 @@ class MetaHasTraitsObject ( object ):
             base_dict = base.__dict__
 
             # Merge listener information:
-            for name, value in base_dict.get( ListenerTraits ).items():
+            for name, value in six.iteritems(base_dict.get( ListenerTraits )):
                 if (name not in class_traits) and (name not in class_dict):
                     listeners[ name ] = value
 
             # Merge base traits:
-            for name, value in base_dict.get( BaseTraits ).items():
+            for name, value in six.iteritems(base_dict.get( BaseTraits )):
                 if name not in base_traits:
                     property_info = value.property()
                     if property_info is not None:
@@ -630,11 +633,11 @@ class MetaHasTraitsObject ( object ):
                     base_traits[ name ] = value
 
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s' trait "
+                                     "definition in a category" % name)
 
             # Merge class traits:
-            for name, value in base_dict.get( ClassTraits ).items():
+            for name, value in six.iteritems(base_dict.get( ClassTraits )):
                 if name not in class_traits:
                     property_info = value.property()
                     if property_info is not None:
@@ -647,8 +650,8 @@ class MetaHasTraitsObject ( object ):
                     class_traits[ name ] = value
 
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s' trait "
+                                     "definition in a category" % name)
 
             # Merge prefix traits:
             base_prefix_traits = base_dict.get( PrefixTraits )
@@ -657,8 +660,8 @@ class MetaHasTraitsObject ( object ):
                     prefix_list.append( name )
                     prefix_traits[ name ] = base_prefix_traits[ name ]
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s_' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s_' trait "
+                                     "definition in a category" % name)
 
             # If the base class has a 'ViewElements' object defined, add it to
             # the 'parents' list of this class's 'ViewElements':
@@ -718,7 +721,7 @@ class MetaHasTraitsObject ( object ):
             events = trait.event
             if events is not None:
 
-                if isinstance(events, basestring):
+                if isinstance(events, six.string_types):
                     events = [ events ]
 
                 for event in events:
@@ -817,9 +820,9 @@ def _trait_monitor_index ( cls, handler ):
         if type_handler is type( _handler ):
             if (((type_handler is MethodType)  or
                 'cython_function_or_method' in str(type_handler)) and \
-                (handler.im_self is not None)):
+                (handler.__self__ is not None)):
                 if ((handler.__name__ == _handler.__name__) and
-                    (handler.im_self is _handler.im_self)):
+                    (handler.__self__ is _handler.__self__)):
                    return i
 
             elif handler == _handler:
@@ -984,7 +987,7 @@ def weak_arg(arg):
             if arg is not None:
                 function(arg, *args)
         # Return the correct wrapper depending on the arg count
-        args = function.func_code.co_argcount-1
+        args = six.get_function_code(function).co_argcount-1
         if args == 0:
             return wrapper0
         elif args == 1:
@@ -1004,6 +1007,7 @@ def weak_arg(arg):
 #  'HasTraits' class:
 #-------------------------------------------------------------------------------
 
+@six.add_metaclass(MetaHasTraits)
 class HasTraits ( CHasTraits ):
     """ Enables any Python class derived from it to have trait attributes.
 
@@ -1029,7 +1033,6 @@ class HasTraits ( CHasTraits ):
     The wildcard attribute *temp_lunch* and the dynamically-added trait
     attribute *favorite_sport* are not listed.
     """
-    __metaclass__ = MetaHasTraits
 
     #-- Trait Prefix Rules -----------------------------------------------------
 
@@ -1050,7 +1053,7 @@ class HasTraits ( CHasTraits ):
     #-- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event( basestring )
+    trait_added = Event( six.string_types )
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -1128,7 +1131,7 @@ class HasTraits ( CHasTraits ):
 
         # Make sure a trait argument was specified:
         if len( trait ) == 0:
-            raise ValueError, 'No trait definition was specified.'
+            raise ValueError('No trait definition was specified.')
 
         # Make sure only valid traits get added:
         if len( trait ) > 1:
@@ -1229,7 +1232,7 @@ class HasTraits ( CHasTraits ):
 
         # Copy all methods that are not already in the class from the category:
         for subcls in category.__mro__:
-            for name, value in subcls.__dict__.items():
+            for name, value in six.iteritems(subcls.__dict__):
                 if not hasattr( cls, name ):
                     setattr( cls, name, value )
 
@@ -1246,7 +1249,7 @@ class HasTraits ( CHasTraits ):
 
             # Merge the 'base_traits':
             subclass_traits = getattr( subclass, BaseTraits )
-            for name, value in base_traits.items():
+            for name, value in six.iteritems(base_traits):
                 subclass_traits.setdefault( name, value )
 
             # Merge the 'class_traits':
@@ -1308,14 +1311,14 @@ class HasTraits ( CHasTraits ):
         try:
             if issubclass( klass, TraitChangeNotifyWrapper ):
                 if (not override) and (name in cls.wrappers):
-                    raise TraitError, ("A dispatch handler called '%s' has "
-                                       "already been defined." % name)
+                    raise TraitError("A dispatch handler called '%s' has "
+                                     "already been defined." % name)
                 cls.wrappers[ name ] = klass
                 return
         except TypeError:
             pass
-        raise TraitError, ('%s is not a subclass of TraitChangeNotifyWrapper.' %
-                           klass)
+        raise TraitError('%s is not a subclass of TraitChangeNotifyWrapper.' %
+                         klass)
 
     set_trait_dispatch_handler = classmethod( set_trait_dispatch_handler )
 
@@ -2239,7 +2242,7 @@ class HasTraits ( CHasTraits ):
             names = self.trait_names( type = not_event )
 
         if len( names ) == 0:
-            print ''
+            print('')
             return
 
         result = []
@@ -2262,7 +2265,7 @@ class HasTraits ( CHasTraits ):
             else:
                 result.append( '%s %s' % ( lname, value ) )
 
-        print '\n'.join( result )
+        print('\n'.join( result ))
 
     #---------------------------------------------------------------------------
     #  Add/Remove a handler for a specified trait being changed:
@@ -2560,7 +2563,7 @@ class HasTraits ( CHasTraits ):
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
-        if ((isinstance( name, basestring ) and
+        if ((isinstance( name, six.string_types ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
             self._on_trait_change( handler, name, remove, dispatch, priority, target )
 
@@ -2776,7 +2779,7 @@ class HasTraits ( CHasTraits ):
 
         # Make sure a trait argument was specified:
         if len( trait ) == 0:
-            raise ValueError, 'No trait definition was specified.'
+            raise ValueError('No trait definition was specified.')
 
         # Make sure only valid traits get added:
         if len( trait ) > 1:
@@ -3148,8 +3151,8 @@ class HasTraits ( CHasTraits ):
 
             # Otherwise, it is a 'getattr' request, so indicate that no such
             # attribute exists:
-            raise AttributeError, "'%s' object has no attribute '%s'" % (
-                                  self.__class__.__name__, name )
+            raise AttributeError("'%s' object has no attribute '%s'" % (
+                                  self.__class__.__name__, name ))
 
         # Handle the special case of 'delegated' traits:
         if name[-1:] == '_':
@@ -3188,9 +3191,9 @@ class HasTraits ( CHasTraits ):
 
         # There should ALWAYS be a prefix match in the trait classes, since ''
         # is at the end of the list, so we should never get here:
-        raise SystemError, ("Trait class look-up failed for attribute '%s' "
-                            "for an object of type '%s'") % (
-                            name, self.__class__.__name__ )
+        raise SystemError("Trait class look-up failed for attribute '%s' "
+                          "for an object of type '%s'" % (
+                          name, self.__class__.__name__ ))
 
     #---------------------------------------------------------------------------
     #  Adds/Removes (Java-style) event listeners to an object:
@@ -3479,14 +3482,13 @@ try:
         """
         pass
 
-
+    @six.add_metaclass(ABCMetaHasTraits)
     class ABCHasTraits(HasTraits):
         """ A HasTraits subclass which enables the features of Abstract
         Base Classes (ABC). See the 'abc' module in the standard library
         for more information.
 
         """
-        __metaclass__ = ABCMetaHasTraits
 
 
     class ABCHasStrictTraits(ABCHasTraits):
@@ -3576,12 +3578,11 @@ class MetaInterface ( ABCMetaHasTraits ):
 #-------------------------------------------------------------------------------
 #  'Interface' class:
 #-------------------------------------------------------------------------------
-
+@six.add_metaclass(MetaInterface)
 class Interface ( HasTraits ):
     """ The base class for all interfaces.
     """
 
-    __metaclass__ = MetaInterface
 
 #-------------------------------------------------------------------------------
 #  Class decorator to declare the protocols that a class provides.

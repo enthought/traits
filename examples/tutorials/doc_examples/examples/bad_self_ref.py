@@ -14,5 +14,5 @@ try:
         # This won't work.
         # 'Employee' is not defined until the class definition is complete:
         manager = Instance(Employee)
-except NameError, excp:
-    print excp
+except NameError as excp:
+    print(excp)

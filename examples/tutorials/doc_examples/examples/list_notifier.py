@@ -19,15 +19,15 @@ class Department(HasTraits):
 
 #--[Example*]------------------------------------------------------------------
 def a_handler():
-    print "A handler"
+    print("A handler")
 
 
 def b_handler():
-    print "B handler"
+    print("B handler")
 
 
 def c_handler():
-    print "C handler"
+    print("C handler")
 
 fred = Employee()
 mary = Employee()
@@ -45,7 +45,7 @@ dept.on_trait_change(b_handler, 'employees_items')
 # c_handler is called if 'employees' or its membership change:
 dept.on_trait_change(c_handler, '[employees]')
 
-print "Changing list items"
+print("Changing list items")
 dept.employees[1] = donna     # Calls B and C
-print "Replacing list"
+print("Replacing list")
 dept.employees = [donna]      # Calls A and C

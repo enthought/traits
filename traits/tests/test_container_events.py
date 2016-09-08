@@ -57,7 +57,7 @@ class Callback:
 
     def __call__(self, event):
         if event.added != self.added:
-            print "\n\n******Error\nevent.added:", event.added
+            print("\n\n******Error\nevent.added:", event.added)
         else:
             self.obj.assertEqual(event.added, self.added)
         self.obj.assertEqual(event.changed, self.changed)
