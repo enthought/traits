@@ -349,15 +349,20 @@ class BytesTest(StringTest):
 class CoercibleBytesTrait(HasTraits):
     value = CBytes(b'bytes')
 
+version_dependent = [
+    -10, 10.1, [b''], [b'bytes'], [-10], (-10,), {-10: 'foo'}, {-10},
+    [256], (256,), {256: 'foo'}, {256}, {b'ten': b'10'}, (b'',), None,
+]
 
 class CoercibleBytesTest(StringTest):
 
     obj = CoercibleBytesTrait()
 
     _default_value = b'bytes'
-    _good_values = [b'', b'10', b'-10', 10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
-        {b'ten': b'10'}, (b'',), None, True]
-    _bad_values = []
+    _good_values = [b'', b'10', b'-10', '', 'string', 10, 10L,
+        u'unicode', u'', [10], (10), {10}, {10: 'foo'}, True] + (
+        version_dependent if sys.version_info[0] == 2 else [])
+    _bad_values = (version_dependent if sys.version_info[0] == 3 else [])
 
     def coerce(self, value):
         return bytes(value)
