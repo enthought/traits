@@ -719,7 +719,7 @@ class BaseCBytes(BaseBytes):
             Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return unicode(value)
+            return bytes(value)
         except:
             self.error(object, name, value)
 
@@ -731,7 +731,7 @@ class CBytes(BaseCBytes):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 12, unicode )
+    fast_validate = (12, bytes)
 
 #-------------------------------------------------------------------------------
 #  'BaseCBool' and 'CBool' traits:
