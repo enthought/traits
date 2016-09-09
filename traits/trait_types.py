@@ -445,6 +445,9 @@ class BaseBytes(TraitType):
     #: A description of the type of value this trait accepts:
     info_text = 'a bytes string'
 
+    #: An encoding to use with TraitsUI editors
+    encoding = None
+
     def validate(self, object, name, value):
         """ Validates that a specified value is valid for this trait.
 
@@ -458,13 +461,13 @@ class BaseBytes(TraitType):
     def create_editor(self):
         """ Returns the default traits UI editor for this type of trait.
         """
-        from .traits import hex_editor
+        from .traits import bytes_editor
         auto_set = self.auto_set
         if auto_set is None:
             auto_set = True
         enter_set = self.enter_set or False
 
-        return hex_editor(auto_set, enter_set)
+        return bytes_editor(auto_set, enter_set, self.encoding)
 
 
 class Bytes(BaseBytes):

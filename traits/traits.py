@@ -87,7 +87,7 @@ KindMap = {
 
 PasswordEditor      = None
 MultilineTextEditor = None
-HexEditor           = None
+BytesEditors        = {}
 SourceCodeEditor    = None
 HTMLTextEditor      = None
 PythonShellEditor   = None
@@ -120,40 +120,37 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
 
     return MultilineTextEditor
 
-def hex_editor(auto_set=True, enter_set=False):
-    """ Factory function that returns a text editor for multi-line strings.
+def bytes_editor(auto_set=True, enter_set=False, encoding=None):
+    """ Factory function that returns a text editor for bytes.
     """
-    global HexEditor, format_bytes
 
-    if HexEditor is None:
-        try:
-            from traitsui.api import HexEditor
-        except ImportError:
-            from traitsui.api import TextEditor
+    global BytesEditors
 
-            if sys.version_info[0] == 2:
-                byte_to_hex = lambda b: "{:x}".format(ord(b))
-                hex_to_byte = lambda h: chr(int(h, base=16))
-            else:
-                byte_to_hex = lambda b: "{:x}".format(b)
-                hex_to_byte = lambda h: int(h, base=16)
+    if encoding is not None:
+        if isinstance(encoding, str):
+            import codecs
+            encoding = codecs.lookup(encoding)
 
-            def format_bytes(value):
-                """ Return bytes as hex values separated by spaces """
-                return ' '.join(byte_to_hex(b) for b in value)
+    if (auto_set, enter_set, encoding) not in BytesEditors:
+        from traitsui.api import TextEditor
 
-            def evaluate_bytes(text):
-                return b''.join(hex_to_byte(h) for h in text.split())
+        if encoding is None:
+            # py3-compatible bytes <-> hex unicode string
+            format = lambda b: b.encode('hex').decode('ascii')
+            evaluate = lambda s: s.encode('ascii').decode('hex')
+        else:
+            format = encoding.decode
+            evaluate = encoding.encode
 
-            HexEditor = TextEditor(
-                multi_line=True,
-                format_func=format_bytes,
-                evaluate=evaluate_bytes,
-                auto_set=auto_set,
-                enter_set=enter_set
-            )
+        BytesEditors[(auto_set, enter_set, encoding)] = TextEditor(
+            multi_line=True,
+            format_func=format,
+            evaluate=evaluate,
+            auto_set=auto_set,
+            enter_set=enter_set
+        )
 
-    return HexEditor
+    return BytesEditors[(auto_set, enter_set, encoding)]
 
 def code_editor ( ):
     """ Factory function that returns an editor that treats a multi-line string
