@@ -87,6 +87,7 @@ KindMap = {
 
 PasswordEditor      = None
 MultilineTextEditor = None
+HexEditor           = None
 SourceCodeEditor    = None
 HTMLTextEditor      = None
 PythonShellEditor   = None
@@ -118,6 +119,41 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
                                           enter_set  = enter_set )
 
     return MultilineTextEditor
+
+def hex_editor(auto_set=True, enter_set=False):
+    """ Factory function that returns a text editor for multi-line strings.
+    """
+    global HexEditor, format_bytes
+
+    if HexEditor is None:
+        try:
+            from traitsui.api import HexEditor
+        except ImportError:
+            from traitsui.api import TextEditor
+
+            if sys.version_info[0] == 2:
+                byte_to_hex = lambda b: "{:x}".format(ord(b))
+                hex_to_byte = lambda h: chr(int(h, base=16))
+            else:
+                byte_to_hex = lambda b: "{:x}".format(b)
+                hex_to_byte = lambda h: int(h, base=16)
+
+            def format_bytes(value):
+                """ Return bytes as hex values separated by spaces """
+                return ' '.join(byte_to_hex(b) for b in value)
+
+            def evaluate_bytes(text):
+                return b''.join(hex_to_byte(h) for h in text.split())
+
+            HexEditor = TextEditor(
+                multi_line=True,
+                format_func=format_bytes,
+                evaluate=evaluate_bytes,
+                auto_set=auto_set,
+                enter_set=enter_set
+            )
+
+    return HexEditor
 
 def code_editor ( ):
     """ Factory function that returns an editor that treats a multi-line string
@@ -1033,10 +1069,10 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     attribute this trait is assigned to. For example::
 
         class Bar(HasTraits):
-            
+
             # A float traits Property that should be always positive.
             foo = Property(Float)
-            
+
             # Shadow trait attribute
             _foo = Float
 
@@ -1249,4 +1285,3 @@ def Font ( *args, **metadata ):
     return FontTrait( *args, **metadata )
 
 Font = TraitFactory( Font )
-
