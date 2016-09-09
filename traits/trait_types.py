@@ -709,8 +709,8 @@ class CUnicode ( BaseCUnicode ):
 #-------------------------------------------------------------------------------
 
 class BaseCBytes(BaseBytes):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode.
+    """ Defines a trait whose value must be a Python bytes object and which
+        supports coercions of non-bytes values to bytes.
     """
 
     def validate(self, object, name, value):
