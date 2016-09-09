@@ -37,8 +37,8 @@ from .traits import (CTrait, Trait, Property, TraitFactory, Default, Color,
 
 from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
         Unicode, Bytes, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode,
-        CBool, String, Regex, Code, HTML, Password, Callable, This, self,
-        Function, Method, Module, Python, ReadOnly, Disallow, Constant,
+        CBytes, CBool, String, Regex, Code, HTML, Password, Callable, This,
+        self, Function, Method, Module, Python, ReadOnly, Disallow, Constant,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
@@ -58,9 +58,9 @@ except ImportError:
     pass
 
 from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
-        BaseUnicode, BaseBool, BaseCInt, BaseCLong, BaseCFloat, BaseCComplex,
-        BaseCStr, BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange,
-        BaseEnum, BaseTuple, BaseInstance)
+        BaseUnicode, BaseBytes, BaseBool, BaseCInt, BaseCLong, BaseCFloat,
+        BaseCComplex, BaseCStr, BaseCUnicode, BaseCBool, BaseFile,
+        BaseDirectory, BaseRange, BaseEnum, BaseTuple, BaseInstance)
 
 from .trait_types import UUID, ValidatedTuple
 

@@ -19,10 +19,11 @@ import sys
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (Any, Bytes, CFloat, CInt, CLong, Delegate, Float, HasTraits,
-                   Instance, Int, List, Long, Str, Trait, TraitError,
-                   TraitList, TraitPrefixList, TraitPrefixMap, TraitRange,
-                   Tuple, pop_exception_handler, push_exception_handler)
+from ..api import (Any, Bytes, CBytes, CFloat, CInt, CLong, Delegate, Float,
+                   HasTraits, Instance, Int, List, Long, Str, Trait,
+                   TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
+                   TraitRange, Tuple, pop_exception_handler,
+                   push_exception_handler)
 
 #  Base unit test classes:
 
@@ -340,6 +341,23 @@ class BytesTest(StringTest):
     _bad_values = [10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
         {b'ten': b'10'}, (b'',), None, True] + (version_dependent
         if sys.version_info[0] == 3 else [])
+
+    def coerce(self, value):
+        return bytes(value)
+
+
+class CoercibleBytesTrait(HasTraits):
+    value = CBytes(b'bytes')
+
+
+class CoercibleBytesTest(StringTest):
+
+    obj = CoercibleBytesTrait()
+
+    _default_value = b'bytes'
+    _good_values = [b'', b'10', b'-10', 10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
+        {b'ten': b'10'}, (b'',), None, True]
+    _bad_values = []
 
     def coerce(self, value):
         return bytes(value)
