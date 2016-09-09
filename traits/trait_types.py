@@ -725,8 +725,8 @@ class BaseCBytes(BaseBytes):
 
 
 class CBytes(BaseCBytes):
-    """ Defines a trait whose value must be a Python unicode string and which
-        supports coercions of non-unicode values to unicode using a C-level
+    """ Defines a trait whose value must be a Python bytes and which
+        supports coercions of non-bytes values bytes using a C-level
         fast validator.
     """
 
