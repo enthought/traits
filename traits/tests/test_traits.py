@@ -351,7 +351,8 @@ class CoercibleBytesTrait(HasTraits):
 
 version_dependent = [
     '', 'string', u'unicode', u'', -10, 10.1, [b''], [b'bytes'],
-    [-10], (-10,), {-10: 'foo'}, {-10}, [256], (256,), {256: 'foo'}, {256},
+    [-10], (-10,), {-10: 'foo'}, set([-10]),
+    [256], (256,), {256: 'foo'}, set([256]),
     {b'ten': b'10'}, (b'',), None,
 ]
 
@@ -360,7 +361,8 @@ class CoercibleBytesTest(StringTest):
     obj = CoercibleBytesTrait()
 
     _default_value = b'bytes'
-    _good_values = [b'', b'10', b'-10', 10, 10L, [10], (10,), {10}, {10: 'foo'},
+    _good_values = [
+        b'', b'10', b'-10', 10, 10L, [10], (10,), set([10]), {10: 'foo'},
         True] + (version_dependent if sys.version_info[0] == 2 else [])
     _bad_values = (version_dependent if sys.version_info[0] == 3 else [])
 
