@@ -631,7 +631,7 @@ class NewTraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
         Thread( target = handler, args = args ).start()
 
 #-------------------------------------------------------------------------------
-#  'NewTraitChangeNotifyWrapper' class:
+#  'GEventTraitChangeNotifyWrapper' class:
 #-------------------------------------------------------------------------------
 
 class GEventTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
@@ -639,7 +639,7 @@ class GEventTraitChangeNotifyWrapper(TraitChangeNotifyWrapper):
 
     This class is in charge to dispatch trait change events to a dynamic
     listener, typically created using the `on_trait_change` method and the
-    `dispatch` parameter set to 'new'.
+    `dispatch` parameter set to 'gevent'.
 
     """
 
