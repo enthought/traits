@@ -32,6 +32,7 @@ from os import getcwd
 from os.path import dirname, exists, join
 
 from . import _py2to3
+from .etsconfig.api import ETSConfig
 
 # backwards compatibility: trait_base used to provide a patched enumerate
 enumerate = enumerate
@@ -39,155 +40,6 @@ enumerate = enumerate
 # Set the Python version being used:
 vi = sys.version_info
 python_version = vi[0] + (float( vi[1] ) / 10.0)
-
-try:
-    from traits.etsconfig.api import ETSConfig
-except:
-    # If the ETSConfig package is not available, fake it:
-    class ETSConfig ( object ):
-
-        #-----------------------------------------------------------------------
-        #  'object' interface:
-        #-----------------------------------------------------------------------
-
-        def __init__ ( self ):
-            """ Constructor.
-
-                Note that this constructor can only ever be called from within
-                this module, since we don't expose the class.
-            """
-            # Shadow attributes for properties:
-            self._application_data = None
-            self._toolkit          = None
-
-            return
-
-        #-----------------------------------------------------------------------
-        #  'ETSConfig' interface:
-        #-----------------------------------------------------------------------
-
-        #-- Property Implementations -------------------------------------------
-
-        def _get_application_data ( self ):
-            """ Property getter.
-
-                This is a directory that applications and packages can safely
-                write non-user accessible data to i.e. configuration
-                information, preferences etc.
-
-                Do not put anything in here that the user might want to navigate
-                to (e.g. projects, user data files, etc).
-
-                The actual location differs between operating systems.
-            """
-            if self._application_data is None:
-                self._application_data = self._initialize_application_data()
-
-            return self._application_data
-
-        def _set_application_data ( self, application_data ):
-            """ Property setter.
-            """
-            self._application_data = application_data
-
-        application_data = property( _get_application_data,
-                                     _set_application_data )
-
-        def _get_toolkit ( self ):
-            """
-            Property getter for the GUI toolkit.  The value returned is, in
-            order of preference: the value set by the application; the value
-            passed on the command line using the '-toolkit' option; the value
-            specified by the 'ETS_TOOLKIT' environment variable; otherwise the
-            empty string.
-            """
-            if self._toolkit is None:
-                self._toolkit = self._initialize_toolkit()
-
-            return self._toolkit
-
-        def _set_toolkit ( self, toolkit ):
-            """
-            Property setter for the GUI toolkit.  The toolkit can be set more
-            than once, but only if it is the same one each time.  An application
-            that is written for a particular toolkit can explicitly set it
-            before any other module that gets the value is imported.
-
-            """
-            if self._toolkit and (self._toolkit != toolkit):
-                raise ValueError( 'Cannot set toolkit to %s because it has '
-                         'already been set to %s' % ( toolkit, self._toolkit ) )
-
-            self._toolkit = toolkit
-
-            return
-
-        toolkit = property( _get_toolkit, _set_toolkit )
-
-        #-- Private Methods ----------------------------------------------------
-
-        def _initialize_application_data ( self ):
-            """ Initializes the (default) application data directory.
-            """
-            if sys.platform == 'win32':
-                environment_variable = 'APPDATA'
-                directory_name       = 'Enthought'
-
-            else:
-                environment_variable = 'HOME'
-                directory_name       = '.enthought'
-
-            # Lookup the environment variable:
-            parent_directory = os.environ.get( environment_variable, None )
-            if parent_directory is None:
-                raise ValueError( 'Environment variable "%s" not set' %
-                                  environment_variable )
-
-            application_data = os.path.join( parent_directory, directory_name )
-
-            # If a file already exists with this name then make sure that it is
-            # a directory!
-            if os.path.exists( application_data ):
-                if not os.path.isdir( application_data ):
-                    raise ValueError( 'File "%s" already exists' %
-                                      application_data )
-
-            # Otherwise, create the directory:
-            else:
-                os.makedirs( application_data )
-
-            return application_data
-
-        def _initialize_toolkit ( self ):
-            """ Initializes the toolkit.
-            """
-            # We handle the command line option even though it doesn't have the
-            # highest precedence because we always want to remove it from the
-            # command line:
-            if '-toolkit' in sys.argv:
-                opt_idx = sys.argv.index( '-toolkit' )
-
-                try:
-                    opt_toolkit = sys.argv[ opt_idx + 1 ]
-                except IndexError:
-                    raise ValueError( 'The -toolkit command line argument must '
-                                      'be followed by a toolkit name' )
-
-                # Remove the option:
-                del sys.argv[ opt_idx: opt_idx + 1 ]
-            else:
-                opt_toolkit = None
-
-            if self._toolkit is not None:
-                toolkit = self._toolkit
-            elif opt_toolkit is not None:
-                toolkit = opt_toolkit
-            else:
-                toolkit = os.environ.get( 'ETS_TOOLKIT', '' )
-
-            return toolkit
-
-    ETSConfig = ETSConfig()
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -441,19 +293,40 @@ def get_resource_path ( level = 2 ):
     """
     module = sys._getframe( level ).f_globals.get( '__name__', '__main__' )
 
+    path = None
     if module != '__main__':
         # Return the path to the module:
         try:
-            return dirname( getattr( sys.modules.get( module ), '__file__' ) )
+            path = dirname( getattr( sys.modules.get( module ), '__file__' ) )
         except:
             # Apparently 'module' is not a registered module...treat it like
             # '__main__':
             pass
 
-    # '__main__' is not a real module, so we need a work around:
-    for path in [ dirname( sys.argv[0] ), getcwd() ]:
-        if exists( path ):
-            break
+    if path is None:
+        # '__main__' is not a real module, so we need a work around:
+        for path in [ dirname( sys.argv[0] ), getcwd() ]:
+            if exists( path ):
+                break
+
+    # Handle application bundlers.  Since the python source files may be placed
+    # in a zip file and therefore won't be directly accessable using standard
+    # open/read commands, the app bundlers will look for resources (i.e.  data
+    # files, images, etc.) in specific locations.  For py2app, this is in the
+    # [myapp].app/Contents/Resources directory.  For py2exe, this is the same
+    # directory as the [myapp].exe executable file generated by py2exe.
+    frozen = getattr(sys, 'frozen', False)
+    if frozen:
+        if frozen == 'macosx_app':
+            root = os.environ['RESOURCEPATH']
+        elif frozen in ('dll', 'windows_exe', 'console_exe'):
+            root = os.path.dirname(sys.executable)
+        else:
+            # Unknown app bundler, but try anyway
+            root = os.path.dirname(sys.executable)
+        if ".zip/" in path:
+            zippath, image_path = path.split(".zip/")
+            path = os.path.join(root, image_path)
 
     return path
 

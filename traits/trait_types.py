@@ -86,7 +86,9 @@ try:
     float_fast_validate   = ( 11, float, floating, None, int, long, integer )
     complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
-    bool_fast_validate    = ( 11, bool, bool_ )
+    bool_fast_validate    = ( 11, bool, None, bool_ )
+    # Tuple or single type suitable for an isinstance check.
+    _BOOL_TYPES = (bool, bool_)
 except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate     = ( 11, int )
@@ -94,6 +96,8 @@ except ImportError:
     float_fast_validate   = ( 11, float,   None, int, long )
     complex_fast_validate = ( 11, complex, None, float, int )
     bool_fast_validate    = ( 11, bool )
+    # Tuple or single type suitable for an isinstance check.
+    _BOOL_TYPES = bool
 
 #-------------------------------------------------------------------------------
 #  Returns a default text editor:
@@ -448,8 +452,8 @@ class BaseBool ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, bool ):
-            return value
+        if isinstance( value, _BOOL_TYPES ):
+            return bool(value)
 
         self.error( object, name, value )
 
