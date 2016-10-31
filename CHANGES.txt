@@ -26,6 +26,8 @@ Changes
 * Removed redundant, internal ``ETSConfig`` from Traits codebase. (#327)
 * Better error reporting for failed attribute access. (#243)
 * Removed buggy ``-toolkit`` commandline option ``ETSConfig``. (#326)
+* Removed buggy ``*names`` positional arguments from ``on_trait_change``
+  decorator in improved argument passing (#207).
 * Allow ``Float`` and ``BaseFloat`` traits to accept Python longs. (#272)
 * Clean-up and fixes to example code. (#126)
 * Remove outdated ``ImportSpy`` and ``ImportManager`` utilities. (#188)
@@ -34,8 +36,6 @@ Changes
   the ``logging`` machinery.  It no longer tries to remember when
   a warning has been previously issued. (#220)
 * Deprecated ``HasTraits.get()`` and ``HasTraits.set()`` (#190).
-* Removed buggy ``*names`` positional arguments from ``on_trait_change``
-  decorator in improved argument passing (#207).
 * The default ``View`` shows all (non-event) traits whose ``visible`` property
   is not ``False``. Private traits are set ``visible=False`` by default. (#234)
 
