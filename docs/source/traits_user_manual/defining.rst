@@ -133,7 +133,7 @@ in the following table.
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
 .. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
 .. index:: floating point number type, Long trait, CLong trait, Str trait
-.. index:: CStr trait, Unicode; trait, CUnicode trait
+.. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
 
@@ -149,6 +149,7 @@ Int            CInt          Plain integer          0
 Long           CLong         Long integer           0L
 Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
+Bytes          CBytes        Bytes                  b''
 ============== ============= ====================== ======================
 
 .. index::
@@ -202,6 +203,7 @@ Python built-in functions for type conversion:
 * int()
 * str()
 * unicode()
+* bytes()
 
 .. index::
    single: examples; coercing vs. casting
