@@ -9,6 +9,7 @@ bugfixes and small improvements to the code.
 
 Highlights of this release include:
 
+* support for Python 3.4 and 3.5.
 * new Bytes and ValidatedTuple traits.
 * a new ArrayOrNone trait which correctly handles None comparisons with Numpy
   arrays.
