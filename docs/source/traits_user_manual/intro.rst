@@ -5,11 +5,10 @@ The Traits package for the Python language allows Python programmers to use
 a special kind of type definition called a trait. This document introduces the
 concepts behind, and usage of, the Traits package.
 
-For more information on the Traits package, refer to the `Traits web page
-<http://code.enthought.com/projects/traits>`_. This page contains links to
-downloadable packages, the source code repository, and the Traits development
-website. Additional documentation for the Traits package is available from
-the Traits web page, including:
+For more information on the Traits package, refer to the `Traits GitHub
+repository <http://github.com/enthought/traits>`_. Additional documentation
+for the Traits package is available,
+including:
 
 * *Traits API Reference*
 * `TraitsUI User Manual
@@ -182,4 +181,3 @@ more work on the part of the programmer.
        individually, or view them in a tutorial program by running:
 
        python <Traits dir>/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples
-
