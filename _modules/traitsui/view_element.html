@@ -1,0 +1,347 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traitsui.view_element &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for traitsui.view_element</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: David C. Morrill</span>
+<span class="c1">#  Date:   10/18/2004</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines the abstract ViewElement class that all trait view template items</span>
+<span class="sd">    (i.e., View, Group, Item, Include) derive from.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Trait</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">import</span> <span class="nn">traits._py2to3</span> <span class="kn">as</span> <span class="nn">_py2to3</span>
+
+<span class="kn">from</span> <span class="nn">.ui_traits</span> <span class="kn">import</span> <span class="p">(</span><span class="n">ATheme</span><span class="p">,</span> <span class="n">AnObject</span><span class="p">,</span> <span class="n">DockStyle</span><span class="p">,</span> <span class="n">EditorStyle</span><span class="p">,</span> <span class="n">ExportType</span><span class="p">,</span>
+    <span class="n">HelpId</span><span class="p">,</span> <span class="n">Image</span><span class="p">)</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Constants:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="n">label_pat</span>  <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span> <span class="s2">r&quot;^(.*)\[(.*)\](.*)$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span> <span class="p">)</span>
+<span class="n">label_pat2</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span> <span class="s2">r&quot;^(.*){(.*)}(.*)$&quot;</span><span class="p">,</span>   <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span> <span class="p">)</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ViewElement&#39; class (abstract):</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ViewElement"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.ViewElement">[docs]</a><span class="k">class</span> <span class="nc">ViewElement</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An element of a view.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Replaces any items which have an &#39;id&#39; with an Include object with the</span>
+    <span class="c1">#  same &#39;id&#39;, and puts the object with the &#39;id&#39; into the specified</span>
+    <span class="c1">#  ViewElements object:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ViewElement.replace_include"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.ViewElement.replace_include">[docs]</a>    <span class="k">def</span> <span class="nf">replace_include</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Searches the current object&#39;s **content** attribute for objects that</span>
+<span class="sd">        have an **id** attribute, and replaces each one with an Include object</span>
+<span class="sd">        with the same **id** value, and puts the replaced object into the</span>
+<span class="sd">        specified ViewElements object.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        view_elements : ViewElements object</span>
+<span class="sd">            Object containing Group, Item, and Include objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span> <span class="c1"># Normally overridden in a subclass</span></div>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Returns whether or not the object is replacable by an Include object:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ViewElement.is_includable"><a class="viewcode-back" href="../../traits_api_reference/has_traits.html#traits.has_traits.ViewElement.is_includable">[docs]</a>    <span class="k">def</span> <span class="nf">is_includable</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns whether the object is replacable by an Include object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">False</span> <span class="c1"># Normally overridden in a subclass</span></div></div>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;DefaultViewElement&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="k">class</span> <span class="nc">DefaultViewElement</span> <span class="p">(</span> <span class="n">ViewElement</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A view element that can be used as a default value for traits whose</span>
+<span class="sd">        value is a view element.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Trait definitions:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="c1"># The default context object to edit:</span>
+    <span class="nb">object</span> <span class="o">=</span> <span class="n">AnObject</span>
+
+    <span class="c1"># The default editor style to use:</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="n">EditorStyle</span>
+
+    <span class="c1"># The default dock style to use:</span>
+    <span class="n">dock</span> <span class="o">=</span> <span class="n">DockStyle</span>
+
+    <span class="c1"># The default notebook tab image to use:</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span>
+
+    <span class="c1"># The category of elements dragged out of the view:</span>
+    <span class="n">export</span> <span class="o">=</span> <span class="n">ExportType</span>
+
+    <span class="c1"># Should labels be added to items in a group?</span>
+    <span class="n">show_labels</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span> <span class="bp">True</span> <span class="p">)</span>
+
+    <span class="c1"># The default theme to use for a contained item:</span>
+    <span class="n">item_theme</span> <span class="o">=</span> <span class="n">ATheme</span>
+
+    <span class="c1"># The default theme to use for a contained item&#39;s label:</span>
+    <span class="n">label_theme</span> <span class="o">=</span> <span class="n">ATheme</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Trait definitions:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="c1"># The container trait used by ViewSubElements:</span>
+<span class="n">Container</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span> <span class="n">DefaultViewElement</span><span class="p">(),</span> <span class="n">ViewElement</span> <span class="p">)</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ViewSubElement&#39; class (abstract):</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="k">class</span> <span class="nc">ViewSubElement</span> <span class="p">(</span> <span class="n">ViewElement</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Abstract class representing elements that can be contained in a view.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Trait definitions:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="c1"># The object this ViewSubElement is contained in; must be a ViewElement.</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="n">Container</span>
+
+    <span class="c1"># External help context identifier:</span>
+    <span class="n">help_id</span> <span class="o">=</span> <span class="n">HelpId</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Splits a string at a specified character:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_split</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">char</span><span class="p">,</span> <span class="n">finder</span><span class="p">,</span> <span class="n">assign</span><span class="p">,</span> <span class="n">result</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Splits a string at a specified character.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">finder</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">char</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="n">items</span> <span class="o">=</span> <span class="p">(</span> <span class="n">value</span><span class="p">[:</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">value</span><span class="p">[</span><span class="n">col</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span><span class="p">[</span> <span class="n">assign</span> <span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span> <span class="n">assign</span> <span class="p">]</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">items</span><span class="p">[</span> <span class="n">result</span> <span class="p">]</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Sets an object trait if a specified option string is found:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_option</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets a object trait if a specified option string is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">find</span><span class="p">(</span> <span class="n">option</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span> <span class="p">:</span> <span class="n">col</span> <span class="p">]</span> <span class="o">+</span> <span class="n">string</span><span class="p">[</span> <span class="n">col</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span> <span class="n">option</span> <span class="p">):</span> <span class="p">]</span>
+            <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">string</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Parses any of the one character forms of the &#39;style&#39; trait:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_parse_style</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Parses any of the one-character forms of the **style** trait.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;simple&#39;</span> <span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;@&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;custom&#39;</span> <span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span> <span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;~&#39;</span><span class="p">,</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="s1">&#39;readonly&#39;</span> <span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split</span><span class="p">(</span> <span class="s1">&#39;style&#39;</span><span class="p">,</span>  <span class="n">value</span><span class="p">,</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">str_rfind</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Parses a &#39;[label]&#39; value from the string definition:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_parse_label</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Parses a &#39;[label]&#39; value from the string definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">label_pat</span><span class="o">.</span><span class="n">match</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parsed_label</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">label_pat2</span><span class="o">.</span><span class="n">match</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span>
+
+        <span class="n">empty</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span> <span class="mi">2</span> <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">empty</span>      <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">value</span>      <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span> <span class="mi">3</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">empty</span> <span class="p">)</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Handles a label being found in the string definition:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_parsed_label</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles a label being found in the string definition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Returns a &#39;pretty print&#39; version of a specified trait value:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_repr_value</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ignore</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a &quot;pretty print&quot; version of a specified Item trait value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">ignore</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">suffix</span> <span class="p">)</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Returns a &#39;pretty print&#39; version of a list of traits:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_repr_options</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a &#39;pretty print&#39; version of a list of traits.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span><span class="o">.</span><span class="n">default_value_for</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">result</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span> <span class="p">[</span> <span class="nb">len</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span> <span class="p">]</span> <span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;,</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">name</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span> <span class="n">n</span> <span class="p">),</span> <span class="n">value</span> <span class="p">)</span>
+                                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span> <span class="p">]</span> <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Indents each line in a specified string by a specified number of spaces:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_indent</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">indent</span> <span class="o">=</span> <span class="s1">&#39;    &#39;</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Indents each line in a specified string by 4 spaces.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="p">[</span> <span class="n">indent</span> <span class="o">+</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

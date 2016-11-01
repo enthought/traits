@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,47 +28,33 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="Traits 4 User Manual" href="index.html" />
     <link rel="next" title="Defining Traits: Initialization and Validation" href="defining.html" />
-    <link rel="prev" title="Traits 4 User Manual" href="front.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="defining.html" title="Defining Traits: Initialization and Validation"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="front.html" title="Traits 4 User Manual"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="prev" title="Traits 4 User Manual" href="front.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#">Introduction</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
 <p>The Traits package for the Python language allows Python programmers to use
 a special kind of type definition called a trait. This document introduces the
 concepts behind, and usage of, the Traits package.</p>
-<p>For more information on the Traits package, refer to the <a class="reference external" href="http://code.enthought.com/projects/traits">Traits web page</a>. This page contains links to
-downloadable packages, the source code repository, and the Traits development
-website. Additional documentation for the Traits package is available from
-the Traits web page, including:</p>
+<p>For more information on the Traits package, refer to the <a class="reference external" href="http://github.com/enthought/traits">Traits GitHub
+repository</a>. Additional documentation
+for the Traits package is available,
+including:</p>
 <ul class="simple">
 <li><em>Traits API Reference</em></li>
-<li><a class="reference external" href="http://github.enthought.com/traitsui/index.html">TraitsUI User Manual</a></li>
+<li><a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a></li>
 <li>Traits Technical Notes</li>
 </ul>
 <div class="section" id="what-are-traits">
@@ -103,7 +89,7 @@ modify</em> the values of trait attributes can be automatically constructed usin
 the traits&#8217; definitions. This feature requires that a supported GUI
 toolkit be installed. However, if this feature is not used, the Traits package
 does not otherwise require GUI support. For details on the visualization
-features of Traits, see the <a class="reference external" href="http://github.enthought.com/traitsui/index.html">TraitsUI User Manual</a>.</li>
+features of Traits, see the <a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a>.</li>
 </ul>
 <p>A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
@@ -111,49 +97,49 @@ within the class. Trait attributes defined by a class are automatically
 inherited by any subclass derived from the class.</p>
 <p>The following example <a class="footnote-reference" href="#id3" id="id2">[1]</a> illustrates each of the features of the Traits
 package. These features are elaborated in the rest of this guide.</p>
-<div class="highlight-python" id="index-5"><div class="highlight"><pre><span class="c"># all_traits_features.py --- Shows primary features of the Traits</span>
-<span class="c">#                            package</span>
+<div class="highlight-default" id="index-5"><div class="highlight"><pre><span></span><span class="c1"># all_traits_features.py --- Shows primary features of the Traits</span>
+<span class="c1">#                            package</span>
 
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Delegate</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>\
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Delegate</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>\
                                  <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
 <span class="k">class</span> <span class="nc">Parent</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
-    <span class="c"># INITIALIZATION: last_name&#39; is initialized to &#39;&#39;:</span>
-    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;&#39;</span> <span class="p">)</span>
+    <span class="c1"># INITIALIZATION: last_name&#39; is initialized to &#39;&#39;:</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s1">&#39;&#39;</span> <span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">Child</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
     <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span>
 
-    <span class="c"># VALIDATION: &#39;father&#39; must be a Parent instance:</span>
+    <span class="c1"># VALIDATION: &#39;father&#39; must be a Parent instance:</span>
     <span class="n">father</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">Parent</span> <span class="p">)</span>
 
-    <span class="c"># DELEGATION: &#39;last_name&#39; is delegated to father&#39;s &#39;last_name&#39;:</span>
-    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Delegate</span><span class="p">(</span> <span class="s">&#39;father&#39;</span> <span class="p">)</span>
+    <span class="c1"># DELEGATION: &#39;last_name&#39; is delegated to father&#39;s &#39;last_name&#39;:</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">Delegate</span><span class="p">(</span> <span class="s1">&#39;father&#39;</span> <span class="p">)</span>
 
-    <span class="c"># NOTIFICATION: This method is called when &#39;age&#39; changes:</span>
+    <span class="c1"># NOTIFICATION: This method is called when &#39;age&#39; changes:</span>
     <span class="k">def</span> <span class="nf">_age_changed</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
-        <span class="k">print</span> <span class="s">&#39;Age changed from </span><span class="si">%s</span><span class="s"> to </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;Age changed from </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
-<span class="c"># Set up the example:</span>
+<span class="c1"># Set up the example:</span>
 <span class="n">joe</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
-<span class="n">joe</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="s">&#39;Johnson&#39;</span>
+<span class="n">joe</span><span class="o">.</span><span class="n">last_name</span> <span class="o">=</span> <span class="s1">&#39;Johnson&#39;</span>
 <span class="n">moe</span> <span class="o">=</span> <span class="n">Child</span><span class="p">()</span>
 <span class="n">moe</span><span class="o">.</span><span class="n">father</span> <span class="o">=</span> <span class="n">joe</span>
 
-<span class="c"># DELEGATION in action:</span>
-<span class="k">print</span> <span class="s">&quot;Moe&#39;s last name is </span><span class="si">%s</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="n">moe</span><span class="o">.</span><span class="n">last_name</span>
-<span class="c"># Result:</span>
-<span class="c"># Moe&#39;s last name is Johnson</span>
+<span class="c1"># DELEGATION in action:</span>
+<span class="nb">print</span> <span class="s2">&quot;Moe&#39;s last name is </span><span class="si">%s</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="n">moe</span><span class="o">.</span><span class="n">last_name</span>
+<span class="c1"># Result:</span>
+<span class="c1"># Moe&#39;s last name is Johnson</span>
 
-<span class="c"># NOTIFICATION in action</span>
+<span class="c1"># NOTIFICATION in action</span>
 <span class="n">moe</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="c"># Result:</span>
-<span class="c"># Age changed from 0 to 10</span>
+<span class="c1"># Result:</span>
+<span class="c1"># Age changed from 0 to 10</span>
 
-<span class="c"># VISUALIZATION: Displays a UI for editing moe&#39;s attributes</span>
-<span class="c"># (if a supported GUI toolkit is installed)</span>
+<span class="c1"># VISUALIZATION: Displays a UI for editing moe&#39;s attributes</span>
+<span class="c1"># (if a supported GUI toolkit is installed)</span>
 <span class="n">moe</span><span class="o">.</span><span class="n">configure_traits</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -178,7 +164,7 @@ as legal values for the color red:</p>
 <li>( 1.0, 0.0, 0.0, 1.0 )</li>
 </ul>
 <p>Thus, the user might write:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">plotitem</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;red&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">plotitem</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
 </pre></div>
 </div>
 <p>In a predecessor to Chaco, providing such flexibility came at a cost:</p>
@@ -233,7 +219,7 @@ individually, or view them in a tutorial program by running:</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -246,19 +232,25 @@ individually, or view them in a tutorial program by running:</p>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="front.html"
-                        title="previous chapter">Traits 4 User Manual</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="defining.html"
-                        title="next chapter">Defining Traits: Initialization and Validation</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_user_manual/intro.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Traits 4 User Manual</a><ul>
+      <li>Previous: <a href="front.html" title="previous chapter">Traits 4 User Manual</a></li>
+      <li>Next: <a href="defining.html" title="next chapter">Defining Traits: Initialization and Validation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_user_manual/intro.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -266,39 +258,26 @@ individually, or view them in a tutorial program by running:</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="defining.html" title="Defining Traits: Initialization and Validation"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="front.html" title="Traits 4 User Manual"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >Traits 4 User Manual</a> &raquo;</li>
-  
-    <li><a href="#">Introduction</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_user_manual/intro.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

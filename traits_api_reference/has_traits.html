@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,48 +28,34 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="has_dynamic_views Module" href="has_dynamic_views.html" />
-    <link rel="prev" title="category Module" href="category.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="has_dynamic_views.html" title="has_dynamic_views Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="category.html" title="category Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="category Module" href="category.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.has_traits">
-<span id="has-traits-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">has_traits</span></tt> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
+<span id="has-traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">has_traits</span></code> Module<a class="headerlink" href="#module-traits.has_traits" title="Permalink to this headline">¶</a></h1>
 <p>Defines the HasTraits class, along with several useful subclasses and
 associated metaclasses.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.has_traits.ViewElement">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">ViewElement</tt><a class="reference internal" href="../_modules/traits/has_traits.html#ViewElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ViewElement</code><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>An element of a view.</p>
 <dl class="method">
 <dt id="traits.has_traits.ViewElement.replace_include">
-<tt class="descname">replace_include</tt><big>(</big><em>view_elements</em><big>)</big><a class="headerlink" href="#traits.has_traits.ViewElement.replace_include" title="Permalink to this definition">¶</a></dt>
+<code class="descname">replace_include</code><span class="sig-paren">(</span><em>view_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement.replace_include"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement.replace_include" title="Permalink to this definition">¶</a></dt>
 <dd><p>Searches the current object&#8217;s <strong>content</strong> attribute for objects that
 have an <strong>id</strong> attribute, and replaces each one with an Include object
 with the same <strong>id</strong> value, and puts the replaced object into the
@@ -86,7 +72,7 @@ specified ViewElements object.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.ViewElement.is_includable">
-<tt class="descname">is_includable</tt><big>(</big><big>)</big><a class="headerlink" href="#traits.has_traits.ViewElement.is_includable" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_includable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traitsui/view_element.html#ViewElement.is_includable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ViewElement.is_includable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether the object is replacable by an Include object.</p>
 </dd></dl>
 
@@ -94,10 +80,10 @@ specified ViewElements object.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.MetaHasTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">MetaHasTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="classmethod">
 <dt id="traits.has_traits.MetaHasTraits.add_listener">
-<em class="property">classmethod </em><tt class="descname">add_listener</tt><big>(</big><em>listener</em>, <em>class_name=''</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.add_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.add_listener" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">add_listener</code><span class="sig-paren">(</span><em>listener</em>, <em>class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.add_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.add_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a class creation listener.</p>
 <p>If the class name is the empty string then the listener will be called
 when <em>any</em> class is created.</p>
@@ -105,7 +91,7 @@ when <em>any</em> class is created.</p>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.MetaHasTraits.remove_listener">
-<em class="property">classmethod </em><tt class="descname">remove_listener</tt><big>(</big><em>listener</em>, <em>class_name=''</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.remove_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.remove_listener" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">remove_listener</code><span class="sig-paren">(</span><em>listener</em>, <em>class_name=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraits.remove_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraits.remove_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes a class creation listener.</p>
 </dd></dl>
 
@@ -113,7 +99,7 @@ when <em>any</em> class is created.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.MetaInterface">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">MetaInterface</tt><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaInterface</code><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Meta class for interfaces.</p>
 <p>Interfaces are simple ABCs with the following features:-</p>
 <ol class="arabic simple">
@@ -122,13 +108,13 @@ when <em>any</em> class is created.</p>
 </ol>
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__init__">
-<tt class="descname">__init__</tt><big>(</big><big>)</big><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.MetaInterface.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>x.__init__(...) initializes x; see help(type(x)) for signature</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaInterface.__call__">
-<tt class="descname">__call__</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__call__</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaInterface.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaInterface.__call__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempt to adapt the adaptee to this interface.</p>
 <p>Note that this means that (intentionally ;^) that interfaces
 cannot be instantiated!</p>
@@ -138,24 +124,24 @@ cannot be instantiated!</p>
 
 <dl class="class">
 <dt id="traits.has_traits.MetaHasTraitsObject">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">MetaHasTraitsObject</tt><big>(</big><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">MetaHasTraitsObject</code><span class="sig-paren">(</span><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs all of the meta-class processing needed to convert any
 subclass of HasTraits into a well-formed traits class.</p>
 <dl class="method">
 <dt id="traits.has_traits.MetaHasTraitsObject.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes all of the traits related data in the class dictionary.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaHasTraitsObject.add_traits_meta_data">
-<tt class="descname">add_traits_meta_data</tt><big>(</big><em>bases</em>, <em>class_dict</em>, <em>base_traits</em>, <em>class_traits</em>, <em>instance_traits</em>, <em>prefix_traits</em>, <em>listeners</em>, <em>view_elements</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.add_traits_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_traits_meta_data</code><span class="sig-paren">(</span><em>bases</em>, <em>class_dict</em>, <em>base_traits</em>, <em>class_traits</em>, <em>instance_traits</em>, <em>prefix_traits</em>, <em>listeners</em>, <em>view_elements</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.add_traits_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.add_traits_meta_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the Traits metadata to the class dictionary.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.MetaHasTraitsObject.migrate_property">
-<tt class="descname">migrate_property</tt><big>(</big><em>name</em>, <em>property</em>, <em>property_info</em>, <em>class_dict</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.migrate_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.migrate_property" title="Permalink to this definition">¶</a></dt>
+<code class="descname">migrate_property</code><span class="sig-paren">(</span><em>name</em>, <em>property</em>, <em>property_info</em>, <em>class_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#MetaHasTraitsObject.migrate_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.MetaHasTraitsObject.migrate_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Migrates an existing property to the class being defined
 (allowing for method overrides).</p>
 </dd></dl>
@@ -164,14 +150,14 @@ subclass of HasTraits into a well-formed traits class.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.HasTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">HasTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enables any Python class derived from it to have trait attributes.</p>
 <p>Most of the methods of HasTraits operated by default only on the trait
 attributes explicitly defined in the class definition. They do not operate
 on trait attributes defined by way of wildcards or by calling
 <strong>add_trait()</strong>.
 For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
 <span class="gp">... </span>   <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
 <span class="gp">... </span>   <span class="n">age</span>  <span class="o">=</span> <span class="n">Int</span>
 <span class="gp">... </span>   <span class="n">temp_</span> <span class="o">=</span> <span class="n">Any</span>
@@ -189,7 +175,7 @@ The wildcard attribute <em>temp_lunch</em> and the dynamically-added trait
 attribute <em>favorite_sport</em> are not listed.</p>
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.wrappers">
-<tt class="descname">wrappers</tt><em class="property"> =</em><a class="headerlink" href="#traits.has_traits.HasTraits.wrappers" title="Permalink to this definition">¶</a></dt>
+<code class="descname">wrappers</code><em class="property"> =</em><a class="headerlink" href="#traits.has_traits.HasTraits.wrappers" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><div class="line-block">
 <div class="line">{&#8216;same&#8217;: TraitChangeNotifyWrapper,</div>
@@ -206,20 +192,20 @@ attribute <em>favorite_sport</em> are not listed.</p>
 
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.trait_added">
-<tt class="descname">trait_added</tt><em class="property"> = Event( basestring )</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_added</code><em class="property"> = Event( basestring )</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_added" title="Permalink to this definition">¶</a></dt>
 <dd><p>An event fired when a new trait is dynamically added to the object</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_traits.HasTraits.trait_modified">
-<tt class="descname">trait_modified</tt><em class="property"> = Event</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_modified</code><em class="property"> = Event</em><a class="headerlink" href="#traits.has_traits.HasTraits.trait_modified" title="Permalink to this definition">¶</a></dt>
 <dd><p>An event that can be fired to indicate that the state of the object has
 been modified</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.trait_monitor">
-<em class="property">classmethod </em><tt class="descname">trait_monitor</tt><big>(</big><em>handler</em>, <em>remove=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_monitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_monitor" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">trait_monitor</code><span class="sig-paren">(</span><em>handler</em>, <em>remove=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_monitor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_monitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds or removes the specified <em>handler</em> from the list of active
 monitors.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -243,7 +229,7 @@ removed from the active monitor list.</p>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.add_class_trait">
-<em class="property">classmethod </em><tt class="descname">add_class_trait</tt><big>(</big><em>name</em>, <em>*trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_class_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_class_trait" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">add_class_trait</code><span class="sig-paren">(</span><em>name</em>, <em>*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_class_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_class_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a named trait attribute to this class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -263,19 +249,19 @@ a list equivalent to an argument list for the Trait() function.</li>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.add_trait_category">
-<em class="property">classmethod </em><tt class="descname">add_trait_category</tt><big>(</big><em>category</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait_category" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">add_trait_category</code><span class="sig-paren">(</span><em>category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a trait category to a class.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.set_trait_dispatch_handler">
-<em class="property">classmethod </em><tt class="descname">set_trait_dispatch_handler</tt><big>(</big><em>name</em>, <em>klass</em>, <em>override=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set_trait_dispatch_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set_trait_dispatch_handler" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">set_trait_dispatch_handler</code><span class="sig-paren">(</span><em>name</em>, <em>klass</em>, <em>override=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set_trait_dispatch_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set_trait_dispatch_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets a trait notification dispatch handler.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.trait_subclasses">
-<em class="property">classmethod </em><tt class="descname">trait_subclasses</tt><big>(</big><em>all=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_subclasses" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">trait_subclasses</code><span class="sig-paren">(</span><em>all=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_subclasses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_subclasses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the immediate (or all) subclasses of this class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -290,7 +276,7 @@ False, only immediate subclasses are returned.</td>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.has_traits_interface">
-<tt class="descname">has_traits_interface</tt><big>(</big><em>*interfaces</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.has_traits_interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.has_traits_interface" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_traits_interface</code><span class="sig-paren">(</span><em>*interfaces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.has_traits_interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.has_traits_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether the object implements a specified traits interface.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -308,7 +294,7 @@ otherwise.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_get">
-<tt class="descname">trait_get</tt><big>(</big><em>*names</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_get</code><span class="sig-paren">(</span><em>*names</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for getting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -333,7 +319,7 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.get">
-<tt class="descname">get</tt><big>(</big><em>*names</em>, <em>**metadata</em><big>)</big><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for getting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -358,7 +344,7 @@ name/value pairs for <em>all</em> traits defined on the object.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_set">
-<tt class="descname">trait_set</tt><big>(</big><em>trait_change_notify=True</em>, <em>**traits</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_set</code><span class="sig-paren">(</span><em>trait_change_notify=True</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -385,11 +371,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bill&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -397,7 +383,7 @@ in a lambda function. For example, you can write:</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.set">
-<tt class="descname">set</tt><big>(</big><em>trait_change_notify=True</em>, <em>**traits</em><big>)</big><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -424,11 +410,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bill&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -436,7 +422,7 @@ in a lambda function. For example, you can write:</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_setq">
-<tt class="descname">trait_setq</tt><big>(</big><em>**traits</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_setq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_setq" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_setq</code><span class="sig-paren">(</span><em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_setq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_setq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shortcut for setting object trait attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -457,11 +443,11 @@ attribute and sets the corresponding trait attribute to the value
 specified. This is a useful shorthand when a number of trait attributes
 need to be set on an object, or a trait attribute value needs to be set
 in a lambda function. For example, you can write:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">trait_setq</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_setq</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>instead of:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bill&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -469,7 +455,7 @@ in a lambda function. For example, you can write:</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.reset_traits">
-<tt class="descname">reset_traits</tt><big>(</big><em>traits=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.reset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.reset_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset_traits</code><span class="sig-paren">(</span><em>traits=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.reset_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.reset_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets some or all of an object&#8217;s trait attributes to their default
 values.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -495,20 +481,20 @@ explicitly named in <em>traits</em>.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.copyable_trait_names">
-<tt class="descname">copyable_trait_names</tt><big>(</big><em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copyable_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copyable_trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copyable_trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copyable_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copyable_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of trait names to copy or clone by default.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.all_trait_names">
-<tt class="descname">all_trait_names</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.all_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.all_trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">all_trait_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.all_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.all_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of all trait names, including implicitly defined
 traits.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.copy_traits">
-<tt class="descname">copy_traits</tt><big>(</big><em>other</em>, <em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copy_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copy_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">copy_traits</code><span class="sig-paren">(</span><em>other</em>, <em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.copy_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.copy_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copies another object&#8217;s trait attributes into this one.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -521,7 +507,7 @@ unspecified, the set of names returned by trait_names() is used.
 If &#8216;all&#8217; or an empty list, the set of names returned by
 all_trait_names() is used.</li>
 <li><strong>memo</strong> (<em>dict</em>) &#8211; A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>None | &#8216;deep&#8217; | &#8216;shallow&#8217;</em>) &#8211; The type of copy to perform on any trait that does not have
+<li><strong>copy</strong> (<em>None | 'deep' | 'shallow'</em>) &#8211; The type of copy to perform on any trait that does not have
 explicit &#8216;copy&#8217; metadata. A value of None means &#8216;copy reference&#8217;.</li>
 </ul>
 </td>
@@ -537,7 +523,7 @@ empty if all the attributes were successfully copied.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.clone_traits">
-<tt class="descname">clone_traits</tt><big>(</big><em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.clone_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.clone_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clone_traits</code><span class="sig-paren">(</span><em>traits=None</em>, <em>memo=None</em>, <em>copy=None</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.clone_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.clone_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clones a new object from this one, optionally copying only a
 specified set of traits.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -547,7 +533,7 @@ specified set of traits.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>traits</strong> (<em>list of strings</em>) &#8211; The list of names of the trait attributes to copy.</li>
 <li><strong>memo</strong> (<em>dict</em>) &#8211; A dictionary of objects that have already been copied.</li>
-<li><strong>copy</strong> (<em>str</em>) &#8211; The type of copy <tt class="docutils literal"><span class="pre">deep</span></tt> or <tt class="docutils literal"><span class="pre">shallow</span></tt> to perform on any trait
+<li><strong>copy</strong> (<em>str</em>) &#8211; The type of copy <code class="docutils literal"><span class="pre">deep</span></code> or <code class="docutils literal"><span class="pre">shallow</span></code> to perform on any trait
 that does not have explicit &#8216;copy&#8217; metadata. A value of None means
 &#8216;copy reference&#8217;.</li>
 </ul>
@@ -570,13 +556,13 @@ cloned.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.edit_traits">
-<tt class="descname">edit_traits</tt><big>(</big><em>view=None</em>, <em>parent=None</em>, <em>kind=None</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.edit_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.edit_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">edit_traits</code><span class="sig-paren">(</span><em>view=None</em>, <em>parent=None</em>, <em>kind=None</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.edit_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.edit_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Displays a user interface window for editing trait attribute values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>view</strong> (<em>View or string</em>) &#8211; A View object (or its name) that defines a user interface for
 editing trait attribute values of the current object. If the view is
 defined as an attribute on this class, use the name of the attribute.
@@ -602,20 +588,23 @@ to display all of the items in the view at one time.</li>
 </ul>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A UI object.</p>
+</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_context">
-<tt class="descname">trait_context</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_context" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_context</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_context" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default context to use for editing or configuring
 traits.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view">
-<tt class="descname">trait_view</tt><big>(</big><em>name=None</em>, <em>view_element=None</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_view</code><span class="sig-paren">(</span><em>name=None</em>, <em>view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets or sets a ViewElement associated with an object&#8217;s class.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -623,7 +612,7 @@ traits.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<em>str</em>) &#8211; Name of a view element</li>
-<li><strong>view_element</strong> (<em>ViewElement</em>) &#8211; View element to associate</li>
+<li><strong>view_element</strong> (<a class="reference internal" href="#traits.has_traits.ViewElement" title="traits.has_traits.ViewElement"><em>ViewElement</em></a>) &#8211; View element to associate</li>
 </ul>
 </td>
 </tr>
@@ -645,7 +634,7 @@ associated with a name by a previous call to this method.</p>
 <p>If neither <em>name</em> nor <em>view_element</em> is specified, the method returns a
 View object, based on the following order of preference:</p>
 <ol class="arabic simple">
-<li>If there is a View object named <tt class="docutils literal"><span class="pre">traits_view</span></tt> associated with the
+<li>If there is a View object named <code class="docutils literal"><span class="pre">traits_view</span></code> associated with the
 current object, it is returned.</li>
 <li>If there is exactly one View object associated the current
 object, it is returned.</li>
@@ -656,19 +645,19 @@ non-event trait attributes on the current object.</li>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.default_traits_view">
-<tt class="descname">default_traits_view</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.default_traits_view" title="Permalink to this definition">¶</a></dt>
+<code class="descname">default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.default_traits_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the default traits view for the object&#8217;s class.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.class_default_traits_view">
-<em class="property">classmethod </em><tt class="descname">class_default_traits_view</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_default_traits_view" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">class_default_traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_default_traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_default_traits_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the default traits view for the class.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_views">
-<tt class="descname">trait_views</tt><big>(</big><em>klass=None</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_views" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_views</code><span class="sig-paren">(</span><em>klass=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_views"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_views" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all view elements associated with the
 current object&#8217;s class.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -695,7 +684,7 @@ objects that are instances of the specified class are returned.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_view_elements">
-<tt class="descname">trait_view_elements</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view_elements" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_view_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ViewElements object associated with the object&#8217;s
 class.</p>
 <p>The returned object can be used to access all the view elements
@@ -704,7 +693,7 @@ associated with the class.</p>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.class_trait_view_elements">
-<em class="property">classmethod </em><tt class="descname">class_trait_view_elements</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_view_elements" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">class_trait_view_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_view_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_view_elements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the ViewElements object associated with the class.</p>
 <p>The returned object can be used to access all the view elements
 associated with the class.</p>
@@ -712,14 +701,14 @@ associated with the class.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.configure_traits">
-<tt class="descname">configure_traits</tt><big>(</big><em>filename=None</em>, <em>view=None</em>, <em>kind=None</em>, <em>edit=True</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">configure_traits</code><span class="sig-paren">(</span><em>filename=None</em>, <em>view=None</em>, <em>kind=None</em>, <em>edit=True</em>, <em>context=None</em>, <em>handler=None</em>, <em>id=''</em>, <em>scrollable=None</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.configure_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.configure_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and displays a dialog box for editing values of trait
 attributes, as if it were a complete, self-contained GUI application.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>filename</strong> (<em>str</em>) &#8211; The name (including path) of a file that contains a pickled
 representation of the current object. When this parameter is
 specified, the method reads the corresponding file (if it exists)
@@ -755,6 +744,9 @@ to display all of the items in the view at one time.</li>
 </ul>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True on success.</p>
+</td>
+</tr>
 </tbody>
 </table>
 <p class="rubric">Description</p>
@@ -769,28 +761,42 @@ modified before displaying the dialog box. If <em>filename</em> is unspecified
 or None, no pickling or unpickling occurs.</p>
 <p>If <em>edit</em> is True (the default), a dialog box for editing the
 current object is displayed. If <em>edit</em> is False or None, no
-dialog box is displayed. You can use <tt class="docutils literal"><span class="pre">edit=False</span></tt> if you want the
+dialog box is displayed. You can use <code class="docutils literal"><span class="pre">edit=False</span></code> if you want the
 object to be restored from the contents of <em>filename</em>, without being
 modified by the user.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.editable_traits">
-<tt class="descname">editable_traits</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.editable_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.editable_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current object.</p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.class_editable_traits">
-<em class="property">classmethod </em><tt class="descname">class_editable_traits</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_editable_traits" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">class_editable_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_editable_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_editable_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an alphabetically sorted list of the names of non-event
 trait attributes associated with the current class.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="traits.has_traits.HasTraits.visible_traits">
+<code class="descname">visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.visible_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an alphabetically sorted list of the names of non-event
+trait attributes associated with the current object, that should be GUI visible</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="traits.has_traits.HasTraits.class_visible_traits">
+<em class="property">classmethod </em><code class="descname">class_visible_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_visible_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_visible_traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an alphabetically sorted list of the names of non-event
+trait attributes associated with the current class, that should be GUI visible</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="traits.has_traits.HasTraits.print_traits">
-<tt class="descname">print_traits</tt><big>(</big><em>show_help=False</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.print_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.print_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">print_traits</code><span class="sig-paren">(</span><em>show_help=False</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.print_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.print_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints the values of all explicitly-defined, non-event trait
 attributes on the current object, in an easily readable format.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -805,7 +811,7 @@ attributes on the current object, in an easily readable format.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.on_trait_change">
-<tt class="descname">on_trait_change</tt><big>(</big><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_change" title="Permalink to this definition">¶</a></dt>
+<code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_change" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes the object to invoke a handler whenever a trait attribute
 matching a specified pattern is modified, or removes the association.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -834,19 +840,19 @@ Possible values are:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">same</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">same</span></code></td>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">ui</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ui</span></code></td>
 <td>Run notifications on the UI thread. If the current
 thread is the UI thread, the notifications are executed
 immediately; otherwise, they are placed on the UI
 event queue.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">fast_ui</span></tt></td>
-<td>Alias for <tt class="docutils literal"><span class="pre">ui</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">fast_ui</span></code></td>
+<td>Alias for <code class="docutils literal"><span class="pre">ui</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">new</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">new</span></code></td>
 <td>Run notifications in a new thread.</td>
 </tr>
 </tbody>
@@ -864,15 +870,15 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre>xname2[(&#39;.&#39;|&#39;:&#39;) xname2]*
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
 </pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre>( xname3 | &#39;[&#39;xname3[&#39;,&#39;xname3]*&#39;]&#39; ) [&#39;*&#39;]
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
@@ -888,7 +894,7 @@ this notation is as follows:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">item1.item2</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">item1.item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -896,7 +902,7 @@ list or dict) with a trait called
 <em>item2</em> cause a notification to be
 generated.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">item1:item2</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">item1:item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -906,13 +912,13 @@ changes to <em>item1</em> do not (i.e., the
 &#8216;:&#8217; indicates that changes to the
 <em>link</em> object should not be reported).</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
 <td>A list which matches any of the
 specified items. Note that at the
 topmost level, the surrounding square
 brackets are optional.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">name?</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">name?</span></code></td>
 <td>If the current object does not have an
 attribute called <em>name</em>, the reference
 can be ignored. If the &#8216;?&#8217; character
@@ -920,34 +926,34 @@ is omitted, the current object must
 have a trait called <em>name</em>, otherwise
 an exception will be raised.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">prefix+</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix+</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">+metadata_name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+metadata_name</span></code></td>
 <td>Matches any trait on the object having
 <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-metadata_name</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-metadata_name</span></code></td>
 <td>Matches any trait on the object which
 does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">prefix+metadata_name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">prefix+metadata_name</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em> and which
 has <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">prefix-metadata_name</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix-metadata_name</span></code></td>
 <td>Matches any trait on the object
 whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+</span></code></td>
 <td>Matches all traits on the object.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">pattern*</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">pattern*</span></code></td>
 <td>Matches object graphs where <em>pattern</em>
 occurs one or more times (useful for
 setting up listeners on recursive data
@@ -968,46 +974,46 @@ lists).</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo,bar,baz</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo,bar,baz</span></code></td>
 <td>Listen for trait changes to <em>object.foo</em>,
 <em>object.bar</em>, and <em>object.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">['foo','bar','baz']</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">['foo','bar','baz']</span></code></td>
 <td>Equivalent to &#8216;foo,bar,baz&#8217;, but may be more
 useful in cases where the individual items are
 computed.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.bar.baz</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.bar.baz</span></code></td>
 <td>Listen for trait changes to
 <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
 <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">foo:bar:baz</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo:bar:baz</span></code></td>
 <td>Listen for changes to <em>object.foo.bar.baz</em>, and
 only report changes to <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.[bar,baz]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,baz]</span></code></td>
 <td>Listen for trait changes to <em>object.foo.bar</em>
 and <em>object.foo.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">[left,right]*.name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">[left,right]*.name</span></code></td>
 <td>Listen for trait changes to the <em>name</em> trait of
 each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
 tree.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">+dirty</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">+dirty</span></code></td>
 <td>Listen for trait changes on any trait in the
 <em>object</em> which has the &#8216;dirty&#8217; metadata set.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">foo.+dirty</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo.+dirty</span></code></td>
 <td>Listen for trait changes on any trait in
 <em>object.foo</em> which has the &#8216;dirty&#8217; metadata
 set.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></code></td>
 <td>Listen for trait changes on <em>object.foo.bar</em> or
 any trait on <em>object.foo</em> which does not have
 &#8216;dirty&#8217; metadata set.</td>
@@ -1088,7 +1094,7 @@ be notified of changes to any of the items of the &#8216;xxx&#8217; trait.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.on_trait_event">
-<tt class="descname">on_trait_event</tt><big>(</big><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><big>)</big><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_event" title="Permalink to this definition">¶</a></dt>
+<code class="descname">on_trait_event</code><span class="sig-paren">(</span><em>handler</em>, <em>name=None</em>, <em>remove=False</em>, <em>dispatch='same'</em>, <em>priority=False</em>, <em>deferred=False</em>, <em>target=None</em><span class="sig-paren">)</span><a class="headerlink" href="#traits.has_traits.HasTraits.on_trait_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Causes the object to invoke a handler whenever a trait attribute
 matching a specified pattern is modified, or removes the association.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1117,19 +1123,19 @@ Possible values are:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">same</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">same</span></code></td>
 <td>Run notifications on the same thread as this one.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">ui</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">ui</span></code></td>
 <td>Run notifications on the UI thread. If the current
 thread is the UI thread, the notifications are executed
 immediately; otherwise, they are placed on the UI
 event queue.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">fast_ui</span></tt></td>
-<td>Alias for <tt class="docutils literal"><span class="pre">ui</span></tt>.</td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">fast_ui</span></code></td>
+<td>Alias for <code class="docutils literal"><span class="pre">ui</span></code>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">new</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">new</span></code></td>
 <td>Run notifications in a new thread.</td>
 </tr>
 </tbody>
@@ -1147,15 +1153,15 @@ is None, <em>handler</em> is invoked when any trait attribute on the
 object is changed.</p>
 <p>The <em>name</em> parameter is a single <em>xname</em> or a list of <em>xname</em> names,
 where an <em>xname</em> is an extended name of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre>xname2[(&#39;.&#39;|&#39;:&#39;) xname2]*
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname2</span><span class="p">[(</span><span class="s1">&#39;.&#39;</span><span class="o">|</span><span class="s1">&#39;:&#39;</span><span class="p">)</span> <span class="n">xname2</span><span class="p">]</span><span class="o">*</span>
 </pre></div>
 </div>
 <p>An <em>xname2</em> is of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre>( xname3 | &#39;[&#39;xname3[&#39;,&#39;xname3]*&#39;]&#39; ) [&#39;*&#39;]
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span> <span class="n">xname3</span> <span class="o">|</span> <span class="s1">&#39;[&#39;</span><span class="n">xname3</span><span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="n">xname3</span><span class="p">]</span><span class="o">*</span><span class="s1">&#39;]&#39;</span> <span class="p">)</span> <span class="p">[</span><span class="s1">&#39;*&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>An <em>xname3</em> is of the form:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">xname</span> <span class="o">|</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">|</span> <span class="n">name</span><span class="p">[</span><span class="s1">&#39;?&#39;</span> <span class="o">|</span> <span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="o">|</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 </div>
 <p>A <em>name</em> is any valid Python attribute name. The semantic meaning of
@@ -1171,7 +1177,7 @@ this notation is as follows:</p>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">item1.item2</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">item1.item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -1179,7 +1185,7 @@ list or dict) with a trait called
 <em>item2</em> cause a notification to be
 generated.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">item1:item2</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">item1:item2</span></code></td>
 <td>means <em>item1</em> is a trait containing an
 object (or objects if <em>item1</em> is a
 list or dict) with a trait called
@@ -1189,13 +1195,13 @@ changes to <em>item1</em> do not (i.e., the
 &#8216;:&#8217; indicates that changes to the
 <em>link</em> object should not be reported).</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">[</span> <span class="pre">item1,</span> <span class="pre">item2,</span> <span class="pre">...,</span> <span class="pre">itemN</span> <span class="pre">]</span></code></td>
 <td>A list which matches any of the
 specified items. Note that at the
 topmost level, the surrounding square
 brackets are optional.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">name?</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">name?</span></code></td>
 <td>If the current object does not have an
 attribute called <em>name</em>, the reference
 can be ignored. If the &#8216;?&#8217; character
@@ -1203,34 +1209,34 @@ is omitted, the current object must
 have a trait called <em>name</em>, otherwise
 an exception will be raised.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">prefix+</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix+</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">+metadata_name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+metadata_name</span></code></td>
 <td>Matches any trait on the object having
 <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">-metadata_name</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-metadata_name</span></code></td>
 <td>Matches any trait on the object which
 does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">prefix+metadata_name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">prefix+metadata_name</span></code></td>
 <td>Matches any trait on the object whose
 name begins with <em>prefix</em> and which
 has <em>metadata_name</em> metadata.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">prefix-metadata_name</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">prefix-metadata_name</span></code></td>
 <td>Matches any trait on the object
 whose name begins with <em>prefix</em> and
 which does not have <em>metadata_name</em>
 metadata.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">+</span></code></td>
 <td>Matches all traits on the object.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">pattern*</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">pattern*</span></code></td>
 <td>Matches object graphs where <em>pattern</em>
 occurs one or more times (useful for
 setting up listeners on recursive data
@@ -1251,46 +1257,46 @@ lists).</td>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo,bar,baz</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo,bar,baz</span></code></td>
 <td>Listen for trait changes to <em>object.foo</em>,
 <em>object.bar</em>, and <em>object.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">['foo','bar','baz']</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">['foo','bar','baz']</span></code></td>
 <td>Equivalent to &#8216;foo,bar,baz&#8217;, but may be more
 useful in cases where the individual items are
 computed.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.bar.baz</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.bar.baz</span></code></td>
 <td>Listen for trait changes to
 <em>object.foo.bar.baz</em> and report changes to
 <em>object.foo</em>, <em>object.foo.bar</em> or
 <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">foo:bar:baz</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo:bar:baz</span></code></td>
 <td>Listen for changes to <em>object.foo.bar.baz</em>, and
 only report changes to <em>object.foo.bar.baz</em>.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.[bar,baz]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,baz]</span></code></td>
 <td>Listen for trait changes to <em>object.foo.bar</em>
 and <em>object.foo.baz</em>.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">[left,right]*.name</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">[left,right]*.name</span></code></td>
 <td>Listen for trait changes to the <em>name</em> trait of
 each node of a tree having <em>left</em> and <em>right</em>
 links to other tree nodes, and where <em>object</em>
 the method is applied to the root node of the
 tree.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">+dirty</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">+dirty</span></code></td>
 <td>Listen for trait changes on any trait in the
 <em>object</em> which has the &#8216;dirty&#8217; metadata set.</td>
 </tr>
-<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">foo.+dirty</span></tt></td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">foo.+dirty</span></code></td>
 <td>Listen for trait changes on any trait in
 <em>object.foo</em> which has the &#8216;dirty&#8217; metadata
 set.</td>
 </tr>
-<tr class="row-even"><td><tt class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></tt></td>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">foo.[bar,-dirty]</span></code></td>
 <td>Listen for trait changes on <em>object.foo.bar</em> or
 any trait on <em>object.foo</em> which does not have
 &#8216;dirty&#8217; metadata set.</td>
@@ -1371,7 +1377,7 @@ be notified of changes to any of the items of the &#8216;xxx&#8217; trait.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.sync_trait">
-<tt class="descname">sync_trait</tt><big>(</big><em>trait_name</em>, <em>object</em>, <em>alias=None</em>, <em>mutual=True</em>, <em>remove=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.sync_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.sync_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">sync_trait</code><span class="sig-paren">(</span><em>trait_name</em>, <em>object</em>, <em>alias=None</em>, <em>mutual=True</em>, <em>remove=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.sync_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.sync_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Synchronizes the value of a trait attribute on this object with a
 trait attribute on another object.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1403,7 +1409,7 @@ be updated, but not vice versa.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.add_trait">
-<tt class="descname">add_trait</tt><big>(</big><em>name</em>, <em>*trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_trait</code><span class="sig-paren">(</span><em>name</em>, <em>*trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.add_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.add_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a trait attribute to this object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1423,7 +1429,7 @@ it is equivalent to passing the entire list of values to Trait().</li>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.remove_trait">
-<tt class="descname">remove_trait</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.remove_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.remove_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">remove_trait</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.remove_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.remove_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes a trait attribute from this object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1440,7 +1446,7 @@ True if the trait was successfully removed.</td>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait">
-<tt class="descname">trait</tt><big>(</big><em>name</em>, <em>force=False</em>, <em>copy=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait</code><span class="sig-paren">(</span><em>name</em>, <em>force=False</em>, <em>copy=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the trait definition for the <em>name</em> trait attribute.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1470,7 +1476,7 @@ definition found is returned unmodified (the default).</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.base_trait">
-<tt class="descname">base_trait</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.base_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.base_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">base_trait</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.base_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.base_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the base trait definition for a trait attribute.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1490,14 +1496,14 @@ returns the definition of that attribute&#8217;s trait as the result.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.validate_trait">
-<tt class="descname">validate_trait</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.validate_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.validate_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_trait</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.validate_trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.validate_trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates whether a value is legal for a trait.</p>
 <p>Returns the validated value if it is valid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.traits">
-<tt class="descname">traits</tt><big>(</big><em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">traits</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary containing the definitions of all of the trait
 attributes of this object that match the set of <em>metadata</em> criteria.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1530,7 +1536,7 @@ values of all keywords to be included in the result.</p>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.class_traits">
-<em class="property">classmethod </em><tt class="descname">class_traits</tt><big>(</big><em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_traits" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">class_traits</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dictionary containing the definitions of all of the trait
 attributes of the class that match the set of <em>metadata</em> criteria.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1563,7 +1569,7 @@ values of all keywords to be included in the result.</p>
 
 <dl class="method">
 <dt id="traits.has_traits.HasTraits.trait_names">
-<tt class="descname">trait_names</tt><big>(</big><em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all trait attributes whose definitions
 match the set of <em>metadata</em> criteria specified.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1581,7 +1587,7 @@ names of the matching trait attributes, not the trait definitions.</p>
 
 <dl class="classmethod">
 <dt id="traits.has_traits.HasTraits.class_trait_names">
-<em class="property">classmethod </em><tt class="descname">class_trait_names</tt><big>(</big><em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_names" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">class_trait_names</code><span class="sig-paren">(</span><em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#HasTraits.class_trait_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasTraits.class_trait_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the names of all trait attributes whose definitions
 match the set of <em>metadata</em> criteria specified.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1601,7 +1607,7 @@ names of the matching trait attributes, not the trait definitions.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.HasStrictTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">HasStrictTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#HasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class guarantees that any object attribute that does not have an
 explicit or wildcard trait definition results in an exception.</p>
 <p>This feature can be useful in cases where a more rigorous software
@@ -1612,7 +1618,7 @@ going unnoticed; a misspelled attribute name typically causes an exception.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.HasPrivateTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">HasPrivateTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">HasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#HasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.HasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class ensures that any public object attribute that does not have
 an explicit or wildcard trait definition results in an exception, but
 &#8220;private&#8221; attributes (whose names start with &#8216;_&#8217;) have an initial value of
@@ -1625,46 +1631,46 @@ manipulated only by the (presumably correct) methods of the class itself.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">SingletonHasTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that support trait attributes.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasStrictTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">SingletonHasStrictTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that supports strict trait attributes.</p>
 <p>Non-trait attributes generate an exception.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.SingletonHasPrivateTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">SingletonHasPrivateTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasPrivateTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">SingletonHasPrivateTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#SingletonHasPrivateTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.SingletonHasPrivateTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton class that supports trait attributes, with private attributes
 being unchecked.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.Vetoable">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">Vetoable</tt><a class="reference internal" href="../_modules/traits/has_traits.html#Vetoable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Vetoable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">Vetoable</code><a class="reference internal" href="../_modules/traits/has_traits.html#Vetoable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Vetoable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a &#8216;vetoable&#8217; request object and an associated event.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.Interface">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">Interface</tt><a class="reference internal" href="../_modules/traits/has_traits.html#Interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Interface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">Interface</code><a class="reference internal" href="../_modules/traits/has_traits.html#Interface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.Interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>The base class for all interfaces.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.ISerializable">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">ISerializable</tt><a class="reference internal" href="../_modules/traits/has_traits.html#ISerializable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ISerializable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ISerializable</code><a class="reference internal" href="../_modules/traits/has_traits.html#ISerializable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ISerializable" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class that implemented ISerializable requires that all HasTraits
 objects saved as part of its state also implement ISerializable.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.has_traits.traits_super">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">traits_super</tt><a class="reference internal" href="../_modules/traits/has_traits.html#traits_super"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.traits_super" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">traits_super</code><a class="reference internal" href="../_modules/traits/has_traits.html#traits_super"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.traits_super" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -1676,7 +1682,7 @@ objects saved as part of its state also implement ISerializable.</p>
 </div>
 <dl class="class">
 <dt id="traits.has_traits.ABCMetaHasTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">ABCMetaHasTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#ABCMetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCMetaHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCMetaHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCMetaHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCMetaHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A MetaHasTraits subclass which also inherits from
 abc.ABCMeta.</p>
 <div class="admonition note">
@@ -1688,7 +1694,7 @@ with MetaHasTraits, provided it is inherited first.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.ABCHasTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">ABCHasTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which enables the features of Abstract
 Base Classes (ABC). See the &#8216;abc&#8217; module in the standard library
 for more information.</p>
@@ -1696,7 +1702,7 @@ for more information.</p>
 
 <dl class="class">
 <dt id="traits.has_traits.ABCHasStrictTraits">
-<em class="property">class </em><tt class="descclassname">traits.has_traits.</tt><tt class="descname">ABCHasStrictTraits</tt><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasStrictTraits" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_traits.</code><code class="descname">ABCHasStrictTraits</code><a class="reference internal" href="../_modules/traits/has_traits.html#ABCHasStrictTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.ABCHasStrictTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>A HasTraits subclass which behaves like HasStrictTraits but
 also enables the features of Abstract Base Classes (ABC). See the
 &#8216;abc&#8217; module in the standard library for more information.</p>
@@ -1706,55 +1712,8 @@ also enables the features of Abstract Base Classes (ABC). See the
 <div class="section" id="functions">
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="traits.has_traits.get_delegate_pattern">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">get_delegate_pattern</tt><big>(</big><em>name</em>, <em>trait</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#get_delegate_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.get_delegate_pattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the correct &#8216;delegate&#8217; listener pattern for a specified name and
-delegate trait.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits.weak_arg">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">weak_arg</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#weak_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.weak_arg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a weak reference to arg and wrap the function so that the
-dereferenced weakref is passed as the first argument. If arg has been
-deleted then the function is not called.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.has_traits.property_depends_on">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">property_depends_on</tt><big>(</big><em>dependency</em>, <em>settable=False</em>, <em>flushable=False</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#property_depends_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.property_depends_on" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks the following method definition as being a &#8220;cached property&#8221;
-that depends on the specified extended trait names. That is, it is a
-property getter which, for performance reasons, caches its most recently
-computed result in an attribute whose name is of the form:
-<em>_traits_cache_name</em>, where <em>name</em> is the name of the property. A method
-marked as being a cached property needs only to compute and return its
-result. The &#64;property_depends_on decorator automatically wraps the
-decorated method in cache management code that will cache the most
-recently computed value and flush the cache when any of the specified
-dependencies are modified, thus eliminating the need to write
-boilerplate cache management code explicitly. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
-<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span>
-
-<span class="nd">@property_depends_on</span><span class="p">(</span> <span class="s">&#39;file_name&#39;</span> <span class="p">)</span>
-<span class="k">def</span> <span class="nf">_get_file_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-    <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">result</span>
-</pre></div>
-</div>
-<p>In this example, accessing the <em>file_contents</em> trait calls the
-_get_file_contents() method only once each time after the <strong>file_name</strong>
-trait is modified. In all other cases, the cached value
-<strong>_file_contents</strong>, which is maintained by the &#64;cached_property wrapper
-code, is returned.</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="traits.has_traits.cached_property">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">cached_property</tt><big>(</big><em>function</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#cached_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.cached_property" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.has_traits.</code><code class="descname">cached_property</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#cached_property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.cached_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the following method definition as being a &#8220;cached property&#8221;.
 That is, it is a property getter which, for performance reasons, caches
 its most recently computed result in an attribute whose name is of the
@@ -1763,12 +1722,12 @@ method marked as being a cached property needs only to compute and
 return its result. The &#64;cached_property decorator automatically wraps
 the decorated method in cache management code, eliminating the need to
 write boilerplate cache management code explicitly. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
-<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s">&#39;file_name&#39;</span> <span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
+<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;file_name&#39;</span> <span class="p">)</span>
 
 <span class="nd">@cached_property</span>
 <span class="k">def</span> <span class="nf">_get_file_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">result</span>
@@ -1786,23 +1745,15 @@ For details, see the traits.traits.Property() function.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="traits.has_traits.on_trait_change">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">on_trait_change</tt><big>(</big><em>name</em>, <em>post_init=False</em>, <em>*names</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.on_trait_change" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks the following method definition as being a handler for the
-extended trait change specified by <em>name(s)</em>.</p>
-<p>Refer to the documentation for the on_trait_change() method of
-the <strong>HasTraits</strong> class for information on the correct syntax for
-the <em>name(s)</em> argument.</p>
-<p>A handler defined using this decorator is normally effective
-immediately. However, if <em>post_init</em> is <strong>True</strong>, then the handler only
-become effective after all object constructor arguments have been
-processed. That is, trait values assigned as part of object construction
-will not cause the handler to be invoked.</p>
+<dt id="traits.has_traits.get_delegate_pattern">
+<code class="descclassname">traits.has_traits.</code><code class="descname">get_delegate_pattern</code><span class="sig-paren">(</span><em>name</em>, <em>trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#get_delegate_pattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.get_delegate_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the correct &#8216;delegate&#8217; listener pattern for a specified name and
+delegate trait.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.has_traits.implements">
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">implements</tt><big>(</big><em>*interfaces</em><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.has_traits.</code><code class="descname">implements</code><span class="sig-paren">(</span><em>*interfaces</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.implements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declares the interfaces that a class implements.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1817,6 +1768,80 @@ will not cause the handler to be invoked.</p>
 interface that the containing class implements. Each specified interface
 must be a subclass of <strong>Interface</strong>. This function should only be
 called from directly within a class body.</p>
+<div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 4.4: </span>Use the <code class="docutils literal"><span class="pre">provides</span></code> class decorator instead.</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.has_traits.on_trait_change">
+<code class="descclassname">traits.has_traits.</code><code class="descname">on_trait_change</code><span class="sig-paren">(</span><em>name</em>, <em>post_init=False</em>, <em>dispatch='same'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#on_trait_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.on_trait_change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the following method definition as being a handler for the
+extended trait change specified by <em>name(s)</em>.</p>
+<p>Refer to the documentation for the on_trait_change() method of
+the <strong>HasTraits</strong> class for information on the correct syntax for
+the <em>name</em> argument and the semantics of the <em>dispatch</em> keyword
+argument.</p>
+<p>A handler defined using this decorator is normally effective
+immediately. However, if <em>post_init</em> is <strong>True</strong>, then the handler only
+becomes effective after all object constructor arguments have been
+processed. That is, trait values assigned as part of object construction
+will not cause the handler to be invoked.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.has_traits.property_depends_on">
+<code class="descclassname">traits.has_traits.</code><code class="descname">property_depends_on</code><span class="sig-paren">(</span><em>dependency</em>, <em>settable=False</em>, <em>flushable=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#property_depends_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.property_depends_on" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the following method definition as being a &#8220;cached property&#8221;
+that depends on the specified extended trait names. That is, it is a
+property getter which, for performance reasons, caches its most recently
+computed result in an attribute whose name is of the form:
+<em>_traits_cache_name</em>, where <em>name</em> is the name of the property. A method
+marked as being a cached property needs only to compute and return its
+result. The &#64;property_depends_on decorator automatically wraps the
+decorated method in cache management code that will cache the most
+recently computed value and flush the cache when any of the specified
+dependencies are modified, thus eliminating the need to write
+boilerplate cache management code explicitly. For example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
+<span class="n">file_contents</span> <span class="o">=</span> <span class="n">Property</span>
+
+<span class="nd">@property_depends_on</span><span class="p">(</span> <span class="s1">&#39;file_name&#39;</span> <span class="p">)</span>
+<span class="k">def</span> <span class="nf">_get_file_contents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>In this example, accessing the <em>file_contents</em> trait calls the
+_get_file_contents() method only once each time after the <strong>file_name</strong>
+trait is modified. In all other cases, the cached value
+<strong>_file_contents</strong>, which is maintained by the &#64;cached_property wrapper
+code, is returned.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.has_traits.provides">
+<code class="descclassname">traits.has_traits.</code><code class="descname">provides</code><span class="sig-paren">(</span><em>*protocols</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.provides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class decorator to declare the protocols that a class provides.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*protocols</strong> &#8211; A list of protocols (Interface classes or Python ABCs) that the
+decorated class provides.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="traits.has_traits.weak_arg">
+<code class="descclassname">traits.has_traits.</code><code class="descname">weak_arg</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#weak_arg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_traits.weak_arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a weak reference to arg and wrap the function so that the
+dereferenced weakref is passed as the first argument. If arg has been
+deleted then the function is not called.</p>
 </dd></dl>
 
 </div>
@@ -1826,33 +1851,39 @@ called from directly within a class body.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#abc-classes">ABC classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="category.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="has_dynamic_views.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/has_traits.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="category.html" title="previous chapter"><code class="docutils literal"><span class="pre">category</span></code> Module</a></li>
+      <li>Next: <a href="has_dynamic_views.html" title="next chapter"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/has_traits.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -1860,39 +1891,26 @@ called from directly within a class body.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="has_dynamic_views.html" title="has_dynamic_views Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="category.html" title="category Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/has_traits.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

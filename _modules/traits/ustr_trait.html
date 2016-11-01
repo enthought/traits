@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,55 +26,47 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.ustr_trait</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.ustr_trait</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2008, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author: David C. Morrill</span>
-<span class="c">#  Date:   08/21/2008</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2008, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: David C. Morrill</span>
+<span class="c1">#  Date:   08/21/2008</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Defines the UStr type and HasUniqueStrings mixin class for efficiently</span>
 <span class="sd">    creating lists of objects containing traits whose string values must be</span>
 <span class="sd">    unique within the list.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
@@ -84,20 +76,20 @@
 <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">NoDefaultSpecified</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;UStr&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;UStr&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="UStr"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr">[docs]</a><span class="k">class</span> <span class="nc">UStr</span> <span class="p">(</span> <span class="n">TraitType</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Trait type that ensures that a value assigned to a trait is unique</span>
 <span class="sd">        within the list it belongs to.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#: The type value to assign to restore the original list item type when a</span>
-    <span class="c">#: list item is removed from the monitored list:</span>
+    <span class="c1">#: The type value to assign to restore the original list item type when a</span>
+    <span class="c1">#: list item is removed from the monitored list:</span>
     <span class="n">str_type</span> <span class="o">=</span> <span class="n">TraitValue</span><span class="p">()</span>
 
-    <span class="c">#: The informational text describing the trait:</span>
-    <span class="n">info_text</span> <span class="o">=</span> <span class="s">&#39;a unique string&#39;</span>
+    <span class="c1">#: The informational text describing the trait:</span>
+    <span class="n">info_text</span> <span class="o">=</span> <span class="s1">&#39;a unique string&#39;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">list_name</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span>
                          <span class="n">default_value</span> <span class="o">=</span> <span class="n">NoDefaultSpecified</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span> <span class="p">):</span>
@@ -113,7 +105,7 @@
                                  <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">owner</span><span class="p">,</span> <span class="n">list_name</span> <span class="p">)</span> <span class="p">]</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">roots</span>     <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">available</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">owner</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items_modified</span><span class="p">,</span> <span class="n">list_name</span> <span class="o">+</span> <span class="s">&#39;[]&#39;</span> <span class="p">)</span>
+        <span class="n">owner</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_items_modified</span><span class="p">,</span> <span class="n">list_name</span> <span class="o">+</span> <span class="s1">&#39;[]&#39;</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="UStr.validate"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.UStr.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Ensures that a value being assigned to a trait is a unique string.</span>
@@ -139,25 +131,25 @@
                     <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">available</span><span class="p">[</span> <span class="n">value</span> <span class="p">]</span>
                     <span class="n">available</span> <span class="o">=</span> <span class="bp">None</span>
 
-                <span class="n">new_value</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
                 <span class="k">if</span> <span class="n">new_value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
                     <span class="k">break</span>
 
             <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="p">[</span> <span class="n">value</span> <span class="p">]</span> <span class="o">=</span> <span class="n">index</span> <span class="o">=</span> \
                     <span class="bp">self</span><span class="o">.</span><span class="n">roots</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-                <span class="n">new_value</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s">_</span><span class="si">%d</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
+                <span class="n">new_value</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">index</span> <span class="p">)</span>
 
             <span class="n">names</span><span class="p">[</span> <span class="n">new_value</span> <span class="p">]</span> <span class="o">=</span> <span class="nb">object</span>
             <span class="k">return</span> <span class="n">new_value</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">_remove</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Removes a specified name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span> <span class="s">&#39;_&#39;</span> <span class="p">)</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span> <span class="s1">&#39;_&#39;</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">col</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">index</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">name</span><span class="p">[</span> <span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span> <span class="p">]</span> <span class="p">)</span>
@@ -182,12 +174,12 @@
 
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">added</span><span class="p">:</span>
             <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="n">ustr_type</span> <span class="p">)</span>
-            <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">item</span><span class="p">,</span> <span class="n">str_name</span> <span class="p">)</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;HasUniqueStrings&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;HasUniqueStrings&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="HasUniqueStrings"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings">[docs]</a><span class="k">class</span> <span class="nc">HasUniqueStrings</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Mixin or base class for objects containing lists with items containing</span>
 <span class="sd">        string valued traits that must be unique.</span>
@@ -206,12 +198,12 @@
 <span class="sd">            usa = List( State, unique_string = &#39;name, abbreviation&#39; )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c">#-- Private Traits ---------------------------------------------------------</span>
+    <span class="c1">#-- Private Traits ---------------------------------------------------------</span>
 
-    <span class="c"># List of UStr traits that have been attached to object list traits:</span>
+    <span class="c1"># List of UStr traits that have been attached to object list traits:</span>
     <span class="n">_ustr_traits</span> <span class="o">=</span> <span class="n">List</span>
 
-    <span class="c">#-- HasTraits Object Initializer -------------------------------------------</span>
+    <span class="c1">#-- HasTraits Object Initializer -------------------------------------------</span>
 
 <div class="viewcode-block" id="HasUniqueStrings.traits_init"><a class="viewcode-back" href="../../traits_api_reference/ustr_trait.html#traits.ustr_trait.HasUniqueStrings.traits_init">[docs]</a>    <span class="k">def</span> <span class="nf">traits_init</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Adds any UStrMonitor objects to list traits with &#39;unique_string&#39;</span>
@@ -220,24 +212,33 @@
         <span class="nb">super</span><span class="p">(</span> <span class="n">HasUniqueStrings</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">traits_init</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span> <span class="n">unique_string</span> <span class="o">=</span> <span class="n">is_str</span> <span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">for</span> <span class="n">str_name</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">unique_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s">&#39;,&#39;</span> <span class="p">):</span>
+            <span class="k">for</span> <span class="n">str_name</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">unique_string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="s1">&#39;,&#39;</span> <span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ustr_traits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">UStr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">str_name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
 
             <span class="n">items</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">items</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="p">[]</span> <span class="p">)</span>
-                <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">items</span> <span class="p">)</span>
-</pre></div></div></div>
+                <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">items</span> <span class="p">)</span></div></div>
+
+</pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -245,33 +246,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.ustr_trait</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

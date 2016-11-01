@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,53 +26,45 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.trait_notifiers</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.trait_notifiers</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2005-2013, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author:        David C. Morrill</span>
-<span class="c">#  Original Date: 06/21/2002</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005-2013, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author:        David C. Morrill</span>
+<span class="c1">#  Original Date: 06/21/2002</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Classes that implement and support the Traits change notification mechanism</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
@@ -87,19 +79,19 @@
 <span class="kn">from</span> <span class="nn">.trait_base</span> <span class="kn">import</span> <span class="n">Uninitialized</span>
 <span class="kn">from</span> <span class="nn">.trait_errors</span> <span class="kn">import</span> <span class="n">TraitNotificationError</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Global Data:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Global Data:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
-<span class="c"># The thread ID for the user interface thread</span>
+<span class="c1"># The thread ID for the user interface thread</span>
 <span class="n">ui_thread</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
-<span class="c"># The handler for notifications that must be run on the UI thread</span>
+<span class="c1"># The handler for notifications that must be run on the UI thread</span>
 <span class="n">ui_handler</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Sets up the user interface thread handler:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Sets up the user interface thread handler:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="set_ui_handler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.set_ui_handler">[docs]</a><span class="k">def</span> <span class="nf">set_ui_handler</span> <span class="p">(</span> <span class="n">handler</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Sets up the user interface thread handler.</span>
@@ -107,29 +99,29 @@
     <span class="k">global</span> <span class="n">ui_handler</span><span class="p">,</span> <span class="n">ui_thread</span>
 
     <span class="n">ui_handler</span> <span class="o">=</span> <span class="n">handler</span>
-    <span class="n">ui_thread</span>  <span class="o">=</span> <span class="n">get_ident</span><span class="p">()</span>
-</div>
+    <span class="n">ui_thread</span>  <span class="o">=</span> <span class="n">get_ident</span><span class="p">()</span></div>
+
 <span class="k">def</span> <span class="nf">ui_dispatch</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">):</span>
     <span class="k">if</span> <span class="n">get_ident</span><span class="p">()</span> <span class="o">==</span> <span class="n">ui_thread</span><span class="p">:</span>
         <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ui_handler</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span> <span class="p">)</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;NotificationExceptionHandlerState&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;NotificationExceptionHandlerState&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="NotificationExceptionHandlerState"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandlerState">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandlerState</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">reraise_exceptions</span><span class="p">,</span> <span class="n">locked</span> <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>            <span class="o">=</span> <span class="n">handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reraise_exceptions</span> <span class="o">=</span> <span class="n">reraise_exceptions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">locked</span>             <span class="o">=</span> <span class="n">locked</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locked</span>             <span class="o">=</span> <span class="n">locked</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;NotificationExceptionHandler&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;NotificationExceptionHandler&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="NotificationExceptionHandler"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NotificationExceptionHandler">[docs]</a><span class="k">class</span> <span class="nc">NotificationExceptionHandler</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
@@ -137,7 +129,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span>   <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">thread_local</span>  <span class="o">=</span> <span class="n">thread_local</span><span class="p">()</span>
 
-<span class="c">#-- Private Methods ------------------------------------------------------------</span>
+<span class="c1">#-- Private Methods ------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_push_handler</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">reraise_exceptions</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
                               <span class="n">main</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">locked</span> <span class="o">=</span> <span class="bp">False</span> <span class="p">):</span>
@@ -202,8 +194,8 @@
             <span class="n">handlers</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
-                      <span class="s">&#39;Attempted to pop an empty traits notification exception &#39;</span>
-                      <span class="s">&#39;handler stack.&#39;</span> <span class="p">)</span>
+                      <span class="s1">&#39;Attempted to pop an empty traits notification exception &#39;</span>
+                      <span class="s1">&#39;handler stack.&#39;</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_handle_exception</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span>  <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Handles a traits notification exception using the handler defined</span>
@@ -225,7 +217,7 @@
             <span class="nb">id</span>       <span class="o">=</span> <span class="n">get_ident</span><span class="p">()</span>
             <span class="n">handlers</span> <span class="o">=</span> <span class="n">thread_local</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="nb">id</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">handlers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">thread_local</span><span class="p">,</span> <span class="s">&#39;handlers&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+            <span class="n">handlers</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">thread_local</span><span class="p">,</span> <span class="s1">&#39;handlers&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">handlers</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -246,65 +238,65 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">handlers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">locked</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
-                      <span class="s">&#39;The traits notification exception handler is locked. &#39;</span>
-                      <span class="s">&#39;No changes are allowed.&#39;</span> <span class="p">)</span>
+                      <span class="s1">&#39;The traits notification exception handler is locked. &#39;</span>
+                      <span class="s1">&#39;No changes are allowed.&#39;</span> <span class="p">)</span>
 
-    <span class="c">#---------------------------------------------------------------------------</span>
-    <span class="c">#  This method defines the default notification exception handling</span>
-    <span class="c">#  behavior of traits. However, it can be completely overridden by pushing</span>
-    <span class="c">#  a new handler using the &#39;_push_handler&#39; method.</span>
-    <span class="c">#</span>
-    <span class="c">#  It logs any exceptions generated in a trait notification handler.</span>
-    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  This method defines the default notification exception handling</span>
+    <span class="c1">#  behavior of traits. However, it can be completely overridden by pushing</span>
+    <span class="c1">#  a new handler using the &#39;_push_handler&#39; method.</span>
+    <span class="c1">#</span>
+    <span class="c1">#  It logs any exceptions generated in a trait notification handler.</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_log_exception</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Logs any exceptions generated in a trait notification handler.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># When the stack depth is too great, the logger can&#39;t always log the</span>
-        <span class="c"># message. Make sure that it goes to the console at a minimum:</span>
+        <span class="c1"># When the stack depth is too great, the logger can&#39;t always log the</span>
+        <span class="c1"># message. Make sure that it goes to the console at a minimum:</span>
         <span class="n">excp_class</span><span class="p">,</span> <span class="n">excp</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">((</span><span class="n">excp_class</span> <span class="ow">is</span> <span class="ne">RuntimeError</span><span class="p">)</span> <span class="ow">and</span>
             <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">excp</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span>
-            <span class="p">(</span><span class="n">excp</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;maximum recursion depth exceeded&#39;</span><span class="p">)):</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">__stderr__</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s">&#39;Exception occurred in traits notification &#39;</span>
-                <span class="s">&#39;handler for object: </span><span class="si">%s</span><span class="s">, trait: </span><span class="si">%s</span><span class="s">, old value: </span><span class="si">%s</span><span class="s">, &#39;</span>
-                <span class="s">&#39;new value: </span><span class="si">%s</span><span class="s">.</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
-                <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span> <span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="p">(</span><span class="n">excp</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;maximum recursion depth exceeded&#39;</span><span class="p">)):</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">__stderr__</span><span class="o">.</span><span class="n">write</span><span class="p">(</span> <span class="s1">&#39;Exception occurred in traits notification &#39;</span>
+                <span class="s1">&#39;handler for object: </span><span class="si">%s</span><span class="s1">, trait: </span><span class="si">%s</span><span class="s1">, old value: </span><span class="si">%s</span><span class="s1">, &#39;</span>
+                <span class="s1">&#39;new value: </span><span class="si">%s</span><span class="s1">.</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span> <span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span>
         <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">logging</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">traits_logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
-                                                  <span class="s">&#39;traits&#39;</span> <span class="p">)</span>
+                                                  <span class="s1">&#39;traits&#39;</span> <span class="p">)</span>
             <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
-            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span> <span class="s">&#39;</span><span class="si">%(message)s</span><span class="s">&#39;</span> <span class="p">)</span> <span class="p">)</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span> <span class="p">)</span> <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span>
-            <span class="k">print</span> <span class="p">(</span><span class="s">&#39;Exception occurred in traits notification handler.</span><span class="se">\n</span><span class="s">&#39;</span>
-                   <span class="s">&#39;Please check the log file for details.&#39;</span><span class="p">)</span>
+            <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Exception occurred in traits notification handler.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                   <span class="s1">&#39;Please check the log file for details.&#39;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
-                <span class="s">&#39;Exception occurred in traits notification handler for &#39;</span>
-                <span class="s">&#39;object: </span><span class="si">%s</span><span class="s">, trait: </span><span class="si">%s</span><span class="s">, old value: </span><span class="si">%s</span><span class="s">, new value: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+                <span class="s1">&#39;Exception occurred in traits notification handler for &#39;</span>
+                <span class="s1">&#39;object: </span><span class="si">%s</span><span class="s1">, trait: </span><span class="si">%s</span><span class="s1">, old value: </span><span class="si">%s</span><span class="s1">, new value: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
                 <span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="c"># Ignore anything we can&#39;t log the above way:</span>
-            <span class="k">pass</span>
+            <span class="c1"># Ignore anything we can&#39;t log the above way:</span>
+            <span class="k">pass</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Traits global notification exception handler:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Traits global notification exception handler:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <span class="n">notification_exception_handler</span> <span class="o">=</span> <span class="n">NotificationExceptionHandler</span><span class="p">()</span>
 
 <span class="n">push_exception_handler</span> <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_push_handler</span>
 <span class="n">pop_exception_handler</span>  <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_pop_handler</span>
 <span class="n">handle_exception</span>       <span class="o">=</span> <span class="n">notification_exception_handler</span><span class="o">.</span><span class="n">_handle_exception</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Traits global notification event tracer:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Traits global notification event tracer:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="n">_pre_change_event_tracer</span> <span class="o">=</span> <span class="bp">None</span>
 <span class="n">_post_change_event_tracer</span> <span class="o">=</span> <span class="bp">None</span>
@@ -349,9 +341,9 @@
     <span class="n">_pre_change_event_tracer</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">_post_change_event_tracer</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;AbstractStaticChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;AbstractStaticChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="k">class</span> <span class="nc">AbstractStaticChangeNotifyWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -367,9 +359,9 @@
         <span class="n">arg_count</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
         <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
-                <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the static anytrait change &#39;</span>
-                 <span class="s">&#39;notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 arguments is &#39;</span>
-                 <span class="s">&#39;allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span>
+                <span class="p">(</span><span class="s1">&#39;Invalid number of arguments for the static anytrait change &#39;</span>
+                 <span class="s1">&#39;notification handler: </span><span class="si">%s</span><span class="s1">. A maximum of 4 arguments is &#39;</span>
+                 <span class="s1">&#39;allowed, but </span><span class="si">%s</span><span class="s1"> were specified.&#39;</span><span class="p">)</span>
                 <span class="o">%</span> <span class="p">(</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transforms</span><span class="p">[</span><span class="n">arg_count</span><span class="p">]</span>
 
@@ -379,71 +371,70 @@
         <span class="sd">&quot;&quot;&quot; Dispatch to the appropriate handler method. &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
-            <span class="c"># Extract the arguments needed from the handler.</span>
+            <span class="c1"># Extract the arguments needed from the handler.</span>
             <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
-            <span class="c"># Send a description of the change event to the event tracer.</span>
+            <span class="c1"># Send a description of the change event to the event tracer.</span>
             <span class="k">if</span> <span class="n">_pre_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">_pre_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
                                           <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="c"># Call the handler.</span>
+                <span class="c1"># Call the handler.</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">exception</span> <span class="o">=</span> <span class="n">e</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">exception</span> <span class="o">=</span> <span class="bp">None</span>
-            <span class="k">finally</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                     <span class="n">_post_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
                                                <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
-                                               <span class="n">exception</span><span class="o">=</span><span class="n">exception</span> <span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">exception</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                                               <span class="n">exception</span><span class="o">=</span><span class="n">e</span> <span class="p">)</span>
                 <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                    <span class="n">_post_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
+                                               <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+                                               <span class="n">exception</span><span class="o">=</span><span class="bp">None</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">equals</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
         <span class="k">return</span> <span class="bp">False</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;StaticAnyTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;StaticAnyTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="StaticAnyTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticAnyTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticAnyTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">AbstractStaticChangeNotifyWrapper</span><span class="p">):</span>
 
-    <span class="c"># The wrapper is called with the full set of argument, and we need to</span>
-    <span class="c"># create a tuple with the arguments that need to be sent to the event</span>
-    <span class="c"># handler, depending on the number of those.</span>
+    <span class="c1"># The wrapper is called with the full set of argument, and we need to</span>
+    <span class="c1"># create a tuple with the arguments that need to be sent to the event</span>
+    <span class="c1"># handler, depending on the number of those.</span>
     <span class="n">argument_transforms</span> <span class="o">=</span> <span class="p">{</span>
         <span class="mi">0</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(),</span>
         <span class="mi">1</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,),</span>
         <span class="mi">2</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
         <span class="mi">3</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
         <span class="mi">4</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
-    <span class="p">}</span>
+    <span class="p">}</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;StaticTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;StaticTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="StaticTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.StaticTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">StaticTraitChangeNotifyWrapper</span><span class="p">(</span><span class="n">AbstractStaticChangeNotifyWrapper</span><span class="p">):</span>
 
-    <span class="c"># The wrapper is called with the full set of argument, and we need to</span>
-    <span class="c"># create a tuple with the arguments that need to be sent to the event</span>
-    <span class="c"># handler, depending on the number of those.</span>
+    <span class="c1"># The wrapper is called with the full set of argument, and we need to</span>
+    <span class="c1"># create a tuple with the arguments that need to be sent to the event</span>
+    <span class="c1"># handler, depending on the number of those.</span>
     <span class="n">argument_transforms</span> <span class="o">=</span> <span class="p">{</span>
         <span class="mi">0</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(),</span>
         <span class="mi">1</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,),</span>
         <span class="mi">2</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
         <span class="mi">3</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
         <span class="mi">4</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">),</span>
-    <span class="p">}</span>
+    <span class="p">}</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;TraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;TraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="TraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">TraitChangeNotifyWrapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Dynamic change notify wrapper.</span>
 
@@ -452,9 +443,9 @@
 <span class="sd">    the decorator with the same name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c"># The wrapper is called with the full set of argument, and we need to</span>
-    <span class="c"># create a tuple with the arguments that need to be sent to the event</span>
-    <span class="c"># handler, depending on the number of those.</span>
+    <span class="c1"># The wrapper is called with the full set of argument, and we need to</span>
+    <span class="c1"># create a tuple with the arguments that need to be sent to the event</span>
+    <span class="c1"># handler, depending on the number of those.</span>
     <span class="n">argument_transforms</span> <span class="o">=</span> <span class="p">{</span>
         <span class="mi">0</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(),</span>
         <span class="mi">1</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">:</span> <span class="p">(</span><span class="n">new</span><span class="p">,),</span>
@@ -467,8 +458,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">init</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
-        <span class="c"># If target is not None and handler is a function then the handler</span>
-        <span class="c"># will be removed when target is deleted.</span>
+        <span class="c1"># If target is not None and handler is a function then the handler</span>
+        <span class="c1"># will be removed when target is deleted.</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span> <span class="n">handler</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">MethodType</span><span class="p">:</span>
             <span class="n">func</span>   <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">im_func</span>
             <span class="nb">object</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">im_self</span>
@@ -479,36 +470,36 @@
                 <span class="n">arg_count</span>   <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span> <span class="o">-</span> <span class="mi">1</span>
                 <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
-                        <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the dynamic trait &#39;</span>
-                         <span class="s">&#39;change notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 &#39;</span>
-                         <span class="s">&#39;arguments is allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
+                        <span class="p">(</span><span class="s1">&#39;Invalid number of arguments for the dynamic trait &#39;</span>
+                         <span class="s1">&#39;change notification handler: </span><span class="si">%s</span><span class="s1">. A maximum of 4 &#39;</span>
+                         <span class="s1">&#39;arguments is allowed, but </span><span class="si">%s</span><span class="s1"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
                         <span class="p">(</span> <span class="n">func</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
 
-                <span class="c"># We use the unbound method here to prevent cyclic garbage</span>
-                <span class="c"># (issue #100).</span>
+                <span class="c1"># We use the unbound method here to prevent cyclic garbage</span>
+                <span class="c1"># (issue #100).</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_notify_method_listener</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transforms</span><span class="p">[</span><span class="n">arg_count</span><span class="p">]</span>
 
                 <span class="k">return</span> <span class="n">arg_count</span>
 
         <span class="k">elif</span> <span class="n">target</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c"># Set up so the handler will be removed when the target is deleted.</span>
+            <span class="c1"># Set up so the handler will be removed when the target is deleted.</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span> <span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">listener_deleted</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">owner</span> <span class="o">=</span> <span class="n">owner</span>
 
         <span class="n">arg_count</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">func_code</span><span class="o">.</span><span class="n">co_argcount</span>
         <span class="k">if</span> <span class="n">arg_count</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">TraitNotificationError</span><span class="p">(</span>
-                <span class="p">(</span><span class="s">&#39;Invalid number of arguments for the dynamic trait change &#39;</span>
-                 <span class="s">&#39;notification handler: </span><span class="si">%s</span><span class="s">. A maximum of 4 arguments is &#39;</span>
-                 <span class="s">&#39;allowed, but </span><span class="si">%s</span><span class="s"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
+                <span class="p">(</span><span class="s1">&#39;Invalid number of arguments for the dynamic trait change &#39;</span>
+                 <span class="s1">&#39;notification handler: </span><span class="si">%s</span><span class="s1">. A maximum of 4 arguments is &#39;</span>
+                 <span class="s1">&#39;allowed, but </span><span class="si">%s</span><span class="s1"> were specified.&#39;</span><span class="p">)</span> <span class="o">%</span>
                 <span class="p">(</span> <span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">arg_count</span> <span class="p">)</span> <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span>     <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span>  <span class="o">=</span> <span class="n">handler</span>
 
-        <span class="c"># We use the unbound method here to prevent cyclic garbage</span>
-        <span class="c"># (issue #100).</span>
+        <span class="c1"># We use the unbound method here to prevent cyclic garbage</span>
+        <span class="c1"># (issue #100).</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_notify_function_listener</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transforms</span><span class="p">[</span><span class="n">arg_count</span><span class="p">]</span>
 
@@ -521,9 +512,9 @@
 <span class="sd">        attribute to avoid reference cycles.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># `notify_listener` is either the *unbound*</span>
-        <span class="c"># `_notify_method_listener` or `_notify_function_listener` to</span>
-        <span class="c"># prevent cyclic garbage (issue #100).</span>
+        <span class="c1"># `notify_listener` is either the *unbound*</span>
+        <span class="c1"># `_notify_method_listener` or `_notify_function_listener` to</span>
+        <span class="c1"># prevent cyclic garbage (issue #100).</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notify_listener</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
 <div class="viewcode-block" id="TraitChangeNotifyWrapper.dispatch"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.TraitChangeNotifyWrapper.dispatch">[docs]</a>    <span class="k">def</span> <span class="nf">dispatch</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">):</span>
@@ -532,8 +523,8 @@
 <span class="sd">        This method is normally the only one that needs to be overridden in</span>
 <span class="sd">        a subclass to implement the subclass&#39;s dispatch mechanism.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
-</div>
+        <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span></div>
+
     <span class="k">def</span> <span class="nf">equals</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">handler</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">handler</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">True</span>
@@ -545,9 +536,9 @@
         <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">handler</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">listener_deleted</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ref</span> <span class="p">):</span>
-        <span class="c"># In multithreaded situations, it&#39;s possible for this method to</span>
-        <span class="c"># be called after, or concurrently with, the dispose method.</span>
-        <span class="c"># Don&#39;t raise in that case.</span>
+        <span class="c1"># In multithreaded situations, it&#39;s possible for this method to</span>
+        <span class="c1"># be called after, or concurrently with, the dispose method.</span>
+        <span class="c1"># Don&#39;t raise in that case.</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">owner</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span> <span class="bp">self</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -560,22 +551,22 @@
     <span class="k">def</span> <span class="nf">_dispatch_change_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prepare and dispatch a trait change event to a listener. &quot;&quot;&quot;</span>
 
-        <span class="c"># Extract the arguments needed from the handler.</span>
+        <span class="c1"># Extract the arguments needed from the handler.</span>
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
-        <span class="c"># Send a description of the event to the change event tracer.</span>
+        <span class="c1"># Send a description of the event to the change event tracer.</span>
         <span class="k">if</span> <span class="n">_pre_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">_pre_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span> <span class="p">)</span>
 
-        <span class="c"># Dispatch the event to the listener.</span>
+        <span class="c1"># Dispatch the event to the listener.</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="n">_post_change_event_tracer</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
                                            <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">e</span> <span class="p">)</span>
-            <span class="c"># This call needs to be made inside the `except` block in case</span>
-            <span class="c"># the handler wants to re-raise the exception.</span>
+            <span class="c1"># This call needs to be made inside the `except` block in case</span>
+            <span class="c1"># the handler wants to re-raise the exception.</span>
             <span class="n">handle_exception</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">_post_change_event_tracer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -587,12 +578,12 @@
 
         <span class="n">obj_weak_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">obj_weak_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">):</span>
-            <span class="c"># We make sure to hold a reference to the object before invoking</span>
-            <span class="c"># `getattr` so that the listener does not disappear in a</span>
-            <span class="c"># multi-threaded case.</span>
+            <span class="c1"># We make sure to hold a reference to the object before invoking</span>
+            <span class="c1"># `getattr` so that the listener does not disappear in a</span>
+            <span class="c1"># multi-threaded case.</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">obj_weak_ref</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="c"># Dynamically resolve the listener by name.</span>
+                <span class="c1"># Dynamically resolve the listener by name.</span>
                 <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
                                              <span class="n">listener</span> <span class="p">)</span>
@@ -602,12 +593,12 @@
 
         <span class="k">if</span> <span class="n">old</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Uninitialized</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="p">)</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;ExtendedTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ExtendedTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="ExtendedTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.ExtendedTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">ExtendedTraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Change notify wrapper for &quot;extended&quot; trait change events..</span>
 
@@ -621,10 +612,10 @@
     <span class="k">def</span> <span class="nf">_dispatch_change_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prepare and dispatch a trait change event to a listener. &quot;&quot;&quot;</span>
 
-        <span class="c"># Extract the arguments needed from the handler.</span>
+        <span class="c1"># Extract the arguments needed from the handler.</span>
         <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argument_transform</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="p">)</span>
 
-        <span class="c"># Dispatch the event to the listener.</span>
+        <span class="c1"># Dispatch the event to the listener.</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
@@ -635,12 +626,12 @@
 
         <span class="n">obj_weak_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span>
         <span class="k">if</span> <span class="n">obj_weak_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c"># We make sure to hold a reference to the object before invoking</span>
-            <span class="c"># `getattr` so that the listener does not disappear in a</span>
-            <span class="c"># multi-threaded case.</span>
+            <span class="c1"># We make sure to hold a reference to the object before invoking</span>
+            <span class="c1"># `getattr` so that the listener does not disappear in a</span>
+            <span class="c1"># multi-threaded case.</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="n">obj_weak_ref</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="c"># Dynamically resolve the listener by name.</span>
+                <span class="c1"># Dynamically resolve the listener by name.</span>
                 <span class="n">listener</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span>
                                              <span class="n">listener</span> <span class="p">)</span>
@@ -648,12 +639,12 @@
     <span class="k">def</span> <span class="nf">_notify_function_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dispatch a trait change event to a function listener. &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dispatch_change_event</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;FastUITraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;FastUITraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="FastUITraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.FastUITraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">FastUITraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Dynamic change notify wrapper, dispatching on the UI thread.</span>
 
@@ -666,12 +657,12 @@
         <span class="k">if</span> <span class="n">get_ident</span><span class="p">()</span> <span class="o">==</span> <span class="n">ui_thread</span><span class="p">:</span>
             <span class="n">handler</span><span class="p">(</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ui_handler</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span>
+            <span class="n">ui_handler</span><span class="p">(</span> <span class="n">handler</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;NewTraitChangeNotifyWrapper&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;NewTraitChangeNotifyWrapper&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="NewTraitChangeNotifyWrapper"><a class="viewcode-back" href="../../traits_api_reference/trait_notifiers.html#traits.trait_notifiers.NewTraitChangeNotifyWrapper">[docs]</a><span class="k">class</span> <span class="nc">NewTraitChangeNotifyWrapper</span> <span class="p">(</span> <span class="n">TraitChangeNotifyWrapper</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Dynamic change notify wrapper, dispatching on a new thread.</span>
 
@@ -687,12 +678,20 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -700,33 +699,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.trait_notifiers</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

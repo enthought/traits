@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,37 +28,23 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="adapter Module" href="adapter.html" />
-    <link rel="prev" title="API Reference" href="index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="adapter.html" title="adapter Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="API Reference"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="API Reference" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.traits">
-<span id="traits-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">traits</span></tt> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
+<span id="traits-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">traits</span></code> Module<a class="headerlink" href="#module-traits.traits" title="Permalink to this headline">¶</a></h1>
 <p>Defines the &#8216;core&#8217; traits for the Traits package. A trait is a type definition
 that can be used for normal Python object attributes, giving the attributes
 some additional characteristics:</p>
@@ -88,23 +74,23 @@ feature.</p>
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.traits.CTrait">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">CTrait</tt><a class="reference internal" href="../_modules/traits/traits.html#CTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">CTrait</code><a class="reference internal" href="../_modules/traits/traits.html#CTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extends the underlying C-based cTrait type.</p>
 <dl class="method">
 <dt id="traits.traits.CTrait.is_trait_type">
-<tt class="descname">is_trait_type</tt><big>(</big><em>trait_type</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#CTrait.is_trait_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.is_trait_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_trait_type</code><span class="sig-paren">(</span><em>trait_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#CTrait.is_trait_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.is_trait_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns whether or not this trait is of a specified trait type.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.traits.CTrait.get_editor">
-<tt class="descname">get_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#CTrait.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.get_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#CTrait.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.get_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the user interface editor associated with the trait.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.traits.CTrait.get_help">
-<tt class="descname">get_help</tt><big>(</big><em>full=True</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#CTrait.get_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.get_help" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_help</code><span class="sig-paren">(</span><em>full=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#CTrait.get_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.get_help" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the help text for a trait.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -123,13 +109,13 @@ trait and the <strong>info</strong> string on the trait&#8217;s handler.</p>
 
 <dl class="method">
 <dt id="traits.traits.CTrait.full_info">
-<tt class="descname">full_info</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#CTrait.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.full_info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#CTrait.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.full_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a description of the trait.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.traits.CTrait.info">
-<tt class="descname">info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#CTrait.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#CTrait.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.CTrait.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a description of the trait.</p>
 </dd></dl>
 
@@ -137,29 +123,58 @@ trait and the <strong>info</strong> string on the trait&#8217;s handler.</p>
 
 <dl class="class">
 <dt id="traits.traits.TraitFactory">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">TraitFactory</tt><big>(</big><em>maker_function=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#TraitFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.TraitFactory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">TraitFactory</code><span class="sig-paren">(</span><em>maker_function=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#TraitFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.TraitFactory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.traits.TraitImportError">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">TraitImportError</tt><big>(</big><em>message</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#TraitImportError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.TraitImportError" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">TraitImportError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#TraitImportError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.TraitImportError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a factory class for deferring import problems until encountering
 code that actually tries to use the unimportable trait.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.traits.Default">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">Default</tt><big>(</big><em>func=None</em>, <em>args=()</em>, <em>kw=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Default" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">Default</code><span class="sig-paren">(</span><em>func=None</em>, <em>args=()</em>, <em>kw=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a value the first time it is accessed.</p>
 <p>A Default object can be used anywhere a default trait value would normally
 be specified, to generate a default value dynamically.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="traits.traits.Property">
+<code class="descclassname">traits.traits.</code><code class="descname">Property</code><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
+<dt id="traits.traits.ForwardProperty">
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">ForwardProperty</code><span class="sig-paren">(</span><em>metadata</em>, <em>validate=None</em>, <em>handler=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#ForwardProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.ForwardProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to implement Property traits where accessor functions are defined
+implicitly on the class.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits.Color">
+<code class="descclassname">traits.traits.</code><code class="descname">Color</code><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits.RGBColor">
+<code class="descclassname">traits.traits.</code><code class="descname">RGBColor</code><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="traits.traits.Font">
+<code class="descclassname">traits.traits.</code><code class="descname">Font</code><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
 <dt id="traits.traits.Trait">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">Trait</tt><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">Trait</code><span class="sig-paren">(</span><em>*value_type</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#Trait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Trait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a trait definition.</p>
-<p class="rubric">Parameters</p>
 <p>This function accepts a variety of forms of parameter lists:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -218,7 +233,7 @@ appropriate form of zero, False,
 or emtpy string, set or sequence.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>class</em>)</td>
-<td><div class="first last highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
    <span class="k">pass</span>
 <span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
 <span class="n">MyClass</span><span class="p">)</span>
@@ -232,10 +247,10 @@ cannot be assigned as a value.</td>
 </tr>
 <tr class="row-odd"><td>Trait(None,
 <em>class</em>)</td>
-<td><div class="first last highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
   <span class="k">pass</span>
 <span class="n">foo</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span>
-<span class="bp">None</span><span class="p">,</span> <span class="n">MyClass</span><span class="p">)</span>
+<span class="kc">None</span><span class="p">,</span> <span class="n">MyClass</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -243,11 +258,11 @@ cannot be assigned as a value.</td>
 None <em>can</em> be assigned as a value.</td>
 </tr>
 <tr class="row-even"><td>Trait(<em>instance</em>)</td>
-<td><div class="first last highlight-python"><div class="highlight"><pre>class MyClass:
-   pass
-i = MyClass()
-foo =
-  Trait(i)
+<td><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyClass</span><span class="p">:</span>
+   <span class="k">pass</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="n">foo</span> <span class="o">=</span>
+  <span class="n">Trait</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 </pre></div>
 </div>
 </td>
@@ -276,7 +291,7 @@ validated by an object derived from
 TupleType)</td>
 <td>This is the most general form of
 the function. The notation:
-<tt class="docutils literal"><span class="pre">{...|...|...}+</span></tt> means a list of
+<code class="docutils literal"><span class="pre">{...|...|...}+</span></code> means a list of
 one or more of any of the items
 listed between the braces. Thus, the
 most general form of the function
@@ -293,28 +308,22 @@ keyword arguments. The value of each keyword argument becomes bound to the
 resulting trait object as the value of an attribute having the same name
 as the keyword. This feature lets you associate metadata with a trait.</p>
 <p>The following predefined keywords are accepted:</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Keywords:</th><td class="field-body"><ul class="first last">
-<li><p class="first"><strong>desc</strong> (<em>str</em>) &#8211;
-Describes the intended meaning of the trait. It is used in
-exception messages and fly-over help in user interfaces.</p>
-</li>
-<li><p class="first"><strong>label</strong> (<em>str</em>) &#8211;
-Provides a human-readable name for the trait. It is used to label user
-interface editors for traits.</p>
-</li>
-<li><p class="first"><strong>editor</strong> (<em>traits.api.Editor</em>) &#8211;
-Instance of a subclass Editor object to use when creating a user
+<p class="rubric">Keywords</p>
+<dl class="docutils">
+<dt>desc</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Describes the intended meaning of the trait. It is used in
+exception messages and fly-over help in user interfaces.</dd>
+<dt>label</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd>Provides a human-readable name for the trait. It is used to label user
+interface editors for traits.</dd>
+<dt>editor</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">traits.api.Editor</span><dd>Instance of a subclass Editor object to use when creating a user
 interface editor for the trait. See the &#8220;Traits UI User Guide&#8221; for
-more information on trait editors.</p>
-</li>
-<li><p class="first"><strong>comparison_mode</strong> (<em>int</em>) &#8211;
-Indicates when trait change notifications should be generated based upon
+more information on trait editors.</dd>
+<dt>comparison_mode</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd><p class="first">Indicates when trait change notifications should be generated based upon
 the result of comparing the old and new values of a trait assignment:</p>
-<ul class="simple">
+<ul class="last simple">
 <li>0 (NO_COMPARE): The values are not compared and a trait change
 notification is generated on each assignment.</li>
 <li>1 (OBJECT_IDENTITY_COMPARE): A trait change notification is
@@ -323,210 +332,82 @@ generated if the old and new values are not the same object.</li>
 old and new values are not equal using Python&#8217;s
 &#8216;rich comparison&#8217; operator. This is the default.</li>
 </ul>
-</li>
-<li><p class="first"><strong>rich_compare</strong> (<em>bool</em>) &#8211;
-Indicates whether the basis for considering a trait attribute value to
+</dd>
+<dt>rich_compare</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">bool</span><dd><p class="first">Indicates whether the basis for considering a trait attribute value to
 have changed is a &#8220;rich&#8221; comparison (True, the default), or simple
 object identity (False). This attribute can be useful in cases
 where a detailed comparison of two objects is very expensive, or where
 you do not care whether the details of an object change, as long as the
 same object is used.</p>
-<blockquote>
+<blockquote class="last">
 <div><div class="deprecated">
-<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <tt class="docutils literal"><span class="pre">comparison_mode</span></tt> instead</p>
+<p><span class="versionmodified">Deprecated since version 3.0.3: </span>Use <code class="docutils literal"><span class="pre">comparison_mode</span></code> instead</p>
 </div>
 </div></blockquote>
-</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.traits.Property">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Property</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Property"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait whose value is a Python property.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>fget</strong> (<em>function</em>) &#8211; The &#8220;getter&#8221; function for the property.</li>
-<li><strong>fset</strong> (<em>function</em>) &#8211; The &#8220;setter&#8221; function for the property.</li>
-<li><strong>fvalidate</strong> (<em>function</em>) &#8211; The validation function for the property. The method should return the
-value to set or raise TraitError if the new value is not valid.</li>
-<li><strong>force</strong> (<em>bool</em>) &#8211; Indicates whether to use only the function definitions specified by
-<strong>fget</strong> and <strong>fset</strong>, and not look elsewhere on the class.</li>
-<li><strong>handler</strong> (<em>function</em>) &#8211; A trait handler function for the trait.</li>
-<li><strong>trait</strong> (<em>Trait or value</em>) &#8211; A trait definition or a value that can be converted to a trait that
-constrains the values of the property trait.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="rubric">Description</p>
-<p>If no getter, setter or validate functions are specified (and <strong>force</strong> is
-not True), it is assumed that they are defined elsewhere on the class whose
-attribute this trait is assigned to. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    
-    <span class="c"># A float traits Property that should be always positive.</span>
-    <span class="n">foo</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
-    
-    <span class="c"># Shadow trait attribute</span>
-    <span class="n">_foo</span> <span class="o">=</span> <span class="n">Float</span>
-
-    <span class="k">def</span> <span class="nf">_set_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span> <span class="o">=</span> <span class="n">x</span>
-
-    <span class="k">def</span> <span class="nf">_validate_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span>
-                <span class="s">&#39;foo property should be a positive number&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">x</span>
-
-    <span class="k">def</span> <span class="nf">_get_foo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_foo</span>
-</pre></div>
-</div>
-<p>You can use the <strong>depends_on</strong> metadata attribute to indicate that the
-property depends on the value of another trait. The value of <strong>depends_on</strong>
-is an extended name specifier for traits that the property depends on. The
-property will a trait change notification if any of the traits specified
-by <strong>depends_on</strong> change. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Wheel</span> <span class="p">(</span> <span class="n">Part</span> <span class="p">):</span>
-    <span class="n">axle</span>     <span class="o">=</span> <span class="n">Instanced</span><span class="p">(</span> <span class="n">Axle</span> <span class="p">)</span>
-    <span class="n">position</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s">&#39;axle.chassis.position&#39;</span> <span class="p">)</span>
-</pre></div>
-</div>
-<p>For details of the extended trait name syntax, refer to the on_trait_change()
-method of the HasTraits class.</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="traits.traits.ForwardProperty">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">ForwardProperty</tt><big>(</big><em>metadata</em>, <em>validate=None</em>, <em>handler=None</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#ForwardProperty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.ForwardProperty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to implement Property traits where accessor functions are defined
-implicitly on the class.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.traits.Color">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Color</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Color" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait whose value must be a GUI toolkit-specific color.</p>
-<p class="rubric">Description</p>
-<p>For wxPython, the returned trait accepts any of the following values:</p>
-<ul class="simple">
-<li>A wx.Colour instance</li>
-<li>A wx.ColourPtr instance</li>
-<li>an integer whose hexadecimal form is 0x*RRGGBB*, where <em>RR</em> is the red
-value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
-</ul>
-<p class="rubric">Default Value</p>
-<p>For wxPython, 0x000000 (that is, white)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="traits.traits.RGBColor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">RGBColor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#RGBColor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.RGBColor" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Returns a trait whose value must be a GUI toolkit-specific RGB-based</dt>
-<dd>color.</dd>
+</dd>
 </dl>
-<p class="rubric">Description</p>
-<p>For wxPython, the returned trait accepts any of the following values:</p>
-<ul class="simple">
-<li>A tuple of the form (<em>r</em>, <em>g</em>, <em>b</em>), in which <em>r</em>, <em>g</em>, and <em>b</em> represent
-red, green, and blue values, respectively, and are floats in the range
-from 0.0 to 1.0</li>
-<li>An integer whose hexadecimal form is 0x*RRGGBB*, where <em>RR</em> is the red
-value, <em>GG</em> is the green value, and <em>BB</em> is the blue value</li>
-</ul>
-<p class="rubric">Default Value</p>
-<p>For wxPython, (0.0, 0.0, 0.0) (that is, white)</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="traits.traits.Font">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">Font</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#Font"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.Font" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a trait whose value must be a GUI toolkit-specific font.</p>
-<p class="rubric">Description</p>
-<p>For wxPython, the returned trait accepts any of the following:</p>
-<ul class="simple">
-<li>a wx.Font instance</li>
-<li>a wx.FontPtr instance</li>
-<li>a string describing the font, including one or more of the font family,
-size, weight, style, and typeface name.</li>
-</ul>
-<p class="rubric">Default Value</p>
-<p>For wxPython, &#8216;Arial 10&#8217;</p>
-</dd></dl>
-
-</div>
-<div class="section" id="functions">
-<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.traits.password_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">password_editor</tt><big>(</big><em>auto_set=True</em>, <em>enter_set=False</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#password_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.password_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">password_editor</code><span class="sig-paren">(</span><em>auto_set=True</em>, <em>enter_set=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#password_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.password_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns an editor for passwords.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.multi_line_text_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">multi_line_text_editor</tt><big>(</big><em>auto_set=True</em>, <em>enter_set=False</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#multi_line_text_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.multi_line_text_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">multi_line_text_editor</code><span class="sig-paren">(</span><em>auto_set=True</em>, <em>enter_set=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#multi_line_text_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.multi_line_text_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns a text editor for multi-line strings.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.code_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">code_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#code_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.code_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">code_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#code_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.code_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns an editor that treats a multi-line string
 as source code.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.shell_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">shell_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#shell_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.shell_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">shell_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#shell_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.shell_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns a Python shell for editing Python values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.time_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">time_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#time_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.time_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">time_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#time_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.time_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns a Time editor for editing Time values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.date_editor">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">date_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#date_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.date_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">date_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#date_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.date_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory function that returns a Date editor for editing Date values.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.trait_factory">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">trait_factory</tt><big>(</big><em>trait</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#trait_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_factory" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">trait_factory</code><span class="sig-paren">(</span><em>trait</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#trait_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_factory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.trait_cast">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">trait_cast</tt><big>(</big><em>something</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#trait_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">trait_cast</code><span class="sig-paren">(</span><em>something</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#trait_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Casts a CTrait, TraitFactory or TraitType to a CTrait but returns None
 if it is none of those.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.try_trait_cast">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">try_trait_cast</tt><big>(</big><em>something</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#try_trait_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.try_trait_cast" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">try_trait_cast</code><span class="sig-paren">(</span><em>something</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#try_trait_cast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.try_trait_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to cast a value to a trait. Returns either a trait or the
 original value.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.traits.trait_from">
-<tt class="descclassname">traits.traits.</tt><tt class="descname">trait_from</tt><big>(</big><em>something</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#trait_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_from" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.traits.</code><code class="descname">trait_from</code><span class="sig-paren">(</span><em>something</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#trait_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits.trait_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait derived from its input.</p>
 </dd></dl>
 
@@ -535,12 +416,12 @@ original value.</p>
 <h2>Private Classes<a class="headerlink" href="#private-classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.traits._InstanceArgs">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">_InstanceArgs</tt><big>(</big><em>factory</em>, <em>args</em>, <em>kw</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#_InstanceArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._InstanceArgs" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">_InstanceArgs</code><span class="sig-paren">(</span><em>factory</em>, <em>args</em>, <em>kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_InstanceArgs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._InstanceArgs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.traits._TraitMaker">
-<em class="property">class </em><tt class="descclassname">traits.traits.</tt><tt class="descname">_TraitMaker</tt><big>(</big><em>*value_type</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.traits.</code><code class="descname">_TraitMaker</code><span class="sig-paren">(</span><em>*value_type</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/traits.html#_TraitMaker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.traits._TraitMaker" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -550,33 +431,39 @@ original value.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">traits</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 <li><a class="reference internal" href="#private-classes">Private Classes</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">API Reference</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="adapter.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/traits.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">API Reference</a></li>
+      <li>Next: <a href="adapter.html" title="next chapter"><code class="docutils literal"><span class="pre">adapter</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/traits.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -584,39 +471,26 @@ original value.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="adapter.html" title="adapter Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="API Reference"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/traits.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

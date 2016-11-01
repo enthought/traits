@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,37 +28,23 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="has_traits Module" href="has_traits.html" />
-    <link rel="prev" title="adapter Module" href="adapter.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="has_traits.html" title="has_traits Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="adapter.html" title="adapter Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="adapter Module" href="adapter.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.category">
-<span id="category-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">category</span></tt> Module<a class="headerlink" href="#module-traits.category" title="Permalink to this headline">¶</a></h1>
+<span id="category-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">category</span></code> Module<a class="headerlink" href="#module-traits.category" title="Permalink to this headline">¶</a></h1>
 <p>Adds a &#8220;category&#8221; capability to Traits-based classes, similar to that
 provided by the Cocoa (Objective-C) environment for the Macintosh.</p>
 <p>You can use categories to extend an existing HasTraits class, as an
@@ -70,29 +56,29 @@ subclassing, categories do not allow overriding trait attributes.</p>
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.category.MetaCategory">
-<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">MetaCategory</tt><a class="reference internal" href="../_modules/traits/category.html#MetaCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.category.</code><code class="descname">MetaCategory</code><a class="reference internal" href="../_modules/traits/category.html#MetaCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategory" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.category.MetaCategoryObject">
-<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">MetaCategoryObject</tt><big>(</big><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><big>)</big><a class="reference internal" href="../_modules/traits/category.html#MetaCategoryObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategoryObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.category.</code><code class="descname">MetaCategoryObject</code><span class="sig-paren">(</span><em>cls</em>, <em>class_name</em>, <em>bases</em>, <em>class_dict</em>, <em>is_category</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/category.html#MetaCategoryObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.MetaCategoryObject" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.category.Category">
-<em class="property">class </em><tt class="descclassname">traits.category.</tt><tt class="descname">Category</tt><a class="reference internal" href="../_modules/traits/category.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.Category" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.category.</code><code class="descname">Category</code><a class="reference internal" href="../_modules/traits/category.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.category.Category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used for defining &#8220;category&#8221; extensions to existing classes.</p>
 <p>To define a class as a category, specify &#8220;Category,&#8221; followed by the name
 of the base class name in the base class list.</p>
 <p>The following example demonstrates defining a category:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Category</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Category</span>
 
 <span class="k">class</span> <span class="nc">Base</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;Base x&quot;</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;Base y&quot;</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Base x&quot;</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Base y&quot;</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">BaseExtra</span><span class="p">(</span><span class="n">Category</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
-    <span class="n">z</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&quot;BaseExtra z&quot;</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;BaseExtra z&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -104,31 +90,37 @@ of the base class name in the base class list.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">category</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="adapter.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="has_traits.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/category.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="adapter.html" title="previous chapter"><code class="docutils literal"><span class="pre">adapter</span></code> Module</a></li>
+      <li>Next: <a href="has_traits.html" title="next chapter"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/category.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -136,39 +128,26 @@ of the base class name in the base class list.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="has_traits.html" title="has_traits Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="adapter.html" title="adapter Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/category.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,37 +26,54 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.etsconfig.etsconfig</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.etsconfig.etsconfig</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot; Enthought Tool Suite configuration information. &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot; Enthought Tool Suite configuration information. &quot;&quot;&quot;</span>
 
 
-<span class="c"># Standard library imports.</span>
+<span class="c1"># Standard library imports.</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+
+
+<span class="k">class</span> <span class="nc">ETSToolkitError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Error raised by issues importing ETS toolkits</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    message : str</span>
+<span class="sd">        The message detailing the error.</span>
+
+<span class="sd">    toolkit : str or None</span>
+<span class="sd">        The toolkit associated with the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">toolkit</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">toolkit</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;could not import toolkit &#39;{0}&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">toolkit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">toolkit</span><span class="p">:</span>
+                <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">toolkit</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">message</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
 
 
 <div class="viewcode-block" id="ETSConfig"><a class="viewcode-back" href="../../../traits_api_reference/traits.etsconfig.html#traits.etsconfig.etsconfig.ETSConfig">[docs]</a><span class="k">class</span> <span class="nc">ETSConfig</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -68,11 +85,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c">###########################################################################</span>
-    <span class="c"># &#39;object&#39; interface.</span>
-    <span class="c">###########################################################################</span>
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
 
-    <span class="c">#### operator methods #####################################################</span>
+    <span class="c1">#### operator methods #####################################################</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -83,7 +100,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># Shadow attributes for properties.</span>
+        <span class="c1"># Shadow attributes for properties.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_data</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_application_home</span> <span class="o">=</span> <span class="bp">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_company</span>          <span class="o">=</span> <span class="bp">None</span>
@@ -94,11 +111,11 @@
         <span class="k">return</span>
 
 
-    <span class="c">###########################################################################</span>
-    <span class="c"># &#39;ETSConfig&#39; interface.</span>
-    <span class="c">###########################################################################</span>
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;ETSConfig&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
 
-    <span class="c">#### properties ###########################################################</span>
+    <span class="c1">#### properties ###########################################################</span>
 
     <span class="k">def</span> <span class="nf">get_application_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return the application data directory path.</span>
@@ -236,11 +253,43 @@
     <span class="n">company</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_company</span><span class="p">,</span> <span class="n">_set_company</span><span class="p">)</span>
 
 
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">provisional_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Perform an operation with toolkit provisionally set</span>
+
+<span class="sd">        This sets the toolkit attribute of the ETSConfig object to the</span>
+<span class="sd">        provided value. If the operation fails with an exception, the toolkit</span>
+<span class="sd">        is reset to nothing.</span>
+
+<span class="sd">        This method should only be called if the toolkit is not currently set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        toolkit : string</span>
+<span class="sd">            The name of the toolkit to provisionally use.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ETSToolkitError</span>
+<span class="sd">            If the toolkit attribute is already set, then an ETSToolkitError</span>
+<span class="sd">            will be raised when entering the context manager.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;ETSConfig toolkit is already set to &#39;{0}&#39;&quot;</span>
+            <span class="k">raise</span> <span class="n">ETSToolkitError</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">yield</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># reset the toolkit state</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">raise</span>
+
+
     <span class="k">def</span> <span class="nf">_get_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property getter for the GUI toolkit.  The value returned is, in order</span>
-<span class="sd">        of preference: the value set by the application; the value passed on</span>
-<span class="sd">        the command line using the &#39;-toolkit&#39; option; the value specified by</span>
+<span class="sd">        of preference: the value set by the application; the value specified by</span>
 <span class="sd">        the &#39;ETS_TOOLKIT&#39; environment variable; otherwise the empty string.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -248,7 +297,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_toolkit</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
 
     <span class="k">def</span> <span class="nf">_set_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">toolkit</span><span class="p">):</span>
@@ -261,8 +310,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">!=</span> <span class="n">toolkit</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="s">&quot;cannot set toolkit to </span><span class="si">%s</span><span class="s"> because it has &quot;</span>\
-                            <span class="s">&quot;already been set to </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">toolkit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="s2">&quot;cannot set toolkit to </span><span class="si">%s</span><span class="s2"> because it has &quot;</span>\
+                            <span class="s2">&quot;already been set to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">toolkit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="o">=</span> <span class="n">toolkit</span>
 
@@ -276,12 +325,11 @@
 <span class="sd">        Deprecated: This property is no longer used.</span>
 
 <span class="sd">        Property getter for the Enable backend.  The value returned is, in order</span>
-<span class="sd">        of preference: the value set by the application; the value passed on</span>
-<span class="sd">        the command line using the &#39;-toolkit&#39; option; the value specified by</span>
+<span class="sd">        of preference: the value set by the application; the value specified by</span>
 <span class="sd">        the &#39;ENABLE_TOOLKIT&#39; environment variable; otherwise the empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Use of the enable_toolkit attribute is deprecated.&#39;</span><span class="p">)</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Use of the enable_toolkit attribute is deprecated.&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span>
 
@@ -296,7 +344,7 @@
 <span class="sd">        module that gets the value is imported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
-        <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Use of the enable_toolkit attribute is deprecated.&#39;</span><span class="p">)</span>
+        <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Use of the enable_toolkit attribute is deprecated.&#39;</span><span class="p">)</span>
 
         <span class="k">return</span>
 
@@ -312,21 +360,21 @@
 <span class="sd">        value will be a reasonable default for the given enable backend.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="s">&quot;The kiva_backend attribute is dependent on toolkit, which has not been set.&quot;</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">,</span> <span class="s2">&quot;The kiva_backend attribute is dependent on toolkit, which has not been set.&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="c"># Pick a reasonable default based on the toolkit</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s">&quot;wx&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s">&quot;quartz&quot;</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&quot;darwin&quot;</span> <span class="k">else</span> <span class="s">&quot;image&quot;</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s">&quot;qt4&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s">&quot;image&quot;</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s">&quot;pyglet&quot;</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s">&quot;gl&quot;</span>
+                <span class="c1"># Pick a reasonable default based on the toolkit</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;wx&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;quartz&quot;</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s2">&quot;darwin&quot;</span> <span class="k">else</span> <span class="s2">&quot;image&quot;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;qt4&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s2">&quot;pyglet&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;gl&quot;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s">&quot;image&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span> <span class="o">=</span> <span class="s2">&quot;image&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kiva_backend</span>
 
@@ -363,15 +411,15 @@
     <span class="n">user_data</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_user_data</span><span class="p">,</span> <span class="n">_set_user_data</span><span class="p">)</span>
 
 
-    <span class="c">#### private methods #####################################################</span>
+    <span class="c1">#### private methods #####################################################</span>
 
-    <span class="c"># fixme: In future, these methods could allow the properties to be set</span>
-    <span class="c"># via the (as yet non-existent) preference/configuration mechanism. This</span>
-    <span class="c"># would allow configuration via (in order of precedence):-</span>
-    <span class="c">#</span>
-    <span class="c"># - a configuration file</span>
-    <span class="c"># - environment variables</span>
-    <span class="c"># - the command line</span>
+    <span class="c1"># fixme: In future, these methods could allow the properties to be set</span>
+    <span class="c1"># via the (as yet non-existent) preference/configuration mechanism. This</span>
+    <span class="c1"># would allow configuration via (in order of precedence):-</span>
+    <span class="c1">#</span>
+    <span class="c1"># - a configuration file</span>
+    <span class="c1"># - environment variables</span>
+    <span class="c1"># - the command line</span>
 
     <span class="k">def</span> <span class="nf">_get_application_dirname</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -387,11 +435,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">dirname</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="n">main_mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;__main__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="n">main_mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__main__&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">main_mod</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main_mod</span><span class="p">,</span> <span class="s">&#39;__file__&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main_mod</span><span class="p">,</span> <span class="s1">&#39;__file__&#39;</span><span class="p">):</span>
                 <span class="n">main_mod_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">main_mod</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
                 <span class="n">dirname</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">main_mod_file</span><span class="p">))</span>
 
@@ -404,37 +452,37 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&#39;win32&#39;</span><span class="p">:</span>
-            <span class="n">environment_variable</span> <span class="o">=</span> <span class="s">&#39;APPDATA&#39;</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+            <span class="n">environment_variable</span> <span class="o">=</span> <span class="s1">&#39;APPDATA&#39;</span>
             <span class="n">directory_name</span>       <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">environment_variable</span> <span class="o">=</span> <span class="s">&#39;HOME&#39;</span>
-            <span class="n">directory_name</span>       <span class="o">=</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">environment_variable</span> <span class="o">=</span> <span class="s1">&#39;HOME&#39;</span>
+            <span class="n">directory_name</span>       <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="c"># Lookup the environment variable.</span>
+        <span class="c1"># Lookup the environment variable.</span>
         <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">environment_variable</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">parent_directory</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">parent_directory</span> <span class="o">==</span> <span class="s">&#39;/root&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">parent_directory</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">parent_directory</span> <span class="o">==</span> <span class="s1">&#39;/root&#39;</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">tempfile</span>
             <span class="kn">from</span> <span class="nn">warnings</span> <span class="kn">import</span> <span class="n">warn</span>
             <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">gettempdir</span><span class="p">()</span>
-            <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;USER&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;USER&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-                <span class="n">directory_name</span> <span class="o">+=</span> <span class="s">&quot;_</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">user</span>
-            <span class="n">warn</span><span class="p">(</span><span class="s">&#39;Environment variable &quot;</span><span class="si">%s</span><span class="s">&quot; not set, setting home directory to </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> \
+                <span class="n">directory_name</span> <span class="o">+=</span> <span class="s2">&quot;_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">user</span>
+            <span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Environment variable &quot;</span><span class="si">%s</span><span class="s1">&quot; not set, setting home directory to </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> \
                 <span class="p">(</span><span class="n">environment_variable</span><span class="p">,</span> <span class="n">parent_directory</span><span class="p">))</span>
 
         <span class="n">application_data</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_directory</span><span class="p">,</span> <span class="n">directory_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">create</span><span class="p">:</span>
-            <span class="c"># If a file already exists with this name then make sure that it is</span>
-            <span class="c"># a directory!</span>
+            <span class="c1"># If a file already exists with this name then make sure that it is</span>
+            <span class="c1"># a directory!</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">application_data</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">application_data</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;File &quot;</span><span class="si">%s</span><span class="s">&quot; already exists&#39;</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;File &quot;</span><span class="si">%s</span><span class="s1">&quot; already exists&#39;</span>
                                                     <span class="o">%</span> <span class="n">application_data</span><span class="p">)</span>
 
-            <span class="c"># Otherwise, create the directory.</span>
+            <span class="c1"># Otherwise, create the directory.</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">application_data</span><span class="p">)</span>
 
@@ -447,7 +495,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="s">&#39;Enthought&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;Enthought&#39;</span>
 
 
     <span class="k">def</span> <span class="nf">_initialize_toolkit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -455,28 +503,10 @@
 <span class="sd">        Initializes the toolkit.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># We handle the command line option even though it doesn&#39;t have the</span>
-        <span class="c"># highest precedence because we always want to remove it from the</span>
-        <span class="c"># command line.</span>
-        <span class="k">if</span> <span class="s">&#39;-toolkit&#39;</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">:</span>
-            <span class="n">opt_idx</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&#39;-toolkit&#39;</span><span class="p">)</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">opt_toolkit</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">opt_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="s">&quot;the -toolkit command line argument must be followed by a toolkit name&quot;</span>
-
-            <span class="c"># Remove the option.</span>
-            <span class="k">del</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="n">opt_idx</span><span class="p">:</span><span class="n">opt_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">opt_toolkit</span> <span class="o">=</span> <span class="bp">None</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="n">toolkit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_toolkit</span>
-        <span class="k">elif</span> <span class="n">opt_toolkit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="n">toolkit</span> <span class="o">=</span> <span class="n">opt_toolkit</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">toolkit</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ETS_TOOLKIT&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+            <span class="n">toolkit</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ETS_TOOLKIT&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">toolkit</span>
 
@@ -487,29 +517,29 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># We check what the os.path.expanduser returns</span>
-        <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s">&#39;~&#39;</span><span class="p">)</span>
+        <span class="c1"># We check what the os.path.expanduser returns</span>
+        <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">)</span>
         <span class="n">directory_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">company</span>
 
 
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s">&#39;win32&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="kn">from</span> <span class="nn">win32com.shell</span> <span class="kn">import</span> <span class="n">shell</span><span class="p">,</span> <span class="n">shellcon</span>
 
-                <span class="c"># Due to the fact that the user&#39;s My Documents directory can</span>
-                <span class="c"># be in some pretty strange places, it&#39;s safest to just ask</span>
-                <span class="c"># Windows where it is.</span>
+                <span class="c1"># Due to the fact that the user&#39;s My Documents directory can</span>
+                <span class="c1"># be in some pretty strange places, it&#39;s safest to just ask</span>
+                <span class="c1"># Windows where it is.</span>
                 <span class="n">MY_DOCS</span> <span class="o">=</span> <span class="n">shellcon</span><span class="o">.</span><span class="n">CSIDL_PERSONAL</span>
                 <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">SHGetFolderPath</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MY_DOCS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-                <span class="c"># But if they don&#39;t have pywin32 installed, just do it the</span>
-                <span class="c"># naive way...</span>
+                <span class="c1"># But if they don&#39;t have pywin32 installed, just do it the</span>
+                <span class="c1"># naive way...</span>
 
-                <span class="c"># Check if the usr_dir is C:\\John Doe\\Documents and Settings.</span>
-                <span class="c"># If yes, then we should modify the usr_dir to be &#39;My Documents&#39;.</span>
-                <span class="c"># If no, then the user must have modified the os.environ</span>
-                <span class="c"># variables and the directory chosen is a desirable one.</span>
-                <span class="n">desired_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_directory</span><span class="p">,</span> <span class="s">&#39;My Documents&#39;</span><span class="p">)</span>
+                <span class="c1"># Check if the usr_dir is C:\\John Doe\\Documents and Settings.</span>
+                <span class="c1"># If yes, then we should modify the usr_dir to be &#39;My Documents&#39;.</span>
+                <span class="c1"># If no, then the user must have modified the os.environ</span>
+                <span class="c1"># variables and the directory chosen is a desirable one.</span>
+                <span class="n">desired_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_directory</span><span class="p">,</span> <span class="s1">&#39;My Documents&#39;</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">desired_dir</span><span class="p">):</span>
                     <span class="n">parent_directory</span> <span class="o">=</span> <span class="n">desired_dir</span>
@@ -517,41 +547,49 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">directory_name</span> <span class="o">=</span> <span class="n">directory_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-        <span class="c"># The final directory.</span>
+        <span class="c1"># The final directory.</span>
         <span class="n">usr_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parent_directory</span><span class="p">,</span> <span class="n">directory_name</span><span class="p">)</span>
 
-        <span class="c"># If a file already exists with this name then make sure that it is</span>
-        <span class="c"># a directory!</span>
+        <span class="c1"># If a file already exists with this name then make sure that it is</span>
+        <span class="c1"># a directory!</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">usr_dir</span><span class="p">):</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">usr_dir</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;File &quot;</span><span class="si">%s</span><span class="s">&quot; already exists&#39;</span> <span class="o">%</span> <span class="n">usr_dir</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;File &quot;</span><span class="si">%s</span><span class="s1">&quot; already exists&#39;</span> <span class="o">%</span> <span class="n">usr_dir</span><span class="p">)</span>
 
-        <span class="c"># Otherwise, create the directory.</span>
+        <span class="c1"># Otherwise, create the directory.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">usr_dir</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">usr_dir</span>
+        <span class="k">return</span> <span class="n">usr_dir</span></div>
 
 
 
-<span class="c"># We very purposefully only have one object and do not export the class. We</span>
-<span class="c"># could have just made everything class methods, but that always seems a bit</span>
-<span class="c"># gorpy, especially with properties etc.</span></div>
+<span class="c1"># We very purposefully only have one object and do not export the class. We</span>
+<span class="c1"># could have just made everything class methods, but that always seems a bit</span>
+<span class="c1"># gorpy, especially with properties etc.</span>
 <span class="n">ETSConfig</span> <span class="o">=</span> <span class="n">ETSConfig</span><span class="p">()</span>
 
 
-<span class="c">#### EOF ######################################################################</span>
+<span class="c1">#### EOF ######################################################################</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -559,33 +597,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.etsconfig.etsconfig</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

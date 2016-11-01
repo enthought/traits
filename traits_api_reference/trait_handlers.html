@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,37 +28,23 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="trait_numeric Module" href="trait_numeric.html" />
-    <link rel="prev" title="trait_errors Module" href="trait_errors.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="trait_numeric.html" title="trait_numeric Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="trait_errors.html" title="trait_errors Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="trait_errors Module" href="trait_errors.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">trait_handlers</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.trait_handlers">
-<span id="trait-handlers-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_handlers</span></tt> Module<a class="headerlink" href="#module-traits.trait_handlers" title="Permalink to this headline">¶</a></h1>
+<span id="trait-handlers-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">trait_handlers</span></code> Module<a class="headerlink" href="#module-traits.trait_handlers" title="Permalink to this headline">¶</a></h1>
 <p>Defines the BaseTraitHandler class and a standard set of BaseTraitHandler
 subclasses for use with the Traits package.</p>
 <p>A trait handler mediates the assignment of values to object traits. It
@@ -69,7 +55,7 @@ consistent.</p>
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.trait_handlers.BaseTraitHandler">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">BaseTraitHandler</tt><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">BaseTraitHandler</code><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The task of this class and its subclasses is to verify the correctness
 of values assigned to object trait attributes.</p>
 <p>This class is an alternative to trait validator functions. A trait handler
@@ -87,7 +73,7 @@ wider range of cases, such as interactions with other components.</li>
 </div></blockquote>
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.error">
-<tt class="descname">error</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.error" title="Permalink to this definition">¶</a></dt>
+<code class="descname">error</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raises a TraitError exception.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -111,7 +97,7 @@ another trait handler to handle to validate the value.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.full_info">
-<tt class="descname">full_info</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.full_info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">full_info</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.full_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.full_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string describing the type of value accepted by the
 trait handler.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -146,7 +132,7 @@ method.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.info">
-<tt class="descname">info</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.info" title="Permalink to this definition">¶</a></dt>
+<code class="descname">info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Must return a string describing the type of value accepted by the
 trait handler.</p>
 <p>The string should be a phrase describing the type defined by the
@@ -167,7 +153,7 @@ attribute.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.repr">
-<tt class="descname">repr</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.repr" title="Permalink to this definition">¶</a></dt>
+<code class="descname">repr</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.repr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.repr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a printable representation of a value along with its type.</p>
 <div class="deprecated">
 <p><span class="versionmodified">Deprecated since version 3.0.3: </span>This functionality was only used to provide readable error
@@ -186,14 +172,14 @@ TraitError itself.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.get_editor">
-<tt class="descname">get_editor</tt><big>(</big><em>trait=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.get_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_editor</code><span class="sig-paren">(</span><em>trait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.get_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.get_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a trait editor that allows the user to modify the <em>trait</em>
 trait.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<em>Trait</em>) &#8211; The trait to be edited.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>trait</strong> (<a class="reference internal" href="traits.html#traits.traits.Trait" title="traits.traits.Trait"><em>Trait</em></a>) &#8211; The trait to be edited.</td>
 </tr>
 </tbody>
 </table>
@@ -208,13 +194,13 @@ User Guide</em>.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.create_editor">
-<tt class="descname">create_editor</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.create_editor" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_editor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.create_editor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.create_editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the default traits UI editor to use for a trait.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.trait_handlers.BaseTraitHandler.inner_traits">
-<tt class="descname">inner_traits</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.inner_traits" title="Permalink to this definition">¶</a></dt>
+<code class="descname">inner_traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#BaseTraitHandler.inner_traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.BaseTraitHandler.inner_traits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a tuple containing the <em>inner traits</em> for this trait. Most
 trait handlers do not have any inner traits, and so will return an
 empty tuple. The exceptions are <strong>List</strong> and <strong>Dict</strong> trait types,
@@ -227,12 +213,12 @@ trait. For example, in <em>List( Int )</em>, the <em>inner traits</em> for
 
 <dl class="attribute">
 <dt id="traits.trait_handlers.NoDefaultSpecified">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">NoDefaultSpecified</tt><a class="reference internal" href="../_modules/traits/trait_handlers.html#NoDefaultSpecified"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.NoDefaultSpecified" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">NoDefaultSpecified</code><a class="reference internal" href="../_modules/traits/trait_handlers.html#NoDefaultSpecified"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.NoDefaultSpecified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitType">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitType</tt><big>(</big><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object at 0x1022d2290&gt;</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitType</code><span class="sig-paren">(</span><em>default_value=&lt;traits.trait_handlers.NoDefaultSpecified object&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for new trait types.</p>
 <p>This class enables you to define new traits using a class-based
 approach, instead of by calling the Trait() factory function with an
@@ -321,13 +307,13 @@ a value, and should normally not raise any exceptions.</p>
 </ul>
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.init">
-<tt class="descname">init</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.init" title="Permalink to this definition">¶</a></dt>
+<code class="descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allows the trait to perform any additional initialization needed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.get_default_value">
-<tt class="descname">get_default_value</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.get_default_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_default_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.get_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.get_default_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a tuple of the form: (<em>default_value_type</em>, <em>default_value</em>)
 which describes the default value for this trait. The default
 implementation analyzes the value of the trait&#8217;s <strong>default_value</strong>
@@ -365,7 +351,7 @@ validate the result.</li>
 
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.clone">
-<tt class="descname">clone</tt><big>(</big><em>default_value=&lt;missing&gt;</em>, <em>**metadata</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.clone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clone</code><span class="sig-paren">(</span><em>default_value=&lt;missing&gt;</em>, <em>**metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.clone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clones the contents of this object into a new instance of the same
 class, and then modifies the cloned copy using the specified
 <em>default_value</em> and <em>metadata</em>. Returns the cloned object as the
@@ -376,20 +362,20 @@ needed, but should always call the &#8216;super&#8217; method if possible.</p>
 
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.get_value">
-<tt class="descname">get_value</tt><big>(</big><em>object</em>, <em>name</em>, <em>trait=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.get_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_value</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>trait=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.get_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.get_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current value of a property-based trait.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.set_value">
-<tt class="descname">set_value</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.set_value" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_value</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.set_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.set_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the cached value of a property-based trait and fires the
 appropriate trait change event.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.trait_handlers.TraitType.as_ctrait">
-<tt class="descname">as_ctrait</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.as_ctrait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">as_ctrait</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitType.as_ctrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitType.as_ctrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a CTrait corresponding to the trait defined by this class.</p>
 </dd></dl>
 
@@ -397,7 +383,7 @@ appropriate trait change event.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitHandler">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitHandler</tt><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitHandler</code><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>The task of this class and its subclasses is to verify the correctness
 of values assigned to object trait attributes.</p>
 <p>This class is an alternative to trait validator functions. A trait handler
@@ -417,7 +403,7 @@ wider range of cases, such as interactions with other components.</li>
 is validate().</p>
 <dl class="method">
 <dt id="traits.trait_handlers.TraitHandler.validate">
-<tt class="descname">validate</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitHandler.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitHandler.validate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitHandler.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitHandler.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verifies whether a new value assigned to a trait attribute is valid.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -451,16 +437,16 @@ raise a TraitError exception</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitRange">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitRange</tt><big>(</big><em>low=None</em>, <em>high=None</em>, <em>exclude_low=False</em>, <em>exclude_high=False</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitRange" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitRange</code><span class="sig-paren">(</span><em>low=None</em>, <em>high=None</em>, <em>exclude_low=False</em>, <em>exclude_high=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitRange"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitRange" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a trait attribute lies within a specified numeric range.</p>
 <p>TraitRange is the underlying handler for the predefined Range() trait
 factory.</p>
 <p>Any value assigned to a trait containing a TraitRange handler must be of the
 correct type and in the numeric range defined by the TraitRange instance.
 No automatic coercion takes place. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">age</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">TraitRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">150</span><span class="p">))</span>
-    <span class="n">weight</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">TraitRange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">None</span><span class="p">))</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">TraitRange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This example defines a Person class, which has an <strong>age</strong> trait
@@ -470,7 +456,7 @@ attribute, which must be an integer/long in the range from 0 to 150, and a
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitString">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitString</tt><big>(</big><em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitString" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitString</code><span class="sig-paren">(</span><em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>regex=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitString" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a trait attribute value is a string that satisfied some
 additional, optional constraints.</p>
 <p>The optional constraints include minimum and maximum lengths, and a regular
@@ -481,8 +467,8 @@ non-string types result in a TraitError being raised. The handler then
 makes sure that the resulting string is within the specified length range
 and that it matches the regular expression.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitString</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="s">r&#39;^[A-Za-z]*$&#39;</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitString</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="s1">r&#39;^[A-Za-z]*$&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This example defines a <strong>Person</strong> class with a <strong>name</strong> attribute, which
@@ -492,7 +478,7 @@ upper and lower case letters.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitCoerceType">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitCoerceType</tt><big>(</big><em>aType</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCoerceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCoerceType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitCoerceType</code><span class="sig-paren">(</span><em>aType</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCoerceType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCoerceType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is of a specified
 Python type, or can be coerced to the specified type.</p>
 <p>TraitCoerceType is the underlying handler for the predefined traits and
@@ -500,17 +486,17 @@ factories for Python simple types. The TraitCoerceType class is also an
 example of a parametrized type, because the single TraitCoerceType class
 allows creating instances that check for totally different sets of values.
 For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitCoerceType</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitCoerceType</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">TraitCoerceType</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>In this example, the <strong>name</strong> attribute must be of type <tt class="docutils literal"><span class="pre">str</span></tt> (string),
-while the <strong>weight</strong> attribute must be of type <tt class="docutils literal"><span class="pre">float</span></tt>, although both are
+<p>In this example, the <strong>name</strong> attribute must be of type <code class="docutils literal"><span class="pre">str</span></code> (string),
+while the <strong>weight</strong> attribute must be of type <code class="docutils literal"><span class="pre">float</span></code>, although both are
 based on instances of the TraitCoerceType class. Note that this example is
 essentially the same as writing:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -552,7 +538,7 @@ The following table lists the allowed coercions.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitCastType">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitCastType</tt><big>(</big><em>aType</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCastType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCastType" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitCastType</code><span class="sig-paren">(</span><em>aType</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCastType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCastType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is of a specified
 Python type, or can be cast to the specified type.</p>
 <p>This class is similar to TraitCoerceType, but uses casting rather than
@@ -562,22 +548,22 @@ value assigned to the trait attribute.</p>
 <p>Any trait that uses a TraitCastType instance in its definition ensures that
 its value is of the type associated with the TraitCastType instance. For
 example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitCastType</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">TraitCastType</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">TraitCastType</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>In this example, the <strong>name</strong> trait must be of type <tt class="docutils literal"><span class="pre">str</span></tt> (string), while
-the <strong>weight</strong> trait must be of type <tt class="docutils literal"><span class="pre">float</span></tt>. Note that this example is
+<p>In this example, the <strong>name</strong> trait must be of type <code class="docutils literal"><span class="pre">str</span></code> (string), while
+the <strong>weight</strong> trait must be of type <code class="docutils literal"><span class="pre">float</span></code>. Note that this example is
 essentially the same as writing:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">CStr</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">CFloat</span>
 </pre></div>
 </div>
 <p>To understand the difference between TraitCoerceType and TraitCastType (and
 also between Float and CFloat), consider the following example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
 <span class="gp">... </span>   <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span>
 <span class="gp">... </span>   <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
 <span class="go">&gt;&gt;&gt;</span>
@@ -592,7 +578,7 @@ also between Float and CFloat), consider the following example:</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.ThisClass">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">ThisClass</tt><big>(</big><em>allow_none=False</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#ThisClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.ThisClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">ThisClass</code><span class="sig-paren">(</span><em>allow_none=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#ThisClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.ThisClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that the trait attribute values belong to the same class (or
 a subclass) as the object containing the trait attribute.</p>
 <p>ThisClass is the underlying handler for the predefined traits <strong>This</strong>
@@ -601,15 +587,15 @@ and <strong>self</strong>, and the elements of ListThis.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitInstance">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitInstance</tt><big>(</big><em>aClass</em>, <em>allow_none=True</em>, <em>adapt='no'</em>, <em>module=''</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitInstance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitInstance</code><span class="sig-paren">(</span><em>aClass</em>, <em>allow_none=True</em>, <em>adapt='no'</em>, <em>module=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitInstance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that trait attribute values belong to a specified Python class
 or type.</p>
 <p>TraitInstance is the underlying handler for the predefined trait
 <strong>Instance</strong> and the elements of List( Instance ).</p>
 <p>Any trait that uses a TraitInstance handler ensures that its values belong
 to the specified type or class (or one of its subclasses). For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">manager</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="bp">True</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">TraitInstance</span><span class="p">(</span><span class="n">Employee</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This example defines a class Employee, which has a <strong>manager</strong> trait
@@ -621,17 +607,17 @@ as its value.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitWeakRef">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitWeakRef</tt><big>(</big><em>aClass</em>, <em>allow_none=True</em>, <em>adapt='no'</em>, <em>module=''</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitWeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitWeakRef" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitWeakRef</code><span class="sig-paren">(</span><em>aClass</em>, <em>allow_none=True</em>, <em>adapt='no'</em>, <em>module=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitWeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitWeakRef" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.HandleWeakRef">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">HandleWeakRef</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#HandleWeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.HandleWeakRef" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">HandleWeakRef</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#HandleWeakRef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.HandleWeakRef" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitClass">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitClass</tt><big>(</big><em>aClass</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitClass</code><span class="sig-paren">(</span><em>aClass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that trait attribute values are subclasses of a specified class
 (or the class itself).</p>
 <p>A value is valid if it is a subclass of the specified class (including the
@@ -641,7 +627,7 @@ class.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitFunction">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitFunction</tt><big>(</big><em>aFunc</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitFunction</code><span class="sig-paren">(</span><em>aFunc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitFunction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that assigned trait attribute values are acceptable to a
 specified validator function.</p>
 <p>TraitFunction is the underlying handler for the predefined trait
@@ -651,7 +637,7 @@ Trait() function.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitEnum">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitEnum</tt><big>(</big><em>*values</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitEnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitEnum" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitEnum</code><span class="sig-paren">(</span><em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitEnum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitEnum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a member of a
 specified list of values.</p>
 <p>TraitEnum is the underlying handler for the forms of the Trait() function
@@ -660,7 +646,7 @@ that take a list of possible values</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitPrefixList">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitPrefixList</tt><big>(</big><em>*values</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitPrefixList</code><span class="sig-paren">(</span><em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a member of a list
 of specified string values, or is a unique prefix of one of those values.</p>
 <p>TraitPrefixList is a variation on TraitEnum. The values that can be
@@ -673,8 +659,8 @@ to the constructor is described by [<em>s</em><sub>1</sub>, <em>s</em><sub>2</su
 is a valid value, then the actual value assigned to the trait attribute is
 the corresponding <em>s</em><sub>i</sub> value that <em>v</em> matched.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre>class Person(HasTraits):
-    married = Trait(&#39;no&#39;, TraitPrefixList(&#39;yes&#39;, &#39;no&#39;)
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">TraitPrefixList</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The Person class has a <strong>married</strong> trait that accepts any of the
@@ -689,7 +675,7 @@ and is not based on a brute force set of comparisons.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitMap">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitMap</tt><big>(</big><em>map</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitMap</code><span class="sig-paren">(</span><em>map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the value assigned to a trait attribute is a key of a
 specified dictionary, and also assigns the dictionary value corresponding
 to that key to a <em>shadow</em> attribute.</p>
@@ -702,8 +688,8 @@ attribute name with an underscore (&#8216;_&#8217;) appended. Mapped trait attri
 can be used to allow a variety of user-friendly input values to be mapped to
 a set of internal, program-friendly values.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
-<span class="gp">... </span>   <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;yes&#39;</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">({</span><span class="s">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">})</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;class Person(HasTraits):</span>
+<span class="gp">... </span>   <span class="n">married</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">TraitMap</span><span class="p">({</span><span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">})</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="go">&gt;&gt;&gt;bob = Person()</span>
 <span class="go">&gt;&gt;&gt;print bob.married</span>
@@ -721,7 +707,7 @@ to the key &#8216;yes&#8217;.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitPrefixMap">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitPrefixMap</tt><big>(</big><em>map</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitPrefixMap</code><span class="sig-paren">(</span><em>map</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitPrefixMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitPrefixMap" title="Permalink to this definition">¶</a></dt>
 <dd><p>A cross between the TraitPrefixList and TraitMap classes.</p>
 <p>Like TraitMap, TraitPrefixMap is created using a dictionary, but in this
 case, the keys of the dictionary must be strings. Like TraitPrefixList,
@@ -730,8 +716,8 @@ one and only one key <em>k</em> in the dictionary. The actual values assigned to
 the trait attribute is <em>k</em>, and its corresponding mapped attribute is
 <em>map*[*k</em>].</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
-<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;true&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span> <span class="mi">0</span> <span class="p">}</span>
+<span class="n">boolean_map</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">(</span><span class="n">mapping</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>This example defines a Boolean trait that accepts any prefix of &#8216;true&#8217;,
@@ -740,7 +726,7 @@ the trait attribute is <em>k</em>, and its corresponding mapped attribute is
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitExpression">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitExpression</tt><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitExpression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitExpression" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitExpression</code><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitExpression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitExpression" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a valid Python
 expression. The compiled form of a valid expression is stored as the
 mapped value of the trait.</p>
@@ -748,7 +734,7 @@ mapped value of the trait.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitCompound">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitCompound</tt><big>(</big><em>*handlers</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCompound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCompound" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitCompound</code><span class="sig-paren">(</span><em>*handlers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCompound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCompound" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a logical-OR combination of other trait handlers.</p>
 <p>This class provides a means of creating complex trait definitions by
 combining several simpler trait definitions. TraitCompound is the underlying
@@ -763,14 +749,14 @@ case, any non-mapped traits or trait handlers use identity mapping.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitTuple">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitTuple</tt><big>(</big><em>*args</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitTuple</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitTuple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that values assigned to a trait attribute are tuples of a
 specified length, with elements that are of specified types.</p>
 <p>TraitTuple is the underlying handler for the predefined trait <strong>Tuple</strong>,
 and the trait factory Tuple().</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">rank</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
-<span class="n">suit</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s">&#39;Hearts&#39;</span><span class="p">,</span> <span class="s">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s">&#39;Spades&#39;</span><span class="p">,</span> <span class="s">&#39;Clubs&#39;</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rank</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="n">suit</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="s1">&#39;Hearts&#39;</span><span class="p">,</span> <span class="s1">&#39;Diamonds&#39;</span><span class="p">,</span> <span class="s1">&#39;Spades&#39;</span><span class="p">,</span> <span class="s1">&#39;Clubs&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">TraitTuple</span><span class="p">(</span><span class="n">rank</span><span class="p">,</span> <span class="n">suit</span><span class="p">))</span>
 </pre></div>
@@ -783,19 +769,19 @@ strings, &#8216;Hearts&#8217;, &#8216;Diamonds&#8217;, &#8216;Spades&#8217;, or 
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitCallable">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitCallable</tt><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCallable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCallable" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitCallable</code><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitCallable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitCallable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that the value of a trait attribute is a callable Python object
 (usually a function or method).</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitListEvent">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitListEvent</tt><big>(</big><em>index=0</em>, <em>removed=None</em>, <em>added=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitListEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitListEvent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitListEvent</code><span class="sig-paren">(</span><em>index=0</em>, <em>removed=None</em>, <em>added=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitListEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitListEvent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitList">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitList</tt><big>(</big><em>trait=None</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>has_items=True</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitList</code><span class="sig-paren">(</span><em>trait=None</em>, <em>minlen=0</em>, <em>maxlen=9223372036854775807</em>, <em>has_items=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that a value assigned to a trait attribute is a list containing
 elements of a specified type, and that the length of the list is also
 within a specified range.</p>
@@ -804,7 +790,7 @@ assigned to the trait attribute do not violate the list&#8217;s type and length
 constraints. TraitList is the underlying handler for the predefined
 list-based traits.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Card</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="k">pass</span>
 <span class="k">class</span> <span class="nc">Hand</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">cards</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">([],</span> <span class="n">TraitList</span><span class="p">(</span><span class="n">Trait</span><span class="p">(</span><span class="n">Card</span><span class="p">),</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">52</span><span class="p">))</span>
@@ -817,33 +803,33 @@ list.</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitListObject">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitListObject</tt><big>(</big><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitListObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitListObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitListObject</code><span class="sig-paren">(</span><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitListObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitListObject" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitSetEvent">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitSetEvent</tt><big>(</big><em>removed=None</em>, <em>added=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetEvent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitSetEvent</code><span class="sig-paren">(</span><em>removed=None</em>, <em>added=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetEvent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitSetObject">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitSetObject</tt><big>(</big><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitSetObject</code><span class="sig-paren">(</span><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetObject" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="method">
 <dt id="traits.trait_handlers.TraitSetObject.copy">
-<tt class="descname">copy</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetObject.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetObject.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a true <tt class="docutils literal"><span class="pre">set</span></tt> object with a copy of the data.</p>
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitSetObject.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitSetObject.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a true <code class="docutils literal"><span class="pre">set</span></code> object with a copy of the data.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitDictEvent">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitDictEvent</tt><big>(</big><em>added=None</em>, <em>changed=None</em>, <em>removed=None</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDictEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDictEvent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitDictEvent</code><span class="sig-paren">(</span><em>added=None</em>, <em>changed=None</em>, <em>removed=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDictEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDictEvent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitDict">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitDict</tt><big>(</big><em>key_trait=None</em>, <em>value_trait=None</em>, <em>has_items=True</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitDict</code><span class="sig-paren">(</span><em>key_trait=None</em>, <em>value_trait=None</em>, <em>has_items=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that values assigned to a trait attribute are dictionaries whose
 keys and values are of specified types.</p>
 <p>TraitDict also makes sure that any changes to keys or values made that are
@@ -851,7 +837,7 @@ made after the dictionary is assigned to the trait attribute satisfy the
 type constraints. TraitDict is the underlying handler for the
 dictionary-based predefined traits, and the Dict() trait factory.</p>
 <p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">WorkoutClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WorkoutClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">member_weights</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">({},</span> <span class="n">TraitDict</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -863,7 +849,7 @@ be floats (i.e., their most recently recorded weight).</p>
 
 <dl class="class">
 <dt id="traits.trait_handlers.TraitDictObject">
-<em class="property">class </em><tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">TraitDictObject</tt><big>(</big><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDictObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDictObject" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.trait_handlers.</code><code class="descname">TraitDictObject</code><span class="sig-paren">(</span><em>trait</em>, <em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#TraitDictObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers.TraitDictObject" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -871,28 +857,28 @@ be floats (i.e., their most recently recorded weight).</p>
 <h2>Private Functions<a class="headerlink" href="#private-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.trait_handlers._arg_count">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">_arg_count</tt><big>(</big><em>func</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#_arg_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._arg_count" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">_arg_count</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_arg_count"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._arg_count" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the correct argument count for a specified function or method.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_handlers._write_only">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">_write_only</tt><big>(</big><em>object</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#_write_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._write_only" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">_write_only</code><span class="sig-paren">(</span><em>object</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_write_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._write_only" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_handlers._read_only">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">_read_only</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#_read_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._read_only" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">_read_only</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_read_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._read_only" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_handlers._undefined_get">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">_undefined_get</tt><big>(</big><em>object</em>, <em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#_undefined_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._undefined_get" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">_undefined_get</code><span class="sig-paren">(</span><em>object</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_undefined_get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._undefined_get" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_handlers._undefined_set">
-<tt class="descclassname">traits.trait_handlers.</tt><tt class="descname">_undefined_set</tt><big>(</big><em>object</em>, <em>name</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_handlers.html#_undefined_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._undefined_set" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_handlers.</code><code class="descname">_undefined_set</code><span class="sig-paren">(</span><em>object</em>, <em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_handlers.html#_undefined_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_handlers._undefined_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -902,32 +888,38 @@ be floats (i.e., their most recently recorded weight).</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">trait_handlers</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">trait_handlers</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#private-functions">Private Functions</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="trait_errors.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">trait_errors</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="trait_numeric.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">trait_numeric</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/trait_handlers.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="trait_errors.html" title="previous chapter"><code class="docutils literal"><span class="pre">trait_errors</span></code> Module</a></li>
+      <li>Next: <a href="trait_numeric.html" title="next chapter"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/trait_handlers.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -935,39 +927,26 @@ be floats (i.e., their most recently recorded weight).</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="trait_numeric.html" title="trait_numeric Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="trait_errors.html" title="trait_errors Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">trait_handlers</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/trait_handlers.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,31 +26,23 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.testing.nose_tools</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.testing.nose_tools</h1><div class="highlight"><pre>
-<span class="s">&quot;Non-standard functions for the &#39;nose&#39; testing framework.&quot;</span>
+<span></span><span class="s2">&quot;Non-standard functions for the &#39;nose&#39; testing framework.&quot;</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">nose</span> <span class="kn">import</span> <span class="n">DeprecatedTest</span><span class="p">,</span> <span class="n">SkipTest</span>
@@ -72,7 +64,7 @@
         <span class="k">return</span> <span class="n">make_decorator</span><span class="p">(</span><span class="n">f</span><span class="p">)(</span><span class="n">g</span><span class="p">)</span>
 
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="c"># Define stubs in case nose isn&#39;t installed.</span>
+    <span class="c1"># Define stubs in case nose isn&#39;t installed.</span>
 
     <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -82,36 +74,44 @@
 <span class="sd">        absence of &#39;nose&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;skipping unit tests requires the package &#39;nose&#39;&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">f</span>
-</div>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;skipping unit tests requires the package &#39;nose&#39;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
 <div class="viewcode-block" id="deprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.nose_tools.deprecated">[docs]</a>    <span class="k">def</span> <span class="nf">deprecated</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Stub replacement for marking a unit test deprecated in the absence</span>
 <span class="sd">        of &#39;nose&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s">&quot;skipping deprecated unit tests requires the package &#39;nose&#39;&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">f</span>
-</div>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;skipping deprecated unit tests requires the package &#39;nose&#39;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
 <div class="viewcode-block" id="performance"><a class="viewcode-back" href="../../../traits_api_reference/traits.testing.html#traits.testing.nose_tools.performance">[docs]</a><span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Decorator to add an attribute to the test to mark it as</span>
 <span class="sd">    a performance-measuring test.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">f</span><span class="o">.</span><span class="n">performance</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="k">return</span> <span class="n">f</span>
+    <span class="k">return</span> <span class="n">f</span></div>
 
-<span class="c">#### EOF #######################################################################</span></div>
+<span class="c1">#### EOF #######################################################################</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -119,33 +119,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.testing.nose_tools</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

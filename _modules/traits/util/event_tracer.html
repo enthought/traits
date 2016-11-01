@@ -1,0 +1,457 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.util.event_tracer &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for traits.util.event_tracer</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2013, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; Record trait change events in single and multi-threaded environments.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">traits</span> <span class="kn">import</span> <span class="n">trait_notifiers</span>
+
+
+<span class="n">CHANGEMSG</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">u&quot;{time} {direction:-{direction}{length}} {name!r} changed from &quot;</span>
+    <span class="s2">u&quot;{old!r} to {new!r} in {class_name!r}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">CALLINGMSG</span> <span class="o">=</span> <span class="s2">u&quot;{time} {action:&gt;{gap}}: {handler!r} in {source}</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">EXITMSG</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">u&quot;{time} {direction:-{direction}{length}} &quot;</span>
+    <span class="s2">u&quot;EXIT: {handler!r}{exception}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE</span> <span class="o">=</span> <span class="mi">9</span>
+
+
+<div class="viewcode-block" id="SentinelRecord"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.SentinelRecord">[docs]</a><span class="k">class</span> <span class="nc">SentinelRecord</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sentinel record to separate groups of chained change event dispatches.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">u&#39;</span><span class="se">\n</span><span class="s1">&#39;</span></div>
+
+
+<div class="viewcode-block" id="ChangeMessageRecord"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeMessageRecord">[docs]</a><span class="k">class</span> <span class="nc">ChangeMessageRecord</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Message record for a change event dispatch.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;old&#39;</span><span class="p">,</span> <span class="s1">&#39;new&#39;</span><span class="p">,</span> <span class="s1">&#39;class_name&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">indent</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+        <span class="c1">#: Time stamp in UTC.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="c1">#: Depth level in a chain of trait change dispatches.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">indent</span>
+        <span class="c1">#: The name of the trait that changed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="c1">#: The old value.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">old</span> <span class="o">=</span> <span class="n">old</span>
+        <span class="c1">#: The new value.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new</span> <span class="o">=</span> <span class="n">new</span>
+        <span class="c1">#: The name of the class that the trait change took place.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_name</span> <span class="o">=</span> <span class="n">class_name</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">CHANGEMSG</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;&gt;&#39;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">old</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">old</span><span class="p">,</span>
+            <span class="n">new</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">new</span><span class="p">,</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">class_name</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CallingMessageRecord"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.CallingMessageRecord">[docs]</a><span class="k">class</span> <span class="nc">CallingMessageRecord</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Message record for a change handler call.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">indent</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">source</span><span class="p">):</span>
+        <span class="c1">#: Time stamp in UTC.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="c1">#: Depth level of the call in a chain of trait change dispatches.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">indent</span>
+        <span class="c1">#: The traits change handler that is called.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
+        <span class="c1">#: The source file where the handler was defined.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE</span>
+        <span class="k">return</span> <span class="n">CALLINGMSG</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s1">&#39;CALLING&#39;</span><span class="p">,</span>
+            <span class="n">handler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+            <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
+            <span class="n">gap</span><span class="o">=</span><span class="n">gap</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExitMessageRecord"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.ExitMessageRecord">[docs]</a><span class="k">class</span> <span class="nc">ExitMessageRecord</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Message record for returning from a change event dispatch.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;indent&#39;</span><span class="p">,</span> <span class="s1">&#39;handler&#39;</span><span class="p">,</span> <span class="s1">&#39;exception&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">indent</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+        <span class="c1">#: Time stamp in UTC.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="c1">#: Depth level of the exit in a chain of trait change dispatch.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">indent</span>
+        <span class="c1">#: The traits change handler that is called.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">handler</span>
+        <span class="c1">#: The exception type (if one took place)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exception</span> <span class="o">=</span> <span class="n">exception</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">EXITMSG</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">time</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span>
+            <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span>
+            <span class="n">handler</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span>
+            <span class="n">exception</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RecordContainer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.RecordContainer">[docs]</a><span class="k">class</span> <span class="nc">RecordContainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A simple record container.</span>
+
+<span class="sd">     This class is commonly used to hold records from a single thread.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_records</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="RecordContainer.record"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.RecordContainer.record">[docs]</a>    <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add the record into the container.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RecordContainer.save_to_file"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.RecordContainer.save_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save the records into a file.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_records</span><span class="p">:</span>
+                <span class="n">fh</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">unicode</span><span class="p">(</span><span class="n">record</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="MultiThreadRecordContainer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadRecordContainer">[docs]</a><span class="k">class</span> <span class="nc">MultiThreadRecordContainer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A container of record containers that are used by separate threads.</span>
+
+<span class="sd">    Each record container is mapped to a thread name id. When a RecordContainer</span>
+<span class="sd">    does not exist for a specific thread a new empty RecordContainer will be</span>
+<span class="sd">    created on request.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_creation_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_record_containers</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="MultiThreadRecordContainer.get_change_event_collector"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadRecordContainer.get_change_event_collector">[docs]</a>    <span class="k">def</span> <span class="nf">get_change_event_collector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the dedicated RecordContainer for the thread.</span>
+
+<span class="sd">        If no RecordContainer is found for `thread_name` then a new</span>
+<span class="sd">        RecordContainer is created.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_creation_lock</span><span class="p">:</span>
+            <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_containers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">thread_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">container</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">container</span> <span class="o">=</span> <span class="n">RecordContainer</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_record_containers</span><span class="p">[</span><span class="n">thread_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">container</span>
+            <span class="k">return</span> <span class="n">container</span></div>
+
+<div class="viewcode-block" id="MultiThreadRecordContainer.save_to_directory"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadRecordContainer.save_to_directory">[docs]</a>    <span class="k">def</span> <span class="nf">save_to_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">directory_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save records files into the directory.</span>
+
+<span class="sd">        Each RecordContainer will dump its records on a separate file named</span>
+<span class="sd">        &lt;thread_name&gt;.trace.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_creation_lock</span><span class="p">:</span>
+            <span class="n">containers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_record_containers</span>
+            <span class="k">for</span> <span class="n">thread_name</span><span class="p">,</span> <span class="n">container</span> <span class="ow">in</span> <span class="n">containers</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">directory_name</span><span class="p">,</span> <span class="s1">&#39;{0}.trace&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">thread_name</span><span class="p">))</span>
+                <span class="n">container</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ChangeEventRecorder"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeEventRecorder">[docs]</a><span class="k">class</span> <span class="nc">ChangeEventRecorder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A single thread trait change event recorder.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Class constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        container : MultiThreadRecordContainer</span>
+<span class="sd">           An container to store the records for each trait change.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">container</span>
+
+<div class="viewcode-block" id="ChangeEventRecorder.pre_tracer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeEventRecorder.pre_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">pre_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Record a string representation of the trait change dispatch</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span>
+        <span class="n">container</span><span class="o">.</span><span class="n">record</span><span class="p">(</span>
+            <span class="n">ChangeMessageRecord</span><span class="p">(</span>
+                <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
+                <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">old</span><span class="o">=</span><span class="n">old</span><span class="p">,</span>
+                <span class="n">new</span><span class="o">=</span><span class="n">new</span><span class="p">,</span>
+                <span class="n">class_name</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">container</span><span class="o">.</span><span class="n">record</span><span class="p">(</span>
+            <span class="n">CallingMessageRecord</span><span class="p">(</span>
+                <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
+                <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+                <span class="n">handler</span><span class="o">=</span><span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                <span class="n">source</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsourcefile</span><span class="p">(</span><span class="n">handler</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="ChangeEventRecorder.post_tracer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.ChangeEventRecorder.post_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">post_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Record a string representation of the trait change return</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span>
+        <span class="k">if</span> <span class="n">exception</span><span class="p">:</span>
+            <span class="n">exception_msg</span> <span class="o">=</span> <span class="s1">&#39; [EXCEPTION: {}]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exception_msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span>
+
+        <span class="n">container</span><span class="o">.</span><span class="n">record</span><span class="p">(</span>
+            <span class="n">ExitMessageRecord</span><span class="p">(</span>
+                <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span>
+                <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span>
+                <span class="n">handler</span><span class="o">=</span><span class="n">handler</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>
+                <span class="n">exception</span><span class="o">=</span><span class="n">exception_msg</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">indent</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">container</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="n">SentinelRecord</span><span class="p">())</span></div></div>
+
+
+<div class="viewcode-block" id="MultiThreadChangeEventRecorder"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadChangeEventRecorder">[docs]</a><span class="k">class</span> <span class="nc">MultiThreadChangeEventRecorder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A thread aware trait change recorder.</span>
+
+<span class="sd">    The class manages multiple ChangeEventRecorders which record trait change</span>
+<span class="sd">    events for each thread in a separate file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Object constructor</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        container : MultiThreadChangeEventRecorder</span>
+<span class="sd">            The container of RecordContainers to keep the trait change records</span>
+<span class="sd">            for each thread.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">container</span> <span class="o">=</span> <span class="n">container</span>
+
+<div class="viewcode-block" id="MultiThreadChangeEventRecorder.close"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadChangeEventRecorder.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Close and stop all logging.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="MultiThreadChangeEventRecorder.pre_tracer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadChangeEventRecorder.pre_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">pre_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The traits pre event tracer.</span>
+
+<span class="sd">        This method should be set as the global pre event tracer for traits.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tracer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tracer</span><span class="p">()</span>
+        <span class="n">tracer</span><span class="o">.</span><span class="n">pre_tracer</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MultiThreadChangeEventRecorder.post_tracer"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.MultiThreadChangeEventRecorder.post_tracer">[docs]</a>    <span class="k">def</span> <span class="nf">post_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The traits post event tracer.</span>
+
+<span class="sd">        This method should be set as the global post event tracer for traits.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tracer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tracer</span><span class="p">()</span>
+        <span class="n">tracer</span><span class="o">.</span><span class="n">post_tracer</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">exception</span><span class="o">=</span><span class="n">exception</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_tracer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tracer_lock</span><span class="p">:</span>
+            <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">thread</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">:</span>
+                <span class="n">container</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">container</span>
+                <span class="n">thread_container</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_change_event_collector</span><span class="p">(</span>
+                    <span class="n">thread</span><span class="p">)</span>
+                <span class="n">tracer</span> <span class="o">=</span> <span class="n">ChangeEventRecorder</span><span class="p">(</span><span class="n">thread_container</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="n">thread</span><span class="p">]</span> <span class="o">=</span> <span class="n">tracer</span>
+                <span class="k">return</span> <span class="n">tracer</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="n">thread</span><span class="p">]</span></div>
+
+
+<span class="nd">@contextmanager</span>
+<div class="viewcode-block" id="record_events"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.event_tracer.record_events">[docs]</a><span class="k">def</span> <span class="nf">record_events</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Multi-threaded trait change event tracer.</span>
+
+<span class="sd">    Usage</span>
+<span class="sd">    -----</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        &gt;&gt;&gt; from trace_recorder import record_events</span>
+<span class="sd">        &gt;&gt;&gt; with record_events() as change_event_container:</span>
+<span class="sd">        ...     my_model.some_trait = True</span>
+<span class="sd">        &gt;&gt;&gt; change_event_container.save_to_directory(&#39;C:\\dev\\trace&#39;)</span>
+
+<span class="sd">    This will install a tracer that will record all events that occur from</span>
+<span class="sd">    setting of some_trait on the my_model instance.</span>
+
+<span class="sd">    The results will be stored in one file per running thread in the</span>
+<span class="sd">    directory &#39;C:\\dev\\trace&#39;.  The files are named after the thread being</span>
+<span class="sd">    traced.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="n">MultiThreadRecordContainer</span><span class="p">()</span>
+    <span class="n">recorder</span> <span class="o">=</span> <span class="n">MultiThreadChangeEventRecorder</span><span class="p">(</span><span class="n">container</span><span class="o">=</span><span class="n">container</span><span class="p">)</span>
+    <span class="n">trait_notifiers</span><span class="o">.</span><span class="n">set_change_event_tracers</span><span class="p">(</span>
+        <span class="n">pre_tracer</span><span class="o">=</span><span class="n">recorder</span><span class="o">.</span><span class="n">pre_tracer</span><span class="p">,</span> <span class="n">post_tracer</span><span class="o">=</span><span class="n">recorder</span><span class="o">.</span><span class="n">post_tracer</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">container</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">trait_notifiers</span><span class="o">.</span><span class="n">clear_change_event_tracers</span><span class="p">()</span>
+        <span class="n">recorder</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

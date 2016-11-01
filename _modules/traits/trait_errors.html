@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,53 +26,45 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.trait_errors</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.trait_errors</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2005, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author: David C. Morrill</span>
-<span class="c">#  Date:   06/21/2002</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: David C. Morrill</span>
+<span class="c1">#  Date:   06/21/2002</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Defines the standard exceptions raised by the Traits package.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
@@ -82,9 +74,9 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_py2to3</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Utilities</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Utilities</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 
 <div class="viewcode-block" id="repr_type"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.repr_type">[docs]</a><span class="k">def</span> <span class="nf">repr_type</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
@@ -92,34 +84,34 @@
 <span class="sd">    error messages.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">the_type</span> <span class="o">=</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">type_w_old_style</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="s">&#39;</span><span class="si">%r</span><span class="s"> </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">the_type</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">msg</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%r</span><span class="s1"> </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">the_type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">msg</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;TraitError&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;TraitError&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="TraitError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitError">[docs]</a><span class="k">class</span> <span class="nc">TraitError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-           <span class="c"># If the given args is not a tuple then assume that the user intended</span>
-           <span class="c"># it to be the single item in a one-element tuple.</span>
+           <span class="c1"># If the given args is not a tuple then assume that the user intended</span>
+           <span class="c1"># it to be the single item in a one-element tuple.</span>
            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">,</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="c"># Save the information, in case the &#39;args&#39; object is not the correct</span>
-           <span class="c"># one, and we need to regenerate the message later:</span>
+           <span class="c1"># Save the information, in case the &#39;args&#39; object is not the correct</span>
+           <span class="c1"># one, and we need to regenerate the message later:</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">name</span>   <span class="o">=</span> <span class="n">name</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">info</span>   <span class="o">=</span> <span class="n">info</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">value</span>  <span class="o">=</span> <span class="n">value</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">desc</span>   <span class="o">=</span> <span class="bp">None</span>
-           <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="s">&#39;The&#39;</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;The&#39;</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">set_desc</span><span class="p">(</span> <span class="bp">None</span><span class="p">,</span> <span class="n">args</span> <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">set_desc</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="nb">object</span> <span class="o">=</span> <span class="bp">None</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s">&#39;desc&#39;</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;desc&#39;</span> <span class="p">):</span>
            <span class="k">if</span> <span class="n">desc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span>
            <span class="k">if</span> <span class="nb">object</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
@@ -127,52 +119,52 @@
            <span class="bp">self</span><span class="o">.</span><span class="n">set_args</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">set_prefix</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span> <span class="p">):</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s">&#39;prefix&#39;</span> <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span> <span class="p">):</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
            <span class="bp">self</span><span class="o">.</span><span class="n">set_args</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">set_args</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-           <span class="n">extra</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+           <span class="n">extra</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-           <span class="n">extra</span> <span class="o">=</span> <span class="s">&#39; specifies </span><span class="si">%s</span><span class="s"> and&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span>
-        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s">&#39;object&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
+           <span class="n">extra</span> <span class="o">=</span> <span class="s1">&#39; specifies </span><span class="si">%s</span><span class="s1"> and&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">desc</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="bp">None</span> <span class="p">)</span>
 
-        <span class="c"># Note: self.args must be a tuple so be sure to leave the trailing</span>
-        <span class="c"># commas.</span>
+        <span class="c1"># Note: self.args must be a tuple so be sure to leave the trailing</span>
+        <span class="c1"># commas.</span>
         <span class="n">the_type</span> <span class="o">=</span> <span class="n">_py2to3</span><span class="o">.</span><span class="n">type_w_old_style</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> &#39;</span><span class="si">%s</span><span class="s">&#39; trait of </span><span class="si">%s</span><span class="s"> instance</span><span class="si">%s</span><span class="s"> must be </span><span class="si">%s</span><span class="s">, &quot;</span>
-                         <span class="s">&quot;but a value of </span><span class="si">%s</span><span class="s"> was specified.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &#39;</span><span class="si">%s</span><span class="s2">&#39; trait of </span><span class="si">%s</span><span class="s2"> instance</span><span class="si">%s</span><span class="s2"> must be </span><span class="si">%s</span><span class="s2">, &quot;</span>
+                         <span class="s2">&quot;but a value of </span><span class="si">%s</span><span class="s2"> was specified.&quot;</span> <span class="o">%</span> <span class="p">(</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">class_of</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">extra</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">repr_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))),</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%s</span><span class="s"> &#39;</span><span class="si">%s</span><span class="s">&#39; trait</span><span class="si">%s</span><span class="s"> must be </span><span class="si">%s</span><span class="s">, but a value of </span><span class="si">%s</span><span class="s"> was &quot;</span>
-                         <span class="s">&quot;specified.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">extra</span><span class="p">,</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">repr_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> &#39;</span><span class="si">%s</span><span class="s2">&#39; trait</span><span class="si">%s</span><span class="s2"> must be </span><span class="si">%s</span><span class="s2">, but a value of </span><span class="si">%s</span><span class="s2"> was &quot;</span>
+                         <span class="s2">&quot;specified.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">extra</span><span class="p">,</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">repr_type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))),</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;TraitNotificationError&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;TraitNotificationError&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="TraitNotificationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.TraitNotificationError">[docs]</a><span class="k">class</span> <span class="nc">TraitNotificationError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
 
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;DelegationError&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;DelegationError&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="DelegationError"><a class="viewcode-back" href="../../traits_api_reference/trait_errors.html#traits.trait_errors.DelegationError">[docs]</a><span class="k">class</span> <span class="nc">DelegationError</span> <span class="p">(</span> <span class="n">TraitError</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">args</span> <span class="p">):</span>
-        <span class="c"># .args must be a tuple.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">,</span>
+        <span class="c1"># .args must be a tuple.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">,</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Export the defined exceptions to the C-base traits module:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Export the defined exceptions to the C-base traits module:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ctraits</span>
 <span class="n">ctraits</span><span class="o">.</span><span class="n">_exceptions</span><span class="p">(</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">DelegationError</span> <span class="p">)</span>
 </pre></div>
@@ -180,12 +172,20 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -193,33 +193,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.trait_errors</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

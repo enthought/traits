@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,43 +28,29 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="trait_errors Module" href="trait_errors.html" />
-    <link rel="prev" title="interface_checker Module" href="interface_checker.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="trait_errors.html" title="trait_errors Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="interface_checker.html" title="interface_checker Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="interface_checker Module" href="interface_checker.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.trait_base">
-<span id="trait-base-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">trait_base</span></tt> Module<a class="headerlink" href="#module-traits.trait_base" title="Permalink to this headline">¶</a></h1>
+<span id="trait-base-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">trait_base</span></code> Module<a class="headerlink" href="#module-traits.trait_base" title="Permalink to this headline">¶</a></h1>
 <p>Defines common, low-level capabilities needed by the Traits package.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="data">
 <dt id="traits.trait_base.Uninitialized">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">Uninitialized</tt><em class="property"> = &lt;uninitialized&gt;</em><a class="headerlink" href="#traits.trait_base.Uninitialized" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">Uninitialized</code><em class="property"> = &lt;uninitialized&gt;</em><a class="headerlink" href="#traits.trait_base.Uninitialized" title="Permalink to this definition">¶</a></dt>
 <dd><p>When the first reference to a trait is a &#8216;get&#8217; reference, the default value of
 the trait is implicitly assigned and returned as the value of the trait.
 Because of this implicit assignment, a trait change notification is
@@ -76,7 +62,7 @@ assignment, and treat it specially.</p>
 
 <dl class="data">
 <dt id="traits.trait_base.Undefined">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">Undefined</tt><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_base.Undefined" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">Undefined</code><em class="property"> = &lt;undefined&gt;</em><a class="headerlink" href="#traits.trait_base.Undefined" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton object that indicates that a trait attribute has not yet had a
 value set (i.e., its value is undefined). This object is used instead of
 None, because None often has other meanings, such as that a value is not
@@ -87,14 +73,14 @@ parameter, to indicate that the attribute previously had no value.</p>
 
 <dl class="data">
 <dt id="traits.trait_base.Missing">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">Missing</tt><em class="property"> = &lt;missing&gt;</em><a class="reference internal" href="../_modules/traits/trait_base.html#Missing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.Missing" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">Missing</code><em class="property"> = &lt;missing&gt;</em><a class="reference internal" href="../_modules/traits/trait_base.html#Missing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.Missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton object that indicates that a method argument is missing from a
 type-checked method signature.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="traits.trait_base.Self">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">Self</tt><em class="property"> = &lt;self&gt;</em><a class="reference internal" href="../_modules/traits/trait_base.html#Self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.Self" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">Self</code><em class="property"> = &lt;self&gt;</em><a class="reference internal" href="../_modules/traits/trait_base.html#Self"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.Self" title="Permalink to this definition">¶</a></dt>
 <dd><p>Singleton object that references the current &#8216;object&#8217;.</p>
 </dd></dl>
 
@@ -103,14 +89,14 @@ type-checked method signature.</p>
 <h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.trait_base.strx">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">strx</tt><big>(</big><em>arg</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#strx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.strx" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">strx</code><span class="sig-paren">(</span><em>arg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#strx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.strx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wraps the built-in str() function to raise a TypeError if the
 argument is not of a type in StringTypes.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.class_of">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">class_of</tt><big>(</big><em>object</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#class_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.class_of" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">class_of</code><span class="sig-paren">(</span><em>object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#class_of"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.class_of" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string containing the class name of an object with the
 correct indefinite article (&#8216;a&#8217; or &#8216;an&#8217;) preceding it (e.g., &#8216;an Image&#8217;,
 &#8216;a PlotValue&#8217;).</p>
@@ -118,81 +104,81 @@ correct indefinite article (&#8216;a&#8217; or &#8216;an&#8217;) preceding it (e
 
 <dl class="function">
 <dt id="traits.trait_base.add_article">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">add_article</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#add_article"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.add_article" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">add_article</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#add_article"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.add_article" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a string containing the correct indefinite article (&#8216;a&#8217; or &#8216;an&#8217;)
 prefixed to the specified string.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.user_name_for">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">user_name_for</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#user_name_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.user_name_for" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">user_name_for</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#user_name_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.user_name_for" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a &#8220;user-friendly&#8221; version of a string, with the first letter
 capitalized and with underscore characters replaced by spaces. For example,
-<tt class="docutils literal"><span class="pre">user_name_for('user_name_for')</span></tt> returns <tt class="docutils literal"><span class="pre">'User</span> <span class="pre">name</span> <span class="pre">for'</span></tt>.</p>
+<code class="docutils literal"><span class="pre">user_name_for('user_name_for')</span></code> returns <code class="docutils literal"><span class="pre">'User</span> <span class="pre">name</span> <span class="pre">for'</span></code>.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.traits_home">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">traits_home</tt><big>(</big><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#traits_home"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.traits_home" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">traits_home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#traits_home"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.traits_home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the path to the Traits home directory.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.verify_path">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">verify_path</tt><big>(</big><em>path</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#verify_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.verify_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">verify_path</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#verify_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.verify_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verify that a specified path exists, and try to create it if it
 does not exist.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.get_module_name">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">get_module_name</tt><big>(</big><em>level=2</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#get_module_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_module_name" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">get_module_name</code><span class="sig-paren">(</span><em>level=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_module_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_module_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the module that the caller&#8217;s caller is located in.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.get_resource_path">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">get_resource_path</tt><big>(</big><em>level=2</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#get_resource_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_resource_path" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">get_resource_path</code><span class="sig-paren">(</span><em>level=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#get_resource_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.get_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a resource path calculated from the caller&#8217;s stack.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.xgetattr">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">xgetattr</tt><big>(</big><em>object</em>, <em>xname</em>, <em>default=&lt;undefined&gt;</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#xgetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xgetattr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">xgetattr</code><span class="sig-paren">(</span><em>object</em>, <em>xname</em>, <em>default=&lt;undefined&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xgetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xgetattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value of an extended object attribute name of the form:
 name[.name2[.name3...]].</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.xsetattr">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">xsetattr</tt><big>(</big><em>object</em>, <em>xname</em>, <em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#xsetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xsetattr" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">xsetattr</code><span class="sig-paren">(</span><em>object</em>, <em>xname</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#xsetattr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.xsetattr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the value of an extended object attribute name of the form:
 name[.name2[.name3...]].</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.is_none">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">is_none</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#is_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.is_none" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">is_none</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.is_none" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.not_none">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">not_none</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#not_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_none" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">not_none</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_none"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_none" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.not_false">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">not_false</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#not_false"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_false" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">not_false</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_false"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_false" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.not_event">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">not_event</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#not_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_event" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">not_event</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#not_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.not_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="traits.trait_base.is_str">
-<tt class="descclassname">traits.trait_base.</tt><tt class="descname">is_str</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="../_modules/traits/trait_base.html#is_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.is_str" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.trait_base.</code><code class="descname">is_str</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/trait_base.html#is_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.trait_base.is_str" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -202,32 +188,38 @@ name[.name2[.name3...]].</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">trait_base</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#functions">Functions</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="interface_checker.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="trait_errors.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">trait_errors</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/trait_base.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="interface_checker.html" title="previous chapter"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a></li>
+      <li>Next: <a href="trait_errors.html" title="next chapter"><code class="docutils literal"><span class="pre">trait_errors</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/trait_base.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -235,39 +227,26 @@ name[.name2[.name3...]].</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="trait_errors.html" title="trait_errors Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="interface_checker.html" title="interface_checker Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/trait_base.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

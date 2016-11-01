@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,28 +26,20 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="shortcut icon" href="_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="#" />
-    <link rel="next" title="Traits 4 User Manual" href="traits_user_manual/index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="traits_user_manual/index.html" title="Traits 4 User Manual"
-             accesskey="N">next</a> |</li>
-        <li><a href="#">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="next" title="Traits 4 User Manual" href="traits_user_manual/index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="traits-documentation">
 <h1>Traits Documentation<a class="headerlink" href="#traits-documentation" title="Permalink to this headline">¶</a></h1>
@@ -97,8 +89,16 @@
 <li class="toctree-l3"><a class="reference internal" href="traits_user_manual/advanced.html#performance-considerations-of-traits">Performance Considerations of Traits</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/testing.html">Testing Traits Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/testing.html#using-mocks">Using Mocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/testing.html">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/testing.html#testing-traits-classes">Testing Traits Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/testing.html#using-mocks">Using Mocks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="traits_user_manual/debugging.html">Tips for debugging Traits</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/debugging.html#re-raising-exceptions-in-change-handlers">Re-raising exceptions in change handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_user_manual/debugging.html#tracing-traits-change-events">Tracing Traits Change Events</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="traits_user_manual/index.html#indices-and-tables">Indices and tables</a></li>
@@ -111,29 +111,29 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="traits_api_reference/index.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="traits_api_reference/index.html#traits-core">Traits core</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.html"><tt class="docutils literal"><span class="pre">traits</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/adapter.html"><tt class="docutils literal"><span class="pre">adapter</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/category.html"><tt class="docutils literal"><span class="pre">category</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_traits.html"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_dynamic_views.html"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/interface_checker.html"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_base.html"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_errors.html"><tt class="docutils literal"><span class="pre">trait_errors</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_handlers.html"><tt class="docutils literal"><span class="pre">trait_handlers</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_numeric.html"><tt class="docutils literal"><span class="pre">trait_numeric</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_types.html"><tt class="docutils literal"><span class="pre">trait_types</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_value.html"><tt class="docutils literal"><span class="pre">trait_value</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits_listener.html"><tt class="docutils literal"><span class="pre">traits_listener</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_notifiers.html"><tt class="docutils literal"><span class="pre">trait_notifiers</span></tt> Module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/ustr_trait.html"><tt class="docutils literal"><span class="pre">ustr_trait</span></tt> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.html"><code class="docutils literal"><span class="pre">traits</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/adapter.html"><code class="docutils literal"><span class="pre">adapter</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/category.html"><code class="docutils literal"><span class="pre">category</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_traits.html"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/has_dynamic_views.html"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/interface_checker.html"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_base.html"><code class="docutils literal"><span class="pre">trait_base</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_errors.html"><code class="docutils literal"><span class="pre">trait_errors</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_handlers.html"><code class="docutils literal"><span class="pre">trait_handlers</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_numeric.html"><code class="docutils literal"><span class="pre">trait_numeric</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_types.html"><code class="docutils literal"><span class="pre">trait_types</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_value.html"><code class="docutils literal"><span class="pre">trait_value</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits_listener.html"><code class="docutils literal"><span class="pre">traits_listener</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/trait_notifiers.html"><code class="docutils literal"><span class="pre">trait_notifiers</span></code> Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/ustr_trait.html"><code class="docutils literal"><span class="pre">ustr_trait</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="traits_api_reference/index.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.adaptation.html"><tt class="docutils literal"><span class="pre">adaptation</span></tt> Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.etsconfig.html"><tt class="docutils literal"><span class="pre">etsconfig</span></tt> Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.protocols.html"><tt class="docutils literal"><span class="pre">protocols</span></tt> Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.testing.html"><tt class="docutils literal"><span class="pre">testing</span></tt> Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.util.html"><tt class="docutils literal"><span class="pre">util</span></tt> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.adaptation.html"><code class="docutils literal"><span class="pre">adaptation</span></code> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.etsconfig.html"><code class="docutils literal"><span class="pre">etsconfig</span></code> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.protocols.html"><code class="docutils literal"><span class="pre">protocols</span></code> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.testing.html"><code class="docutils literal"><span class="pre">testing</span></code> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="traits_api_reference/traits.util.html"><code class="docutils literal"><span class="pre">util</span></code> Package</a></li>
 </ul>
 </li>
 </ul>
@@ -142,7 +142,7 @@
 </ul>
 </div>
 <ul class="simple">
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 </div>
@@ -151,7 +151,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="#">
               <img class="logo" src="_static/e-logo-rev.png" alt="Logo"/>
@@ -164,16 +164,22 @@
 </ul>
 </li>
 </ul>
-
-  <h4>Next topic</h4>
-  <p class="topless"><a href="traits_user_manual/index.html"
-                        title="next chapter">Traits 4 User Manual</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="traits_user_manual/index.html" title="next chapter">Traits 4 User Manual</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -181,33 +187,26 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="traits_user_manual/index.html" title="Traits 4 User Manual"
-             >next</a> |</li>
-        <li><a href="#">Traits 4 User Manual</a> &raquo;</li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/index.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>
