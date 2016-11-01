@@ -123,7 +123,7 @@ if __name__ == "__main__":
         version=__version__,
         url='http://docs.enthought.com/traits',
         author='David C. Morrill, et. al.',
-        author_email='dmorrill@enthought.com',
+        author_email='info@enthought.com',
         classifiers=[c.strip() for c in """\
             Development Status :: 5 - Production/really Stable
             Intended Audience :: Developers
