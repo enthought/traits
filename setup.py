@@ -121,7 +121,7 @@ if __name__ == "__main__":
     setup(
         name='traits',
         version=__version__,
-        url='http://code.enthought.com/projects/traits',
+        url='http://docs.enthought.com/traits',
         author='David C. Morrill, et. al.',
         author_email='dmorrill@enthought.com',
         classifiers=[c.strip() for c in """\
