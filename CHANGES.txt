@@ -1,6 +1,22 @@
 Traits CHANGELOG
 ================
 
+Release 4.6.0
+-------------
+
+This is an incremental release over 4.5, accumulating over a year's worth of
+bugfixes and small improvements to the code.
+
+Highlights of this release include:
+
+* support for Python 3.4 and 3.5.
+* new Bytes and ValidatedTuple traits.
+* a new ArrayOrNone trait which correctly handles None comparisons with Numpy
+  arrays.
+* clean-up of the ETSConfig code for TraitsUI toolkit selection.
+* better compatibility with NumPy scalar types.
+* many other bugfixes and improvements.
+
 Change summary since 4.5.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
