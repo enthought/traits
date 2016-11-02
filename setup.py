@@ -125,7 +125,7 @@ if __name__ == "__main__":
         author='David C. Morrill, et. al.',
         author_email='info@enthought.com',
         classifiers=[c.strip() for c in """\
-            Development Status :: 5 - Production/really Stable
+            Development Status :: 5 - Production/Stable
             Intended Audience :: Developers
             Intended Audience :: Science/Research
             License :: OSI Approved :: BSD License
