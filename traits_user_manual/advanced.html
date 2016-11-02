@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,35 +27,21 @@
     <link rel="shortcut icon" href="../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="Traits 4 User Manual" href="index.html" />
-    <link rel="next" title="Testing Traits Classes" href="testing.html" />
-    <link rel="prev" title="Custom Traits" href="custom.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="testing.html" title="Testing Traits Classes"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="custom.html" title="Custom Traits"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="next" title="Testing" href="testing.html" />
+    <link rel="prev" title="Custom Traits" href="custom.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#">Advanced Topics</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="advanced-topics">
 <span id="id1"></span><h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
@@ -82,7 +68,7 @@ define a method on the same class as the trait attribute, with a name based on
 the name of the trait attribute:</p>
 <span class="target" id="index-1"></span><dl class="method">
 <dt id="_name_default">
-<tt class="descname">_name_default</tt><big>(</big><big>)</big><a class="headerlink" href="#_name_default" title="Permalink to this definition">¶</a></dt>
+<code class="descname">_name_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_name_default" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>This method initializes the <em>name</em> trait attribute, returning its initial value.
@@ -96,9 +82,9 @@ _<em>name</em>_default()  method avoids the overhead of subclassing a trait.</p>
 <p>Often, a subclass must override a trait attribute in a parent class by providing
 a different default value. You can specify a new default value without
 completely re-specifying the trait definition for the attribute. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># override_default.py -- Example of overriding a default value for</span>
-<span class="c">#                        a trait attribute in a subclass</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># override_default.py -- Example of overriding a default value for</span>
+<span class="c1">#                        a trait attribute in a subclass</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
@@ -114,21 +100,21 @@ completely re-specifying the trait definition for the attribute. For example:</p
 </div>
 <div class="section" id="reusing-trait-definitions">
 <span id="index-5"></span><span id="id5"></span><h3>Reusing Trait Definitions<a class="headerlink" href="#reusing-trait-definitions" title="Permalink to this headline">¶</a></h3>
-<p>As mentioned in <a class="reference internal" href="defining.html#defining-traits-initialization-and-validation"><em>Defining Traits: Initialization and Validation</em></a>, in most
+<p>As mentioned in <a class="reference internal" href="defining.html#defining-traits-initialization-and-validation"><span class="std std-ref">Defining Traits: Initialization and Validation</span></a>, in most
 cases, traits are defined in-line in attribute definitions, but they can also be
 defined independently. A trait definition only describes the characteristics of
 a trait, and not the current value of a trait attribute, so it can be used in
 the definition of any number of attributes. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre># trait_reuse.py --- Example of reusing trait definitions
-from traits.api import HasTraits, Range
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># trait_reuse.py --- Example of reusing trait definitions</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
 
-coefficient = Range(-1.0, 1.0, 0.0))
+<span class="n">coefficient</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
 
-class quadratic(HasTraits):
-    c2 = coefficient
-    c1 = coefficient
-    c0 = coefficient
-    x  = Range(-100.0, 100.0, 0.0)
+<span class="k">class</span> <span class="nc">quadratic</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="n">coefficient</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="n">coefficient</span>
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">coefficient</span>
+    <span class="n">x</span>  <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this example, a trait named <strong>coefficient</strong> is defined externally to the
@@ -152,34 +138,34 @@ strategies are described in the following sections.</p>
 <p>The Traits package enables you to define a category of trait attributes
 associated with a particular trait definition, by including an underscore (&#8216;_&#8217;)
 as a wildcard at the end of a trait attribute name. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># temp_wildcard.py --- Example of using a wildcard with a Trait</span>
-<span class="c">#                      attribute name</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># temp_wildcard.py --- Example of using a wildcard with a Trait</span>
+<span class="c1">#                      attribute name</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">temp_</span> <span class="o">=</span> <span class="n">Any</span>
 </pre></div>
 </div>
 <p>This example defines a class Person, with a category of attributes that have
-names beginning with <tt class="docutils literal"><span class="pre">temp</span></tt>, and that are defined by the Any trait. Thus, any
+names beginning with <code class="docutils literal"><span class="pre">temp</span></code>, and that are defined by the Any trait. Thus, any
 part of the program that uses a Person instance can reference attributes such as
 <strong>tempCount</strong>, <strong>temp_name</strong>, or <strong>temp_whatever</strong>, without having to explicitly
 declare these trait attributes. Each such attribute has None as the initial
 value and allows assignment of any value (because it is based on the Any trait).</p>
 <p>You can even give all object attributes a default trait definition, by
 specifying only the wildcard character for the attribute name:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># all_wildcard.py --- Example of trait attribute wildcard rules</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># all_wildcard.py --- Example of trait attribute wildcard rules</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
 
-    <span class="c"># Normal, explicitly defined trait:</span>
+    <span class="c1"># Normal, explicitly defined trait:</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
 
-    <span class="c"># By default, let all traits have any value:</span>
+    <span class="c1"># By default, let all traits have any value:</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">Any</span>
 
-    <span class="c"># Except for this one, which must be an Int:</span>
+    <span class="c1"># Except for this one, which must be an Int:</span>
     <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">&gt;&gt;&gt; bill = Person()</span>
@@ -214,11 +200,11 @@ characters, the definition with the longest name applies.</li>
 </ol>
 <p>Note that all possible attribute names are covered by one of these two rules.
 The base HasTraits class implicitly contains the attribute definition
-<tt class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></tt>. This rule guarantees that, by default, all attributes have
+<code class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></code>. This rule guarantees that, by default, all attributes have
 standard Python language semantics.</p>
 <p>These rules are demonstrated by the following example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># wildcard_rules.py -- Example of trait attribute wildcard rules</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Python</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># wildcard_rules.py -- Example of trait attribute wildcard rules</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Python</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">temp_count</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
@@ -228,7 +214,7 @@ standard Python language semantics.</p>
 </div>
 <p>In this example, the Person class has a <strong>temp_count</strong> attribute, which must be
 an integer and which has an initial value of -1. Any other attribute with a name
-starting with <tt class="docutils literal"><span class="pre">temp</span></tt> has an initial value of None and allows any value to be
+starting with <code class="docutils literal"><span class="pre">temp</span></code> has an initial value of None and allows any value to be
 assigned. All other object attributes behave like normal Python attributes
 (i.e., they allow any value to be assigned, but they must have a value assigned
 to them before their first reference).</p>
@@ -237,8 +223,8 @@ to them before their first reference).</p>
 <span id="index-9"></span><span id="id9"></span><h5>Disallow Object<a class="headerlink" href="#disallow-object" title="Permalink to this headline">¶</a></h5>
 <p>The singleton object Disallow can be used with wildcards to disallow all
 attributes that are not explicitly defined. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># disallow.py --- Example of using Disallow with wildcards</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> \
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># disallow.py --- Example of using Disallow with wildcards</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> \
     <span class="n">Disallow</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -261,7 +247,7 @@ causes an exception.</p>
 <div class="section" id="hastraits-subclasses">
 <span id="index-10"></span><span id="id10"></span><h5>HasTraits Subclasses<a class="headerlink" href="#hastraits-subclasses" title="Permalink to this headline">¶</a></h5>
 <p>Because the HasTraits class implicitly contains the attribute definition
-<tt class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></tt>, subclasses of HasTraits by default have very standard Python
+<code class="docutils literal"><span class="pre">_</span> <span class="pre">=</span> <span class="pre">Python</span></code>, subclasses of HasTraits by default have very standard Python
 attribute behavior for any attribute not explicitly defined as a trait
 attribute. However, the wildcard trait attribute definition rules make it easy
 to create subclasses of HasTraits with very non-standard attribute behavior. Two
@@ -277,13 +263,13 @@ than is typical for Python programs. It also helps prevent typos and spelling
 mistakes in attribute names from going unnoticed; a misspelled attribute name
 typically causes an exception. The definition of HasStrictTraits is the
 following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">HasStrictTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HasStrictTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
       <span class="n">_</span> <span class="o">=</span> <span class="n">Disallow</span>
 </pre></div>
 </div>
 <p>HasStrictTraits can be used to create type-checked data structures, as in the
 following example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TreeNode</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TreeNode</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
     <span class="n">left</span> <span class="o">=</span> <span class="n">This</span>
     <span class="n">right</span> <span class="o">=</span> <span class="n">This</span>
     <span class="n">value</span> <span class="o">=</span> <span class="n">Str</span>
@@ -306,7 +292,7 @@ class&#8217;s public API, to keep track of internal object state. Such attribute
 not need to be type-checked because they are only manipulated by the (presumably
 correct) methods of the class itself. The definition of HasPrivateTraits is the
 following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">HasPrivateTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">HasPrivateTraits</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
       <span class="n">__</span> <span class="o">=</span> <span class="n">Any</span>
       <span class="n">_</span>  <span class="o">=</span> <span class="n">Disallow</span>
 </pre></div>
@@ -322,23 +308,23 @@ object-, rather than class-, specific. This is accomplished using the
 add_trait() method of the HasTraits class:</p>
 <dl class="method">
 <dt id="add_trait">
-<tt class="descname">add_trait</tt><big>(</big><em>name</em>, <em>trait</em><big>)</big><a class="headerlink" href="#add_trait" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_trait</code><span class="sig-paren">(</span><em>name</em>, <em>trait</em><span class="sig-paren">)</span><a class="headerlink" href="#add_trait" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p id="index-14">For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># object_trait_attrs.py --- Example of per-object trait attributes</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># object_trait_attrs.py --- Example of per-object trait attributes</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Range</span>
 
 <span class="k">class</span> <span class="nc">GUISlider</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;Value&#39;</span><span class="p">,</span>
-                 <span class="n">trait</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-                 <span class="n">initial</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Value&#39;</span><span class="p">,</span>
+                 <span class="n">trait</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">initial</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
         <span class="n">HasTraits</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">trait</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">min</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">:</span>
                 <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">,</span> <span class="nb">min</span>
-            <span class="k">if</span> <span class="n">initial</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">initial</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">initial</span> <span class="o">=</span> <span class="nb">min</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">min</span> <span class="o">&lt;=</span> <span class="n">initial</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">):</span>
                 <span class="n">initial</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">,</span> <span class="nb">max</span><span class="p">][</span>
@@ -357,7 +343,7 @@ constructed). Thus, the label trait attribute on the GUISlider object is
 determined by the calling code, and added in the __init__() method using
 add_trait().</p>
 <p>You can require that add_trait() must be used in order to add attributes to a
-class, by deriving the class from HasStrictTraits (see <a class="reference internal" href="#hasstricttraits"><em>HasStrictTraits</em></a>).
+class, by deriving the class from HasStrictTraits (see <a class="reference internal" href="#hasstricttraits"><span class="std std-ref">HasStrictTraits</span></a>).
 When a class inherits from HasStrictTraits, the program cannot create a new
 attribute (either a trait attribute or a regular attribute) simply by assigning
 to it, as is normally the case in Python. In this case, add_trait() is the only
@@ -384,7 +370,7 @@ kinds of objects are actually <em>intended</em> to be used in a given situation.
 <div class="section" id="defining-an-interface">
 <span id="index-16"></span><span id="id15"></span><h3>Defining an Interface<a class="headerlink" href="#defining-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>To define an interface, create a subclass of Interface:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Interface</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Interface</span>
 
 <span class="k">class</span> <span class="nc">IName</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
 
@@ -394,7 +380,7 @@ kinds of objects are actually <em>intended</em> to be used in a given situation.
 </div>
 <p>Interface classes serve primarily as documentation of the methods and
 attributes that the interface defines. In this case, a class that implements the
-<tt class="docutils literal"><span class="pre">IName</span></tt> interface must have a method named <tt class="docutils literal"><span class="pre">get_name()</span></tt>, which takes no arguments
+<code class="docutils literal"><span class="pre">IName</span></code> interface must have a method named <code class="docutils literal"><span class="pre">get_name()</span></code>, which takes no arguments
 and returns a string. Do not include any implementation code in an interface
 declaration. However, the Traits package does not actually check to ensure that
 interfaces do not contain implementations.</p>
@@ -403,16 +389,16 @@ interfaces do not contain implementations.</p>
 <div class="section" id="implementing-an-interface">
 <span id="index-17"></span><span id="id16"></span><h3>Implementing an Interface<a class="headerlink" href="#implementing-an-interface" title="Permalink to this headline">¶</a></h3>
 <p>A class declares that it implements one or more interfaces using the
-<tt class="xref py py-func docutils literal"><span class="pre">provides()</span></tt> class decorator, which has the signature:</p>
+<code class="xref py py-func docutils literal"><span class="pre">provides()</span></code> class decorator, which has the signature:</p>
 <dl class="function">
 <dt>
-<tt class="descclassname">traits.has_traits.</tt><tt class="descname">provides</tt><big>(</big><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><big>)</big><a class="reference internal" href="../_modules/traits/has_traits.html#provides"><span class="viewcode-link">[source]</span></a></dt>
+<code class="descclassname">traits.has_traits.</code><code class="descname">provides</code><span class="sig-paren">(</span><em>interface</em><span class="optional">[</span>, <em>interface2</em>, <em>...</em>, <em>interfaceN</em><span class="optional">]</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_traits.html#provides"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
 
 <p id="index-18">Interface names beyond the first one are optional. As for all class
 decorators, the call to provides must occur just before the class
 definition. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Interface</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Interface</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">IName</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -421,13 +407,13 @@ definition. For example:</p>
 <span class="nd">@provides</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 
-    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;John&#39;</span> <span class="p">)</span>
-    <span class="n">last_name</span>  <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s">&#39;Doe&#39;</span> <span class="p">)</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s1">&#39;John&#39;</span> <span class="p">)</span>
+    <span class="n">last_name</span>  <span class="o">=</span> <span class="n">Str</span><span class="p">(</span> <span class="s1">&#39;Doe&#39;</span> <span class="p">)</span>
 
-    <span class="c"># Implementation of the &#39;IName&#39; interface:</span>
+    <span class="c1"># Implementation of the &#39;IName&#39; interface:</span>
     <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="sd">&#39;&#39;&#39; Returns the name of an object. &#39;&#39;&#39;</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{first} {last}&#39;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{first}</span><span class="s1"> </span><span class="si">{last}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -444,7 +430,7 @@ an InterfaceError if they don&#8217;t.</li>
 </ul>
 <p>The CHECK_INTERFACES variable must be imported directly from the
 traits.has_traits module:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">traits.has_traits</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">traits.has_traits</span>
 <span class="n">traits</span><span class="o">.</span><span class="n">has_traits</span><span class="o">.</span><span class="n">CHECK_INTERFACES</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 </div>
@@ -453,29 +439,29 @@ traits.has_traits module:</p>
 <span id="index-19"></span><span id="id17"></span><h3>Using Interfaces<a class="headerlink" href="#using-interfaces" title="Permalink to this headline">¶</a></h3>
 <p>You can use an interface at any place where you would normally use a class name.
 The most common way to use interfaces is with the
-<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a> or
-<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><tt class="xref py py-class docutils literal"><span class="pre">Supports</span></tt></a> traits:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><code class="xref py py-class docutils literal"><span class="pre">Instance</span></code></a> or
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><code class="xref py py-class docutils literal"><span class="pre">Supports</span></code></a> traits:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Apartment</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">renter</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">william</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s">&#39;William&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s">&#39;Adams&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">william</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">first_name</span><span class="o">=</span><span class="s1">&#39;William&#39;</span><span class="p">,</span> <span class="n">last_name</span><span class="o">=</span><span class="s1">&#39;Adams&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">apt1</span> <span class="o">=</span> <span class="n">Apartment</span><span class="p">(</span> <span class="n">renter</span><span class="o">=</span><span class="n">william</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="s">&#39;Renter is: &#39;</span><span class="p">,</span> <span class="n">apt1</span><span class="o">.</span><span class="n">renter</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s1">&#39;Renter is: &#39;</span><span class="p">,</span> <span class="n">apt1</span><span class="o">.</span><span class="n">renter</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
 <span class="go">Renter is: William Adams</span>
 </pre></div>
 </div>
-<p>Using an interface class with an <tt class="docutils literal"><span class="pre">Instance</span></tt> trait definition declares that the
+<p>Using an interface class with an <code class="docutils literal"><span class="pre">Instance</span></code> trait definition declares that the
 trait accepts only values that implement the specified interface. Using the
-<tt class="docutils literal"><span class="pre">Supports</span></tt> traits, if the assigned object does not implement the interface,
+<code class="docutils literal"><span class="pre">Supports</span></code> traits, if the assigned object does not implement the interface,
 the Traits package may automatically substitute an adapter object that
-implements the specified interface. See <a class="reference internal" href="#adaptation"><em>Adaptation</em></a> for more
+implements the specified interface. See <a class="reference internal" href="#adaptation"><span class="std std-ref">Adaptation</span></a> for more
 information.</p>
 </div>
 </div>
 <div class="section" id="adaptation">
 <span id="index-20"></span><span id="id18"></span><h2>Adaptation<a class="headerlink" href="#adaptation" title="Permalink to this headline">¶</a></h2>
 <p><em>The adaptation features of Traits have been rewritten in v. 4.4.0 . See
-the</em> <a class="reference internal" href="#migration"><em>migration guide</em></a> <em>below for details regarding changes
+the</em> <a class="reference internal" href="#migration"><span class="std std-ref">migration guide</span></a> <em>below for details regarding changes
 in API.</em></p>
 <p>Adaptation is the process of transforming an object that does not implement a
 specific interface needed by a client into an object that does. In the adapter
@@ -490,23 +476,23 @@ an adapter for that interface, as illustrated in the figure below.</p>
 services: introducing a new component in the application should not require
 modifying the data objects!</p>
 <p>Traits provides a package to make this pattern easy and automatic:
-In the <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><tt class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></tt></a> package, adapters from a protocol
+In the <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><code class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></code></a> package, adapters from a protocol
 (type or interface) to another can be registered with a manager object.
 HasTraits classes can either explicitly request to adapt an object to a
 protocol, or they can define special traits that automatically invoke
 the adaptation manager whenever it is necessary.</p>
-<p>For example, if a <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><tt class="xref py py-class docutils literal"><span class="pre">Supports</span></tt></a> trait requires
+<p>For example, if a <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><code class="xref py py-class docutils literal"><span class="pre">Supports</span></code></a> trait requires
 its values to implement
-interface <tt class="docutils literal"><span class="pre">IPrintable</span></tt>, and an object is assigned to it which is of
-class <tt class="docutils literal"><span class="pre">Image</span></tt>, which does not implement <tt class="docutils literal"><span class="pre">IPrintable</span></tt>, then Traits looks for
-an adapter from <tt class="docutils literal"><span class="pre">Image</span></tt> to <tt class="docutils literal"><span class="pre">IPrintable</span></tt>, and if one exists the adapter object
+interface <code class="docutils literal"><span class="pre">IPrintable</span></code>, and an object is assigned to it which is of
+class <code class="docutils literal"><span class="pre">Image</span></code>, which does not implement <code class="docutils literal"><span class="pre">IPrintable</span></code>, then Traits looks for
+an adapter from <code class="docutils literal"><span class="pre">Image</span></code> to <code class="docutils literal"><span class="pre">IPrintable</span></code>, and if one exists the adapter object
 is assigned to the trait. If necessary, a &#8220;chain&#8221; of adapter objects might be
 created, in order to perform the required adaptation.</p>
 <div class="section" id="main-features">
 <h3>Main features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h3>
-<p>The main features of the <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><tt class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></tt></a> package are:</p>
+<p>The main features of the <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#module-traits.adaptation" title="traits.adaptation"><code class="xref py py-mod docutils literal"><span class="pre">traits.adaptation</span></code></a> package are:</p>
 <ul>
-<li><p class="first">Support for Python classes, ABCs, and traits <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.Interface" title="traits.has_traits.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a> s</p>
+<li><p class="first">Support for Python classes, ABCs, and traits <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.Interface" title="traits.has_traits.Interface"><code class="xref py py-class docutils literal"><span class="pre">Interface</span></code></a> s</p>
 <blockquote>
 <div><p>Protocols can be specified using any of those.</p>
 </div></blockquote>
@@ -545,22 +531,22 @@ or an adapter object can be built that provides the protocol</li>
 <div class="section" id="defining-adapters">
 <span id="index-21"></span><span id="id19"></span><h3>Defining Adapters<a class="headerlink" href="#defining-adapters" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="the-adapter-class">
-<span id="subclassing-adapter"></span><span id="index-22"></span><h4>The <tt class="xref py py-class docutils literal"><span class="pre">Adapter</span></tt> class<a class="headerlink" href="#the-adapter-class" title="Permalink to this headline">¶</a></h4>
+<span id="subclassing-adapter"></span><span id="index-22"></span><h4>The <code class="xref py py-class docutils literal"><span class="pre">Adapter</span></code> class<a class="headerlink" href="#the-adapter-class" title="Permalink to this headline">¶</a></h4>
 <p>The Traits package provides two classes for defining adapters,
-one for Traits adapters, <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter" title="traits.adaptation.adapter.Adapter"><tt class="xref py py-class docutils literal"><span class="pre">Adapter</span></tt></a>,
+one for Traits adapters, <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter" title="traits.adaptation.adapter.Adapter"><code class="xref py py-class docutils literal"><span class="pre">Adapter</span></code></a>,
 and one for for pure-Python adapters,
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.PurePythonAdapter" title="traits.adaptation.adapter.PurePythonAdapter"><tt class="xref py py-class docutils literal"><span class="pre">PurePythonAdapter</span></tt></a>. These classes
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.PurePythonAdapter" title="traits.adaptation.adapter.PurePythonAdapter"><code class="xref py py-class docutils literal"><span class="pre">PurePythonAdapter</span></code></a>. These classes
 streamline the process of creating a new adapter class. They have a standard
 constructor that does not normally need to be overridden by subclasses. This
 constructor accepts one parameter, which is the object to be adapted, and
-assigns that object to an <tt class="xref py py-attr docutils literal"><span class="pre">adaptee</span></tt> attribute (a trait in the case
-of <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter" title="traits.adaptation.adapter.Adapter"><tt class="xref py py-class docutils literal"><span class="pre">Adapter</span></tt></a>).</p>
+assigns that object to an <code class="xref py py-attr docutils literal"><span class="pre">adaptee</span></code> attribute (a trait in the case
+of <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adapter.Adapter" title="traits.adaptation.adapter.Adapter"><code class="xref py py-class docutils literal"><span class="pre">Adapter</span></code></a>).</p>
 <p>As an adapter writer, you need to take care of the following:</p>
 <ul class="simple">
 <li>Declare which interfaces the adapter class implements on behalf of the
 object it is adapting. For example, if we are working with Traits
-<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.Interface" title="traits.has_traits.Interface"><tt class="xref py py-class docutils literal"><span class="pre">Interface</span></tt></a> s, the adapter would be decorated with the
-<tt class="xref py py-func docutils literal"><span class="pre">provides()</span></tt> decorator. In the case of Python ABCs,
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.Interface" title="traits.has_traits.Interface"><code class="xref py py-class docutils literal"><span class="pre">Interface</span></code></a> s, the adapter would be decorated with the
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.provides" title="traits.has_traits.provides"><code class="xref py py-func docutils literal"><span class="pre">provides()</span></code></a> decorator. In the case of Python ABCs,
 the class would be a subclass of the abstract base class, or be
 <a class="reference external" href="http://docs.python.org/2/library/abc.html#abc.ABCMeta.register">registered with it</a>.</li>
 <li>Implement the methods defined in the interfaces declared in the previous
@@ -570,21 +556,21 @@ on the adaptee object.</li>
 <ul class="simple" id="index-23">
 <li>For Traits adapters, define a trait attribute named <strong>adaptee</strong> that
 declares what type of object it is an adapter for. Usually, this is an
-<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a> trait.</li>
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><code class="xref py py-class docutils literal"><span class="pre">Instance</span></code></a> trait.</li>
 </ul>
 <p id="index-24">The following code example shows a definition of a simple adapter class:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">provides</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">provides</span>
 
-<span class="c"># Declare what interfaces this adapter implements for its client</span>
+<span class="c1"># Declare what interfaces this adapter implements for its client</span>
 <span class="nd">@provides</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">PersonToIName</span><span class="p">(</span><span class="n">Adapter</span><span class="p">):</span>
 
-    <span class="c"># Declare the type of client it supports:</span>
+    <span class="c1"># Declare the type of client it supports:</span>
     <span class="n">adaptee</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>
 
-    <span class="c"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
+    <span class="c1"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
     <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{first} {last}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{first}</span><span class="s1"> </span><span class="si">{last}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
                                        <span class="n">last</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span>
 </pre></div>
@@ -593,37 +579,37 @@ declares what type of object it is an adapter for. Usually, this is an
 <div class="section" id="registering-adapters">
 <span id="index-25"></span><span id="id20"></span><h4>Registering adapters<a class="headerlink" href="#registering-adapters" title="Permalink to this headline">¶</a></h4>
 <p>Once an adapter class has been defined, it has to be registered with the
-adaptation manager using the <tt class="xref py py-func docutils literal"><span class="pre">register_factory()</span></tt>
+adaptation manager using the <code class="xref py py-func docutils literal"><span class="pre">register_factory()</span></code>
 function.</p>
-<p>The signature of <tt class="xref py py-func docutils literal"><span class="pre">register_factory()</span></tt> is:</p>
+<p>The signature of <code class="xref py py-func docutils literal"><span class="pre">register_factory()</span></code> is:</p>
 <dl class="function">
 <dt>
-<tt class="descclassname">traits.adaptation.api.</tt><tt class="descname">register_factory</tt><big>(</big><em>adapter_class</em>, <em>from_protocol</em>, <em>to_protocol</em><big>)</big></dt>
+<code class="descclassname">traits.adaptation.api.</code><code class="descname">register_factory</code><span class="sig-paren">(</span><em>adapter_class</em>, <em>from_protocol</em>, <em>to_protocol</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/adaptation/adaptation_manager.html#register_factory"><span class="viewcode-link">[source]</span></a></dt>
 <dd></dd></dl>
 
-<p>The <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory" title="traits.adaptation.adaptation_manager.register_factory"><tt class="xref py py-func docutils literal"><span class="pre">register_factory()</span></tt></a> function
+<p>The <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory" title="traits.adaptation.adaptation_manager.register_factory"><code class="xref py py-func docutils literal"><span class="pre">register_factory()</span></code></a> function
 takes as first argument
-the adapter class (or an <a class="reference internal" href="#adapter-factories"><em>adapter factory</em></a>), followed
+the adapter class (or an <a class="reference internal" href="#adapter-factories"><span class="std std-ref">adapter factory</span></a>), followed
 by the protocol to be adapted (the one provided by the adaptee,
-<tt class="xref py py-attr docutils literal"><span class="pre">from_protocol</span></tt>), and the protocol that it provides
-(<tt class="xref py py-attr docutils literal"><span class="pre">to_protocol</span></tt>).</p>
+<code class="xref py py-attr docutils literal"><span class="pre">from_protocol</span></code>), and the protocol that it provides
+(<code class="xref py py-attr docutils literal"><span class="pre">to_protocol</span></code>).</p>
 <p id="index-26">This is the example from the previous section, were the adapter is registered:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">provides</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="k">import</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">provides</span>
 
-<span class="c"># Declare what interfaces this adapter implements for its client</span>
+<span class="c1"># Declare what interfaces this adapter implements for its client</span>
 <span class="nd">@provides</span><span class="p">(</span><span class="n">IName</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">PersonToIName</span><span class="p">(</span><span class="n">Adapter</span><span class="p">):</span>
 
-    <span class="c"># Declare the type of client it supports:</span>
+    <span class="c1"># Declare the type of client it supports:</span>
     <span class="n">adaptee</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>
 
-    <span class="c"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
+    <span class="c1"># Implement the &#39;IName&#39; interface on behalf of its client:</span>
     <span class="k">def</span> <span class="nf">get_name</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s">&#39;{first} {last}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{first}</span><span class="s1"> </span><span class="si">{last}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">first_name</span><span class="p">,</span>
                                        <span class="n">last</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">last_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">name</span>
 
-<span class="c"># ... somewhere else at application startup.</span>
+<span class="c1"># ... somewhere else at application startup.</span>
 <span class="n">register_factory</span><span class="p">(</span><span class="n">PersonToIName</span><span class="p">,</span> <span class="n">Person</span><span class="p">,</span> <span class="n">IName</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -631,7 +617,7 @@ by the protocol to be adapted (the one provided by the adaptee,
 </div>
 <div class="section" id="adapter-factories-and-conditional-adaptation">
 <span id="adapter-factories"></span><span id="index-27"></span><h3>Adapter factories, and conditional adaptation<a class="headerlink" href="#adapter-factories-and-conditional-adaptation" title="Permalink to this headline">¶</a></h3>
-<p>The first argument to the <tt class="xref py py-func docutils literal"><span class="pre">register_factory()</span></tt>
+<p>The first argument to the <code class="xref py py-func docutils literal"><span class="pre">register_factory()</span></code>
 function needs not be an adapter <em>class</em>, it can be, more generally, an
 adapter <em>factory</em>.</p>
 <p>An adapter factory can be any callable that accepts one positional argument,
@@ -644,13 +630,13 @@ adaptee object.</p>
 <p>A common use of adapter factories is to allow adaptation only if the
 state of the adaptee object allows it. The factory returns an adapter object
 if adaptation is possible, or None if it is not.</p>
-<p>In the following example, a <tt class="docutils literal"><span class="pre">numpy.ndarray</span></tt> object can be adapted to provide
-an <tt class="docutils literal"><span class="pre">IImage</span></tt> protocol only if the number of dimensions is 2. (For
+<p>In the following example, a <code class="docutils literal"><span class="pre">numpy.ndarray</span></code> object can be adapted to provide
+an <code class="docutils literal"><span class="pre">IImage</span></code> protocol only if the number of dimensions is 2. (For
 illustration, this example uses Python ABCs rather than Traits Interfaces.)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">abc</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">HasTraits</span>
-<span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="kn">import</span> <span class="n">adapt</span><span class="p">,</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">register_factory</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.adaptation.api</span> <span class="k">import</span> <span class="n">adapt</span><span class="p">,</span> <span class="n">Adapter</span><span class="p">,</span> <span class="n">register_factory</span>
 
 <span class="k">class</span> <span class="nc">ImageABC</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span>
@@ -658,7 +644,7 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)</p>
 <span class="k">class</span> <span class="nc">NDArrayToImage</span><span class="p">(</span><span class="n">Adapter</span><span class="p">):</span>
     <span class="n">adaptee</span> <span class="o">=</span> <span class="n">Array</span>
 
-<span class="c"># Declare that NDArrayToImage implements ImageABC.</span>
+<span class="c1"># Declare that NDArrayToImage implements ImageABC.</span>
 <span class="n">ImageABC</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">NDArrayToImage</span><span class="p">)</span>
 
 
@@ -666,19 +652,19 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)</p>
     <span class="sd">&quot;&quot;&quot; An adapter factory from numpy arrays to the ImageABC protocol.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">adaptee</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">NDArrayToImage</span><span class="p">(</span><span class="n">adaptee</span><span class="o">=</span><span class="n">adaptee</span><span class="p">)</span>
-    <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
-<span class="c"># ... somewhere else at application startup</span>
+<span class="c1"># ... somewhere else at application startup</span>
 <span class="n">register_factory</span><span class="p">(</span><span class="n">ndarray_to_image_abc</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">ImageABC</span><span class="p">)</span>
 
-<span class="c"># Try to adapt numpy arrays to images. The `adapt` function is</span>
-<span class="c"># introduced later in the docs, but you can probably guess what it does ;-)</span>
+<span class="c1"># Try to adapt numpy arrays to images. The `adapt` function is</span>
+<span class="c1"># introduced later in the docs, but you can probably guess what it does ;-)</span>
 
-<span class="c"># This adaptation fails, as the array is 1D</span>
-<span class="n">image</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">ImageABC</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">image</span> <span class="o">==</span> <span class="bp">None</span>
+<span class="c1"># This adaptation fails, as the array is 1D</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">ImageABC</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">image</span> <span class="o">==</span> <span class="kc">None</span>
 
-<span class="c"># This succeeds.</span>
+<span class="c1"># This succeeds.</span>
 <span class="n">image</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]),</span> <span class="n">ImageABC</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">NDArrayToImage</span><span class="p">)</span>
 </pre></div>
@@ -688,14 +674,14 @@ illustration, this example uses Python ABCs rather than Traits Interfaces.)</p>
 <div class="section" id="requesting-an-adapter">
 <span id="using-adapters"></span><span id="index-28"></span><h3>Requesting an adapter<a class="headerlink" href="#requesting-an-adapter" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="the-adapt-function">
-<h4>The <tt class="docutils literal"><span class="pre">adapt</span></tt> function<a class="headerlink" href="#the-adapt-function" title="Permalink to this headline">¶</a></h4>
+<h4>The <code class="docutils literal"><span class="pre">adapt</span></code> function<a class="headerlink" href="#the-adapt-function" title="Permalink to this headline">¶</a></h4>
 <p>Adapter classes are defined as described in the preceding sections, but you do
 not explicitly create instances of these classes.</p>
-<p>Instead, the function <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt" title="traits.adaptation.adaptation_manager.adapt"><tt class="xref py py-func docutils literal"><span class="pre">adapt()</span></tt></a> is
+<p>Instead, the function <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt" title="traits.adaptation.adaptation_manager.adapt"><code class="xref py py-func docutils literal"><span class="pre">adapt()</span></code></a> is
 used, giving the object that needs to be adapted and the target protocol.</p>
-<p>For instance, in the example in the <a class="reference internal" href="#conditional-adaptation"><em>Conditional adaptation</em></a> section,
+<p>For instance, in the example in the <a class="reference internal" href="#conditional-adaptation"><span class="std std-ref">Conditional adaptation</span></a> section,
 a 2D numpy array is adapted to an ImageABC protocol with</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">image</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]),</span> <span class="n">ImageABC</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]),</span> <span class="n">ImageABC</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In some cases, no single adapter class is registered that adapts the object
@@ -706,20 +692,20 @@ that actually implements the required interface, is returned.</p>
 <p>When a situation like this arises, the adapted object assigned to the trait
 always contains the smallest set of adapter objects needed to adapt the
 original object. Also, more specific adapters are preferred over less specific
-ones. For example, let&#8217;s suppose we have a class <tt class="docutils literal"><span class="pre">Document</span></tt> and a subclass
-<tt class="docutils literal"><span class="pre">HTMLDocument</span></tt>. We register two adapters to an interface <tt class="docutils literal"><span class="pre">IPrintable</span></tt>,
-<tt class="docutils literal"><span class="pre">DocumentToIPrintable</span></tt> and <tt class="docutils literal"><span class="pre">HTMLDocumentToIPrintable</span></tt>. The call</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">html_doc</span> <span class="o">=</span> <span class="n">HTMLDocument</span><span class="p">()</span>
+ones. For example, let&#8217;s suppose we have a class <code class="docutils literal"><span class="pre">Document</span></code> and a subclass
+<code class="docutils literal"><span class="pre">HTMLDocument</span></code>. We register two adapters to an interface <code class="docutils literal"><span class="pre">IPrintable</span></code>,
+<code class="docutils literal"><span class="pre">DocumentToIPrintable</span></code> and <code class="docutils literal"><span class="pre">HTMLDocumentToIPrintable</span></code>. The call</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">html_doc</span> <span class="o">=</span> <span class="n">HTMLDocument</span><span class="p">()</span>
 <span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>will return an instance of the <tt class="docutils literal"><span class="pre">HTMLDocumentToIPrintable</span></tt> adapter, as it
-is more specific than <tt class="docutils literal"><span class="pre">DocumentToIPrintable</span></tt>.</p>
+<p>will return an instance of the <code class="docutils literal"><span class="pre">HTMLDocumentToIPrintable</span></code> adapter, as it
+is more specific than <code class="docutils literal"><span class="pre">DocumentToIPrintable</span></code>.</p>
 <p>If no single adapter and no adapter chain can be constructed for the requested
-adaptation, an <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_error.AdaptationError" title="traits.adaptation.adaptation_error.AdaptationError"><tt class="xref py py-class docutils literal"><span class="pre">AdaptationError</span></tt></a>
+adaptation, an <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_error.AdaptationError" title="traits.adaptation.adaptation_error.AdaptationError"><code class="xref py py-class docutils literal"><span class="pre">AdaptationError</span></code></a>
 is raised. Alternatively, one can specify a default value to be returned
 in this case:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">unprintable_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">EmptyPrintableDoc</span><span class="p">())</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">unprintable_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">EmptyPrintableDoc</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -727,38 +713,38 @@ in this case:</p>
 <h4>Using Traits interfaces<a class="headerlink" href="#using-traits-interfaces" title="Permalink to this headline">¶</a></h4>
 <p>An alternative syntax to create adapters when using Traits Interfaces is
 to use the interface class as an adapter factory, for example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">printable</span> <span class="o">=</span> <span class="n">IPrintable</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printable</span> <span class="o">=</span> <span class="n">IPrintable</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>is equivalent to</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">printable</span> <span class="o">=</span> <span class="n">adapt</span><span class="p">(</span><span class="n">html_doc</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>(the default argument, None, is optional).</p>
 </div>
 <div class="section" id="using-the-supports-and-adaptsto-traits">
-<h4>Using the <tt class="docutils literal"><span class="pre">Supports</span></tt> and <tt class="docutils literal"><span class="pre">AdaptsTo</span></tt> traits<a class="headerlink" href="#using-the-supports-and-adaptsto-traits" title="Permalink to this headline">¶</a></h4>
+<h4>Using the <code class="docutils literal"><span class="pre">Supports</span></code> and <code class="docutils literal"><span class="pre">AdaptsTo</span></code> traits<a class="headerlink" href="#using-the-supports-and-adaptsto-traits" title="Permalink to this headline">¶</a></h4>
 <p>Using the terminology introduced in this section, we can say that the
-<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a> trait accepts values that <em>provide</em> the specified protocol.</p>
+<a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Instance" title="traits.trait_types.Instance"><code class="xref py py-class docutils literal"><span class="pre">Instance</span></code></a> trait accepts values that <em>provide</em> the specified protocol.</p>
 <p>Traits defines two additional traits that accept values that <em>support</em> a
 given protocol (they provide it or can be adapted to it) instead:</p>
 <ul class="simple">
-<li>The <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><tt class="xref py py-class docutils literal"><span class="pre">Supports</span></tt></a> trait accepts values that support the specified
+<li>The <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.Supports" title="traits.trait_types.Supports"><code class="xref py py-class docutils literal"><span class="pre">Supports</span></code></a> trait accepts values that support the specified
 protocol. The value of the trait after assignment is the possibly adapted
 value (i.e., it is the original assigned value if that provides the protocol,
 or is an adapter otherwise).</li>
-<li>The <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.AdaptsTo" title="traits.trait_types.AdaptsTo"><tt class="xref py py-class docutils literal"><span class="pre">AdaptsTo</span></tt></a> trait also accepts values that support the specified
-protocol. Unlike <tt class="docutils literal"><span class="pre">Supports</span></tt>, <tt class="docutils literal"><span class="pre">AdaptsTo</span></tt> stores the original, unadapted
+<li>The <a class="reference internal" href="../traits_api_reference/trait_types.html#traits.trait_types.AdaptsTo" title="traits.trait_types.AdaptsTo"><code class="xref py py-class docutils literal"><span class="pre">AdaptsTo</span></code></a> trait also accepts values that support the specified
+protocol. Unlike <code class="docutils literal"><span class="pre">Supports</span></code>, <code class="docutils literal"><span class="pre">AdaptsTo</span></code> stores the original, unadapted
 value.</li>
 </ul>
 <p>If your application works with adaptation, it is natural to use the
-<tt class="docutils literal"><span class="pre">Supports</span></tt> trait in place of the <tt class="docutils literal"><span class="pre">Instance</span></tt> one in most cases. This
+<code class="docutils literal"><span class="pre">Supports</span></code> trait in place of the <code class="docutils literal"><span class="pre">Instance</span></code> one in most cases. This
 will allow that application to be extended by adaptation in the future
 without changing the existing code, without having to invoke adaptation
 explicitly in your code.</p>
-<p>For example, a Traits object can be written against the <tt class="docutils literal"><span class="pre">IPrintable</span></tt>
+<p>For example, a Traits object can be written against the <code class="docutils literal"><span class="pre">IPrintable</span></code>
 interface and be open to extensions by adaptation as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Adapter</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Interface</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">Adapter</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Interface</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span>
                         <span class="n">register_factory</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Supports</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">IPrintable</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
@@ -766,8 +752,8 @@ interface and be open to extensions by adaptation as follows:</p>
         <span class="sd">&quot;&quot;&quot; Return text formatted with the given number of columns. &quot;&quot;&quot;</span>
 
 <span class="k">class</span> <span class="nc">PrintQueue</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="c"># This is the key part of the example: we declare a list of</span>
-    <span class="c"># items that provide or can be adapted to IPrintable</span>
+    <span class="c1"># This is the key part of the example: we declare a list of</span>
+    <span class="c1"># items that provide or can be adapted to IPrintable</span>
     <span class="n">queue</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Supports</span><span class="p">(</span><span class="n">IPrintable</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -779,14 +765,14 @@ interface and be open to extensions by adaptation as follows:</p>
     <span class="k">def</span> <span class="nf">print_next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">printable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="c"># The elements from the list are guaranteed to provide</span>
-        <span class="c"># IPrintable, so we can call the interface without worrying</span>
-        <span class="c"># about adaptation.</span>
+        <span class="c1"># The elements from the list are guaranteed to provide</span>
+        <span class="c1"># IPrintable, so we can call the interface without worrying</span>
+        <span class="c1"># about adaptation.</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="n">printable</span><span class="o">.</span><span class="n">get_formatted_text</span><span class="p">(</span><span class="n">n_cols</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
-        <span class="k">print</span> <span class="s">&#39;-- Start document --&#39;</span>
-        <span class="k">print</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s">&#39;-- End of document -</span><span class="se">\n</span><span class="s">&#39;</span>
+        <span class="nb">print</span> <span class="s1">&#39;-- Start document --&#39;</span>
+        <span class="nb">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">&#39;-- End of document -</span><span class="se">\n</span><span class="s1">&#39;</span>
 
 <span class="k">class</span> <span class="nc">TextDocument</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; A text document. &quot;&quot;&quot;</span>
@@ -801,17 +787,17 @@ interface and be open to extensions by adaptation as follows:</p>
         <span class="k">return</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">n_cols</span><span class="p">)</span>
 
 
-<span class="c"># ---- Application starts here.</span>
+<span class="c1"># ---- Application starts here.</span>
 
-<span class="c"># Register the adapter.</span>
+<span class="c1"># Register the adapter.</span>
 <span class="n">register_factory</span><span class="p">(</span><span class="n">TextDocumentToIPrintable</span><span class="p">,</span> <span class="n">TextDocument</span><span class="p">,</span> <span class="n">IPrintable</span><span class="p">)</span>
 
-<span class="c"># Create two text documents.</span>
-<span class="n">doc1</span> <span class="o">=</span> <span class="n">TextDocument</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s">&#39;very very long text the will bore you for sure&#39;</span><span class="p">)</span>
-<span class="n">doc2</span> <span class="o">=</span> <span class="n">TextDocument</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s">&#39;once upon a time in a far away galaxy&#39;</span><span class="p">)</span>
+<span class="c1"># Create two text documents.</span>
+<span class="n">doc1</span> <span class="o">=</span> <span class="n">TextDocument</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;very very long text the will bore you for sure&#39;</span><span class="p">)</span>
+<span class="n">doc2</span> <span class="o">=</span> <span class="n">TextDocument</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;once upon a time in a far away galaxy&#39;</span><span class="p">)</span>
 
-<span class="c"># The text documents can be pushed on the print queue; in the process,</span>
-<span class="c"># they are automatically adapted by Traits.</span>
+<span class="c1"># The text documents can be pushed on the print queue; in the process,</span>
+<span class="c1"># they are automatically adapted by Traits.</span>
 <span class="n">print_queue</span> <span class="o">=</span> <span class="n">PrintQueue</span><span class="p">()</span>
 <span class="n">print_queue</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">doc1</span><span class="p">)</span>
 <span class="n">print_queue</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">doc2</span><span class="p">)</span>
@@ -821,38 +807,38 @@ interface and be open to extensions by adaptation as follows:</p>
 </pre></div>
 </div>
 <p>This scripts produces this output:</p>
-<div class="highlight-python"><div class="highlight"><pre>-- Start document --
-very very long text
-the will bore you
-for sure
--- End of document -
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="n">Start</span> <span class="n">document</span> <span class="o">--</span>
+<span class="n">very</span> <span class="n">very</span> <span class="n">long</span> <span class="n">text</span>
+<span class="n">the</span> <span class="n">will</span> <span class="n">bore</span> <span class="n">you</span>
+<span class="k">for</span> <span class="n">sure</span>
+<span class="o">--</span> <span class="n">End</span> <span class="n">of</span> <span class="n">document</span> <span class="o">-</span>
 
--- Start document --
-once upon a time in
-a far away galaxy
--- End of document -
+<span class="o">--</span> <span class="n">Start</span> <span class="n">document</span> <span class="o">--</span>
+<span class="n">once</span> <span class="n">upon</span> <span class="n">a</span> <span class="n">time</span> <span class="ow">in</span>
+<span class="n">a</span> <span class="n">far</span> <span class="n">away</span> <span class="n">galaxy</span>
+<span class="o">--</span> <span class="n">End</span> <span class="n">of</span> <span class="n">document</span> <span class="o">-</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="section" id="implementation-details">
 <h3>Implementation details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h3>
-<p>The algorithm for finding a sequence of adapters adapting an object <tt class="docutils literal"><span class="pre">adaptee</span></tt>
-to a protocol <tt class="docutils literal"><span class="pre">to_protocol</span></tt> is based on a weighted graph.</p>
+<p>The algorithm for finding a sequence of adapters adapting an object <code class="docutils literal"><span class="pre">adaptee</span></code>
+to a protocol <code class="docutils literal"><span class="pre">to_protocol</span></code> is based on a weighted graph.</p>
 <p>Nodes on the graphs are protocols (types or interfaces).
-Edges are adaptation offers that connect a <tt class="docutils literal"><span class="pre">offer.from_protocol</span></tt> to a
-<tt class="docutils literal"><span class="pre">offer.to_protocol</span></tt>.</p>
-<p>Edges connect protocol <tt class="docutils literal"><span class="pre">A</span></tt> to protocol <tt class="docutils literal"><span class="pre">B</span></tt> and are weighted by two
+Edges are adaptation offers that connect a <code class="docutils literal"><span class="pre">offer.from_protocol</span></code> to a
+<code class="docutils literal"><span class="pre">offer.to_protocol</span></code>.</p>
+<p>Edges connect protocol <code class="docutils literal"><span class="pre">A</span></code> to protocol <code class="docutils literal"><span class="pre">B</span></code> and are weighted by two
 numbers in this priority:</p>
 <ol class="arabic simple">
 <li>a unit weight (1) representing the fact that we use 1 adaptation
-offer to go from <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">B</span></tt></li>
+offer to go from <code class="docutils literal"><span class="pre">A</span></code> to <code class="docutils literal"><span class="pre">B</span></code></li>
 <li>the number of steps up the type hierarchy that we need to take
-to go from <tt class="docutils literal"><span class="pre">A</span></tt> to <tt class="docutils literal"><span class="pre">offer.from_protocol</span></tt>, so that more specific
+to go from <code class="docutils literal"><span class="pre">A</span></code> to <code class="docutils literal"><span class="pre">offer.from_protocol</span></code>, so that more specific
 adapters are always preferred</li>
 </ol>
-<p>The algorithm finds the shortest weighted path between <tt class="docutils literal"><span class="pre">adaptee</span></tt>
-and <tt class="docutils literal"><span class="pre">to_protocol</span></tt>. Once a candidate path is found, it tries to
+<p>The algorithm finds the shortest weighted path between <code class="docutils literal"><span class="pre">adaptee</span></code>
+and <code class="docutils literal"><span class="pre">to_protocol</span></code>. Once a candidate path is found, it tries to
 create the chain of adapters using the factories in the adaptation offers
 that compose the path. If this fails because of conditional
 adaptation (i.e., an adapter factory returns None), the path
@@ -864,37 +850,37 @@ every adaptation offer is used at most once.</p>
 <span id="migration"></span><h3>Migration guide<a class="headerlink" href="#migration-guide" title="Permalink to this headline">¶</a></h3>
 <p>The implementation of the adaptation mechanism changed in Traits 4.4.0 from
 one based on PyProtocols to a new, smaller, and more robust implementation.</p>
-<p>Code written against <tt class="docutils literal"><span class="pre">traits.protocols</span></tt> will continue to work, although
+<p>Code written against <code class="docutils literal"><span class="pre">traits.protocols</span></code> will continue to work, although
 the <cite>traits.protocols</cite> API has been deprecated and its members will log a
-warning the first time they are accessed. The <tt class="docutils literal"><span class="pre">traits.protocols</span></tt> package
+warning the first time they are accessed. The <code class="docutils literal"><span class="pre">traits.protocols</span></code> package
 will be removed in Traits 5.0 .</p>
 <p>This is a list of replacements for the old API:</p>
 <ul>
-<li><p class="first"><tt class="xref py py-class docutils literal"><span class="pre">traits.protocols.api.AdaptationFailure</span></tt></p>
-<p>Use <tt class="xref py py-class docutils literal"><span class="pre">traits.api.AdaptationError</span></tt> instead.</p>
+<li><p class="first"><code class="xref py py-class docutils literal"><span class="pre">traits.protocols.api.AdaptationFailure</span></code></p>
+<p>Use <code class="xref py py-class docutils literal"><span class="pre">traits.api.AdaptationError</span></code> instead.</p>
 </li>
-<li><p class="first"><tt class="xref py py-func docutils literal"><span class="pre">traits.api.adapts()</span></tt></p>
-<p>Use the <tt class="xref py py-func docutils literal"><span class="pre">traits.api.register_factory()</span></tt> function.</p>
+<li><p class="first"><code class="xref py py-func docutils literal"><span class="pre">traits.api.adapts()</span></code></p>
+<p>Use the <code class="xref py py-func docutils literal"><span class="pre">traits.api.register_factory()</span></code> function.</p>
 </li>
-<li><p class="first"><tt class="xref py py-func docutils literal"><span class="pre">implements()</span></tt></p>
-<p>Use the <tt class="xref py py-func docutils literal"><span class="pre">traits.api.provides()</span></tt> decorator instead.</p>
+<li><p class="first"><code class="xref py py-func docutils literal"><span class="pre">implements()</span></code></p>
+<p>Use the <code class="xref py py-func docutils literal"><span class="pre">traits.api.provides()</span></code> decorator instead.</p>
 </li>
-<li><p class="first"><tt class="xref py py-func docutils literal"><span class="pre">traits.protocols.api.declareAdapter()</span></tt></p>
-<p>Use the function <tt class="xref py py-func docutils literal"><span class="pre">traits.api.register_factory()</span></tt>, or the function
-<tt class="xref py py-func docutils literal"><span class="pre">traits.adaptation.api.register_offer()</span></tt> instead. It is no longer
+<li><p class="first"><code class="xref py py-func docutils literal"><span class="pre">traits.protocols.api.declareAdapter()</span></code></p>
+<p>Use the function <code class="xref py py-func docutils literal"><span class="pre">traits.api.register_factory()</span></code>, or the function
+<code class="xref py py-func docutils literal"><span class="pre">traits.adaptation.api.register_offer()</span></code> instead. It is no longer
 necessary to distinguish between &#8220;types&#8221;, &#8220;protocols&#8221;, and &#8220;objects&#8221;.</p>
 </li>
-<li><p class="first"><tt class="xref py py-func docutils literal"><span class="pre">traits.protocols.api.declareImplementation()</span></tt></p>
+<li><p class="first"><code class="xref py py-func docutils literal"><span class="pre">traits.protocols.api.declareImplementation()</span></code></p>
 <p>This function
-was used occasionally to declare that an arbitrary type (e.g., <tt class="docutils literal"><span class="pre">dict</span></tt>)
-implements an interface. Users that use Python ABCs can use the <tt class="docutils literal"><span class="pre">register</span></tt>
+was used occasionally to declare that an arbitrary type (e.g., <code class="docutils literal"><span class="pre">dict</span></code>)
+implements an interface. Users that use Python ABCs can use the <code class="docutils literal"><span class="pre">register</span></code>
 method for achieving the same result. Otherwise, use the function
-<tt class="xref py py-func docutils literal"><span class="pre">traits.adaptation.api.register_provides()</span></tt> that declares a &#8220;null&#8221;
+<code class="xref py py-func docutils literal"><span class="pre">traits.adaptation.api.register_provides()</span></code> that declares a &#8220;null&#8221;
 adapter to adapt the type to the interface.</p>
 </li>
 <li><p class="first">Testing if a class is an Interface</p>
-<p><tt class="docutils literal"><span class="pre">issubclass(klass,</span> <span class="pre">Interface)</span></tt> is not reliable, use
-<tt class="xref py py-func docutils literal"><span class="pre">traits.api.isinterface()</span></tt> instead</p>
+<p><code class="docutils literal"><span class="pre">issubclass(klass,</span> <span class="pre">Interface)</span></code> is not reliable, use
+<code class="xref py py-func docutils literal"><span class="pre">traits.api.isinterface()</span></code> instead</p>
 </li>
 </ul>
 </div>
@@ -905,25 +891,25 @@ adapter to adapt the type to the interface.</p>
 Adaptation might work in particular cases but is not guaranteed to work
 correctly in situations involving old-style classes. When used with Traits,
 the classes involved in adaptation are typically subclasses of
-<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><tt class="xref py py-class docutils literal"><span class="pre">HasTraits</span></tt></a>, in which case this is not an issue.</li>
-<li>The methods <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory" title="traits.adaptation.adaptation_manager.register_factory"><tt class="xref py py-func docutils literal"><span class="pre">register_factory()</span></tt></a>,
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt" title="traits.adaptation.adaptation_manager.adapt"><tt class="xref py py-func docutils literal"><span class="pre">adapt()</span></tt></a>,
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasTraits" title="traits.has_traits.HasTraits"><code class="xref py py-class docutils literal"><span class="pre">HasTraits</span></code></a>, in which case this is not an issue.</li>
+<li>The methods <a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory" title="traits.adaptation.adaptation_manager.register_factory"><code class="xref py py-func docutils literal"><span class="pre">register_factory()</span></code></a>,
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt" title="traits.adaptation.adaptation_manager.adapt"><code class="xref py py-func docutils literal"><span class="pre">adapt()</span></code></a>,
 etc. use a global adaptation manager, which is accessible through the
 function
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.get_global_adaptation_manager" title="traits.adaptation.adaptation_manager.get_global_adaptation_manager"><tt class="xref py py-func docutils literal"><span class="pre">get_global_adaptation_manager()</span></tt></a>.
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.get_global_adaptation_manager" title="traits.adaptation.adaptation_manager.get_global_adaptation_manager"><code class="xref py py-func docutils literal"><span class="pre">get_global_adaptation_manager()</span></code></a>.
 The traits automatic adaptation features also use the global manager.
 Having a global adaptation manager can get you into trouble, for the usual
 reasons related to having a global state. If you want to have more control
 over adaptation, we recommend creating a new
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager" title="traits.adaptation.adaptation_manager.AdaptationManager"><tt class="xref py py-class docutils literal"><span class="pre">AdaptationManager</span></tt></a>
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager" title="traits.adaptation.adaptation_manager.AdaptationManager"><code class="xref py py-class docutils literal"><span class="pre">AdaptationManager</span></code></a>
 instance, use it directly in your application, and set it as the global
 manager using
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.set_global_adaptation_manager" title="traits.adaptation.adaptation_manager.set_global_adaptation_manager"><tt class="xref py py-func docutils literal"><span class="pre">set_global_adaptation_manager()</span></tt></a>.
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.set_global_adaptation_manager" title="traits.adaptation.adaptation_manager.set_global_adaptation_manager"><code class="xref py py-func docutils literal"><span class="pre">set_global_adaptation_manager()</span></code></a>.
 A common issue with the global manager arises in unittesting, where adapters
 registered in one test influence the outcome of other tests downstream.
 Tests relying on adaptation should make sure to reset the state of the
 global adapter using
-<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.reset_global_adaptation_manager" title="traits.adaptation.adaptation_manager.reset_global_adaptation_manager"><tt class="xref py py-func docutils literal"><span class="pre">reset_global_adaptation_manager()</span></tt></a>.</li>
+<a class="reference internal" href="../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.reset_global_adaptation_manager" title="traits.adaptation.adaptation_manager.reset_global_adaptation_manager"><code class="xref py py-func docutils literal"><span class="pre">reset_global_adaptation_manager()</span></code></a>.</li>
 </ol>
 </div>
 <div class="section" id="recommended-readings-about-adaptation">
@@ -932,7 +918,7 @@ global adapter using
 pattern outside of Traits:</p>
 <ul class="simple">
 <li><a class="reference external" href="http://peak.telecommunity.com/protocol_ref/module-protocols.html">PyProtocols</a>,
-a precursor of <tt class="docutils literal"><span class="pre">traits.adaptation</span></tt></li>
+a precursor of <code class="docutils literal"><span class="pre">traits.adaptation</span></code></li>
 <li><a class="reference external" href="http://www.python.org/dev/peps/pep-0246/">PEP 246</a> on object adaptation</li>
 <li><a class="reference external" href="http://www.eclipse.org/articles/article.php?file=Article-Adapters/index.html">Article about adapters in Eclipse plugins</a></li>
 </ul>
@@ -951,7 +937,7 @@ TraitUI view.</p>
 <p>The Property() function has the following signature:</p>
 <dl class="function">
 <dt id="traits.adaptation.api.Property">
-<tt class="descclassname">traits.adaptation.api.</tt><tt class="descname">Property</tt><big>(</big><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traits.adaptation.api.Property" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.adaptation.api.</code><code class="descname">Property</code><span class="sig-paren">(</span><span class="optional">[</span><em>fget=None</em>, <em>fset=None</em>, <em>fvalidate=None</em>, <em>force=False</em>, <em>handler=None</em>, <em>trait=None</em>, <em>**metadata</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#traits.adaptation.api.Property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>All parameters are optional, including the <em>fget</em> &#8220;getter&#8221;, <em>fvalidate</em>
@@ -964,7 +950,7 @@ trait attribute.</p>
 that trait&#8217;s handler supersedes the <em>handler</em> argument, if any. Because the
 <em>fget</em> parameter accepts either a method or a trait, you can define a Property
 trait by simply passing another trait. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">source</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">Code</span> <span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">Code</span> <span class="p">)</span>
 </pre></div>
 </div>
 <p>This line defines a trait whose value is validated by the Code trait, and whose
@@ -994,19 +980,19 @@ depended on. However, to simplify the situation, Property traits support a
 indicate that a getter method&#8217;s return value should be cached. Use
 <strong>depends_on</strong> to indicate the other attributes that the property depends on.</p>
 <p id="index-32">For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># cached_prop.py -- Example of @cached_property decorator</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># cached_prop.py -- Example of @cached_property decorator</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span>\
                                  <span class="n">Property</span><span class="p">,</span> <span class="n">cached_property</span>
 
 <span class="k">class</span> <span class="nc">TestScores</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
 
     <span class="n">scores</span>  <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Int</span> <span class="p">)</span>
-    <span class="n">average</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s">&#39;scores&#39;</span> <span class="p">)</span>
+    <span class="n">average</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span> <span class="n">depends_on</span> <span class="o">=</span> <span class="s1">&#39;scores&#39;</span> <span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">_get_average</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span>
-        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="nb">reduce</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span> <span class="n">reduce</span><span class="p">(</span> <span class="k">lambda</span> <span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">:</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">)</span>
                  <span class="o">/</span> <span class="nb">len</span><span class="p">(</span> <span class="n">s</span> <span class="p">))</span>
 </pre></div>
 </div>
@@ -1014,7 +1000,7 @@ indicate that a getter method&#8217;s return value should be cached. Use
 preceding the property&#8217;s getter method.</p>
 <p>The <strong>depends_on</strong> metadata attribute accepts extended trait references, using
 the same syntax as the on_trait_change() method&#8217;s name parameter, described in
-<a class="reference internal" href="notification.html#the-name-parameter"><em>The name Parameter</em></a>. As a result, it can take values that specify
+<a class="reference internal" href="notification.html#the-name-parameter"><span class="std std-ref">The name Parameter</span></a>. As a result, it can take values that specify
 attributes on referenced objects, multiple attributes, or attributes that are
 selected based on their metadata attributes.</p>
 </div>
@@ -1042,15 +1028,15 @@ for those trait attributes. The benefits of this approach are that you do not
 need to override __getstate__(), and that the metadata helps document the
 pickling behavior of the class.</p>
 <p id="index-36">For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># transient_metadata.py -- Example of using &#39;transient&#39; metadata</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Any</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># transient_metadata.py -- Example of using &#39;transient&#39; metadata</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="k">class</span> <span class="nc">DataBase</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
-    <span class="c"># The name of the data base file:</span>
+    <span class="c1"># The name of the data base file:</span>
     <span class="n">file_name</span> <span class="o">=</span> <span class="n">File</span>
 
-    <span class="c"># The open file handle used to access the data base:</span>
-    <span class="nb">file</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span> <span class="n">transient</span> <span class="o">=</span> <span class="bp">True</span> <span class="p">)</span>
+    <span class="c1"># The open file handle used to access the data base:</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">Any</span><span class="p">(</span> <span class="n">transient</span> <span class="o">=</span> <span class="kc">True</span> <span class="p">)</span>
 </pre></div>
 </div>
 <p>In this example, the DataBase class&#8217;s file trait is marked as transient because
@@ -1068,26 +1054,26 @@ automatically transient traits are:</p>
 <ul class="simple">
 <li>Constant</li>
 <li>Event</li>
-<li>Read-only and write-only Property traits (See <a class="reference internal" href="#property-factory-function"><em>Property Factory Function</em></a>)</li>
-<li>Shadow attributes for mapped traits (See <a class="reference internal" href="custom.html#mapped-traits"><em>Mapped Traits</em></a>)</li>
-<li>Private attributes of HasPrivateTraits subclasses (See <a class="reference internal" href="#hasprivatetraits"><em>HasPrivateTraits</em></a>)</li>
+<li>Read-only and write-only Property traits (See <a class="reference internal" href="#property-factory-function"><span class="std std-ref">Property Factory Function</span></a>)</li>
+<li>Shadow attributes for mapped traits (See <a class="reference internal" href="custom.html#mapped-traits"><span class="std std-ref">Mapped Traits</span></a>)</li>
+<li>Private attributes of HasPrivateTraits subclasses (See <a class="reference internal" href="#hasprivatetraits"><span class="std std-ref">HasPrivateTraits</span></a>)</li>
 <li>Delegate traits that do not have a local value overriding the delegation.
 Delegate traits with a local value are non-transient, i.e., they are
-serialized. (See <a class="reference internal" href="deferring.html#delegatesto"><em>DelegatesTo</em></a>) You can mark a Delegate trait as
+serialized. (See <a class="reference internal" href="deferring.html#delegatesto"><span class="std std-ref">DelegatesTo</span></a>) You can mark a Delegate trait as
 transient if you do not want its value to ever be serialized.</li>
 </ul>
 </div>
 <div class="section" id="overriding-getstate">
 <span id="index-38"></span><span id="id28"></span><h3>Overriding __getstate__()<a class="headerlink" href="#overriding-getstate" title="Permalink to this headline">¶</a></h3>
 <p>In general, try to avoid overriding __getstate__() in subclasses of HasTraits.
-Instead, mark traits that should not be pickled with <tt class="docutils literal"><span class="pre">transient</span> <span class="pre">=</span> <span class="pre">True</span></tt>
+Instead, mark traits that should not be pickled with <code class="docutils literal"><span class="pre">transient</span> <span class="pre">=</span> <span class="pre">True</span></code>
 metadata.</p>
 <p>However, in cases where this strategy is insufficient, use the following pattern
 to override __getstate__() to remove items that should not be persisted:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">__getstate__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">__getstate__</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
     <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span> <span class="n">XXX</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
 
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span> <span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="s">&#39;bar&#39;</span> <span class="p">]:</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;bar&#39;</span> <span class="p">]:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">state</span><span class="p">[</span> <span class="n">key</span> <span class="p">]</span>
 
@@ -1104,6 +1090,18 @@ entire state dictionary to its <strong>__dict__</strong> attribute. While slower
 strategy has the advantage of generating trait change notifications for each
 attribute. These notifications are important for classes that rely on them to
 ensure that their internal object state remains consistent and up to date.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you&#8217;re manually creating state dictionaries for consumption by
+__setstate__(), you should be aware of an additional implementation detail:
+when pickling, the HasTraits __getstate__() method returns a dictionary with
+an extra <code class="docutils literal"><span class="pre">'__traits_version__'</span></code> key giving the version of Traits used at
+pickling time.  If this key is not present when unpickling, the HasTraits
+__setstate__() method falls back to a compatibility mode and may not restore
+the state correctly.  For the same reason, if you&#8217;re overriding
+__getstate__(), you should be careful to make the appropriate <code class="docutils literal"><span class="pre">super(...,</span>
+<span class="pre">self).__getstate__()</span></code> call.</p>
+</div>
 </div>
 <div class="section" id="overriding-setstate">
 <span id="index-40"></span><span id="id29"></span><h3>Overriding __setstate__()<a class="headerlink" href="#overriding-setstate" title="Permalink to this headline">¶</a></h3>
@@ -1130,7 +1128,7 @@ Reference</em> for a complete list of HasTraits methods.</p>
 <div class="section" id="add-trait">
 <span id="index-42"></span><span id="id31"></span><h3>add_trait()<a class="headerlink" href="#add-trait" title="Permalink to this headline">¶</a></h3>
 <p>This method adds a trait attribute to an object dynamically, after the object
-has been created. For more information, see <a class="reference internal" href="#per-object-trait-attributes"><em>Per-Object Trait Attributes</em></a>.</p>
+has been created. For more information, see <a class="reference internal" href="#per-object-trait-attributes"><span class="std std-ref">Per-Object Trait Attributes</span></a>.</p>
 </div>
 <div class="section" id="clone-traits">
 <span id="index-43"></span><span id="id32"></span><h3>clone_traits()<a class="headerlink" href="#clone-traits" title="Permalink to this headline">¶</a></h3>
@@ -1149,11 +1147,11 @@ original object when the user commits changes.</p>
 corresponding to each keyword to the matching value. This shorthand is useful
 when a number of trait attributes need to be set on an object, or a trait
 attribute value needs to be set in a lambda function. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">trait_set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Bill&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">27</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The statement above is equivalent to the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Bill&#39;</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Bill&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">27</span>
 </pre></div>
 </div>
@@ -1181,9 +1179,9 @@ contain a reference to the other. For the class that occurs first in lexical
 order, it is not possible to define the trait attribute that references the
 other class, since the class it needs to refer to has not yet been defined.</p>
 <p id="index-46">This is illustrated in the following example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># circular_definition.py --- Non-working example of mutually-</span>
-<span class="c">#                            referring classes</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># circular_definition.py --- Non-working example of mutually-</span>
+<span class="c1">#                            referring classes</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">hatched_from</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Egg</span><span class="p">)</span>
@@ -1198,9 +1196,9 @@ definition order of the classes does not fix the problem, because then the
 <strong>created_by</strong> trait references the Chicken class, which has not yet been defined.</p>
 <p>The problem can be solved using the add_class_trait() method, as shown in the
 following code:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># add_class_trait.py --- Example of mutually-referring classes</span>
-<span class="c">#                        using add_class_trait()</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># add_class_trait.py --- Example of mutually-referring classes</span>
+<span class="c1">#                        using add_class_trait()</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Trait</span>
 
 <span class="k">class</span> <span class="nc">Chicken</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="k">pass</span>
@@ -1208,7 +1206,7 @@ following code:</p>
 <span class="k">class</span> <span class="nc">Egg</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">created_by</span> <span class="o">=</span> <span class="n">Trait</span><span class="p">(</span><span class="n">Chicken</span><span class="p">)</span>
 
-<span class="n">Chicken</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="s">&#39;hatched_from&#39;</span><span class="p">,</span> <span class="n">Egg</span><span class="p">)</span>
+<span class="n">Chicken</span><span class="o">.</span><span class="n">add_class_trait</span><span class="p">(</span><span class="s1">&#39;hatched_from&#39;</span><span class="p">,</span> <span class="n">Egg</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1272,7 +1270,7 @@ the tool is justified and appropriate.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -1308,7 +1306,7 @@ the tool is justified and appropriate.</p>
 <li><a class="reference internal" href="#main-features">Main features</a></li>
 <li><a class="reference internal" href="#note-on-terminology">Note on terminology</a></li>
 <li><a class="reference internal" href="#defining-adapters">Defining Adapters</a><ul>
-<li><a class="reference internal" href="#the-adapter-class">The <tt class="docutils literal"><span class="pre">Adapter</span></tt> class</a></li>
+<li><a class="reference internal" href="#the-adapter-class">The <code class="docutils literal"><span class="pre">Adapter</span></code> class</a></li>
 <li><a class="reference internal" href="#registering-adapters">Registering adapters</a></li>
 </ul>
 </li>
@@ -1317,9 +1315,9 @@ the tool is justified and appropriate.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#requesting-an-adapter">Requesting an adapter</a><ul>
-<li><a class="reference internal" href="#the-adapt-function">The <tt class="docutils literal"><span class="pre">adapt</span></tt> function</a></li>
+<li><a class="reference internal" href="#the-adapt-function">The <code class="docutils literal"><span class="pre">adapt</span></code> function</a></li>
 <li><a class="reference internal" href="#using-traits-interfaces">Using Traits interfaces</a></li>
-<li><a class="reference internal" href="#using-the-supports-and-adaptsto-traits">Using the <tt class="docutils literal"><span class="pre">Supports</span></tt> and <tt class="docutils literal"><span class="pre">AdaptsTo</span></tt> traits</a></li>
+<li><a class="reference internal" href="#using-the-supports-and-adaptsto-traits">Using the <code class="docutils literal"><span class="pre">Supports</span></code> and <code class="docutils literal"><span class="pre">AdaptsTo</span></code> traits</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#implementation-details">Implementation details</a></li>
@@ -1352,19 +1350,25 @@ the tool is justified and appropriate.</p>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="custom.html"
-                        title="previous chapter">Custom Traits</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="testing.html"
-                        title="next chapter">Testing Traits Classes</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_user_manual/advanced.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Traits 4 User Manual</a><ul>
+      <li>Previous: <a href="custom.html" title="previous chapter">Custom Traits</a></li>
+      <li>Next: <a href="testing.html" title="next chapter">Testing</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_user_manual/advanced.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -1372,39 +1376,26 @@ the tool is justified and appropriate.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="testing.html" title="Testing Traits Classes"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="custom.html" title="Custom Traits"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >Traits 4 User Manual</a> &raquo;</li>
-  
-    <li><a href="#">Advanced Topics</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_user_manual/advanced.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,37 +28,23 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="interface_checker Module" href="interface_checker.html" />
-    <link rel="prev" title="has_traits Module" href="has_traits.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="interface_checker.html" title="interface_checker Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="has_traits.html" title="has_traits Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="has_traits Module" href="has_traits.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.has_dynamic_views">
-<span id="has-dynamic-views-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">has_dynamic_views</span></tt> Module<a class="headerlink" href="#module-traits.has_dynamic_views" title="Permalink to this headline">¶</a></h1>
+<span id="has-dynamic-views-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">has_dynamic_views</span></code> Module<a class="headerlink" href="#module-traits.has_dynamic_views" title="Permalink to this headline">¶</a></h1>
 <p>Provides a framework that assembles Traits UI Views at run time,
 when the view is requested, rather than at the time a class is written.</p>
 <p>This capability is particularly useful when the object being &#8216;viewed&#8217; with a
@@ -98,13 +84,13 @@ in a manner similar to how the elements of the View itself were composed.</p>
 Traits ViewSubElement and must have associated metadata like the following for
 each dynamic view or sub-element it will display in:</p>
 <dl class="docutils">
-<dt>_&lt;dynamic name&gt;_order <span class="classifier-delimiter">:</span> <span class="classifier">A float value.</span></dt>
-<dd>The framework uses only ViewSubElements with this metadata
+<dt>_&lt;dynamic name&gt;_order</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">A float value.</span><dd>The framework uses only ViewSubElements with this metadata
 instantiated when building the dynamic view or sub-element with
 the specified name.  The elements are sorted by ascending
 order of this value using the standard list sort function.</dd>
-<dt>_&lt;dynamic name&gt;_priority <span class="classifier-delimiter">:</span> <span class="classifier">A float value.</span></dt>
-<dd>The framework resolves any overloading of an order value by
+<dt>_&lt;dynamic name&gt;_priority</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">A float value.</span><dd>The framework resolves any overloading of an order value by
 picking the first element encountered that has the highest
 priority value. The other elements with the same view order are
 not displayed at all.</dd>
@@ -115,32 +101,32 @@ are called when model values change and can access  the Traits UIInfo
 object representing the actual UI instances.  To provide a handler, append the
 following metadata to your view sub-element:</p>
 <dl class="docutils">
-<dt>_&lt;dynamic_name&gt;_handler <span class="classifier-delimiter">:</span> <span class="classifier">A HasTraits instance.</span></dt>
-<dd>The framework will connect listeners to call the handler methods as
+<dt>_&lt;dynamic_name&gt;_handler</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">A HasTraits instance.</span><dd>The framework will connect listeners to call the handler methods as
 part of the handler for the dynamic view.</dd>
 </dl>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.has_dynamic_views.DynamicViewSubElement">
-<em class="property">class </em><tt class="descclassname">traits.has_dynamic_views.</tt><tt class="descname">DynamicViewSubElement</tt><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#DynamicViewSubElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_dynamic_views.</code><code class="descname">DynamicViewSubElement</code><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#DynamicViewSubElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declares a dynamic sub-element of a dynamic view.</p>
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicViewSubElement.keywords">
-<tt class="descname">keywords</tt><em class="property"> = Dict</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.keywords" title="Permalink to this definition">¶</a></dt>
+<code class="descname">keywords</code><em class="property"> = Dict</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.keywords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keyword arguments passed in during construction of the actual
 ViewSubElement instance.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicViewSubElement.klass">
-<tt class="descname">klass</tt><em class="property"> = Any</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.klass" title="Permalink to this definition">¶</a></dt>
+<code class="descname">klass</code><em class="property"> = Any</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.klass" title="Permalink to this definition">¶</a></dt>
 <dd><p>The class of the actual ViewSubElement we are dynamically creating.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicViewSubElement.name">
-<tt class="descname">name</tt><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicViewSubElement.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of this dynamic sub-element.  This controls the metadata
 names identifying the sub-elements that compose this element.</p>
 </dd></dl>
@@ -149,32 +135,32 @@ names identifying the sub-elements that compose this element.</p>
 
 <dl class="class">
 <dt id="traits.has_dynamic_views.DynamicView">
-<em class="property">class </em><tt class="descclassname">traits.has_dynamic_views.</tt><tt class="descname">DynamicView</tt><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#DynamicView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.DynamicView" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_dynamic_views.</code><code class="descname">DynamicView</code><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#DynamicView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.DynamicView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Declares a dynamic view.</p>
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicView.id">
-<tt class="descname">id</tt><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">id</code><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>The ID of the view.  This is the ID that the view&#8217;s preferences will be
 saved under.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicView.name">
-<tt class="descname">name</tt><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><em class="property"> = Str</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the view.  This is the name that should be requested when
 calling edit_traits() or configure_traits().</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicView.keywords">
-<tt class="descname">keywords</tt><em class="property"> = Dict</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.keywords" title="Permalink to this definition">¶</a></dt>
+<code class="descname">keywords</code><em class="property"> = Dict</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.keywords" title="Permalink to this definition">¶</a></dt>
 <dd><p>Keyword arguments passed in during construction of the actual view
 instance.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="traits.has_dynamic_views.DynamicView.use_as_default">
-<tt class="descname">use_as_default</tt><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.use_as_default" title="Permalink to this definition">¶</a></dt>
+<code class="descname">use_as_default</code><em class="property"> = Bool( False )</em><a class="headerlink" href="#traits.has_dynamic_views.DynamicView.use_as_default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this view should be the default traits view for objects
 it is contributed to.</p>
 </dd></dl>
@@ -183,19 +169,19 @@ it is contributed to.</p>
 
 <dl class="class">
 <dt id="traits.has_dynamic_views.HasDynamicViews">
-<em class="property">class </em><tt class="descclassname">traits.has_dynamic_views.</tt><tt class="descname">HasDynamicViews</tt><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.has_dynamic_views.</code><code class="descname">HasDynamicViews</code><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides of a framework that builds Traits UI Views at run time,
 when the view is requested, rather than at the time a class is written.</p>
 <dl class="method">
 <dt id="traits.has_dynamic_views.HasDynamicViews.trait_view">
-<tt class="descname">trait_view</tt><big>(</big><em>name=None</em>, <em>view_element=None</em><big>)</big><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews.trait_view" title="Permalink to this definition">¶</a></dt>
+<code class="descname">trait_view</code><span class="sig-paren">(</span><em>name=None</em>, <em>view_element=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews.trait_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews.trait_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets or sets a ViewElement associated with an object&#8217;s class.</p>
 <p>Extended here to build dynamic views and sub-elements.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="traits.has_dynamic_views.HasDynamicViews.declare_dynamic_view">
-<tt class="descname">declare_dynamic_view</tt><big>(</big><em>declaration</em><big>)</big><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews.declare_dynamic_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews.declare_dynamic_view" title="Permalink to this definition">¶</a></dt>
+<code class="descname">declare_dynamic_view</code><span class="sig-paren">(</span><em>declaration</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/has_dynamic_views.html#HasDynamicViews.declare_dynamic_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.has_dynamic_views.HasDynamicViews.declare_dynamic_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>A convenience method to add a new dynamic view declaration to this
 instance.</p>
 </dd></dl>
@@ -209,31 +195,37 @@ instance.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="has_traits.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">has_traits</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="interface_checker.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/has_dynamic_views.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="has_traits.html" title="previous chapter"><code class="docutils literal"><span class="pre">has_traits</span></code> Module</a></li>
+      <li>Next: <a href="interface_checker.html" title="next chapter"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/has_dynamic_views.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -241,39 +233,26 @@ instance.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="interface_checker.html" title="interface_checker Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="has_traits.html" title="has_traits Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/has_dynamic_views.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -49,7 +49,8 @@ In this example, the attribute named **weight** specifies that the class has a
 corresponding trait called **weight**. The value associated with the attribute
 **weight** (i.e., ``Float(150.0)``) specifies a predefined trait provided with
 the Traits package, which requires that values assigned be of the standard
-Python type **float**. The value 150.0 specifies the default value of the trait.
+Python type **float**. The value 150.0 specifies the default value of the
+trait.
 
 The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
@@ -66,12 +67,9 @@ For example::
     >>> joe.weight = 162       # OK to assign an int
     >>> joe.weight = 'average' # Error to assign a string
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'weight' trait of a Person
-    instance must be a float, but a value of 'average' <type 'str'> was
-    specified.
+        ...
+    traits.trait_errors.TraitError: The 'weight' trait of a Person instance
+    must be a float, but a value of 'average' <type 'str'> was specified.
 
 In this example, **joe** is an instance of the Person class defined in the
 previous example. The **joe** object has an instance attribute **weight**,
@@ -135,7 +133,7 @@ in the following table.
 .. index:: Boolean type, Bool trait, CBool trait, Complex trait, CComplex trait
 .. index:: complex number type, Float trait, CFloat trait, Int trait, CInt trait
 .. index:: floating point number type, Long trait, CLong trait, Str trait
-.. index:: CStr trait, Unicode; trait, CUnicode trait
+.. index:: CStr trait, Unicode; trait, CUnicode trait, Bytes trait, CBytes trait
 
 .. _predefined-defaults-for-simple-types-table:
 
@@ -151,6 +149,7 @@ Int            CInt          Plain integer          0
 Long           CLong         Long integer           0L
 Str            CStr          String                 ''
 Unicode        CUnicode      Unicode                u''
+Bytes          CBytes        Bytes                  b''
 ============== ============= ====================== ======================
 
 .. index::
@@ -204,6 +203,7 @@ Python built-in functions for type conversion:
 * int()
 * str()
 * unicode()
+* bytes()
 
 .. index::
    single: examples; coercing vs. casting
@@ -221,11 +221,9 @@ casting traits::
     >>> bill.cweight = 180    # OK, cast to float(180)
     >>> bill.weight  = '180'  # Error, invalid coercion
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits\enthought\traits\trait_handlers.py", line 175,
-    in error value )
-    traits.trait_errors.TraitError: The 'weight' trait of a Person
-    instance must be a float, but a value of '180' <type 'str'> was specified.
+        ...
+    traits.trait_errors.TraitError: The 'weight' trait of a Person instance
+    must be a float, but a value of '180' <type 'str'> was specified.
     >>> bill.cweight = '180'  # OK, cast to float('180')
     >>> print bill.cweight
     180.0
@@ -245,6 +243,15 @@ trait cannot be used as a simple name, it is omitted from the Name column of
 the table.
 
 .. index:: Any(), Array(), Button(), Callable(), CArray(), Class(), Code()
+.. index:: Color(), CSet(), Constant(), Dict()
+.. index:: Directory(), Disallow, Either(), Enum()
+.. index:: Event(), Expression(), false, File(), Font()
+.. index:: Instance(), List(), Method(), Module()
+.. index:: Password(), Property(), Python()
+.. index:: PythonValue(), Range(), ReadOnly(), Regex()
+.. index:: RGBColor(), Set() String(), This,
+.. index:: ToolbarButton(), true, Tuple(), Type()
+.. index:: undefined, UUID(), ValidatedTuple(), WeakRef()
 
 .. _predefined-traits-beyond-simple-types-table:
 
@@ -257,6 +264,9 @@ the table.
 +------------------+----------------------------------------------------------+
 | Array            | Array( [*dtype* = None, *shape* = None, *value* = None,  |
 |                  | *typecode* = None, \*\*\ *metadata*] )                   |
++------------------+----------------------------------------------------------+
+| ArrayOrNone      | ArrayOrNone( [*dtype* = None, *shape* = None,            |
+|                  | *value* = None, *typecode* = None, \*\*\ *metadata*] )   |
 +------------------+----------------------------------------------------------+
 | Button           | Button( [*label* = '', *image* = None, *style* =         |
 |                  | 'button', *orientation* = 'vertical', *width_padding* =  |
@@ -274,17 +284,17 @@ the table.
 +------------------+----------------------------------------------------------+
 | Color            | Color( [\*\ *args*, \*\*\ *metadata*] )                  |
 +------------------+----------------------------------------------------------+
-| CSet             |CSet( [*trait* = None, *value* = None, *items* = True,    |
-|                  |\*\*\ *metadata*] )                                       |
+| CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
 | n/a              | Constant( *value*[, \*\*\ *metadata*] )                  |
 +------------------+----------------------------------------------------------+
-| Dict, DictStrAny,|Dict( [*key_trait* = None, *value_trait* = None,          |
-| DictStrBool,     |*value* = None, *items* = True, \*\*\ *metadata*] )       |
+| Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
+| DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
 | DictStrFloat,    |                                                          |
-| DictStrInt,      |.. index:: Color(), CSet(), Constant(), Dict()            |
-| DictStrList,     |.. index:: Directory(), Disallow, Either(), Enum()        |
-| DictStrLong,     |.. index:: Event(), Expression(), false, File(), Font()   |
+| DictStrInt,      |                                                          |
+| DictStrList,     |                                                          |
+| DictStrLong,     |                                                          |
 | DictStrStr       |                                                          |
 +------------------+----------------------------------------------------------+
 | Directory        | Directory( [*value* = '', *auto_set* = False, *entries* =|
@@ -292,7 +302,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| n/a              |Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] ) |
+| n/a              | Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] )|
 +------------------+----------------------------------------------------------+
 | Enum             | Enum( *values*[, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
@@ -320,15 +330,15 @@ the table.
 |                  | None, *kw* = None, *allow_none* = True, *adapt* = None,  |
 |                  | *module* = None, \*\*\ *metadata*] )                     |
 +------------------+----------------------------------------------------------+
-| List, ListBool,  |List([*trait* = None, *value* = None, *minlen* = 0,       |
-| ListClass,       |*maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*]) |
+| List, ListBool,  | List([*trait* = None, *value* = None, *minlen* = 0,      |
+| ListClass,       | *maxlen* = sys.maxint, *items* = True, \*\*\ *metadata*])|
 | ListComplex,     |                                                          |
-| ListFloat,       |.. index:: Function(), Generic(), generic_trait, HTML()   |
-| ListFunction,    |.. index:: Instance(), List(), Method(), Module()         |
-| ListInstance,    |.. index:: Password(), Property(), Python(), PythonValue()|
-| ListInt,         |.. index:: Range(), ReadOnly(), Regex(), RGBColor(), Set()|
-| ListMethod,      |.. index:: String(), This, ToolbarButton(), true, Tuple() |
-| ListStr,         |.. index:: Type(), undefined, UUID(), WeakRef()           |
+| ListFloat,       |                                                          |
+| ListFunction,    |                                                          |
+| ListInstance,    |                                                          |
+| ListInt,         |                                                          |
+| ListMethod,      |                                                          |
+| ListStr,         |                                                          |
 | ListThis,        |                                                          |
 | ListUnicode      |                                                          |
 +------------------+----------------------------------------------------------+
@@ -386,6 +396,9 @@ the table.
 |                  | NoDefaultSpecified, \*\*\ *metadata*])                   |
 +------------------+----------------------------------------------------------+
 | UUID [3]_        | UUID( [\*\*\ *metadata*] )                               |
++------------------+----------------------------------------------------------+
+| ValidatedTuple   | ValidatedTuple( [\*\ *traits*, *fvalidate* = None,       |
+|                  | *fvalidate_info* = '' , \*\*\ *metadata*] )              |
 +------------------+----------------------------------------------------------+
 | WeakRef          | WeakRef( [*klass* = 'traits.HasTraits',                  |
 |                  | *allow_none* = False, *adapt* = 'yes', \*\*\ *metadata*])|
@@ -486,18 +499,43 @@ it is also a valid value for assignment.
     >>> hats.stock = 4      # Error, value is not in \
     >>>                     # permitted list
     Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-      File "c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py", line 175,
-    in error value )
+        ...
     traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
-    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4 <type
-    'int'> was specified.
+    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4
+    <type 'int'> was specified.
 
-This example defines an InventoryItem class, with two trait attributes,
+
+This defines an :py:class:`InventoryItem` class, with two trait attributes,
 **name**, and **stock**. The name attribute is simply a string. The **stock**
 attribute has an initial value of None, and can be assigned the values None, 0,
 1, 2, 3, and 'many'. The example then creates an instance of the InventoryItem
 class named **hats**, and assigns values to its attributes.
+
+When the list of possible values can change during the lifetime of the object,
+one can specify **another trait** that holds the list of possible values::
+
+    >>> from traits.api import Enum, HasTraits, List
+    >>> class InventoryItem(HasTraits):
+    ...    possible_stock_states = List([None, 0, 1, 2, 3, 'many'])
+    ...    stock = Enum(0, values="possible_stock_states")
+    ...            # Enumerated list, default value is 0. The list of
+    ...            # allowed values is whatever possible_stock_states holds
+    ...
+
+    >>> hats = InventoryItem()
+    >>> hats.stock
+    0
+    >>> hats.stock = 2      # OK
+    >>> hats.stock = 4      # TraitError like above
+    Traceback (most recent call last):
+        ...
+    traits.trait_errors.TraitError: The 'stock' trait of an InventoryItem
+    instance must be None or 0 or 1 or 2 or 3 or 'many', but a value of 4
+    <type 'int'> was specified.
+
+    >>> hats.possible_stock_states.append(4)  # Add 4 to list of allowed values
+    >>> hats.stock = 4      # OK
+
 
 .. index:: metadata attributes; on traits
 
@@ -583,7 +621,10 @@ HasTraits objects:
 * **desc**: A string describing the intended meaning of the trait. It is used
   in exception messages and fly-over help in user interface trait editors.
 * **editor**: Specifies an instance of a subclass of TraitEditor to use when
-  creating a user interface editor for the trait. Refer to the `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_ for more information on trait editors.
+  creating a user interface editor for the trait. Refer to the
+  `TraitsUI User Manual
+  <http://docs.enthought.com/traitsui/traitsui_user_manual/index.html>`_
+  for more information on trait editors.
 * **label**: A string providing a human-readable name for the trait. It is
   used to label trait attribute values in user interface trait editors.
 * **rich_compare**: A Boolean indicating whether the basis for considering a
@@ -690,4 +731,3 @@ the metadata attribute::
        details on particular traits, and see Chapter 5 for details on extending
        existing traits.
 .. [3] Available in Python 2.5.
-

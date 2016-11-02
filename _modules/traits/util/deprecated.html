@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,38 +26,38 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.util.deprecated</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.util.deprecated</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005-2014, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in /LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
 <span class="sd">&quot;&quot;&quot; A decorator for marking methods/functions as deprecated. &quot;&quot;&quot;</span>
 
-
-<span class="c"># Standard library imports.</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-
-<span class="c"># We only warn about each function or method once!</span>
-<span class="n">_cache</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="deprecated"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.deprecated.deprecated">[docs]</a><span class="k">def</span> <span class="nf">deprecated</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
@@ -68,44 +68,37 @@
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; A decorator for marking methods/functions as deprecated. &quot;&quot;&quot;</span>
 
+        <span class="nd">@functools.wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
         <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot; The method/function wrapper. &quot;&quot;&quot;</span>
 
-            <span class="k">global</span> <span class="n">_cache</span>
-
-            <span class="n">module_name</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">__module__</span>
-            <span class="n">function_name</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">__name__</span>
-
-            <span class="k">if</span> <span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_cache</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="s">&#39;DEPRECATED: </span><span class="si">%s</span><span class="s">.</span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                        <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">message</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-
-                <span class="n">_cache</span><span class="p">[(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">True</span>
-
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">__doc__</span>  <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">__doc__</span>
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="n">__name__</span>
 
         <span class="k">return</span> <span class="n">wrapper</span>
 
-    <span class="k">return</span> <span class="n">decorator</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
 
-<span class="c">#### EOF ######################################################################</span></div>
+<span class="c1">#### EOF ######################################################################</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -113,33 +106,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.util.deprecated</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

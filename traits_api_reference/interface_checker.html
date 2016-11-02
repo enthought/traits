@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,53 +28,39 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="API Reference" href="index.html" />
     <link rel="next" title="trait_base Module" href="trait_base.html" />
-    <link rel="prev" title="has_dynamic_views Module" href="has_dynamic_views.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="trait_base.html" title="trait_base Module"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="has_dynamic_views.html" title="has_dynamic_views Module"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">API Reference</a> &raquo;</li>
+    <link rel="prev" title="has_dynamic_views Module" href="has_dynamic_views.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-traits.interface_checker">
-<span id="interface-checker-module"></span><h1><tt class="xref py py-mod docutils literal"><span class="pre">interface_checker</span></tt> Module<a class="headerlink" href="#module-traits.interface_checker" title="Permalink to this headline">¶</a></h1>
+<span id="interface-checker-module"></span><h1><code class="xref py py-mod docutils literal"><span class="pre">interface_checker</span></code> Module<a class="headerlink" href="#module-traits.interface_checker" title="Permalink to this headline">¶</a></h1>
 <p>An attempt at type-safe casting.</p>
 <div class="section" id="classes">
 <h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="traits.interface_checker.InterfaceError">
-<em class="property">class </em><tt class="descclassname">traits.interface_checker.</tt><tt class="descname">InterfaceError</tt><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceError" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.interface_checker.</code><code class="descname">InterfaceError</code><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceError" title="Permalink to this definition">¶</a></dt>
 <dd><p>The exception raised if a class does not really implement an interface.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="traits.interface_checker.InterfaceChecker">
-<em class="property">class </em><tt class="descclassname">traits.interface_checker.</tt><tt class="descname">InterfaceChecker</tt><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceChecker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceChecker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">traits.interface_checker.</code><code class="descname">InterfaceChecker</code><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceChecker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceChecker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that interfaces are actually implemented.</p>
 <dl class="method">
 <dt id="traits.interface_checker.InterfaceChecker.check_implements">
-<tt class="descname">check_implements</tt><big>(</big><em>cls</em>, <em>interfaces</em>, <em>error_mode</em><big>)</big><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceChecker.check_implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceChecker.check_implements" title="Permalink to this definition">¶</a></dt>
+<code class="descname">check_implements</code><span class="sig-paren">(</span><em>cls</em>, <em>interfaces</em>, <em>error_mode</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/interface_checker.html#InterfaceChecker.check_implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.InterfaceChecker.check_implements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the class implements the specified interfaces.</p>
 <p>&#8216;interfaces&#8217; can be a single interface or a list of interfaces.</p>
 </dd></dl>
@@ -86,7 +72,7 @@
 <h2>Function<a class="headerlink" href="#function" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="traits.interface_checker.check_implements">
-<tt class="descclassname">traits.interface_checker.</tt><tt class="descname">check_implements</tt><big>(</big><em>cls</em>, <em>interfaces</em>, <em>error_mode=0</em><big>)</big><a class="reference internal" href="../_modules/traits/interface_checker.html#check_implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.check_implements" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">traits.interface_checker.</code><code class="descname">check_implements</code><span class="sig-paren">(</span><em>cls</em>, <em>interfaces</em>, <em>error_mode=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/traits/interface_checker.html#check_implements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#traits.interface_checker.check_implements" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks that the class implements the specified interfaces.</p>
 <p>&#8216;interfaces&#8217; can be a single interface or a list of interfaces.</p>
 </dd></dl>
@@ -98,32 +84,38 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a><ul>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">interface_checker</span></code> Module</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
 <li><a class="reference internal" href="#function">Function</a></li>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="has_dynamic_views.html"
-                        title="previous chapter"><tt class="docutils literal"><span class="pre">has_dynamic_views</span></tt> Module</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="trait_base.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">trait_base</span></tt> Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_api_reference/interface_checker.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">API Reference</a><ul>
+      <li>Previous: <a href="has_dynamic_views.html" title="previous chapter"><code class="docutils literal"><span class="pre">has_dynamic_views</span></code> Module</a></li>
+      <li>Next: <a href="trait_base.html" title="next chapter"><code class="docutils literal"><span class="pre">trait_base</span></code> Module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_api_reference/interface_checker.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -131,39 +123,26 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="trait_base.html" title="trait_base Module"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="has_dynamic_views.html" title="has_dynamic_views Module"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >API Reference</a> &raquo;</li>
-  
-    <li><a href="#"><tt class="docutils literal"><span class="pre">interface_checker</span></tt> Module</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_api_reference/interface_checker.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

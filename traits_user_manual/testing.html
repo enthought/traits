@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Testing Traits Classes &mdash; Traits 4 User Manual</title>
+    <title>Testing &mdash; Traits 4 User Manual</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,40 +27,28 @@
     <link rel="shortcut icon" href="../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="Traits 4 User Manual" href="index.html" />
-    <link rel="next" title="API Reference" href="../traits_api_reference/index.html" />
-    <link rel="prev" title="Advanced Topics" href="advanced.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../traits_api_reference/index.html" title="API Reference"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="advanced.html" title="Advanced Topics"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="next" title="Tips for debugging Traits" href="debugging.html" />
+    <link rel="prev" title="Advanced Topics" href="advanced.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#">Testing Traits Classes</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
-  <div class="section" id="testing-traits-classes">
-<span id="testing-trait-classes"></span><span id="index-0"></span><h1>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="testing">
+<span id="index-0"></span><h1>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="testing-traits-classes">
+<span id="testing-trait-classes"></span><h2>Testing Traits Classes<a class="headerlink" href="#testing-traits-classes" title="Permalink to this headline">¶</a></h2>
 <p>A mixin class is provided to facilitate writing tests for HasTraits classes.
-The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><tt class="xref py py-class docutils literal"><span class="pre">UnittestTools</span></tt></a> is added as a
+The following methods are available when <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools" title="traits.testing.unittest_tools.UnittestTools"><code class="xref py py-class docutils literal"><span class="pre">UnittestTools</span></code></a> is added as a
 mixin class in the developer&#8217;s test cases.</p>
 <table border="1" class="longtable docutils">
 <colgroup>
@@ -68,24 +56,24 @@ mixin class in the developer&#8217;s test cases.</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertTraitChanges"><tt class="xref py py-obj docutils literal"><span class="pre">assertTraitChanges</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertTraitChanges"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitChanges</span></code></a></td>
 <td>Assert an object trait changes a given number of times.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange"><tt class="xref py py-obj docutils literal"><span class="pre">assertTraitDoesNotChange</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange" title="traits.testing.unittest_tools.UnittestTools.assertTraitDoesNotChange"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitDoesNotChange</span></code></a></td>
 <td>Assert an object trait does not change.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges"><tt class="xref py py-obj docutils literal"><span class="pre">assertMultiTraitChanges</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges" title="traits.testing.unittest_tools.UnittestTools.assertMultiTraitChanges"><code class="xref py py-obj docutils literal"><span class="pre">assertMultiTraitChanges</span></code></a></td>
 <td>Assert that traits on multiple objects do or do not change.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync"><tt class="xref py py-obj docutils literal"><span class="pre">assertTraitChangesAsync</span></tt></a></td>
+<tr class="row-even"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync" title="traits.testing.unittest_tools.UnittestTools.assertTraitChangesAsync"><code class="xref py py-obj docutils literal"><span class="pre">assertTraitChangesAsync</span></code></a></td>
 <td>Assert an object trait eventually changes.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><tt class="xref py py-obj docutils literal"><span class="pre">assertEventuallyTrue</span></tt></a></td>
+<tr class="row-odd"><td><a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-obj docutils literal"><span class="pre">assertEventuallyTrue</span></code></a></td>
 <td>Assert that the given condition is eventually true.</td>
 </tr>
 </tbody>
 </table>
-<p>The above assert methods, except <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><tt class="xref py py-func docutils literal"><span class="pre">assertEventuallyTrue()</span></tt></a>, can be used as
+<p>The above assert methods, except <a class="reference internal" href="../traits_api_reference/traits.testing.html#traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue" title="traits.testing.unittest_tools.UnittestTools.assertEventuallyTrue"><code class="xref py py-func docutils literal"><span class="pre">assertEventuallyTrue()</span></code></a>, can be used as
 context managers, which at entry, hook a trait listeners on the class for the
 desired events and record the arguments passed to the change handler at every
 fired event. This way the developer can easily assert that specific events
@@ -96,9 +84,9 @@ name, thus care is required to safeguard against spelling mistakes in the
 names of the traits that we need to assert the behaviour.</p>
 <p>The following example demonstrates the basic usage of the mixin class in a
 TestCase:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
-<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="kn">import</span> <span class="n">UnittestTools</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">on_trait_change</span>
+<span class="kn">from</span> <span class="nn">traits.testing.api</span> <span class="k">import</span> <span class="n">UnittestTools</span>
 
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
@@ -107,7 +95,7 @@ TestCase:</p>
     <span class="n">list_of_numbers</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Float</span><span class="p">)</span>
     <span class="n">flag</span> <span class="o">=</span> <span class="n">Bool</span>
 
-    <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s">&#39;number&#39;</span><span class="p">)</span>
+    <span class="nd">@on_trait_change</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">_add_number_to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Append the value to the list of numbers. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">list_of_numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
@@ -127,47 +115,47 @@ TestCase:</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">my_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_class</span>
 
-        <span class="c"># Checking for change events</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+        <span class="c1"># Checking for change events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
             <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">5.0</span>
 
-        <span class="c"># Inspecting the last recorded event</span>
-        <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
+        <span class="c1"># Inspecting the last recorded event</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="p">[</span><span class="n">expected</span><span class="p">])</span>
 
-        <span class="c"># Checking for specific number of events</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
-            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="c1"># Checking for specific number of events</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
             <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
             <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 
-        <span class="n">expected</span> <span class="o">=</span> <span class="p">[(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span>
-                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span>
-                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)]</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="p">[(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span>
+                    <span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertSequenceEqual</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="n">expected</span><span class="p">)</span>
 
-        <span class="c"># Check using extended names</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;list_of_numbers[]&#39;</span><span class="p">):</span>
+        <span class="c1"># Check using extended names</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitChanges</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;list_of_numbers[]&#39;</span><span class="p">):</span>
             <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.0</span>
 
-        <span class="c"># Check that event is not fired</span>
+        <span class="c1"># Check that event is not fired</span>
         <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
-            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="bp">True</span>
-            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c"># The value is the same as the original</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertTraitDoesNotChange</span><span class="p">(</span><span class="n">my_class</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">my_class</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># The value is the same as the original</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="using-mocks">
-<h1>Using Mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h1>
-<p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><tt class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></tt></a> instance will raise an error
-because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><tt class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></tt></a> machinery does not allow any modification of
-the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><tt class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></tt></a> instance. To circumvent the
-<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><tt class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></tt></a> machinery, and mock methods using <a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>,
+<h2>Using Mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h2>
+<p>Trying to mock a method in a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> instance will raise an error
+because the <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> machinery does not allow any modification of
+the methods and attributes of a <a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> instance. To circumvent the
+<a class="reference internal" href="../traits_api_reference/has_traits.html#traits.has_traits.HasStrictTraits" title="traits.has_traits.HasStrictTraits"><code class="xref py py-class docutils literal"><span class="pre">HasStrictTraits</span></code></a> machinery, and mock methods using <a class="reference external" href="https://pypi.python.org/pypi/mock">the mock library</a>,
 please follow the logic in the example below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
-<span class="kn">from</span> <span class="nn">mock</span> <span class="kn">import</span> <span class="n">Mock</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">mock</span> <span class="k">import</span> <span class="n">Mock</span>
 
 <span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
 
@@ -179,19 +167,20 @@ please follow the logic in the example below:</p>
 
 <span class="n">my_class</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 
-<span class="c"># Using my_class.add_to_number = Mock() will fail.</span>
-<span class="c"># But setting the mock on the instance `__dict__` works.</span>
-<span class="n">my_class</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s">&#39;add_to_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
+<span class="c1"># Using my_class.add_to_number = Mock() will fail.</span>
+<span class="c1"># But setting the mock on the instance `__dict__` works.</span>
+<span class="n">my_class</span><span class="o">.</span><span class="n">__dict__</span><span class="p">[</span><span class="s1">&#39;add_to_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Mock</span><span class="p">()</span>
 
-<span class="c"># We can now use the mock in our tests.</span>
+<span class="c1"># We can now use the mock in our tests.</span>
 <span class="n">my_class</span><span class="o">.</span><span class="n">add_number</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="o">.</span><span class="n">call_args_list</span>
+<span class="nb">print</span> <span class="n">my_class</span><span class="o">.</span><span class="n">add_to_number</span><span class="o">.</span><span class="n">call_args_list</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><tt class="xref py py-func docutils literal"><span class="pre">Property()</span></tt></a> setters,
+<p class="last">The above method will not work for mocking <a class="reference internal" href="../traits_api_reference/traits.html#traits.traits.Property" title="traits.traits.Property"><code class="xref py py-func docutils literal"><span class="pre">Property()</span></code></a> setters,
 getters and validators.</p>
+</div>
 </div>
 </div>
 
@@ -199,29 +188,38 @@ getters and validators.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
             </a></p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Testing Traits Classes</a></li>
+<li><a class="reference internal" href="#">Testing</a><ul>
+<li><a class="reference internal" href="#testing-traits-classes">Testing Traits Classes</a></li>
 <li><a class="reference internal" href="#using-mocks">Using Mocks</a></li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="advanced.html"
-                        title="previous chapter">Advanced Topics</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="../traits_api_reference/index.html"
-                        title="next chapter">API Reference</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_user_manual/testing.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Traits 4 User Manual</a><ul>
+      <li>Previous: <a href="advanced.html" title="previous chapter">Advanced Topics</a></li>
+      <li>Next: <a href="debugging.html" title="next chapter">Tips for debugging Traits</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_user_manual/testing.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -229,39 +227,26 @@ getters and validators.</p>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../traits_api_reference/index.html" title="API Reference"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="advanced.html" title="Advanced Topics"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >Traits 4 User Manual</a> &raquo;</li>
-  
-    <li><a href="#">Testing Traits Classes</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_user_manual/testing.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

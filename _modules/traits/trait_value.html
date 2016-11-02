@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,54 +26,46 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.trait_value</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.trait_value</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2008, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author:        David C. Morrill</span>
-<span class="c">#  Original Date: 04/01/2008</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2008, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author:        David C. Morrill</span>
+<span class="c1">#  Original Date: 04/01/2008</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Defines the TraitValue class, used for creating special, dynamic trait</span>
 <span class="sd">    values.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
@@ -84,16 +76,16 @@
 <span class="kn">from</span> <span class="nn">.trait_types</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">.trait_handlers</span> <span class="kn">import</span> <span class="n">TraitType</span><span class="p">,</span> <span class="n">_read_only</span><span class="p">,</span> <span class="n">_write_only</span><span class="p">,</span> <span class="n">_arg_count</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;BaseTraitValue&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;BaseTraitValue&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="BaseTraitValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.BaseTraitValue">[docs]</a><span class="k">class</span> <span class="nc">BaseTraitValue</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
 
-    <span class="c"># Subclasses can define this trait as a property:</span>
-    <span class="c"># value = Property</span>
+    <span class="c1"># Subclasses can define this trait as a property:</span>
+    <span class="c1"># value = Property</span>
 
-    <span class="c">#-- Public Methods ---------------------------------------------------------</span>
+    <span class="c1">#-- Public Methods ---------------------------------------------------------</span>
 
 <div class="viewcode-block" id="BaseTraitValue.as_ctrait"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.BaseTraitValue.as_ctrait">[docs]</a>    <span class="k">def</span> <span class="nf">as_ctrait</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">original_trait</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the low-level C-based trait for this TraitValue.</span>
@@ -114,35 +106,35 @@
             <span class="p">(</span><span class="nb">len</span><span class="p">(</span> <span class="n">notifiers</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)):</span>
             <span class="n">trait</span><span class="o">.</span><span class="n">_notifiers</span><span class="p">(</span> <span class="mi">1</span> <span class="p">)</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">notifiers</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">trait</span>
+        <span class="k">return</span> <span class="n">trait</span></div>
 
-    <span class="c">#-- Private Methods --------------------------------------------------------</span>
-</div>
+    <span class="c1">#-- Private Methods --------------------------------------------------------</span>
+
     <span class="k">def</span> <span class="nf">_as_ctrait</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">original_trait</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the low-level C-based trait for this TraitValue.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">value_trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;value&#39;</span> <span class="p">)</span>
+        <span class="n">value_trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;value&#39;</span> <span class="p">)</span>
         <span class="k">if</span> <span class="n">value_trait</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-        <span class="k">if</span> <span class="n">value_trait</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s">&#39;property&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s">&quot;Invalid TraitValue specified.&quot;</span> <span class="p">)</span>
+        <span class="k">if</span> <span class="n">value_trait</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s1">&#39;property&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s2">&quot;Invalid TraitValue specified.&quot;</span> <span class="p">)</span>
 
-        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;type&#39;</span><span class="p">:</span>         <span class="s">&#39;property&#39;</span><span class="p">,</span>
-                     <span class="s">&#39;_trait_value&#39;</span><span class="p">:</span> <span class="bp">self</span> <span class="p">}</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span>         <span class="s1">&#39;property&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;_trait_value&#39;</span><span class="p">:</span> <span class="bp">self</span> <span class="p">}</span>
 
         <span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span> <span class="n">validate</span> <span class="o">=</span> <span class="n">value_trait</span><span class="o">.</span><span class="n">property</span><span class="p">()</span>
         <span class="n">read_only</span> <span class="o">=</span> <span class="p">(</span><span class="n">getter</span> <span class="ow">is</span> <span class="n">_read_only</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">read_only</span><span class="p">:</span>
             <span class="n">getter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_getter</span>
-            <span class="n">metadata</span><span class="p">[</span> <span class="s">&#39;transient&#39;</span> <span class="p">]</span> <span class="o">=</span>  <span class="bp">True</span>
+            <span class="n">metadata</span><span class="p">[</span> <span class="s1">&#39;transient&#39;</span> <span class="p">]</span> <span class="o">=</span>  <span class="bp">True</span>
 
         <span class="k">if</span> <span class="n">setter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_write_only</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">read_only</span><span class="p">:</span>
                 <span class="n">setter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_only_setter</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">setter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setter</span>
-            <span class="n">metadata</span><span class="p">[</span> <span class="s">&#39;transient&#39;</span> <span class="p">]</span> <span class="o">=</span>  <span class="bp">True</span>
+            <span class="n">metadata</span><span class="p">[</span> <span class="s1">&#39;transient&#39;</span> <span class="p">]</span> <span class="o">=</span>  <span class="bp">True</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_property_trait</span><span class="p">(</span> <span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">metadata</span> <span class="p">)</span>
 
@@ -176,33 +168,33 @@
 
     <span class="k">def</span> <span class="nf">_read_only_setter</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
+        <span class="nb">object</span><span class="o">.</span><span class="n">trait_property_changed</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;TraitValue&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;TraitValue&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="TraitValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.TraitValue">[docs]</a><span class="k">class</span> <span class="nc">TraitValue</span> <span class="p">(</span> <span class="n">BaseTraitValue</span> <span class="p">):</span>
 
-    <span class="c">#: The callable used to define a default value:</span>
+    <span class="c1">#: The callable used to define a default value:</span>
     <span class="n">default</span> <span class="o">=</span> <span class="n">Callable</span>
 
-    <span class="c">#: The positional arguments to pass to the callable default value:</span>
+    <span class="c1">#: The positional arguments to pass to the callable default value:</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">Tuple</span>
 
-    <span class="c">#: The keyword arguments to pass to the callable default value:</span>
+    <span class="c1">#: The keyword arguments to pass to the callable default value:</span>
     <span class="n">kw</span> <span class="o">=</span> <span class="n">Dict</span>
 
-    <span class="c">#: The trait to use as the new trait type:</span>
+    <span class="c1">#: The trait to use as the new trait type:</span>
     <span class="nb">type</span> <span class="o">=</span> <span class="n">Any</span>
 
-    <span class="c">#: The object to delegate the new value to:</span>
+    <span class="c1">#: The object to delegate the new value to:</span>
     <span class="n">delegate</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">)</span>
 
-    <span class="c">#: The name of the trait on the delegate object to get the new value from:</span>
+    <span class="c1">#: The name of the trait on the delegate object to get the new value from:</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
 
-    <span class="c">#-- Private Methods --------------------------------------------------------</span>
+    <span class="c1">#-- Private Methods --------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_as_ctrait</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">original_trait</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the low-level C-based trait for this TraitValue.</span>
@@ -226,9 +218,9 @@
                 <span class="nb">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kw</span> <span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="nb">type</span><span class="p">,</span> <span class="n">TraitType</span> <span class="p">):</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="p">(</span><span class="s">&quot;The &#39;type&#39; attribute of a TraitValue &quot;</span>
-                    <span class="s">&quot;instance must be a TraitType instance or subclass, but a &quot;</span>
-                    <span class="s">&quot;value of </span><span class="si">%s</span><span class="s"> was specified.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="p">(</span><span class="s2">&quot;The &#39;type&#39; attribute of a TraitValue &quot;</span>
+                    <span class="s2">&quot;instance must be a TraitType instance or subclass, but a &quot;</span>
+                    <span class="s2">&quot;value of </span><span class="si">%s</span><span class="s2"> was specified.&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait</span> <span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_ctrait</span> <span class="o">=</span> <span class="n">trait</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="n">as_ctrait</span><span class="p">()</span>
             <span class="n">trait</span><span class="o">.</span><span class="n">value_allowed</span><span class="p">(</span> <span class="bp">True</span> <span class="p">)</span>
@@ -237,20 +229,20 @@
             <span class="k">return</span> <span class="bp">None</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;&#39;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s">&quot;You must specify a non-empty string &quot;</span>
-                    <span class="s">&quot;value for the &#39;name&#39; attribute when using the &quot;</span>
-                    <span class="s">&quot;&#39;delegate&#39; trait of a TraitValue instance.&quot;</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">TraitError</span><span class="p">(</span> <span class="s2">&quot;You must specify a non-empty string &quot;</span>
+                    <span class="s2">&quot;value for the &#39;name&#39; attribute when using the &quot;</span>
+                    <span class="s2">&quot;&#39;delegate&#39; trait of a TraitValue instance.&quot;</span> <span class="p">)</span>
 
-            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span> <span class="s">&#39;type&#39;</span><span class="p">:</span>         <span class="s">&#39;property&#39;</span><span class="p">,</span>
-                         <span class="s">&#39;_trait_value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
-                         <span class="s">&#39;transient&#39;</span><span class="p">:</span>    <span class="bp">True</span> <span class="p">}</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span>         <span class="s1">&#39;property&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;_trait_value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
+                         <span class="s1">&#39;transient&#39;</span><span class="p">:</span>    <span class="bp">True</span> <span class="p">}</span>
 
             <span class="n">getter</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delegate_getter</span>
             <span class="n">setter</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delegate_setter</span>
             <span class="n">validate</span> <span class="o">=</span> <span class="bp">None</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span> <span class="s">&#39;value&#39;</span><span class="p">,</span> <span class="n">Event</span><span class="p">()</span> <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">Event</span><span class="p">()</span> <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">delegate</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delegate_modified</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
 
             <span class="n">trait</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_property_trait</span><span class="p">(</span> <span class="n">getter</span><span class="p">,</span> <span class="n">setter</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span> <span class="n">metadata</span> <span class="p">)</span>
@@ -263,39 +255,48 @@
     <span class="k">def</span> <span class="nf">_delegate_setter</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
         <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">delegate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
 
-    <span class="c">#-- Traits Event Handlers --------------------------------------------------</span>
+    <span class="c1">#-- Traits Event Handlers --------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">_delegate_modified</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">True</span></div>
 
-<span class="c">#-- Helper Function Definitions ------------------------------------------------</span>
-</div>
+<span class="c1">#-- Helper Function Definitions ------------------------------------------------</span>
+
 <div class="viewcode-block" id="SyncValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.SyncValue">[docs]</a><span class="k">def</span> <span class="nf">SyncValue</span> <span class="p">(</span> <span class="n">delegate</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
-    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="TypeValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.TypeValue">[docs]</a><span class="k">def</span> <span class="nf">TypeValue</span> <span class="p">(</span> <span class="nb">type</span> <span class="p">):</span>
-    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="nb">type</span> <span class="o">=</span> <span class="nb">type</span> <span class="p">)</span>
-</div>
-<div class="viewcode-block" id="DefaultValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.DefaultValue">[docs]</a><span class="k">def</span> <span class="nf">DefaultValue</span> <span class="p">(</span> <span class="n">default</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(),</span> <span class="n">kw</span> <span class="o">=</span> <span class="p">{}</span> <span class="p">):</span>
-    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="n">default</span> <span class="o">=</span> <span class="n">default</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">kw</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Tell the C-based traits module about the &#39;BaseTraitValue&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<div class="viewcode-block" id="TypeValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.TypeValue">[docs]</a><span class="k">def</span> <span class="nf">TypeValue</span> <span class="p">(</span> <span class="nb">type</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="nb">type</span> <span class="o">=</span> <span class="nb">type</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DefaultValue"><a class="viewcode-back" href="../../traits_api_reference/trait_value.html#traits.trait_value.DefaultValue">[docs]</a><span class="k">def</span> <span class="nf">DefaultValue</span> <span class="p">(</span> <span class="n">default</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(),</span> <span class="n">kw</span> <span class="o">=</span> <span class="p">{}</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">TraitValue</span><span class="p">(</span> <span class="n">default</span> <span class="o">=</span> <span class="n">default</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">args</span><span class="p">,</span> <span class="n">kw</span> <span class="o">=</span> <span class="n">kw</span> <span class="p">)</span></div>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Tell the C-based traits module about the &#39;BaseTraitValue&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">ctraits</span>
 <span class="n">ctraits</span><span class="o">.</span><span class="n">_value_class</span><span class="p">(</span> <span class="n">BaseTraitValue</span> <span class="p">)</span>
+
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -303,33 +304,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.trait_value</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

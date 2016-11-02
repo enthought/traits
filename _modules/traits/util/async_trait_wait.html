@@ -1,0 +1,144 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>traits.util.async_trait_wait &mdash; Traits 4 User Manual</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../../../_static/et.ico"/>
+    <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for traits.util.async_trait_wait</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">threading</span>
+
+
+<div class="viewcode-block" id="wait_for_condition"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.async_trait_wait.wait_for_condition">[docs]</a><span class="k">def</span> <span class="nf">wait_for_condition</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Wait until the given condition is true, re-evaluating on trait change.</span>
+
+<span class="sd">    This is intended for use in multithreading situations where traits can be</span>
+<span class="sd">    modified from a different thread than the calling thread.</span>
+
+<span class="sd">    Wait until `condition` is satisfied.  Raise a RuntimeError if</span>
+<span class="sd">    `condition` is not satisfied within the given timeout.</span>
+
+<span class="sd">    `condition` is a callback function that will be called with `obj`</span>
+<span class="sd">    as its single argument.  It should return a boolean indicating</span>
+<span class="sd">    whether the condition is satisfied or not.</span>
+
+<span class="sd">    `timeout` gives the maximum time in seconds to wait for the</span>
+<span class="sd">    condition to become true.  The default value of `None` indicates</span>
+<span class="sd">    no timeout.</span>
+
+<span class="sd">    (obj, trait) give an object and trait to listen to for indication</span>
+<span class="sd">    of a possible change: whenever the trait changes, the condition is</span>
+<span class="sd">    re-evaluated.  The condition will also be evaluated on entering</span>
+<span class="sd">    this function.</span>
+
+<span class="sd">    Note that in cases of unusual timing it&#39;s possible for the condition to be</span>
+<span class="sd">    evaluated one more time *after* the ``wait_for_condition`` call has</span>
+<span class="sd">    returned.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">condition_satisfied</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">handler</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="n">condition_satisfied</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+    <span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">trait</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="c1"># Catch case where the condition was satisfied before</span>
+            <span class="c1"># the on_trait_change handler was active.</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c1"># Allow a Ctrl-C to interrupt.  The 0.05 value matches</span>
+            <span class="c1"># what&#39;s used by the standard library&#39;s Condition.wait.</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">condition_satisfied</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                <span class="n">condition_satisfied</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">condition_satisfied</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">condition_satisfied</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Timed out waiting for condition.&quot;</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

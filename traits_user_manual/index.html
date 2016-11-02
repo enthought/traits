@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,33 +27,20 @@
     <link rel="shortcut icon" href="../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="next" title="Traits 4 User Manual" href="front.html" />
-    <link rel="prev" title="Traits Documentation" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="front.html" title="Traits 4 User Manual"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Traits Documentation"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="prev" title="Traits Documentation" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#">Traits 4 User Manual</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="traits-4-user-manual">
 <h1>Traits 4 User Manual<a class="headerlink" href="#traits-4-user-manual" title="Permalink to this headline">¶</a></h1>
@@ -183,16 +170,24 @@
 <li class="toctree-l2"><a class="reference internal" href="advanced.html#performance-considerations-of-traits">Performance Considerations of Traits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing Traits Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="testing.html#using-mocks">Using Mocks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#testing-traits-classes">Testing Traits Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html#using-mocks">Using Mocks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="debugging.html">Tips for debugging Traits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#re-raising-exceptions-in-change-handlers">Re-raising exceptions in change handlers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="debugging.html#tracing-traits-change-events">Tracing Traits Change Events</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="../genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="../search.html"><em>Search Page</em></a></li>
+<li><a class="reference internal" href="../genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="../search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 </div>
 
@@ -200,7 +195,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -210,19 +205,23 @@
 <li><a class="reference internal" href="#">Traits 4 User Manual</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="../index.html"
-                        title="previous chapter">Traits Documentation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="front.html"
-                        title="next chapter">Traits 4 User Manual</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_user_manual/index.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Traits Documentation</a></li>
+      <li>Next: <a href="front.html" title="next chapter">Traits 4 User Manual</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_user_manual/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -230,38 +229,26 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="front.html" title="Traits 4 User Manual"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../index.html" title="Traits Documentation"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-  
-    <li><a href="#">Traits 4 User Manual</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_user_manual/index.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

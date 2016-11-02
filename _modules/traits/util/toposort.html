@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,45 +26,37 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.util.toposort</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.util.toposort</h1><div class="highlight"><pre>
-<span class="c">#-----------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2011, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># This software is provided without warranty under the terms of the BSD</span>
-<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c"># under the conditions described in the aforementioned license.  The license</span>
-<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c"># Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c"># Author: Enthought, Inc.</span>
-<span class="c"># Description: &lt;Enthought util package component&gt;</span>
-<span class="c">#</span>
-<span class="c">#-----------------------------------------------------------------------------</span>
+<span></span><span class="c1">#-----------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2011, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought util package component&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#-----------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; A simple topological sort on a dictionary graph.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -74,9 +66,9 @@
 <span class="sd">    Exception for cyclic graphs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s">&quot;Graph is cyclic&quot;</span><span class="p">)</span>
+        <span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Graph is cyclic&quot;</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="topological_sort"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.toposort.topological_sort">[docs]</a><span class="k">def</span> <span class="nf">topological_sort</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the nodes in the graph in topological order.</span>
@@ -101,18 +93,28 @@
         <span class="k">if</span> <span class="n">node</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">explored</span><span class="p">:</span>
             <span class="n">explore</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
     <span class="n">order</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">order</span>
-</pre></div></div>
+    <span class="k">return</span> <span class="n">order</span></div>
+
+
+</pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -120,33 +122,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.util.toposort</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,46 +26,38 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.category</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.category</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2005, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author: David C. Morrill</span>
-<span class="c">#  Date:   11/06/2004</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: David C. Morrill</span>
+<span class="c1">#  Date:   11/06/2004</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; Adds a &quot;category&quot; capability to Traits-based classes, similar to that</span>
 <span class="sd">    provided by the Cocoa (Objective-C) environment for the Macintosh.</span>
@@ -77,32 +69,32 @@
 <span class="sd">    subclassing, categories do not allow overriding trait attributes.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
 <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">MetaHasTraits</span><span class="p">,</span> <span class="n">MetaHasTraitsObject</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;MetaCategory&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;MetaCategory&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="MetaCategory"><a class="viewcode-back" href="../../traits_api_reference/category.html#traits.category.MetaCategory">[docs]</a><span class="k">class</span> <span class="nc">MetaCategory</span> <span class="p">(</span> <span class="n">MetaHasTraits</span> <span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__new__</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span> <span class="p">):</span>
 
-        <span class="c"># Make sure the correct usage is being applied:</span>
+        <span class="c1"># Make sure the correct usage is being applied:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">bases</span> <span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">,</span> \
-                  <span class="s">&quot;Correct usage is: class FooCategory(Category,Foo):&quot;</span>
+                  <span class="s2">&quot;Correct usage is: class FooCategory(Category,Foo):&quot;</span>
 
-        <span class="c"># Process any traits-related information in the class dictionary:</span>
+        <span class="c1"># Process any traits-related information in the class dictionary:</span>
         <span class="n">MetaCategoryObject</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="bp">True</span> <span class="p">)</span>
 
-        <span class="c"># Move all remaining items in our class dictionary to the base class&#39;s</span>
-        <span class="c"># dictionary:</span>
+        <span class="c1"># Move all remaining items in our class dictionary to the base class&#39;s</span>
+        <span class="c1"># dictionary:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">bases</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">category_class</span> <span class="o">=</span> <span class="n">bases</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">class_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -110,36 +102,36 @@
                     <span class="nb">setattr</span><span class="p">(</span> <span class="n">category_class</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="p">)</span>
                     <span class="k">del</span> <span class="n">class_dict</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span>
 
-        <span class="c"># Finish building the class using the updated class dictionary:</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span> <span class="p">)</span>
+        <span class="c1"># Finish building the class using the updated class dictionary:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">class_name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;MetaCategoryObject&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;MetaCategoryObject&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="MetaCategoryObject"><a class="viewcode-back" href="../../traits_api_reference/category.html#traits.category.MetaCategoryObject">[docs]</a><span class="k">class</span> <span class="nc">MetaCategoryObject</span> <span class="p">(</span> <span class="n">MetaHasTraitsObject</span> <span class="p">):</span>
 
-    <span class="c">#---------------------------------------------------------------------------</span>
-    <span class="c">#  Adds the traits meta-data to the class:</span>
-    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Adds the traits meta-data to the class:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
 
     <span class="k">def</span> <span class="nf">add_traits_meta_data</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">class_dict</span><span class="p">,</span> <span class="n">base_traits</span><span class="p">,</span>
                                <span class="n">class_traits</span><span class="p">,</span> <span class="n">instance_traits</span><span class="p">,</span> <span class="n">prefix_traits</span><span class="p">,</span>
                                <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span> <span class="n">bases</span> <span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="c"># Update the class and each of the existing subclasses:</span>
+            <span class="c1"># Update the class and each of the existing subclasses:</span>
             <span class="n">bases</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_add_trait_category</span><span class="p">(</span> <span class="n">base_traits</span><span class="p">,</span> <span class="n">class_traits</span><span class="p">,</span>
                       <span class="n">instance_traits</span><span class="p">,</span> <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span>
                       <span class="n">view_elements</span> <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">MetaHasTraitsObject</span><span class="o">.</span><span class="n">add_traits_meta_data</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span>
                    <span class="n">class_dict</span><span class="p">,</span> <span class="n">base_traits</span><span class="p">,</span> <span class="n">class_traits</span><span class="p">,</span> <span class="n">instance_traits</span><span class="p">,</span>
-                   <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">)</span>
+                   <span class="n">prefix_traits</span><span class="p">,</span> <span class="n">listeners</span><span class="p">,</span> <span class="n">view_elements</span> <span class="p">)</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;Category&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;Category&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../traits_api_reference/category.html#traits.category.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span> <span class="p">(</span> <span class="nb">object</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Used for defining &quot;category&quot; extensions to existing classes.</span>
 
@@ -158,18 +150,27 @@
 <span class="sd">            z = Str(&quot;BaseExtra z&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MetaCategory</span>
-</pre></div></div>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MetaCategory</span></div>
+
+</pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -177,33 +178,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.category</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,53 +26,45 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.interface_checker</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.interface_checker</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c">#</span>
-<span class="c">#  Copyright (c) 2008, Enthought, Inc.</span>
-<span class="c">#  All rights reserved.</span>
-<span class="c">#</span>
-<span class="c">#  This software is provided without warranty under the terms of the BSD</span>
-<span class="c">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c">#  under the conditions described in the aforementioned license.  The license</span>
-<span class="c">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c">#</span>
-<span class="c">#  Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c">#  Author: Martin Chilvers</span>
-<span class="c">#  Date:   03/20/2008</span>
-<span class="c">#</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2008, Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  This software is provided without warranty under the terms of the BSD</span>
+<span class="c1">#  license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1">#  under the conditions described in the aforementioned license.  The license</span>
+<span class="c1">#  is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1">#  Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: Martin Chilvers</span>
+<span class="c1">#  Date:   03/20/2008</span>
+<span class="c1">#</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 
 <span class="sd">&quot;&quot;&quot; An attempt at type-safe casting.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Imports:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 
@@ -82,80 +74,80 @@
 
 <span class="kn">from</span> <span class="nn">.has_traits</span> <span class="kn">import</span> <span class="n">HasTraits</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Logging:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Logging:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span> <span class="n">__name__</span> <span class="p">)</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  Constants:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Constants:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
-<span class="c"># Message templates for interface errors.</span>
-<span class="n">BAD_SIGNATURE</span>  <span class="o">=</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; class signature for the &#39;</span><span class="si">%s</span><span class="s">&#39; method is different &quot;</span>
-                  <span class="s">&quot;from that of the &#39;</span><span class="si">%s</span><span class="s">&#39; interface.&quot;</span><span class="p">)</span>
-<span class="n">MISSING_METHOD</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; class does not implement the &#39;</span><span class="si">%s</span><span class="s">&#39; method of the &quot;</span>
-                  <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; interface.&quot;</span><span class="p">)</span>
-<span class="n">MISSING_TRAIT</span>  <span class="o">=</span> <span class="p">(</span><span class="s">&quot;The &#39;</span><span class="si">%s</span><span class="s">&#39; class does not implement the </span><span class="si">%s</span><span class="s"> trait(s) of the &quot;</span>
-                  <span class="s">&quot;&#39;</span><span class="si">%s</span><span class="s">&#39; interface.&quot;</span><span class="p">)</span>
+<span class="c1"># Message templates for interface errors.</span>
+<span class="n">BAD_SIGNATURE</span>  <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; class signature for the &#39;</span><span class="si">%s</span><span class="s2">&#39; method is different &quot;</span>
+                  <span class="s2">&quot;from that of the &#39;</span><span class="si">%s</span><span class="s2">&#39; interface.&quot;</span><span class="p">)</span>
+<span class="n">MISSING_METHOD</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; class does not implement the &#39;</span><span class="si">%s</span><span class="s2">&#39; method of the &quot;</span>
+                  <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; interface.&quot;</span><span class="p">)</span>
+<span class="n">MISSING_TRAIT</span>  <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;The &#39;</span><span class="si">%s</span><span class="s2">&#39; class does not implement the </span><span class="si">%s</span><span class="s2"> trait(s) of the &quot;</span>
+                  <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; interface.&quot;</span><span class="p">)</span>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;InterfaceError&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;InterfaceError&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="InterfaceError"><a class="viewcode-back" href="../../traits_api_reference/interface_checker.html#traits.interface_checker.InterfaceError">[docs]</a><span class="k">class</span> <span class="nc">InterfaceError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; The exception raised if a class does not really implement an interface.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">pass</span>
+    <span class="k">pass</span></div>
 
-<span class="c">#-------------------------------------------------------------------------------</span>
-<span class="c">#  &#39;InterfaceChecker&#39; class:</span>
-<span class="c">#-------------------------------------------------------------------------------</span>
-</div>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;InterfaceChecker&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
 <div class="viewcode-block" id="InterfaceChecker"><a class="viewcode-back" href="../../traits_api_reference/interface_checker.html#traits.interface_checker.InterfaceChecker">[docs]</a><span class="k">class</span> <span class="nc">InterfaceChecker</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Checks that interfaces are actually implemented.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c">#---------------------------------------------------------------------------</span>
-    <span class="c">#  &#39;InterfaceChecker&#39; interface:</span>
-    <span class="c">#---------------------------------------------------------------------------</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  &#39;InterfaceChecker&#39; interface:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="InterfaceChecker.check_implements"><a class="viewcode-back" href="../../traits_api_reference/interface_checker.html#traits.interface_checker.InterfaceChecker.check_implements">[docs]</a>    <span class="k">def</span> <span class="nf">check_implements</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">error_mode</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Checks that the class implements the specified interfaces.</span>
 
 <span class="sd">            &#39;interfaces&#39; can be a single interface or a list of interfaces.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c"># If a single interface was specified then turn it into a list:</span>
+        <span class="c1"># If a single interface was specified then turn it into a list:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="nb">iter</span><span class="p">(</span> <span class="n">interfaces</span> <span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="n">interfaces</span> <span class="o">=</span> <span class="p">[</span> <span class="n">interfaces</span> <span class="p">]</span>
 
-        <span class="c"># If the class has traits then check that it implements all traits and</span>
-        <span class="c"># methods on the specified interfaces:</span>
+        <span class="c1"># If the class has traits then check that it implements all traits and</span>
+        <span class="c1"># methods on the specified interfaces:</span>
         <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">HasTraits</span> <span class="p">):</span>
             <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_has_traits_class</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span>
                                                      <span class="n">error_mode</span> <span class="p">):</span>
                     <span class="k">return</span> <span class="bp">False</span>
 
-        <span class="c"># Otherwise, just check that the class implements all methods on the</span>
-        <span class="c"># specified interface:</span>
+        <span class="c1"># Otherwise, just check that the class implements all methods on the</span>
+        <span class="c1"># specified interface:</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_non_has_traits_class</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span>
                                                          <span class="n">error_mode</span> <span class="p">):</span>
                     <span class="k">return</span> <span class="bp">False</span>
 
-        <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">True</span></div>
 
-    <span class="c">#---------------------------------------------------------------------------</span>
-    <span class="c">#  Private interface:</span>
-    <span class="c">#---------------------------------------------------------------------------</span>
-</div>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+    <span class="c1">#  Private interface:</span>
+    <span class="c1">#---------------------------------------------------------------------------</span>
+
     <span class="k">def</span> <span class="nf">_check_has_traits_class</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interface</span><span class="p">,</span> <span class="n">error_mode</span> <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Checks that a &#39;HasTraits&#39; class implements an interface.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -180,7 +172,7 @@
                              <span class="bp">self</span><span class="o">.</span><span class="n">_class_name</span><span class="p">(</span> <span class="n">interface</span> <span class="p">)</span> <span class="p">),</span> <span class="n">error_mode</span> <span class="p">)</span>
 
 
-            <span class="c"># Check that the method signatures are the same:</span>
+            <span class="c1"># Check that the method signatures are the same:</span>
             <span class="n">cls_argspec</span>       <span class="o">=</span> <span class="n">getargspec</span><span class="p">(</span> <span class="n">cls_methods</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="p">)</span>
             <span class="n">interface_argspec</span> <span class="o">=</span> <span class="n">getargspec</span><span class="p">(</span> <span class="n">interface_methods</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="p">)</span>
 
@@ -211,14 +203,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">public_methods</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">getmro</span><span class="p">(</span> <span class="n">cls</span> <span class="p">):</span>
-            <span class="c"># Stop when we get to &#39;HasTraits&#39;!:</span>
+            <span class="c1"># Stop when we get to &#39;HasTraits&#39;!:</span>
             <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="n">HasTraits</span><span class="p">:</span>
                 <span class="k">break</span>
 
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span> <span class="s">&#39;_&#39;</span> <span class="p">))</span> <span class="ow">and</span>
-                    <span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">FunctionType</span><span class="p">)):</span>
-                    <span class="n">public_methods</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">if</span> <span class="p">((</span><span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span> <span class="s1">&#39;_&#39;</span> <span class="p">))</span> <span class="ow">and</span>
+                        <span class="p">(</span><span class="nb">type</span><span class="p">(</span> <span class="n">value</span> <span class="p">)</span> <span class="ow">is</span> <span class="n">FunctionType</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">public_methods</span><span class="p">:</span>
+                        <span class="n">public_methods</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">return</span> <span class="n">public_methods</span>
 
@@ -232,10 +225,10 @@
         <span class="k">if</span> <span class="n">error_mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span> <span class="n">msg</span> <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
 
 
-<span class="c"># A default interface checker:</span></div>
+<span class="c1"># A default interface checker:</span>
 <span class="n">checker</span> <span class="o">=</span> <span class="n">InterfaceChecker</span><span class="p">()</span>
 
 <div class="viewcode-block" id="check_implements"><a class="viewcode-back" href="../../traits_api_reference/interface_checker.html#traits.interface_checker.check_implements">[docs]</a><span class="k">def</span> <span class="nf">check_implements</span> <span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">error_mode</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
@@ -243,18 +236,27 @@
 
 <span class="sd">        &#39;interfaces&#39; can be a single interface or a list of interfaces.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">checker</span><span class="o">.</span><span class="n">check_implements</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">error_mode</span> <span class="p">)</span>
-</pre></div></div>
+    <span class="k">return</span> <span class="n">checker</span><span class="o">.</span><span class="n">check_implements</span><span class="p">(</span> <span class="n">cls</span><span class="p">,</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">error_mode</span> <span class="p">)</span></div>
+
+</pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../index.html">
               <img class="logo" src="../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
       <input type="text" name="q" />
@@ -262,33 +264,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.interface_checker</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

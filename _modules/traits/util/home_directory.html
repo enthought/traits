@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,67 +26,59 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.util.home_directory</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.util.home_directory</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c"># Copyright (c) 2005, 2006 by Enthought, Inc.</span>
-<span class="c"># All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># This software is provided without warranty under the terms of the BSD</span>
-<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c"># under the conditions described in the aforementioned license.  The license</span>
-<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c"># Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c"># Author: Enthought, Inc.</span>
-<span class="c"># Description: &lt;Enthought util package component&gt;</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005, 2006 by Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought util package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <div class="viewcode-block" id="get_home_directory"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.home_directory.get_home_directory">[docs]</a><span class="k">def</span> <span class="nf">get_home_directory</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Determine the user&#39;s home directory.&quot;&quot;&quot;</span>
 
-    <span class="c"># &#39;HOME&#39; should work on most Unixes, and &#39;USERPROFILE&#39; works on at</span>
-    <span class="c"># least Windows XP ;^)</span>
-    <span class="c">#</span>
-    <span class="c"># FIXME: Is this really better than the following??</span>
-    <span class="c">#       path = os.path.expanduser(&#39;~&#39;)</span>
-    <span class="c"># The above seems to work on both Windows and Unixes though the docs</span>
-    <span class="c"># indicate it might not work as well on Macs.</span>
-    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;HOME&#39;</span><span class="p">,</span> <span class="s">&#39;USERPROFILE&#39;</span><span class="p">]:</span>
+    <span class="c1"># &#39;HOME&#39; should work on most Unixes, and &#39;USERPROFILE&#39; works on at</span>
+    <span class="c1"># least Windows XP ;^)</span>
+    <span class="c1">#</span>
+    <span class="c1"># FIXME: Is this really better than the following??</span>
+    <span class="c1">#       path = os.path.expanduser(&#39;~&#39;)</span>
+    <span class="c1"># The above seems to work on both Windows and Unixes though the docs</span>
+    <span class="c1"># indicate it might not work as well on Macs.</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">,</span> <span class="s1">&#39;USERPROFILE&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
-            <span class="c"># Make sure that the path ends with a path separator.</span>
+            <span class="c1"># Make sure that the path ends with a path separator.</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">:</span>
                 <span class="n">path</span> <span class="o">+=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
 
             <span class="k">break</span>
 
-    <span class="c"># If all else fails, the current directory will do.</span>
+    <span class="c1"># If all else fails, the current directory will do.</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="k">return</span> <span class="n">path</span></div>
 </pre></div>
@@ -94,12 +86,20 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -107,33 +107,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.util.home_directory</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

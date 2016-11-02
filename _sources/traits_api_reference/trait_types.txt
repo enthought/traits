@@ -37,6 +37,10 @@ Traits
 
 .. autoclass:: Unicode
 
+.. autoclass:: BaseBytes
+
+.. autoclass:: Bytes
+
 .. autoclass:: BaseBool
 
 .. autoclass:: Bool
@@ -64,6 +68,10 @@ Traits
 .. autoclass:: BaseCUnicode
 
 .. autoclass:: CUnicode
+
+.. autoclass:: BaseCBytes
+
+.. autoclass:: CBytes
 
 .. autoclass:: BaseCBool
 
@@ -130,8 +138,12 @@ Traits
 .. autoclass:: Enum
 
 .. autoclass:: BaseTuple
+   :special-members: __init__
 
 .. autoclass:: Tuple
+
+.. autoclass:: ValidatedTuple
+   :special-members: __init__
 
 .. autoclass:: List
 
@@ -219,4 +231,3 @@ Functions
 ---------
 
 .. autofunction:: default_text_editor
-

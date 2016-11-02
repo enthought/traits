@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,34 +28,20 @@
     <link rel="top" title="Traits 4 User Manual" href="../index.html" />
     <link rel="up" title="Traits 4 User Manual" href="index.html" />
     <link rel="next" title="Trait Notification" href="notification.html" />
-    <link rel="prev" title="Introduction" href="intro.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="notification.html" title="Trait Notification"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="intro.html" title="Introduction"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" accesskey="U">Traits 4 User Manual</a> &raquo;</li>
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
-    <li><a href="#">Defining Traits: Initialization and Validation</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="defining-traits-initialization-and-validation">
 <span id="index-0"></span><span id="id1"></span><h1>Defining Traits: Initialization and Validation<a class="headerlink" href="#defining-traits-initialization-and-validation" title="Permalink to this headline">¶</a></h1>
@@ -72,15 +58,15 @@ attributes that use the traits you have defined.</li>
 in an attribute definition. This strategy is used in many examples in this
 guide. However, you can also define traits independently, and reuse the trait
 definitions across multiple classes and attributes (see
-<a class="reference internal" href="advanced.html#reusing-trait-definitions"><em>Reusing Trait Definitions</em></a>).</p>
+<a class="reference internal" href="advanced.html#reusing-trait-definitions"><span class="std std-ref">Reusing Trait Definitions</span></a>).</p>
 <p>In order to use trait attributes in a class, the class must inherit from the
 HasTraits class in the Traits package (or from a subclass of HasTraits). The
 following example defines a class called Person that has a single trait
 attribute <strong>weight</strong>, which is initialized to 150.0 and can only take floating
 point values.</p>
-<div class="highlight-python" id="index-3"><div class="highlight"><pre><span class="c"># minimal.py --- Minimal example of using traits.</span>
+<div class="highlight-default" id="index-3"><div class="highlight"><pre><span></span><span class="c1"># minimal.py --- Minimal example of using traits.</span>
 
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">150.0</span><span class="p">)</span>
@@ -88,29 +74,27 @@ point values.</p>
 </div>
 <p id="index-4">In this example, the attribute named <strong>weight</strong> specifies that the class has a
 corresponding trait called <strong>weight</strong>. The value associated with the attribute
-<strong>weight</strong> (i.e., <tt class="docutils literal"><span class="pre">Float(150.0)</span></tt>) specifies a predefined trait provided with
+<strong>weight</strong> (i.e., <code class="docutils literal"><span class="pre">Float(150.0)</span></code>) specifies a predefined trait provided with
 the Traits package, which requires that values assigned be of the standard
-Python type <strong>float</strong>. The value 150.0 specifies the default value of the trait.</p>
+Python type <strong>float</strong>. The value 150.0 specifies the default value of the
+trait.</p>
 <p>The value associated with each class-level attribute determines the
 characteristics of the instance attribute identified by the attribute name.
 For example:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from minimal import Person
-&gt;&gt;&gt; # instantiate the class
-&gt;&gt;&gt; joe = Person()
-&gt;&gt;&gt; # Show the default value
-&gt;&gt;&gt; joe.weight
-150.0
-&gt;&gt;&gt; # Assign new values
-&gt;&gt;&gt; joe.weight = 161.9     # OK to assign a float
-&gt;&gt;&gt; joe.weight = 162       # OK to assign an int
-&gt;&gt;&gt; joe.weight = &#39;average&#39; # Error to assign a string
-Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
-  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
-in error value )
-traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
-instance must be a float, but a value of &#39;average&#39; &lt;type &#39;str&#39;&gt; was
-specified.
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">minimal</span> <span class="k">import</span> <span class="n">Person</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># instantiate the class</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Show the default value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">weight</span>
+<span class="go">150.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Assign new values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mf">161.9</span>     <span class="c1"># OK to assign a float</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="mi">162</span>       <span class="c1"># OK to assign an int</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">joe</span><span class="o">.</span><span class="n">weight</span> <span class="o">=</span> <span class="s1">&#39;average&#39;</span> <span class="c1"># Error to assign a string</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">traits.trait_errors.TraitError</span>: <span class="n">The &#39;weight&#39; trait of a Person instance</span>
+<span class="go">must be a float, but a value of &#39;average&#39; &lt;type &#39;str&#39;&gt; was specified.</span>
 </pre></div>
 </div>
 <p>In this example, <strong>joe</strong> is an instance of the Person class defined in the
@@ -129,20 +113,20 @@ used Python data types. In the simplest case, you can assign the trait name
 to an attribute of a class derived from HasTraits; any instances of the class
 will have that attribute initialized to the built-in default value for the
 trait. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span>
 </pre></div>
 </div>
 <p>This statement defines an attribute whose value must be a floating point
 number, and whose initial value is 0.0 (the built-in default value for Floats).</p>
 <p>If you want to use an initial value other than the built-in default, you can
 pass it as an argument to the trait:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">account_balance</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Most predefined traits are callable, <a class="footnote-reference" href="#id14" id="id3">[2]</a> and can accept a default value and
 possibly other arguments; all that are callable can also accept metadata as
-keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><em>Other Predefined Traits</em></a> for information on trait
-signatures, and see <a class="reference internal" href="#trait-metadata"><em>Trait Metadata</em></a> for information on metadata
+keyword arguments. (See <a class="reference internal" href="#other-predefined-traits"><span class="std std-ref">Other Predefined Traits</span></a> for information on trait
+signatures, and see <a class="reference internal" href="#trait-metadata"><span class="std std-ref">Trait Metadata</span></a> for information on metadata
 arguments.)</p>
 <div class="section" id="predefined-traits-for-simple-types">
 <span id="index-6"></span><span id="id4"></span><h3>Predefined Traits for Simple Types<a class="headerlink" href="#predefined-traits-for-simple-types" title="Permalink to this headline">¶</a></h3>
@@ -203,6 +187,11 @@ in the following table.</p>
 <td>Unicode</td>
 <td>u&#8217;&#8216;</td>
 </tr>
+<tr class="row-odd"><td>Bytes</td>
+<td>CBytes</td>
+<td>Bytes</td>
+<td>b&#8217;&#8216;</td>
+</tr>
 </tbody>
 </table>
 <div class="section" id="trait-type-coercion">
@@ -256,28 +245,27 @@ Python built-in functions for type conversion:</p>
 <li>int()</li>
 <li>str()</li>
 <li>unicode()</li>
+<li>bytes()</li>
 </ul>
 <p id="index-15">The following example illustrates the difference between coercing traits and
 casting traits:</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import HasTraits, Float, CFloat
-&gt;&gt;&gt; class Person ( HasTraits ):
-...    weight  = Float
-...    cweight = CFloat
-&gt;&gt;&gt;
-&gt;&gt;&gt; bill = Person()
-&gt;&gt;&gt; bill.weight  = 180    # OK, coerced to 180.0
-&gt;&gt;&gt; bill.cweight = 180    # OK, cast to float(180)
-&gt;&gt;&gt; bill.weight  = &#39;180&#39;  # Error, invalid coercion
-Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
-  File &quot;c:\svn\ets3\traits\enthought\traits\trait_handlers.py&quot;, line 175,
-in error value )
-traits.trait_errors.TraitError: The &#39;weight&#39; trait of a Person
-instance must be a float, but a value of &#39;180&#39; &lt;type &#39;str&#39;&gt; was specified.
-&gt;&gt;&gt; bill.cweight = &#39;180&#39;  # OK, cast to float(&#39;180&#39;)
-&gt;&gt;&gt; print bill.cweight
-180.0
-&gt;&gt;&gt;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">CFloat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Person</span> <span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span>
+<span class="gp">... </span>   <span class="n">weight</span>  <span class="o">=</span> <span class="n">Float</span>
+<span class="gp">... </span>   <span class="n">cweight</span> <span class="o">=</span> <span class="n">CFloat</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">weight</span>  <span class="o">=</span> <span class="mi">180</span>    <span class="c1"># OK, coerced to 180.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="mi">180</span>    <span class="c1"># OK, cast to float(180)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">weight</span>  <span class="o">=</span> <span class="s1">&#39;180&#39;</span>  <span class="c1"># Error, invalid coercion</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">traits.trait_errors.TraitError</span>: <span class="n">The &#39;weight&#39; trait of a Person instance</span>
+<span class="go">must be a float, but a value of &#39;180&#39; &lt;type &#39;str&#39;&gt; was specified.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bill</span><span class="o">.</span><span class="n">cweight</span> <span class="o">=</span> <span class="s1">&#39;180&#39;</span>  <span class="c1"># OK, cast to float(&#39;180&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="n">bill</span><span class="o">.</span><span class="n">cweight</span>
+<span class="go">180.0</span>
+<span class="go">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -292,7 +280,7 @@ for details. Most can be used either as simple names, which use their built-in
 default values, or as callables, which can take additional arguments. If the
 trait cannot be used as a simple name, it is omitted from the Name column of
 the table.</p>
-<p class="rubric" id="predefined-traits-beyond-simple-types-table"><span id="index-16"></span>Predefined traits beyond simple types</p>
+<span class="target" id="index-16"></span><span class="target" id="index-17"></span><span class="target" id="index-18"></span><span class="target" id="index-19"></span><span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span><p class="rubric" id="predefined-traits-beyond-simple-types-table"><span id="index-25"></span>Predefined traits beyond simple types</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="24%" />
@@ -311,36 +299,40 @@ the table.</p>
 <td>Array( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
 <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Button</td>
+<tr class="row-even"><td>ArrayOrNone</td>
+<td>ArrayOrNone( [<em>dtype</em> = None, <em>shape</em> = None,
+<em>value</em> = None, <em>typecode</em> = None, **<em>metadata</em>] )</td>
+</tr>
+<tr class="row-odd"><td>Button</td>
 <td>Button( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;button&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 7, <em>height_padding</em> = 5, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Callable</td>
+<tr class="row-even"><td>Callable</td>
 <td>Callable( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>CArray</td>
+<tr class="row-odd"><td>CArray</td>
 <td>CArray( [<em>dtype</em> = None, <em>shape</em> = None, <em>value</em> = None,
 <em>typecode</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Class</td>
+<tr class="row-even"><td>Class</td>
 <td>Class( [<em>value</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Code</td>
+<tr class="row-odd"><td>Code</td>
 <td>Code( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Color</td>
+<tr class="row-even"><td>Color</td>
 <td>Color( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>CSet</td>
+<tr class="row-odd"><td>CSet</td>
 <td>CSet( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>n/a</td>
+<tr class="row-even"><td>n/a</td>
 <td>Constant( <em>value*[, ***metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Dict, DictStrAny,
+<tr class="row-odd"><td>Dict, DictStrAny,
 DictStrBool,
 DictStrFloat,
 DictStrInt,
@@ -348,56 +340,56 @@ DictStrList,
 DictStrLong,
 DictStrStr</td>
 <td>Dict( [<em>key_trait</em> = None, <em>value_trait</em> = None,
-<em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )<span class="target" id="index-17"></span><span class="target" id="index-18"></span></td>
+<em>value</em> = None, <em>items</em> = True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd" id="index-19"><td>Directory</td>
+<tr class="row-even"><td>Directory</td>
 <td>Directory( [<em>value</em> = &#8216;&#8217;, <em>auto_set</em> = False, <em>entries</em> =
 10, <em>exists</em> = False, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Disallow</td>
+<tr class="row-odd"><td>Disallow</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>n/a</td>
+<tr class="row-even"><td>n/a</td>
 <td>Either( <em>val1*[, *val2</em>, ..., <em>valN</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Enum</td>
+<tr class="row-odd"><td>Enum</td>
 <td>Enum( <em>values*[, ***metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Event</td>
+<tr class="row-even"><td>Event</td>
 <td>Event( [<em>trait</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Expression</td>
+<tr class="row-odd"><td>Expression</td>
 <td>Expression( [<em>value</em> = &#8216;0&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>false</td>
+<tr class="row-even"><td>false</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>File</td>
+<tr class="row-odd"><td>File</td>
 <td>File( [<em>value</em> = &#8216;&#8217;, <em>filter</em> = None, <em>auto_set</em> = False,
 <em>entries</em> = 10, <em>exists</em> = False,  **<em>metadata</em> ] )</td>
 </tr>
-<tr class="row-odd"><td>Font</td>
+<tr class="row-even"><td>Font</td>
 <td>Font( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Function</td>
+<tr class="row-odd"><td>Function</td>
 <td>Function( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Generic</td>
+<tr class="row-even"><td>Generic</td>
 <td>Generic( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>generic_trait</td>
+<tr class="row-odd"><td>generic_trait</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>HTML</td>
+<tr class="row-even"><td>HTML</td>
 <td>HTML( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> = sys.maxint,
 <em>regex</em> = &#8216;&#8217;,  **<em>metadata</em> ] )</td>
 </tr>
-<tr class="row-even"><td>Instance</td>
+<tr class="row-odd"><td>Instance</td>
 <td>Instance( [<em>klass</em> = None, <em>factory</em> = None, <em>args</em> =
 None, <em>kw</em> = None, <em>allow_none</em> = True, <em>adapt</em> = None,
 <em>module</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>List, ListBool,
+<tr class="row-even"><td>List, ListBool,
 ListClass,
 ListComplex,
 ListFloat,
@@ -409,83 +401,87 @@ ListStr,
 ListThis,
 ListUnicode</td>
 <td>List([<em>trait</em> = None, <em>value</em> = None, <em>minlen</em> = 0,
-<em>maxlen</em> = sys.maxint, <em>items</em> = True, **<em>metadata</em>])<span class="target" id="index-20"></span><span class="target" id="index-21"></span><span class="target" id="index-22"></span><span class="target" id="index-23"></span><span class="target" id="index-24"></span></td>
+<em>maxlen</em> = sys.maxint, <em>items</em> = True, **<em>metadata</em>])</td>
 </tr>
-<tr class="row-even" id="index-25"><td>Method</td>
+<tr class="row-odd"><td>Method</td>
 <td>Method ([**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Module</td>
+<tr class="row-even"><td>Module</td>
 <td>Module ( [**<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Password</td>
+<tr class="row-odd"><td>Password</td>
 <td>Password( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Property</td>
+<tr class="row-even"><td>Property</td>
 <td><p class="first">Property( [<em>fget</em> = None, <em>fset</em> = None, <em>fvalidate</em> =
 None, <em>force</em> = False, <em>handler</em> = None, <em>trait</em> = None,
 ** <em>metadata</em>] )</p>
-<p class="last">See <a class="reference internal" href="advanced.html#property-traits"><em>Property Traits</em></a>, for details.</p>
+<p class="last">See <a class="reference internal" href="advanced.html#property-traits"><span class="std std-ref">Property Traits</span></a>, for details.</p>
 </td>
 </tr>
-<tr class="row-even"><td>Python</td>
+<tr class="row-odd"><td>Python</td>
 <td>Python ( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>PythonValue</td>
+<tr class="row-even"><td>PythonValue</td>
 <td>PythonValue( [<em>value</em> = None, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Range</td>
+<tr class="row-odd"><td>Range</td>
 <td>Range( [<em>low</em> = None, <em>high</em> = None, <em>value</em> = None,
 <em>exclude_low</em> = False, <em>exclude_high</em> = False,
 *<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>ReadOnly</td>
+<tr class="row-even"><td>ReadOnly</td>
 <td>ReadOnly( [<em>value</em> = Undefined, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>Regex</td>
+<tr class="row-odd"><td>Regex</td>
 <td>Regex( [<em>value</em> = &#8216;&#8217;, <em>regex</em> = &#8216;.*&#8217;, **<em>metadata</em>])</td>
 </tr>
-<tr class="row-odd"><td>RGBColor</td>
+<tr class="row-even"><td>RGBColor</td>
 <td>RGBColor( [*<em>args</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>self</td>
+<tr class="row-odd"><td>self</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>Set</td>
+<tr class="row-even"><td>Set</td>
 <td>Set( [<em>trait</em> = None, <em>value</em> = None, <em>items</em> = True,
 **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>String</td>
+<tr class="row-odd"><td>String</td>
 <td>String( [<em>value</em> = &#8216;&#8217;, <em>minlen</em> = 0, <em>maxlen</em> =
 sys.maxint, <em>regex</em> = &#8216;&#8217;, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>This</td>
+<tr class="row-even"><td>This</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>ToolbarButton</td>
+<tr class="row-odd"><td>ToolbarButton</td>
 <td>ToolbarButton( [<em>label</em> = &#8216;&#8217;, <em>image</em> = None, <em>style</em> =
 &#8216;toolbar&#8217;, <em>orientation</em> = &#8216;vertical&#8217;, <em>width_padding</em> =
 2, <em>height_padding</em> = 2, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>true</td>
+<tr class="row-even"><td>true</td>
 <td>n/a</td>
 </tr>
-<tr class="row-even"><td>Tuple</td>
+<tr class="row-odd"><td>Tuple</td>
 <td>Tuple( [*<em>traits</em>, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-odd"><td>Type</td>
+<tr class="row-even"><td>Type</td>
 <td>Type( [<em>value</em> = None, <em>klass</em> = None, <em>allow_none</em> =
 True, **<em>metadata</em>] )</td>
 </tr>
-<tr class="row-even"><td>undefined</td>
+<tr class="row-odd"><td>undefined</td>
 <td>n/a</td>
 </tr>
-<tr class="row-odd"><td>UStr</td>
+<tr class="row-even"><td>UStr</td>
 <td>UStr( [<em>owner</em>, <em>list_name</em>, <em>str_name</em>, <em>default_value =
 NoDefaultSpecified, ***metadata</em>])</td>
 </tr>
-<tr class="row-even"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
+<tr class="row-odd"><td>UUID <a class="footnote-reference" href="#id15" id="id8">[3]</a></td>
 <td>UUID( [**<em>metadata</em>] )</td>
+</tr>
+<tr class="row-even"><td>ValidatedTuple</td>
+<td>ValidatedTuple( [*<em>traits</em>, <em>fvalidate</em> = None,
+<em>fvalidate_info</em> = &#8216;&#8217; , **<em>metadata</em>] )</td>
 </tr>
 <tr class="row-odd"><td>WeakRef</td>
 <td>WeakRef( [<em>klass</em> = &#8216;traits.HasTraits&#8217;,
@@ -500,9 +496,9 @@ NoDefaultSpecified, ***metadata</em>])</td>
 class (or a subclass) as the enclosing class. The default value of This is
 None; the default value of <strong>self</strong> is the object containing the attribute.</p>
 <p id="index-27">The following is an example of using This:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># this.py --- Example of This predefined trait</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># this.py --- Example of This predefined trait</span>
 
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">This</span>
@@ -511,9 +507,9 @@ None; the default value of <strong>self</strong> is the object containing the at
 <p>This example defines an Employee class, which has a <strong>manager</strong> trait
 attribute, which accepts only other Employee instances as its value. It might
 be more intuitive to write the following:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># bad_self_ref.py --- Non-working example with self- referencing</span>
-<span class="c">#                     class definition</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># bad_self_ref.py --- Non-working example with self- referencing</span>
+<span class="c1">#                     class definition</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
 <span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Employee</span><span class="p">)</span>
 </pre></div>
@@ -524,7 +520,7 @@ main reason for providing the This trait.</p>
 <p>Note that if a trait attribute is defined using This on one class and is
 referenced on an instance of a subclass, the This trait verifies values based
 on the class on which it was defined. For example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">This</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Employee</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>   <span class="n">manager</span> <span class="o">=</span> <span class="n">This</span>
 <span class="gp">...</span>
@@ -533,10 +529,10 @@ on the class on which it was defined. For example:</p>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fred</span> <span class="o">=</span> <span class="n">Employee</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mary</span> <span class="o">=</span> <span class="n">Executive</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># The following is OK, because fred&#39;s manager can be an</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># instance of Employee or any subclass.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The following is OK, because fred&#39;s manager can be an</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># instance of Employee or any subclass.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fred</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">mary</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># This is also OK, because mary&#39;s manager can be an Employee</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This is also OK, because mary&#39;s manager can be an Employee</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">mary</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">fred</span>
 </pre></div>
 </div>
@@ -553,37 +549,60 @@ value.</p>
 <p id="index-29">A trait defined in this fashion can accept only values that are contained in
 the list of permitted values. The default value is the first value specified;
 it is also a valid value for assignment.</p>
-<div class="highlight-python"><div class="highlight"><pre>&gt;&gt;&gt; from traits.api import Enum, HasTraits, Str
-&gt;&gt;&gt; class InventoryItem(HasTraits):
-...    name  = Str # String value, default is &#39;&#39;
-...    stock = Enum(None, 0, 1, 2, 3, &#39;many&#39;)
-...            # Enumerated list, default value is
-...            #&#39;None&#39;
-...
-&gt;&gt;&gt; hats = InventoryItem()
-&gt;&gt;&gt; hats.name = &#39;Stetson&#39;
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">name</span>  <span class="o">=</span> <span class="n">Str</span> <span class="c1"># String value, default is &#39;&#39;</span>
+<span class="gp">... </span>   <span class="n">stock</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">)</span>
+<span class="gp">... </span>           <span class="c1"># Enumerated list, default value is</span>
+<span class="gp">... </span>           <span class="c1">#&#39;None&#39;</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span> <span class="o">=</span> <span class="n">InventoryItem</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Stetson&#39;</span>
 
-&gt;&gt;&gt; print &#39;%s: %s&#39; % (hats.name, hats.stock)
-Stetson: None
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">hats</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">hats</span><span class="o">.</span><span class="n">stock</span><span class="p">)</span>
+<span class="go">Stetson: None</span>
 
-&gt;&gt;&gt; hats.stock = 2      # OK
-&gt;&gt;&gt; hats.stock = &#39;many&#39; # OK
-&gt;&gt;&gt; hats.stock = 4      # Error, value is not in \
-&gt;&gt;&gt;                     # permitted list
-Traceback (most recent call last):
-  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
-  File &quot;c:\svn\ets3\traits_3.0.3\enthought\traits\trait_handlers.py&quot;, line 175,
-in error value )
-traits.trait_errors.TraitError: The &#39;stock&#39; trait of an InventoryItem
-instance must be None or 0 or 1 or 2 or 3 or &#39;many&#39;, but a value of 4 &lt;type
-&#39;int&#39;&gt; was specified.
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="mi">2</span>      <span class="c1"># OK</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="s1">&#39;many&#39;</span> <span class="c1"># OK</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="mi">4</span>      <span class="c1"># Error, value is not in \</span>
+<span class="gp">&gt;&gt;&gt; </span>                    <span class="c1"># permitted list</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">traits.trait_errors.TraitError</span>: <span class="n">The &#39;stock&#39; trait of an InventoryItem</span>
+<span class="go">instance must be None or 0 or 1 or 2 or 3 or &#39;many&#39;, but a value of 4</span>
+<span class="go">&lt;type &#39;int&#39;&gt; was specified.</span>
 </pre></div>
 </div>
-<p>This example defines an InventoryItem class, with two trait attributes,
+<p>This defines an <code class="xref py py-class docutils literal"><span class="pre">InventoryItem</span></code> class, with two trait attributes,
 <strong>name</strong>, and <strong>stock</strong>. The name attribute is simply a string. The <strong>stock</strong>
 attribute has an initial value of None, and can be assigned the values None, 0,
 1, 2, 3, and &#8216;many&#8217;. The example then creates an instance of the InventoryItem
 class named <strong>hats</strong>, and assigns values to its attributes.</p>
+<p>When the list of possible values can change during the lifetime of the object,
+one can specify <strong>another trait</strong> that holds the list of possible values:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">List</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InventoryItem</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">possible_stock_states</span> <span class="o">=</span> <span class="n">List</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;many&#39;</span><span class="p">])</span>
+<span class="gp">... </span>   <span class="n">stock</span> <span class="o">=</span> <span class="n">Enum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;possible_stock_states&quot;</span><span class="p">)</span>
+<span class="gp">... </span>           <span class="c1"># Enumerated list, default value is 0. The list of</span>
+<span class="gp">... </span>           <span class="c1"># allowed values is whatever possible_stock_states holds</span>
+<span class="gp">...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span> <span class="o">=</span> <span class="n">InventoryItem</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="mi">2</span>      <span class="c1"># OK</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="mi">4</span>      <span class="c1"># TraitError like above</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">traits.trait_errors.TraitError</span>: <span class="n">The &#39;stock&#39; trait of an InventoryItem</span>
+<span class="go">instance must be None or 0 or 1 or 2 or 3 or &#39;many&#39;, but a value of 4</span>
+<span class="go">&lt;type &#39;int&#39;&gt; was specified.</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">possible_stock_states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Add 4 to list of allowed values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hats</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="mi">4</span>      <span class="c1"># OK</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -610,14 +629,14 @@ and can be queried:</p>
 returns Undefined.</li>
 <li><strong>default_kind</strong>: Returns a string describing the type of value returned by
 the default attribute for the trait. The possible values are:<ul>
-<li><tt class="docutils literal"><span class="pre">value</span></tt>: The default attribute returns the actual default value.</li>
-<li><tt class="docutils literal"><span class="pre">list</span></tt>: A copy of the list default value.</li>
-<li><tt class="docutils literal"><span class="pre">dict</span></tt>: A copy of the dictionary default value.</li>
-<li><tt class="docutils literal"><span class="pre">self</span></tt>: The default value is the object the trait is bound to; the
+<li><code class="docutils literal"><span class="pre">value</span></code>: The default attribute returns the actual default value.</li>
+<li><code class="docutils literal"><span class="pre">list</span></code>: A copy of the list default value.</li>
+<li><code class="docutils literal"><span class="pre">dict</span></code>: A copy of the dictionary default value.</li>
+<li><code class="docutils literal"><span class="pre">self</span></code>: The default value is the object the trait is bound to; the
 <strong>default</strong> attribute returns Undefined.</li>
-<li><tt class="docutils literal"><span class="pre">factory</span></tt>: The default value is created by calling a factory; the
+<li><code class="docutils literal"><span class="pre">factory</span></code>: The default value is created by calling a factory; the
 <strong>default</strong> attribute returns Undefined.</li>
-<li><tt class="docutils literal"><span class="pre">method</span></tt>: The default value is created by calling a method on the object
+<li><code class="docutils literal"><span class="pre">method</span></code>: The default value is created by calling a method on the object
 the trait is bound to; the <strong>default</strong> attribute returns Undefined.</li>
 </ul>
 </li>
@@ -629,15 +648,15 @@ it contains the traits that define the items in the list or the keys and
 values in the dictionary.</li>
 <li><strong>parent</strong>: The trait from which this one is derived.</li>
 <li><strong>prefix</strong>: A prefix or substitution applied to the delegate attribute.
-See <a class="reference internal" href="deferring.html#deferring-traits"><em>Deferring Trait Definitions</em></a> for details.</li>
+See <a class="reference internal" href="deferring.html#deferring-traits"><span class="std std-ref">Deferring Trait Definitions</span></a> for details.</li>
 <li><strong>trait_type</strong>: Returns the type of the trait, which is typically a handler
 derived from TraitType.</li>
 <li><strong>type</strong>: One of the following, depending on the nature of the trait:<ul>
-<li><tt class="docutils literal"><span class="pre">constant</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">delegate</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">event</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">property</span></tt></li>
-<li><tt class="docutils literal"><span class="pre">trait</span></tt></li>
+<li><code class="docutils literal"><span class="pre">constant</span></code></li>
+<li><code class="docutils literal"><span class="pre">delegate</span></code></li>
+<li><code class="docutils literal"><span class="pre">event</span></code></li>
+<li><code class="docutils literal"><span class="pre">property</span></code></li>
+<li><code class="docutils literal"><span class="pre">trait</span></code></li>
 </ul>
 </li>
 </ul>
@@ -650,7 +669,9 @@ HasTraits objects:</p>
 <li><strong>desc</strong>: A string describing the intended meaning of the trait. It is used
 in exception messages and fly-over help in user interface trait editors.</li>
 <li><strong>editor</strong>: Specifies an instance of a subclass of TraitEditor to use when
-creating a user interface editor for the trait. Refer to the <a class="reference external" href="http://github.enthought.com/traitsui/index.html">TraitsUI User Manual</a> for more information on trait editors.</li>
+creating a user interface editor for the trait. Refer to the
+<a class="reference external" href="http://docs.enthought.com/traitsui/traitsui_user_manual/index.html">TraitsUI User Manual</a>
+for more information on trait editors.</li>
 <li><strong>label</strong>: A string providing a human-readable name for the trait. It is
 used to label trait attribute values in user interface trait editors.</li>
 <li><strong>rich_compare</strong>: A Boolean indicating whether the basis for considering a
@@ -671,23 +692,23 @@ predefined traits is False (the value will be persisted if its container is).
 You can set it to True for traits whose values you know you do not want to
 persist. Do not set it to True on traits where it is set internally to
 False, as doing so is likely to create unintended consequences. See
-<a class="reference internal" href="advanced.html#persistence"><em>Persistence</em></a> for more information.</li>
+<a class="reference internal" href="advanced.html#persistence"><span class="std std-ref">Persistence</span></a> for more information.</li>
 </ul>
 <p>Other metadata attributes may be recognized by specific predefined traits.</p>
 </div>
 <div class="section" id="accessing-metadata-attributes">
 <span id="index-41"></span><span id="id13"></span><h3>Accessing Metadata Attributes<a class="headerlink" href="#accessing-metadata-attributes" title="Permalink to this headline">¶</a></h3>
 <p id="index-42">Here is an example of setting trait metadata using keyword arguments:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># keywords.py --- Example of trait keywords</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># keywords.py --- Example of trait keywords</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Str</span>
 
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
-    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-                     <span class="n">desc</span><span class="o">=</span><span class="s">&#39;first or personal name&#39;</span><span class="p">,</span>
-                     <span class="n">label</span><span class="o">=</span><span class="s">&#39;First Name&#39;</span><span class="p">)</span>
-    <span class="n">last_name</span> <span class="o">=</span>  <span class="n">Str</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-                     <span class="n">desc</span><span class="o">=</span><span class="s">&#39;last or family name&#39;</span><span class="p">,</span>
-                     <span class="n">label</span><span class="o">=</span><span class="s">&#39;Last Name&#39;</span><span class="p">)</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                     <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;first or personal name&#39;</span><span class="p">,</span>
+                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;First Name&#39;</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span>  <span class="n">Str</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                     <span class="n">desc</span><span class="o">=</span><span class="s1">&#39;last or family name&#39;</span><span class="p">,</span>
+                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Last Name&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this example, in a user interface editor for a Person object, the labels
@@ -700,8 +721,8 @@ name&#8221; when moused over.</p>
 <p>To get the value of a trait metadata attribute, you can use the trait() method
 on a HasTraits object to get a reference to a specific trait, and then access
 the metadata attribute:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="c"># metadata.py --- Example of accessing trait metadata attributes</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> \
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># metadata.py --- Example of accessing trait metadata attributes</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> \
                                  <span class="n">Instance</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">TraitType</span>
 
 <span class="k">class</span> <span class="nc">Foo</span><span class="p">(</span> <span class="n">HasTraits</span> <span class="p">):</span> <span class="k">pass</span>
@@ -714,32 +735,32 @@ the metadata attribute:</p>
 
 <span class="n">t</span> <span class="o">=</span> <span class="n">Test</span><span class="p">()</span>
 
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                      <span class="c"># 99</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>                 <span class="c"># value</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>                 <span class="c"># ()</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Int</span> <span class="p">)</span>         <span class="c"># True</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span>       <span class="c"># False</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                      <span class="c1"># 99</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>                 <span class="c1"># value</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>                 <span class="c1"># ()</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Int</span> <span class="p">)</span>         <span class="c1"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;i&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span>       <span class="c1"># False</span>
 
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                     <span class="c"># []</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>                <span class="c"># list</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>
-         <span class="c"># (&lt;traits.traits.CTrait object at 0x01B24138&gt;,)</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span> <span class="p">)</span>       <span class="c"># True</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">TraitType</span> <span class="p">)</span>  <span class="c"># True</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span>      <span class="c"># False</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span> <span class="c"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                     <span class="c1"># []</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>                <span class="c1"># list</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>
+         <span class="c1"># (&lt;traits.traits.CTrait object at 0x01B24138&gt;,)</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span> <span class="p">)</span>       <span class="c1"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">TraitType</span> <span class="p">)</span>  <span class="c1"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span>      <span class="c1"># False</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;lf&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Float</span> <span class="p">)</span> <span class="c1"># True</span>
 
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                    <span class="c"># &lt;undefined&gt;</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>               <span class="c"># factory</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>               <span class="c"># ()</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Instance</span> <span class="p">)</span>  <span class="c"># True</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span>  <span class="p">)</span>     <span class="c"># False</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                    <span class="c1"># &lt;undefined&gt;</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>               <span class="c1"># factory</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>               <span class="c1"># ()</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Instance</span> <span class="p">)</span>  <span class="c1"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;foo&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span>  <span class="p">)</span>     <span class="c1"># False</span>
 
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                    <span class="c"># [1, 2, 3]</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>               <span class="c"># list</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>               <span class="c"># ()</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Any</span> <span class="p">)</span>       <span class="c"># True</span>
-<span class="k">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span> <span class="p">)</span>      <span class="c"># False</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default</span>                    <span class="c1"># [1, 2, 3]</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">default_kind</span>               <span class="c1"># list</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">inner_traits</span>               <span class="c1"># ()</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">Any</span> <span class="p">)</span>       <span class="c1"># True</span>
+<span class="nb">print</span> <span class="n">t</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span> <span class="s1">&#39;any&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">is_trait_type</span><span class="p">(</span> <span class="n">List</span> <span class="p">)</span>      <span class="c1"># False</span>
 </pre></div>
 </div>
 <p class="rubric">Footnotes</p>
@@ -767,7 +788,7 @@ existing traits.</td></tr>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -797,19 +818,25 @@ existing traits.</td></tr>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="intro.html"
-                        title="previous chapter">Introduction</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="notification.html"
-                        title="next chapter">Trait Notification</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/traits_user_manual/defining.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Traits 4 User Manual</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="notification.html" title="next chapter">Trait Notification</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/traits_user_manual/defining.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -817,39 +844,26 @@ existing traits.</td></tr>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="notification.html" title="Trait Notification"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="intro.html" title="Introduction"
-             >previous</a> |</li>
-        <li><a href="../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="index.html" >Traits 4 User Manual</a> &raquo;</li>
-  
-    <li><a href="#">Defining Traits: Initialization and Validation</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/traits_user_manual/defining.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>

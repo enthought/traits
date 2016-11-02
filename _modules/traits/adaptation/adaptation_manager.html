@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,42 +26,34 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.adaptation.adaptation_manager</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.adaptation.adaptation_manager</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c"># Copyright (c) 2013, Enthought, Inc.</span>
-<span class="c"># All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># This software is provided without warranty under the terms of the BSD</span>
-<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c"># under the conditions described in the aforementioned license.  The license</span>
-<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c"># Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c"># Author: Enthought, Inc.</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2013, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 <span class="sd">&quot;&quot;&quot; Manages all registered adaptations. &quot;&quot;&quot;</span>
 
 
@@ -83,13 +75,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">adaptee</span>
+    <span class="k">return</span> <span class="n">adaptee</span></div>
 
-</div>
+
 <div class="viewcode-block" id="AdaptationManager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager">[docs]</a><span class="k">class</span> <span class="nc">AdaptationManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Manages all registered adaptations. &quot;&quot;&quot;</span>
 
-    <span class="c">#### &#39;AdaptationManager&#39; class protocol ###################################</span>
+    <span class="c1">#### &#39;AdaptationManager&#39; class protocol ###################################</span>
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="AdaptationManager.mro_distance_to_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.mro_distance_to_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">mro_distance_to_protocol</span><span class="p">(</span><span class="n">from_type</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
@@ -107,11 +99,11 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">from_type</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">None</span>
 
-        <span class="c"># We walk up the MRO hierarchy until the point where the `to_protocol`</span>
-        <span class="c"># is *no longer* provided. When we reach that point we know that the</span>
-        <span class="c"># previous class in the MRO is the one that provided the protocol in</span>
-        <span class="c"># the first place (e.g., the first super-class implementing an</span>
-        <span class="c"># interface).</span>
+        <span class="c1"># We walk up the MRO hierarchy until the point where the `to_protocol`</span>
+        <span class="c1"># is *no longer* provided. When we reach that point we know that the</span>
+        <span class="c1"># previous class in the MRO is the one that provided the protocol in</span>
+        <span class="c1"># the first place (e.g., the first super-class implementing an</span>
+        <span class="c1"># interface).</span>
         <span class="n">supertypes</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">from_type</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
 
         <span class="n">distance</span> <span class="o">=</span> <span class="mi">0</span>
@@ -119,35 +111,48 @@
             <span class="k">if</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
                 <span class="n">distance</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="c"># We have reached the point in the MRO where the protocol is no</span>
-            <span class="c"># longer provided.</span>
+            <span class="c1"># We have reached the point in the MRO where the protocol is no</span>
+            <span class="c1"># longer provided.</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">break</span>
 
-        <span class="k">return</span> <span class="n">distance</span>
-</div>
+        <span class="k">return</span> <span class="n">distance</span></div>
+
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="AdaptationManager.provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.provides_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does the given type provide (i.e implement) a given protocol?</span>
 
-<span class="sd">        &#39;type_&#39;    is a Python &#39;type&#39;.</span>
-<span class="sd">        &#39;protocol&#39; is either a regular Python class or a traits Interface.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        type_ :</span>
+<span class="sd">          Python &#39;type&#39;.</span>
 
-<span class="sd">        Return True if the object provides the protocol, otherwise False.</span>
+<span class="sd">        protocol :</span>
+<span class="sd">          Either a regular Python class or a traits Interface.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        result : bool</span>
+<span class="sd">          True if the object provides the protocol, otherwise False.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># We do the &#39;is&#39; check first as a performance improvement to save us</span>
-        <span class="c"># a call to &#39;issubclass&#39;.</span>
-        <span class="k">return</span> <span class="n">type_</span> <span class="ow">is</span> <span class="n">protocol</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+        <span class="c1"># We do the &#39;is&#39; check first as a performance improvement to save us</span>
+        <span class="c1"># a call to &#39;issubclass&#39;.</span>
+        <span class="k">return</span> <span class="n">type_</span> <span class="ow">is</span> <span class="n">protocol</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
 
-    <span class="c">#### &#39;AdaptationManager&#39; protocol ##########################################</span>
-</div>
+    <span class="c1">#### &#39;AdaptationManager&#39; protocol ##########################################</span>
+
 <div class="viewcode-block" id="AdaptationManager.adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.adapt">[docs]</a>    <span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Attempt to adapt an object to a given protocol.</span>
 
-<span class="sd">        `adaptee`     is the object that we want to adapt.</span>
-<span class="sd">        `to_protocol` is the protocol that the want to adapt the object to.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        adaptee :</span>
+<span class="sd">          The object that we want to adapt.</span>
+
+<span class="sd">        to_protocol :</span>
+<span class="sd">          The protocol that the want to adapt the object to.</span>
 
 <span class="sd">        If `adaptee` already provides (i.e. implements) the given protocol</span>
 <span class="sd">        then it is simply returned unchanged.</span>
@@ -161,26 +166,26 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># If the object already provides the given protocol then it is</span>
-        <span class="c"># simply returned.</span>
-        <span class="c"># We use adaptee.__class__ instead of type(adaptee) as a courtesy to</span>
-        <span class="c"># old-style classes.</span>
+        <span class="c1"># If the object already provides the given protocol then it is</span>
+        <span class="c1"># simply returned.</span>
+        <span class="c1"># We use adaptee.__class__ instead of type(adaptee) as a courtesy to</span>
+        <span class="c1"># old-style classes.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">adaptee</span><span class="o">.</span><span class="n">__class__</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="n">adaptee</span>
 
-        <span class="c"># Otherwise, try adapting the object.</span>
+        <span class="c1"># Otherwise, try adapting the object.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">AdaptationError</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">AdaptationError</span><span class="p">(</span>
-                    <span class="s">&#39;Could not adapt </span><span class="si">%r</span><span class="s"> to </span><span class="si">%r</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">))</span>
+                    <span class="s1">&#39;Could not adapt </span><span class="si">%r</span><span class="s1"> to </span><span class="si">%r</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="n">default</span>
 
-        <span class="k">return</span> <span class="n">result</span>
-</div>
+        <span class="k">return</span> <span class="n">result</span></div>
+
 <div class="viewcode-block" id="AdaptationManager.register_offer"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.register_offer">[docs]</a>    <span class="k">def</span> <span class="nf">register_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offer</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Register an offer to adapt from one protocol to another. &quot;&quot;&quot;</span>
 
@@ -189,8 +194,8 @@
         <span class="p">)</span>
         <span class="n">offers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span>
 
-        <span class="k">return</span>
-</div>
+        <span class="k">return</span></div>
+
 <div class="viewcode-block" id="AdaptationManager.register_factory"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.register_factory">[docs]</a>    <span class="k">def</span> <span class="nf">register_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Register an adapter factory.</span>
 
@@ -209,15 +214,15 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="k">return</span>
-</div>
+        <span class="k">return</span></div>
+
 <div class="viewcode-block" id="AdaptationManager.register_provides"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.register_provides">[docs]</a>    <span class="k">def</span> <span class="nf">register_provides</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Register that a protocol provides another. &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">register_factory</span><span class="p">(</span><span class="n">no_adapter_necessary</span><span class="p">,</span> <span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
 
-        <span class="k">return</span>
-</div>
+        <span class="k">return</span></div>
+
 <div class="viewcode-block" id="AdaptationManager.supports_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.AdaptationManager.supports_protocol">[docs]</a>    <span class="k">def</span> <span class="nf">supports_protocol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Does the object support a given protocol?</span>
 
@@ -226,13 +231,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span></div>
 
-    <span class="c">#### Private protocol #####################################################</span>
+    <span class="c1">#### Private protocol #####################################################</span>
 
-    <span class="c">#: All registered adaptation offers.</span>
-    <span class="c">#: Keys are the type name of the offer&#39;s from_protocol; values are a</span>
-    <span class="c">#: list of adaptation offers.</span></div>
+    <span class="c1">#: All registered adaptation offers.</span>
+    <span class="c1">#: Keys are the type name of the offer&#39;s from_protocol; values are a</span>
+    <span class="c1">#: list of adaptation offers.</span>
     <span class="n">_adaptation_offers</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">List</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
@@ -242,100 +247,100 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c"># The algorithm for finding a sequence of adapters adapting &#39;adaptee&#39;</span>
-        <span class="c"># to &#39;to_protocol&#39; is based on a weighted graph.</span>
+        <span class="c1"># The algorithm for finding a sequence of adapters adapting &#39;adaptee&#39;</span>
+        <span class="c1"># to &#39;to_protocol&#39; is based on a weighted graph.</span>
 
-        <span class="c"># Nodes on the graphs are protocols (types or interfaces).</span>
-        <span class="c"># Edges are adaptation offers that connect a offer.from_protocol to a</span>
-        <span class="c"># offer.to_protocol.</span>
-        <span class="c"># Edges connect protocol A to protocol B and are weighted by two</span>
-        <span class="c"># numbers in this priority:</span>
-        <span class="c"># 1) a unit weight (1) representing the fact that we use 1 adaptation</span>
-        <span class="c">#    offer to go from A to B</span>
-        <span class="c"># 2) the number of steps up the type hierarchy that we need to take</span>
-        <span class="c">#    to go from A to offer.from_protocol, so that more specific</span>
-        <span class="c">#    adapters are always preferred</span>
+        <span class="c1"># Nodes on the graphs are protocols (types or interfaces).</span>
+        <span class="c1"># Edges are adaptation offers that connect a offer.from_protocol to a</span>
+        <span class="c1"># offer.to_protocol.</span>
+        <span class="c1"># Edges connect protocol A to protocol B and are weighted by two</span>
+        <span class="c1"># numbers in this priority:</span>
+        <span class="c1"># 1) a unit weight (1) representing the fact that we use 1 adaptation</span>
+        <span class="c1">#    offer to go from A to B</span>
+        <span class="c1"># 2) the number of steps up the type hierarchy that we need to take</span>
+        <span class="c1">#    to go from A to offer.from_protocol, so that more specific</span>
+        <span class="c1">#    adapters are always preferred</span>
 
-        <span class="c"># The algorithm finds the shortest weighted path between &#39;adaptee&#39;</span>
-        <span class="c"># and &#39;to_protocol&#39;. Once a candidate path is found, it tries to</span>
-        <span class="c"># create the adapters using the factories in the adaptation offers</span>
-        <span class="c"># that compose the path. If this fails because of conditional</span>
-        <span class="c"># adaptation (i.e., an adapter factory returns None), the path</span>
-        <span class="c"># is discarded and the algorithm looks for the next shortest path.</span>
+        <span class="c1"># The algorithm finds the shortest weighted path between &#39;adaptee&#39;</span>
+        <span class="c1"># and &#39;to_protocol&#39;. Once a candidate path is found, it tries to</span>
+        <span class="c1"># create the adapters using the factories in the adaptation offers</span>
+        <span class="c1"># that compose the path. If this fails because of conditional</span>
+        <span class="c1"># adaptation (i.e., an adapter factory returns None), the path</span>
+        <span class="c1"># is discarded and the algorithm looks for the next shortest path.</span>
 
-        <span class="c"># Cycles in adaptation are avoided by only considering path were</span>
-        <span class="c"># every adaptation offer is used at most once.</span>
+        <span class="c1"># Cycles in adaptation are avoided by only considering path were</span>
+        <span class="c1"># every adaptation offer is used at most once.</span>
 
-        <span class="c"># The implementation of the algorithm is based on a priority queue,</span>
-        <span class="c"># &#39;offer_queue&#39;.</span>
-        <span class="c">#</span>
-        <span class="c"># Each value in the queue has got two parts,</span>
-        <span class="c"># one is the adaptation path, i.e., the sequence of adaptation offers</span>
-        <span class="c"># followed so far; the second value is the protocol of the last</span>
-        <span class="c"># visited node.</span>
-        <span class="c">#</span>
-        <span class="c"># The priority in the queue is the sum of all the weights for the</span>
-        <span class="c"># edges traversed in the path.</span>
+        <span class="c1"># The implementation of the algorithm is based on a priority queue,</span>
+        <span class="c1"># &#39;offer_queue&#39;.</span>
+        <span class="c1">#</span>
+        <span class="c1"># Each value in the queue has got two parts,</span>
+        <span class="c1"># one is the adaptation path, i.e., the sequence of adaptation offers</span>
+        <span class="c1"># followed so far; the second value is the protocol of the last</span>
+        <span class="c1"># visited node.</span>
+        <span class="c1">#</span>
+        <span class="c1"># The priority in the queue is the sum of all the weights for the</span>
+        <span class="c1"># edges traversed in the path.</span>
 
-        <span class="c"># Unique sequence counter to make the priority list stable</span>
-        <span class="c"># w.r.t the sequence of insertion.</span>
+        <span class="c1"># Unique sequence counter to make the priority list stable</span>
+        <span class="c1"># w.r.t the sequence of insertion.</span>
         <span class="n">counter</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 
-        <span class="c"># The priority queue containing entries of the form</span>
-        <span class="c"># (cumulative weight, path, current protocol) describing an</span>
-        <span class="c"># adaptation path starting at `adaptee`, following a sequence</span>
-        <span class="c"># of adaptation offers, `path`, and having weight `cumulative_weight`.</span>
-        <span class="c">#</span>
-        <span class="c"># &#39;cumulative weight&#39; is a tuple of the form</span>
-        <span class="c"># (number of traversed adapters,</span>
-        <span class="c">#  number of steps up protocol hierarchies,</span>
-        <span class="c">#  counter)</span>
-        <span class="c">#</span>
-        <span class="c"># The counter is an increasing number, and is used to make the</span>
-        <span class="c"># priority queue stable w.r.t insertion time</span>
-        <span class="c"># (see http://bit.ly/13VxILn).</span>
+        <span class="c1"># The priority queue containing entries of the form</span>
+        <span class="c1"># (cumulative weight, path, current protocol) describing an</span>
+        <span class="c1"># adaptation path starting at `adaptee`, following a sequence</span>
+        <span class="c1"># of adaptation offers, `path`, and having weight `cumulative_weight`.</span>
+        <span class="c1">#</span>
+        <span class="c1"># &#39;cumulative weight&#39; is a tuple of the form</span>
+        <span class="c1"># (number of traversed adapters,</span>
+        <span class="c1">#  number of steps up protocol hierarchies,</span>
+        <span class="c1">#  counter)</span>
+        <span class="c1">#</span>
+        <span class="c1"># The counter is an increasing number, and is used to make the</span>
+        <span class="c1"># priority queue stable w.r.t insertion time</span>
+        <span class="c1"># (see http://bit.ly/13VxILn).</span>
         <span class="n">offer_queue</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">next</span><span class="p">(</span><span class="n">counter</span><span class="p">)),</span> <span class="p">[],</span> <span class="nb">type</span><span class="p">(</span><span class="n">adaptee</span><span class="p">))]</span>
 
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">offer_queue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c"># Get the most specific candidate path for adaptation.</span>
+            <span class="c1"># Get the most specific candidate path for adaptation.</span>
             <span class="n">weight</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">current_protocol</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="n">offer_queue</span><span class="p">)</span>
 
             <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_applicable_offers</span><span class="p">(</span><span class="n">current_protocol</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
-            <span class="c"># Sort by weight first, then by from_protocol type.</span>
+            <span class="c1"># Sort by weight first, then by from_protocol type.</span>
             <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">cmp</span><span class="o">=</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c"># functools.cmp_to_key is available from 2.7 and 3.2</span>
+                <span class="c1"># functools.cmp_to_key is available from 2.7 and 3.2</span>
                 <span class="n">edges</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">functools</span><span class="o">.</span><span class="n">cmp_to_key</span><span class="p">(</span><span class="n">_by_weight_then_from_protocol_specificity</span><span class="p">))</span>
-                
 
-            <span class="c"># At this point, the first edges are the shortest ones. Within</span>
-            <span class="c"># edges with the same distance, interfaces which are subclasses</span>
-            <span class="c"># of other interfaces in that group come first. The rest of</span>
-            <span class="c"># the order is unspecified.</span>
+
+            <span class="c1"># At this point, the first edges are the shortest ones. Within</span>
+            <span class="c1"># edges with the same distance, interfaces which are subclasses</span>
+            <span class="c1"># of other interfaces in that group come first. The rest of</span>
+            <span class="c1"># the order is unspecified.</span>
 
             <span class="k">for</span> <span class="n">mro_distance</span><span class="p">,</span> <span class="n">offer</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
                 <span class="n">new_path</span> <span class="o">=</span> <span class="n">path</span> <span class="o">+</span> <span class="p">[</span><span class="n">offer</span><span class="p">]</span>
 
-                <span class="c"># Check if we arrived at the target protocol.</span>
+                <span class="c1"># Check if we arrived at the target protocol.</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">offer</span><span class="o">.</span><span class="n">to_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
-                    <span class="c"># Walk path and create adapters</span>
+                    <span class="c1"># Walk path and create adapters</span>
                     <span class="n">adapter</span> <span class="o">=</span> <span class="n">adaptee</span>
                     <span class="k">for</span> <span class="n">offer</span> <span class="ow">in</span> <span class="n">new_path</span><span class="p">:</span>
                         <span class="n">adapter</span> <span class="o">=</span> <span class="n">offer</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">adapter</span><span class="p">)</span>
                         <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-                            <span class="c"># This adaptation attempt failed (e.g. because of</span>
-                            <span class="c"># conditional adaptation).</span>
-                            <span class="c"># Discard this path and continue.</span>
+                            <span class="c1"># This adaptation attempt failed (e.g. because of</span>
+                            <span class="c1"># conditional adaptation).</span>
+                            <span class="c1"># Discard this path and continue.</span>
                             <span class="k">break</span>
 
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="c"># We&#39;re done!</span>
+                        <span class="c1"># We&#39;re done!</span>
                         <span class="k">return</span> <span class="n">adapter</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c"># Push the new path on the priority queue.</span>
+                    <span class="c1"># Push the new path on the priority queue.</span>
                     <span class="n">adapter_weight</span><span class="p">,</span> <span class="n">mro_weight</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">weight</span>
                     <span class="n">new_weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">adapter_weight</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
                                   <span class="n">mro_weight</span> <span class="o">+</span> <span class="n">mro_distance</span><span class="p">,</span>
@@ -370,13 +375,13 @@
             <span class="k">if</span> <span class="n">mro_distance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
 
                 <span class="k">for</span> <span class="n">offer</span> <span class="ow">in</span> <span class="n">offers</span><span class="p">:</span>
-                    <span class="c"># Avoid cycles by checking that we did not consider this</span>
-                    <span class="c"># offer in this path.</span>
+                    <span class="c1"># Avoid cycles by checking that we did not consider this</span>
+                    <span class="c1"># offer in this path.</span>
                     <span class="k">if</span> <span class="n">offer</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
                         <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">mro_distance</span><span class="p">,</span> <span class="n">offer</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">edges</span>
-</div>
+        <span class="k">return</span> <span class="n">edges</span></div>
+
 <span class="k">def</span> <span class="nf">_by_weight_then_from_protocol_specificity</span><span class="p">(</span><span class="n">edge_1</span><span class="p">,</span> <span class="n">edge_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Comparison function for graph edges.</span>
 
@@ -390,18 +395,18 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c"># edge_1 and edge_2 are edges, of the form (mro_distance, offer)</span>
+    <span class="c1"># edge_1 and edge_2 are edges, of the form (mro_distance, offer)</span>
 
     <span class="n">mro_distance_1</span><span class="p">,</span> <span class="n">offer_1</span> <span class="o">=</span> <span class="n">edge_1</span>
     <span class="n">mro_distance_2</span><span class="p">,</span> <span class="n">offer_2</span> <span class="o">=</span> <span class="n">edge_2</span>
 
-    <span class="c"># First, compare the MRO distance.</span>
+    <span class="c1"># First, compare the MRO distance.</span>
     <span class="k">if</span> <span class="n">mro_distance_1</span> <span class="o">&lt;</span> <span class="n">mro_distance_2</span><span class="p">:</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">elif</span> <span class="n">mro_distance_1</span> <span class="o">&gt;</span> <span class="n">mro_distance_2</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">1</span>
 
-    <span class="c"># The distance is equal, prefer more specific &#39;from_protocol&#39;s</span>
+    <span class="c1"># The distance is equal, prefer more specific &#39;from_protocol&#39;s</span>
     <span class="k">if</span> <span class="n">offer_1</span><span class="o">.</span><span class="n">from_protocol</span> <span class="ow">is</span> <span class="n">offer_2</span><span class="o">.</span><span class="n">from_protocol</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>
 
@@ -413,84 +418,95 @@
     <span class="k">return</span> <span class="mi">0</span>
 
 
-<span class="c"># The default global adaptation manager.</span>
-<span class="c"># PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.</span>
-<span class="c"># If you must use a global adaptation manager, use the functions</span>
-<span class="c"># `get_global_adaptation_manager`, `reset_global_adaptation_manager`,</span>
-<span class="c"># `set_global_adaptation_manager`.</span>
+<span class="c1">#: The default global adaptation manager.</span>
+<span class="c1">#:</span>
+<span class="c1">#: PROVIDED FOR BACKWARD COMPATIBILITY ONLY, IT SHOULD NEVER BE USED DIRECTLY.</span>
+<span class="c1">#: If you must use a global adaptation manager, use the functions</span>
+<span class="c1">#: :class:`get_global_adaptation_manager`,</span>
+<span class="c1">#: :class:`reset_global_adaptation_manager`,</span>
+<span class="c1">#: :class:`set_global_adaptation_manager`.</span>
+
 <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="set_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.set_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">set_global_adaptation_manager</span><span class="p">(</span><span class="n">new_adaptation_manager</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Set the global adaptation manager to the given instance. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">adaptation_manager</span>
-    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">new_adaptation_manager</span>
+    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">new_adaptation_manager</span></div>
 
-</div>
+
 <div class="viewcode-block" id="reset_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.reset_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">reset_global_adaptation_manager</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Set the global adaptation manager to a new AdaptationManager instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">adaptation_manager</span>
-    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="p">()</span>
+    <span class="n">adaptation_manager</span> <span class="o">=</span> <span class="n">AdaptationManager</span><span class="p">()</span></div>
 
-</div>
+
 <div class="viewcode-block" id="get_global_adaptation_manager"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.get_global_adaptation_manager">[docs]</a><span class="k">def</span> <span class="nf">get_global_adaptation_manager</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Set a reference to the global adaptation manager. &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">adaptation_manager</span>
-    <span class="k">return</span> <span class="n">adaptation_manager</span>
+    <span class="k">return</span> <span class="n">adaptation_manager</span></div>
 
 
-<span class="c"># Convenience references to methods on the default adaptation manager.</span>
-<span class="c">#</span>
-<span class="c"># If you add a public method to the adaptation manager protocol then don&#39;t</span>
-<span class="c"># forget to add a convenience function here!</span>
-</div>
+<span class="c1"># Convenience references to methods on the default adaptation manager.</span>
+<span class="c1">#</span>
+<span class="c1"># If you add a public method to the adaptation manager protocol then don&#39;t</span>
+<span class="c1"># forget to add a convenience function here!</span>
+
 <div class="viewcode-block" id="adapt"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.adapt">[docs]</a><span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">AdaptationError</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Attempt to adapt an object to a given protocol. &quot;&quot;&quot;</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
 
-</div>
-<div class="viewcode-block" id="register_factory"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_factory">[docs]</a><span class="k">def</span> <span class="nf">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
+
+<div class="viewcode-block" id="register_factory"><a class="viewcode-back" href="../../../traits_user_manual/advanced.html#traits.adaptation.adaptation_manager.register_factory">[docs]</a><span class="k">def</span> <span class="nf">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Register an adapter factory. &quot;&quot;&quot;</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_factory</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">from_protocol</span><span class="p">,</span> <span class="n">to_protocol</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="register_offer"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_offer">[docs]</a><span class="k">def</span> <span class="nf">register_offer</span><span class="p">(</span><span class="n">offer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Register an offer to adapt from one protocol to another. &quot;&quot;&quot;</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_offer</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_offer</span><span class="p">(</span><span class="n">offer</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="register_provides"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.register_provides">[docs]</a><span class="k">def</span> <span class="nf">register_provides</span><span class="p">(</span><span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Register that a protocol provides another. &quot;&quot;&quot;</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_provides</span><span class="p">(</span><span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">register_provides</span><span class="p">(</span><span class="n">provider_protocol</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="supports_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.supports_protocol">[docs]</a><span class="k">def</span> <span class="nf">supports_protocol</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Does the object support a given protocol? &quot;&quot;&quot;</span>
     <span class="n">manager</span> <span class="o">=</span> <span class="n">get_global_adaptation_manager</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">supports_protocol</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">manager</span><span class="o">.</span><span class="n">supports_protocol</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
 
-</div>
+
 <div class="viewcode-block" id="provides_protocol"><a class="viewcode-back" href="../../../traits_api_reference/traits.adaptation.html#traits.adaptation.adaptation_manager.provides_protocol">[docs]</a><span class="k">def</span> <span class="nf">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Does the given type provide (i.e implement) a given protocol? &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">AdaptationManager</span><span class="o">.</span><span class="n">provides_protocol</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
 
-<span class="c">#### EOF ######################################################################</span></div>
+<span class="c1">#### EOF ######################################################################</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -498,33 +514,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.adaptation.adaptation_manager</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>

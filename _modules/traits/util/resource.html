@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
-        VERSION:     '4.5.0',
+        VERSION:     '4.6.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,43 +26,35 @@
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../../../_static/et.ico"/>
     <link rel="top" title="Traits 4 User Manual" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
-  </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li>
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
   
-    <li><a href="#">traits.util.resource</a></li>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-      </ul>
-    </div>  
+  </head>
+  <body role="document">
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for traits.util.resource</h1><div class="highlight"><pre>
-<span class="c">#------------------------------------------------------------------------------</span>
-<span class="c"># Copyright (c) 2005, Enthought, Inc.</span>
-<span class="c"># All rights reserved.</span>
-<span class="c">#</span>
-<span class="c"># This software is provided without warranty under the terms of the BSD</span>
-<span class="c"># license included in enthought/LICENSE.txt and may be redistributed only</span>
-<span class="c"># under the conditions described in the aforementioned license.  The license</span>
-<span class="c"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
-<span class="c"># Thanks for using Enthought open source!</span>
-<span class="c">#</span>
-<span class="c"># Author: Enthought, Inc.</span>
-<span class="c"># Description: &lt;Enthought util package component&gt;</span>
-<span class="c">#------------------------------------------------------------------------------</span>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought util package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
 <span class="sd">&quot;&quot;&quot; Utility functions for managing and finding resources (ie. images/files etc).</span>
 
 <span class="sd">    get_path :           Returns the absolute path of a class or instance</span>
@@ -80,7 +72,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<span class="c"># Standard library imports.</span>
+<span class="c1"># Standard library imports.</span>
 <span class="kn">import</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">distutils.sysconfig</span> <span class="kn">import</span> <span class="n">get_python_lib</span>
 
@@ -93,32 +85,32 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c"># Is this a class or an instance?</span>
+        <span class="c1"># Is this a class or an instance?</span>
         <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="n">klass</span> <span class="o">=</span> <span class="n">path</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">klass</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">__class__</span>
 
-        <span class="c"># Get the name of the module that the class was loaded from.</span>
+        <span class="c1"># Get the name of the module that the class was loaded from.</span>
         <span class="n">module_name</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="n">__module__</span>
 
-        <span class="c"># Look the module up.</span>
+        <span class="c1"># Look the module up.</span>
         <span class="n">module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
             <span class="n">dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()]</span>
             <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dirs</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
                     <span class="n">path</span> <span class="o">=</span> <span class="n">d</span>
                     <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c"># Get the path to the module.</span>
+            <span class="c1"># Get the path to the module.</span>
             <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">__file__</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">path</span>
-</div>
-<div class="viewcode-block" id="create_unique_name"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.create_unique_name">[docs]</a><span class="k">def</span> <span class="nf">create_unique_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s">&#39;_&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">path</span></div>
+
+<div class="viewcode-block" id="create_unique_name"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.create_unique_name">[docs]</a><span class="k">def</span> <span class="nf">create_unique_name</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Creates a name starting with &#39;prefix&#39; that is not in &#39;names&#39;. &quot;&quot;&quot;</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
@@ -128,8 +120,8 @@
         <span class="n">name</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">separator</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
-    <span class="k">return</span> <span class="n">name</span>
-</div>
+    <span class="k">return</span> <span class="n">name</span></div>
+
 <div class="viewcode-block" id="find_resource"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.find_resource">[docs]</a><span class="k">def</span> <span class="nf">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">alt_path</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_path</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Returns a file object or file path pointing to the desired resource.</span>
 
@@ -170,21 +162,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="c"># Get the image using the pkg_resources resource_stream module, which</span>
-        <span class="c"># will find the file by getting the Chaco install path and appending the</span>
-        <span class="c"># image path. This method works in all cases as long as setuptools is</span>
-        <span class="c"># installed. If setuptools isn&#39;t installed, the backup sys.path[0]</span>
-        <span class="c"># method is used.</span>
+        <span class="c1"># Get the image using the pkg_resources resource_stream module, which</span>
+        <span class="c1"># will find the file by getting the Chaco install path and appending the</span>
+        <span class="c1"># image path. This method works in all cases as long as setuptools is</span>
+        <span class="c1"># installed. If setuptools isn&#39;t installed, the backup sys.path[0]</span>
+        <span class="c1"># method is used.</span>
         <span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">resource_stream</span><span class="p">,</span> <span class="n">working_set</span><span class="p">,</span> <span class="n">Requirement</span>
 
-        <span class="c"># Get a requirement for the project</span>
+        <span class="c1"># Get a requirement for the project</span>
         <span class="n">requirement</span> <span class="o">=</span> <span class="n">Requirement</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
             <span class="n">dist</span> <span class="o">=</span> <span class="n">working_set</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">requirement</span><span class="p">)</span>
             <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">location</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
 
-            <span class="c"># If the path exists, return it</span>
+            <span class="c1"># If the path exists, return it</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">full_path</span>
             <span class="k">else</span><span class="p">:</span>
@@ -193,33 +185,33 @@
             <span class="k">return</span> <span class="n">resource_stream</span><span class="p">(</span><span class="n">requirement</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
 
     <span class="k">except</span><span class="p">:</span>
-        <span class="c"># Setuptools was either not installed, or it failed to find the file.</span>
-        <span class="c"># First check to see if the package was installed using egginst by</span>
-        <span class="c"># looking for the file at: site-packages\\resouce_path</span>
+        <span class="c1"># Setuptools was either not installed, or it failed to find the file.</span>
+        <span class="c1"># First check to see if the package was installed using egginst by</span>
+        <span class="c1"># looking for the file at: site-packages\\resouce_path</span>
         <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">get_python_lib</span><span class="p">(),</span> <span class="n">resource_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">full_path</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
 
-        <span class="c"># Get the image using sys.path[0], which is the directory that the</span>
-        <span class="c"># running script lives in. The path to the file is then constructed by</span>
-        <span class="c"># navigating from the script&#39;s location. This method only works if this</span>
-        <span class="c"># script is called directly from the command line using</span>
-        <span class="c"># &#39;python %SOMEPATH%/&lt;script&gt;&#39;</span>
+        <span class="c1"># Get the image using sys.path[0], which is the directory that the</span>
+        <span class="c1"># running script lives in. The path to the file is then constructed by</span>
+        <span class="c1"># navigating from the script&#39;s location. This method only works if this</span>
+        <span class="c1"># script is called directly from the command line using</span>
+        <span class="c1"># &#39;python %SOMEPATH%/&lt;script&gt;&#39;</span>
         <span class="k">if</span> <span class="n">alt_path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">if</span> <span class="n">return_path</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">)</span>
 
-        <span class="c"># Try to open the file, return None on exception</span>
+        <span class="c1"># Try to open the file, return None on exception</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">),</span> <span class="s">&#39;rb&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alt_path</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="k">return</span>
+            <span class="k">return</span></div>
 
-</div>
+
 <div class="viewcode-block" id="store_resource"><a class="viewcode-back" href="../../../traits_api_reference/traits.util.html#traits.util.resource.store_resource">[docs]</a><span class="k">def</span> <span class="nf">store_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Store the content of a resource, given by the name of the project</span>
 <span class="sd">        and the path (relative to the root of the project), into a newly</span>
@@ -233,28 +225,36 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">fi</span> <span class="o">=</span> <span class="n">find_resource</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">fi</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Resource not found for project &quot;</span><span class="si">%s</span><span class="s">&quot;: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Resource not found for project &quot;</span><span class="si">%s</span><span class="s1">&quot;: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
                            <span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">resource_path</span><span class="p">))</span>
 
-    <span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">fo</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
     <span class="n">fo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fi</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">fi</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">fi</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<span class="c">#### EOF ######################################################################</span></div>
+<span class="c1">#### EOF ######################################################################</span>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../../../index.html">
               <img class="logo" src="../../../_static/e-logo-rev.png" alt="Logo"/>
-            </a></p>
-<div id="searchbox" style="display: none">
+            </a></p><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
       <input type="text" name="q" />
@@ -262,33 +262,23 @@
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../../../genindex.html" title="General Index"
-             >index</a></li>
-        <li><a href="../../../index.html">Traits 4 User Manual</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li>
-  
-    <li><a href="#">traits.util.resource</a></li>
-  
-
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2011, Enthought.
-      Last updated on May 06, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
     </div>
+
+    
+
+    
   </body>
 </html>
