@@ -1,0 +1,7 @@
+nose
+cython
+sphinx == 1.4.8 ; python_version == '2.6'
+sphinx ; python_version >= '2.7'
+coverage
+unittest2 ; python_version == '2.6'
+numpy ; python_version >= '3.2'
