@@ -18,8 +18,8 @@ import threading
 import sys
 import warnings
 
-from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
-        Property, Str)
+from traits.api import (
+    Any, Event, HasStrictTraits, Instance, Int, List, Str, Property)
 from traits.util.async_trait_wait import wait_for_condition
 
 # Compatibility layer for Python 2.6: try loading unittest2
@@ -27,7 +27,7 @@ from traits import _py2to3
 if sys.version_info[:2] == (2, 6):
     import unittest2 as unittest
 else:
-    import unittest
+    import unittest  # noqa
 
 
 class _AssertTraitChangesContext(object):
@@ -157,12 +157,14 @@ class _TraitsChangeCollector(HasStrictTraits):
     _lock = Instance(threading.Lock, ())
 
     def __init__(self, **traits):
-        value = traits.pop('trait', None):
+        value = traits.pop('trait', None)
         if value is not None:
-            message = "The `trait` keyword is deprecated please use `monitor_traits`"
+            message = (
+                "The `trait` keyword is deprecated."
+                " please use `monitor_traits`")
             warnings.warn(message, DeprecationWarning, stacklevel=2)
             traits['monitor_traits'] = value
-        super(_TraitChangeCollector, self).__init__(**traits)
+        super(_TraitsChangeCollector, self).__init__(**traits)
 
     def start_collecting(self):
         self.obj.on_trait_change(
