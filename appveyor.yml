@@ -32,14 +32,13 @@ matrix:
 
 
 cache:
-  - c:\egg_cache
+  - C:\Users\appveyor\AppData\Local\pip\Cache
 
 init:
   - ps: $Env:sdkbin = "C:\Program Files\Microsoft SDKs\Windows\" + $Env:sdkver + "\Bin"
   - ps: $Env:sdkverpath = "C:/Program Files/Microsoft SDKs/Windows/" + $Env:sdkver + "/Setup/WindowsSdkVer.exe"
   - ps: $Env:path = $Env:python + ";" + $Env:python + "\scripts;" + $Env:sdkbin + ";" + $Env:path
 install:
-  - ps: if ((Test-Path "c:/egg_cache") -eq 0) { mkdir c:/egg_cache }
   - ps: python -m pip install --upgrade --no-binary wheel pip
   - ps: pip install --upgrade wheel
   - ps: pip --version
