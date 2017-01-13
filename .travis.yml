@@ -30,4 +30,5 @@ notifications:
   email:
     - travis-ci@enthought.com
 after_success:
-  coveralls
+  - pip install coveralls
+  - coveralls
