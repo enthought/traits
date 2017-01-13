@@ -385,7 +385,7 @@ class UnittestTools(object):
             of changes. None can be used to indicate no timeout.
 
         """
-        collector = _TraitsChangeCollector(obj=obj, trait=trait)
+        collector = _TraitsChangeCollector(obj=obj, monitor_traits=trait)
 
         # Pass control to body of the with statement.
         collector.start_collecting()
