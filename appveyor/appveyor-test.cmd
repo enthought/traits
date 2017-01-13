@@ -1,6 +1,3 @@
-"%sdkverpath%" -q -version:"%sdkver%"
-call setenv /x64
-
 mkdir testrun
 copy .coveragerc testrun
 cd testrun
