@@ -12,6 +12,12 @@ environment:
     - python: "C:/Python34-x64"
       sdkver: "v7.1"
 
+    - python: "C:/Python35-x64"
+      sdkver: "v7.1"
+
+    - python: "C:/Python36-x64"
+      sdkver: "v7.1"
+
 cache:
   - c:\egg_cache
 
