@@ -8,12 +8,28 @@ environment:
   matrix:
     - python: "C:/Python27-x64"
       sdkver: "v7.0"
+      REQUIREMENTS: "ci-requirements.txt"
 
     - python: "C:/Python33-x64"
       sdkver: "v7.1"
+      REQUIREMENTS: "ci-requirements.txt"
 
     - python: "C:/Python34-x64"
       sdkver: "v7.1"
+      REQUIREMENTS: "ci-requirements.txt"
+
+    - python: "C:/Python27-x64"
+      sdkver: "v7.0"
+      REQUIREMENTS: "ci-requirements-latest.txt"
+
+    - python: "C:/Python34-x64"
+      sdkver: "v7.1"
+      REQUIREMENTS: "ci-requirements-latest.txt"
+
+matrix:
+  allow_failures:
+  - REQUIREMENTS: "ci-requirements-latest.txt"
+
 
 cache:
   - c:\egg_cache
