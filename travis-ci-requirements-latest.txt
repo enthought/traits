@@ -1,0 +1,6 @@
+nose
+cython
+sphinx
+coverage
+coveralls
+numpy
