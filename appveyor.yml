@@ -42,7 +42,7 @@ install:
   - ps: python -m pip install --upgrade --no-binary wheel pip
   - ps: pip install --upgrade wheel
   - ps: pip --version
-  - cmd /v:on /e:on /c ".\appveyor-install.cmd"
+  - cmd /v:on /e:on /c ".\ci\appveyor-install.cmd"
 test_script:
   - ps: md testrun
   - ps: cd testrun
