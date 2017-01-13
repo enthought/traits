@@ -141,7 +141,7 @@ class _TraitsChangeCollector(HasStrictTraits):
     obj = Any
 
     # The (possibly extended) trait name.
-    trait = Str
+    monitor_traits = Str
 
     # Read-only event count.
     event_count = Property(Int)
@@ -156,16 +156,24 @@ class _TraitsChangeCollector(HasStrictTraits):
     # simultaneously.
     _lock = Instance(threading.Lock, ())
 
+    def __init__(self, **traits):
+        value = traits.pop('trait', None):
+        if value is not None:
+            message = "The `trait` keyword is deprecated please use `monitor_traits`"
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            traits['monitor_traits'] = value
+        super(_TraitChangeCollector, self).__init__(**traits)
+
     def start_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.trait,
+            self.monitor_traits,
         )
 
     def stop_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.trait,
+            self.monitor_traits,
             remove=True,
         )
 
