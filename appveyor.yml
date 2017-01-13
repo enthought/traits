@@ -29,4 +29,6 @@ install:
   - ps: pip --version
   - cmd /v:on /e:on /c ".\appveyor-install.cmd"
 test_script:
-  - cmd /v:on /e:on /c ".\appveyor-test.cmd"
+  - ps: md testrun
+  - ps: cd testrun
+  - ps: coverage run -m nose.core -v traits --exe
