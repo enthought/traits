@@ -9,9 +9,6 @@ environment:
     - python: "C:/Python27-x64"
       sdkver: "v7.0"
 
-    - python: "C:/Python33-x64"
-      sdkver: "v7.1"
-
     - python: "C:/Python34-x64"
       sdkver: "v7.1"
 
