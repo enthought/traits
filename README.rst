@@ -48,6 +48,9 @@ inherited by any subclass derived from the class.
 Dependencies
 ------------
 
+Traits runs on both Python 2 and Python 3. It requires Python 2.7
+or Python >= 3.4.
+
 Traits has the following optional dependencies:
 
 * `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types

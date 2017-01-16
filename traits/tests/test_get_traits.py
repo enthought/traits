@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, Str, Undefined, ReadOnly, Float
+from ..api import Float, HasTraits, Int, ReadOnly, Str, TraitError, Undefined
 
 
 class Foo(HasTraits):
@@ -36,12 +36,12 @@ class Bar(HasTraits):
 
 class GetTraitTestCase(unittest.TestCase):
 
-    @unittest.expectedFailure
     def test_trait_set_bad(self):
-        b = Foo()
+        b = Foo(num=23)
         # This should fail before and after #234.
-        b.num = 'first'
-        self.assertEqual(b.num, 'first')
+        with self.assertRaises(TraitError):
+            b.num = 'first'
+        self.assertEqual(b.num, 23)
 
     def test_trait_set_replaced(self):
         b = Foo()
