@@ -3,5 +3,4 @@ cython
 Sphinx
 coverage
 coveralls
-unittest2 ; python_version == '2.6'
-numpy ; python_version >= '3.2'
+numpy ; python_version >= '3.4'
