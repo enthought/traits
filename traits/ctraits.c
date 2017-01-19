@@ -1610,9 +1610,7 @@ default_value_for ( trait_object      * trait,
         case 1:
             result = trait->default_value;
             if (result == NULL) {
-                PyErr_SetString(
-                    PyExc_ValueError, "CTrait object has no default value.");
-                return NULL;
+                result = Py_None;
             }
             Py_INCREF( result );
             break;
