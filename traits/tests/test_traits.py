@@ -20,7 +20,7 @@ import sys
 from traits.testing.unittest_tools import unittest
 
 from ..api import (Any, Bytes, CBytes, CFloat, CInt, CLong, Delegate, Float,
-                   HasTraits, Instance, Int, List, Long, Str, Trait,
+                   HasTraits, Instance, Int, List, Long, Str, This, Trait,
                    TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
                    TraitRange, Tuple, pop_exception_handler,
                    push_exception_handler)
@@ -961,3 +961,33 @@ class test_list_value(test_base2):
 
     def _record_trait_list_event(self, object, name, old, new):
         self.last_event = new
+
+
+class ThisDummy(HasTraits):
+    allows_none = This()
+    disallows_none = This(allow_none=False)
+
+
+class TestThis(unittest.TestCase):
+    def test_this_none(self):
+        d = ThisDummy()
+        self.assertIsNone(d.allows_none)
+        d.allows_none = None
+        d.allows_none = ThisDummy()
+        self.assertIsNotNone(d.allows_none)
+        d.allows_none = None
+        self.assertIsNone(d.allows_none)
+
+        # Still starts out as None, unavoidably.
+        self.assertIsNone(d.disallows_none)
+        d.disallows_none = ThisDummy()
+        self.assertIsNotNone(d.disallows_none)
+        with self.assertRaises(TraitError):
+            d.disallows_none = None
+        self.assertIsNotNone(d.disallows_none)
+
+    def test_this_other_class(self):
+        d = ThisDummy()
+        with self.assertRaises(TraitError):
+            d.allows_none = object()
+        self.assertIsNone(d.allows_none)
