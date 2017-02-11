@@ -40,7 +40,6 @@ class CopyTraitsBase(unittest.TestCase):
     __test__ = False
 
     def setUp(self):
-        print '\n**CopyTraitsBase.setUp ',
         super(CopyTraitsBase, self).setUp()
         self.shared = Shared(s='shared')
         self.foo = Foo(shared=self.shared, s='foo')
@@ -54,26 +53,11 @@ class CopyTraitsBase(unittest.TestCase):
 
         return
 
-    def print_copy(self):
-        print '\nfoo.copy:', self.foo.base_trait('shared').copy
-        print 'bar.copy:', self.bar.base_trait('shared').copy
-        print 'baz.copy:', self.baz.base_trait('shared').copy
-        print 'foo2.copy:', self.foo2.base_trait('shared').copy
-        print 'bar2.copy:', self.bar2.base_trait('shared').copy
-        print 'baz2.copy:', self.baz2.base_trait('shared').copy
-
     def set_shared_copy(self, value):
         """ Change the copy style for the 'shared' traits. """
-        #self.print_copy()
         self.foo.base_trait('shared').copy = value
         self.bar.base_trait('shared').copy = value
         self.baz.base_trait('shared').copy = value
-
-        # copy is metadata and therefore a shared  a class attribute
-        # self.foo2.base_trait('shared').copy = value
-        # self.bar2.base_trait('shared').copy = value
-        # self.baz2.base_trait('shared').copy = value
-        #self.print_copy()
 
 
 class TestCopyTraitsSetup(CopyTraitsBase):
@@ -81,16 +65,6 @@ class TestCopyTraitsSetup(CopyTraitsBase):
 
     def setUp(self):
         super(TestCopyTraitsSetup, self).setUp()
-        print '\nshared', self.shared
-        print 'foo', self.foo
-        print 'bar', self.bar
-        print 'baz', self.baz
-        print '\nshared2', self.shared2
-        print 'foo2', self.foo2
-        print 'bar2', self.bar2
-        print 'baz2', self.baz2
-
-        return
 
     def test_setup(self):
         self.assertIs(self.foo, self.bar.foo)
@@ -104,10 +78,9 @@ class TestCopyTraitsSetup(CopyTraitsBase):
         self.assertIs(self.foo2.shared, self.shared2)
         self.assertIs(self.bar2.shared, self.shared2)
         self.assertIs(self.baz2.shared, self.shared2)
-        return
 
 
-class CopyTraits:
+class CopyTraits(object):
 
     def test_baz2_s(self):
         self.assertEqual(self.baz2.s, 'baz')
@@ -143,7 +116,7 @@ class CopyTraits:
         self.assertIsNot(self.baz2.bar.foo, self.baz.bar.foo)
 
 
-class CopyTraitsSharedCopyNone:
+class CopyTraitsSharedCopyNone(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is not the same object as the source.
@@ -195,7 +168,6 @@ class TestCopyTraitsSharedCopyNone(CopyTraits,
     __test__ = False
 
     def setUp(self):
-        print '\n***TestCopyTraitsSharedCopyNone',
         #super(TestCopyTraitsSharedCopyNone,self).setUp()
 
         # deep is the default value for Instance trait copy
@@ -208,7 +180,6 @@ class TestCopyTraitsCopyNotSpecified(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyNotSpecified',
 #        super(TestCopyTraitsCopyNotSpecified,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -220,7 +191,6 @@ class TestCopyTraitsCopyShallow(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyShallow',
 #        super(TestCopyTraitsCopyShallow,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -232,7 +202,6 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyDeep',
 #        super(TestCopyTraitsCopyDeep,self).setUp()
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyNone.setUp(self)
@@ -240,7 +209,7 @@ class TestCopyTraitsCopyDeep(CopyTraitsBase, TestCopyTraitsSharedCopyNone):
         return
 
 
-class CopyTraitsSharedCopyRef:
+class CopyTraitsSharedCopyRef(object):
     def test_baz2_shared(self):
         # First hand Instance trait is a different object and
         # is the same object as the source.
@@ -271,7 +240,6 @@ class TestCopyTraitsSharedCopyRef(CopyTraits,
     __test__ = False
 
     def setUp(self):
-        print '\n***TestCopyTraitsSharedCopyRef.setUp ',
         #super(TestCopyTraitsSharedCopyRef,self).setUp()
         self.set_shared_copy('ref')
         return
@@ -285,7 +253,6 @@ class TestCopyTraitsCopyNotSpecifiedSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyNotSpecifiedSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz)
@@ -297,7 +264,6 @@ class TestCopyTraitsCopyShallowSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyShallowSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy='shallow')
@@ -309,7 +275,6 @@ class TestCopyTraitsCopyDeepSharedRef(CopyTraitsBase,
     __test__ = True
 
     def setUp(self):
-        print '\n*TestCopyTraitsCopyDeepSharedRef.setUp',
         CopyTraitsBase.setUp(self)
         TestCopyTraitsSharedCopyRef.setUp(self)
         self.baz2.copy_traits(self.baz, copy='deep')

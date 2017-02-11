@@ -1,10 +1,12 @@
 .. index:: testing, test trait classes
 
+Testing
+=======
+
 .. _testing_trait_classes:
 
-======================
 Testing Traits Classes
-======================
+----------------------
 
 A mixin class is provided to facilitate writing tests for HasTraits classes.
 The following methods are available when |UnittestTools| is added as a
@@ -93,10 +95,8 @@ TestCase::
                 my_class.flag = True
                 my_class.number = 2.0  # The value is the same as the original
 
-
-===========
 Using Mocks
-===========
+-----------
 
 Trying to mock a method in a |HasStrictTraits| instance will raise an error
 because the |HasStrictTraits| machinery does not allow any modification of

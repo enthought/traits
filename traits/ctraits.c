@@ -310,9 +310,27 @@ fatal_trait_error ( void ) {
 +----------------------------------------------------------------------------*/
 
 static int
-invalid_attribute_error ( void ) {
+invalid_attribute_error ( PyObject * name ) {
 
-    PyErr_SetString( PyExc_TypeError, "attribute name must be string" );
+#if PY_MAJOR_VERSION >= 3
+    const char* fmt = "attribute name must be an instance of <type 'str'>. "
+                      "Got %R (%.200s).";
+    PyErr_Format(PyExc_TypeError, fmt, name, name->ob_type->tp_name);
+#else
+    // Python 2.6 doesn't support %R in PyErr_Format, so we compute and
+    // insert the repr explicitly.
+    const char* fmt = "attribute name must be an instance of <type 'str'>. "
+                      "Got %.200s (%.200s).";
+    PyObject *obj_repr;
+
+    obj_repr = PyObject_Repr(name);
+    if ( obj_repr == NULL ) {
+        return -1;
+    }
+    PyErr_Format(PyExc_TypeError, fmt, PyString_AsString(obj_repr),
+                 name->ob_type->tp_name);
+    Py_DECREF( obj_repr );
+#endif
 
     return -1;
 }
@@ -363,7 +381,7 @@ static int
 bad_delegate_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
     PyErr_Format(
         DelegationError,
@@ -384,7 +402,7 @@ static int
 bad_delegate_error2 ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -406,7 +424,7 @@ static int
 delegation_recursion_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -424,7 +442,7 @@ static int
 delegation_recursion_error2 ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -447,7 +465,7 @@ static int
 delete_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -468,7 +486,7 @@ static int
 set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -489,7 +507,7 @@ static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -510,7 +528,7 @@ static int
 set_delete_property_error ( has_traits_object * obj, PyObject * name ) {
 
     if ( !Py2to3_SimpleString_Check( name ) ) {
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     PyErr_Format(
@@ -977,7 +995,7 @@ has_traits_getattro ( has_traits_object * obj, PyObject * name ) {
         // unambiguously, so we have to reckeck in case the marker value is
         // returned. Make sure to pick an unlikely marker value.
         if((value==bad_attr_marker) && !Py2to3_AttrNameCheck(name)) {
-            invalid_attribute_error();
+            invalid_attribute_error( name );
             return NULL;
         }
         if( value != NULL ){
@@ -1120,7 +1138,7 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
     PyObject          * name;
     PyObject          * daname;
     PyObject          * daname2;
-        PyObject          * dict;
+    PyObject          * dict;
     int i, instance;
 
     /* Parse arguments, which specify the trait name and whether or not an
@@ -1147,16 +1165,26 @@ _has_traits_trait ( has_traits_object * obj, PyObject * args ) {
         }
 
         dict = delegate->obj_dict;
-        if ( ((dict == NULL) ||
-              ((temp_delegate = (has_traits_object *) PyDict_GetItem( dict,
-                                          trait->delegate_name )) == NULL)) &&
-              ((temp_delegate = (has_traits_object *) has_traits_getattro(
-                  delegate, trait->delegate_name )) == NULL) )
-            break;
 
+        temp_delegate = NULL;
+        if (dict != NULL) {
+            temp_delegate = (has_traits_object *) PyDict_GetItem(
+                dict, trait->delegate_name );
+            /* PyDict_GetItem returns a borrowed reference,
+               so we need to INCREF. */
+            Py_XINCREF( temp_delegate );
+        }
+        if (temp_delegate == NULL) {
+            /* has_traits_getattro returns a new reference,
+               so no need to INCREF. */
+            temp_delegate = (has_traits_object *) has_traits_getattro(
+                delegate, trait->delegate_name );
+        }
+        if (temp_delegate == NULL) {
+            break;
+        }
         Py_DECREF( delegate );
         delegate = temp_delegate;
-        Py_INCREF( delegate );
 
         if ( !PyHasTraits_Check( delegate ) ) {
             bad_delegate_error2( obj, name );
@@ -1281,7 +1309,7 @@ _has_traits_items_event ( has_traits_object * obj, PyObject * args ) {
     }
 
     if ( !Py2to3_AttrNameCheck( name ) ) {
-        invalid_attribute_error();
+        invalid_attribute_error( name );
         return NULL;
     }
 retry:
@@ -1428,19 +1456,23 @@ _has_traits_notifiers ( has_traits_object * obj, PyObject * args ) {
     PyObject * list;
     int force_create;
 
-        if ( !PyArg_ParseTuple( args, "i", &force_create ) )
+    if ( !PyArg_ParseTuple( args, "i", &force_create ) )
         return NULL;
 
     result = (PyObject *) obj->notifiers;
     if ( result == NULL ) {
-        result = Py_None;
-        if ( force_create && ((list = PyList_New( 0 )) != NULL) ) {
-            obj->notifiers = (PyListObject *) (result = list);
-            Py_INCREF( result );
+        if ( force_create ) {
+            list = PyList_New(0);
+            if (list == NULL)
+                return NULL;
+            obj->notifiers = (PyListObject *)list;
+            result = list;
+        }
+        else {
+            result = Py_None;
         }
     }
     Py_INCREF( result );
-
     return result;
 }
 
@@ -1577,6 +1609,9 @@ default_value_for ( trait_object      * trait,
         case 0:
         case 1:
             result = trait->default_value;
+            if (result == NULL) {
+                result = Py_None;
+            }
             Py_INCREF( result );
             break;
         case 2:
@@ -1713,7 +1748,7 @@ getattr_trait ( trait_object      * trait,
     nname = Py2to3_NormaliseAttrName(name);
 
     if( nname == NULL ){
-        invalid_attribute_error();
+        invalid_attribute_error( name );
         return NULL;
     }
 
@@ -1778,7 +1813,7 @@ getattr_delegate ( trait_object      * trait,
     nname = Py2to3_NormaliseAttrName(name);
 
     if( nname == NULL ){
-        invalid_attribute_error();
+        invalid_attribute_error( name );
         Py_DECREF( delegate );
         return NULL;
     }
@@ -1834,7 +1869,7 @@ getattr_disallow ( trait_object      * trait,
     if ( Py2to3_SimpleString_Check( name ) )
         unknown_attribute_error( obj, name );
     else
-        invalid_attribute_error();
+        invalid_attribute_error( name );
 
     return NULL;
 }
@@ -1955,7 +1990,7 @@ setattr_python ( trait_object      * traito,
 
         nname = Py2to3_NormaliseAttrName( name );
         if( nname == NULL )
-            return invalid_attribute_error();
+            return invalid_attribute_error( name );
 
         if ( PyDict_SetItem( dict, nname, value ) >= 0 ){
             Py2to3_FinishNormaliseAttrName(name,nname);
@@ -1971,7 +2006,7 @@ setattr_python ( trait_object      * traito,
     if ( dict != NULL ) {
         PyObject *nname = Py2to3_NormaliseAttrName( name );
         if( nname == NULL )
-            return invalid_attribute_error();
+            return invalid_attribute_error( name );
 
         if ( PyDict_DelItem( dict, nname ) >= 0 ){
             Py2to3_FinishNormaliseAttrName(name,nname);
@@ -1991,7 +2026,7 @@ setattr_python ( trait_object      * traito,
         return -1;
     }
 
-    return invalid_attribute_error();
+    return invalid_attribute_error( name );
 }
 
 /*-----------------------------------------------------------------------------
@@ -2220,7 +2255,7 @@ setattr_trait ( trait_object      * traito,
 
         nname = Py2to3_NormaliseAttrName(name);
         if( nname == NULL )
-            return invalid_attribute_error();
+            return invalid_attribute_error( name );
 
         old_value = PyDict_GetItem( dict, nname );
         if ( old_value == NULL ) {
@@ -2303,7 +2338,7 @@ setattr_trait ( trait_object      * traito,
     nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
         Py_DECREF( value );
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     new_value    = (traitd->flags & TRAIT_SETATTR_ORIGINAL_VALUE)?
@@ -2723,7 +2758,7 @@ setattr_readonly ( trait_object      * traito,
 
     nname = Py2to3_NormaliseAttrName(name);
     if( nname == NULL ){
-        return invalid_attribute_error();
+        return invalid_attribute_error( name );
     }
 
     result = PyDict_GetItem( dict, nname );
@@ -2757,7 +2792,7 @@ setattr_constant ( trait_object      * traito,
         );
         return -1;
     }
-    return invalid_attribute_error();
+    return invalid_attribute_error( name );
 }
 
 /*-----------------------------------------------------------------------------

@@ -3,25 +3,27 @@
 
 # delegate.py --- Example of trait delegation
 
-#--[Imports]--------------------------------------------------------------------
+#--[Imports]-------------------------------------------------------------------
 from traits.api import DelegatesTo, HasTraits, Instance, Str, TraitError
 
-#--[Code]-----------------------------------------------------------------------
+
+#--[Code]----------------------------------------------------------------------
 class Parent(HasTraits):
     first_name = Str
-    last_name  = Str
+    last_name = Str
+
 
 class Child(HasTraits):
     first_name = Str
-    last_name  = DelegatesTo('father')
-    father     = Instance(Parent)
-    mother     = Instance(Parent)
+    last_name = DelegatesTo('father')
+    father = Instance(Parent)
+    mother = Instance(Parent)
 
-#--[Example*]-------------------------------------------------------------------
 
-tony  = Parent(first_name='Anthony', last_name='Jones')
+#--[Example*]------------------------------------------------------------------
+tony = Parent(first_name='Anthony', last_name='Jones')
 alice = Parent(first_name='Alice', last_name='Smith')
-sally = Child( first_name='Sally', father=tony, mother=alice)
+sally = Child(first_name='Sally', father=tony, mother=alice)
 
 # Child delegates its 'last_name' to its 'father' object's 'last_name'
 print sally.last_name
@@ -35,7 +37,7 @@ print tony.last_name
 # Validation is still controlled by the father's 'last_name' trait
 print 'Attempting to assign a Parent object to a Str trait...\n'
 try:
-    sally.last_name = sally.mother # ERR: string expected
+    sally.last_name = sally.mother  # ERR: string expected
 except TraitError, c:
     print 'TraitError: ', c
 

@@ -404,6 +404,10 @@ class TraitType ( BaseTraitHandler ):
                 self._metadata.update( metadata )
             else:
                 self._metadata = metadata
+            # By default, private traits are not visible.
+            if (self._metadata.get('private') and
+                    self._metadata.get('visible') is None):
+                self._metadata['visible'] = False
         else:
             self._metadata = self.metadata.copy()
 
@@ -2344,14 +2348,11 @@ class TraitListObject ( list ):
 
             if isinstance(key, slice):
                 values = value
-                try:
-                    key = slice(*key.indices(len( self )))
-                except (ValueError, TypeError):
-                    raise TypeError('must assign sequence (not "%s") to slice' % (
-                                    values.__class__.__name__ ))
-                slice_len = max(0, (key.stop - key.start) // key.step)
+                slice_len = len(removed)
+
                 delta = len( values ) - slice_len
-                if key.step != 1 and delta != 0:
+                step = 1 if key.step is None else key.step
+                if step != 1 and delta != 0:
                     raise ValueError(
                         'attempt to assign sequence of size %d to extended slice of size %d' % (
                         len( values ), slice_len
@@ -2365,7 +2366,7 @@ class TraitListObject ( list ):
                     values = [ validate( object, name, value )
                                for value in values ]
                 value = values
-                if key.step == 1:
+                if step == 1:
                     # FIXME: Bug-for-bug compatibility with old __setslice__ code.
                     # In this case, we return a TraitListEvent with an
                     # index=key.start and the removed and added lists as they
@@ -2419,10 +2420,10 @@ class TraitListObject ( list ):
             removed = []
 
         if isinstance(key,slice):
-            key = slice(*key.indices(len( self )))
-            slice_len = max(0, (key.stop - key.start) // key.step)
+            slice_len = len(removed)
             delta = slice_len
-            if key.step == 1:
+            step = 1 if key.step is None else key.step
+            if step == 1:
                 # FIXME: See corresponding comment in __setitem__() for
                 # explanation.
                 index = key.start
@@ -2599,10 +2600,18 @@ class TraitListObject ( list ):
         else:
             self.len_error( len( self ) - 1 )
 
-    def sort ( self, cmp = None, key = None, reverse = False ):
-        removed = self[:]
-        list.sort( self, cmp = cmp, key = key, reverse = reverse )
+    if sys.version_info[0] < 3:
+        def sort ( self, cmp = None, key = None, reverse = False ):
+            removed = self[:]
+            list.sort( self, cmp = cmp, key = key, reverse = reverse )
+            self._sort_common(removed)
+    else:
+        def sort ( self, key = None, reverse = False ):
+            removed = self[:]
+            list.sort( self, key = key, reverse = reverse )
+            self._sort_common(removed)
 
+    def _sort_common ( self, removed ):
         if (getattr(self, 'name_items', None) is not None and
             getattr(self, 'trait', None) is not None):
             self._send_trait_items_event( self.name_items,
@@ -2745,6 +2754,8 @@ class TraitSetObject ( set ):
         if not hasattr(self, 'trait'):
             return set.update(self, value)
         try:
+            if not isinstance(value, set):
+                value = set(value)
             added = value.difference( self )
             if len( added ) > 0:
                 object   = self.object()
@@ -2784,6 +2795,8 @@ class TraitSetObject ( set ):
     def symmetric_difference_update ( self, value ):
         if not hasattr(self, 'trait'):
             return set.symmetric_difference_update(self, value)
+        if not isinstance(value, set):
+            value = set(value)
         removed = self.intersection( value )
         added   = value.difference( self )
         if (len( removed ) > 0) or (len( added ) > 0):
@@ -2879,6 +2892,21 @@ class TraitSetObject ( set ):
 
         self.__dict__.update( state )
 
+    def __ior__(self, value):
+        self.update(value)
+        return self
+
+    def __iand__(self, value):
+        self.intersection_update(value)
+        return self
+
+    def __ixor__(self, value):
+        self.symmetric_difference_update(value)
+        return self
+
+    def __isub__(self, value):
+        self.difference_update(value)
+        return self
 
 #-------------------------------------------------------------------------------
 #  'TraitDictEvent' class:

@@ -5,6 +5,31 @@
 import sys
 import os
 from os import path
+from contextlib import contextmanager
+
+
+class ETSToolkitError(RuntimeError):
+    """ Error raised by issues importing ETS toolkits
+
+    Attributes
+    ----------
+    message : str
+        The message detailing the error.
+
+    toolkit : str or None
+        The toolkit associated with the error.
+    """
+
+    def __init__(self, message='', toolkit=None, *args):
+        if not message and toolkit:
+            message = "could not import toolkit '{0}'".format(toolkit)
+        self.toolkit = toolkit
+        self.message = message
+        if message:
+            if toolkit:
+                args = (toolkit,) + args
+            args = (message,) + args
+        self.args = args
 
 
 class ETSConfig(object):
@@ -184,11 +209,43 @@ class ETSConfig(object):
     company = property(_get_company, _set_company)
 
 
+    @contextmanager
+    def provisional_toolkit(self, toolkit):
+        """ Perform an operation with toolkit provisionally set
+
+        This sets the toolkit attribute of the ETSConfig object to the
+        provided value. If the operation fails with an exception, the toolkit
+        is reset to nothing.
+
+        This method should only be called if the toolkit is not currently set.
+
+        Parameters
+        ----------
+        toolkit : string
+            The name of the toolkit to provisionally use.
+
+        Raises
+        ------
+        ETSToolkitError
+            If the toolkit attribute is already set, then an ETSToolkitError
+            will be raised when entering the context manager.
+        """
+        if self.toolkit:
+            msg = "ETSConfig toolkit is already set to '{0}'"
+            raise ETSToolkitError(msg.format(self.toolkit))
+        self.toolkit = toolkit
+        try:
+            yield
+        except:
+            # reset the toolkit state
+            self._toolkit = ''
+            raise
+
+
     def _get_toolkit(self):
         """
         Property getter for the GUI toolkit.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ETS_TOOLKIT' environment variable; otherwise the empty string.
 
         """
@@ -224,8 +281,7 @@ class ETSConfig(object):
         Deprecated: This property is no longer used.
 
         Property getter for the Enable backend.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
         """
         from warnings import warn
@@ -403,26 +459,8 @@ class ETSConfig(object):
         Initializes the toolkit.
 
         """
-        # We handle the command line option even though it doesn't have the
-        # highest precedence because we always want to remove it from the
-        # command line.
-        if '-toolkit' in sys.argv:
-            opt_idx = sys.argv.index('-toolkit')
-
-            try:
-                opt_toolkit = sys.argv[opt_idx + 1]
-            except IndexError:
-                raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
-
-            # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 1]
-        else:
-            opt_toolkit = None
-
         if self._toolkit is not None:
             toolkit = self._toolkit
-        elif opt_toolkit is not None:
-            toolkit = opt_toolkit
         else:
             toolkit = os.environ.get('ETS_TOOLKIT', '')
 

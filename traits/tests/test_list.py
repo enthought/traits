@@ -90,6 +90,58 @@ class ListTestCase(unittest.TestCase):
         self.assertEqual(f.l[:-1], ['zero', 'one', 'two'])
         return
 
+    def test_slice_assignment(self):
+        # Exhaustive testing.
+        starts = stops = [None] + range(-10, 11)
+        steps = list(starts)
+        steps.remove(0)
+        test_slices = [slice(start, stop, step)
+                       for start in starts for stop in stops for step in steps]
+
+        for test_slice in test_slices:
+            f = Foo(l=['zero', 'one', 'two', 'three', 'four'])
+            plain_l = list(f.l)
+            length = len(plain_l[test_slice])
+            replacements = map(str, range(length))
+
+            # Plain Python list and Traits list behaviour should match.
+            plain_l[test_slice] = replacements
+            f.l[test_slice] = replacements
+            self.assertEqual(
+                f.l, plain_l, "failed for slice {0!r}".format(test_slice))
+
+    def test_slice_assignments_of_different_length(self):
+        # Test slice assignments where rhs has a different length
+        # to the slice. These should work only for slices of step 1.
+        test_list = ['zero', 'one', 'two', 'three']
+        f = Foo(l=test_list)
+        f.l[1:3] = '01234'
+        self.assertEqual(f.l, ['zero', '0', '1', '2', '3', '4', 'three'])
+        f.l[4:] = []
+        self.assertEqual(f.l, ['zero', '0', '1', '2'])
+        f.l[:] = 'abcde'
+        self.assertEqual(f.l, ['a', 'b', 'c', 'd', 'e'])
+        f.l[:] = []
+        self.assertEqual(f.l, [])
+
+        f = Foo(l=test_list)
+        with self.assertRaises(ValueError):
+            f.l[::2] = ['a', 'b', 'c']
+        self.assertEqual(f.l, test_list)
+        with self.assertRaises(ValueError):
+            f.l[::-1] = []
+        self.assertEqual(f.l, test_list)
+
+    def test_slice_deletion_bad_length_computation(self):
+        # Regression test for enthought/traits#283.
+        class IHasConstrainedList(HasTraits):
+            foo = List(Str, minlen=3)
+
+        f = IHasConstrainedList(foo=['zero', 'one', 'two', 'three'])
+        # We're deleting two items; this should raise.
+        with self.assertRaises(TraitError):
+            del f.foo[::3]
+
     def test_retrieve_reference(self):
         f = Foo(l=['initial', 'value'])
 
@@ -273,3 +325,41 @@ class ListTestCase(unittest.TestCase):
         f.l = list('123')
         f.l *= 4
         self.assertEqual(f.l, list('123123123123'))
+
+    def test_sort_no_args(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort()
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    def test_sort_key(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x))
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(reverse=True)
+        self.assertEqual(f.l, ["d", "c", "b", "a"])
+
+    def test_sort_key_reverse(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(key=lambda x: -ord(x), reverse=True)
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] >= 3, "Not for Python 3")
+    def test_sort_cmp(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        f.l.sort(cmp=lambda x, y: ord(x) - ord(y))
+        self.assertEqual(f.l, ["a", "b", "c", "d"])
+
+    @unittest.skipIf(sys.version_info[0] < 3, "Not for Python 2")
+    def test_sort_cmp_error(self):
+        f = Foo()
+        f.l = ["a", "c", "b", "d"]
+        with self.assertRaises(TypeError):
+            f.l.sort(cmp=lambda x, y: ord(x) - ord(y))

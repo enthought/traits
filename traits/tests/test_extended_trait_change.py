@@ -405,20 +405,20 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_instance1(self):
         i1 = Instance1(tc=self)
         for i in range(3):
-            i1.set(exp_object=i1.ref, exp_name='value', dst_name='value',
-                   exp_old=i, exp_new=(i + 1), dst_new=(i + 1))
+            i1.trait_set(exp_object=i1.ref, exp_name='value', dst_name='value',
+                         exp_old=i, exp_new=(i + 1), dst_new=(i + 1))
             i1.ref.value = (i + 1)
         self.assertEqual(i1.calls, (3 * 5))
         self.assertEqual(i1.ref.value, 3)
         ref = ArgCheckBase()
-        i1.set(exp_object=i1, exp_name='ref', dst_name='value',
-               exp_old=i1.ref, exp_new=ref, dst_new=0)
+        i1.trait_set(exp_object=i1, exp_name='ref', dst_name='value',
+                     exp_old=i1.ref, exp_new=ref, dst_new=0)
         i1.ref = ref
         self.assertEqual(i1.calls, (4 * 5))
         self.assertEqual(i1.ref.value, 0)
         for i in range(3):
-            i1.set(exp_object=i1.ref, exp_name='value', dst_name='value',
-                   exp_old=i, exp_new=(i + 1), dst_new=(i + 1))
+            i1.trait_set(exp_object=i1.ref, exp_name='value', dst_name='value',
+                         exp_old=i, exp_new=(i + 1), dst_new=(i + 1))
             i1.ref.value = (i + 1)
         self.assertEqual(i1.calls, (7 * 5))
         self.assertEqual(i1.ref.value, 3)
@@ -427,24 +427,24 @@ class OnTraitChangeTest(unittest.TestCase):
         l1 = List1(tc=self)
         for i in range(3):
             ac = ArgCheckBase()
-            l1.set(exp_object=l1, exp_name='refs_items', type_old=None,
-                   exp_old=Undefined, type_new=TraitListEvent)
+            l1.trait_set(exp_object=l1, exp_name='refs_items', type_old=None,
+                         exp_old=Undefined, type_new=TraitListEvent)
             l1.refs.append(ac)
         #self.assertEqual(l1.calls, (3 * 3))  # FIXME
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
         refs = [ArgCheckBase(), ArgCheckBase(), ArgCheckBase()]
-        l1.set(exp_object=l1, exp_name='refs', type_old=None,
-               exp_old=l1.refs, type_new=TraitListObject)
+        l1.trait_set(exp_object=l1, exp_name='refs', type_old=None,
+                     exp_old=l1.refs, type_new=TraitListObject)
         l1.refs = refs
         #self.assertEqual(l1.calls, (4 * 3))
         for i in range(3):
             self.assertEqual(l1.refs[i].value, 0)
         for i in range(3):
             for j in range(3):
-                l1.set(exp_object=l1.refs[j], exp_name='value',
-                       type_old=None, exp_old=i,
-                       type_new=None, exp_new=(i + 1))
+                l1.trait_set(exp_object=l1.refs[j], exp_name='value',
+                             type_old=None, exp_old=i,
+                             type_new=None, exp_new=(i + 1))
                 l1.refs[j].value = (i + 1)
         #self.assertEqual(l1.calls, (13 * 3))
         for i in range(3):
@@ -460,24 +460,24 @@ class OnTraitChangeTest(unittest.TestCase):
         d1 = Dict1(tc=self)
         for i in range(3):
             ac = ArgCheckBase()
-            d1.set(exp_object=d1, exp_name='refs_items', type_old=None,
-                   exp_old=Undefined, type_new=TraitDictEvent)
+            d1.trait_set(exp_object=d1, exp_name='refs_items', type_old=None,
+                         exp_old=Undefined, type_new=TraitDictEvent)
             d1.refs[i] = ac
         #self.assertEqual(d1.calls, (3 * 3))  # FIXME
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
         refs = {0: ArgCheckBase(), 1: ArgCheckBase(), 2: ArgCheckBase()}
-        d1.set(exp_object=d1, exp_name='refs', type_old=None,
-               exp_old=d1.refs, type_new=TraitDictObject)
+        d1.trait_set(exp_object=d1, exp_name='refs', type_old=None,
+                     exp_old=d1.refs, type_new=TraitDictObject)
         d1.refs = refs
         #self.assertEqual(d1.calls, (4 * 3))
         for i in range(3):
             self.assertEqual(d1.refs[i].value, 0)
         for i in range(3):
             for j in range(3):
-                d1.set(exp_object=d1.refs[j], exp_name='value',
-                       type_old=None, exp_old=i,
-                       type_new=None, exp_new=(i + 1))
+                d1.trait_set(exp_object=d1.refs[j], exp_name='value',
+                             type_old=None, exp_old=i,
+                             type_new=None, exp_new=(i + 1))
                 d1.refs[j].value = (i + 1)
         #self.assertEqual(d1.calls, (13 * 3))
         for i in range(3):
@@ -515,9 +515,9 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(c, handlers, pattern)
         r0 = c.ref
         r1 = ArgCheckBase()
-        c.set(exp_object=c, exp_name='ref', exp_old=r0, exp_new=r1)
+        c.trait_set(exp_object=c, exp_name='ref', exp_old=r0, exp_new=r1)
         c.ref = r1
-        c.set(exp_old=r1, exp_new=r0)
+        c.trait_set(exp_old=r1, exp_new=r0)
         c.ref = r0
         self.assertEqual(c.calls, 2 * n)
         self.multi_register(c, handlers, pattern, remove=True)
@@ -528,12 +528,12 @@ class OnTraitChangeTest(unittest.TestCase):
     def test_pattern_list5(self):
         c = Complex(tc=self)
         c.on_trait_change(c.arg_check1, 'ref.[int1,int2,int3]')
-        self.assertRaises(TraitError, c.set, ref=ArgCheckBase())
+        self.assertRaises(TraitError, c.trait_set, ref=ArgCheckBase())
 
     def test_pattern_list6(self):
         c = Complex(tc=self)
         c.on_trait_change(c.arg_check2, 'ref.[int1,int2,int3]')
-        self.assertRaises(TraitError, c.set, ref=ArgCheckBase())
+        self.assertRaises(TraitError, c.trait_set, ref=ArgCheckBase())
 
     def test_pattern_list7(self):
         c = Complex(tc=self)
@@ -583,8 +583,8 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(lt, handlers, 'head.next*.value')
         cur = lt.head
         for i in range(4):
-            lt.set(exp_object=cur, exp_name='value', exp_old=10 * i,
-                   exp_new=(10 * i) + 1)
+            lt.trait_set(exp_object=cur, exp_name='value', exp_old=10 * i,
+                         exp_new=(10 * i) + 1)
             cur.value = (10 * i) + 1
             cur = cur.next
         self.assertEqual(lt.calls, 4 * nh)
@@ -603,8 +603,8 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(lt, handlers, 'head.[next,prev]*.value')
         cur = lt.head
         for i in range(4):
-            lt.set(exp_object=cur, exp_name='value', exp_old=10 * i,
-                   exp_new=(10 * i) + 1)
+            lt.trait_set(exp_object=cur, exp_name='value', exp_old=10 * i,
+                         exp_new=(10 * i) + 1)
             cur.value = (10 * i) + 1
             cur = cur.next
         self.assertEqual(lt.calls, 4 * nh)
@@ -635,7 +635,7 @@ class OnTraitChangeTest(unittest.TestCase):
         self.assertEqual(sum, 0)
         for n in ['int1', 'int2', 'int3']:
             for i in range(3):
-                pdo.set(exp_old=sum, exp_new=sum + 1)
+                pdo.trait_set(exp_old=sum, exp_new=sum + 1)
                 setattr(pdo.ref, n, i + 1)
                 sum += 1
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
@@ -643,7 +643,7 @@ class OnTraitChangeTest(unittest.TestCase):
         for i in range(10):
             x = pdo.sum
         self.assertEqual(pdo.pcalls, (3 * 3) + 1)
-        pdo.set(exp_old=sum, exp_new=60)
+        pdo.trait_set(exp_old=sum, exp_new=60)
         old_ref = pdo.ref
         pdo.ref = ArgCheckBase(int1=10, int2=20, int3=30)
         self.assertEqual(pdo.pcalls, (3 * 3) + 2)
@@ -651,7 +651,7 @@ class OnTraitChangeTest(unittest.TestCase):
         sum = 60
         for n in ['int1', 'int2', 'int3']:
             for i in range(3):
-                pdo.set(exp_old=sum, exp_new=sum + 1)
+                pdo.trait_set(exp_old=sum, exp_new=sum + 1)
                 setattr(pdo.ref, n, getattr(pdo.ref, n) + 1)
                 sum += 1
         self.assertEqual(pdo.pcalls, (2 * 3 * 3) + 2)
@@ -672,7 +672,7 @@ class OnTraitChangeTest(unittest.TestCase):
         for i in range(3):
             self.assertEqual(l.refs[i].value, 0)
         refs = [ArgCheckBase(), ArgCheckBase(), ArgCheckBase()]
-        self.assertRaises(TraitError, l.set, refs=refs)
+        self.assertRaises(TraitError, l.trait_set, refs=refs)
         self.assertEqual(l.calls, 0)
         for i in range(3):
             self.assertEqual(l.refs[i].value, 0)
@@ -692,7 +692,7 @@ class OnTraitChangeTest(unittest.TestCase):
         for i in range(3):
             self.assertEqual(d.refs[i].value, 0)
         refs = {0: ArgCheckBase(), 1: ArgCheckBase(), 2: ArgCheckBase()}
-        self.assertRaises(TraitError, d.set, refs=refs)
+        self.assertRaises(TraitError, d.trait_set, refs=refs)
         self.assertEqual(d.calls, 0)
         for i in range(3):
             self.assertEqual(d.refs[i].value, 0)
@@ -712,12 +712,12 @@ class OnTraitChangeTest(unittest.TestCase):
         self.multi_register(c, handlers, pattern)
         for i in range(3):
             for n in names:
-                c.set(exp_object=r, exp_name=n, exp_old=i,
-                      exp_new=(i + 1))
+                c.trait_set(exp_object=r, exp_name=n, exp_old=i,
+                            exp_new=(i + 1))
                 setattr(r, n, i + 1)
             for n in other:
-                c.set(exp_object=r, exp_name=n, exp_old=i,
-                      exp_new=(i + 1))
+                c.trait_set(exp_object=r, exp_name=n, exp_old=i,
+                            exp_new=(i + 1))
                 setattr(r, n, i + 1)
         self.assertEqual(c.calls, 3 * nn * nh)
         self.multi_register(c, handlers, pattern, remove=True)
@@ -737,17 +737,17 @@ class OnTraitChangeTest(unittest.TestCase):
         l2 = Link(value=10)
         l3 = Link(value=20)
         l4 = Link(value=30)
-        l1.set(next=l2, prev=l4)
-        l2.set(next=l3, prev=l1)
-        l3.set(next=l4, prev=l2)
-        l4.set(next=l1, prev=l3)
+        l1.trait_set(next=l2, prev=l4)
+        l2.trait_set(next=l3, prev=l1)
+        l3.trait_set(next=l4, prev=l2)
+        l4.trait_set(next=l1, prev=l3)
         return l1
 
     def new_link(self, lt, cur, value):
         link = Link(value=value, next=cur.next, prev=cur)
         cur.next.prev = link
-        lt.set(exp_object=cur, exp_name='next', exp_old=cur.next,
-               exp_new=link)
+        lt.trait_set(exp_object=cur, exp_name='next', exp_old=cur.next,
+                     exp_new=link)
         cur.next = link
         return link
 

@@ -1267,6 +1267,16 @@ strategy has the advantage of generating trait change notifications for each
 attribute. These notifications are important for classes that rely on them to
 ensure that their internal object state remains consistent and up to date.
 
+.. note:: If you're manually creating state dictionaries for consumption by
+   __setstate__(), you should be aware of an additional implementation detail:
+   when pickling, the HasTraits __getstate__() method returns a dictionary with
+   an extra ``'__traits_version__'`` key giving the version of Traits used at
+   pickling time.  If this key is not present when unpickling, the HasTraits
+   __setstate__() method falls back to a compatibility mode and may not restore
+   the state correctly.  For the same reason, if you're overriding
+   __getstate__(), you should be careful to make the appropriate ``super(...,
+   self).__getstate__()`` call.
+
 .. index:: __setstate__(); overriding
 
 .. _overriding-setstate:
@@ -1338,7 +1348,7 @@ corresponding to each keyword to the matching value. This shorthand is useful
 when a number of trait attributes need to be set on an object, or a trait
 attribute value needs to be set in a lambda function. For example::
 
-    person.set(name='Bill', age=27)
+    person.trait_set(name='Bill', age=27)
 
 The statement above is equivalent to the following::
 
