@@ -1,5 +1,5 @@
-testing Package
-===============
+:mod:`testing` Package
+======================
 
 :mod:`testing` Package
 ----------------------
@@ -25,3 +25,10 @@ testing Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`trait_assert_tools` Module
+--------------------------------
+
+.. automodule:: traits.testing.unittest_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:

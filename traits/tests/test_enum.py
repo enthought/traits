@@ -1,6 +1,7 @@
-import unittest
+from traits.testing.unittest_tools import unittest
 
 from traits.api import Enum, HasTraits, List, Property, TraitError
+
 
 class ExampleModel(HasTraits):
     valid_models = Property(List)
@@ -8,6 +9,7 @@ class ExampleModel(HasTraits):
 
     def _get_valid_models(self):
         return ['model1', 'model2', 'model3']
+
 
 class EnumTestCase(unittest.TestCase):
     def test_valid_enum(self):
@@ -21,5 +23,3 @@ class EnumTestCase(unittest.TestCase):
             example_model.root = 'not_valid_model'
 
         self.assertRaises(TraitError, assign_invalid)
-
-

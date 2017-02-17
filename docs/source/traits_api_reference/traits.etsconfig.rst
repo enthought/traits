@@ -1,5 +1,5 @@
-etsconfig Package
-=================
+:mod:`etsconfig` Package
+========================
 
 :mod:`etsconfig` Package
 ------------------------

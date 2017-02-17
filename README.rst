@@ -2,7 +2,15 @@
 traits: explicitly typed attributes for Python
 ==============================================
 
-http://github.enthought.com/traits
+http://docs.enthought.com/traits
+
+.. image:: https://api.travis-ci.org/enthought/traits.png?branch=master
+   :target: https://travis-ci.org/enthought/traits
+   :alt: Build status
+
+.. image:: https://coveralls.io/repos/enthought/traits/badge.png
+   :target: https://coveralls.io/r/enthought/traits
+   :alt: Coverage status
 
 The Traits project is at the center of all Enthought Tool Suite development
 and has changed the mental model used at Enthought for programming in the
@@ -17,7 +25,7 @@ characteristics:
 - **Initialization**: A trait has a *default value*, which is
   automatically set as the initial value of an attribute before its
   first use in a program.
-- **Validation**: A trait attribute's type is *explicitly declared*. The
+- **Validation**: The type of a trait attribute is *explicitly declared*. The
   type is evident in the code, and only values that meet a
   programmer-specified set of criteria (i.e., the trait definition) can
   be assigned to that attribute.
@@ -34,13 +42,23 @@ characteristics:
 
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
-within the class. Trait attributes defined by a classs are automatically
+within the class. Trait attributes defined by a class are automatically
 inherited by any subclass derived from the class.
 
-Prerequisites
--------------
-You must have the following libraries installed before building or installing
-Traits:
+Dependencies
+------------
 
-* `Numpy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
+Traits runs on both Python 2 and Python 3. It requires Python 2.7
+or Python >= 3.4.
+
+Traits has the following optional dependencies:
+
+* `NumPy <http://pypi.python.org/pypi/numpy>`_ to support the trait types
   for arrays.
+* `Traitsui <https://pypi.python.org/pypi/traitsui>`_ to support Gui
+  Views.
+
+To build the full documentation one needs:
+
+* sphinx > 1.2.3
+* mock (optional if traitsui is not available)

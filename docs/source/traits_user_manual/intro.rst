@@ -5,14 +5,14 @@ The Traits package for the Python language allows Python programmers to use
 a special kind of type definition called a trait. This document introduces the
 concepts behind, and usage of, the Traits package.
 
-For more information on the Traits package, refer to the `Traits web page
-<http://code.enthought.com/projects/traits>`_. This page contains links to
-downloadable packages, the source code repository, and the Traits development
-website. Additional documentation for the Traits package is available from
-the Traits web page, including:
+For more information on the Traits package, refer to the `Traits GitHub
+repository <http://github.com/enthought/traits>`_. Additional documentation
+for the Traits package is available,
+including:
 
 * *Traits API Reference*
-* `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_
+* `TraitsUI User Manual
+  <http://docs.enthought.com/traitsui/traitsui_user_manual/index.html>`_
 * Traits Technical Notes
 
 What Are Traits?
@@ -53,7 +53,8 @@ attributes, giving the attributes some additional characteristics:
   the traits' definitions. This feature requires that a supported GUI
   toolkit be installed. However, if this feature is not used, the Traits package
   does not otherwise require GUI support. For details on the visualization
-  features of Traits, see the `TraitsUI User Manual <http://github.enthought.com/traitsui/index.html>`_.
+  features of Traits, see the `TraitsUI User Manual
+  <http://docs.enthought.com/traitsui/traitsui_user_manual/index.html>`_.
 
 A class can freely mix trait-based attributes with normal Python attributes,
 or can opt to allow the use of only a fixed or open set of trait attributes
@@ -112,11 +113,6 @@ package. These features are elaborated in the rest of this guide.
     # (if a supported GUI toolkit is installed)
     moe.configure_traits()
 
-In addition, traits can be used to define type-checked method signatures. The
-Traits package can ensure that the arguments and return value of a method
-invocation match the traits defined for the parameters and return value in the
-method signature. This feature is described in :ref:`type-checked-methods`.
-
 Background
 ----------
 Python does not require the data type of variables to be declared. As any
@@ -173,10 +169,10 @@ where the Traits package has been used, it has proven valuable for enhancing
 programmers' ability to understand code, during both concurrent
 development and maintenance.
 
-The Traits 4.0 package works with version 2.7 and later of Python, and is
-similar in some ways to the Python property language feature. Standard Python
-properties provide the similar capabilities to the Traits package, but with
-more work on the part of the programmer.
+The Traits |version| package works with versions 2.7 and 3.4 and later of
+Python.  It is similar in some ways to the Python property language feature.
+Standard Python properties provide the similar capabilities to the Traits
+package, but with more work on the part of the programmer.
 
 .. rubric:: Footnotes
 .. [1] All code examples in this guide that include a file name are also
@@ -185,4 +181,3 @@ more work on the part of the programmer.
        individually, or view them in a tutorial program by running:
 
        python <Traits dir>/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples
-

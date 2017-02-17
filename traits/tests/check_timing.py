@@ -1,4 +1,3 @@
-#------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -12,233 +11,241 @@
 # Date: 03/03/2003
 # Description: Perform timing tests on various trait styles to determine the
 #              amount of overhead that traits add.
-#------------------------------------------------------------------------------
-
-#-------------------------------------------------------------------------------
-#  Imports:
-#-------------------------------------------------------------------------------
 
 from __future__ import absolute_import
 
 from time import time
-from ..api import Any, Delegate, HasTraits, Int, Range
-
-print 'OK!'
-
-#-------------------------------------------------------------------------------
-#  Constants:
-#-------------------------------------------------------------------------------
+from ..api import Any, DelegatesTo, HasTraits, Int, Range
 
 # Number of iterations to perform:
 n = 1000000
 
-# Loop overhead time (actual value determined first time a measurement is made):
+# Loop overhead time (actual value determined first time a measurement is made)
 t0 = -1.0
 
-#-------------------------------------------------------------------------------
-#  Measure how long it takes to execute a specified function:
-#-------------------------------------------------------------------------------
 
-def measure ( func ):
+#  Measure how long it takes to execute a specified function:
+def measure(func):
     now = time()
     func()
     return time() - now
 
-#-------------------------------------------------------------------------------
-#  'Old style' Python attribute get/set:
-#-------------------------------------------------------------------------------
 
+#  'Old style' Python attribute get/set:
 class old_style_value:
 
-    def measure ( self ):
+    def measure(self, reference_get=1.0, reference_set=1.0):
         global t0
         self.init()
 
         if t0 < 0.0:
-            t0 = measure( self.null )
-        t1 = measure( self.do_get )
-        t2 = measure( self.do_set )
-        scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+            t0 = measure(self.null)
+        t1 = measure(self.do_get)
+        t2 = measure(self.do_set)
 
-    def null ( self ):
+        scale = 1.0e6 / n
+        get_time = max(t1 - t0, 0.0) * scale
+        set_time = max(t2 - t0, 0.0) * scale
+
+        return get_time, set_time
+
+    def null(self):
         for i in range(n):
             pass
 
-    def init ( self ):
+    def init(self):
         self.value = -1
 
-    def do_set ( self ):
+    def do_set(self):
         for i in range(n):
             self.value = i
 
-    def do_get ( self ):
+    def do_get(self):
         for i in range(n):
             self.value
 
-#-------------------------------------------------------------------------------
+
 #  'New style' Python attribute get/set:
-#-------------------------------------------------------------------------------
+class new_style_value(object):
 
-class new_style_value ( object ):
-
-    def measure ( self ):
+    def measure(self):
         global t0
         self.init()
 
         if t0 < 0.0:
-            t0 = measure( self.null )
-        t1 = measure( self.do_get )
-        t2 = measure( self.do_set )
-        scale = 1.0e6 / n
-        print self.__class__.__name__ + ':'
-        print '  get: %.2f usec' % (max( t1 - t0, 0.0 ) * scale)
-        print '  set: %.2f usec' % (max( t2 - t0, 0.0 ) * scale)
-        print
+            t0 = measure(self.null)
+        t1 = measure(self.do_get)
+        t2 = measure(self.do_set)
 
-    def null ( self ):
+        scale = 1.0e6 / n
+        get_time = max(t1 - t0, 0.0) * scale
+        set_time = max(t2 - t0, 0.0) * scale
+
+        return get_time, set_time
+
+    def null(self):
         for i in range(n):
             pass
 
-    def init ( self ):
+    def init(self):
         self.value = -1
 
-    def do_set ( self ):
+    def do_set(self):
         for i in range(n):
             self.value = i
 
-    def do_get ( self ):
+    def do_get(self):
         for i in range(n):
             self.value
 
-#-------------------------------------------------------------------------------
+
 #  Python 'property' get/set:
-#-------------------------------------------------------------------------------
+class property_value(new_style_value):
 
-class property_value ( new_style_value ):
-
-    def get_value ( self ):
+    def get_value(self):
         return self._value
 
-    def set_value ( self, value ):
+    def set_value(self, value):
         self._value = value
 
-    value = property( get_value, set_value )
+    value = property(get_value, set_value)
 
-#-------------------------------------------------------------------------------
+
 #  Python 'global' get/set:
-#-------------------------------------------------------------------------------
+class global_value(new_style_value):
 
-class global_value ( new_style_value ):
-
-    def init ( self ):
+    def init(self):
         global gvalue
         gvalue = -1
 
-    def do_set ( self ):
+    def do_set(self):
         global gvalue
         for i in range(n):
             gvalue = i
 
-    def do_get ( self ):
+    def do_get(self):
         global gvalue
         for i in range(n):
             gvalue
 
-#-------------------------------------------------------------------------------
-#  Trait that can have any value:
-#-------------------------------------------------------------------------------
 
-class any_value ( HasTraits, new_style_value ):
+#  Trait that can have any value:
+class any_value(HasTraits, new_style_value):
 
     value = Any
 
-#-------------------------------------------------------------------------------
-#  Trait that can only have 'float' values:
-#-------------------------------------------------------------------------------
 
-class int_value ( any_value ):
+#  Trait that can only have 'float' values:
+class int_value(any_value):
 
     value = Int
 
-#-------------------------------------------------------------------------------
+
 #  Trait that can only have 'range' values:
-#-------------------------------------------------------------------------------
+class range_value(any_value):
 
-class range_value ( any_value ):
+    value = Range(-1, 2000000000)
 
-    value = Range( -1, 2000000000 )
 
-#-------------------------------------------------------------------------------
 #  Executes method when float trait is changed:
-#-------------------------------------------------------------------------------
+class change_value(int_value):
 
-class change_value ( int_value ):
-
-    def _value_changed ( self, old, new ):
+    def _value_changed(self, old, new):
         pass
 
-#-------------------------------------------------------------------------------
+
 #  Notifies handler when float trait is changed:
-#-------------------------------------------------------------------------------
+class monitor_value(int_value):
 
-class monitor_value ( int_value ):
+    def init(self):
+        self.on_trait_change(self.on_value_change, 'value')
 
-    def init ( self ):
-        self.on_trait_change( self.on_value_change, 'value' )
-
-    def on_value_change ( self, object, trait_name, old, new ):
+    def on_value_change(self, object, trait_name, old, new):
         pass
 
-#-------------------------------------------------------------------------------
+
 #  Float trait is delegated to another object:
-#-------------------------------------------------------------------------------
+class delegate_value(HasTraits, new_style_value):
 
-class delegate_value ( HasTraits, new_style_value ):
-
-    value    = Delegate( 'delegate' )
+    value = DelegatesTo('delegate')
     delegate = Any
 
-    def init ( self ):
+    def init(self):
         self.delegate = int_value()
 
-#-------------------------------------------------------------------------------
+
 #  Float trait is delegated through one object to another object:
-#-------------------------------------------------------------------------------
+class delegate_2_value(delegate_value):
 
-class delegate_2_value ( delegate_value ):
+    def init(self):
+        delegate = delegate_value()
+        delegate.init()
+        self.delegate = delegate
 
-    def init ( self ):
-        self.delegate = delegate_value()
-        self.delegate.init()
 
-#-------------------------------------------------------------------------------
 #  Float trait is delegated through two objects to another object:
-#-------------------------------------------------------------------------------
+class delegate_3_value(delegate_value):
 
-class delegate_3_value ( delegate_value ):
+    def init(self):
+        delegate = delegate_2_value()
+        delegate.init()
+        self.delegate = delegate
 
-    def init ( self ):
-        self.delegate = delegate_2_value()
-        self.delegate.init()
 
-#-------------------------------------------------------------------------------
 #  Run the timing measurements:
-#-------------------------------------------------------------------------------
+def report(name, get_time, set_time, ref_get_time, ref_set_time):
+    """ Return string containing a benchmark report.
+
+    The arguments are the name of the benchmark case, the times to do a 'get'
+    or a 'set' operation for that benchmark case in usec, and the
+    corresponding times for a reference operation (e.g., getting and
+    setting an attribute on a new-style instance.
+    """
+
+    template = (
+        '{name:^30}: Get {get_time:02.3f} us (x {get_speed_up:02.3f}), '
+        'Set {set_time:02.3f} us (x {set_speed_up:02.3f})'
+        )
+
+    report = template.format(
+        name=name,
+        get_time=get_time,
+        get_speed_up=ref_get_time / get_time,
+        set_time=set_time,
+        set_speed_up=ref_set_time / set_time,
+        )
+
+    return report
+
+
+def run_benchmark(klass, ref_get_time, ref_set_time):
+    benchmark_name = klass.__name__
+    get_time, set_time = klass().measure()
+    print report(benchmark_name,
+                 get_time, set_time,
+                 ref_get_time, ref_set_time)
+
+
+def main():
+    ref_get_time, ref_set_time = new_style_value().measure()
+
+    benchmarks = [
+        global_value,
+        old_style_value,
+        new_style_value,
+        property_value,
+        any_value,
+        int_value,
+        range_value,
+        change_value,
+        monitor_value,
+        delegate_value,
+        delegate_2_value,
+        delegate_3_value
+    ]
+
+    for benchmark in benchmarks:
+        run_benchmark(benchmark, ref_get_time, ref_set_time)
 
 if __name__ == '__main__':
-    old_style_value().measure()
-    new_style_value().measure()
-    property_value().measure()
-    global_value().measure()
-    any_value().measure()
-    int_value().measure()
-    range_value().measure()
-    change_value().measure()
-    monitor_value().measure()
-    delegate_value().measure()
-    delegate_2_value().measure()
-    delegate_3_value().measure()
+    main()

@@ -5,6 +5,31 @@
 import sys
 import os
 from os import path
+from contextlib import contextmanager
+
+
+class ETSToolkitError(RuntimeError):
+    """ Error raised by issues importing ETS toolkits
+
+    Attributes
+    ----------
+    message : str
+        The message detailing the error.
+
+    toolkit : str or None
+        The toolkit associated with the error.
+    """
+
+    def __init__(self, message='', toolkit=None, *args):
+        if not message and toolkit:
+            message = "could not import toolkit '{0}'".format(toolkit)
+        self.toolkit = toolkit
+        self.message = message
+        if message:
+            if toolkit:
+                args = (toolkit,) + args
+            args = (message,) + args
+        self.args = args
 
 
 class ETSConfig(object):
@@ -51,20 +76,22 @@ class ETSConfig(object):
     def get_application_data(self, create=False):
         """ Return the application data directory path.
 
-            **Parameters**
+            Parameters
+            ----------
+            create: bool
+                Create the corresponding directory or not.
 
-            create: create the corresponding directory or not
+            Notes
+            -----
+            - This is a directory that applications and packages can safely
+              write non-user accessible data to i.e. configuration
+              information, preferences etc.
 
-            **Notes**
+            - Do not put anything in here that the user might want to
+              navigate to e.g. projects, user data files etc.
 
-            This is a directory that applications and packages can safely
-            write non-user accessible data to i.e. configuration
-            information, preferences etc.
+            - The actual location differs between operating systems.
 
-            Do not put anything in here that the user might want to navigate to
-            e.g. projects, user data files etc.
-
-            The actual location differs between operating systems.
        """
         if self._application_data is None:
             self._application_data = \
@@ -92,35 +119,36 @@ class ETSConfig(object):
     def get_application_home(self, create=False):
         """ Return the application home directory path.
 
-            **Parameters**
+            Parameters
+            ----------
+            create: bool
+                Create the corresponding directory or not.
 
-            create: create the corresponding directory or not
+            Note
+            ----
+            - This is a directory named after the current, running
+              application that imported this module that applications and
+              packages can safely write non-user accessible data to i.e.
+              configuration information, preferences etc.  It is a
+              sub-directory of self.application_data, named after the
+              directory that contains the "main" python script that started
+              the process.  For example, if application foo is started with
+              a script named "run.py" in a directory named "foo", then the
+              application home would be: <ETSConfig.application_data>/foo,
+              regardless of if it was launched with "python
+              <path_to_foo>/run.py" or "cd <path_to_foo>; python run.py"
 
-            **Notes**
+            - This is useful for library modules used in apps that need to
+              store state, preferences, etc. for the specific app only, and
+              not for all apps which use that library module.  If the
+              library module uses ETSConfig.application_home, they can
+              store prefs for the app all in one place and do not need to
+              know the details of where each app might reside.
 
-            This is a directory named after the current, running
-            application that imported this module that applications and
-            packages can safely write non-user accessible data to i.e.
-            configuration information, preferences etc.  It is a
-            sub-directory of self.application_data, named after the
-            directory that contains the "main" python script that started
-            the process.  For example, if application foo is started with
-            a script named "run.py" in a directory named "foo", then the
-            application home would be: <ETSConfig.application_data>/foo,
-            regardless of if it was launched with "python
-            <path_to_foo>/run.py" or "cd <path_to_foo>; python run.py"
+            - Do not put anything in here that the user might want to
+              navigate to e.g. projects, user home files etc.
 
-            This is useful for library modules used in apps that need to
-            store state, preferences, etc. for the specific app only, and
-            not for all apps which use that library module.  If the
-            library module uses ETSConfig.application_home, they can
-            store prefs for the app all in one place and do not need to
-            know the details of where each app might reside.
-
-            Do not put anything in here that the user might want to
-            navigate to e.g. projects, user home files etc.
-
-            The actual location differs between operating systems.
+            - The actual location differs between operating systems.
 
        """
         if self._application_home is None:
@@ -181,11 +209,43 @@ class ETSConfig(object):
     company = property(_get_company, _set_company)
 
 
+    @contextmanager
+    def provisional_toolkit(self, toolkit):
+        """ Perform an operation with toolkit provisionally set
+
+        This sets the toolkit attribute of the ETSConfig object to the
+        provided value. If the operation fails with an exception, the toolkit
+        is reset to nothing.
+
+        This method should only be called if the toolkit is not currently set.
+
+        Parameters
+        ----------
+        toolkit : string
+            The name of the toolkit to provisionally use.
+
+        Raises
+        ------
+        ETSToolkitError
+            If the toolkit attribute is already set, then an ETSToolkitError
+            will be raised when entering the context manager.
+        """
+        if self.toolkit:
+            msg = "ETSConfig toolkit is already set to '{0}'"
+            raise ETSToolkitError(msg.format(self.toolkit))
+        self.toolkit = toolkit
+        try:
+            yield
+        except:
+            # reset the toolkit state
+            self._toolkit = ''
+            raise
+
+
     def _get_toolkit(self):
         """
         Property getter for the GUI toolkit.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ETS_TOOLKIT' environment variable; otherwise the empty string.
 
         """
@@ -221,8 +281,7 @@ class ETSConfig(object):
         Deprecated: This property is no longer used.
 
         Property getter for the Enable backend.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
         """
         from warnings import warn
@@ -400,26 +459,8 @@ class ETSConfig(object):
         Initializes the toolkit.
 
         """
-        # We handle the command line option even though it doesn't have the
-        # highest precedence because we always want to remove it from the
-        # command line.
-        if '-toolkit' in sys.argv:
-            opt_idx = sys.argv.index('-toolkit')
-
-            try:
-                opt_toolkit = sys.argv[opt_idx + 1]
-            except IndexError:
-                raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
-
-            # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 1]
-        else:
-            opt_toolkit = None
-
         if self._toolkit is not None:
             toolkit = self._toolkit
-        elif opt_toolkit is not None:
-            toolkit = opt_toolkit
         else:
             toolkit = os.environ.get('ETS_TOOLKIT', '')
 
@@ -438,14 +479,26 @@ class ETSConfig(object):
 
 
         if sys.platform == 'win32':
-            # Check if the usr_dir is C:\\John Doe\\Documents and Settings.
-            # If yes, then we should modify the usr_dir to be 'My Documents'.
-            # If no, then the user must have modified the os.environ
-            # variables and the directory chosen is a desirable one.
-            desired_dir = os.path.join(parent_directory, 'My Documents')
+            try:
+                from win32com.shell import shell, shellcon
 
-            if os.path.exists(desired_dir):
-                parent_directory = desired_dir
+                # Due to the fact that the user's My Documents directory can
+                # be in some pretty strange places, it's safest to just ask
+                # Windows where it is.
+                MY_DOCS = shellcon.CSIDL_PERSONAL
+                parent_directory = shell.SHGetFolderPath(0, MY_DOCS, 0, 0)
+            except ImportError:
+                # But if they don't have pywin32 installed, just do it the
+                # naive way...
+
+                # Check if the usr_dir is C:\\John Doe\\Documents and Settings.
+                # If yes, then we should modify the usr_dir to be 'My Documents'.
+                # If no, then the user must have modified the os.environ
+                # variables and the directory chosen is a desirable one.
+                desired_dir = os.path.join(parent_directory, 'My Documents')
+
+                if os.path.exists(desired_dir):
+                    parent_directory = desired_dir
 
         else:
             directory_name = directory_name.lower()

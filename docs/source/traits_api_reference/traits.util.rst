@@ -1,10 +1,18 @@
-util Package
-============
+:mod:`util` Package
+===================
 
 :mod:`util` Package
 -------------------
 
 .. automodule:: traits.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`async_trait_wait` Module
+------------------------------
+
+.. automodule:: traits.util.async_trait_wait
     :members:
     :undoc-members:
     :show-inheritance:
@@ -41,18 +49,18 @@ util Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`refresh` Module
----------------------
-
-.. automodule:: traits.util.refresh
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`resource` Module
 ----------------------
 
 .. automodule:: traits.util.resource
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`import_symbol` Module
+-----------------------------
+
+.. automodule:: traits.util.import_symbol
     :members:
     :undoc-members:
     :show-inheritance:
@@ -65,3 +73,17 @@ util Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`trait_documenter` Module
+------------------------------
+
+.. automodule:: traits.util.trait_documenter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`event_tracer` Module
+------------------------------
+
+.. automodule:: traits.util.event_tracer
+    :members:
+    :undoc-members:

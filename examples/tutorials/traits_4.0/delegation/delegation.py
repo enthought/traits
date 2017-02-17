@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Delegation Fixes and Improvements)------------------------------------------
+#--(Delegation Fixes and Improvements)-----------------------------------------
 """
 Delegation Fixes and Improvements
 =================================
@@ -29,18 +29,18 @@ the case.
 However, starting with Traits 3.0, this feature has now been implemented. An
 example of what this means is shown below::
 
-    class Parent ( HasTraits ):
+    class Parent(HasTraits):
 
         first_name = Str
         last_name  = Str
 
-    class Child ( HasTraits ):
+    class Child(HasTraits):
 
-        mother = Instance( Parent )
-        father = Instance( Parent )
+        mother = Instance(Parent)
+        father = Instance(Parent)
 
         first_name = Str
-        last_name  = Delegate( 'father' )
+        last_name  = Delegate('father')
 
 In this example, we've created two classes, **Parent** and **Child**, and the
 value of the **Child** class's *last_name* trait delegates its value to its
@@ -48,26 +48,26 @@ value of the **Child** class's *last_name* trait delegates its value to its
 
 Next, we'll set up a simple set of test objects::
 
-    mom = Parent( first_name = 'Julia', last_name = 'Wilson' )
-    dad = Parent( first_name = 'William', last_name = 'Chase' )
-    son = Child( mother = mom, father = dad, first_name = 'John' )
+    mom = Parent(first_name='Julia', last_name='Wilson')
+    dad = Parent(first_name='William', last_name='Chase')
+    son = Child(mother=mom, father=dad, first_name='John')
 
 Finally, we'll set up a notification handler on the *son* object's *last_name*
 trait and then try out various combinations of setting both the *father* and
 *son* object's *last_name* trait to see in which cases the notification handler
 is called::
 
-    def name_changed ( name ):
+    def name_changed(name):
         print 'Your last name has been changed to %s.' % name
 
     # Set up a change notification handler on the son's last name:
-    son.on_trait_change( name_changed, 'last_name' )
+    son.on_trait_change(name_changed, 'last_name')
 
     # This should cause the son's last name to change as well:
     print "Changing dad's last name to Jones."
     dad.last_name = 'Jones'
 
-    # This change override's the father's last name for the son:
+    # This change overrides the father's last name for the son:
     print "Changing son's last name to Thomas."
     son.last_name = 'Thomas'
 
@@ -75,7 +75,7 @@ is called::
     print "Changing dad's last name to Riley."
     dad.last_name = 'Riley'
 
-    # Son decide's to revert his name back to his father's name:
+    # Son decides to revert his name back to his father's name:
     print "Reverting son's last name."
     del son.last_name
 
@@ -91,44 +91,43 @@ notification handler.
 """
 # FIXME - this need to be redone without traitsui
 
-#--<Imports>--------------------------------------------------------------------
-
 from traits.api import *
 
-#--[Parent Class]---------------------------------------------------------------
 
-class Parent ( HasTraits ):
-
-    first_name = Str
-    last_name  = Str
-
-#--[Child Class]----------------------------------------------------------------
-
-class Child ( HasTraits ):
-
-    mother = Instance( Parent )
-    father = Instance( Parent )
+#--[Parent Class]--------------------------------------------------------------
+class Parent(HasTraits):
 
     first_name = Str
-    last_name  = Delegate( 'father' )
+    last_name = Str
 
-#--[Example*]-------------------------------------------------------------------
 
-mom = Parent( first_name = 'Julia', last_name = 'Wilson' )
-dad = Parent( first_name = 'William', last_name = 'Chase' )
-son = Child( mother = mom, father = dad, first_name = 'John' )
+#--[Child Class]---------------------------------------------------------------
+class Child(HasTraits):
 
-def name_changed ( name ):
+    mother = Instance(Parent)
+    father = Instance(Parent)
+
+    first_name = Str
+    last_name = Delegate('father')
+
+#--[Example*]------------------------------------------------------------------
+
+mom = Parent(first_name='Julia', last_name='Wilson')
+dad = Parent(first_name='William', last_name='Chase')
+son = Child(mother=mom, father=dad, first_name='John')
+
+
+def name_changed(name):
     print 'Your last name has been changed to %s.' % name
 
 # Set up a change notification handler on the son's last name:
-son.on_trait_change( name_changed, 'last_name' )
+son.on_trait_change(name_changed, 'last_name')
 
 # This should cause the son's last name to change as well:
 print "Changing dad's last name to Jones."
 dad.last_name = 'Jones'
 
-# This change override's the father's last name for the son:
+# This change overrides the father's last name for the son:
 print "Changing son's last name to Thomas."
 son.last_name = 'Thomas'
 
@@ -136,7 +135,7 @@ son.last_name = 'Thomas'
 print "Changing dad's last name to Riley."
 dad.last_name = 'Riley'
 
-# Son decide's to revert his name back to his father's name:
+# Son decides to revert his name back to his father's name:
 print "Reverting son's last name."
 del son.last_name
 

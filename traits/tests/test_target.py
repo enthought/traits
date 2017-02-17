@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2010, Enthought, Inc.
 #  All rights reserved.
@@ -10,18 +10,16 @@
 #
 #  Thanks for using Enthought open source!
 #
-#-------------------------------------------------------------------------------
-
-
-
+#------------------------------------------------------------------------------
 """ Test whether HasTraits objects with cycles can be garbage collected.
 """
 
 # Standard library imports
-import unittest
+from traits.testing.unittest_tools import unittest
 
 # Enthought library imports
 from traits.api import HasTraits, Instance, Int
+
 
 class TestCase(unittest.TestCase):
     """ Tests the 'target' argument for on_traits_change. """
@@ -37,6 +35,7 @@ class TestCase(unittest.TestCase):
 
         # Set up to count changes in i
         self.count = 0
+
         def count_notifies():
             self.count += 1
         obj.on_trait_change(count_notifies, "i", target=target)
@@ -64,6 +63,7 @@ class TestCase(unittest.TestCase):
 
         # Set up to count changes in i
         self.count = 0
+
         def count_notifies():
             self.count += 1
         parent.on_trait_change(count_notifies, "child:i", target=target)
@@ -78,11 +78,3 @@ class TestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
-
-
-
-

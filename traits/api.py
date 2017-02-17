@@ -36,31 +36,39 @@ from .traits import (CTrait, Trait, Property, TraitFactory, Default, Color,
         RGBColor, Font)
 
 from .trait_types import (Any, Generic, Int, Long, Float, Complex, Str, Title,
-        Unicode, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode, CBool,
-        String, Regex, Code, HTML, Password, Callable, This, self, Function,
-        Method, Class, Module, Python, ReadOnly, Disallow, missing, Constant,
+        Unicode, Bytes, Bool, CInt, CLong, CFloat, CComplex, CStr, CUnicode,
+        CBytes, CBool, String, Regex, Code, HTML, Password, Callable, This,
+        self, Function, Method, Module, Python, ReadOnly, Disallow, Constant,
         Delegate, DelegatesTo, PrototypedFrom, Expression, PythonValue, File,
         Directory, Range, Enum, Tuple, List, CList, Set, CSet, Dict, Instance,
         AdaptedTo, AdaptsTo, Event, Button, ToolbarButton, Either, Type,
-        Symbol, WeakRef, Date, Time, false, true, undefined)
+        Symbol, WeakRef, Date, Time, false, true, undefined, Supports)
 
 from .trait_types import (ListInt, ListFloat, ListStr, ListUnicode,
-        ListComplex, ListBool, ListFunction, ListMethod, ListClass,
-        ListInstance, ListThis, DictStrAny, DictStrStr, DictStrInt,
+        ListComplex, ListBool, ListFunction, ListMethod,
+        ListThis, DictStrAny, DictStrStr, DictStrInt,
         DictStrLong, DictStrFloat, DictStrBool, DictStrList)
 
+try:
+    from .trait_types import Class, ListClass, ListInstance
+except ImportError:
+    # Python 3 does not have old-style classes anymore, so Class does not exist
+    # interestingly, ListInstance is not equivalent to List(Instance), but
+    # rather only allows old-style instances.
+    pass
+
 from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
-        BaseUnicode, BaseBool, BaseCInt, BaseCLong, BaseCFloat, BaseCComplex,
-        BaseCStr, BaseCUnicode, BaseCBool, BaseFile, BaseDirectory, BaseRange,
-        BaseEnum, BaseTuple, BaseInstance)
+        BaseUnicode, BaseBytes, BaseBool, BaseCInt, BaseCLong, BaseCFloat,
+        BaseCComplex, BaseCStr, BaseCUnicode, BaseCBool, BaseFile,
+        BaseDirectory, BaseRange, BaseEnum, BaseTuple, BaseInstance)
 
-from .trait_types import UUID
+from .trait_types import UUID, ValidatedTuple
 
-from .has_traits import (method, HasTraits, HasStrictTraits, HasPrivateTraits,
+from .has_traits import (HasTraits, HasStrictTraits, HasPrivateTraits,
         Interface, SingletonHasTraits, SingletonHasStrictTraits,
         SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
         implements, traits_super, on_trait_change, cached_property,
-        property_depends_on)
+        property_depends_on, provides, isinterface)
 
 try:
     from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
@@ -78,9 +86,12 @@ from .trait_handlers import (BaseTraitHandler, TraitType, TraitHandler,
 from .trait_value import (BaseTraitValue, TraitValue, SyncValue,
         TypeValue, DefaultValue)
 
-from .adapter import Adapter, adapts
+from .adaptation.adapter import Adapter, adapts
+from .adaptation.adaptation_error import AdaptationError
+from .adaptation.adaptation_manager import adapt, register_factory, \
+     register_provides
 
-from .trait_numeric import Array, CArray
+from .trait_numeric import Array, ArrayOrNone, CArray
 
 try:
     from . import has_traits as has_traits

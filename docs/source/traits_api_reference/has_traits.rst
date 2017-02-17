@@ -13,9 +13,27 @@ Classes
 
 .. autoclass:: MetaInterface
 
+    .. automethod:: __init__
+
+    .. automethod:: __call__
+
 .. autoclass:: MetaHasTraitsObject
 
+    .. automethod:: __init__
+
 .. autoclass:: HasTraits
+    :exclude-members: wrappers
+
+    .. attribute:: wrappers
+        :annotation: =
+
+            | {'same': TraitChangeNotifyWrapper,
+            |     'extended': ExtendedTraitChangeNotifyWrapper,
+            |     'new': NewTraitChangeNotifyWrapper,
+            |     'fast_ui': FastUITraitChangeNotifyWrapper,
+            |     'ui': FastUITraitChangeNotifyWrapper}
+
+        Mapping from dispatch type to notification wrapper class type
 
 .. autoclass:: HasStrictTraits
 
@@ -35,63 +53,30 @@ Classes
 
 .. autoclass:: traits_super
 
+ABC classes
+-----------
+
+.. note:: These classes are only available when the abc module is present.
+
+.. autoclass:: ABCMetaHasTraits
+
+.. autoclass:: ABCHasTraits
+
+.. autoclass:: ABCHasStrictTraits
+
 Functions
 ---------
 
-.. autofunction:: get_delegate_pattern
-
-.. autofunction:: trait_method
-
-.. autofunction:: method
-
-.. autofunction:: weak_arg
-
-.. autofunction:: property_depends_on
-
 .. autofunction:: cached_property
 
-.. autofunction:: on_trait_change
+.. autofunction:: get_delegate_pattern
 
 .. autofunction:: implements
 
-Private Function
-----------------
+.. autofunction:: on_trait_change
 
-.. autofunction:: traits.has_traits._clone_trait
+.. autofunction:: property_depends_on
 
-.. autofunction:: traits.has_traits._get_method
+.. autofunction:: provides
 
-.. autofunction:: traits.has_traits._get_def
-
-.. autofunction:: traits.has_traits._is_serializable
-
-.. autofunction:: traits.has_traits._get_instance_handlers
-
-.. autofunction:: traits.has_traits._check_method
-
-.. autofunction:: traits.has_traits._check_trait
-
-.. autofunction:: traits.has_traits._trait_for
-
-.. autofunction:: traits.has_traits._mapped_trait_for
-
-.. autofunction:: traits.has_traits._add_notifiers
-
-.. autofunction:: traits.has_traits._add_event_handlers
-
-.. autofunction:: traits.has_traits._property_method
-
-.. autofunction:: traits.has_traits._extract_interfaces
-
-.. autofunction:: traits.has_traits._create_implements_class
-
-.. autofunction:: traits.has_traits._trait_monitor_index
-
-.. autofunction:: traits.has_traits._add_assignment_advisor
-
-Private Classes
----------------
-
-.. autoclass:: traits.has_traits._SimpleTest
-
-.. autoclass:: traits.has_traits.__NoInterface__
+.. autofunction:: weak_arg

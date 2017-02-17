@@ -1,7 +1,7 @@
 #  Copyright (c) 2007, Enthought, Inc.
 #  License: BSD Style.
 
-#--(Interfaces)-----------------------------------------------------------------
+#--(Interfaces)----------------------------------------------------------------
 """
 Interfaces
 ==========
@@ -17,9 +17,9 @@ in the example below::
 
     from traits.api import Interface
 
-    class IName ( Interface ):
+    class IName(Interface):
 
-        def get_name ( self ):
+        def get_name(self):
             " Returns the name of an object. "
 
 This same code is shown in the **IName Interface** tab of the code.
@@ -34,7 +34,7 @@ Implementing Interfaces
 A class declares that it implements one or more interfaces using the
 **implements** function, which has the form::
 
-    implements( interface [, interface2, ..., interfacen] )
+    implements(interface [, interface2, ..., interfacen])
 
 The semantics of this function is that the class declares that it implements
 each of the *interfaces* specified as an argument to **implements**.
@@ -44,9 +44,9 @@ definition, as shown in the following example::
 
     from traits.api import HasTraits, implements
 
-    class Person ( HasTraits ):
+    class Person(HasTraits):
 
-        implements( IName )
+        implements(IName)
 
         ...
 
@@ -68,9 +68,9 @@ accomplished using the **Instance** trait, as shown in the following example::
 
     from traits.api import HasTraits, Instance
 
-    class Apartment ( HasTraits ):
+    class Apartment(HasTraits):
 
-        renter = Instance( IName )
+        renter = Instance(IName)
 
 Using an interface class in an **Instance** trait definition declares that the
 trait only accepts values which are objects that either:
@@ -86,54 +86,53 @@ interfaces, such as::
 
     from traits.api import HasTraits, Instance
 
-    class Apartment ( HasTraits ):
+    class Apartment(HasTraits):
 
-        renter = Instance( Person )
+        renter = Instance(Person)
 
 In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
-#--<Imports>--------------------------------------------------------------------
+#--<Imports>-------------------------------------------------------------------
 
 from traits.api import *
 
-#--[IName Interface]------------------------------------------------------------
 
+#--[IName Interface]-----------------------------------------------------------
 # Define the 'IName' interface:
-class IName ( Interface ):
+class IName(Interface):
 
-    def get_name ( self ):
+    def get_name(self):
         """ Returns the name of an object. """
 
-#--[Person Class]---------------------------------------------------------------
 
-class Person ( HasTraits ):
+#--[Person Class]--------------------------------------------------------------
+class Person(HasTraits):
 
-    implements( IName )
+    implements(IName)
 
-    first_name = Str( 'John' )
-    last_name  = Str( 'Doe' )
+    first_name = Str('John')
+    last_name = Str('Doe')
 
     # Implementation of the 'IName' interface:
-    def get_name ( self ):
+    def get_name(self):
         """ Returns the name of an object. """
-        return ('%s %s' % ( self.first_name, self.last_name ))
+        return ('%s %s' % (self.first_name, self.last_name))
 
-#--[Apartment Class]------------------------------------------------------------
 
+#--[Apartment Class]-----------------------------------------------------------
 # Define a class using an object that implements the 'IName' interface:
-class Apartment ( HasTraits ):
+class Apartment(HasTraits):
 
-    renter = Instance( IName )
+    renter = Instance(IName)
 
-#--[Example*]--------------------------------------------------------------------
 
+#--[Example*]------------------------------------------------------------------
 # Create an object implementing the 'IName' interface:
-william = Person( first_name = 'William', last_name = 'Adams' )
+william = Person(first_name='William', last_name='Adams')
 
 # Create an apartment, and assign 'renter' an object implementing 'IName':
-apt = Apartment( renter = william )
+apt = Apartment(renter=william)
 
 # Verify that the object works correctly:
 print 'Renter is:', apt.renter.get_name()
-

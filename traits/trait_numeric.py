@@ -80,7 +80,7 @@ class AbstractArray ( TraitType ):
             raise TraitError( "Using Array or CArray trait types requires the "
                               "numpy package to be installed." )
 
-        from numpy import array, asarray, ndarray, zeros
+        from numpy import asarray, ndarray
 
         # Mark this as being an 'array' trait:
         metadata[ 'array' ] = True
@@ -122,23 +122,7 @@ class AbstractArray ( TraitType ):
                 raise TraitError, "shape should be a list or tuple"
 
         if value is None:
-            if dtype is None:
-                # Compatibility with the default of Traits 2.0
-                dt = int
-            else:
-                dt = dtype
-            if shape is None:
-                value = zeros( ( 0, ), dt )
-            else:
-                size = []
-                for item in shape:
-                    if item is None:
-                        item = 1
-                    elif type( item ) in SequenceTypes:
-                        # XXX: what is this supposed to do?
-                        item = item[0]
-                    size.append( item )
-                value = zeros( size, dt )
+            value = self._default_for_dtype_and_shape( dtype, shape )
 
         self.dtype  = dtype
         self.shape  = shape
@@ -217,7 +201,7 @@ class AbstractArray ( TraitType ):
 
         return 'an array%s%s' % ( dtype, shape )
 
-    def get_editor ( self, trait = None ):
+    def create_editor ( self ):
         """ Returns the default UI editor for the trait.
         """
         editor = None
@@ -259,6 +243,31 @@ class AbstractArray ( TraitType ):
         """
         return value.copy()
 
+    def _default_for_dtype_and_shape ( self, dtype, shape ):
+        """ Invent a suitable default value for a given dtype and shape. """
+        from numpy import zeros
+
+        if dtype is None:
+            # Compatibility with the default of Traits 2.0
+            dt = int
+        else:
+            dt = dtype
+        if shape is None:
+            value = zeros( ( 0, ), dt )
+        else:
+            size = []
+            for item in shape:
+                if item is None:
+                    item = 1
+                elif type( item ) in SequenceTypes:
+                    # Given a (minimum-allowed-length, maximum-allowed_length)
+                    # pair for a particular axis, use the minimum.
+                    item = item[0]
+                size.append( item )
+            value = zeros( size, dt )
+        return value
+
+
 #-------------------------------------------------------------------------------
 #  'Array' trait:
 #-------------------------------------------------------------------------------
@@ -288,7 +297,7 @@ class Array ( AbstractArray ):
             first dimension must be in the range 3 to 5 (inclusive), and the
             second dimension must be at least 2.)
         value : numpy array
-            A default value for the array
+            A default value for the array.
 
         Default Value
         -------------
@@ -322,7 +331,7 @@ class CArray ( AbstractArray ):
         Parameters
         ----------
         dtype : a numpy dtype (e.g., int32)
-            The type of elements in the array
+            The type of elements in the array.
         shape : a tuple
             Describes the required shape of any assigned value. Wildcards and
             ranges are allowed. The value None within the *shape* tuple means
@@ -335,7 +344,7 @@ class CArray ( AbstractArray ):
             first dimension must be in the range 3 to 5 (inclusive), and the
             second dimension must be at least 2.)
         value : numpy array
-            A default value for the array
+            A default value for the array.
 
         Default Value
         -------------
@@ -354,3 +363,34 @@ class CArray ( AbstractArray ):
         super( CArray, self ).__init__( dtype, shape, value, True,
                                         typecode = typecode, **metadata )
 
+
+#-------------------------------------------------------------------------------
+#  'ArrayOrNone' trait
+#-------------------------------------------------------------------------------
+
+class ArrayOrNone ( CArray ):
+    """ A trait whose value may be either a NumPy array or None, with
+        casting allowed.  The default is None.
+    """
+    def __init__ ( self, *args, **metadata ):
+        # Normally use object identity to detect array values changing:
+        metadata.setdefault( 'comparison_mode', OBJECT_IDENTITY_COMPARE )
+        super( ArrayOrNone, self ).__init__( *args, **metadata )
+
+    def validate (self, object, name, value ):
+        if value is None:
+            return value
+        return super( ArrayOrNone, self ).validate( object, name, value )
+
+    def get_default_value ( self ):
+        dv = self.default_value
+        if dv is None:
+            return ( 0, dv )
+        else:
+            return ( 7, ( self.copy_default_value,
+                          ( self.validate( None, None, dv ), ), None ) )
+
+    def _default_for_dtype_and_shape ( self, dtype, shape ):
+        # For ArrayOrNone, if no default is explicitly specified, we
+        # always default to `None`.
+        return None
