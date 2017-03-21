@@ -24,7 +24,7 @@ init:
   - ps: $Env:path = $Env:python + ";" + $Env:python + "\scripts;" + $Env:sdkbin + ";" + $Env:path
 install:
   - ps: if ((Test-Path "c:/egg_cache") -eq 0) { mkdir c:/egg_cache }
-  - ps: python -m pip install --upgrade --no-use-wheel pip
+  - ps: python -m pip install --upgrade --no-binary wheel pip
   - ps: pip install --upgrade wheel
   - ps: pip --version
   - cmd /v:on /e:on /c ".\appveyor-install.cmd"

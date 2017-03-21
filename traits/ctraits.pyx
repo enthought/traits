@@ -1370,15 +1370,8 @@ cdef object getattr_delegate(cTrait trait, CHasTraits obj, object name):
         delegate_attr_name = trait.delegate_attr_name(trait, obj, name)
         tp = type(delegate)
 
-        try:
-            result = getattr(delegate, delegate_attr_name)
-            return result
-        except NotImplementedError as exc:
-            raise exc
-        except Exception as exc:
-            raise DelegationError("The '%.50s' object has no attribute "
-                    "'%.400s' because its %.50s delegate has no attribute"
-                    " '%.400s'." % (type(obj), name, tp, delegate_attr_name))
+        result = getattr(delegate, delegate_attr_name)
+        return result
 
     # FIXME: needs support for unicode
     invalid_attribute_error(name)
