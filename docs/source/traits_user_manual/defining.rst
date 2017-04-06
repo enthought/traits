@@ -475,7 +475,7 @@ a single trait type, including None. The default value of Either is None.
 
 The following is an example of using Either::
 
-    # either.py --- Example of This predefined trait
+    # either.py --- Example of Either predefined trait
 
     from traits.api import HasTraits, Either, Str
 
