@@ -466,9 +466,11 @@ on the class on which it was defined. For example::
 
 Either
 ::::::
-Another predefined trait that merit special explanation is Either. The
+Another predefined trait that merits special explanation is Either. The
 Either trait is intended for attributes that may take a value of more than
-a single trait type, including None. The default value of Either is None.
+a single trait type, including None. The default value of Either is None, even
+if None is not one of the types the user explicitly defines in the constructor,
+but a different default value can be provided using the ``default`` argument.
 
 .. index::
    pair: Either trait; examples
