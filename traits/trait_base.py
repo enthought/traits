@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+t#------------------------------------------------------------------------------
 #
 #  Copyright (c) 2005, Enthought, Inc.
 #  All rights reserved.
@@ -320,7 +320,7 @@ def get_resource_path ( level = 2 ):
     if frozen:
         if hasattr(sys, "_MEIPASS"):
             root = sys._MEIPASS
-        elif frozen in ('macosx_app'):
+        elif frozen == 'macosx_app':
             root = os.environ['RESOURCEPATH']
         elif frozen in ('dll', 'windows_exe', 'console_exe'):
             root = os.path.dirname(sys.executable)
