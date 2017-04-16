@@ -1043,6 +1043,9 @@ class HasTraits ( CHasTraits ):
     #: been modified
     trait_modified = Event
 
+    def __contains__(self, item):
+        return item in self.__dict__
+
     #---------------------------------------------------------------------------
     #  Handles a 'trait_added' event being fired:
     #---------------------------------------------------------------------------
