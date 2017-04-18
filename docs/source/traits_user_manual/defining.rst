@@ -287,7 +287,7 @@ the table.
 | CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| Constant         | Constant( *value*[, \*\*\ *metadata*] )                  |
+| Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
 | DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
@@ -302,9 +302,10 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| Either           | Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] )|
+| Either           | Either( *val1*\ [, *val2*, ..., *valN*,                  |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| Enum             | Enum( *values*[, \*\*\ *metadata*] )                     |
+| Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
 | Event            | Event( [*trait* = None, \*\*\ *metadata*] )              |
 +------------------+----------------------------------------------------------+
@@ -351,7 +352,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
 |                  | None, *force* = False, *handler* = None, *trait* = None, |
-|                  | \*\* \ *metadata*] )                                     |
+|                  | \*\*\ *metadata*] )                                      |
 |                  |                                                          |
 |                  | See :ref:`property-traits`, for details.                 |
 +------------------+----------------------------------------------------------+
