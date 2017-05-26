@@ -416,14 +416,15 @@ def _property_method ( class_dict, name ):
 _HasTraits = None
 
 class MetaHasTraits ( type ):
-    ### JMS: Need a docstring here.
+    """ Controls the creation of HasTraits classes.
+    """
     # All registered class creation listeners.
     #
     # { Str class_name : Callable listener }
     _listeners = {}
 
     def __new__ ( cls, class_name, bases, class_dict ):
-        mhto = MetaHasTraitsObject( cls, class_name, bases, class_dict, False )
+        MetaHasTraitsObject( cls, class_name, bases, class_dict, False )
 
         # Finish building the class using the updated class dictionary:
         klass = type.__new__( cls, class_name, bases, class_dict )
