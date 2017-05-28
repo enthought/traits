@@ -31,7 +31,10 @@
 
 from __future__ import absolute_import
 
-from .has_traits import MetaHasTraits, MetaHasTraitsObject
+from .has_traits import (
+    MetaHasTraits, create_traits_meta_dict, BaseTraits, ClassTraits,
+    InstanceTraits, PrefixTraits, ListenerTraits, ViewTraits
+)
 
 #-------------------------------------------------------------------------------
 #  'MetaCategory' class:
@@ -47,7 +50,21 @@ class MetaCategory ( MetaHasTraits ):
                   "Correct usage is: class FooCategory(Category,Foo):"
 
         # Process any traits-related information in the class dictionary:
-        MetaCategoryObject( cls, class_name, bases, class_dict, True )
+        traits_meta_dict = create_traits_meta_dict(
+            cls, class_name, bases, class_dict, True )
+
+        if len( bases ) == 2:
+            # Update the class and each of the existing subclasses:
+            bases[1]._add_trait_category(
+                traits_meta_dict[ BaseTraits     ],
+                traits_meta_dict[ ClassTraits    ],
+                traits_meta_dict[ InstanceTraits ],
+                traits_meta_dict[ PrefixTraits   ],
+                traits_meta_dict[ ListenerTraits ],
+                traits_meta_dict[ ViewTraits     ]
+            )
+        else:
+            class_dict.update(traits_meta_dict)
 
         # Move all remaining items in our class dictionary to the base class's
         # dictionary:
@@ -61,28 +78,6 @@ class MetaCategory ( MetaHasTraits ):
         # Finish building the class using the updated class dictionary:
         return type.__new__( cls, class_name, bases, class_dict )
 
-#-------------------------------------------------------------------------------
-#  'MetaCategoryObject' class:
-#-------------------------------------------------------------------------------
-
-class MetaCategoryObject ( MetaHasTraitsObject ):
-
-    #---------------------------------------------------------------------------
-    #  Adds the traits meta-data to the class:
-    #---------------------------------------------------------------------------
-
-    def add_traits_meta_data ( self, bases, class_dict, base_traits,
-                               class_traits, instance_traits, prefix_traits,
-                               listeners, view_elements ):
-        if len( bases ) == 2:
-            # Update the class and each of the existing subclasses:
-            bases[1]._add_trait_category( base_traits, class_traits,
-                      instance_traits, prefix_traits, listeners,
-                      view_elements )
-        else:
-            MetaHasTraitsObject.add_traits_meta_data( self, bases,
-                   class_dict, base_traits, class_traits, instance_traits,
-                   prefix_traits, listeners, view_elements )
 
 #-------------------------------------------------------------------------------
 #  'Category' class:
