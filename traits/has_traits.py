@@ -417,6 +417,13 @@ _HasTraits = None
 
 class MetaHasTraits ( type ):
     """ Controls the creation of HasTraits classes.
+
+    The heavy work is done by the `create_traits_meta_dict` function, which
+    takes the ``class_dict`` dictionary of class members and extracts and
+    processes the trait declarations in it. The trait declarations are then
+    added back to the class dictionary and passed off to the __new__ method
+    of the type superclass, to be added to the class.
+
     """
     # All registered class creation listeners.
     #
@@ -462,6 +469,9 @@ class MetaHasTraits ( type ):
 
 def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
     """ Processes all of the traits related data in the class dictionary.
+
+    .. warning:: this function alters the `class_dict` input dictionary.
+
     """
     # Create the various class dictionaries, lists and objects needed to
     # hold trait and view information and definitions:
