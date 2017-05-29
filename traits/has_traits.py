@@ -425,7 +425,7 @@ class MetaHasTraits ( type ):
 
     def __new__ ( cls, class_name, bases, class_dict ):
         traits_meta_dict = create_traits_meta_dict(
-            cls, class_name, bases, class_dict, False )
+            class_name, bases, class_dict, False )
         class_dict.update(traits_meta_dict)
 
         # Finish building the class using the updated class dictionary:
@@ -460,7 +460,7 @@ class MetaHasTraits ( type ):
     remove_listener = classmethod( remove_listener )
 
 
-def create_traits_meta_dict( cls, class_name, bases, class_dict, is_category ):
+def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
     """ Processes all of the traits related data in the class dictionary.
     """
     # Create the various class dictionaries, lists and objects needed to
