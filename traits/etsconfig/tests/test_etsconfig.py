@@ -223,20 +223,6 @@ class ETSConfigTestCase(unittest.TestCase):
         self.assertEqual(dirname, self.ETSConfig.application_data)
         self.assertEqual(app_name, 'tests')
 
-    def test_toolkit_argv(self):
-        test_args = ['something', '-toolkit', 'test', 'something_else']
-        with mock_sys_argv(test_args):
-            toolkit = self.ETSConfig.toolkit
-
-        self.assertEqual(toolkit, 'test')
-        self.assertEqual(test_args, ['something', 'something_else'])
-
-    def test_toolkit_argv_missing(self):
-        test_args = ['something', '-toolkit']
-        with mock_sys_argv(test_args):
-            with self.assertRaises(ValueError):
-                self.ETSConfig.toolkit
-
     def test_toolkit_environ(self):
         test_args = ['something']
         test_environ = {'ETS_TOOLKIT': 'test'}
@@ -255,18 +241,8 @@ class ETSConfigTestCase(unittest.TestCase):
 
         self.assertEqual(toolkit, '')
 
-    def test_toolkit_argv_wins(self):
-        test_args = ['something', '-toolkit', 'test_args', 'something_else']
-        test_environ = {'ETS_TOOLKIT': 'test_environ'}
-        with mock_sys_argv(test_args):
-            with mock_os_environ(test_environ):
-                toolkit = self.ETSConfig.toolkit
-
-        self.assertEqual(toolkit, 'test_args')
-        self.assertEqual(test_args, ['something', 'something_else'])
-
     def test_set_toolkit(self):
-        test_args = ['something', '-toolkit', 'test_args', 'something_else']
+        test_args = []
         test_environ = {'ETS_TOOLKIT': 'test_environ'}
 
         with mock_sys_argv(test_args):
@@ -275,10 +251,6 @@ class ETSConfigTestCase(unittest.TestCase):
                 toolkit = self.ETSConfig.toolkit
 
         self.assertEqual(toolkit, 'test_direct')
-        # XXX this is a bit of a dodgy outcome...
-        self.assertEqual(test_args,
-                         ['something', '-toolkit', 'test_args',
-                          'something_else'])
 
     def test_provisional_toolkit(self):
         test_args = []

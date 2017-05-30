@@ -1,6 +1,3 @@
-"%sdkverpath%" -q -version:"%sdkver%"
-call setenv /x64
-
 rem install python packages
 pip install --cache-dir C:/egg_cache nose
 pip install --cache-dir C:/egg_cache coverage==3.7.1

@@ -73,6 +73,15 @@ class ListUpdatesTest(HasTraits):
         self.events_received += 1
 
 
+class SimpleProperty(HasTraits):
+    x = Int
+
+    y = Property(Int, depends_on='x')
+
+    def _get_y(self):
+        return self.x + 1
+
+
 class TestRegression(unittest.TestCase):
 
     def test_default_value_for_no_cache(self):
@@ -86,6 +95,14 @@ class TestRegression(unittest.TestCase):
         default = ctrait.default_value_for(dummy, 'x')
         self.assertEqual(default, 10)
         self.assertEqual(dummy.__dict__, {})
+
+    def test_default_value_for_property(self):
+        """ Don't segfault when calling default_value_for on a Property trait.
+        """
+        # Regression test for enthought/traits#336.
+        y_trait = SimpleProperty.class_traits()['y']
+        simple_property = SimpleProperty
+        self.assertIsNone(y_trait.default_value_for(simple_property, "y"))
 
     def test_subclasses_weakref(self):
         """ Make sure that dynamically created subclasses are not held

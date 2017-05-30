@@ -1,20 +1,51 @@
 Traits CHANGELOG
 ================
 
+Release 4.6.0
+-------------
+
+This is an incremental release over 4.5, accumulating over a year's worth of
+bugfixes and small improvements to the code.
+
+Highlights of this release include:
+
+* support for Python 3.4 and 3.5.
+* new Bytes and ValidatedTuple traits.
+* a new ArrayOrNone trait which correctly handles None comparisons with Numpy
+  arrays.
+* clean-up of the ETSConfig code for TraitsUI toolkit selection.
+* better compatibility with NumPy scalar types.
+* many other bugfixes and improvements.
+
 Change summary since 4.5.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Enhancements
 
+* Added a ``Bytes`` Trait and related traits (#329)
+* Added support for finding resources from zipped Python source code (#316)
+* Added in-place set arithmetic operations for ``TraitSetObject``s and accept
+  match behaviour of ``TraitSetObject`` with regular Python sets when
+  performing operations with non-set types (eg. lists, dictionaries) (#289)
+* Added a context manager to allow provisional selection of a toolkit to
+  ``ETSConfig`` (this generally improves reliability of toolkit selection
+  for Pyface and TraitsUI). (#276)
 * Added Trait change recorder to aid in debugging event-driven code. (#139)
 * ``__iadd__`` and ``__imul__`` implemented on TraitListObjects. (#165)
 * Added new ``ArrayOrNone`` trait type to replace the
   ``Either(None, Array)`` idiom.  The old idiom results in warnings
   on NumPy >= 1.9. (#219)
-* Added a new ValidatedTuple trait that supports custom validation. (#205)
+* Added a new ``ValidatedTuple`` trait that supports custom validation. (#205)
 
 Changes
 
+* Removed redundant, internal ``ETSConfig`` from Traits codebase. (#327)
+* Better error reporting for failed attribute access. (#243)
+* Removed buggy ``-toolkit`` commandline option ``ETSConfig``. (#326)
+* Removed buggy ``*names`` positional arguments from ``on_trait_change``
+  decorator in improved argument passing (#207).
+* Allow ``Float`` and ``BaseFloat`` traits to accept Python longs. (#272)
+* Clean-up and fixes to example code. (#126)
 * Remove outdated ``ImportSpy`` and ``ImportManager`` utilities. (#188)
 * The ``deprecated`` decorator now issues a DeprecationWarning (using
   the Python ``warnings`` module) rather than logging a warning via
@@ -23,9 +54,17 @@ Changes
 * Deprecated ``HasTraits.get()`` and ``HasTraits.set()`` (#190).
 * The default ``View`` shows all (non-event) traits whose ``visible`` property
   is not ``False``. Private traits are set ``visible=False`` by default. (#234)
- 
+
 Fixes
 
+* Fix Bool traits so that value stored is always a Python ``bool`` (and in
+  particular, not a NumPy ``np.bool_``). (#318)
+* Fix Bool traits so that regular validator accepts NumpPy's ``np.bool_``
+  boolean values (bringing it in agreement with the fast validator). (#302)
+* Fix use of ``next`` in ``TraitDocumenter`` for Python 3 compatibility. (#293)
+* Fix off-by-one error when ``TraitListObject`` is setting or deleting slices.
+  (#283)
+* Fix reference cycles caused by ``sync_traits``. (#135)
 * Fix so that ``sys.exc_info()`` works as expected in exception handlers in
   Python 3 (#266)
 * Fix ``String`` trait to accept ``str`` subclasses (like ``numpy.str_``).
