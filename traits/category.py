@@ -50,33 +50,31 @@ class MetaCategory ( MetaHasTraits ):
                   "Correct usage is: class FooCategory(Category,Foo):"
 
         # Process any traits-related information in the class dictionary:
-        traits_meta_dict = create_traits_meta_dict(
+        new_class_dict = create_traits_meta_dict(
             class_name, bases, class_dict, is_category=True )
 
         if len( bases ) == 2:
-            # Update the class and each of the existing subclasses:
-            bases[1]._add_trait_category(
-                traits_meta_dict[ BaseTraits     ],
-                traits_meta_dict[ ClassTraits    ],
-                traits_meta_dict[ InstanceTraits ],
-                traits_meta_dict[ PrefixTraits   ],
-                traits_meta_dict[ ListenerTraits ],
-                traits_meta_dict[ ViewTraits     ]
-            )
-        else:
-            class_dict.update(traits_meta_dict)
-
-        # Move all remaining items in our class dictionary to the base class's
-        # dictionary:
-        if len( bases ) == 2:
             category_class = bases[1]
-            for name, value in class_dict.items():
+
+            # Update the class and each of the existing subclasses:
+            category_class._add_trait_category(
+                new_class_dict.pop( BaseTraits     ),
+                new_class_dict.pop( ClassTraits    ),
+                new_class_dict.pop( InstanceTraits ),
+                new_class_dict.pop( PrefixTraits   ),
+                new_class_dict.pop( ListenerTraits ),
+                new_class_dict.pop( ViewTraits     )
+            )
+
+            # Move all remaining items in our class dictionary to the base
+            # class's dictionary:
+            for name, value in new_class_dict.items():
                 if not hasattr( category_class, name ):
                     setattr( category_class, name, value )
-                    del class_dict[ name ]
+                    del new_class_dict[ name ]
 
         # Finish building the class using the updated class dictionary:
-        return type.__new__( cls, class_name, bases, class_dict )
+        return type.__new__( cls, class_name, bases, new_class_dict )
 
 
 #-------------------------------------------------------------------------------

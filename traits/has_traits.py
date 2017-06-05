@@ -431,12 +431,11 @@ class MetaHasTraits ( type ):
     _listeners = {}
 
     def __new__ ( cls, class_name, bases, class_dict ):
-        traits_meta_dict = create_traits_meta_dict(
+        new_class_dict = create_traits_meta_dict(
             class_name, bases, class_dict, is_category=False )
-        class_dict.update(traits_meta_dict)
 
         # Finish building the class using the updated class dictionary:
-        klass = type.__new__( cls, class_name, bases, class_dict )
+        klass = type.__new__( cls, class_name, bases, new_class_dict )
 
         # Call all listeners that registered for this specific class:
         name = '%s.%s' % ( klass.__module__, klass.__name__ )
@@ -784,6 +783,10 @@ def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
     traits_meta_dict[ PrefixTraits    ] = prefix_traits
     traits_meta_dict[ ListenerTraits  ] = listeners
     traits_meta_dict[ ViewTraits      ] = view_elements
+
+    # Add remaining class_dict entries back to traits_meta_dict, so that the
+    # caller can use traits_meta_dict as the new class dictionary.
+    traits_meta_dict.update(class_dict)
     return traits_meta_dict
 
 
