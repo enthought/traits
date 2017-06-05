@@ -32,7 +32,7 @@
 from __future__ import absolute_import
 
 from .has_traits import (
-    MetaHasTraits, create_traits_meta_dict, BaseTraits, ClassTraits,
+    MetaHasTraits, update_traits_class_dict, BaseTraits, ClassTraits,
     InstanceTraits, PrefixTraits, ListenerTraits, ViewTraits
 )
 
@@ -50,7 +50,7 @@ class MetaCategory ( MetaHasTraits ):
                   "Correct usage is: class FooCategory(Category,Foo):"
 
         # Process any traits-related information in the class dictionary:
-        new_class_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category=True )
 
         if len( bases ) == 2:
@@ -58,23 +58,23 @@ class MetaCategory ( MetaHasTraits ):
 
             # Update the class and each of the existing subclasses:
             category_class._add_trait_category(
-                new_class_dict.pop( BaseTraits     ),
-                new_class_dict.pop( ClassTraits    ),
-                new_class_dict.pop( InstanceTraits ),
-                new_class_dict.pop( PrefixTraits   ),
-                new_class_dict.pop( ListenerTraits ),
-                new_class_dict.pop( ViewTraits     )
+                class_dict.pop( BaseTraits     ),
+                class_dict.pop( ClassTraits    ),
+                class_dict.pop( InstanceTraits ),
+                class_dict.pop( PrefixTraits   ),
+                class_dict.pop( ListenerTraits ),
+                class_dict.pop( ViewTraits     )
             )
 
             # Move all remaining items in our class dictionary to the base
             # class's dictionary:
-            for name, value in new_class_dict.items():
+            for name, value in class_dict.items():
                 if not hasattr( category_class, name ):
                     setattr( category_class, name, value )
-                    del new_class_dict[ name ]
+                    del class_dict[ name ]
 
         # Finish building the class using the updated class dictionary:
-        return type.__new__( cls, class_name, bases, new_class_dict )
+        return type.__new__( cls, class_name, bases, class_dict )
 
 
 #-------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 from traits.testing.unittest_tools import unittest
 from traits.has_traits import (
-    create_traits_meta_dict, on_trait_change,
+    update_traits_class_dict, on_trait_change,
     BaseTraits, ClassTraits, PrefixTraits,
     ListenerTraits, InstanceTraits, HasTraits
 )
@@ -32,7 +32,7 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
@@ -42,7 +42,7 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
 
         # Other traits dictionaries should be empty.
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
-            self.assertEqual(traits_meta_dict[kind], {})
+            self.assertEqual(class_dict[kind], {})
 
     def test_forward_property(self):
         # Given
@@ -58,20 +58,20 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
-        self.assertEqual(traits_meta_dict[ListenerTraits], {})
-        self.assertEqual(traits_meta_dict[InstanceTraits], {})
+        self.assertEqual(class_dict[ListenerTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
 
         # Both ClassTraits and BaseTraits should contain a single trait (the
         # property we created)
-        self.assertEqual(len(traits_meta_dict[BaseTraits]), 1)
-        self.assertEqual(len(traits_meta_dict[ClassTraits]), 1)
-        self.assertIs(traits_meta_dict[BaseTraits]['my_property'],
-                      traits_meta_dict[ClassTraits]['my_property'])
+        self.assertEqual(len(class_dict[BaseTraits]), 1)
+        self.assertEqual(len(class_dict[ClassTraits]), 1)
+        self.assertIs(class_dict[BaseTraits]['my_property'],
+                      class_dict[ClassTraits]['my_property'])
 
         # The class_dict should still have the entry for `attr`, but not
         # `my_property`.
@@ -89,20 +89,20 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
-        self.assertEqual(traits_meta_dict[ListenerTraits], {})
-        self.assertEqual(traits_meta_dict[InstanceTraits], {})
+        self.assertEqual(class_dict[ListenerTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
 
         # Both ClassTraits and BaseTraits should contain a single trait (the
         # Int trait)
-        self.assertEqual(len(traits_meta_dict[BaseTraits]), 1)
-        self.assertEqual(len(traits_meta_dict[ClassTraits]), 1)
-        self.assertIs(traits_meta_dict[BaseTraits]['my_int'],
-                      traits_meta_dict[ClassTraits]['my_int'])
+        self.assertEqual(len(class_dict[BaseTraits]), 1)
+        self.assertEqual(len(class_dict[ClassTraits]), 1)
+        self.assertIs(class_dict[BaseTraits]['my_int'],
+                      class_dict[ClassTraits]['my_int'])
 
         # The class_dict should still have the entry for `attr`, but not
         # `my_int`.
@@ -120,15 +120,15 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
         for kind in (BaseTraits, ClassTraits, ListenerTraits, InstanceTraits):
-            self.assertEqual(traits_meta_dict[kind], {})
+            self.assertEqual(class_dict[kind], {})
 
-        self.assertIn('my_int', traits_meta_dict[PrefixTraits])
+        self.assertIn('my_int', class_dict[PrefixTraits])
 
         # The class_dict should still have the entry for `attr`, but not
         # `my_int`.
@@ -150,16 +150,16 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
-        self.assertEqual(traits_meta_dict[BaseTraits], {})
-        self.assertEqual(traits_meta_dict[ClassTraits], {})
-        self.assertEqual(traits_meta_dict[InstanceTraits], {})
+        self.assertEqual(class_dict[BaseTraits], {})
+        self.assertEqual(class_dict[ClassTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
         self.assertEqual(
-            traits_meta_dict[ListenerTraits],
+            class_dict[ListenerTraits],
             {'my_listener':
              ('method', {
                  'pattern': 'something',
@@ -177,15 +177,15 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
-        self.assertEqual(traits_meta_dict[BaseTraits], {})
-        self.assertEqual(traits_meta_dict[InstanceTraits], {})
-        self.assertEqual(traits_meta_dict[ListenerTraits], {})
-        self.assertIs(traits_meta_dict[ClassTraits]['my_property'],
+        self.assertEqual(class_dict[BaseTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
+        self.assertEqual(class_dict[ListenerTraits], {})
+        self.assertIs(class_dict[ClassTraits]['my_property'],
                       generic_trait)
 
     def test_complex_baseclass(self):
@@ -201,20 +201,20 @@ class TestCreateTraitsMetaDict(unittest.TestCase):
         is_category = False
 
         # When
-        traits_meta_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category
         )
 
         # Then
-        self.assertEqual(traits_meta_dict[InstanceTraits], {})
-        self.assertEqual(traits_meta_dict[ListenerTraits], {})
+        self.assertEqual(class_dict[InstanceTraits], {})
+        self.assertEqual(class_dict[ListenerTraits], {})
         self.assertIs(
-            traits_meta_dict[BaseTraits]['x'],
-            traits_meta_dict[ClassTraits]['x']
+            class_dict[BaseTraits]['x'],
+            class_dict[ClassTraits]['x']
         )
         self.assertIs(
-            traits_meta_dict[BaseTraits]['my_trait'],
-            traits_meta_dict[ClassTraits]['my_trait']
+            class_dict[BaseTraits]['my_trait'],
+            class_dict[ClassTraits]['my_trait']
         )
 
 

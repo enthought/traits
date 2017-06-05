@@ -431,11 +431,11 @@ class MetaHasTraits ( type ):
     _listeners = {}
 
     def __new__ ( cls, class_name, bases, class_dict ):
-        new_class_dict = create_traits_meta_dict(
+        update_traits_class_dict(
             class_name, bases, class_dict, is_category=False )
 
         # Finish building the class using the updated class dictionary:
-        klass = type.__new__( cls, class_name, bases, new_class_dict )
+        klass = type.__new__( cls, class_name, bases, class_dict )
 
         # Call all listeners that registered for this specific class:
         name = '%s.%s' % ( klass.__module__, klass.__name__ )
@@ -466,16 +466,13 @@ class MetaHasTraits ( type ):
     remove_listener = classmethod( remove_listener )
 
 
-def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
+def update_traits_class_dict( class_name, bases, class_dict, is_category ):
     """ Processes all of the traits related data in the class dictionary.
 
     This is called during the construction of a new HasTraits class. The first
     three parameters have the same interpretation as the corresponding
-    parameters of ``type.__new__``.  The return value of this function is
-    a dictionary of new class members, which is passed to ``type.__new__``
-    instead of the original `class_dict` parameter.
-
-    .. warning:: this function alters the `class_dict` input dictionary.
+    parameters of ``type.__new__``. This function modifies `class_dict`
+    in-place.
 
     Parameters
     ----------
@@ -487,12 +484,6 @@ def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
         A dictionary of class members.
     is_category : bool
         Whether this is a Category subclass.
-
-    Returns
-    -------
-    traits_class_dict : dict
-        A dictionary with traits-related class members. This dictionary will
-        be passed to ``type.__new__`` instead of the original `class_dict`.
 
     """
     # Create the various class dictionaries, lists and objects needed to
@@ -779,18 +770,13 @@ def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
 
             listeners[ name ] = ( 'property', cached, depends_on )
 
-    traits_meta_dict = {}
-    traits_meta_dict[ BaseTraits      ] = base_traits
-    traits_meta_dict[ ClassTraits     ] = class_traits
-    traits_meta_dict[ InstanceTraits  ] = instance_traits
-    traits_meta_dict[ PrefixTraits    ] = prefix_traits
-    traits_meta_dict[ ListenerTraits  ] = listeners
-    traits_meta_dict[ ViewTraits      ] = view_elements
-
-    # Add remaining class_dict entries back to traits_meta_dict, so that the
-    # caller can use traits_meta_dict as the new class dictionary.
-    traits_meta_dict.update(class_dict)
-    return traits_meta_dict
+    # Add processed traits back into class_dict.
+    class_dict[ BaseTraits      ] = base_traits
+    class_dict[ ClassTraits     ] = class_traits
+    class_dict[ InstanceTraits  ] = instance_traits
+    class_dict[ PrefixTraits    ] = prefix_traits
+    class_dict[ ListenerTraits  ] = listeners
+    class_dict[ ViewTraits      ] = view_elements
 
 
 def migrate_property ( name, property, property_info, class_dict ):
