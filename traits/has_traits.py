@@ -470,7 +470,27 @@ class MetaHasTraits ( type ):
 def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
     """ Processes all of the traits related data in the class dictionary.
 
+    This is called during the construction of a new HasTraits class. The first
+    three parameters have the same interpretation as the corresponding
+    parameters of ``type.__new__``.
+
     .. warning:: this function alters the `class_dict` input dictionary.
+
+    Parameters
+    ----------
+    class_name : str or unicode
+        The name of the HasTraits class.
+    bases : tuple
+        The base classes for the HasTraits class.
+    class_dict : dict
+        A dictionary of class members.
+    is_category : bool
+        Whether this is a Category subclass.
+
+    Returns
+    -------
+    traits_meta_dict : dict
+        A dictionary with traits-related members. XXX expand this XXX
 
     """
     # Create the various class dictionaries, lists and objects needed to
