@@ -51,7 +51,7 @@ class MetaCategory ( MetaHasTraits ):
 
         # Process any traits-related information in the class dictionary:
         traits_meta_dict = create_traits_meta_dict(
-            class_name, bases, class_dict, True )
+            class_name, bases, class_dict, is_category=True )
 
         if len( bases ) == 2:
             # Update the class and each of the existing subclasses:

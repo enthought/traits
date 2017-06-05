@@ -432,7 +432,7 @@ class MetaHasTraits ( type ):
 
     def __new__ ( cls, class_name, bases, class_dict ):
         traits_meta_dict = create_traits_meta_dict(
-            class_name, bases, class_dict, False )
+            class_name, bases, class_dict, is_category=False )
         class_dict.update(traits_meta_dict)
 
         # Finish building the class using the updated class dictionary:
