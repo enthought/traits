@@ -471,7 +471,9 @@ def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
 
     This is called during the construction of a new HasTraits class. The first
     three parameters have the same interpretation as the corresponding
-    parameters of ``type.__new__``.
+    parameters of ``type.__new__``.  The return value of this function is
+    a dictionary of new class members, which is passed to ``type.__new__``
+    instead of the original `class_dict` parameter.
 
     .. warning:: this function alters the `class_dict` input dictionary.
 
@@ -488,8 +490,9 @@ def create_traits_meta_dict( class_name, bases, class_dict, is_category ):
 
     Returns
     -------
-    traits_meta_dict : dict
-        A dictionary with traits-related members. XXX expand this XXX
+    traits_class_dict : dict
+        A dictionary with traits-related class members. This dictionary will
+        be passed to ``type.__new__`` instead of the original `class_dict`.
 
     """
     # Create the various class dictionaries, lists and objects needed to
