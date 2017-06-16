@@ -110,8 +110,6 @@ def password_editor ( auto_set=True, enter_set=False ):
 def multi_line_text_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns a text editor for multi-line strings.
     """
-    global MultilineTextEditors
-
     if (auto_set, enter_set) not in MultilineTextEditors:
         from traitsui.api import TextEditor
         MultilineTextEditors[auto_set, enter_set] = TextEditor(
@@ -125,9 +123,6 @@ def multi_line_text_editor ( auto_set=True, enter_set=False ):
 def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     """ Factory function that returns a text editor for bytes.
     """
-
-    global BytesEditors
-
     if encoding is not None:
         if isinstance(encoding, str):
             import codecs
