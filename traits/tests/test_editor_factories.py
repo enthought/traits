@@ -16,11 +16,18 @@ Tests for Editor factories.
 
 """
 
+try:
+    import traitsui
+    HAS_TRAITSUI = True
+except ImportError:
+    HAS_TRAITSUI = False
+
 from traits.testing.unittest_tools import unittest
 
 from ..traits import multi_line_text_editor
 
 
+@unittest.skipUnless(HAS_TRAITSUI, "This test needs traitsui")
 class TestMultiLineEditor(unittest.TestCase):
     def test_auto_set_default(self):
         a = multi_line_text_editor(auto_set=False)
