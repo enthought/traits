@@ -101,7 +101,7 @@ class TestRegression(unittest.TestCase):
         """
         # Regression test for enthought/traits#336.
         y_trait = SimpleProperty.class_traits()['y']
-        simple_property = SimpleProperty
+        simple_property = SimpleProperty()
         self.assertIsNone(y_trait.default_value_for(simple_property, "y"))
 
     def test_subclasses_weakref(self):
