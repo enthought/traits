@@ -63,6 +63,15 @@ class TestBool(unittest.TestCase):
         self.assertTrue(a.foo)
 
     @unittest.skipUnless(numpy_available, "numpy not available")
+    def test_numpy_bool_retrieved_as_bool(self):
+        a = A()
+        a.foo = numpy.bool_(True)
+        self.assertIsInstance(a.foo, bool)
+
+        a.foo = numpy.bool_(False)
+        self.assertIsInstance(a.foo, bool)
+
+    @unittest.skipUnless(numpy_available, "numpy not available")
     def test_numpy_bool_accepted_as_dict_value(self):
         # Regression test for enthought/traits#299.
         class HasBoolDict(HasTraits):

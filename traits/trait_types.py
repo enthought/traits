@@ -86,7 +86,7 @@ try:
     float_fast_validate   = ( 11, float, floating, None, int, long, integer )
     complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
-    bool_fast_validate    = ( 11, bool, bool_ )
+    bool_fast_validate    = ( 11, bool, None, bool_ )
     # Tuple or single type suitable for an isinstance check.
     _BOOL_TYPES = (bool, bool_)
 except ImportError:
@@ -430,6 +430,54 @@ class Unicode ( BaseUnicode ):
     #: The C-level fast validator to use:
     fast_validate = ( 11, unicode, None, str )
 
+
+#-------------------------------------------------------------------------------
+#  'BaseBytes' and 'Bytes' traits:
+#-------------------------------------------------------------------------------
+
+class BaseBytes(TraitType):
+    """ Defines a trait whose value must be a Python bytes string.
+    """
+
+    #: The default value for the trait:
+    default_value = b''
+
+    #: A description of the type of value this trait accepts:
+    info_text = 'a bytes string'
+
+    #: An encoding to use with TraitsUI editors
+    encoding = None
+
+    def validate(self, object, name, value):
+        """ Validates that a specified value is valid for this trait.
+
+            Note: The 'fast validator' version performs this check in C.
+        """
+        if isinstance(value, bytes):
+            return value
+
+        self.error(object, name, value)
+
+    def create_editor(self):
+        """ Returns the default traits UI editor for this type of trait.
+        """
+        from .traits import bytes_editor
+        auto_set = self.auto_set
+        if auto_set is None:
+            auto_set = True
+        enter_set = self.enter_set or False
+
+        return bytes_editor(auto_set, enter_set, self.encoding)
+
+
+class Bytes(BaseBytes):
+    """ Defines a trait whose value must be a Python bytes string using a
+        C-level fast validator.
+    """
+
+    #: The C-level fast validator to use:
+    fast_validate = (11, bytes)
+
 #-------------------------------------------------------------------------------
 #  'BaseBool' and 'Bool' traits:
 #-------------------------------------------------------------------------------
@@ -453,7 +501,7 @@ class BaseBool ( TraitType ):
             Note: The 'fast validator' version performs this check in C.
         """
         if isinstance( value, _BOOL_TYPES ):
-            return value
+            return bool(value)
 
         self.error( object, name, value )
 
@@ -658,6 +706,35 @@ class CUnicode ( BaseCUnicode ):
 
     #: The C-level fast validator to use:
     fast_validate = ( 12, unicode )
+
+#-------------------------------------------------------------------------------
+#  'BaseCBytes' and 'CBytes' traits:
+#-------------------------------------------------------------------------------
+
+class BaseCBytes(BaseBytes):
+    """ Defines a trait whose value must be a Python bytes object and which
+        supports coercions of non-bytes values to bytes.
+    """
+
+    def validate(self, object, name, value):
+        """ Validates that a specified value is valid for this trait.
+
+            Note: The 'fast validator' version performs this check in C.
+        """
+        try:
+            return bytes(value)
+        except:
+            self.error(object, name, value)
+
+
+class CBytes(BaseCBytes):
+    """ Defines a trait whose value must be a Python bytes and which
+        supports coercions of non-bytes values bytes using a C-level
+        fast validator.
+    """
+
+    #: The C-level fast validator to use:
+    fast_validate = (12, bytes)
 
 #-------------------------------------------------------------------------------
 #  'BaseCBool' and 'CBool' traits:

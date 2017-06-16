@@ -236,7 +236,10 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
     return value
 
 cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
-    raise NotImplementedError('vt')
+    if (len(trait.py_validate) == 2 and value is None) or isinstance(value, type(obj)):
+        return value
+    raise_trait_error(trait, obj, name, value)
+
 
 cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
     # FIXME: where defined as register in the C code

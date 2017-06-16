@@ -5,11 +5,10 @@ The Traits package for the Python language allows Python programmers to use
 a special kind of type definition called a trait. This document introduces the
 concepts behind, and usage of, the Traits package.
 
-For more information on the Traits package, refer to the `Traits web page
-<http://code.enthought.com/projects/traits>`_. This page contains links to
-downloadable packages, the source code repository, and the Traits development
-website. Additional documentation for the Traits package is available from
-the Traits web page, including:
+For more information on the Traits package, refer to the `Traits GitHub
+repository <http://github.com/enthought/traits>`_. Additional documentation
+for the Traits package is available,
+including:
 
 * *Traits API Reference*
 * `TraitsUI User Manual
@@ -170,10 +169,10 @@ where the Traits package has been used, it has proven valuable for enhancing
 programmers' ability to understand code, during both concurrent
 development and maintenance.
 
-The Traits 4.0 package works with version 2.7 and later of Python, and is
-similar in some ways to the Python property language feature. Standard Python
-properties provide the similar capabilities to the Traits package, but with
-more work on the part of the programmer.
+The Traits |version| package works with versions 2.7 and 3.4 and later of
+Python.  It is similar in some ways to the Python property language feature.
+Standard Python properties provide the similar capabilities to the Traits
+package, but with more work on the part of the programmer.
 
 .. rubric:: Footnotes
 .. [1] All code examples in this guide that include a file name are also
@@ -182,4 +181,3 @@ more work on the part of the programmer.
        individually, or view them in a tutorial program by running:
 
        python <Traits dir>/traits/tutor/tutor.py <Traits dir>/docs/tutorials/doc_examples
-
