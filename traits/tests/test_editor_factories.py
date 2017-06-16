@@ -37,6 +37,6 @@ class TestMultiLineEditor(unittest.TestCase):
 
     def test_enter_set_default(self):
         a = multi_line_text_editor(enter_set=True)
-        self.assertTrue(a.auto_set)
+        self.assertTrue(a.enter_set)
         b = multi_line_text_editor()
-        self.assertFalse(b.auto_set)
+        self.assertFalse(b.enter_set)
