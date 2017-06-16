@@ -85,14 +85,14 @@ KindMap = {
 #  Editor factory functions:
 #-------------------------------------------------------------------------------
 
-PasswordEditor      = None
-MultilineTextEditor = {}
-BytesEditors        = {}
-SourceCodeEditor    = None
-HTMLTextEditor      = None
-PythonShellEditor   = None
-DateEditor          = None
-TimeEditor          = None
+PasswordEditor       = None
+MultilineTextEditors = {}
+BytesEditors         = {}
+SourceCodeEditor     = None
+HTMLTextEditor       = None
+PythonShellEditor    = None
+DateEditor           = None
+TimeEditor           = None
 
 def password_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns an editor for passwords.
@@ -110,17 +110,17 @@ def password_editor ( auto_set=True, enter_set=False ):
 def multi_line_text_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns a text editor for multi-line strings.
     """
-    global MultilineTextEditor
+    global MultilineTextEditors
 
-    if (auto_set, enter_set) not in MultilineTextEditor:
+    if (auto_set, enter_set) not in MultilineTextEditors:
         from traitsui.api import TextEditor
-        MultilineTextEditor[(auto_set, enter_set)] = TextEditor(
+        MultilineTextEditors[auto_set, enter_set] = TextEditor(
             multi_line = True,
             auto_set   = auto_set,
             enter_set  = enter_set
             )
 
-    return MultilineTextEditor[(auto_set, enter_set)]
+    return MultilineTextEditors[auto_set, enter_set]
 
 def bytes_editor(auto_set=True, enter_set=False, encoding=None):
     """ Factory function that returns a text editor for bytes.
