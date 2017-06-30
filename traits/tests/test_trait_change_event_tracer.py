@@ -73,11 +73,10 @@ class TestChangeEventTracers(unittest.TestCase):
         foo.on_trait_change(_on_foo_baz_changed, 'baz')
 
         # Set the event tracer and trigger a cascade of change events.
-        trait_notifiers.set_change_event_tracers(
-            pre_tracer=self._collect_pre_notification_events,
-            post_tracer=self._collect_post_notification_events)
-
-        foo.baz = 3
+        pre_tracer=self._collect_pre_notification_events
+        post_tracer=self._collect_post_notification_events
+        with trait_notifiers.change_event_tracers(pre_tracer, post_tracer):
+            foo.baz = 3
 
         self.assertEqual(len(self.pre_change_events), 4)
         self.assertEqual(len(self.post_change_events), 4)
@@ -100,8 +99,7 @@ class TestChangeEventTracers(unittest.TestCase):
 
         self.assertEqual(self.exceptions, [None] * 4)
 
-        # Deactivate the tracer; it should not be called anymore.
-        trait_notifiers.clear_change_event_tracers()
+        # Check that the tracers are no longer active.
         foo.baz = 23
         self.assertEqual(len(self.pre_change_events), 4)
         self.assertEqual(len(self.post_change_events), 4)
@@ -116,11 +114,10 @@ class TestChangeEventTracers(unittest.TestCase):
         foo.on_trait_change(_on_foo_fuz_changed, 'fuz')
 
         # Set the event tracer and trigger a cascade of change events.
-        trait_notifiers.set_change_event_tracers(
-            pre_tracer=self._collect_pre_notification_events,
-            post_tracer=self._collect_post_notification_events)
-
-        foo.fuz = 3
+        pre_tracer=self._collect_pre_notification_events
+        post_tracer=self._collect_post_notification_events
+        with trait_notifiers.change_event_tracers(pre_tracer, post_tracer):
+            foo.fuz = 3
 
         self.assertEqual(len(self.pre_change_events), 4)
         self.assertEqual(len(self.post_change_events), 4)

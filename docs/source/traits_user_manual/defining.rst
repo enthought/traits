@@ -287,7 +287,7 @@ the table.
 | CSet             | CSet( [*trait* = None, *value* = None, *items* = True,   |
 |                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| n/a              | Constant( *value*[, \*\*\ *metadata*] )                  |
+| Constant         | Constant( *value*\ [, \*\*\ *metadata*] )                |
 +------------------+----------------------------------------------------------+
 | Dict, DictStrAny,| Dict( [*key_trait* = None, *value_trait* = None,         |
 | DictStrBool,     | *value* = None, *items* = True, \*\*\ *metadata*] )      |
@@ -302,9 +302,10 @@ the table.
 +------------------+----------------------------------------------------------+
 | Disallow         | n/a                                                      |
 +------------------+----------------------------------------------------------+
-| n/a              | Either( *val1*[, *val2*, ..., *valN*, \*\*\ *metadata*] )|
+| Either           | Either( *val1*\ [, *val2*, ..., *valN*,                  |
+|                  | \*\*\ *metadata*] )                                      |
 +------------------+----------------------------------------------------------+
-| Enum             | Enum( *values*[, \*\*\ *metadata*] )                     |
+| Enum             | Enum( *values*\ [, \*\*\ *metadata*] )                   |
 +------------------+----------------------------------------------------------+
 | Event            | Event( [*trait* = None, \*\*\ *metadata*] )              |
 +------------------+----------------------------------------------------------+
@@ -351,7 +352,7 @@ the table.
 +------------------+----------------------------------------------------------+
 | Property         | Property( [*fget* = None, *fset* = None, *fvalidate* =   |
 |                  | None, *force* = False, *handler* = None, *trait* = None, |
-|                  | \*\* \ *metadata*] )                                     |
+|                  | \*\*\ *metadata*] )                                      |
 |                  |                                                          |
 |                  | See :ref:`property-traits`, for details.                 |
 +------------------+----------------------------------------------------------+
@@ -459,6 +460,50 @@ on the class on which it was defined. For example::
     >>> fred.manager = mary
     >>> # This is also OK, because mary's manager can be an Employee
     >>> mary.manager = fred
+
+.. index:: Either trait
+
+.. _either:
+
+Either
+::::::
+Another predefined trait that merits special explanation is Either. The
+Either trait is intended for attributes that may take a value of more than
+a single trait type, including None. The default value of Either is None, even
+if None is not one of the types the user explicitly defines in the constructor,
+but a different default value can be provided using the ``default`` argument.
+
+.. index::
+   pair: Either trait; examples
+
+The following is an example of using Either::
+
+    # either.py --- Example of Either predefined trait
+
+    from traits.api import HasTraits, Either, Str
+
+    class Employee(HasTraits):
+        manager_name = Either(Str, None)
+
+This example defines an Employee class, which has a **manager_name** trait
+attribute, which accepts either an Str instance or None as its value, and
+will raise a TraitError if a value of any other type is assigned. For example::
+
+    >>> from traits.api import HasTraits, Either, Str
+    >>> class Employee(HasTraits):
+    ...     manager_name = Either(Str, None)
+    ...
+    >>> steven = Employee(manager_name="Jenni")
+    >>> # Here steven's manager is named "Jenni"
+    >>> steven.manager_name
+    'Jenni'
+    >>> eric = Employee(manager_name=None)
+    >>> # Eric is the boss, so he has no manager.
+    >>> eric.manager_name is None
+    True
+    >>> # Assigning a value that is neither a string nor None will fail.
+    >>> steven.manager_name = 5
+    traits.trait_errors.TraitError: The 'manager_name' trait of an Employee instance must be a string or None, but a value of 5 <type 'int'> was specified.
 
 .. index:: multiple values, defining trait with
 
