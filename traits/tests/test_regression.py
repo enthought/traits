@@ -3,6 +3,7 @@ import gc
 import sys
 
 from ..has_traits import HasTraits, Property, on_trait_change
+from ..trait_errors import TraitError
 from ..trait_types import Bool, DelegatesTo, Instance, Int, List
 from ..testing.unittest_tools import unittest
 
@@ -195,12 +196,15 @@ class TestRegression(unittest.TestCase):
         a = HasTraits()
         a.add_trait('foo', Int)
         a.foo = 1
-        self.assertRaises(ExpectedException, setattr, a, 'foo', 'a')
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
         pkld_a = dumps(a)
         unpkld_a = loads(pkld_a)
-        self.assertRaises(ExpectedException, setattr, unpkld_a, 'foo', 'a')
+        with self.assertRaises(TraitError):
+            unpkld_a.foo = 'a'
         copied_a = deepcopy(a)
-        self.assertRaises(ExpectedException, setattr, copied_a, 'foo', 'a')
+        with self.assertRaises(TraitError):
+            copied_a.foo = 'a'
 
 
 if __name__ == '__main__':
