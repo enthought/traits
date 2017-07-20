@@ -21,7 +21,7 @@ import time
 from traits.testing.unittest_tools import unittest
 
 # Enthought library imports
-from ..api import HasTraits, Any, DelegatesTo, Instance, Int
+from traits.api import HasTraits, Any, DelegatesTo, Instance, Int
 
 
 class TestCase(unittest.TestCase):

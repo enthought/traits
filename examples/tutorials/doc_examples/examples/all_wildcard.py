@@ -35,7 +35,7 @@ bill.age = 49
 print('Attempting to assign a string to an Int trait object...\n')
 try:
     bill.age = 'middle age'
-except TraitError, c:
+except TraitError as c:
     print('TraitError: ', c, '\n')
 
 # Display the final results:

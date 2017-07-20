@@ -20,7 +20,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Dict
+from traits.api import HasTraits, Dict
 
 
 class MyClass(HasTraits):

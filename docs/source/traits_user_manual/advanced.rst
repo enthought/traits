@@ -883,9 +883,9 @@ interface and be open to extensions by adaptation as follows:
             # about adaptation.
             lines = printable.get_formatted_text(n_cols=20)
 
-            print '-- Start document --'
-            print '\n'.join(lines)
-            print '-- End of document -\n'
+            print('-- Start document --')
+            print('\n'.join(lines))
+            print('-- End of document -\n')
 
     class TextDocument(HasTraits):
         """ A text document. """

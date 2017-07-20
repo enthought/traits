@@ -54,7 +54,7 @@ tab's *total_hits* trait definition.
 """
 
 # FIXME redo example without traitsui
-import six
+
 import six.moves as sm
 
 from traits.api import *

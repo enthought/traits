@@ -8,9 +8,10 @@
 
 # cached_prop.py - Example of @cached_property decorator
 #--[Imports]-------------------------------------------------------------------
-from traits.api import HasPrivateTraits, List, Int, Property, cached_property
-import six
 import six.moves as sm
+
+from traits.api import HasPrivateTraits, List, Int, Property, cached_property
+
 
 #--[Code]----------------------------------------------------------------------
 class TestScores(HasPrivateTraits):

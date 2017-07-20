@@ -366,16 +366,16 @@ value in the dictionary corresponding to the value assigned. For example::
 
     >>> import mapped
     >>> my_shape1 = mapped.GraphicShape()
-    >>> print my_shape1.line_color, my_shape1.fill_color
+    >>> print(my_shape1.line_color, my_shape1.fill_color)
     black red
-    >>> print my_shape1.line_color_, my_shape1.fill_color_
+    >>> print(my_shape1.line_color_, my_shape1.fill_color_)
     (0.0, 0.0, 0.0, 1.0) (1.0, 0.0, 0.0, 1.0)
     >>> my_shape2 = mapped.GraphicShape()
     >>> my_shape2.line_color = 'blue'
     >>> my_shape2.fill_color = 'green'
-    >>> print my_shape2.line_color, my_shape2.fill_color
+    >>> print(my_shape2.line_color, my_shape2.fill_color)
     blue green
-    >>> print my_shape2.line_color_, my_shape2.fill_color_
+    >>> print(my_shape2.line_color_, my_shape2.fill_color_)
     (0.0, 0.0, 1.0, 1.0) (0.0, 1.0, 0.0, 1.0)
 
 This example shows how a mapped trait can be used to create a user-friendly
@@ -449,10 +449,10 @@ For example::
     ...
     >>> alf = Alien()
     >>> alf.heads = 'o'
-    >>> print alf.heads
+    >>> print(alf.heads)
     one
     >>> alf.heads = 'tw'
-    >>> print alf.heads
+    >>> print(alf.heads)
     two
     >>> alf.heads = 't'  # Error, not a unique prefix
     Traceback (most recent call last):

@@ -223,7 +223,7 @@ casting traits::
     traits.trait_errors.TraitError: The 'weight' trait of a Person instance
     must be a float, but a value of '180' <type 'str'> was specified.
     >>> bill.cweight = '180'  # OK, cast to float('180')
-    >>> print bill.cweight
+    >>> print(bill.cweight)
     180.0
     >>>
 
@@ -489,7 +489,7 @@ it is also a valid value for assignment.
     >>> hats = InventoryItem()
     >>> hats.name = 'Stetson'
 
-    >>> print '%s: %s' % (hats.name, hats.stock)
+    >>> print('%s: %s' % (hats.name, hats.stock))
     Stetson: None
 
     >>> hats.stock = 2      # OK
@@ -695,32 +695,32 @@ the metadata attribute::
 
     t = Test()
 
-    print t.trait( 'i' ).default                      # 99
-    print t.trait( 'i' ).default_kind                 # value
-    print t.trait( 'i' ).inner_traits                 # ()
-    print t.trait( 'i' ).is_trait_type( Int )         # True
-    print t.trait( 'i' ).is_trait_type( Float )       # False
+    print(t.trait( 'i' ).default)                      # 99
+    print(t.trait( 'i' ).default_kind)                 # value
+    print(t.trait( 'i' ).inner_traits)                 # ()
+    print(t.trait( 'i' ).is_trait_type( Int ))         # True
+    print(t.trait( 'i' ).is_trait_type( Float ))       # False
 
-    print t.trait( 'lf' ).default                     # []
-    print t.trait( 'lf' ).default_kind                # list
-    print t.trait( 'lf' ).inner_traits
+    print(t.trait( 'lf' ).default)                     # []
+    print(t.trait( 'lf' ).default_kind)                # list
+    print(t.trait( 'lf' ).inner_traits)
              # (<traits.traits.CTrait object at 0x01B24138>,)
-    print t.trait( 'lf' ).is_trait_type( List )       # True
-    print t.trait( 'lf' ).is_trait_type( TraitType )  # True
-    print t.trait( 'lf' ).is_trait_type( Float )      # False
-    print t.trait( 'lf' ).inner_traits[0].is_trait_type( Float ) # True
+    print(t.trait( 'lf' ).is_trait_type( List ))       # True
+    print(t.trait( 'lf' ).is_trait_type( TraitType ))  # True
+    print(t.trait( 'lf' ).is_trait_type( Float ))      # False
+    print(t.trait( 'lf' ).inner_traits[0].is_trait_type( Float )) # True
 
-    print t.trait( 'foo' ).default                    # <undefined>
-    print t.trait( 'foo' ).default_kind               # factory
-    print t.trait( 'foo' ).inner_traits               # ()
-    print t.trait( 'foo' ).is_trait_type( Instance )  # True
-    print t.trait( 'foo' ).is_trait_type( List  )     # False
+    print(t.trait( 'foo' ).default)                    # <undefined>
+    print(t.trait( 'foo' ).default_kind)               # factory
+    print(t.trait( 'foo' ).inner_traits)               # ()
+    print(t.trait( 'foo' ).is_trait_type( Instance ))  # True
+    print(t.trait( 'foo' ).is_trait_type( List  ))     # False
 
-    print t.trait( 'any' ).default                    # [1, 2, 3]
-    print t.trait( 'any' ).default_kind               # list
-    print t.trait( 'any' ).inner_traits               # ()
-    print t.trait( 'any' ).is_trait_type( Any )       # True
-    print t.trait( 'any' ).is_trait_type( List )      # False
+    print(t.trait( 'any' ).default)                    # [1, 2, 3]
+    print(t.trait( 'any' ).default_kind)               # list
+    print(t.trait( 'any' ).inner_traits)               # ()
+    print(t.trait( 'any' ).is_trait_type( Any ))       # True
+    print(t.trait( 'any' ).is_trait_type( List ))      # False
 
 .. rubric:: Footnotes
 .. [2] Most callable predefined traits are classes, but a few are functions.

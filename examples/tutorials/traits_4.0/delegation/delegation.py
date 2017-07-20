@@ -58,29 +58,29 @@ trait and then try out various combinations of setting both the *father* and
 is called::
 
     def name_changed(name):
-        print 'Your last name has been changed to %s.' % name
+        print('Your last name has been changed to %s.' % name)
 
     # Set up a change notification handler on the son's last name:
     son.on_trait_change(name_changed, 'last_name')
 
     # This should cause the son's last name to change as well:
-    print "Changing dad's last name to Jones."
+    print("Changing dad's last name to Jones.")
     dad.last_name = 'Jones'
 
     # This change overrides the father's last name for the son:
-    print "Changing son's last name to Thomas."
+    print("Changing son's last name to Thomas.")
     son.last_name = 'Thomas'
 
     # This should no longer have any effect on the son's last name:
-    print "Changing dad's last name to Riley."
+    print("Changing dad's last name to Riley.")
     dad.last_name = 'Riley'
 
     # Son decides to revert his name back to his father's name:
-    print "Reverting son's last name."
+    print("Reverting son's last name.")
     del son.last_name
 
     # Now changing the father's name should affect the son again:
-    print "Changing dad's last name to Simmons."
+    print("Changing dad's last name to Simmons.")
     dad.last_name = 'Simmons'
 
 For the actual results of running this code, refer to the **Output** tab. Note

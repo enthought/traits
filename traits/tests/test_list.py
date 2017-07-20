@@ -15,7 +15,7 @@ import six.moves as sm
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import CList, HasTraits, Instance, Int, List, Str, TraitError
+from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
 
 
 class Foo(HasTraits):

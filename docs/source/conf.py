@@ -14,6 +14,8 @@
 import sys
 import os
 
+import six
+
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
@@ -139,7 +141,7 @@ copyright = '2008-2011, Enthought'
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 d = {}
-execfile(os.path.join('..', '..', 'traits', '__init__.py'), d)
+six.exec_(os.path.join('..', '..', 'traits', '__init__.py'), d)
 version = release = d['__version__']
 
 # There are two options for replacing |today|: either, you set today to some

@@ -186,10 +186,10 @@ The following code shows a simple example of using adaptation::
     apt = Apartment(renter = william)
 
     # Verify that the resulting value implements 'IName' correctly:
-    print 'Renter is: ', apt.renter.get_name()
+    print('Renter is: ', apt.renter.get_name())
 
     # Check the type of object actually assigned to 'renter':
-    print apt.renter
+    print(apt.renter)
 
 Refer to the **Output** tab for the actual result of running this example.
 

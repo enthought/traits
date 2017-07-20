@@ -21,7 +21,7 @@ import six
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
+from traits.api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
                    Instance, Int, List, Long, Str, Trait, TraitError,
                    TraitList, TraitPrefixList, TraitPrefixMap, TraitRange,
                    Tuple, pop_exception_handler, push_exception_handler)

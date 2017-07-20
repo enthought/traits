@@ -18,12 +18,12 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (Any, Dict, HasTraits, Instance, Int, List, Property,
+from traits.api import (Any, Dict, HasTraits, Instance, Int, List, Property,
                    TraitDictEvent, TraitError, TraitListEvent, Undefined,
                    cached_property, on_trait_change, pop_exception_handler,
                    push_exception_handler)
 
-from ..trait_handlers import TraitListObject, TraitDictObject
+from traits.trait_handlers import TraitListObject, TraitDictObject
 
 
 class ArgCheckBase(HasTraits):

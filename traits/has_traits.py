@@ -167,48 +167,27 @@ def _get_method ( cls, method ):
     return None
 
 
-if sys.version_info[0] >= 3:
-    def _get_def ( class_name, class_dict, bases, method ):
-        """ Gets the definition of a specified method (if any).
-        """
-        if method[0:2] == '__':
-            method = '_%s%s' % ( class_name, method )
-    
-        result = class_dict.get( method )
+def _get_def ( class_name, class_dict, bases, method ):
+    """ Gets the definition of a specified method (if any).
+    """
+    if method[0:2] == '__':
+        method = '_%s%s' % ( class_name, method )
+
+    result = class_dict.get( method )
+    if ((result is not None) and
+        is_function_type(result) and
+        (getattr( result, 'on_trait_change', None ) is None)):
+        return result
+
+    for base in bases:
+        result = getattr( base, method, None )
         if ((result is not None) and
-            is_function_type(result) and
-            (getattr( result, 'on_trait_change', None ) is None)):
+            is_unbound_method_type(result) and \
+            (getattr( six.get_unbound_function(result),
+                      'on_trait_change', None ) is None)):
             return result
-    
-        for base in bases:
-            result = getattr( base, method, None )
-            if ((result is not None) and
-                is_unbound_method_type(result) and \
-                (getattr( result, 'on_trait_change', None ) is None)):
-                return result
-    
-        return None
-else:
-    def _get_def ( class_name, class_dict, bases, method ):
-        """ Gets the definition of a specified method (if any).
-        """
-        if method[0:2] == '__':
-            method = '_%s%s' % ( class_name, method )
-    
-        result = class_dict.get( method )
-        if ((result is not None) and
-            is_function_type(result) and
-            (getattr( result, 'on_trait_change', None ) is None)):
-            return result
-    
-        for base in bases:
-            result = getattr( base, method, None )
-            if ((result is not None) and
-                is_unbound_method_type(result) and \
-                (getattr( result.__func__, 'on_trait_change', None ) is None)):
-                return result
-    
-        return None
+
+    return None
 
 
 def is_cython_func_or_method(method):
@@ -244,7 +223,7 @@ def _is_serializable ( value ):
         return True
 
     if isinstance( value, dict ):
-        for name, item in value.items():
+        for name, item in six.iteritems(value):
             if ((not _is_serializable( name )) or
                 (not _is_serializable( item ))):
                 return False
@@ -267,7 +246,7 @@ def _get_instance_handlers ( class_dict, bases ):
 
     # Merge all of the base class information into the result:
     for base in bases:
-        for name, base_arg_lists in base.__dict__.get( InstanceTraits ).items():
+        for name, base_arg_lists in six.iteritems(base.__dict__.get( InstanceTraits )):
             arg_lists = instance_traits.get( name )
             if arg_lists is None:
                 instance_traits[ name ] = base_arg_lists[:]
@@ -277,7 +256,7 @@ def _get_instance_handlers ( class_dict, bases ):
                         arg_lists.append( arg_list )
 
     # Merge in the information from the class dictionary:
-    for name, value in class_dict.items():
+    for name, value in six.iteritems(class_dict):
         if (name[:1] == '_') and is_function_type(value):
             n   = 13
             col = name.find( '_changed_for_' )
@@ -495,9 +474,8 @@ class MetaHasTraitsObject ( object ):
 
         # Move all trait definitions from the class dictionary to the
         # appropriate trait class dictionaries:
-        # Creates a copy because the values are changing during iteration
-        for name, value in list(six.iteritems(class_dict)):
-            value = _check_trait( value )
+        for name in list(six.iterkeys(class_dict)):
+            value = _check_trait( class_dict[name] )
             rc    = isinstance( value, CTrait )
 
             if (not rc) and isinstance( value, ForwardProperty ):
@@ -699,8 +677,10 @@ class MetaHasTraitsObject ( object ):
         # Make one final pass over the class traits dictionary, making sure
         # all static trait notification handlers are attached to a 'cloned'
         # copy of the original trait:
+        # The dictionary is modified in place
         cloned = set()
-        for name in class_traits.keys():
+
+        for name in list(six.iterkeys(class_traits)):
             trait    = class_traits[ name ]
             handlers = [ anytrait,
                          _get_def( class_name, class_dict, bases,
@@ -820,9 +800,9 @@ def _trait_monitor_index ( cls, handler ):
         if type_handler is type( _handler ):
             if (((type_handler is MethodType)  or
                 'cython_function_or_method' in str(type_handler)) and \
-                (handler.__self__ is not None)):
+                (six.get_method_self(handler) is not None)):
                 if ((handler.__name__ == _handler.__name__) and
-                    (handler.__self__ is _handler.__self__)):
+                    (six.get_method_self(handler) is six.get_method_self(_handler))):
                    return i
 
             elif handler == _handler:
@@ -1024,7 +1004,7 @@ class HasTraits ( CHasTraits ):
         >>>bob = Person()
         >>>bob.temp_lunch = 'sandwich'
         >>>bob.add_trait('favorite_sport', Str('football'))
-        >>>print bob.trait_names()
+        >>>print(bob.trait_names())
         ['trait_added', 'age', 'name']
 
     In this example, the trait_names() method returns only the *age* and
@@ -1254,12 +1234,12 @@ class HasTraits ( CHasTraits ):
 
             # Merge the 'class_traits':
             subclass_traits = getattr( subclass, ClassTraits )
-            for name, value in class_traits.items():
+            for name, value in six.iteritems(class_traits):
                 subclass_traits.setdefault( name, value )
 
             # Merge the 'instance_traits':
             subclass_traits = getattr( subclass, InstanceTraits )
-            for name, arg_lists in instance_traits.items():
+            for name, arg_lists in six.iteritems(instance_traits):
                 subclass_arg_lists = subclass_traits.get( name )
                 if subclass_arg_lists is None:
                     subclass_traits[ name ] = arg_lists[:]
@@ -1272,7 +1252,7 @@ class HasTraits ( CHasTraits ):
             subclass_traits = getattr( subclass, PrefixTraits )
             subclass_list   = subclass_traits['*']
             changed         = False
-            for name, value in prefix_traits.items():
+            for name, value in six.iteritems(prefix_traits):
                 if name not in subclass_traits:
                     subclass_traits[ name ] = value
                     subclass_list.append( name )
@@ -1407,7 +1387,7 @@ class HasTraits ( CHasTraits ):
         # contained HasTraits objects in its persisted state also implement
         # ISerializable:
         if self.has_traits_interface( ISerializable ):
-            for name, value in result.items():
+            for name, value in six.iteritems(result):
                 if not _is_serializable( value ):
                     raise TraitError( "The '%s' trait of a '%s' instance "
                                       "contains the unserializable value: %s" %
@@ -1538,12 +1518,12 @@ class HasTraits ( CHasTraits ):
         if not trait_change_notify:
             self._trait_change_notify( False )
             try:
-                for name, value in traits.items():
+                for name, value in six.iteritems(traits):
                     setattr( self, name, value )
             finally:
                 self._trait_change_notify( True )
         else:
-            for name, value in traits.items():
+            for name, value in six.iteritems(traits):
                 setattr( self, name, value )
 
         return self
@@ -1651,7 +1631,7 @@ class HasTraits ( CHasTraits ):
         """ Returns the list of all trait names, including implicitly defined
             traits.
         """
-        return self.__class_traits__.keys()
+        return list(six.iterkeys(self.__class_traits__))
 
     #---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
@@ -1963,7 +1943,7 @@ class HasTraits ( CHasTraits ):
                 result = view_elements.find( name )
                 if (result is None) and (handler is not None):
                     method = getattr( handler, name, None )
-                    if callable( method ):
+                    if six.callable( method ):
                         result = method()
 
                 return result
@@ -1990,7 +1970,7 @@ class HasTraits ( CHasTraits ):
 
         if handler is not None:
             method = getattr( handler, name, None )
-            if callable( method ):
+            if six.callable( method ):
                 result = method()
                 if isinstance( result, ViewElement ):
                     return result
@@ -2158,30 +2138,18 @@ class HasTraits ( CHasTraits ):
         modified by the user.
         """
         if filename is not None:
-            fd = None
-            try:
-                import cPickle
-                fd = open( filename, 'rb' )
-                self.copy_traits( cPickle.Unpickler( fd ).load() )
-            except:
-                if fd is not None:
-                    fd.close()
+            with open(filename, 'rb') as fd:
+                self.copy_traits( sm.cPickle.Unpickler( fd ).load() )
 
         if edit:
             from traitsui.api import toolkit
             if context is None:
                 context = self
             rc = toolkit().view_application( context, self.trait_view( view ),
-                                           kind, handler, id, scrollable, args )
+                                             kind, handler, id, scrollable, args )
             if rc and (filename is not None):
-                fd = None
-                try:
-                    import cPickle
-                    fd = open( filename, 'wb' )
-                    cPickle.Pickler( fd, True ).dump( self )
-                finally:
-                    if fd is not None:
-                        fd.close()
+                with open(filename, 'wb') as fd:
+                    sm.cPickle.Pickler( fd, True ).dump( self )
             return rc
 
         return True
@@ -2686,9 +2654,9 @@ class HasTraits ( CHasTraits ):
         # to avoid reference cycles, this must not be a member function. See
         # Github issue #69 for more detail.
         def _sync_trait_listener_deleted (ref, info):
-            for key, dic in info.items():
+            for key, dic in list(six.iteritems(info)):
                 if key != '':
-                    for name, value in dic.items():
+                    for name, value in list(six.iteritems(dic)):
                         if ref is value[0]:
                             del dic[ name ]
                     if len( dic ) == 0:
@@ -2727,7 +2695,7 @@ class HasTraits ( CHasTraits ):
             return
         locked = info[ '' ]
         locked[ name ] = None
-        for object, object_name in info[ name ].values():
+        for object, object_name in six.itervalues(info[ name ]):
             object = object()
             if object_name not in object._get_sync_trait_info()[ '' ]:
                 try:
@@ -2744,7 +2712,7 @@ class HasTraits ( CHasTraits ):
         info   = self.__sync_trait__
         locked = info[ '' ]
         locked[ name ] = None
-        for object, object_name in info[ name ].values():
+        for object, object_name in six.itervalues(info[ name ]):
             object = object()
             if object_name not in object._get_sync_trait_info()[ '' ]:
                 try:
@@ -2993,7 +2961,7 @@ class HasTraits ( CHasTraits ):
             if name[-6:] != "_items":
                 traits[name] = trt
 
-        for name in self.__dict__.keys():
+        for name in six.iterkeys(self.__dict__):
             if name not in traits:
                 trait = self.trait( name )
                 if trait is not None:
@@ -3002,13 +2970,13 @@ class HasTraits ( CHasTraits ):
         if len( metadata ) == 0:
             return traits
 
-        for meta_name, meta_eval in metadata.items():
+        for meta_name, meta_eval in list(six.iteritems(metadata)):
             if type( meta_eval ) is not FunctionType:
                 metadata[ meta_name ] = _SimpleTest( meta_eval )
 
         result = {}
-        for name, trait in traits.items():
-            for meta_name, meta_eval in metadata.items():
+        for name, trait in six.iteritems(traits):
+            for meta_name, meta_eval in six.iteritems(metadata):
                 if not meta_eval( getattr( trait, meta_name ) ):
                     break
             else:
@@ -3057,12 +3025,12 @@ class HasTraits ( CHasTraits ):
 
         result = {}
 
-        for meta_name, meta_eval in metadata.items():
+        for meta_name, meta_eval in list(six.iteritems(metadata)):
             if type( meta_eval ) is not FunctionType:
                 metadata[ meta_name ] = _SimpleTest( meta_eval )
 
-        for name, trait in cls.__base_traits__.items():
-            for meta_name, meta_eval in metadata.items():
+        for name, trait in six.iteritems(cls.__base_traits__):
+            for meta_name, meta_eval in six.iteritems(metadata):
                 if not meta_eval( getattr( trait, meta_name ) ):
                     break
             else:
@@ -3152,7 +3120,7 @@ class HasTraits ( CHasTraits ):
             # Otherwise, it is a 'getattr' request, so indicate that no such
             # attribute exists:
             raise AttributeError("'%s' object has no attribute '%s'" % (
-                                  self.__class__.__name__, name ))
+                                 self.__class__.__name__, name ))
 
         # Handle the special case of 'delegated' traits:
         if name[-1:] == '_':
@@ -3193,7 +3161,7 @@ class HasTraits ( CHasTraits ):
         # is at the end of the list, so we should never get here:
         raise SystemError("Trait class look-up failed for attribute '%s' "
                           "for an object of type '%s'" % (
-                          name, self.__class__.__name__ ))
+                          name, self.__class__.__name__))
 
     #---------------------------------------------------------------------------
     #  Adds/Removes (Java-style) event listeners to an object:
@@ -3238,7 +3206,7 @@ class HasTraits ( CHasTraits ):
         """
         dic = {}
         for klass in object.__class__.__mro__:
-            for name, method in klass.__dict__.items():
+            for name, method in six.iteritems(klass.__dict__):
                 if (type( method ) is FunctionType) and (name not in dic):
                     dic[ name ] = True
                     yield name
@@ -3315,7 +3283,7 @@ class HasTraits ( CHasTraits ):
             registered, traits listeners (called at object creation and
             unpickling times).
         """
-        for name, data in self.__class__.__listener_traits__.items():
+        for name, data in six.iteritems(self.__class__.__listener_traits__):
             if data[0] == 'method':
                 config = data[1]
                 if config['post_init']:
@@ -3329,7 +3297,7 @@ class HasTraits ( CHasTraits ):
             registered, traits listeners (called at object creation and
             unpickling times).
         """
-        for name, data in self.__class__.__listener_traits__.items():
+        for name, data in six.iteritems(self.__class__.__listener_traits__):
             getattr( self, '_init_trait_%s_listener' % data[0] )( name, *data )
 
     def _init_trait_method_listener ( self, name, kind, config ):
@@ -3482,6 +3450,7 @@ try:
         """
         pass
 
+
     @six.add_metaclass(ABCMetaHasTraits)
     class ABCHasTraits(HasTraits):
         """ A HasTraits subclass which enables the features of Abstract
@@ -3578,11 +3547,11 @@ class MetaInterface ( ABCMetaHasTraits ):
 #-------------------------------------------------------------------------------
 #  'Interface' class:
 #-------------------------------------------------------------------------------
+
 @six.add_metaclass(MetaInterface)
 class Interface ( HasTraits ):
     """ The base class for all interfaces.
     """
-
 
 #-------------------------------------------------------------------------------
 #  Class decorator to declare the protocols that a class provides.

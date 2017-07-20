@@ -78,10 +78,10 @@ DelegatesTo object. Consider the following example::
     >>> tony  = Parent(first_name='Anthony', last_name='Jones')
     >>> alice = Parent(first_name='Alice', last_name='Smith')
     >>> sally = Child( first_name='Sally', father=tony, mother=alice)
-    >>> print sally.last_name
+    >>> print(sally.last_name)
     Jones
     >>> sally.last_name = 'Cooper' # Updates delegatee
-    >>> print tony.last_name
+    >>> print(tony.last_name)
     Cooper
     >>> sally.last_name = sally.mother # ERR: string expected
     Traceback (most recent call last):
@@ -178,7 +178,7 @@ PrototypedFrom::
     >>> maria = Parent(first_name = 'Maria', family_name = 'Gonzalez',\
     ... favorite_first_name = 'Tomas', child_allowance = 10.0 )
     >>> nino = Child( father=fred, mother=maria )
-    >>> print '%s %s gets $%.2f for allowance' % (nino.first_name, \ ... nino.last_name, nino.allowance)
+    >>> print('%s %s gets $%.2f for allowance' % (nino.first_name, \ ... nino.last_name, nino.allowance))
     Tomas Lopez gets $5.00 for allowance
     """
 
@@ -236,7 +236,7 @@ example::
         last_name  = Str
 
         def _last_name_changed(self, new):
-            print "Parent's last name changed to %s." % new
+            print("Parent's last name changed to %s." % new)
 
     class Child ( HasTraits ):
 
@@ -245,7 +245,7 @@ example::
         last_name  = PrototypedFrom( 'father' )
 
         def _last_name_changed(self, new):
-            print "Child's last name changed to %s." % new
+            print("Child's last name changed to %s." % new)
 
     """
     >>> dad = Parent( first_name='William', last_name='Chase' )

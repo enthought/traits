@@ -24,11 +24,11 @@
 
 from __future__ import absolute_import
 
-import six
-
 from types import FunctionType
 
 from inspect import getargspec, getmro
+
+import six
 
 from .has_traits import HasTraits
 

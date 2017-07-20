@@ -26,7 +26,7 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import BaseFloat, Float, HasTraits
+from traits.api import BaseFloat, Float, HasTraits
 
 
 class FloatModel(HasTraits):

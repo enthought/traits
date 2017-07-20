@@ -17,7 +17,7 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, Range, Long, TraitError
+from traits.api import HasTraits, Int, Range, Long, TraitError
 
 
 class A(HasTraits):

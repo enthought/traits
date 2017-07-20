@@ -12,7 +12,7 @@ import six.moves as sm
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import Dict, HasTraits, Int, List
+from traits.api import Dict, HasTraits, Int, List
 
 
 class C(HasTraits):

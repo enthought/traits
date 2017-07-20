@@ -11,7 +11,7 @@ from traits import _py2to3
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, List, Str
+from traits.api import HasTraits, Int, List, Str
 
 
 class A(HasTraits):

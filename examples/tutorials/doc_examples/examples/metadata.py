@@ -31,8 +31,8 @@ print(t.trait('i').is_trait_type(Float))         # False
 
 print(t.trait('lf').default)                     # []
 print(t.trait('lf').default_kind)                # list
-print(t.trait('lf').inner_traits)  # (<traits.traits.CTrait object at
-                                  #  0x01B24138>,)
+print(t.trait('lf').inner_traits)            # (<traits.traits.CTrait object at
+                                             #  0x01B24138>,)
 print(t.trait('lf').is_trait_type(List))         # True
 print(t.trait('lf').is_trait_type(TraitType))    # True
 print(t.trait('lf').is_trait_type(Float))        # False

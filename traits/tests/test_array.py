@@ -20,7 +20,7 @@ except ImportError:
 else:
     numpy_available = True
 
-from ..api import Array, Bool, HasTraits
+from traits.api import Array, Bool, HasTraits
 
 
 if numpy_available:

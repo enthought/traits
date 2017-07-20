@@ -25,6 +25,8 @@ import re
 from string \
     import capwords
 
+import six
+
 from traits.api import (HasPrivateTraits, HasTraits, File, Directory, Instance,
                         Int, Str, List, Bool, Dict, Property,
                         Button, cached_property)
@@ -766,7 +768,7 @@ class Lab(ASection):
                         del values[name]
 
                 # Execute the current lab code:
-                exec(module[2:] in values, values)
+                six.exec_(module[2:] in values, values)
 
                 # fixme: Hack trying to update the Traits UI view of the dict.
                 self.values = {}
@@ -783,7 +785,7 @@ class Lab(ASection):
                 if isinstance(popup, HasTraits):
                     popup.edit_traits(kind='livemodal')
 
-            except SyntaxError, excp:
+            except SyntaxError as excp:
                 # Convert the line number of the syntax error from one in the
                 # composite module to one in the appropriate code snippet:
                 line = excp.lineno

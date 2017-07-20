@@ -18,8 +18,8 @@ import six
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Trait, TraitError, TraitHandler
-from ..trait_base import strx
+from traits.api import HasTraits, Trait, TraitError, TraitHandler
+from traits.trait_base import strx
 
 
 # Validation via function

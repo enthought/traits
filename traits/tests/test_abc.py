@@ -7,7 +7,7 @@ import six
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
+from traits.api import ABCHasTraits, ABCMetaHasTraits, HasTraits, Int, Float
 
 
 class TestNew(unittest.TestCase):

@@ -127,9 +127,10 @@ notifications managed by traits are correctly initialized for the object.
 Failure to call this method may result in lost change notifications.
 """
 
+from six.moves.cPickle import dumps, loads
+
 from traits.api import *
 from time import time, sleep
-from cPickle import dumps, loads
 
 
 #--[Session Class]-------------------------------------------------------------

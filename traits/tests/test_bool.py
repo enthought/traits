@@ -23,7 +23,7 @@ else:
     numpy_available = True
 
 from traits.testing.unittest_tools import unittest
-from ..api import Bool, Dict, HasTraits, Int, TraitError
+from traits.api import Bool, Dict, HasTraits, Int, TraitError
 
 
 if six.PY2:

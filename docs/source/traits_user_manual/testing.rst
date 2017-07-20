@@ -123,7 +123,7 @@ please follow the logic in the example below::
 
     # We can now use the mock in our tests.
     my_class.add_number(42)
-    print my_class.add_to_number.call_args_list
+    print(my_class.add_to_number.call_args_list)
 
 .. note::
 

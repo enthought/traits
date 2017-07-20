@@ -5,9 +5,9 @@ import sys
 import six
 import six.moves as sm
 
-from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import Bool, DelegatesTo, Instance, Int, List
-from ..testing.unittest_tools import unittest
+from traits.has_traits import HasTraits, Property, on_trait_change
+from traits.trait_types import Bool, DelegatesTo, Instance, Int, List
+from traits.testing.unittest_tools import unittest
 
 
 class Dummy(HasTraits):
