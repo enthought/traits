@@ -25,10 +25,8 @@ import six
 
 if six.PY2:
     LONG_TYPE = long
-    MAXINT = sys.maxint
 else:
     LONG_TYPE = int
-    MAXINT = six.MAXSIZE
 
 try:
     import numpy
@@ -77,12 +75,12 @@ class TestInt(unittest.TestCase):
 
     def test_accepts_large_long(self):
         a = A()
-        a.integral = LONG_TYPE(MAXINT)
-        self.assertEqual(a.integral, MAXINT)
+        a.integral = LONG_TYPE(six.MAXSIZE)
+        self.assertEqual(a.integral, six.MAXSIZE)
         self.assertIs(type(a.integral), int)
 
-        a.integral = MAXINT + 1
-        self.assertEqual(a.integral, MAXINT + 1)
+        a.integral = six.MAXSIZE + 1
+        self.assertEqual(a.integral, six.MAXSIZE + 1)
         self.assertIs(type(a.integral), LONG_TYPE)
 
     def test_accepts_bool(self):

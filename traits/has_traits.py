@@ -1264,7 +1264,7 @@ class HasTraits ( CHasTraits ):
 
             # Merge the 'listeners':
             subclass_traits = getattr( subclass, ListenerTraits )
-            for name, value in listeners.items():
+            for name, value in six.iteritems(listeners):
                 subclass_traits.setdefault( name, value )
 
         # Copy all our new view elements into the base class's ViewElements:
@@ -1276,7 +1276,7 @@ class HasTraits ( CHasTraits ):
                     base_ve = ViewElements()
                     setattr( cls, ViewTraits, base_ve )
                 base_ve_content = base_ve.content
-                for name, value in content.items():
+                for name, value in six.iteritems(content):
                     base_ve_content.setdefault( name, value )
 
     _add_trait_category = classmethod( _add_trait_category )
@@ -2957,7 +2957,7 @@ class HasTraits ( CHasTraits ):
         traits = self.__base_traits__.copy()
         
         # Update with instance-defined traits.
-        for name, trt in self._instance_traits().items():
+        for name, trt in six.iteritems(self._instance_traits()):
             if name[-6:] != "_items":
                 traits[name] = trt
 

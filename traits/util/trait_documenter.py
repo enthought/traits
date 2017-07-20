@@ -106,7 +106,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition),
+        self.add_line(six.u('   :annotation: = {0}'.format(definition)),
                       '<autodoc>')
 
     # Private Interface #####################################################

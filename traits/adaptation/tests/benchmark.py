@@ -11,6 +11,8 @@ from pprint import pprint
 import time
 
 import six
+import six.moves as sm
+
 
 from traits.adaptation.adaptation_manager import AdaptationManager
 from traits.api import Adapter, HasTraits, Interface, provides
@@ -29,14 +31,14 @@ class IFoo{i}(Interface):
 class Foo{i}(HasTraits):
     pass
 """
-for i in range(N_SOURCES):
+for i in sm.xrange(N_SOURCES):
     exec(create_classes_to_adapt.format(i=i))
 
 # The object that we will try to adapt!
 foo = Foo1()
 
 # Create a lot of other interfaces that we will adapt to.
-for i in range(N_PROTOCOLS):
+for i in sm.xrange(N_PROTOCOLS):
     exec('class I{i}(Interface): pass'.format(i=i))
 
 create_traits_adapter_class = """
@@ -46,8 +48,8 @@ class IFoo{source}ToI{target}(Adapter):
 """
 
 #  Create adapters from each 'IFooX' to all of the interfaces.
-for source in range(N_SOURCES):
-    for target in range(N_PROTOCOLS):
+for source in sm.xrange(N_SOURCES):
+    for target in sm.xrange(N_PROTOCOLS):
         exec(create_traits_adapter_class.format(source=source, target=target))
 
 
@@ -68,12 +70,12 @@ adaptation_manager.register_factory(
 # We register the adapters in reversed order, so that looking for the one
 # with index 0 will need traversing the whole list.
 # I.e., we're considering the worst case scenario.
-for source in range(N_SOURCES):
-    for target in reversed(range(N_PROTOCOLS)):
+for source in sm.xrange(N_SOURCES):
+    for target in reversed(sm.xrange(N_PROTOCOLS)):
         exec(register_ifoox_to_ix.format(source=source, target=target))
 
 start_time = time.time()
-for _ in range(N_ITERATIONS):
+for _ in sm.xrange(N_ITERATIONS):
     adaptation_manager.adapt(foo, I0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print('apptools using Interfaces: %.3f msec per iteration' % time_per_iter)
@@ -82,7 +84,7 @@ print('apptools using Interfaces: %.3f msec per iteration' % time_per_iter)
 #### traits.adaptation with ABCs ##############################################
 
 # Create some classes to adapt (using ABCs!).
-for i in range(N_SOURCES):
+for i in sm.xrange(N_SOURCES):
     exec(
 '''
 @six.add_metaclass(abc.ABCMeta)
@@ -96,7 +98,7 @@ class FooABC{i}(object):
 foo = Foo0()
 
 # Create a lot of other ABCs!
-for i in range(N_PROTOCOLS):
+for i in sm.xrange(N_PROTOCOLS):
     exec(
 '''
 @six.add_metaclass(abc.ABCMeta)
@@ -113,8 +115,8 @@ class FooABC{source}ToABC{target}(object):
 ABC{target}.register(FooABC{source}ToABC{target})
 """
 
-for source in range(N_SOURCES):
-    for target in range(N_PROTOCOLS):
+for source in sm.xrange(N_SOURCES):
+    for target in sm.xrange(N_PROTOCOLS):
         exec(create_abc_adapter_class.format(source=source, target=target))
 
 # Register all of the adapters.
@@ -131,12 +133,12 @@ adaptation_manager.register_factory(
 # We register the adapters in reversed order, so that looking for the one
 # with index 0 will need traversing the whole list.
 # I.e., we're considering the worst case scenario.
-for source in range(N_SOURCES):
-    for target in reversed(range(N_PROTOCOLS)):
+for source in sm.xrange(N_SOURCES):
+    for target in reversed(sm.xrange(N_PROTOCOLS)):
         exec(register_fooxabc_to_abcx.format(source=source, target=target))
 
 start_time = time.time()
-for _ in range(N_ITERATIONS):
+for _ in sm.xrange(N_ITERATIONS):
     adaptation_manager.adapt(foo, ABC0)
 time_per_iter = (time.time() - start_time) / float(N_ITERATIONS) * 1000.0
 print('apptools using ABCs: %.3f msec per iteration' % time_per_iter)

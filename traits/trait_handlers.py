@@ -62,12 +62,11 @@ logger = logging.getLogger( __name__ )
 #  Constants:
 #-------------------------------------------------------------------------------
 
+
 if six.PY2:
     LONG_TYPE = long
-    MAXINT = sys.maxint
 else:
     LONG_TYPE = int
-    MAXINT = sys.maxsize
 
 # Trait 'comparison_mode' enum values:
 NO_COMPARE              = 0
@@ -891,7 +890,7 @@ class TraitString ( TraitHandler ):
     must be a string of between 0 and 50 characters that consist of only
     upper and lower case letters.
     """
-    def __init__ ( self, minlen = 0, maxlen = MAXINT, regex = '' ):
+    def __init__ ( self, minlen = 0, maxlen = six.MAXSIZE, regex = '' ):
         """ Creates a TraitString handler.
 
         Parameters
@@ -912,9 +911,9 @@ class TraitString ( TraitHandler ):
     def _init ( self ):
         if self.regex != '':
             self.match = re.compile( self.regex ).match
-            if (self.minlen == 0) and (self.maxlen == MAXINT):
+            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
                 self.validate = self.validate_regex
-        elif (self.minlen == 0) and (self.maxlen == MAXINT):
+        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
             self.validate = self.validate_str
         else:
             self.validate = self.validate_len
@@ -956,10 +955,10 @@ class TraitString ( TraitHandler ):
 
     def info ( self ):
         msg = ''
-        if (self.minlen != 0) and (self.maxlen != MAXINT):
+        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
             msg = ' between %d and %d characters long' % (
                   self.minlen, self.maxlen )
-        elif self.maxlen != MAXINT:
+        elif self.maxlen != six.MAXSIZE:
             msg = ' <= %d characters long' % self.maxlen
         elif self.minlen != 0:
             msg = ' >= %d characters long' % self.minlen
@@ -2187,7 +2186,7 @@ class TraitList ( TraitHandler ):
     default_value_type = 5
     _items_event       = None
 
-    def __init__ ( self, trait = None, minlen = 0, maxlen = MAXINT,
+    def __init__ ( self, trait = None, minlen = 0, maxlen = six.MAXSIZE,
                          has_items = True ):
         """ Creates a TraitList handler.
 
@@ -2227,12 +2226,12 @@ class TraitList ( TraitHandler ):
 
     def full_info ( self, object, name, value ):
         if self.minlen == 0:
-            if self.maxlen == MAXINT:
+            if self.maxlen == six.MAXSIZE:
                 size = 'items'
             else:
                 size = 'at most %d items' % self.maxlen
         else:
-            if self.maxlen == MAXINT:
+            if self.maxlen == six.MAXSIZE:
                 size = 'at least %d items' % self.minlen
             else:
                 size = 'from %s to %s items' % (

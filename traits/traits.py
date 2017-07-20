@@ -437,7 +437,7 @@ TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
     str:  '',
-    six.text_type: u'',
+    six.text_type: six.u(''),
     int:     0,
     LONG_TYPE:    LONG_TYPE(0),
     float:   0.0,

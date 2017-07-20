@@ -59,11 +59,6 @@ if six.PY2:
 else:
     LONG_TYPE = int
 
-if six.PY2:
-    MAXINT = sys.maxint
-else:
-    MAXINT = sys.maxsize
-
 MutableTypes = ( list, dict )
 SetTypes     = SequenceTypes + ( set, )
 
@@ -405,7 +400,7 @@ class BaseUnicode ( TraitType ):
     """
 
     #: The default value for the trait:
-    default_value = u''
+    default_value = six.u('')
 
     #: A description of the type of value this trait accepts:
     info_text = 'a unicode string'
@@ -714,7 +709,7 @@ class String ( TraitType ):
         specified regular expression.
     """
 
-    def __init__ ( self, value = '', minlen = 0, maxlen = MAXINT,
+    def __init__ ( self, value = '', minlen = 0, maxlen = six.MAXSIZE,
                    regex = '', **metadata ):
         """ Creates a String trait.
 
@@ -743,9 +738,9 @@ class String ( TraitType ):
         self._validate = 'validate_all'
         if self.regex != '':
             self.match = re.compile( self.regex ).match
-            if (self.minlen == 0) and (self.maxlen == MAXINT):
+            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
                 self._validate = 'validate_regex'
-        elif (self.minlen == 0) and (self.maxlen == MAXINT):
+        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
             self._validate = 'validate_str'
         else:
             self._validate = 'validate_len'
@@ -809,10 +804,10 @@ class String ( TraitType ):
         """ Returns a description of the trait.
         """
         msg = ''
-        if (self.minlen != 0) and (self.maxlen != MAXINT):
+        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
             msg = ' between %d and %d characters long' % (
                   self.minlen, self.maxlen )
-        elif self.maxlen != MAXINT:
+        elif self.maxlen != six.MAXSIZE:
             msg = ' <= %d characters long' % self.maxlen
         elif self.minlen != 0:
             msg = ' >= %d characters long' % self.minlen
@@ -2214,7 +2209,7 @@ class List ( TraitType ):
     _items_event       = None
 
     def __init__ ( self, trait = None, value = None, minlen = 0,
-                   maxlen = MAXINT, items = True, **metadata ):
+                   maxlen = six.MAXSIZE, items = True, **metadata ):
         """ Returns a List trait.
 
         Parameters
@@ -2277,12 +2272,12 @@ class List ( TraitType ):
         """ Returns a description of the trait.
         """
         if self.minlen == 0:
-            if self.maxlen == MAXINT:
+            if self.maxlen == six.MAXSIZE:
                 size = 'items'
             else:
                 size = 'at most %d items' % self.maxlen
         else:
-            if self.maxlen == MAXINT:
+            if self.maxlen == six.MAXSIZE:
                 size = 'at least %d items' % self.minlen
             else:
                 size = 'from %s to %s items' % (
