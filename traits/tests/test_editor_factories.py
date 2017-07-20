@@ -24,7 +24,7 @@ except ImportError:
 
 from traits.testing.unittest_tools import unittest
 
-from ..traits import multi_line_text_editor
+from traits.traits import multi_line_text_editor
 
 
 @unittest.skipUnless(HAS_TRAITSUI, "This test needs traitsui")

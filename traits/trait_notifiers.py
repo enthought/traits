@@ -439,8 +439,8 @@ class TraitChangeNotifyWrapper(object):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
         if type( handler ) is MethodType:
-            func   = handler.im_func
-            object = handler.im_self
+            func   = six.get_method_function(handler)
+            object = six.get_method_self(handler)
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
@@ -507,9 +507,9 @@ class TraitChangeNotifyWrapper(object):
         if handler is self:
             return True
 
-        if (type( handler ) is MethodType) and (handler.im_self is not None):
+        if (type( handler ) is MethodType) and (six.get_method_self(handler) is not None):
             return ((handler.__name__ == self.name) and
-                    (handler.im_self is self.object()))
+                    (six.get_method_self(handler) is self.object()))
 
         return ((self.name is None) and (handler == self.handler))
 

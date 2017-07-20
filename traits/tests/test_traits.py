@@ -356,7 +356,7 @@ class BytesTest(StringTest):
     _default_value = b'bytes'
     _good_values = [b'', b'10', b'-10'] + (version_dependent
         if sys.version_info[0] == 2 else [])
-    _bad_values = [10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
+    _bad_values = [10, -10, LONG_TYPE(10), 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
         {b'ten': b'10'}, (b'',), None, True] + (version_dependent
         if sys.version_info[0] == 3 else [])
 
@@ -380,7 +380,7 @@ class CoercibleBytesTest(StringTest):
 
     _default_value = b'bytes'
     _good_values = [
-        b'', b'10', b'-10', 10, 10L, [10], (10,), set([10]), {10: 'foo'},
+        b'', b'10', b'-10', 10, LONG_TYPE(10), [10], (10,), set([10]), {10: 'foo'},
         True] + (version_dependent if sys.version_info[0] == 2 else [])
     _bad_values = (version_dependent if sys.version_info[0] == 3 else [])
 
