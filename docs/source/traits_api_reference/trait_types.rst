@@ -37,6 +37,10 @@ Traits
 
 .. autoclass:: Unicode
 
+.. autoclass:: BaseBytes
+
+.. autoclass:: Bytes
+
 .. autoclass:: BaseBool
 
 .. autoclass:: Bool
@@ -64,6 +68,10 @@ Traits
 .. autoclass:: BaseCUnicode
 
 .. autoclass:: CUnicode
+
+.. autoclass:: BaseCBytes
+
+.. autoclass:: CBytes
 
 .. autoclass:: BaseCBool
 

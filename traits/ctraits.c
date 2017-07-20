@@ -1609,6 +1609,9 @@ default_value_for ( trait_object      * trait,
         case 0:
         case 1:
             result = trait->default_value;
+            if (result == NULL) {
+                result = Py_None;
+            }
             Py_INCREF( result );
             break;
         case 2:

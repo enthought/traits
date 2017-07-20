@@ -93,13 +93,14 @@ KindMap = {
 #  Editor factory functions:
 #-------------------------------------------------------------------------------
 
-PasswordEditor      = None
-MultilineTextEditor = None
-SourceCodeEditor    = None
-HTMLTextEditor      = None
-PythonShellEditor   = None
-DateEditor          = None
-TimeEditor          = None
+PasswordEditor       = None
+MultilineTextEditors = {}
+BytesEditors         = {}
+SourceCodeEditor     = None
+HTMLTextEditor       = None
+PythonShellEditor    = None
+DateEditor           = None
+TimeEditor           = None
 
 def password_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns an editor for passwords.
@@ -117,15 +118,44 @@ def password_editor ( auto_set=True, enter_set=False ):
 def multi_line_text_editor ( auto_set=True, enter_set=False ):
     """ Factory function that returns a text editor for multi-line strings.
     """
-    global MultilineTextEditor
-
-    if MultilineTextEditor is None:
+    if (auto_set, enter_set) not in MultilineTextEditors:
         from traitsui.api import TextEditor
-        MultilineTextEditor = TextEditor( multi_line = True,
-                                          auto_set   = auto_set,
-                                          enter_set  = enter_set )
+        MultilineTextEditors[auto_set, enter_set] = TextEditor(
+            multi_line = True,
+            auto_set   = auto_set,
+            enter_set  = enter_set
+            )
 
-    return MultilineTextEditor
+    return MultilineTextEditors[auto_set, enter_set]
+
+def bytes_editor(auto_set=True, enter_set=False, encoding=None):
+    """ Factory function that returns a text editor for bytes.
+    """
+    if encoding is not None:
+        if isinstance(encoding, str):
+            import codecs
+            encoding = codecs.lookup(encoding)
+
+    if (auto_set, enter_set, encoding) not in BytesEditors:
+        from traitsui.api import TextEditor
+
+        if encoding is None:
+            # py3-compatible bytes <-> hex unicode string
+            format = lambda b: b.encode('hex').decode('ascii')
+            evaluate = lambda s: s.encode('ascii').decode('hex')
+        else:
+            format = encoding.decode
+            evaluate = encoding.encode
+
+        BytesEditors[(auto_set, enter_set, encoding)] = TextEditor(
+            multi_line=True,
+            format_func=format,
+            evaluate=evaluate,
+            auto_set=auto_set,
+            enter_set=enter_set
+        )
+
+    return BytesEditors[(auto_set, enter_set, encoding)]
 
 def code_editor ( ):
     """ Factory function that returns an editor that treats a multi-line string
@@ -1040,10 +1070,10 @@ def Property ( fget = None, fset = None, fvalidate = None, force = False,
     attribute this trait is assigned to. For example::
 
         class Bar(HasTraits):
-            
+
             # A float traits Property that should be always positive.
             foo = Property(Float)
-            
+
             # Shadow trait attribute
             _foo = Float
 
@@ -1256,4 +1286,3 @@ def Font ( *args, **metadata ):
     return FontTrait( *args, **metadata )
 
 Font = TraitFactory( Font )
-

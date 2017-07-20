@@ -94,10 +94,7 @@ class AdaptationManager(HasTraits):
           True if the object provides the protocol, otherwise False.
 
         """
-
-        # We do the 'is' check first as a performance improvement to save us
-        # a call to 'issubclass'.
-        return type_ is protocol or issubclass(type_, protocol)
+        return issubclass(type_, protocol)
 
     #### 'AdaptationManager' protocol ##########################################
 

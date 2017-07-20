@@ -24,6 +24,7 @@
 
 from __future__ import absolute_import
 
+import contextlib
 import six
 import six.moves as sm
 
@@ -293,12 +294,30 @@ def set_change_event_tracers( pre_tracer=None, post_tracer=None ):
     _pre_change_event_tracer = pre_tracer
     _post_change_event_tracer = post_tracer
 
+
+def get_change_event_tracers():
+    """ Get the currently active global trait change event tracers. """
+    return _pre_change_event_tracer, _post_change_event_tracer
+
+
 def clear_change_event_tracers():
     """ Clear the global trait change event tracer. """
     global _pre_change_event_tracer
     global _post_change_event_tracer
     _pre_change_event_tracer = None
     _post_change_event_tracer = None
+
+
+@contextlib.contextmanager
+def change_event_tracers(pre_tracer, post_tracer):
+    """ Context manager to temporarily change the global event tracers. """
+    old_pre_tracer, old_post_tracer = get_change_event_tracers()
+    set_change_event_tracers(pre_tracer, post_tracer)
+    try:
+        yield
+    finally:
+        set_change_event_tracers(old_pre_tracer, old_post_tracer)
+
 
 #-------------------------------------------------------------------------------
 #  'AbstractStaticChangeNotifyWrapper' class:
@@ -420,8 +439,8 @@ class TraitChangeNotifyWrapper(object):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
         if type( handler ) is MethodType:
-            func   = handler.__func__
-            object = handler.__self__
+            func   = handler.im_func
+            object = handler.im_self
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
@@ -488,9 +507,9 @@ class TraitChangeNotifyWrapper(object):
         if handler is self:
             return True
 
-        if (type( handler ) is MethodType) and (handler.__self__ is not None):
+        if (type( handler ) is MethodType) and (handler.im_self is not None):
             return ((handler.__name__ == self.name) and
-                    (handler.__self__ is self.object()))
+                    (handler.im_self is self.object()))
 
         return ((self.name is None) and (handler == self.handler))
 
