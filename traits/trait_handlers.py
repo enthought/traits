@@ -73,7 +73,7 @@ NO_COMPARE              = 0
 OBJECT_IDENTITY_COMPARE = 1
 RICH_COMPARE            = 2
 
-RangeTypes    = ( int, six.integer_types, float )
+RangeTypes    = ( int, LONG_TYPE, float )
 
 CallableTypes = ( FunctionType, MethodType )
 

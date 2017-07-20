@@ -86,8 +86,7 @@ class TestABC(unittest.TestCase):
         self.assertTrue(isinstance(foolike, AbstractFoo))
 
     def test_post_hoc_mixing(self):
-        @six.add_metaclass(ABCMetaHasTraits)
-        class TraitedBar(HasTraits, AbstractBar):
+        class TraitedBar(six.with_metaclass(ABCMetaHasTraits, HasTraits, AbstractBar)):
             x = Int(10)
 
             def bar(self):

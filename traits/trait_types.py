@@ -374,7 +374,7 @@ class Str ( BaseStr ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 11, six.text_type )
+    fast_validate = ( 11, six.string_types[0] )
 
 
 class Title ( Str ):
@@ -1609,8 +1609,8 @@ class BaseRange ( TraitType ):
         is_static = (not issubclass( vtype, six.string_types ))
         if is_static and (vtype not in RangeTypes):
             raise TraitError("Range can only be use for int, long or float "
-                               "values, but a value of type %s was specified." %
-                               vtype)
+                             "values, but a value of type %s was specified." %
+                             vtype)
 
         self._low_name = self._high_name = ''
         self._vtype    = Undefined
