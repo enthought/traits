@@ -127,6 +127,7 @@ notifications managed by traits are correctly initialized for the object.
 Failure to call this method may result in lost change notifications.
 """
 
+from __future__ import print_function
 from six.moves.cPickle import dumps, loads
 
 from traits.api import *

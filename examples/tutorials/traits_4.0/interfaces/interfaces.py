@@ -94,7 +94,7 @@ In this case, the value of the trait must be an object which is an instance of
 the specified class or one of its subclasses.
 """
 #--<Imports>-------------------------------------------------------------------
-
+from __future__ import print_function
 from traits.api import *
 
 

@@ -4,6 +4,7 @@
 # deferring_notification.py -- Example of notification with deferring
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, Instance, PrototypedFrom, Str
 
 

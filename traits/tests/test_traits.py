@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------
 
 #  Imports
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import sys
 
@@ -119,7 +119,7 @@ class AnyTraitTest(BaseTest, unittest.TestCase):
     obj = AnyTrait()
 
     _default_value = None
-    _good_values = [10.0, 'ten', six.u('ten'), [10], {'ten': 10}, (10,), None, 1j]
+    _good_values = [10.0, 'ten', u'ten', [10], {'ten': 10}, (10,), None, 1j]
     _mapped_values = []
     _bad_values = []
 
@@ -137,10 +137,10 @@ class CoercibleIntTest(AnyTraitTest):
     obj = CoercibleIntTrait()
 
     _default_value = 99
-    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1, '10', '-10', six.u('10'),
-                    six.u('-10')]
-    _bad_values = ['10L', '-10L', '10.1', '-10.1', six.u('10L'), six.u('-10L'), six.u('10.1'),
-                   six.u('-10.1'), 'ten', six.u('ten'), [10], {'ten': 10}, (10, ), None,
+    _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1, '10', '-10', u'10',
+                    u'-10']
+    _bad_values = ['10L', '-10L', '10.1', '-10.1', u'10L', u'-10L', u'10.1',
+                   u'-10.1', 'ten', u'ten', [10], {'ten': 10}, (10, ), None,
                    1j]
 
     def coerce(self, value):
@@ -159,10 +159,10 @@ class IntTest(AnyTraitTest):
 
     _default_value = 99
     _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
-    _bad_values = ['ten', six.u('ten'), [10], {'ten': 10}, (10,), None, 1j,
-                   10.1, -10.1, '10L', '-10L', '10.1', '-10.1', six.u('10L'),
-                   six.u('-10L'), six.u('10.1'), six.u('-10.1'),  '10', '-10',
-                   six.u('10'), six.u('-10')]
+    _bad_values = ['ten', u'ten', [10], {'ten': 10}, (10,), None, 1j,
+                   10.1, -10.1, '10L', '-10L', '10.1', '-10.1', u'10L',
+                   u'-10L', u'10.1', u'-10.1',  '10', '-10',
+                   u'10', u'-10']
 
     try:
         import numpy as np
@@ -199,11 +199,11 @@ class CoercibleLongTest(AnyTraitTest):
 
     _default_value = LONG_TYPE(99)
     _good_values = [
-        10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1, '10', '-10',
-        six.u('10'), six.u('-10')]
+        10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1,
+        '10', '-10', u'10', u'-10']
     if sys.version_info[0] < 3:
-        _good_values.extend(['10L', '-10L', six.u('10L'), six.u('-10L')])
-    _bad_values = ['10.1', '-10.1', six.u('10.1'), six.u('-10.1'), 'ten', six.u('ten'), [10],
+        _good_values.extend(['10L', '-10L', u'10L', u'-10L'])
+    _bad_values = ['10.1', '-10.1', u'10.1', u'-10.1', 'ten', u'ten', [10],
                    [LONG_TYPE(10)], {'ten': 10}, (10,), (LONG_TYPE(10),), None, 1j]
 
     def coerce(self, value):
@@ -219,11 +219,10 @@ class LongTest(AnyTraitTest):
 
     _default_value = LONG_TYPE(99)
     _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10)]
-    _bad_values = ['ten', six.u('ten'), [10], [LONG_TYPE(10)],
+    _bad_values = ['ten', u'ten', [10], [LONG_TYPE(10)],
                    {'ten': 10}, (10, ), (LONG_TYPE(10),),
                    None, 1j, 10.1, -10.1, '10', '-10', '10L', '-10L', '10.1',
-                   '-10.1', six.u('10'), six.u('-10'),
-                   six.u('10L'), six.u('-10L'), six.u('10.1'), six.u('-10.1')]
+                   '-10.1', u'10', u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
 
     def coerce(self, value):
         try:
@@ -246,10 +245,10 @@ class CoercibleFloatTest(AnyTraitTest):
     _default_value = 99.0
     _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1, '10',
                     '-10', '10.1',
-                    '-10.1', six.u('10'), six.u('-10'), six.u('10.1'),
-                    six.u('-10.1')]
-    _bad_values = ['10L', '-10L', six.u('10L'), six.u('-10L'), 'ten',
-                   six.u('ten'), [10],
+                    '-10.1', u'10', u'-10', u'10.1',
+                    u'-10.1']
+    _bad_values = ['10L', '-10L', u'10L', u'-10L', 'ten',
+                   u'ten', [10],
                    {'ten': 10}, (10, ), None, 1j]
 
     def coerce(self, value):
@@ -264,10 +263,9 @@ class FloatTest(AnyTraitTest):
 
     _default_value = 99.0
     _good_values = [10, -10, 10.1, -10.1]
-    _bad_values = ['ten', six.u('ten'), [10], {'ten': 10}, (10,), None,
+    _bad_values = ['ten', u'ten', [10], {'ten': 10}, (10,), None,
                    1j, '10', '-10', '10L', '-10L', '10.1', '-10.1',
-                   six.u('10'), six.u('-10'), six.u('10L'), six.u('-10L'),
-                   six.u('10.1'), six.u('-10.1')]
+                   u'10', u'-10', u'10L', u'-10L', u'10.1', u'-10.1']
 
     if sys.version_info[0] < 3:
         _good_values.extend([LONG_TYPE(-10), LONG_TYPE(10)])
@@ -294,7 +292,7 @@ class ImaginaryValueTest(AnyTraitTest):
                     '-10', '10.1',
                     '-10.1', 10j, 10 + 10j, 10 - 10j, 10.1j, 10.1 + 10.1j,
                     10.1 - 10.1j, '10j', '10+10j', '10-10j']
-    _bad_values = [six.u('10L'), six.u('-10L'), 'ten', [10],
+    _bad_values = [u'10L', u'-10L', 'ten', [10],
                    {'ten': 10}, (10,), None]
 
     def coerce(self, value):
@@ -315,7 +313,7 @@ class StringTest(AnyTraitTest):
     _default_value = 'string'
     _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1,
                     '10', '-10', '10L',
-                    '-10L', '10.1', '-10.1', 'string', six.u('string'),
+                    '-10L', '10.1', '-10.1', 'string', u'string',
                     1j, [10], ['ten'], {'ten': 10}, (10,), None]
     _bad_values = []
 
@@ -324,18 +322,18 @@ class StringTest(AnyTraitTest):
 
 
 class UnicodeTrait(HasTraits):
-    value = Trait(six.u('unicode'))
+    value = Trait(u'unicode')
 
 
 class UnicodeTest(StringTest):
 
     obj = UnicodeTrait()
 
-    _default_value = six.u('unicode')
+    _default_value = u'unicode'
     _good_values = [10, -10, LONG_TYPE(10), LONG_TYPE(-10), 10.1, -10.1,
                     '10', '-10', '10L', '-10L', '10.1', '-10.1',
-                    '', six.u(''), 'string', six.u('string'), 1j,
-                    [10], ['ten'], [six.u('ten')], {'ten': 10}, (10,), None]
+                    '', u'', 'string', u'string', 1j,
+                    [10], ['ten'], [u'ten'], {'ten': 10}, (10,), None]
     _bad_values = []
 
     def coerce(self, value):
@@ -389,7 +387,7 @@ class CoercibleBytesTest(StringTest):
 
 
 class EnumTrait(HasTraits):
-    value = Trait([1, 'one', 2, 'two', 3, 'three', 4.4, six.u('four.four')])
+    value = Trait([1, 'one', 2, 'two', 3, 'three', 4.4, u'four.four'])
 
 
 class EnumTest(AnyTraitTest):
@@ -397,7 +395,7 @@ class EnumTest(AnyTraitTest):
     obj = EnumTrait()
 
     _default_value = 1
-    _good_values = [1, 'one', 2, 'two', 3, 'three', 4.4, six.u('four.four')]
+    _good_values = [1, 'one', 2, 'two', 3, 'three', 4.4, u'four.four']
     _bad_values = [0, 'zero', 4, None]
 
 
@@ -521,7 +519,7 @@ class OldInstanceTest(AnyTraitTest):
     _good_values = [otrait_test1, OTraitTest1(), OTraitTest2(),
                     OTraitTest3(), None]
     _bad_values = [0, LONG_TYPE(0), 0.0, 0j, OTraitTest1, OTraitTest2, OBadTraitTest(),
-                   'string', six.u('string'), [otrait_test1], (otrait_test1,),
+                   'string', u'string', [otrait_test1], (otrait_test1,),
                    {'data': otrait_test1}]
 
 
@@ -556,7 +554,7 @@ class NewInstanceTest(AnyTraitTest):
     _good_values = [ntrait_test1, NTraitTest1(), NTraitTest2(), NTraitTest3(),
                     None]
     _bad_values = [0, LONG_TYPE(0), 0.0, 0j, NTraitTest1, NTraitTest2, NBadTraitTest(),
-                   'string', six.u('string'), [ntrait_test1], (ntrait_test1,),
+                   'string', u'string', [ntrait_test1], (ntrait_test1,),
                    {'data': ntrait_test1}]
 
 

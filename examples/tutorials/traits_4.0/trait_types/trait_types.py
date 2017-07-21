@@ -92,7 +92,7 @@ This provides the exact same functionality as the previous definition of
   developers.
 """
 #--<Imports>-------------------------------------------------------------------
-
+from __future__ import print_function
 from traits.api import *
 
 

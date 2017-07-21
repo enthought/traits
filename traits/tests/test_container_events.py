@@ -16,7 +16,7 @@
 Tests for Dict items_changed events
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from traits.testing.unittest_tools import unittest
 

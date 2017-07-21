@@ -53,6 +53,7 @@ trait reference. In particular, take a look at the **LeagueModelView Class**
 tab's *total_hits* trait definition.
 """
 
+from __future__ import print_function
 # FIXME redo example without traitsui
 
 import six.moves as sm

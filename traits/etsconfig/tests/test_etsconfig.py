@@ -1,6 +1,6 @@
 """ Tests the 'ETSConfig' configuration object. """
 
-
+from __future__ import print_function
 # Standard library imports.
 import contextlib
 import os

@@ -4,6 +4,7 @@
 # dynamic_notification.py --- Example of dynamic notification
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import Float, HasTraits, Instance
 
 

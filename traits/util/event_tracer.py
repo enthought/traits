@@ -26,12 +26,12 @@ from traits import trait_notifiers
 
 
 CHANGEMSG = (
-    six.u("{time} {direction:-{direction}{length}} {name!r} changed from "
-          "{old!r} to {new!r} in {class_name!r}\n"))
-CALLINGMSG = six.u("{time} {action:>{gap}}: {handler!r} in {source}\n")
+    u"{time} {direction:-{direction}{length}} {name!r} changed from "
+    "{old!r} to {new!r} in {class_name!r}\n")
+CALLINGMSG = u"{time} {action:>{gap}}: {handler!r} in {source}\n"
 EXITMSG = (
-    six.u("{time} {direction:-{direction}{length}} "
-          "EXIT: {handler!r}{exception}\n"))
+    u"{time} {direction:-{direction}{length}} "
+    "EXIT: {handler!r}{exception}\n")
 SPACES_TO_ALIGN_WITH_CHANGE_MESSAGE = 9
 
 
@@ -43,7 +43,7 @@ class SentinelRecord(object):
     __slots__ = ()
 
     def __str__(self):
-        return six.u('\n')
+        return u'\n'
 
 
 @six.python_2_unicode_compatible

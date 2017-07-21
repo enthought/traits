@@ -4,6 +4,7 @@
 # mapped.py --- Example of a mapped trait
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, Trait
 
 #--[Code]----------------------------------------------------------------------

@@ -228,6 +228,7 @@ re-running the example code to verify that this is indeed the case.
 
 #--<Imports>-------------------------------------------------------------------
 
+from __future__ import print_function
 from traits.api import *
 
 

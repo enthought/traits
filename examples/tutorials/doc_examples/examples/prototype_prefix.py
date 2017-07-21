@@ -4,6 +4,7 @@
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 

@@ -12,7 +12,7 @@
 # Description: Perform timing tests on various trait styles to determine the
 #              amount of overhead that traits add.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from time import time
 from ..api import Any, DelegatesTo, HasTraits, Int, Range

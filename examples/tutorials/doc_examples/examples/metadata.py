@@ -4,6 +4,7 @@
 # metadata.py --- Example of accessing trait metadata attributes
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import (HasTraits, Int, List, Float, Instance, Any, TraitType)
 
 

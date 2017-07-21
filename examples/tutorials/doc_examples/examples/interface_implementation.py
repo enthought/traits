@@ -4,6 +4,7 @@
 # interface_implementation.py - Example of implementing an interface
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 

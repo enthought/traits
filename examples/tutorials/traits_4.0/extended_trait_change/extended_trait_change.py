@@ -245,6 +245,7 @@ Refer to the code tabs of this lesson for a complete example using
 bottom of the **Example** tab for the code that sets up an extended trait
 change notification handler using *on_trait_change*.
 """
+from __future__ import print_function
 
 from traits.api import *
 

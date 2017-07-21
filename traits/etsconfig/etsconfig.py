@@ -266,8 +266,8 @@ class ETSConfig(object):
         """
 
         if self._toolkit and self._toolkit != toolkit:
-            raise ValueError("cannot set toolkit to %s because it has "\
-                            "already been set to %s" % (toolkit, self._toolkit))
+            raise ValueError("cannot set toolkit to %s because it has "
+                             "already been set to %s" % (toolkit, self._toolkit))
 
         self._toolkit = toolkit
 

@@ -17,6 +17,7 @@
 """
 
 #  Imports:
+from __future__ import print_function
 
 import sys
 import os
@@ -768,7 +769,7 @@ class Lab(ASection):
                         del values[name]
 
                 # Execute the current lab code:
-                six.exec_(module[2:] in values, values)
+                exec(module[2:] in values, values)
 
                 # fixme: Hack trying to update the Traits UI view of the dict.
                 self.values = {}

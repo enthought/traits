@@ -4,6 +4,7 @@
 # minimal.py --- Minimal example of using traits.
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, Float, TraitError
 
 

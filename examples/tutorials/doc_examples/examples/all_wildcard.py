@@ -5,6 +5,7 @@
 # all_wildcard.py --- Example of trait attribute wildcard rules
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import Any, Str, Int, HasTraits, TraitError
 
 
