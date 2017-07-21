@@ -85,8 +85,6 @@ _<dynamic_name>_handler : A HasTraits instance.
 
 from __future__ import absolute_import
 
-import six
-
 # Enthought library imports:
 from traitsui.delegating_handler import DelegatingHandler
 
@@ -201,7 +199,7 @@ class HasDynamicViews ( HasTraits ):
             # If this is a request for the default view, see if one of our
             # dynamic views should be the default view:
             if (view_element is None) and (name is None or len( name ) < 1):
-                for dname, declaration in six.iteritems(self._dynamic_view_registry):
+                for dname, declaration in self._dynamic_view_registry.items():
                     if declaration.use_as_default:
                         result = self._compose_dynamic_view( dname )
                         break

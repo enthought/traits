@@ -19,6 +19,7 @@
 
 import six
 
+
 class CyclicGraph(Exception):
     """
     Exception for cyclic graphs.

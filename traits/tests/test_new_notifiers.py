@@ -10,7 +10,6 @@ notification really occurs on a separate thread.
 """
 import time
 
-import six
 import six.moves as sm
 
 from traits.api import Float, HasTraits

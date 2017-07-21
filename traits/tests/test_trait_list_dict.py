@@ -10,7 +10,6 @@ from __future__ import absolute_import
 
 import copy
 
-import six
 import six.moves as sm
 
 from traits.has_traits import HasTraits, on_trait_change

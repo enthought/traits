@@ -10,7 +10,6 @@ from __future__ import absolute_import
 
 import sys
 
-import six
 import six.moves as sm
 
 from traits.testing.unittest_tools import unittest

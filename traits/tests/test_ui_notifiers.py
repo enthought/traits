@@ -32,7 +32,6 @@ else:
 from threading import Thread
 import time
 
-import six
 import six.moves as sm
 
 from traits.api import Callable, Float, HasTraits, on_trait_change

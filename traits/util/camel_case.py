@@ -4,7 +4,6 @@
 # Standard library imports.
 import re
 
-import six
 import six.moves as sm
 
 ###############################################################################

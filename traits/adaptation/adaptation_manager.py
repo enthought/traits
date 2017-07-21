@@ -19,8 +19,6 @@ import itertools
 import sys
 import functools
 
-import six
-
 from traits.adaptation.adaptation_error import AdaptationError
 from traits.has_traits import HasTraits
 from traits.trait_types import Dict, List, Str
@@ -321,7 +319,7 @@ class AdaptationManager(HasTraits):
 
         edges = []
 
-        for from_protocol_name, offers in six.iteritems(self._adaptation_offers):
+        for from_protocol_name, offers in self._adaptation_offers.items():
             from_protocol = offers[0].from_protocol
             mro_distance = self.mro_distance_to_protocol(
                 current_protocol, from_protocol

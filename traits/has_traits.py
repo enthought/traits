@@ -223,7 +223,7 @@ def _is_serializable ( value ):
         return True
 
     if isinstance( value, dict ):
-        for name, item in six.iteritems(value):
+        for name, item in value.items():
             if ((not _is_serializable( name )) or
                 (not _is_serializable( item ))):
                 return False

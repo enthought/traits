@@ -24,7 +24,6 @@ import sys
 import threading
 import time
 
-import six
 import six.moves as sm
 
 from traits.testing.unittest_tools import unittest

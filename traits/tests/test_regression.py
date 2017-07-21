@@ -2,7 +2,6 @@
 import gc
 import sys
 
-import six
 import six.moves as sm
 
 from traits.has_traits import HasTraits, Property, on_trait_change
