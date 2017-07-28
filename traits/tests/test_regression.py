@@ -2,8 +2,16 @@
 import gc
 import sys
 
+try:
+    import numpy
+except ImportError:
+    numpy_available = False
+else:
+    numpy_available = True
+    from ..trait_numeric import Array
+
 from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import Bool, DelegatesTo, Instance, Int, List
+from ..trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from ..testing.unittest_tools import unittest
 
 
@@ -188,6 +196,20 @@ class TestRegression(unittest.TestCase):
 
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+
+    @unittest.skipUnless(numpy_available, "test requires NumPy")
+    def test_exception_from_numpy_comparison_ignored(self):
+        # Regression test for enthought/traits#376.
+
+        class MultiArrayDataSource(HasTraits):
+            data = Either(None, Array)
+
+        b = MultiArrayDataSource(data=numpy.array([1, 2]))
+        # The following line was necessary to trigger the bug: the previous
+        # line set a Python exception, but didn't return the correct result to
+        # the CPython interpreter, so the exception wasn't triggered until
+        # later.
+        round(3.14159, 2)
 
 
 if __name__ == '__main__':
