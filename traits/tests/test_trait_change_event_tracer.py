@@ -62,7 +62,7 @@ class TestChangeEventTracers(unittest.TestCase):
 
     def _collect_post_notification_events(self, *args, **kwargs):
         self.post_change_events.append(args)
-        self.exceptions.extend(six.itervalues(kwargs))
+        self.exceptions.extend(kwargs.values())
 
     #### Tests ################################################################
 

@@ -50,7 +50,7 @@ class TestClassTraits(unittest.TestCase):
         # Retrieve all traits that have the `marked` metadata
         # attribute set to True.
         traits = C.class_traits(marked=True)
-        _py2to3.assertCountEqual(self, list(six.iterkeys(traits)), ('y', 'name'))
+        _py2to3.assertCountEqual(self, list(traits.keys()), ('y', 'name'))
 
         # Retrieve all traits that have a `marked` metadata attribute,
         # regardless of its value.

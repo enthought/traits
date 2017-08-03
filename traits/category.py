@@ -56,9 +56,8 @@ class MetaCategory ( MetaHasTraits ):
         if len( bases ) == 2:
             category_class = bases[1]
             # This modifies the dictionary in place
-            for name in list(six.iterkeys(class_dict)):
+            for name, value in list(class_dict.items()):
                 if not hasattr( category_class, name ):
-                    value = class_dict[name]
                     setattr( category_class, name, value )
                     del class_dict[ name ]
 

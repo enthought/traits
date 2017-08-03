@@ -1787,7 +1787,7 @@ class TraitMap ( TraitHandler ):
             raise TraitError('Unmappable')
 
     def info ( self ):
-        keys = sorted(repr(x) for x in six.iterkeys(self.map))
+        keys = sorted(repr(x) for x in self.map.keys())
         return ' or '.join( keys )
 
     def get_editor ( self, trait ):
@@ -1831,7 +1831,7 @@ class TraitPrefixMap ( TraitMap ):
         """
         self.map  = map
         self._map = _map = {}
-        for key in six.iterkeys(map):
+        for key in map.keys():
             _map[ key ] = key
         self.fast_validate = ( 10, _map, self.validate )
 
@@ -1840,7 +1840,7 @@ class TraitPrefixMap ( TraitMap ):
             if value not in self._map:
                 match = None
                 n     = len( value )
-                for key in six.iterkeys(self.map):
+                for key in self.map.keys():
                     if value == key[:n]:
                         if match is not None:
                            match = None

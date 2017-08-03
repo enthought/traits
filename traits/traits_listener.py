@@ -417,7 +417,7 @@ class ListenerItem ( ListenerBase ):
 
         # For each item, determine its type (simple, list, dict):
         self.active[ new ] = active = []
-        for name, trait in six.iteritems(traits):
+        for name, trait in traits.items():
 
             # Determine whether the trait type is simple, list, set or
             # dictionary:
@@ -526,11 +526,11 @@ class ListenerItem ( ListenerBase ):
         """
         if old is not Uninitialized:
             unregister = self.next.unregister
-            for obj in six.itervalues(old):
+            for obj in old.values():
                 unregister( obj )
 
         register = self.next.register
-        for obj in six.itervalues(new):
+        for obj in new.values():
             register( obj )
 
     #---------------------------------------------------------------------------
@@ -554,7 +554,7 @@ class ListenerItem ( ListenerBase ):
             dict = getattr( object, name )
             unregister = self.next.unregister
             register = self.next.register
-            for key, obj in six.iteritems(new.changed):
+            for key, obj in new.changed.items():
                 unregister( obj )
                 register( dict[ key ] )
 
@@ -906,7 +906,7 @@ class ListenerItem ( ListenerBase ):
         else:
             handler = next.register
 
-        for obj in six.itervalues(getattr( object, name )):
+        for obj in getattr( object, name ).values():
             handler( obj )
 
         return INVALID_DESTINATION
@@ -921,7 +921,7 @@ class ListenerItem ( ListenerBase ):
         # Set if the new trait matches our prefix and metadata:
         if new_trait.startswith( self.name[:-1] ):
             trait = object.base_trait( new_trait )
-            for meta_name, meta_eval in six.iteritems(self._metadata):
+            for meta_name, meta_eval in self._metadata.items():
                 if not meta_eval( getattr( trait, meta_name ) ):
                     return
 

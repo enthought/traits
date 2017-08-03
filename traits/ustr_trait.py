@@ -169,7 +169,7 @@ class HasUniqueStrings ( HasTraits ):
         """
         super( HasUniqueStrings, self ).traits_init()
 
-        for name, trait in six.iteritems(self.traits( unique_string = is_str )):
+        for name, trait in self.traits( unique_string = is_str ).items():
             for str_name in trait.unique_string.split( ',' ):
                 self._ustr_traits.append( UStr( self, name, str_name.strip() ) )
 

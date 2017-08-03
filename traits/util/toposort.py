@@ -48,7 +48,7 @@ def topological_sort(graph):
         explored[node] = 1
         order.append(node)
 
-    for node in six.iterkeys(graph):
+    for node in graph.keys():
         if node not in explored:
             explore(node)
     order.reverse()

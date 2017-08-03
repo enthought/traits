@@ -165,7 +165,7 @@ class InterfaceChecker ( HasTraits ):
             if c is HasTraits:
                 break
 
-            for name, value in six.iteritems(c.__dict__):
+            for name, value in c.__dict__.items():
                 if ((not name.startswith( '_' )) and
                         (type( value ) is FunctionType)):
                     if name not in public_methods:
