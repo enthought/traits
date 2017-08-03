@@ -34,6 +34,8 @@ from os.path import dirname, exists, join
 import six
 
 from . import _py2to3
+from ._py2to3 import LONG_TYPE
+
 from .etsconfig.api import ETSConfig
 
 # backwards compatibility: trait_base used to provide a patched enumerate
@@ -53,7 +55,7 @@ SequenceTypes = ( list, tuple )
 
 ComplexTypes  = ( float, int )
 
-TypeTypes     = ( str,  six.text_type, int, six.integer_types, float, complex, list, tuple, dict, bool )
+TypeTypes     = ( str,  six.text_type, int, LONG_TYPE, float, complex, list, tuple, dict, bool )
 
 TraitNotifier = '__trait_notifier__'
 
@@ -180,7 +182,7 @@ def strx ( arg ):
 #  Constants:
 #-------------------------------------------------------------------------------
 
-StringTypes = ( str, six.text_type, int, six.integer_types, float, complex )
+StringTypes = ( str, six.text_type, int, LONG_TYPE, float, complex )
 
 #-------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -188,7 +190,7 @@ StringTypes = ( str, six.text_type, int, six.integer_types, float, complex )
 
 # Mapping of coercable types.
 CoercableTypes = {
-    six.integer_types:    ( 11, six.integer_types, int ),
+    LONG_TYPE:    ( 11, LONG_TYPE, int ),
     float:   ( 11, float, int ),
     complex: ( 11, complex, float, int ),
     six.text_type: ( 11, six.text_type, str )

@@ -51,6 +51,8 @@ from .trait_errors import TraitError, repr_type
 
 from . import _py2to3
 
+from ._py2to3 import LONG_TYPE
+
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
 
@@ -61,12 +63,6 @@ logger = logging.getLogger( __name__ )
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
-
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 # Trait 'comparison_mode' enum values:
 NO_COMPARE              = 0

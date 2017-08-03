@@ -67,14 +67,11 @@ from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     _undefined_get, _undefined_set)
 
 
+from ._py2to3 import LONG_TYPE
+
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
-
-if six.PY2:
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 # Mapping from 'ctrait' default value types to a string representation:
 KindMap = {

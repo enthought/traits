@@ -48,16 +48,10 @@ from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
 from .trait_errors import TraitError
 
 from . import _py2to3
-
+from ._py2to3 import LONG_TYPE
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
-
-if six.PY2:
-
-    LONG_TYPE = long
-else:
-    LONG_TYPE = int
 
 MutableTypes = ( list, dict )
 SetTypes     = SequenceTypes + ( set, )
@@ -175,7 +169,7 @@ class BaseInt ( TraitType ):
         """
         if type(value) is int:
             return value
-        elif type(value) is six.integer_types:
+        elif type(value) is LONG_TYPE:
             return int(value)
 
         try:
