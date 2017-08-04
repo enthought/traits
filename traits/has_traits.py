@@ -1020,7 +1020,7 @@ class HasTraits ( CHasTraits ):
     #-- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event( six.string_types )
+    trait_added = Event( six.string_types[0] )
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified

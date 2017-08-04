@@ -368,7 +368,7 @@ class Str ( BaseStr ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 11, six.string_types[0] )
+    fast_validate = (11,) + six.string_types
 
 
 class Title ( Str ):
@@ -1533,7 +1533,7 @@ class File ( BaseFile ):
         """
         if not exists:
             # Define the C-level fast validator to use:
-            fast_validate = ( 11, six.string_types )
+            self.fast_validate = (11,) + six.string_types
 
         super( File, self ).__init__( value, filter, auto_set, entries, exists,
                                       **metadata )
@@ -1579,11 +1579,11 @@ class BaseDirectory ( BaseStr ):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        validated_value = super( BaseDirectory, self ).validate( object, name, value )
         if not self.exists:
-            return super( BaseDirectory, self ).validate( object, name, value )
-
-        if isdir( value ):
-            return value
+            return validated_value
+        elif isdir( value ):
+            return validated_value
 
         self.error( object, name, value )
 
@@ -1623,8 +1623,7 @@ class Directory ( BaseDirectory ):
         # Define the C-level fast validator to use if the directory existence
         #: test is not required:
         if not exists:
-            self.fast_validate = ( 11, six.string_types )
-
+            self.fast_validate = (11,) + six.string_types
         super( Directory, self ).__init__( value, auto_set, entries, exists,
                                            **metadata )
 
