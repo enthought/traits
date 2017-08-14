@@ -34,7 +34,7 @@ init:
 install:
   - python -m pip install --upgrade --no-binary wheel pip
   - pip install --upgrade wheel
-  - pip install --upgrade -r ci/$env:requirements
+  - pip install --upgrade -r ci/%requirements%
   - pip --version
   - ci/build.cmd pip install -e .
 test_script:
