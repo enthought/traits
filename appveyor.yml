@@ -39,5 +39,6 @@ install:
   - ci/build.cmd pip install -e .
 test_script:
   - ps: md testrun
+  - ps: copy .coveragerc testrun/
   - ps: cd testrun
   - coverage run -m nose.core -v traits --exe
