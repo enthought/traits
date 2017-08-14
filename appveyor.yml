@@ -42,3 +42,6 @@ test_script:
   - ps: copy .coveragerc testrun/
   - ps: cd testrun
   - coverage run -m nose.core -v traits --exe
+on_success:
+  - pip install coveralls
+  - coveralls
