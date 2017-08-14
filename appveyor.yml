@@ -4,27 +4,27 @@ environment:
 
   matrix:
     - python: "C:/Python27-x64"
-      REQUIREMENTS: "ci-requirements.txt"
+      requirements: "ci-requirements.txt"
 
     - python: "C:/Python34-x64"
-      REQUIREMENTS: "ci-requirements.txt"
-      DISTUTILS_USE_SDK: "1"
+      requirements: "ci-requirements.txt"
+      distutils_use_sdk: "1"
 
     - python: "C:/Python35-x64"
-      REQUIREMENTS: "ci-requirements.txt"
+      requirements: "ci-requirements.txt"
 
     - python: "C:/Python36-x64"
-      REQUIREMENTS: "ci-requirements.txt"
+      requirements: "ci-requirements.txt"
 
     - python: "C:/Python27-x64"
-      REQUIREMENTS: "ci-requirements-latest.txt"
+      requirements: "ci-requirements-latest.txt"
 
     - python: "C:/Python36-x64"
-      REQUIREMENTS: "ci-requirements-latest.txt"
+      requirements: "ci-requirements-latest.txt"
 
 matrix:
   allow_failures:
-  - REQUIREMENTS: "ci-requirements-latest.txt"
+  - requirements: "ci-requirements-latest.txt"
 
 cache:
   - C:\Users\appveyor\AppData\Local\pip\Cache
@@ -34,7 +34,7 @@ init:
 install:
   - python -m pip install --upgrade --no-binary wheel pip
   - pip install --upgrade wheel
-  - pip install --upgrade -r "ci\$env:requirements"
+  - pip install --upgrade -r "ci/$env:requirements"
   - pip --version
   - ci/build.cmd pip install -e .
 test_script:
