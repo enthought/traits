@@ -22,7 +22,7 @@ import unittest  # noqa
 from traits.api import (
     Any, Event, HasStrictTraits, Instance, Int, List, Str, Property)
 from traits.util.async_trait_wait import wait_for_condition
-from traits import _py2to3 
+from traits import _py2to3
 
 
 class _AssertTraitChangesContext(object):
@@ -135,8 +135,8 @@ class _TraitsChangeCollector(HasStrictTraits):
     # The object we're listening to.
     obj = Any
 
-    # The (possibly extended) trait name.
-    monitor_traits = Str
+    # The (possibly extended) trait name(s).
+    trait_name = Str
 
     # Read-only event count.
     event_count = Property(Int)
@@ -156,21 +156,21 @@ class _TraitsChangeCollector(HasStrictTraits):
             value = traits.pop('trait')
             message = (
                 "The `trait` keyword is deprecated."
-                " please use `monitor_traits`")
+                " please use `trait_name`")
             warnings.warn(message, DeprecationWarning, stacklevel=2)
-            traits['monitor_traits'] = value
+            traits['trait_name'] = value
         super(_TraitsChangeCollector, self).__init__(**traits)
 
     def start_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.monitor_traits,
+            self.trait_name,
         )
 
     def stop_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.monitor_traits,
+            self.trait_name,
             remove=True,
         )
 
@@ -382,7 +382,7 @@ class UnittestTools(object):
             of changes. None can be used to indicate no timeout.
 
         """
-        collector = _TraitsChangeCollector(obj=obj, monitor_traits=trait)
+        collector = _TraitsChangeCollector(obj=obj, trait_name=trait)
 
         # Pass control to body of the with statement.
         collector.start_collecting()
