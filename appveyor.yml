@@ -34,8 +34,9 @@ init:
 install:
   - python -m pip install --upgrade --no-binary wheel pip
   - pip install --upgrade wheel
+  - pip install --upgrade -r "ci/$Env:requirements"
   - pip --version
-  - build.cmd pip install -e .
+  - ci/build.cmd pip install -e .
 test_script:
   - ps: md testrun
   - ps: cd testrun
