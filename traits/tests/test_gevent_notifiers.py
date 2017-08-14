@@ -42,6 +42,13 @@ class TestGEventNotifiers(unittest.TestCase, UnittestTools):
         self.greenlets.add(gevent.getcurrent())
         self.notifications.append(event)
 
+    def tearDown(self):
+        for greenlet in self.greenlets:
+            greenlet.kill()
+        gevent.joinall(self.greenlets, 10)
+        self.greenlets = None
+        self.notifications = []
+
     #### Tests ################################################################
 
     @unittest.skipIf(
@@ -65,7 +72,7 @@ class TestGEventNotifiers(unittest.TestCase, UnittestTools):
         self.assertEqual(len(self.greenlets), 18)
 
         # Event should arrive out of order when some of the listeners
-        # release the thread.
+        # release the greenlet thread.
         self.assertEqual(len(self.notifications), 18)
         previous = None
         for _, name, _, _ in self.notifications:
