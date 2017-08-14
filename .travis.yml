@@ -33,7 +33,7 @@ before_install:
   - pip install --upgrade pip
   - pip install wheel
 install:
-  - pip install -r "./ci/${REQUIREMENTS}"
+  - pip install --upgrade -r "./ci/${REQUIREMENTS}"
   - python setup.py develop
 before_script:
   - mkdir testrunner
