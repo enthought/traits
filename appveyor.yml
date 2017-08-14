@@ -30,11 +30,11 @@ cache:
   - C:\Users\appveyor\AppData\Local\pip\Cache
 
 init:
-  - ps: $Env:path = "${python};${python}/scripts;${path}"
+  - ps: $env:path = "$env:python;$env:python\scripts;$env:path"
 install:
   - python -m pip install --upgrade --no-binary wheel pip
   - pip install --upgrade wheel
-  - pip install --upgrade -r "ci/${requirements}"
+  - pip install --upgrade -r "ci\$env:requirements"
   - pip --version
   - ci/build.cmd pip install -e .
 test_script:
