@@ -22,6 +22,7 @@ import unittest  # noqa
 from traits.api import (
     Any, Event, HasStrictTraits, Instance, Int, List, Str, Property)
 from traits.util.async_trait_wait import wait_for_condition
+from traits import _py2to3 
 
 
 class _AssertTraitChangesContext(object):
