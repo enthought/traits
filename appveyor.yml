@@ -43,5 +43,4 @@ test_script:
   - ps: cd testrun
   - coverage run -m nose.core -v traits --exe
 on_success:
-  - pip install coveralls
-  - coveralls
+  - coverage report
