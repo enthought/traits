@@ -151,8 +151,8 @@ class _TraitsChangeCollector(HasStrictTraits):
     _lock = Instance(threading.Lock, ())
 
     def __init__(self, **traits):
-        value = traits.pop('trait', None)
-        if value is not None:
+        if 'trait' in traits:
+            value = traits.pop('trait')
             message = (
                 "The `trait` keyword is deprecated."
                 " please use `monitor_traits`")
