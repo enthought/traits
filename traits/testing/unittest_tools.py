@@ -17,17 +17,11 @@ import contextlib
 import threading
 import sys
 import warnings
+import unittest  # noqa
 
 from traits.api import (
     Any, Event, HasStrictTraits, Instance, Int, List, Str, Property)
 from traits.util.async_trait_wait import wait_for_condition
-
-# Compatibility layer for Python 2.6: try loading unittest2
-from traits import _py2to3
-if sys.version_info[:2] == (2, 6):
-    import unittest2 as unittest
-else:
-    import unittest  # noqa
 
 
 class _AssertTraitChangesContext(object):
