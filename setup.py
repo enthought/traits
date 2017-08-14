@@ -8,7 +8,7 @@ import sys
 from setuptools import setup, Extension, find_packages
 
 MAJOR = 4
-MINOR = 6
+MINOR = 7
 MICRO = 0
 
 IS_RELEASED = False
@@ -95,7 +95,28 @@ if not is_released:
                                  git_revision=git_rev,
                                  is_released=IS_RELEASED))
 
+
+def check_python_version():
+    """
+    Check that this version of Python is supported.
+
+    Raise SystemExit for unsupported Python versions.
+    """
+    supported_python_version = (
+        (2, 7) <= sys.version_info < (3,)
+        or (3, 4) <= sys.version_info
+    )
+    if not supported_python_version:
+        sys.exit(
+            (
+                "Python version {0} is not supported by Traits. "
+                "Traits requires Python >= 2.7 or Python >= 3.4."
+            ).format(sys.version_info)
+        )
+
+
 if __name__ == "__main__":
+    check_python_version()
     write_version_py()
     from traits import __version__
 
@@ -121,11 +142,11 @@ if __name__ == "__main__":
     setup(
         name='traits',
         version=__version__,
-        url='http://code.enthought.com/projects/traits',
+        url='http://docs.enthought.com/traits',
         author='David C. Morrill, et. al.',
-        author_email='dmorrill@enthought.com',
+        author_email='info@enthought.com',
         classifiers=[c.strip() for c in """\
-            Development Status :: 5 - Production/really Stable
+            Development Status :: 5 - Production/Stable
             Intended Audience :: Developers
             Intended Audience :: Science/Research
             License :: OSI Approved :: BSD License
@@ -136,6 +157,13 @@ if __name__ == "__main__":
             Operating System :: Unix
             Programming Language :: C
             Programming Language :: Python
+            Programming Language :: Python :: 2
+            Programming Language :: Python :: 2.7
+            Programming Language :: Python :: 3
+            Programming Language :: Python :: 3.4
+            Programming Language :: Python :: 3.5
+            Programming Language :: Python :: 3.6
+            Programming Language :: Python :: Implementation :: CPython
             Topic :: Scientific/Engineering
             Topic :: Software Development
             Topic :: Software Development :: Libraries

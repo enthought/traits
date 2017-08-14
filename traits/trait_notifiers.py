@@ -24,6 +24,7 @@
 
 from __future__ import absolute_import
 
+import contextlib
 from threading import local as thread_local
 from threading import Thread
 from thread import get_ident
@@ -290,12 +291,30 @@ def set_change_event_tracers( pre_tracer=None, post_tracer=None ):
     _pre_change_event_tracer = pre_tracer
     _post_change_event_tracer = post_tracer
 
+
+def get_change_event_tracers():
+    """ Get the currently active global trait change event tracers. """
+    return _pre_change_event_tracer, _post_change_event_tracer
+
+
 def clear_change_event_tracers():
     """ Clear the global trait change event tracer. """
     global _pre_change_event_tracer
     global _post_change_event_tracer
     _pre_change_event_tracer = None
     _post_change_event_tracer = None
+
+
+@contextlib.contextmanager
+def change_event_tracers(pre_tracer, post_tracer):
+    """ Context manager to temporarily change the global event tracers. """
+    old_pre_tracer, old_post_tracer = get_change_event_tracers()
+    set_change_event_tracers(pre_tracer, post_tracer)
+    try:
+        yield
+    finally:
+        set_change_event_tracers(old_pre_tracer, old_post_tracer)
+
 
 #-------------------------------------------------------------------------------
 #  'AbstractStaticChangeNotifyWrapper' class:

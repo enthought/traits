@@ -3,16 +3,21 @@
 # Traits documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul 22 10:52:03 2008.
 #
-# This file is execfile()d with the current directory set to its containing dir.
+# This file is execfile()d with the current directory set to its containing
+# dir.
 #
 # The contents of this file are pickled, so don't put values in the namespace
-# that aren't pickleable (module imports are okay, they're removed automatically).
+# that aren't pickleable (module imports are okay, they're removed
+# automatically).
 #
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 
 import sys
 import os
+
+# The docset build will use slightly different formatting rules
+BUILD_DOCSET = bool(os.environ.get('BUILD_DOCSET'))
 
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
@@ -116,12 +121,12 @@ mock_modules()
 # General configuration
 # ---------------------
 
-# Add any Sphinx extension module names here, as strings. They can be extensions
-# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = [ 'refactordoc',
-               'sphinx.ext.viewcode',
-               'sphinx.ext.autosummary',
-               'traits.util.trait_documenter']
+# Add any Sphinx extension module names here, as strings. They can be
+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+extensions = ['refactordoc',
+              'sphinx.ext.viewcode',
+              'sphinx.ext.autosummary',
+              'traits.util.trait_documenter']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -134,7 +139,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'traits'
-copyright = '2008-2011, Enthought'
+copyright = '2008-2016, Enthought'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
@@ -151,11 +156,12 @@ today_fmt = '%B %d, %Y'
 # List of documents that shouldn't be included in the build.
 #unused_docs = []
 
-# List of directories, relative to source directories, that shouldn't be searched
-# for source files.
+# List of directories, relative to source directories, that shouldn't be
+# searched for source files.
 #exclude_dirs = []
 
-# The reST default role (used for this markup: `text`) to use for all documents.
+# The reST default role (used for this markup: `text`) to use for all
+# documents.
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
@@ -173,13 +179,19 @@ today_fmt = '%B %d, %Y'
 pygments_style = 'sphinx'
 
 # Options for the autodoc extension.
-autodoc_default_flags =['members']
+autodoc_default_flags = ['members']
 
 autodoc_member_order = 'bysource'
 
 
 # Options for HTML output
 # -----------------------
+
+# When using docset browsers like Dash and Zeal the side bar is redundant.
+if BUILD_DOCSET:
+    html_theme_options = {
+        'nosidebar': 'true'
+    }
 
 # The style sheet to use for HTML and HTML Help pages. A file of that name
 # must exist either in Sphinx' static/ path, or in one of the custom paths
@@ -223,10 +235,10 @@ html_use_smartypants = True
 #html_additional_pages = {}
 
 # If false, no module index is generated.
-html_use_modindex = False
+html_use_modindex = BUILD_DOCSET
 
 # If false, no index is generated.
-#html_use_index = False
+html_use_index = BUILD_DOCSET
 
 # If true, the index is split into individual pages for each letter.
 #html_split_index = False
@@ -256,7 +268,8 @@ htmlhelp_basename = 'Traitsdoc'
 #latex_font_size = '10pt'
 
 # Grouping the document tree into LaTeX files. List of tuples
-# (source start file, target name, title, author, document class [howto/manual]).
+# (source start file, target name, title, author,
+#  document class [howto/manual]).
 latex_documents = [
   ('index', 'Traits.tex', 'Traits 4 User Manual', 'Enthought, Inc.', 'manual'),
 ]

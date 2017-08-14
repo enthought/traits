@@ -428,10 +428,6 @@ class MetaHasTraits ( type ):
         # Finish building the class using the updated class dictionary:
         klass = type.__new__( cls, class_name, bases, class_dict )
 
-        # Fix up all self referential traits to refer to this class:
-        for trait in mhto.self_referential:
-            trait.set_validate( ( 11, klass ) )
-
         # Call all listeners that registered for this specific class:
         name = '%s.%s' % ( klass.__module__, klass.__name__ )
         for listener in MetaHasTraits._listeners.get( name, [] ):
@@ -481,7 +477,6 @@ class MetaHasTraitsObject ( object ):
         prefix_list      = []
         override_bases   = bases
         view_elements    = ViewElements()
-        self_referential = []
 
         # Create a list of just those base classes that derive from HasTraits:
         hastraits_bases = [ base for base in bases
@@ -534,11 +529,6 @@ class MetaHasTraitsObject ( object ):
                            if handler.is_mapped:
                                class_traits[ name + '_' ] = _mapped_trait_for(
                                                                          value )
-
-                           if isinstance( handler, This ):
-                               handler.info_text = \
-                                   add_article( class_name ) + ' instance'
-                               self_referential.append( value )
 
                     elif value_type == 'delegate':
                         # Only add a listener if the trait.listenable metadata
@@ -760,9 +750,6 @@ class MetaHasTraitsObject ( object ):
                     depends_on = ' ' + depends_on
 
                 listeners[ name ] = ( 'property', cached, depends_on )
-
-        # Save the list of self referential traits:
-        self.self_referential = self_referential
 
         # Add the traits meta-data to the class:
         self.add_traits_meta_data(
