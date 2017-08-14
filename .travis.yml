@@ -2,24 +2,22 @@ language: python
 sudo: false
 matrix:
   include:
-  - python: 2.6
-    env: REQUIREMENTS=ci-requirements.txt
   - python: 2.7
-    env: REQUIREMENTS=ci-requirements.txt
-  - python: 3.3
     env: REQUIREMENTS=ci-requirements.txt
   - python: 3.4
     env: REQUIREMENTS=ci-requirements.txt
   - python: 3.5
     env: REQUIREMENTS=ci-requirements.txt
+  - python: 3.6
+    env: REQUIREMENTS=ci-requirements.txt
   - python: 2.7
     env: REQUIREMENTS=ci-requirements-latest.txt
-  - python: 3.5
+  - python: 3.6
     env: REQUIREMENTS=ci-requirements-latest.txt
   allow_failures:
   - python: 2.7
     env: REQUIREMENTS=ci-requirements-latest.txt
-  - python: 3.5
+  - python: 3.6
     env: REQUIREMENTS=ci-requirements-latest.txt
 
 branches:
