@@ -172,8 +172,9 @@ class AbstractArray ( TraitType ):
                             break
                 else:
                     return value
-        except:
-            pass
+        except Exception as inst:
+            if isinstance(inst, SystemError):
+                return value
 
         self.error( object, name, value )
 
