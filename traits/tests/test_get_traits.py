@@ -65,6 +65,13 @@ class GetTraitTestCase(unittest.TestCase):
         self.assertEqual( sorted(b.visible_traits()),
                           sorted(["PubT1", "PrivT2"]) )
 
+    def test_dir(self):
+        b = Foo()
+        self.assertEqual(
+            sorted(dir(b)),
+            ['bar', 'num']
+        )
+
 
 ### EOF #######################################################################
 
