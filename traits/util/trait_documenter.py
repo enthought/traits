@@ -105,8 +105,11 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition),
-                      '<autodoc>')
+        line = u'   :annotation: = {0}'
+        try:
+            self.add_line(line.format(definition), '<autodoc>')
+        except UnicodeDecodeError:
+            self.add_line(line.format(definition.decode('utf-8')), '<autodoc>')
 
     # Private Interface #####################################################
 
