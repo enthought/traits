@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 """ Tests for the trait documenter. """
 
 import StringIO
 import sys
+import textwrap
 import tokenize
+
+import mock
 
 from traits.testing.unittest_tools import unittest
 
@@ -45,6 +49,29 @@ class TestTraitDocumenter(unittest.TestCase):
         string = tokenize.untokenize(definition_tokens)
 
         self.assertEqual(self.source.rstrip(), string)
+
+    def test_add_line(self):
+
+        from traits.util.trait_documenter import TraitDocumenter
+
+        src = textwrap.dedent("""\
+        class Fake(HasTraits):
+
+            #: Test attribute
+            test = Property(Bool, label=u"ミスあり")
+        """)
+        mocked_directive = mock.MagicMock()
+
+        documenter = TraitDocumenter(mocked_directive, 'test', '   ')
+        documenter.object_name = 'Property'
+
+        with mock.patch(
+                'traits.util.trait_documenter.inspect.getsource',
+                return_value=src):
+            with mock.patch(
+                    'traits.util.trait_documenter.ClassLevelDocumenter'):
+                documenter.add_directive_header('')
+
 
 if __name__ == '__main__':
     unittest.main()
