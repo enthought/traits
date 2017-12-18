@@ -6,6 +6,7 @@ pip install --cache-dir C:/egg_cache cython
 rem Work around bug in babel 2.0: see mitsuhiko/babel#174
 pip install --cache-dir C:/egg_cache babel==1.3
 pip install --cache-dir C:/egg_cache Sphinx
+pip install --cache-dir C:/egg_cache mock
 
 rem install traits
 python setup.py develop
