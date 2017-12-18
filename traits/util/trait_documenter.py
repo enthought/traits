@@ -6,12 +6,12 @@
     :copyright: Copyright 2012 by Enthought, Inc
 
 """
-import traceback
-import sys
 import inspect
-import tokenize
-import token
 import StringIO
+import sys
+import token
+import tokenize
+import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
