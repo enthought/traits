@@ -30,25 +30,23 @@ def _python_version_is_32():
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
 
-    def setUp(self):
-        self.source = """
-    depth_interval = Property(Tuple(Float, Float),
-                              depends_on="_depth_interval")
-"""
-        string_io = StringIO.StringIO(self.source)
-        tokens = tokenize.generate_tokens(string_io.readline)
-        self.tokens = tokens
-
     def test_get_definition_tokens(self):
 
         from traits.util.trait_documenter import _get_definition_tokens
 
-        definition_tokens = _get_definition_tokens(self.tokens)
+        src = textwrap.dedent("""\
+        depth_interval = Property(Tuple(Float, Float),
+                                  depends_on="_depth_interval")
+        """)
+        string_io = StringIO.StringIO(src)
+        tokens = tokenize.generate_tokens(string_io.readline)
+
+        definition_tokens = _get_definition_tokens(tokens)
 
         # Check if they are correctly untokenized. This should not raise.
         string = tokenize.untokenize(definition_tokens)
 
-        self.assertEqual(self.source.rstrip(), string)
+        self.assertEqual(src.rstrip(), string)
 
     def test_add_line(self):
 
