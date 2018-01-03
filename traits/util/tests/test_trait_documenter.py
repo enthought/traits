@@ -67,7 +67,9 @@ class TestTraitDocumenter(unittest.TestCase):
                 'traits.util.trait_documenter.inspect.getsource',
                 return_value=src):
             with mock.patch(
-                    'traits.util.trait_documenter.ClassLevelDocumenter'):
+                ('traits.util.trait_documenter.ClassLevelDocumenter'
+                 '.add_directive_header')
+            ):
                 documenter.add_directive_header('')
 
 
