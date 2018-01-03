@@ -72,6 +72,8 @@ class TestTraitDocumenter(unittest.TestCase):
             ):
                 documenter.add_directive_header('')
 
+        documenter.directive.result.append.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
