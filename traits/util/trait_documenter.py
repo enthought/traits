@@ -6,17 +6,20 @@
     :copyright: Copyright 2012 by Enthought, Inc
 
 """
-import traceback
-import sys
 import inspect
-import tokenize
-import token
 import StringIO
+import sys
+import token
+import tokenize
+import traceback
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
 from ..trait_handlers import TraitType
 from ..has_traits import MetaHasTraits
+
+
+IS_PY3 = sys.version_info >= (3, 0)
 
 
 def _is_class_trait(name, cls):
@@ -105,8 +108,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition),
-                      '<autodoc>')
+        self.add_line(u'   :annotation: = {0}'.format(definition), '<autodoc>')
 
     # Private Interface #####################################################
 
@@ -132,7 +134,11 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
-        return tokenize.untokenize(definition_tokens).strip()
+        definition = tokenize.untokenize(definition_tokens).strip()
+        if not IS_PY3:
+            definition = unicode(definition, 'utf-8')
+
+        return definition
 
 
 def _get_definition_tokens(tokens):
