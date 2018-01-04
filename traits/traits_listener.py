@@ -35,7 +35,7 @@ from types import MethodType
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
-from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
+from .trait_types import Str, Int, Bool, Instance, List, Enum, Any, Tuple, Dict
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
 
@@ -229,6 +229,36 @@ class ListenerBase ( HasPrivateTraits ):
         """
         raise NotImplementedError
 
+
+#-------------------------------------------------------------------------------
+#  'ActiveListeners' class:
+#-------------------------------------------------------------------------------
+
+class ActiveListeners ( HasPrivateTraits ):
+    objref = Instance(weakref.ref)
+    traits = List(
+        Tuple( Str, Any ),
+        desc = """
+        a list of all current active
+        (*name*, *type*) listener pairs, where *type* defines the type of
+        listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
+        """
+    )
+    @classmethod
+    def install_obj(cls,dct,obj,**kw):
+        """ Install an instance of *cls* into *dct*, registering a weakref
+        callback to remove it when *obj* dies.
+        """
+        obj_id = id(obj)
+        def obj_died_callback(wr):
+            del dct[obj_id]
+        ret = cls(
+            objref = weakref.ref(obj,obj_died_callback),
+            **kw
+        )
+        dct[obj_id] = ret
+        return ret
+
 #-------------------------------------------------------------------------------
 #  'ListenerItem' class:
 #-------------------------------------------------------------------------------
@@ -285,10 +315,10 @@ class ListenerItem ( ListenerBase ):
     #: items as the 'old' and 'new' arguments?
     is_list_handler = Bool( False )
 
-    #: A dictionary mapping objects to a list of all current active
-    #: (*name*, *type*) listener pairs, where *type* defines the type of
-    #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Instance( WeakKeyDictionary, () )
+    #: A dictionary mapping object-id's to a list of currently active listener
+    #: pairs. A callback in the contained weakref.ref is used to purge dead
+    #: object's id's. 
+    active = Dict( Int, Instance(ActiveListeners) )
 
     #-- 'ListenerBase' Class Method Implementations ----------------------------
 
@@ -341,7 +371,7 @@ class ListenerItem ( ListenerBase ):
         """
         # Make sure we actually have an object to set listeners on and that it
         # has not already been registered (cycle breaking):
-        if (new is None) or (new is Undefined) or (new in self.active):
+        if (new is None) or (new is Undefined) or (id(new) in self.active):
             return INVALID_DESTINATION
 
         # Create a dictionary of {name: trait_values} that match the object's
@@ -352,7 +382,10 @@ class ListenerItem ( ListenerBase ):
             # Handle the special case of an 'anytrait' change listener:
             if self.is_any_trait:
                 try:
-                    self.active[ new ] = [ ( '', ANYTRAIT_LISTENER ) ]
+                    ActiveListeners.install_obj(
+                        self.active, new, 
+                        traits = [ ( '', ANYTRAIT_LISTENER ) ]
+                    )
                     return self._register_anytrait( new, '', False )
                 except TypeError:
                     # This error can occur if 'new' is a list or other object
@@ -414,7 +447,11 @@ class ListenerItem ( ListenerBase ):
                 traits = { name: trait }
 
         # For each item, determine its type (simple, list, dict):
-        self.active[ new ] = active = []
+        active = []
+        ActiveListeners.install_obj(
+            self.active, new, 
+            traits = active
+        )
         for name, trait in traits.items():
 
             # Determine whether the trait type is simple, list, set or
