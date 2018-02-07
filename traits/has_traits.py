@@ -50,7 +50,9 @@ from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
     StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper)
 
-from .trait_handlers import TraitType
+from .trait_handlers import (
+    TraitType, MISSING_DEFAULT_VALUE, TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE)
 
 from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
     add_article, is_none, not_event, not_false)
@@ -171,20 +173,20 @@ if sys.version_info[0] >= 3:
         """
         if method[0:2] == '__':
             method = '_%s%s' % ( class_name, method )
-    
+
         result = class_dict.get( method )
         if ((result is not None) and
             is_function_type(result) and
             (getattr( result, 'on_trait_change', None ) is None)):
             return result
-    
+
         for base in bases:
             result = getattr( base, method, None )
             if ((result is not None) and
                 is_unbound_method_type(result) and \
                 (getattr( result, 'on_trait_change', None ) is None)):
                 return result
-    
+
         return None
 else:
     def _get_def ( class_name, class_dict, bases, method ):
@@ -192,20 +194,20 @@ else:
         """
         if method[0:2] == '__':
             method = '_%s%s' % ( class_name, method )
-    
+
         result = class_dict.get( method )
         if ((result is not None) and
             is_function_type(result) and
             (getattr( result, 'on_trait_change', None ) is None)):
             return result
-    
+
         for base in bases:
             result = getattr( base, method, None )
             if ((result is not None) and
                 is_unbound_method_type(result) and \
                 (getattr( result.im_func, 'on_trait_change', None ) is None)):
                 return result
-    
+
         return None
 
 
@@ -588,13 +590,14 @@ class MetaHasTraitsObject ( object ):
                         class_traits[ name ] = value = ictrait( default_value )
                         # Make sure that the trait now has the default value
                         # has the correct initializer.
-                        value.default_value(1, value.default)
+                        value.default_value(
+                            MISSING_DEFAULT_VALUE, value.default)
                         del class_dict[ name ]
                         override_bases = []
                         handler        = value.handler
                         if (handler is not None) and handler.is_mapped:
                             class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                         value )
+                                value )
                         break
 
         # Process all HasTraits base classes:
@@ -730,7 +733,7 @@ class MetaHasTraitsObject ( object ):
                     _add_notifiers( trait._notifiers( 1 ), handlers )
 
                 if default is not None:
-                    trait.default_value( 8, default )
+                    trait.default_value(CALLABLE_DEFAULT_VALUE, default)
 
             # Handle the case of properties whose value depends upon the value
             # of other traits:
@@ -2191,7 +2194,7 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
-    
+
     def visible_traits ( self ):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object, that should be GUI visible
@@ -2741,7 +2744,11 @@ class HasTraits ( CHasTraits ):
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
 
-        return ((handler is not None) and (handler.default_value_type == 5))
+        return (
+            (handler is not None)
+            and
+            (handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE)
+        )
 
     #---------------------------------------------------------------------------
     #  Add a new trait:
@@ -2971,7 +2978,7 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
-        
+
         # Update with instance-defined traits.
         for name, trt in self._instance_traits().items():
             if name[-6:] != "_items":
