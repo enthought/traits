@@ -203,6 +203,51 @@ static int call_notifiers ( PyListObject *, PyListObject *,
    notifications? */
 #define TRAIT_NO_VALUE_TEST 0x00000100
 
+
+/*-----------------------------------------------------------------------------
+| Default value type constants (see `default_value_for` method)
++----------------------------------------------------------------------------*/
+
+/* The default_value of the trait is the default value */
+#define CONSTANT_DEFAULT_VALUE 0
+
+/* The default_value of the trait is Missing */
+#define MISSING_DEFAULT_VALUE 1
+
+/* The object containing the trait is the default value */
+#define OBJECT_DEFAULT_VALUE 2
+
+/* A new copy of the list specified by default_value is the default value */
+#define LIST_COPY_DEFAULT_VALUE 3
+
+/* A new copy of the dict specified by default_value is the default value */
+#define DICT_COPY_DEFAULT_VALUE 4
+
+/* A new instance of TraitListObject constructed using the default_value list
+  is the default value */
+#define TRAIT_LIST_OBJECT_DEFAULT_VALUE 5
+
+/* A new instance of TraitDictObject constructed using the default_value dict
+   is the default value */
+#define TRAIT_DICT_OBJECT_DEFAULT_VALUE 6
+
+/* The default_value is a tuple of the form: (*callable*, *args*, *kw*),
+   where *callable* is a callable, *args* is a tuple, and *kw* is either a
+   dictionary or None. The default value is the result obtained by invoking
+  ``callable(\*args, \*\*kw)`` */
+#define CALLABLE_AND_ARGS_DEFAULT_VALUE 7
+
+/* The default_value is a callable. The default value is the result obtained
+   by invoking *default_value*(*object*), where *object* is the object
+   containing the trait. If the trait has a validate() method, the validate()
+   method is also called to validate the result */
+#define CALLABLE_DEFAULT_VALUE 8
+
+/* A new instance of TraitSetObject constructed using the default_value set
+   is the default value */
+#define TRAIT_SET_OBJECT_DEFAULT_VALUE 9
+
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -1606,36 +1651,36 @@ default_value_for ( trait_object      * trait,
     PyObject * result = NULL, * value, * dv, * kw, * tuple;
 
     switch ( trait->default_value_type ) {
-        case 0:
-        case 1:
+        case CONSTANT_DEFAULT_VALUE:
+        case MISSING_DEFAULT_VALUE:
             result = trait->default_value;
             if (result == NULL) {
                 result = Py_None;
             }
             Py_INCREF( result );
             break;
-        case 2:
+        case OBJECT_DEFAULT_VALUE:
             result = (PyObject *) obj;
             Py_INCREF( obj );
             break;
-        case 3:
+        case LIST_COPY_DEFAULT_VALUE:
             return PySequence_List( trait->default_value );
-        case 4:
+        case DICT_COPY_DEFAULT_VALUE:
             return PyDict_Copy( trait->default_value );
-        case 5:
+        case TRAIT_LIST_OBJECT_DEFAULT_VALUE:
             return call_class( TraitListObject, trait, obj, name,
                                trait->default_value );
-        case 6:
+        case TRAIT_DICT_OBJECT_DEFAULT_VALUE:
             return call_class( TraitDictObject, trait, obj, name,
                                trait->default_value );
-        case 7:
+        case CALLABLE_AND_ARGS_DEFAULT_VALUE:
             dv = trait->default_value;
             kw = PyTuple_GET_ITEM( dv, 2 );
             if ( kw == Py_None )
                 kw = NULL;
             return PyObject_Call( PyTuple_GET_ITEM( dv, 0 ),
                                   PyTuple_GET_ITEM( dv, 1 ), kw );
-        case 8:
+        case CALLABLE_DEFAULT_VALUE:
             if ( (tuple = PyTuple_New( 1 )) == NULL )
                 return NULL;
             PyTuple_SET_ITEM( tuple, 0, (PyObject *) obj );
@@ -1648,7 +1693,7 @@ default_value_for ( trait_object      * trait,
                 return value;
             }
             break;
-        case 9:
+        case TRAIT_SET_OBJECT_DEFAULT_VALUE:
             return call_class( TraitSetObject, trait, obj, name,
                                trait->default_value );
     }

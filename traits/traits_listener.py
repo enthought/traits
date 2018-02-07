@@ -35,6 +35,9 @@ from types import MethodType
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
+from .trait_handlers import (
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE, TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE)
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
@@ -59,9 +62,9 @@ SET_LISTENER      = '_register_set'
 
 # Mapping from trait default value types to listener types
 type_map = {
-    5: LIST_LISTENER,
-    6: DICT_LISTENER,
-    9: SET_LISTENER
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE: LIST_LISTENER,
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE: DICT_LISTENER,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE: SET_LISTENER
 }
 
 # Listener types:
@@ -1363,4 +1366,3 @@ class ListenerHandler ( object ):
 
     def listener_deleted ( self, ref ):
         self.handler = Undefined
-
