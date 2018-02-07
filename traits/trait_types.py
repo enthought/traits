@@ -257,7 +257,6 @@ class Long ( BaseLong ):
     #: The C-level fast validator to use:
     fast_validate = long_fast_validate
 
-
 #-------------------------------------------------------------------------------
 #  'BaseFloat' and 'Float' traits:
 #-------------------------------------------------------------------------------
