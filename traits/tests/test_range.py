@@ -248,6 +248,12 @@ class RangeTestCase(unittest.TestCase):
         obj.r_closed = 100
         self.assertEqual(obj.r_closed, 100)
 
+        # Default case: both bounds included.
+        obj.r = 0
+        self.assertEqual(obj.r, 0)
+        obj.r = 100
+        self.assertEqual(obj.r, 100)
+
     def test_bounds_exclusion_float_range(self):
         obj = SimpleFloatRange()
 
@@ -270,3 +276,9 @@ class RangeTestCase(unittest.TestCase):
         self.assertEqual(obj.r_closed, 0.0)
         obj.r_closed = 100.0
         self.assertEqual(obj.r_closed, 100.0)
+
+        # Default case: both bounds included.
+        obj.r = 0.0
+        self.assertEqual(obj.r, 0.0)
+        obj.r = 100.0
+        self.assertEqual(obj.r, 100.0)
