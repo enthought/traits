@@ -3832,7 +3832,10 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
                                           value ) > 0 )
                     goto done;
-
+                /* If the containment check failed (for example as a result of
+                   checking whether an array is in a sequence), clear the
+                   exception. See enthought/traits#376. */
+                PyErr_Clear();
                 break;
             case 6:  /* Mapped item check: */
                 if ( PyDict_GetItem( PyTuple_GET_ITEM( type_info, 1 ),
