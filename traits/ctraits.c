@@ -3285,13 +3285,15 @@ _validate_integer(PyObject *value) {
 
 static PyObject *
 _validate_float(PyObject *value) {
+    double value_as_double;
+
     /* Fast path: avoid creating a new object if it's not necessary. */
     if (PyFloat_CheckExact(value)) {
         Py_INCREF(value);
         return value;
     }
 
-    double value_as_double = PyFloat_AsDouble(value);
+    value_as_double = PyFloat_AsDouble(value);
     if (value_as_double == -1.0 && PyErr_Occurred()) {
         return NULL;
     }
