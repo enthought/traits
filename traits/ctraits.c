@@ -3301,7 +3301,14 @@ _check_in_range(PyObject *value, PyObject *range_info) {
     int low_in_range, high_in_range;
     long exclude_mask;
 
+#if PY_MAJOR_VERSION < 3
     exclude_mask = PyInt_AS_LONG(PyTuple_GET_ITEM(range_info, 3));
+#else
+    exclude_mask = PyLong_AsLong(PyTuple_GET_ITEM(range_info, 3));
+    if (exclude_mask == -1 && PyErr_Occurred()) {
+        return -1;
+    }
+#endif  // #if PY_MAJOR_VERSION < 3
 
     low = PyTuple_GET_ITEM(range_info, 1);
     if (low == Py_None) {
