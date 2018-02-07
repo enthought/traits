@@ -4164,9 +4164,15 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         v1 = PyTuple_GET_ITEM( validate, 1 );
                         v2 = PyTuple_GET_ITEM( validate, 2 );
                         v3 = PyTuple_GET_ITEM( validate, 3 );
+#if PY_MAJOR_VERSION < 3
                         if ( ((v1 == Py_None) || PyInt_Check( v1 ) || PyLong_Check(v1)) &&
                              ((v2 == Py_None) || PyInt_Check( v2 ) || PyLong_Check(v2)) &&
                              Py2to3_PyNum_Check( v3 ) )
+#else
+                        if ( ((v1 == Py_None) || PyLong_Check(v1)) &&
+                             ((v2 == Py_None) || PyLong_Check(v2)) &&
+                             Py2to3_PyNum_Check( v3 ) )
+#endif // #if PY_MAJOR_VERSION < 3
                             goto done;
                     }
                     break;
