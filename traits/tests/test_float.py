@@ -37,6 +37,11 @@ class MyFloat(object):
         return self._value
 
 
+class BadFloat(object):
+    def __float__(self):
+        raise ZeroDivisionError
+
+
 class FloatModel(HasTraits):
     value = Float
 
@@ -79,13 +84,6 @@ class CommonFloatTests(object):
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 
-    def test_rejects_string(self):
-        a = self.test_class()
-        with self.assertRaises(TraitError):
-            a.value = "2.3"
-        with self.assertRaises(TraitError):
-            a.value_or_none = "2.3"
-
     def test_accepts_float_like(self):
         a = self.test_class()
 
@@ -96,6 +94,18 @@ class CommonFloatTests(object):
         a.value = MyFloat(594.0)
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 594.0)
+
+    def test_rejects_string(self):
+        a = self.test_class()
+        with self.assertRaises(TraitError):
+            a.value = "2.3"
+        with self.assertRaises(TraitError):
+            a.value_or_none = "2.3"
+
+    def test_bad_float_exceptions_propagated(self):
+        a = self.test_class()
+        with self.assertRaises(ZeroDivisionError):
+            a.value = BadFloat()
 
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
@@ -143,6 +153,12 @@ class CommonFloatTests(object):
 class TestFloat(unittest.TestCase, CommonFloatTests):
     def setUp(self):
         self.test_class = FloatModel
+
+    def test_exceptions_propagate_in_compound_trait(self):
+        # This test doesn't currently pass for BaseFloat, which is why it's not
+        # in the common tests. That's probably a bug.
+        with self.assertRaises(ZeroDivisionError):
+            a.value_or_none = BadFloat()
 
 
 class TestBaseFloat(unittest.TestCase, CommonFloatTests):
