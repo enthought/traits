@@ -3342,7 +3342,7 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
     if (high == Py_None) {
         high_in_range = 1;
     }
-    else if (exclude_mask & 1) {
+    else if (exclude_mask & 2) {
         high_in_range = PyObject_RichCompareBool(int_value, high, Py_LT);
     }
     else {
@@ -3468,7 +3468,7 @@ validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
     if (high == Py_None) {
         high_in_range = 1;
     }
-    else if (exclude_mask & 1) {
+    else if (exclude_mask & 2) {
         high_in_range = PyObject_RichCompareBool(float_value, high, Py_LT);
     }
     else {

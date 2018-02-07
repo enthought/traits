@@ -25,9 +25,19 @@ from ..api import HasTraits, Int, Range, Str, TraitError
 class SimpleFloatRange(HasTraits):
     r = Range(0.0, 100.0)
 
+    r_open_on_right = Range(0.0, 100.0, exclude_low=False, exclude_high=True)
+    r_open_on_left = Range(0.0, 100.0, exclude_low=True, exclude_high=False)
+    r_open = Range(0.0, 100.0, exclude_low=True, exclude_high=True)
+    r_closed = Range(0.0, 100.0, exclude_low=False, exclude_high=False)
+
 
 class SimpleIntRange(HasTraits):
     r = Range(0, 100)
+
+    r_open_on_right = Range(0, 100, exclude_low=False, exclude_high=True)
+    r_open_on_left = Range(0, 100, exclude_low=True, exclude_high=False)
+    r_open = Range(0, 100, exclude_low=True, exclude_high=True)
+    r_closed = Range(0, 100, exclude_low=False, exclude_high=False)
 
 
 class WithFloatRange(HasTraits):
@@ -214,3 +224,49 @@ class RangeTestCase(unittest.TestCase):
         for bad_value in bad_values:
             with self.assertRaises(TraitError):
                 obj.r = bad_value
+
+    def test_bounds_exclusion_int_range(self):
+        obj = SimpleIntRange()
+
+        obj.r_open_on_right = 0
+        self.assertEqual(obj.r_open_on_right, 0)
+        with self.assertRaises(TraitError):
+            obj.r_open_on_right = 100
+
+        with self.assertRaises(TraitError):
+            obj.r_open_on_left = 0
+        obj.r_open_on_left = 100
+        self.assertEqual(obj.r_open_on_left, 100)
+
+        with self.assertRaises(TraitError):
+            obj.r_open = 0
+        with self.assertRaises(TraitError):
+            obj.r_open = 100
+
+        obj.r_closed = 0
+        self.assertEqual(obj.r_closed, 0)
+        obj.r_closed = 100
+        self.assertEqual(obj.r_closed, 100)
+
+    def test_bounds_exclusion_float_range(self):
+        obj = SimpleFloatRange()
+
+        obj.r_open_on_right = 0.0
+        self.assertEqual(obj.r_open_on_right, 0.0)
+        with self.assertRaises(TraitError):
+            obj.r_open_on_right = 100.0
+
+        with self.assertRaises(TraitError):
+            obj.r_open_on_left = 0.0
+        obj.r_open_on_left = 100.0
+        self.assertEqual(obj.r_open_on_left, 100.0)
+
+        with self.assertRaises(TraitError):
+            obj.r_open = 0.0
+        with self.assertRaises(TraitError):
+            obj.r_open = 100.0
+
+        obj.r_closed = 0.0
+        self.assertEqual(obj.r_closed, 0.0)
+        obj.r_closed = 100.0
+        self.assertEqual(obj.r_closed, 100.0)
