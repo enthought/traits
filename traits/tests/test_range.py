@@ -30,6 +30,9 @@ class SimpleFloatRange(HasTraits):
     r_open = Range(0.0, 100.0, exclude_low=True, exclude_high=True)
     r_closed = Range(0.0, 100.0, exclude_low=False, exclude_high=False)
 
+    r_nonnegative = Range(0.0, None)
+    r_nonpositive = Range(None, 0.0)
+
 
 class SimpleIntRange(HasTraits):
     r = Range(0, 100)
@@ -38,6 +41,9 @@ class SimpleIntRange(HasTraits):
     r_open_on_left = Range(0, 100, exclude_low=True, exclude_high=False)
     r_open = Range(0, 100, exclude_low=True, exclude_high=True)
     r_closed = Range(0, 100, exclude_low=False, exclude_high=False)
+
+    r_nonnegative = Range(0, None)
+    r_nonpositive = Range(None, 0)
 
 
 class WithFloatRange(HasTraits):
@@ -248,6 +254,16 @@ class RangeTestCase(unittest.TestCase):
         obj.r_closed = 100
         self.assertEqual(obj.r_closed, 100)
 
+        obj.r_nonnegative = 10**100
+        self.assertEqual(obj.r_nonnegative, 10**100)
+        with self.assertRaises(TraitError):
+            obj.r_nonnegative = -10**100
+
+        with self.assertRaises(TraitError):
+            obj.r_nonpositive = 10**100
+        obj.r_nonpositive = -10**100
+        self.assertEqual(obj.r_nonpositive, -10**100)
+
         # Default case: both bounds included.
         obj.r = 0
         self.assertEqual(obj.r, 0)
@@ -276,6 +292,16 @@ class RangeTestCase(unittest.TestCase):
         self.assertEqual(obj.r_closed, 0.0)
         obj.r_closed = 100.0
         self.assertEqual(obj.r_closed, 100.0)
+
+        obj.r_nonnegative = 1e100
+        self.assertEqual(obj.r_nonnegative, 1e100)
+        with self.assertRaises(TraitError):
+            obj.r_nonnegative = -1e100
+
+        with self.assertRaises(TraitError):
+            obj.r_nonpositive = 1e100
+        obj.r_nonpositive = -1e100
+        self.assertEqual(obj.r_nonpositive, -1e100)
 
         # Default case: both bounds included.
         obj.r = 0.0
