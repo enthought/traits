@@ -4111,12 +4111,15 @@ check_implements:
                else {
                    double value_as_double = PyFloat_AsDouble(value);
                    if (value_as_double == -1.0 && PyErr_Occurred()) {
-                       /* Translate a TypeError to a TraitError, but pass
-                          on other exceptions. */
+                       /* TypeError indicates that we don't have a match;
+                          clear the error and continue with the next item
+                          in the complex sequence. */
                        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
                            PyErr_Clear();
                            break;
                        }
+                       /* Any other exception is unexpected and likely
+                          a code bug; propagate it. */
                        return NULL;
                    }
                    return PyFloat_FromDouble(value_as_double);
