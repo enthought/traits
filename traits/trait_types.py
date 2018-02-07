@@ -1705,7 +1705,7 @@ class BaseRange ( TraitType ):
 
         if vtype is float:
             self._validate  = 'float_validate'
-            kind            = 4
+            kind = 4
             self._type_desc = 'a floating point number'
             if low is not None:
                 low = float( low )
@@ -1715,7 +1715,8 @@ class BaseRange ( TraitType ):
 
         elif vtype is long:
             self._validate  = 'long_validate'
-            self._type_desc = 'a long integer'
+            kind = 3
+            self._type_desc = 'an integer'
             if low is not None:
                 low = long( low )
 
@@ -1724,7 +1725,7 @@ class BaseRange ( TraitType ):
 
         elif vtype is int:
             self._validate  = 'int_validate'
-            kind            = 3
+            kind = 3
             self._type_desc = 'an integer'
             if low is not None:
                 low = int( low )
@@ -1762,7 +1763,7 @@ class BaseRange ( TraitType ):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not long):
+        if is_static:
             self.init_fast_validator( kind, low, high, exclude_mask )
 
         #: Assign type-corrected arguments to handler attributes:

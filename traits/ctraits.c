@@ -3300,7 +3300,7 @@ _check_in_range(PyObject *value, PyObject *range_info) {
     PyObject *low, *high;
     int low_in_range, high_in_range;
     long exclude_mask;
-    
+
     exclude_mask = PyInt_AS_LONG(PyTuple_GET_ITEM(range_info, 3));
 
     low = PyTuple_GET_ITEM(range_info, 1);
@@ -3786,10 +3786,9 @@ static PyObject *
 validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                          PyObject * name, PyObject * value ) {
 
-    int    i, j, k, kind;
-    long   exclude_mask, mode, rc;
-    double float_value;
-    PyObject * low, * high, * result, * type_info, * type, * type2, * args;
+    int i, j, k, kind, in_range;
+    long mode, rc;
+    PyObject * result, * type_info, * type, * type2, * args;
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -3822,87 +3821,51 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                     goto done;
                 break;
 
-#if PY_MAJOR_VERSION < 3
             case 3:  /* Integer range check: */
-                if ( PyInt_Check( value ) ) {
-                    long int_value;
-                    int_value    = PyInt_AS_LONG( value );
-                    low          = PyTuple_GET_ITEM( type_info, 1 );
-                    high         = PyTuple_GET_ITEM( type_info, 2 );
-                    exclude_mask = PyInt_AS_LONG(
-                                       PyTuple_GET_ITEM( type_info, 3 ) );
-                    if ( low != Py_None ) {
-                        if ( (exclude_mask & 1) != 0 ) {
-                            if ( int_value <= PyInt_AS_LONG( low  ) )
-                                break;
-                        } else {
-                            if ( int_value < PyInt_AS_LONG( low  ) )
-                                break;
-                        }
+                result = _validate_int( value );
+                if (result == NULL) {
+                    if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        return NULL;
                     }
-                    if ( high != Py_None ) {
-                        if ( (exclude_mask & 2) != 0 ) {
-                            if ( int_value >= PyInt_AS_LONG( high ) )
-                                break;
-                        } else {
-                            if ( int_value > PyInt_AS_LONG( high ) )
-                                break;
-                        }
-                    }
-                    goto done;
-                }
-                break;
-#endif
-
-            case 4:  /* Floating point range check: */
-                if ( !PyFloat_Check( value ) ) {
-                    float_value = Py2to3_PyNum_AsDouble( value );
-                    if( float_value==-1 && PyErr_Occurred() ){
-                        PyErr_Clear();
-                        break;
-                    }
-
-                    value       = PyFloat_FromDouble( float_value );
-                    if ( value == NULL ) {
-                        PyErr_Clear();
-                        break;
-                    }
-                } else {
-                    float_value = PyFloat_AS_DOUBLE( value );
-                    Py_INCREF( value );
-                }
-                low          = PyTuple_GET_ITEM( type_info, 1 );
-                high         = PyTuple_GET_ITEM( type_info, 2 );
-#if PY_MAJOR_VERSION < 3
-                exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-                exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-                if( exclude_mask==-1 && PyErr_Occurred()){
                     PyErr_Clear();
                     break;
                 }
-#endif  // #if PY_MAJOR_VERSION < 3
 
+                in_range = _check_in_range(result, type_info);
+                if (in_range == -1) {
+                    Py_DECREF(result);
+                    return NULL;
+                }
+                else if (in_range == 0) {
+                    Py_DECREF(result);
+                    break;
+                }
+                else {
+                    return result;
+                }
 
-                if ( low != Py_None ) {
-                    if ( (exclude_mask & 1) != 0 ) {
-                        if ( float_value <= PyFloat_AS_DOUBLE( low ) )
-                            break;
-                    } else {
-                        if ( float_value < PyFloat_AS_DOUBLE( low ) )
-                            break;
+            case 4:  /* Floating point range check: */
+                result = _validate_float( value );
+                if (result == NULL) {
+                    if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        return NULL;
                     }
+                    PyErr_Clear();
+                    break;
                 }
-                if ( high != Py_None ) {
-                    if ( (exclude_mask & 2) != 0 ) {
-                        if ( float_value >= PyFloat_AS_DOUBLE( high ) )
-                            break;
-                    } else {
-                        if ( float_value > PyFloat_AS_DOUBLE( high ) )
-                            break;
-                    }
+
+                in_range = _check_in_range(result, type_info);
+                if (in_range == -1) {
+                    Py_DECREF(result);
+                    return NULL;
                 }
-                goto done2;
+                else if (in_range == 0) {
+                    Py_DECREF(result);
+                    break;
+                }
+                else {
+                    return result;
+                }
 
             case 5:  /* Enumerated item check: */
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
@@ -4121,7 +4084,6 @@ error:
     return raise_trait_error( trait, obj, name, value );
 done:
     Py_INCREF( value );
-done2:
     return value;
 }
 
@@ -4190,19 +4152,17 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                         goto done;
                     break;
 
-#if PY_MAJOR_VERSION < 3
                 case 3:  /* Integer range check: */
                     if ( n == 4 ) {
                         v1 = PyTuple_GET_ITEM( validate, 1 );
                         v2 = PyTuple_GET_ITEM( validate, 2 );
                         v3 = PyTuple_GET_ITEM( validate, 3 );
-                        if ( ((v1 == Py_None) || PyInt_Check( v1 )) &&
-                             ((v2 == Py_None) || PyInt_Check( v2 )) &&
-                             PyInt_Check( v3 ) )
+                        if ( ((v1 == Py_None) || PyInt_Check( v1 ) || PyLong_Check(v1)) &&
+                             ((v2 == Py_None) || PyInt_Check( v2 ) || PyLong_Check(v2)) &&
+                             Py2to3_PyNum_Check( v3 ) )
                             goto done;
                     }
                     break;
-#endif // #if PY_MAJOR_VERSION < 3
 
                 case 4:  /* Floating point range check: */
                     if ( n == 4 ) {
