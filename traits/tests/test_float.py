@@ -157,6 +157,7 @@ class TestFloat(unittest.TestCase, CommonFloatTests):
     def test_exceptions_propagate_in_compound_trait(self):
         # This test doesn't currently pass for BaseFloat, which is why it's not
         # in the common tests. That's probably a bug.
+        a = self.test_class()
         with self.assertRaises(ZeroDivisionError):
             a.value_or_none = BadFloat()
 
