@@ -3205,6 +3205,91 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 
 
 /*-----------------------------------------------------------------------------
+|  Coerce an arbitrary Python object to an integer (exact type int or long
+|  in Python 2; exact type int in Python 3), via its type's
+|  __index__ method if necessary. Raise TypeError if the object is
+|  not convertible to an integer.
++----------------------------------------------------------------------------*/
+
+#if PY_MAJOR_VERSION < 3
+
+static PyObject *
+_validate_int(PyObject *value) {
+    PyObject *index_of_value, *int_index_of_value;
+
+    /* Fast paths for common cases. */
+    if (PyInt_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    if (PyLong_CheckExact(value)) {
+        /* Convert to an int if possible. */
+        int overflow;
+        long x = PyLong_AsLongAndOverflow(value, &overflow);
+        if (overflow) {
+            /* value too large for an int; incref and return the long */
+            Py_INCREF(value);
+            return value;
+        }
+        else if (x == -1 && PyErr_Occurred()) {
+            /* something bad; we shouldn't ever actually reach this path */
+            return NULL;
+        }
+        else {
+            /* value representable as an int */
+            return PyInt_FromLong(x);
+        }
+    }
+
+    /* On Python 2, we run the __index__ result through an extra
+       int call, for a couple of reasons: first, __index__ doesn't
+       guarantee to return an int or long on Python 2; second,
+       __index__ of some NumPy values returns a long unnecessarily
+       (for example, for np.uint64(3) */
+
+    index_of_value = PyNumber_Index(value);
+    if (index_of_value == NULL) {
+        return NULL;
+    }
+    int_index_of_value = PyNumber_Int(index_of_value);
+    Py_DECREF(index_of_value);
+    return int_index_of_value;
+}
+
+#else
+
+static PyObject *
+_validate_int(PyObject *value) {
+    /* There's little point adding our own fast path here, since PyNumber_Index
+       already does a PyLong_Check. */
+    return PyNumber_Index(value);
+}
+
+#endif // PY_MAJOR_VERSION < 3
+
+/*-----------------------------------------------------------------------------
+|  Coerce an arbitrary Python object to a float, via its type's
+|  __float__ method if necessary. Raise TypeError if the object is
+|  not convertible to a float.
++----------------------------------------------------------------------------*/
+
+static PyObject *
+_validate_float(PyObject *value) {
+    /* Fast path: avoid creating a new object if it's not necessary. */
+    if (PyFloat_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+
+    double value_as_double = PyFloat_AsDouble(value);
+    if (value_as_double == -1.0 && PyErr_Occurred()) {
+        return NULL;
+    }
+    return PyFloat_FromDouble(value_as_double);
+}
+
+/*-----------------------------------------------------------------------------
 |  Verifies a Python value is an integer within a specified range:
 +----------------------------------------------------------------------------*/
 
@@ -3218,51 +3303,13 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
 
     /* Step 1: convert to an integer. */
 
-    /* Fast paths for the common cases. */
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_CheckExact(value)) {
-        int_value = value;
-        Py_INCREF(int_value);
-    }
-    else if (PyLong_CheckExact(value)) {
-        /* Check to see if the long value is small enough to be
-           representable as an int. */
-        long x = PyLong_AsLong(value);
-        if (x == -1 && PyErr_Occurred()) {
-            /* If we got an error _other_ than an OverflowError, bail out. */
-            if (!PyErr_ExceptionMatches(PyExc_OverflowError)) {
-                return NULL;
-            }
-            /* Got an overflow error; keep the long. */
-            int_value = value;
-            Py_INCREF(int_value);
+    int_value = _validate_int(value);
+    if (int_value == NULL) {
+        if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+            return NULL;
         }
-        else {
-            int_value = PyInt_FromLong(x);
-            if (int_value == NULL) {
-                return NULL;
-            }
-        }
-    }
-#else
-    if (PyLong_CheckExact(value)) {
-        int_value = value;
-        Py_INCREF(int_value);
-    }
-#endif // #if PY_MAJOR_VERSION < 3
-    else {
-        int_value = PyNumber_Index(value);
-        if (int_value == NULL) {
-            if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
-                /* If PyNumber_Index raises something other than TypeError
-                   there's likely a code bug. Propagate the exception. */
-                return NULL;
-            }
-            /* We got a TypeError, so this value can't be converted to an
-               integer. Raise a TraitError. */
-            PyErr_Clear();
-            goto error;
-        }
+        PyErr_Clear();
+        goto error;
     }
 
     /* Step 2: now int_value has exact type either int or long, and we
@@ -3324,64 +3371,19 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-validate_trait_integer ( trait_object * trait, has_traits_object * obj,
-                         PyObject * name, PyObject * value ) {
-    PyObject *int_value, *result;
+validate_trait_integer(trait_object * trait, has_traits_object * obj,
+                       PyObject * name, PyObject * value) {
+    PyObject *int_value;
 
-    /* Fast paths for the most common cases. */
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_CheckExact(value)) {
-        Py_INCREF(value);
-        return value;
-    }
-    else if (PyLong_CheckExact(value)) {
-        long x;
-        x = PyLong_AsLong(value);
-        if (x == -1 && PyErr_Occurred()) {
-            if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
-                PyErr_Clear();
-                Py_INCREF(value);
-                return value;
-            }
+    int_value = _validate_int(value);
+    if (int_value == NULL) {
+        if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
         }
-        else {
-            return PyInt_FromLong(x);
-        }
+        PyErr_Clear();
+        return raise_trait_error( trait, obj, name, value );
     }
-#else
-    if (PyLong_CheckExact(value)) {
-      Py_INCREF(value);
-      return value;
-    }
-#endif // #if PY_MAJOR_VERSION < 3
-
-    /* General case.  The effect is supposed to be that of
-       int(operator.index(value)).  The extra call to 'int' is necessary
-       because in Python 2, operator.index (somewhat controversially) does
-       *not* always return something of type int or long, but can return
-       instances of subclasses of int or long. */
-    int_value = PyNumber_Index(value);
-    if (int_value == NULL) {
-        /* Translate a TypeError to a TraitError, but pass
-           on other exceptions. */
-        if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-            PyErr_Clear();
-            goto error;
-        }
-        return NULL;
-    }
-
-#if PY_MAJOR_VERSION < 3
-    result = PyNumber_Int(int_value);
-#else
-    result = PyNumber_Long(int_value);
-#endif // #if PY_MAJOR_VERSION < 3
-    Py_DECREF(int_value);
-    return result;
-
-error:
-    return raise_trait_error( trait, obj, name, value );
+    return int_value;
 }
 
 
@@ -3400,27 +3402,17 @@ error:
 static PyObject *
 validate_trait_float(trait_object * trait, has_traits_object * obj,
                      PyObject * name, PyObject * value) {
-    /* Fast path for the most common case. */
-    if (PyFloat_CheckExact(value)) {
-        Py_INCREF(value);
-        return value;
-    }
-    else {
-        double value_as_double = PyFloat_AsDouble(value);
-        /* Translate a TypeError to a TraitError, but propagate
-           other exceptions. */
-        if (value_as_double == -1.0 && PyErr_Occurred()) {
-            if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                PyErr_Clear();
-                goto error;
-            }
+    PyObject *float_value;
+
+    float_value = _validate_float(value);
+    if (float_value == NULL) {
+        if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
         }
-        return PyFloat_FromDouble(value_as_double);
+        PyErr_Clear();
+        return raise_trait_error(trait, obj, name, value);
     }
-
-  error:
-    return raise_trait_error(trait, obj, name, value);
+    return float_value;
 }
 
 /*-----------------------------------------------------------------------------
@@ -3437,25 +3429,13 @@ validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
 
     /* Step 1: convert to a float. */
 
-    if (PyFloat_CheckExact(value)) {
-        float_value = value;
-        Py_INCREF(float_value);
-    }
-    else {
-        double value_as_double = PyFloat_AsDouble(value);
-        if (value_as_double == -1.0 && PyErr_Occurred()) {
-            if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
-                /* An unexpected exception; propagate it. */
-                return NULL;
-            }
-            /* Value not convertible to float. Raise TraitError. */
-            PyErr_Clear();
-            goto error;
-        }
-        float_value = PyFloat_FromDouble(value_as_double);
-        if (float_value == NULL) {
+    float_value = _validate_float(value);
+    if (float_value == NULL) {
+        if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
         }
+        PyErr_Clear();
+        goto error;
     }
 
     /* Step 2: now float_value has exact type float, and we
@@ -3843,7 +3823,6 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
     long   exclude_mask, mode, rc;
     double float_value;
     PyObject * low, * high, * result, * type_info, * type, * type2, * args;
-    PyObject * int_value;
 
     PyObject * list_type_info = PyTuple_GET_ITEM( trait->py_validate, 1 );
     int n = PyTuple_GET_SIZE( list_type_info );
@@ -4145,76 +4124,27 @@ check_implements:
                     goto done;
                 break;
 
-           case 20:  /* Integer check: */
-
-                /* Fast paths for the most common cases. */
-#if PY_MAJOR_VERSION < 3
-                if (PyInt_CheckExact(value)) {
-                    Py_INCREF(value);
-                    return value;
-                }
-                else if (PyLong_CheckExact(value)) {
-                    long x;
-                    x = PyLong_AsLong(value);
-                    if (x == -1 && PyErr_Occurred()) {
-                        if (PyErr_ExceptionMatches(PyExc_OverflowError)) {
-                            PyErr_Clear();
-                            Py_INCREF(value);
-                            return value;
-                        }
+            case 20:  /* Integer check: */
+                result = _validate_int(value);
+                if (result == NULL) {
+                    if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
                         return NULL;
                     }
-                    else {
-                        return PyInt_FromLong(x);
-                    }
+                    PyErr_Clear();
+                    break;
                 }
-#else
-                if (PyLong_CheckExact(value)) {
-                    Py_INCREF(value);
-                    return value;
-                }
-#endif // #if PY_MAJOR_VERSION < 3
-                /* General case. */
-                int_value = PyNumber_Index(value);
-                if (int_value == NULL) {
-                    /* Translate a TypeError to a TraitError, but pass
-                       on other exceptions. */
-                    if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                        PyErr_Clear();
-                        break;
-                    }
-                    return NULL;
-                }
-#if PY_MAJOR_VERSION < 3
-                result = PyNumber_Int(int_value);
-#else
-                result = PyNumber_Long(int_value);
-#endif // #if PY_MAJOR_VERSION < 3
-                Py_DECREF(int_value);
                 return result;
 
-           case 21:  /* Float check */
-               /* Fast path for most common case. */
-               if (PyFloat_CheckExact(value)) {
-                   Py_INCREF(value);
-                   return value;
-               }
-               else {
-                   double value_as_double = PyFloat_AsDouble(value);
-                   if (value_as_double == -1.0 && PyErr_Occurred()) {
-                       /* TypeError indicates that we don't have a match;
-                          clear the error and continue with the next item
-                          in the complex sequence. */
-                       if (PyErr_ExceptionMatches(PyExc_TypeError)) {
-                           PyErr_Clear();
-                           break;
-                       }
-                       /* Any other exception is unexpected and likely
-                          a code bug; propagate it. */
-                       return NULL;
-                   }
-                   return PyFloat_FromDouble(value_as_double);
-               }
+            case 21:  /* Float check */
+                result = _validate_float(value);
+                if (result == NULL) {
+                    if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+                        return NULL;
+                    }
+                    PyErr_Clear();
+                    break;
+                }
+                return result;
 
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
