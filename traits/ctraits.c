@@ -3214,7 +3214,7 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 #if PY_MAJOR_VERSION < 3
 
 static PyObject *
-_validate_int(PyObject *value) {
+_validate_integer(PyObject *value) {
     PyObject *index_of_value, *int_index_of_value;
 
     /* Fast paths for common cases. */
@@ -3242,11 +3242,11 @@ _validate_int(PyObject *value) {
         }
     }
 
-    /* On Python 2, we run the __index__ result through an extra
-       int call, for a couple of reasons: first, __index__ doesn't
-       guarantee to return an int or long on Python 2; second,
-       __index__ of some NumPy values returns a long unnecessarily
-       (for example, for np.uint64(3) */
+    /* We run the __index__ result through an extra int call, for a couple of
+       reasons: first, __index__ doesn't guarantee to return an int or long,
+       and for example for a bool input it returns another bool; second,
+       __index__ of some NumPy values returns a long unnecessarily (for
+       example, for np.uint64(3)) */
 
     index_of_value = PyNumber_Index(value);
     if (index_of_value == NULL) {
@@ -3260,10 +3260,19 @@ _validate_int(PyObject *value) {
 #else
 
 static PyObject *
-_validate_int(PyObject *value) {
+_validate_integer(PyObject *value) {
+    PyObject *index_of_value, *int_index_of_value;
+
     /* There's little point adding our own fast path here, since PyNumber_Index
        already does a PyLong_Check. */
-    return PyNumber_Index(value);
+    index_of_value = PyNumber_Index(value);
+    if (index_of_value == NULL) {
+        return NULL;
+    }
+
+    int_index_of_value = PyNumber_Long(index_of_value);
+    Py_DECREF(index_of_value);
+    return int_index_of_value;
 }
 
 #endif // PY_MAJOR_VERSION < 3
@@ -3352,7 +3361,7 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
 
     /* Step 1: convert to an integer. */
 
-    int_value = _validate_int(value);
+    int_value = _validate_integer(value);
     if (int_value == NULL) {
         if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
@@ -3387,7 +3396,7 @@ validate_trait_integer(trait_object * trait, has_traits_object * obj,
                        PyObject * name, PyObject * value) {
     PyObject *int_value;
 
-    int_value = _validate_int(value);
+    int_value = _validate_integer(value);
     if (int_value == NULL) {
         if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
@@ -3829,7 +3838,7 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 break;
 
             case 3:  /* Integer range check: */
-                result = _validate_int( value );
+                result = _validate_integer( value );
                 if (result == NULL) {
                     if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
                         return NULL;
@@ -4062,7 +4071,7 @@ check_implements:
                 break;
 
             case 20:  /* Integer check: */
-                result = _validate_int(value);
+                result = _validate_integer(value);
                 if (result == NULL) {
                     if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
                         return NULL;
