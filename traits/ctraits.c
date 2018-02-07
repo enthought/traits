@@ -3204,54 +3204,120 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 }
 
 
-
 /*-----------------------------------------------------------------------------
-|  Verifies a Python value is an int within a specified range:
+|  Verifies a Python value is an integer within a specified range:
 +----------------------------------------------------------------------------*/
-#if PY_MAJOR_VERSION < 3
+
 static PyObject *
-validate_trait_int ( trait_object * trait, has_traits_object * obj,
-                     PyObject * name, PyObject * value ) {
+validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
+                               PyObject * name, PyObject * value ) {
 
-    register PyObject * low;
-    register PyObject * high;
+    PyObject *low, *high, *int_value, *type_info;
     long exclude_mask;
-    long int_value;
+    int low_in_range, high_in_range;
 
-    PyObject * type_info = trait->py_validate;
+    /* Step 1: convert to an integer. */
 
-    if ( PyInt_Check( value ) ) {
-        int_value    = PyInt_AS_LONG( value );
-        low          = PyTuple_GET_ITEM( type_info, 1 );
-        high         = PyTuple_GET_ITEM( type_info, 2 );
-        exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-        if ( low != Py_None ) {
-            if ( (exclude_mask & 1) != 0 ) {
-                if ( int_value <= PyInt_AS_LONG( low ) )
-                    goto error;
-            } else {
-                if ( int_value < PyInt_AS_LONG( low ) )
-                    goto error;
-            }
-        }
-
-        if ( high != Py_None ) {
-            if ( (exclude_mask & 2) != 0 ) {
-                if ( int_value >= PyInt_AS_LONG( high ) )
-                    goto error;
-            } else {
-                if ( int_value > PyInt_AS_LONG( high ) )
-                    goto error;
-            }
-        }
-
-        Py_INCREF( value );
-        return value;
+    /* Fast paths for the common cases. */
+#if PY_MAJOR_VERSION < 3
+    if (PyInt_CheckExact(value)) {
+        int_value = value;
+        Py_INCREF(int_value);
     }
-error:
+    else if (PyLong_CheckExact(value)) {
+        /* Check to see if the long value is small enough to be
+           representable as an int. */
+        long x = PyLong_AsLong(value);
+        if (x == -1 && PyErr_Occurred()) {
+            /* If we got an error _other_ than an OverflowError, bail out. */
+            if (!PyErr_ExceptionMatches(PyExc_OverflowError)) {
+                return NULL;
+            }
+            /* Got an overflow error; keep the long. */
+            int_value = value;
+            Py_INCREF(int_value);
+        }
+        else {
+            int_value = PyInt_FromLong(x);
+            if (int_value == NULL) {
+                return NULL;
+            }
+        }
+    }
+#else
+    if (PyLong_CheckExact(value)) {
+        int_value = value;
+        Py_INCREF(int_value);
+    }
+#endif // #if PY_MAJOR_VERSION < 3
+    else {
+        int_value = PyNumber_Index(value);
+        if (int_value == NULL) {
+            if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+                /* If PyNumber_Index raises something other than TypeError
+                   there's likely a code bug. Propagate the exception. */
+                return NULL;
+            }
+            /* We got a TypeError, so this value can't be converted to an
+               integer. Raise a TraitError. */
+            PyErr_Clear();
+            goto error;
+        }
+    }
+
+    /* Step 2: now int_value has exact type either int or long, and we
+       own the reference. Compare with the range bounds. */
+
+    type_info = trait->py_validate;
+    exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
+    low = PyTuple_GET_ITEM( type_info, 1 );
+    if (low == Py_None) {
+        low_in_range = 1;
+    }
+    else if (exclude_mask & 1) {
+        low_in_range = PyObject_RichCompareBool(int_value, low, Py_GT);
+    }
+    else {
+        low_in_range = PyObject_RichCompareBool(int_value, low, Py_GE);
+    }
+
+    if (low_in_range == -1) {
+        /* Something went wrong with the comparison.*/
+        Py_DECREF(int_value);
+        return NULL;
+    }
+    else if (low_in_range == 0) {
+        Py_DECREF(int_value);
+        goto error;
+    }
+
+    high = PyTuple_GET_ITEM( type_info, 2 );
+    if (high == Py_None) {
+        high_in_range = 1;
+    }
+    else if (exclude_mask & 1) {
+        high_in_range = PyObject_RichCompareBool(int_value, high, Py_LT);
+    }
+    else {
+        high_in_range = PyObject_RichCompareBool(int_value, high, Py_LE);
+    }
+
+    if (high_in_range == -1) {
+        /* Something went wrong with the comparison.*/
+        Py_DECREF(int_value);
+        return NULL;
+    }
+    else if (high_in_range == 0) {
+        Py_DECREF(int_value);
+        goto error;
+    }
+
+    /* Success! */
+    return int_value;
+
+  error:
     return raise_trait_error( trait, obj, name, value );
 }
-#endif  // #if PY_MAJOR_VERSION < 3
 
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is a Python integer (an int or long)
@@ -3365,59 +3431,84 @@ static PyObject *
 validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
                              PyObject * name, PyObject * value ) {
 
-    register PyObject * low;
-    register PyObject * high;
+    PyObject *low, *high, *float_value, *type_info;
     long exclude_mask;
-    double float_value;
+    int low_in_range, high_in_range;
 
-    PyObject * type_info = trait->py_validate;
+    /* Step 1: convert to a float. */
 
-    if ( !PyFloat_Check( value ) ) {
-        float_value = Py2to3_PyNum_AsDouble( value );
-        if( float_value==-1 && PyErr_Occurred() )
+    if (PyFloat_CheckExact(value)) {
+        float_value = value;
+        Py_INCREF(float_value);
+    }
+    else {
+        double value_as_double = PyFloat_AsDouble(value);
+        if (value_as_double == -1.0 && PyErr_Occurred()) {
+            if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
+                /* An unexpected exception; propagate it. */
+                return NULL;
+            }
+            /* Value not convertible to float. Raise TraitError. */
+            PyErr_Clear();
             goto error;
-        value       = PyFloat_FromDouble( float_value );
-        if ( value == NULL )
-            goto error;
-        Py_INCREF( value );
-    } else {
-        float_value = PyFloat_AS_DOUBLE( value );
+        }
+        float_value = PyFloat_FromDouble(value_as_double);
+        if (float_value == NULL) {
+            return NULL;
+        }
     }
 
-    low          = PyTuple_GET_ITEM( type_info, 1 );
-    high         = PyTuple_GET_ITEM( type_info, 2 );
-#if PY_MAJOR_VERSION < 3
+    /* Step 2: now float_value has exact type float, and we
+       own the reference. Compare with the range bounds. */
+
+    type_info = trait->py_validate;
     exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-#else
-    exclude_mask = PyLong_AsLong( PyTuple_GET_ITEM( type_info, 3 ) );
-    if( exclude_mask==-1 && PyErr_Occurred()){
+    low = PyTuple_GET_ITEM( type_info, 1 );
+    if (low == Py_None) {
+        low_in_range = 1;
+    }
+    else if (exclude_mask & 1) {
+        low_in_range = PyObject_RichCompareBool(float_value, low, Py_GT);
+    }
+    else {
+        low_in_range = PyObject_RichCompareBool(float_value, low, Py_GE);
+    }
+
+    if (low_in_range == -1) {
+        /* Something went wrong with the comparison.*/
+        Py_DECREF(float_value);
+        return NULL;
+    }
+    else if (low_in_range == 0) {
+        Py_DECREF(float_value);
         goto error;
     }
-#endif  // #if PY_MAJOR_VERSION < 3
 
-    if ( low != Py_None ) {
-        if ( (exclude_mask & 1) != 0 ) {
-            if ( float_value <= PyFloat_AS_DOUBLE( low ) )
-                goto error;
-        } else {
-            if ( float_value < PyFloat_AS_DOUBLE( low ) )
-                goto error;
-        }
+    high = PyTuple_GET_ITEM( type_info, 2 );
+    if (high == Py_None) {
+        high_in_range = 1;
+    }
+    else if (exclude_mask & 1) {
+        high_in_range = PyObject_RichCompareBool(float_value, high, Py_LT);
+    }
+    else {
+        high_in_range = PyObject_RichCompareBool(float_value, high, Py_LE);
     }
 
-    if ( high != Py_None ) {
-        if ( (exclude_mask & 2) != 0 ) {
-            if ( float_value >= PyFloat_AS_DOUBLE( high ) )
-                goto error;
-        } else {
-            if ( float_value > PyFloat_AS_DOUBLE( high ) )
-                goto error;
-        }
+    if (high_in_range == -1) {
+        /* Something went wrong with the comparison.*/
+        Py_DECREF(float_value);
+        return NULL;
+    }
+    else if (high_in_range == 0) {
+        Py_DECREF(float_value);
+        goto error;
     }
 
-    Py_INCREF( value );
-    return value;
-error:
+    /* Success! */
+    return float_value;
+
+  error:
     return raise_trait_error( trait, obj, name, value );
 }
 
@@ -4143,11 +4234,7 @@ done2:
 
 static trait_validate validate_handlers[] = {
     validate_trait_type,        validate_trait_instance,
-#if PY_MAJOR_VERSION < 3
-    validate_trait_self_type,   validate_trait_int,
-#else
-    validate_trait_self_type,   NULL,
-#endif // #if PY_MAJOR_VERSION < 3
+    validate_trait_self_type,   validate_trait_integer_range,
     validate_trait_float_range, validate_trait_enum,
     validate_trait_map,         validate_trait_complex,
     NULL,                       validate_trait_tuple,

@@ -8,9 +8,26 @@
 
 from __future__ import absolute_import
 
+import operator
+
+try:
+    import numpy
+except ImportError:
+    numpy_available = False
+else:
+    numpy_available = True
+
 from traits.testing.unittest_tools import unittest
 
 from ..api import HasTraits, Int, Range, Str, TraitError
+
+
+class SimpleFloatRange(HasTraits):
+    r = Range(0.0, 100.0)
+
+
+class SimpleIntRange(HasTraits):
+    r = Range(0, 100)
 
 
 class WithFloatRange(HasTraits):
@@ -50,6 +67,22 @@ class WithDynamicRange(HasTraits):
 
     def _r_changed(self, old, new):
         self._changed_handler_calls += 1
+
+
+class MyFloat(object):
+    def __init__(self, value):
+        self._value = value
+
+    def __float__(self):
+        return self._value
+
+
+class MyIntLike(object):
+    def __init__(self, value):
+        self._value = value
+
+    def __index__(self):
+        return self._value
 
 
 class RangeTestCase(unittest.TestCase):
@@ -98,3 +131,87 @@ class RangeTestCase(unittest.TestCase):
         with self.assertRaises(TraitError):
             obj.r = obj.high
         self.assertEqual(obj.r, 5)
+
+    def test_type_validation_float_range(self):
+        obj = SimpleFloatRange()
+
+        good_values = [
+            1.47,
+            MyFloat(2.35),
+            23, 0, 100,
+            23.5, 0.0, 100.0,
+        ]
+
+        if numpy_available:
+            numpy_good_values = [
+                numpy.float64(1.1),
+                numpy.float32(1.78),
+                numpy.float16(3.7),
+                numpy.int8(23),
+                numpy.uint8(24),
+                numpy.int32(26),
+                numpy.uint64(27),
+            ]
+            good_values.extend(numpy_good_values)
+
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), float)
+            self.assertEqual(obj.r, float(good_value))
+
+        bad_values = [
+            "a string",
+            1 + 2j,
+            -50.0,  # out of range
+            150.0,  # also out of range
+            -50,
+            150,
+            MyIntLike(17),
+        ]
+
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
+
+    def test_type_validation_int_range(self):
+        obj = SimpleIntRange()
+
+        good_values = [23, 0, 100, MyIntLike(17)]
+
+        if numpy_available:
+            good_values.extend([
+                numpy.int8(23),
+                numpy.uint8(24),
+                numpy.int32(26),
+                numpy.uint64(27),
+            ])
+
+        for good_value in good_values:
+            obj.r = good_value
+            print("good value: ", good_value, type(good_value))
+            self.assertIs(type(obj.r), int)
+            self.assertEqual(obj.r, operator.index(good_value))
+
+        bad_values = [
+            "a string",
+            1 + 2j,
+            -50.0,
+            150.0,
+            1.47,
+            MyFloat(2.35),
+            -50,  # out of range
+            150,  # also out of range
+            MyIntLike(127),
+        ]
+
+        if numpy_available:
+            numpy_bad_values = [
+                numpy.float64(1.1),
+                numpy.float32(1.78),
+                numpy.float16(3.7),
+            ]
+            bad_values.extend(numpy_bad_values)
+
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
