@@ -26,7 +26,7 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import BaseFloat, Either, Float, HasTraits, TraitError
+from ..api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 
 
 class MyFloat(object):
@@ -49,11 +49,15 @@ class FloatModel(HasTraits):
     # validate_trait_complex in ctraits.c).
     value_or_none = Either(None, Float)
 
+    float_or_text = Either(Float, Unicode)
+
 
 class BaseFloatModel(HasTraits):
     value = BaseFloat
 
     value_or_none = Either(None, BaseFloat)
+
+    float_or_text = Either(Float, Unicode)
 
 
 class CommonFloatTests(object):
@@ -106,6 +110,13 @@ class CommonFloatTests(object):
         a = self.test_class()
         with self.assertRaises(ZeroDivisionError):
             a.value = BadFloat()
+
+    def test_compound_trait_float_conversion_fail(self):
+        # Check that a failure to convert to float doesn't terminate
+        # an assignment to a compound trait.
+        a = self.test_class()
+        a.float_or_text = u"not a float"
+        self.assertEqual(a.float_or_text, u"not a float")
 
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
