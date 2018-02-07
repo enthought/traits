@@ -3289,6 +3289,49 @@ _validate_float(PyObject *value) {
     return PyFloat_FromDouble(value_as_double);
 }
 
+/* Common range-checking code used for Range trait validation.
+
+   Returns 1 if the value is within range, 0 otherwise.
+   Returns -1 and sets an exception if anything goes wrong.
+*/
+
+static int
+_check_in_range(PyObject *value, PyObject *range_info) {
+    PyObject *low, *high;
+    int low_in_range, high_in_range;
+    long exclude_mask;
+    
+    exclude_mask = PyInt_AS_LONG(PyTuple_GET_ITEM(range_info, 3));
+
+    low = PyTuple_GET_ITEM(range_info, 1);
+    if (low == Py_None) {
+        low_in_range = 1;
+    }
+    else if (exclude_mask & 1) {
+        low_in_range = PyObject_RichCompareBool(value, low, Py_GT);
+    }
+    else {
+        low_in_range = PyObject_RichCompareBool(value, low, Py_GE);
+    }
+
+    /* If the check against the low bound either failed or errored, return. */
+    if (low_in_range != 1) {
+        return low_in_range;
+    }
+
+    high = PyTuple_GET_ITEM(range_info, 2);
+    if (high == Py_None) {
+        high_in_range = 1;
+    }
+    else if (exclude_mask & 2) {
+        high_in_range = PyObject_RichCompareBool(value, high, Py_LT);
+    }
+    else {
+        high_in_range = PyObject_RichCompareBool(value, high, Py_LE);
+    }
+    return high_in_range;
+}
+
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is an integer within a specified range:
 +----------------------------------------------------------------------------*/
@@ -3297,9 +3340,8 @@ static PyObject *
 validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
                                PyObject * name, PyObject * value ) {
 
-    PyObject *low, *high, *int_value, *type_info;
-    long exclude_mask;
-    int low_in_range, high_in_range;
+    PyObject *int_value;
+    int in_range;
 
     /* Step 1: convert to an integer. */
 
@@ -3309,61 +3351,24 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
             return NULL;
         }
         PyErr_Clear();
-        goto error;
+        return raise_trait_error( trait, obj, name, value );
     }
 
     /* Step 2: now int_value has exact type either int or long, and we
        own the reference. Compare with the range bounds. */
 
-    type_info = trait->py_validate;
-    exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-    low = PyTuple_GET_ITEM( type_info, 1 );
-    if (low == Py_None) {
-        low_in_range = 1;
-    }
-    else if (exclude_mask & 1) {
-        low_in_range = PyObject_RichCompareBool(int_value, low, Py_GT);
-    }
-    else {
-        low_in_range = PyObject_RichCompareBool(int_value, low, Py_GE);
-    }
-
-    if (low_in_range == -1) {
-        /* Something went wrong with the comparison.*/
+    in_range = _check_in_range(int_value, trait->py_validate);
+    if (in_range == -1) {
         Py_DECREF(int_value);
         return NULL;
     }
-    else if (low_in_range == 0) {
+    else if (in_range == 0) {
         Py_DECREF(int_value);
-        goto error;
-    }
-
-    high = PyTuple_GET_ITEM( type_info, 2 );
-    if (high == Py_None) {
-        high_in_range = 1;
-    }
-    else if (exclude_mask & 2) {
-        high_in_range = PyObject_RichCompareBool(int_value, high, Py_LT);
+        return raise_trait_error( trait, obj, name, value );
     }
     else {
-        high_in_range = PyObject_RichCompareBool(int_value, high, Py_LE);
+        return int_value;
     }
-
-    if (high_in_range == -1) {
-        /* Something went wrong with the comparison.*/
-        Py_DECREF(int_value);
-        return NULL;
-    }
-    else if (high_in_range == 0) {
-        Py_DECREF(int_value);
-        goto error;
-    }
-
-    /* Success! */
-    return int_value;
-
-  error:
-    return raise_trait_error( trait, obj, name, value );
 }
 
 /*-----------------------------------------------------------------------------
@@ -3423,9 +3428,8 @@ static PyObject *
 validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
                              PyObject * name, PyObject * value ) {
 
-    PyObject *low, *high, *float_value, *type_info;
-    long exclude_mask;
-    int low_in_range, high_in_range;
+    PyObject *float_value;
+    int in_range;
 
     /* Step 1: convert to a float. */
 
@@ -3435,61 +3439,24 @@ validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
             return NULL;
         }
         PyErr_Clear();
-        goto error;
+        return raise_trait_error( trait, obj, name, value );
     }
 
     /* Step 2: now float_value has exact type float, and we
        own the reference. Compare with the range bounds. */
 
-    type_info = trait->py_validate;
-    exclude_mask = PyInt_AS_LONG( PyTuple_GET_ITEM( type_info, 3 ) );
-    low = PyTuple_GET_ITEM( type_info, 1 );
-    if (low == Py_None) {
-        low_in_range = 1;
-    }
-    else if (exclude_mask & 1) {
-        low_in_range = PyObject_RichCompareBool(float_value, low, Py_GT);
-    }
-    else {
-        low_in_range = PyObject_RichCompareBool(float_value, low, Py_GE);
-    }
-
-    if (low_in_range == -1) {
-        /* Something went wrong with the comparison.*/
+    in_range = _check_in_range(float_value, trait->py_validate);
+    if (in_range == -1) {
         Py_DECREF(float_value);
         return NULL;
     }
-    else if (low_in_range == 0) {
+    else if (in_range == 0) {
         Py_DECREF(float_value);
-        goto error;
-    }
-
-    high = PyTuple_GET_ITEM( type_info, 2 );
-    if (high == Py_None) {
-        high_in_range = 1;
-    }
-    else if (exclude_mask & 2) {
-        high_in_range = PyObject_RichCompareBool(float_value, high, Py_LT);
+        return raise_trait_error( trait, obj, name, value );
     }
     else {
-        high_in_range = PyObject_RichCompareBool(float_value, high, Py_LE);
+        return float_value;
     }
-
-    if (high_in_range == -1) {
-        /* Something went wrong with the comparison.*/
-        Py_DECREF(float_value);
-        return NULL;
-    }
-    else if (high_in_range == 0) {
-        Py_DECREF(float_value);
-        goto error;
-    }
-
-    /* Success! */
-    return float_value;
-
-  error:
-    return raise_trait_error( trait, obj, name, value );
 }
 
 /*-----------------------------------------------------------------------------
