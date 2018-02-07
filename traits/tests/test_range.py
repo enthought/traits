@@ -188,7 +188,6 @@ class RangeTestCase(unittest.TestCase):
 
         for good_value in good_values:
             obj.r = good_value
-            print("good value: ", good_value, type(good_value))
             self.assertIs(type(obj.r), int)
             self.assertEqual(obj.r, operator.index(good_value))
 
