@@ -590,13 +590,14 @@ class MetaHasTraitsObject ( object ):
                         class_traits[ name ] = value = ictrait( default_value )
                         # Make sure that the trait now has the default value
                         # has the correct initializer.
-                        value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                        value.default_value(
+                            MISSING_DEFAULT_VALUE, value.default)
                         del class_dict[ name ]
                         override_bases = []
                         handler        = value.handler
                         if (handler is not None) and handler.is_mapped:
                             class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                         value )
+                                value )
                         break
 
         # Process all HasTraits base classes:
@@ -2743,7 +2744,11 @@ class HasTraits ( CHasTraits ):
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
 
-        return ((handler is not None) and (handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE))
+        return (
+            (handler is not None)
+            and
+            (handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE)
+        )
 
     #---------------------------------------------------------------------------
     #  Add a new trait:

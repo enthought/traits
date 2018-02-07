@@ -882,7 +882,8 @@ class _TraitMaker ( object ):
                             handler.allow_none()
 
                         elif isinstance( default_value, _InstanceArgs ):
-                            default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
+                            default_value_type = (
+                                CALLABLE_AND_ARGS_DEFAULT_VALUE)
                             default_value = ( handler.create_default_value,
                                 default_value.args, default_value.kw )
 
@@ -891,12 +892,14 @@ class _TraitMaker ( object ):
                             typeValue = type( default_value )
 
                             if typeValue is dict:
-                                default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                default_value_type = (
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
                                 default_value = ( aClass, (), default_value )
                             elif not isinstance( default_value, aClass ):
                                 if typeValue is not tuple:
                                     default_value = ( default_value, )
-                                default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
+                                default_value_type = (
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
                                 default_value = ( aClass, default_value, None )
                 else:
                     for i, item in enumerate( other ):
