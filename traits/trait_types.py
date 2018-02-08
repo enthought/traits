@@ -151,32 +151,6 @@ def _validate_float(value):
     return nb_float(value)
 
 
-def _check_in_range(value, range_trait):
-    """
-    Determine whether a value is within the range specified by a Range trait.
-    """
-    low = range_trait._low
-    if low is None:
-        low_in_range = True
-    elif range_trait._exclude_low:
-        low_in_range = value > low
-    else:
-        low_in_range = value >= low
-
-    if not low_in_range:
-        return low_in_range
-
-    high = range_trait._high
-    if high is None:
-        high_in_range = True
-    elif range_trait._exclude_high:
-        high_in_range = value < high
-    else:
-        high_in_range = value <= high
-
-    return high_in_range
-
-
 #-------------------------------------------------------------------------------
 #  'Any' trait:
 #-------------------------------------------------------------------------------
@@ -1810,7 +1784,7 @@ class BaseRange ( TraitType ):
         except TypeError:
             self.error( object, name, value )
 
-        if not _check_in_range(float_value, self):
+        if not self._check_in_range(float_value):
             self.error( object, name, value )
         return float_value
 
@@ -1822,9 +1796,32 @@ class BaseRange ( TraitType ):
         except TypeError:
             self.error( object, name, value )
 
-        if not _check_in_range(integer_value, self):
+        if not self._check_in_range(integer_value):
             self.error( object, name, value )
         return integer_value
+
+    def _check_in_range(self, value):
+        """
+        Determine whether a value is within the range specified.
+        """
+        low = self._low
+        if low is None:
+            low_in_range = True
+        elif self._exclude_low:
+            low_in_range = value > low
+        else:
+            low_in_range = value >= low
+        if not low_in_range:
+            return low_in_range
+
+        high = self._high
+        if high is None:
+            high_in_range = True
+        elif self._exclude_high:
+            high_in_range = value < high
+        else:
+            high_in_range = value <= high
+        return high_in_range
 
     def _get_default_value ( self, object ):
         """ Returns the default value of the range.
