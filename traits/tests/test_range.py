@@ -19,31 +19,45 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, Range, Str, TraitError
+from ..api import BaseRange, Either, HasTraits, Int, Range, Str, TraitError
 
 
-class SimpleFloatRange(HasTraits):
-    r = Range(0.0, 100.0)
+# We need a lot of similar-looking test classes; use a factory to create them.
 
-    r_open_on_right = Range(0.0, 100.0, exclude_low=False, exclude_high=True)
-    r_open_on_left = Range(0.0, 100.0, exclude_low=True, exclude_high=False)
-    r_open = Range(0.0, 100.0, exclude_low=True, exclude_high=True)
-    r_closed = Range(0.0, 100.0, exclude_low=False, exclude_high=False)
+def range_test_class(range_factory, low, high):
+    """
+    Create a HasTraits subclass containing Range traits based
+    on the given range_factory.
+    """
+    class RangeTestClass(HasTraits):
+        r = range_factory(low, high)
 
-    r_nonnegative = Range(0.0, None)
-    r_nonpositive = Range(None, 0.0)
+        r_open_on_right = range_factory(
+            low, high, exclude_low=False, exclude_high=True)
+        r_open_on_left = range_factory(
+            low, high, exclude_low=True, exclude_high=False)
+        r_open = range_factory(
+            low, high, exclude_low=True, exclude_high=True)
+        r_closed = range_factory(
+            low, high, exclude_low=False, exclude_high=False)
+        r_bounded_below = range_factory(low, None, exclude_low=False)
+        r_bounded_above = range_factory(None, high, exclude_high=False)
+
+    return RangeTestClass
 
 
-class SimpleIntRange(HasTraits):
-    r = Range(0, 100)
-
-    r_open_on_right = Range(0, 100, exclude_low=False, exclude_high=True)
-    r_open_on_left = Range(0, 100, exclude_low=True, exclude_high=False)
-    r_open = Range(0, 100, exclude_low=True, exclude_high=True)
-    r_closed = Range(0, 100, exclude_low=False, exclude_high=False)
-
-    r_nonnegative = Range(0, None)
-    r_nonpositive = Range(None, 0)
+SimpleFloatRange = range_test_class(Range, 0.0, 100.0)
+SimpleIntRange = range_test_class(Range, 0, 100)
+SimpleFloatBaseRange = range_test_class(BaseRange, 0.0, 100.0)
+SimpleIntBaseRange = range_test_class(BaseRange, 0, 100)
+CompoundFloatRange = range_test_class(
+    lambda *args, **kwargs: Either(None, Range(*args, **kwargs)),
+    0.0, 100.0,
+)
+CompoundIntRange = range_test_class(
+    lambda *args, **kwargs: Either(None, Range(*args, **kwargs)),
+    0, 100,
+)
 
 
 class WithFloatRange(HasTraits):
@@ -149,35 +163,26 @@ class RangeTestCase(unittest.TestCase):
         self.assertEqual(obj.r, 5)
 
     def test_type_validation_float_range(self):
-        obj = SimpleFloatRange()
-
         good_values = [
             1.47,
             MyFloat(2.35),
             23, 0, 100,
             23.5, 0.0, 100.0,
+            True,
         ]
-
         if numpy_available:
-            numpy_good_values = [
-                numpy.float64(1.1),
-                numpy.float32(1.78),
-                numpy.float16(3.7),
-                numpy.int8(23),
-                numpy.uint8(24),
-                numpy.int32(26),
-                numpy.uint64(27),
-            ]
-            good_values.extend(numpy_good_values)
-
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), float)
-            self.assertEqual(obj.r, float(good_value))
+            good_values.extend([
+                numpy.float16(1.1), numpy.float32(1.78), numpy.float64(3.7),
+                numpy.int8(23), numpy.uint8(24),
+                numpy.int16(25), numpy.uint16(26),
+                numpy.int32(27), numpy.uint32(28),
+                numpy.int64(29), numpy.uint64(30),
+                numpy.bool_(True),
+            ])
 
         bad_values = [
             "a string",
-            1 + 2j,
+            1 + 2j, 0j,
             -50.0,  # out of range
             150.0,  # also out of range
             -50,
@@ -185,27 +190,43 @@ class RangeTestCase(unittest.TestCase):
             MyIntLike(17),
         ]
 
+        obj = SimpleFloatRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), float)
+            self.assertEqual(obj.r, float(good_value))
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
+
+        obj = CompoundFloatRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), float)
+            self.assertEqual(obj.r, float(good_value))
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
+
+        obj = SimpleFloatBaseRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), float)
+            self.assertEqual(obj.r, float(good_value))
         for bad_value in bad_values:
             with self.assertRaises(TraitError):
                 obj.r = bad_value
 
     def test_type_validation_int_range(self):
-        obj = SimpleIntRange()
-
-        good_values = [23, 0, 100, MyIntLike(17)]
-
+        good_values = [23, 0, 100, MyIntLike(17), True]
         if numpy_available:
             good_values.extend([
-                numpy.int8(23),
-                numpy.uint8(24),
-                numpy.int32(26),
-                numpy.uint64(27),
+                numpy.int8(23), numpy.uint8(24),
+                numpy.int16(25), numpy.uint16(26),
+                numpy.int32(27), numpy.uint32(28),
+                numpy.int64(29), numpy.uint64(30),
+                numpy.bool_(True),
             ])
-
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), int)
-            self.assertEqual(obj.r, operator.index(good_value))
 
         bad_values = [
             "a string",
@@ -218,93 +239,96 @@ class RangeTestCase(unittest.TestCase):
             150,  # also out of range
             MyIntLike(127),
         ]
-
         if numpy_available:
-            numpy_bad_values = [
-                numpy.float64(1.1),
-                numpy.float32(1.78),
-                numpy.float16(3.7),
-            ]
-            bad_values.extend(numpy_bad_values)
+            bad_values.extend([
+                numpy.float16(1.1), numpy.float32(1.78), numpy.float64(3.7),
+                numpy.complex_(1+0j),
+            ])
 
+        obj = SimpleIntRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), int)
+            self.assertEqual(obj.r, operator.index(good_value))
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
+
+        obj = CompoundIntRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), int)
+            self.assertEqual(obj.r, operator.index(good_value))
+        for bad_value in bad_values:
+            with self.assertRaises(TraitError):
+                obj.r = bad_value
+
+        obj = SimpleIntBaseRange()
+        for good_value in good_values:
+            obj.r = good_value
+            self.assertIs(type(obj.r), int)
+            self.assertEqual(obj.r, operator.index(good_value))
         for bad_value in bad_values:
             with self.assertRaises(TraitError):
                 obj.r = bad_value
 
     def test_bounds_exclusion_int_range(self):
         obj = SimpleIntRange()
+        self._check_bounds(obj, 0, 100)
 
-        obj.r_open_on_right = 0
-        self.assertEqual(obj.r_open_on_right, 0)
-        with self.assertRaises(TraitError):
-            obj.r_open_on_right = 100
+        obj = CompoundIntRange()
+        self._check_bounds(obj, 0, 100)
 
-        with self.assertRaises(TraitError):
-            obj.r_open_on_left = 0
-        obj.r_open_on_left = 100
-        self.assertEqual(obj.r_open_on_left, 100)
-
-        with self.assertRaises(TraitError):
-            obj.r_open = 0
-        with self.assertRaises(TraitError):
-            obj.r_open = 100
-
-        obj.r_closed = 0
-        self.assertEqual(obj.r_closed, 0)
-        obj.r_closed = 100
-        self.assertEqual(obj.r_closed, 100)
-
-        obj.r_nonnegative = 10**100
-        self.assertEqual(obj.r_nonnegative, 10**100)
-        with self.assertRaises(TraitError):
-            obj.r_nonnegative = -10**100
-
-        with self.assertRaises(TraitError):
-            obj.r_nonpositive = 10**100
-        obj.r_nonpositive = -10**100
-        self.assertEqual(obj.r_nonpositive, -10**100)
-
-        # Default case: both bounds included.
-        obj.r = 0
-        self.assertEqual(obj.r, 0)
-        obj.r = 100
-        self.assertEqual(obj.r, 100)
+        obj = SimpleIntBaseRange()
+        self._check_bounds(obj, 0, 100)
 
     def test_bounds_exclusion_float_range(self):
         obj = SimpleFloatRange()
+        self._check_bounds(obj, 0.0, 100.0)
 
-        obj.r_open_on_right = 0.0
-        self.assertEqual(obj.r_open_on_right, 0.0)
-        with self.assertRaises(TraitError):
-            obj.r_open_on_right = 100.0
+        obj = CompoundFloatRange()
+        self._check_bounds(obj, 0, 100)
 
-        with self.assertRaises(TraitError):
-            obj.r_open_on_left = 0.0
-        obj.r_open_on_left = 100.0
-        self.assertEqual(obj.r_open_on_left, 100.0)
+        obj = SimpleFloatBaseRange()
+        self._check_bounds(obj, 0.0, 100.0)
 
+    def _check_bounds(self, obj, low, high):
+        obj.r_open_on_right = low
+        self.assertEqual(obj.r_open_on_right, low)
         with self.assertRaises(TraitError):
-            obj.r_open = 0.0
-        with self.assertRaises(TraitError):
-            obj.r_open = 100.0
-
-        obj.r_closed = 0.0
-        self.assertEqual(obj.r_closed, 0.0)
-        obj.r_closed = 100.0
-        self.assertEqual(obj.r_closed, 100.0)
-
-        obj.r_nonnegative = 1e100
-        self.assertEqual(obj.r_nonnegative, 1e100)
-        with self.assertRaises(TraitError):
-            obj.r_nonnegative = -1e100
+            obj.r_open_on_right = high
 
         with self.assertRaises(TraitError):
-            obj.r_nonpositive = 1e100
-        obj.r_nonpositive = -1e100
-        self.assertEqual(obj.r_nonpositive, -1e100)
+            obj.r_open_on_left = low
+        obj.r_open_on_left = high
+        self.assertEqual(obj.r_open_on_left, high)
+
+        with self.assertRaises(TraitError):
+            obj.r_open = low
+        with self.assertRaises(TraitError):
+            obj.r_open = high
+
+        obj.r_closed = low
+        self.assertEqual(obj.r_closed, low)
+        obj.r_closed = high
+        self.assertEqual(obj.r_closed, high)
+
+        obj.r_bounded_below = low
+        self.assertEqual(obj.r_bounded_below, low)
+        obj.r_bounded_below = low + 1000
+        self.assertEqual(obj.r_bounded_below, low + 1000)
+        with self.assertRaises(TraitError):
+            obj.r_bounded_below = low - 1000
+
+        obj.r_bounded_above = high
+        self.assertEqual(obj.r_bounded_above, high)
+        with self.assertRaises(TraitError):
+            obj.r_bounded_above = high + 1000
+        obj.r_bounded_above = high - 1000
+        self.assertEqual(obj.r_bounded_above, high - 1000)
 
         # Default case: both bounds included.
-        obj.r = 0.0
-        self.assertEqual(obj.r, 0.0)
-        obj.r = 100.0
-        self.assertEqual(obj.r, 100.0)
+        obj.r = low
+        self.assertEqual(obj.r, low)
+        obj.r = high
+        self.assertEqual(obj.r, high)

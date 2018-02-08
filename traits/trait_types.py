@@ -125,18 +125,56 @@ def default_text_editor ( trait, type = None ):
 
 # Generic validators
 
+def _validate_integer(value):
+    """
+    Coerce an arbitrary Python object to an integer, via its type's
+    __index__ method if necessary. Raise TypeError if no coercion
+    is possible.
+    """
+    if type(value) is int:  # fast path for common case
+        return value
+    else:
+        return int(operator.index(value))
+
+
 def _validate_float(value):
     """
-    Convert an arbitrary Python object to a float, or raise TypeError.
+    Coerce an arbitrary Python object to a float, or raise TypeError.
     """
-    if type(value) == float:  # fast path for common case
+    if type(value) is float:  # fast path for common case
         return value
     try:
         nb_float = type(value).__float__
     except AttributeError:
         raise TypeError(
-            "Object of type {!r} not convertible to float".format(type(value)))
+            "Object of type {!r} not coerceable to float".format(type(value)))
     return nb_float(value)
+
+
+def _check_in_range(value, range_trait):
+    """
+    Determine whether a value is within the range specified by a Range trait.
+    """
+    low = range_trait._low
+    if low is None:
+        low_in_range = True
+    elif range_trait._exclude_low:
+        low_in_range = value > low
+    else:
+        low_in_range = value >= low
+
+    if not low_in_range:
+        return low_in_range
+
+    high = range_trait._high
+    if high is None:
+        high_in_range = True
+    elif range_trait._exclude_high:
+        high_in_range = value < high
+    else:
+        high_in_range = value <= high
+
+    return high_in_range
 
 
 #-------------------------------------------------------------------------------
@@ -180,24 +218,15 @@ class BaseInt ( TraitType ):
     default_value = 0
 
     #: A description of the type of value this trait accepts:
-    info_text = 'an integer (int or long)'
+    info_text = 'an integer'
 
-    def validate ( self, object, name, value ):
+    def validate (self, object, name, value):
         """ Validates that a specified value is valid for this trait.
         """
-        if type(value) is int:
-            return value
-        elif type(value) is long:
-            return int(value)
-
         try:
-            int_value = operator.index( value )
+            return _validate_integer(value)
         except TypeError:
-            pass
-        else:
-            return int(int_value)
-
-        self.error( object, name, value )
+            self.error(object, name, value)
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
@@ -1712,18 +1741,8 @@ class BaseRange ( TraitType ):
             if high is not None:
                 high = float( high )
 
-        elif vtype is long:
-            self._validate  = 'long_validate'
-            kind = 3
-            self._type_desc = 'an integer'
-            if low is not None:
-                low = long( low )
-
-            if high is not None:
-                high = long( high )
-
-        elif vtype is int:
-            self._validate  = 'int_validate'
+        elif vtype is int or vtype is long:
+            self._validate  = 'integer_validate'
             kind = 3
             self._type_desc = 'an integer'
             if low is not None:
@@ -1731,6 +1750,7 @@ class BaseRange ( TraitType ):
 
             if high is not None:
                 high = int( high )
+
         else:
             self.get, self.set, self.validate = self._get, self._set, None
             self._vtype     = None
@@ -1786,54 +1806,25 @@ class BaseRange ( TraitType ):
         """ Validate that the value is a float value in the specified range.
         """
         try:
-            if (isinstance( value, RangeTypes ) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return float( value )
-        except:
-            pass
+            float_value = _validate_float(value)
+        except TypeError:
+            self.error( object, name, value )
 
-        self.error( object, name, value )
+        if not _check_in_range(float_value, self):
+            self.error( object, name, value )
+        return float_value
 
-    def int_validate ( self, object, name, value ):
-        """ Validate that the value is an int value in the specified range.
+    def integer_validate ( self, object, name, value ):
+        """ Validate that the value is an integer value in the specified range.
         """
         try:
-            if (isinstance( value, int_fast_validate[1:]) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return value
-        except:
-            pass
+            integer_value = _validate_integer(value)
+        except TypeError:
+            self.error( object, name, value )
 
-        self.error( object, name, value )
-
-    def long_validate ( self, object, name, value ):
-        """ Validate that the value is a long value in the specified range.
-        """
-        try:
-            valid_types = list(long_fast_validate[1:])
-            valid_types.remove(None)
-            if (isinstance( value, tuple(valid_types) ) and
-                ((self._low is None) or
-                 (self._exclude_low and (self._low < value)) or
-                 ((not self._exclude_low) and (self._low <= value))) and
-                ((self._high is None) or
-                 (self._exclude_high and (self._high > value)) or
-                 ((not self._exclude_high) and (self._high >= value)))):
-               return value
-        except:
-            pass
-
-        self.error( object, name, value )
+        if not _check_in_range(integer_value, self):
+            self.error( object, name, value )
+        return integer_value
 
     def _get_default_value ( self, object ):
         """ Returns the default value of the range.
