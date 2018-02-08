@@ -3215,8 +3215,13 @@ static PyObject *
 _validate_integer(PyObject *value) {
     PyObject *index_of_value, *integer_index_of_value;
 
-    /* Fast path for common case. */
+    /* Fast path for common case. (longs on Python 2 don't count as
+       a common case) */
+#if PY_MAJOR_VERSION < 3
     if (PyInt_CheckExact(value)) {
+#else
+    if (PyLong_CheckExact(value)) {
+#endif // PY_MAJOR_VERSION < 3
         Py_INCREF(value);
         return value;
     }
