@@ -50,6 +50,9 @@ SimpleFloatRange = range_test_class(Range, 0.0, 100.0)
 SimpleIntRange = range_test_class(Range, 0, 100)
 SimpleFloatBaseRange = range_test_class(BaseRange, 0.0, 100.0)
 SimpleIntBaseRange = range_test_class(BaseRange, 0, 100)
+
+# The Either(None, Range) traits exercise a different code-path in ctraits.c:
+# see validate_trait_complex.
 CompoundFloatRange = range_test_class(
     lambda *args, **kwargs: Either(None, Range(*args, **kwargs)),
     0.0, 100.0,
@@ -190,32 +193,19 @@ class RangeTestCase(unittest.TestCase):
             MyIntLike(17),
         ]
 
-        obj = SimpleFloatRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), float)
-            self.assertEqual(obj.r, float(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
-
-        obj = CompoundFloatRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), float)
-            self.assertEqual(obj.r, float(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
-
-        obj = SimpleFloatBaseRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), float)
-            self.assertEqual(obj.r, float(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
+        test_objects = [
+            SimpleFloatRange(),
+            CompoundFloatRange(),
+            SimpleFloatBaseRange(),
+        ]
+        for obj in test_objects:
+            for good_value in good_values:
+                obj.r = good_value
+                self.assertIs(type(obj.r), float)
+                self.assertEqual(obj.r, float(good_value))
+            for bad_value in bad_values:
+                with self.assertRaises(TraitError):
+                    obj.r = bad_value
 
     def test_type_validation_int_range(self):
         good_values = [23, 0, 100, MyIntLike(17), True]
@@ -245,54 +235,42 @@ class RangeTestCase(unittest.TestCase):
                 numpy.complex_(1+0j),
             ])
 
-        obj = SimpleIntRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), int)
-            self.assertEqual(obj.r, operator.index(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
-
-        obj = CompoundIntRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), int)
-            self.assertEqual(obj.r, operator.index(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
-
-        obj = SimpleIntBaseRange()
-        for good_value in good_values:
-            obj.r = good_value
-            self.assertIs(type(obj.r), int)
-            self.assertEqual(obj.r, operator.index(good_value))
-        for bad_value in bad_values:
-            with self.assertRaises(TraitError):
-                obj.r = bad_value
-
-    def test_bounds_exclusion_int_range(self):
-        obj = SimpleIntRange()
-        self._check_bounds(obj, 0, 100)
-
-        obj = CompoundIntRange()
-        self._check_bounds(obj, 0, 100)
-
-        obj = SimpleIntBaseRange()
-        self._check_bounds(obj, 0, 100)
+        test_objects = [
+            SimpleIntRange(),
+            CompoundIntRange(),
+            SimpleIntBaseRange(),
+        ]
+        for obj in test_objects:
+            for good_value in good_values:
+                obj.r = good_value
+                self.assertIs(type(obj.r), int)
+                self.assertEqual(obj.r, operator.index(good_value))
+            for bad_value in bad_values:
+                with self.assertRaises(TraitError):
+                    obj.r = bad_value
 
     def test_bounds_exclusion_float_range(self):
-        obj = SimpleFloatRange()
-        self._check_bounds(obj, 0.0, 100.0)
+        test_objects = [
+            SimpleFloatRange(),
+            CompoundFloatRange(),
+            SimpleFloatBaseRange(),
+        ]
+        for obj in test_objects():
+            self._check_bounds(obj, 0.0, 100.0)
 
-        obj = CompoundFloatRange()
-        self._check_bounds(obj, 0, 100)
-
-        obj = SimpleFloatBaseRange()
-        self._check_bounds(obj, 0.0, 100.0)
+    def test_bounds_exclusion_int_range(self):
+        test_objects = [
+            SimpleIntRange(),
+            CompoundIntRange(),
+            SimpleIntBaseRange(),
+        ]
+        for obj in test_objects:
+            self._check_bounds(obj, 0, 100)
 
     def _check_bounds(self, obj, low, high):
+        """
+        Helper function to check bound validation.
+        """
         obj.r_open_on_right = low
         self.assertEqual(obj.r_open_on_right, low)
         with self.assertRaises(TraitError):
