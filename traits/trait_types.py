@@ -1698,9 +1698,9 @@ class BaseRange ( TraitType ):
 
         is_static = (not issubclass( vtype, basestring ))
         if is_static and (vtype not in RangeTypes):
-            raise TraitError, ("Range can only be use for int, long or float "
-                               "values, but a value of type %s was specified." %
-                               vtype)
+            raise TraitError("Range can only be use for int, long or float "
+                             "values, but a value of type %s was specified." %
+                             vtype)
 
         self._low_name = self._high_name = ''
         self._vtype    = Undefined
@@ -1749,14 +1749,14 @@ class BaseRange ( TraitType ):
             self.default_value_type = CALLABLE_DEFAULT_VALUE
             self.default_value      = self._get_default_value
 
-        exclude_mask = 0
-        if exclude_low:
-            exclude_mask |= 1
-
-        if exclude_high:
-            exclude_mask |= 2
-
         if is_static:
+            exclude_mask = 0
+            if exclude_low:
+                exclude_mask |= 1
+
+            if exclude_high:
+                exclude_mask |= 2
+
             self.init_fast_validator( kind, low, high, exclude_mask )
 
         #: Assign type-corrected arguments to handler attributes:
@@ -1784,7 +1784,7 @@ class BaseRange ( TraitType ):
         except TypeError:
             self.error( object, name, value )
 
-        if not self._check_in_range(float_value):
+        if not self._contains(float_value):
             self.error( object, name, value )
         return float_value
 
@@ -1796,11 +1796,11 @@ class BaseRange ( TraitType ):
         except TypeError:
             self.error( object, name, value )
 
-        if not self._check_in_range(integer_value):
+        if not self._contains(integer_value):
             self.error( object, name, value )
         return integer_value
 
-    def _check_in_range(self, value):
+    def _contains(self, value):
         """
         Determine whether a value is within the range specified.
         """
