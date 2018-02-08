@@ -255,7 +255,7 @@ class RangeTestCase(unittest.TestCase):
             CompoundFloatRange(),
             SimpleFloatBaseRange(),
         ]
-        for obj in test_objects():
+        for obj in test_objects:
             self._check_bounds(obj, 0.0, 100.0)
 
     def test_bounds_exclusion_int_range(self):
