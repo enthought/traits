@@ -3207,75 +3207,39 @@ validate_trait_self_type ( trait_object * trait, has_traits_object * obj,
 /*-----------------------------------------------------------------------------
 |  Coerce an arbitrary Python object to an integer (exact type int or long
 |  in Python 2; exact type int in Python 3), via its type's
-|  __index__ method if necessary. Raise TypeError if the object is
-|  not convertible to an integer.
+|  __index__ method if necessary. Raise TypeError if the object
+|  cannot be coerced to an integer.
 +----------------------------------------------------------------------------*/
-
-#if PY_MAJOR_VERSION < 3
 
 static PyObject *
 _validate_integer(PyObject *value) {
-    PyObject *index_of_value, *int_index_of_value;
+    PyObject *index_of_value, *integer_index_of_value;
 
-    /* Fast paths for common cases. */
+    /* Fast path for common case. */
     if (PyInt_CheckExact(value)) {
         Py_INCREF(value);
         return value;
     }
 
-    if (PyLong_CheckExact(value)) {
-        /* Convert to an int if possible. */
-        int overflow;
-        long x = PyLong_AsLongAndOverflow(value, &overflow);
-        if (overflow) {
-            /* value too large for an int; incref and return the long */
-            Py_INCREF(value);
-            return value;
-        }
-        else if (x == -1 && PyErr_Occurred()) {
-            /* something bad; we shouldn't ever actually reach this path */
-            return NULL;
-        }
-        else {
-            /* value representable as an int */
-            return PyInt_FromLong(x);
-        }
-    }
-
     /* We run the __index__ result through an extra int call, for a couple of
        reasons: first, __index__ doesn't guarantee to return an int or long,
-       and for example for a bool input it returns another bool; second,
-       __index__ of some NumPy values returns a long unnecessarily (for
-       example, for np.uint64(3)) */
+       and for example for a bool input it returns another bool; second, on
+       Python 2, __index__ of some small integer-like values can return a long
+       (for example, for np.uint64(3)) */
 
     index_of_value = PyNumber_Index(value);
     if (index_of_value == NULL) {
         return NULL;
     }
-    int_index_of_value = PyNumber_Int(index_of_value);
-    Py_DECREF(index_of_value);
-    return int_index_of_value;
-}
-
+#if PY_MAJOR_VERSION < 3
+    integer_index_of_value = PyNumber_Int(index_of_value);
 #else
-
-static PyObject *
-_validate_integer(PyObject *value) {
-    PyObject *index_of_value, *int_index_of_value;
-
-    /* There's little point adding our own fast path here, since PyNumber_Index
-       already does a PyLong_Check. */
-    index_of_value = PyNumber_Index(value);
-    if (index_of_value == NULL) {
-        return NULL;
-    }
-
-    int_index_of_value = PyNumber_Long(index_of_value);
+    integer_index_of_value = PyNumber_Long(index_of_value);
+#endif // PY_MAJOR_VERSION < 3
     Py_DECREF(index_of_value);
-    return int_index_of_value;
+    return integer_index_of_value;
 }
 
-#endif // PY_MAJOR_VERSION < 3
 
 /*-----------------------------------------------------------------------------
 |  Coerce an arbitrary Python object to a float, via its type's
@@ -3358,13 +3322,13 @@ static PyObject *
 validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
                                PyObject * name, PyObject * value ) {
 
-    PyObject *int_value;
+    PyObject *integer_value;
     int in_range;
 
     /* Step 1: convert to an integer. */
 
-    int_value = _validate_integer(value);
-    if (int_value == NULL) {
+    integer_value = _validate_integer(value);
+    if (integer_value == NULL) {
         if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
         }
@@ -3372,20 +3336,20 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
         return raise_trait_error( trait, obj, name, value );
     }
 
-    /* Step 2: now int_value has exact type either int or long, and we
+    /* Step 2: now integer_value has exact type either int or long, and we
        own the reference. Compare with the range bounds. */
 
-    in_range = _check_in_range(int_value, trait->py_validate);
+    in_range = _check_in_range(integer_value, trait->py_validate);
     if (in_range == -1) {
-        Py_DECREF(int_value);
+        Py_DECREF(integer_value);
         return NULL;
     }
     else if (in_range == 0) {
-        Py_DECREF(int_value);
+        Py_DECREF(integer_value);
         return raise_trait_error( trait, obj, name, value );
     }
     else {
-        return int_value;
+        return integer_value;
     }
 }
 
@@ -3396,17 +3360,17 @@ validate_trait_integer_range ( trait_object * trait, has_traits_object * obj,
 static PyObject *
 validate_trait_integer(trait_object * trait, has_traits_object * obj,
                        PyObject * name, PyObject * value) {
-    PyObject *int_value;
+    PyObject *integer_value;
 
-    int_value = _validate_integer(value);
-    if (int_value == NULL) {
+    integer_value = _validate_integer(value);
+    if (integer_value == NULL) {
         if (!PyErr_ExceptionMatches(PyExc_TypeError)) {
             return NULL;
         }
         PyErr_Clear();
         return raise_trait_error( trait, obj, name, value );
     }
-    return int_value;
+    return integer_value;
 }
 
 
