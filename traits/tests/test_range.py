@@ -24,7 +24,7 @@ from ..api import BaseRange, Either, HasTraits, Int, Range, Str, TraitError
 
 # We need a lot of similar-looking test classes; use a factory to create them.
 
-def range_test_class(range_factory, low, high):
+def hastraits_range_class(range_factory, low, high):
     """
     Create a HasTraits subclass containing Range traits based
     on the given range_factory.
@@ -46,18 +46,18 @@ def range_test_class(range_factory, low, high):
     return RangeTestClass
 
 
-SimpleFloatRange = range_test_class(Range, 0.0, 100.0)
-SimpleIntRange = range_test_class(Range, 0, 100)
-SimpleFloatBaseRange = range_test_class(BaseRange, 0.0, 100.0)
-SimpleIntBaseRange = range_test_class(BaseRange, 0, 100)
+SimpleFloatRange = hastraits_range_class(Range, 0.0, 100.0)
+SimpleIntRange = hastraits_range_class(Range, 0, 100)
+SimpleFloatBaseRange = hastraits_range_class(BaseRange, 0.0, 100.0)
+SimpleIntBaseRange = hastraits_range_class(BaseRange, 0, 100)
 
 # The Either(None, Range) traits exercise a different code-path in ctraits.c:
 # see validate_trait_complex.
-CompoundFloatRange = range_test_class(
+CompoundFloatRange = hastraits_range_class(
     lambda *args, **kwargs: Either(None, Range(*args, **kwargs)),
     0.0, 100.0,
 )
-CompoundIntRange = range_test_class(
+CompoundIntRange = hastraits_range_class(
     lambda *args, **kwargs: Either(None, Range(*args, **kwargs)),
     0, 100,
 )
