@@ -1651,6 +1651,7 @@ class Directory ( BaseDirectory ):
 #  'BaseRange' and 'Range' traits:
 #-------------------------------------------------------------------------------
 
+
 class BaseRange ( TraitType ):
     """ Defines a trait whose numeric value must be in a specified range.
     """
@@ -1691,43 +1692,12 @@ class BaseRange ( TraitType ):
 
         super( BaseRange, self ).__init__( value, **metadata )
 
-        vtype = type( high )
-        if ((low is not None) and
-            (not issubclass( vtype, ( float, basestring ) ))):
-            vtype = type( low )
-
-        is_static = (not issubclass( vtype, basestring ))
-        if is_static and (vtype not in RangeTypes):
-            raise TraitError("Range can only be use for int, long or float "
-                             "values, but a value of type %s was specified." %
-                             vtype)
-
         self._low_name = self._high_name = ''
-        self._vtype    = Undefined
 
-        if vtype is float:
-            self._validate  = 'float_validate'
-            kind = 4
-            self._type_desc = 'a floating point number'
-            if low is not None:
-                low = float( low )
-
-            if high is not None:
-                high = float( high )
-
-        elif vtype is int or vtype is long:
-            self._validate  = 'integer_validate'
-            kind = 3
-            self._type_desc = 'an integer'
-            if low is not None:
-                low = int( low )
-
-            if high is not None:
-                high = int( high )
-
-        else:
+        if isinstance(low, basestring) or isinstance(high, basestring):
+            # Set up dynamic validation.
             self.get, self.set, self.validate = self._get, self._set, None
-            self._vtype     = None
+            self._vtype = None
             self._type_desc = 'a number'
 
             if isinstance( high, basestring ):
@@ -1747,21 +1717,33 @@ class BaseRange ( TraitType ):
             self._value = compile( str( value ), '<string>', 'eval' )
 
             self.default_value_type = CALLABLE_DEFAULT_VALUE
-            self.default_value      = self._get_default_value
+            self.default_value = self._get_default_value
+        else:
+            # Set up static validation.
+            self._vtype = Undefined
 
-        if is_static:
-            exclude_mask = 0
-            if exclude_low:
-                exclude_mask |= 1
+            vtype, low, high = self._infer_bounds_and_value_type(low, high)
 
-            if exclude_high:
-                exclude_mask |= 2
+            if vtype is float:
+                self._validate  = 'float_validate'
+                kind = 4
+                self._type_desc = 'a floating point number'
 
-            self.init_fast_validator( kind, low, high, exclude_mask )
+            elif vtype is int:
+                self._validate  = 'integer_validate'
+                kind = 3
+                self._type_desc = 'an integer'
+
+            else:
+                # vtype can only ever be int or float
+                assert False, "shouldn't ever get here"
+
+            exclude_mask = 1 * exclude_low | 2 * exclude_high
+            self.init_fast_validator(kind, low, high, exclude_mask)
 
         #: Assign type-corrected arguments to handler attributes:
-        self._low          = low
-        self._high         = high
+        self._low = low
+        self._high = high
         self._exclude_low  = exclude_low
         self._exclude_high = exclude_high
 
@@ -1799,6 +1781,40 @@ class BaseRange ( TraitType ):
         if not self._contains(integer_value):
             self.error( object, name, value )
         return integer_value
+
+    def _infer_bounds_and_value_type(self, low, high):
+        """
+        Infer the value type to use from the low and high values.
+
+        Returns a triple value_type, low, high. Raises if it can't
+        determine a suitable type.
+        """
+        # If both bounds are None, raise.
+        if low is None and high is None:
+            raise TraitError("At least one Range bound must be non-None.")
+
+        # If both bounds are int-like, use integer validation.
+        try:
+            ilow = _validate_integer(low) if low is not None else None
+            ihigh = _validate_integer(high) if high is not None else None
+        except TypeError:
+            pass
+        else:
+            return int, ilow, ihigh
+
+        # Else if both bounds are float-like, use float validation.
+        try:
+            flow = _validate_float(low) if low is not None else None
+            fhigh = _validate_float(high) if high is not None else None
+        except TypeError:
+            pass
+        else:
+            return float, flow, fhigh
+
+        # Neither of the above worked. Raise.
+        raise TraitError("Range can only be used for integer or float "
+                         "values, but bounds of type %s and %s were "
+                         "specified." % (type(low), type(high)))
 
     def _contains(self, value):
         """
