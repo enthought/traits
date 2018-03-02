@@ -44,7 +44,8 @@ from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         CALLABLE_DEFAULT_VALUE, TRAIT_SET_OBJECT_DEFAULT_VALUE)
 
 from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
-        html_editor, password_editor, shell_editor, date_editor, time_editor)
+        html_editor, password_editor, shell_editor, date_editor, time_editor,
+        list_editor)
 
 from .trait_errors import TraitError
 
@@ -2359,24 +2360,10 @@ class List ( TraitType ):
         return 'a list of %s which are %s' % (
                    size, self.item_trait.full_info( object, name, value ) )
 
-    def create_editor ( self ):
+    def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from .api import HasTraits
-
-            if issubclass( handler.aClass, HasTraits ):
-                from traitsui.api import TableEditor
-
-                return TableEditor()
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = self.rows or 5,
-                           use_notebook  = self.use_notebook is True,
-                           page_name     = self.page_name or '' )
+        return list_editor(self, self)
 
     def inner_traits ( self ):
         """ Returns the *inner trait* (or traits) for this trait.
@@ -2481,42 +2468,12 @@ class Set ( TraitType ):
         """
         return 'a set of %s' % self.item_trait.full_info( object, name, value )
 
-    def create_editor ( self ):
+    def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
-        # fixme: Needs to be customized for sets.
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from .api import HasTraits
+        from traitsui.api import TextEditor
 
-            if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from traitsui.table_column import ObjectColumn
-                    from traitsui.table_filter import (EvalFilterTemplate,
-                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from traitsui.api import TableEditor
-
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = self.rows or 5,
-                           use_notebook  = self.use_notebook is True,
-                           page_name     = self.page_name or '' )
+        return TextEditor(evaluate=eval)
 
     def inner_traits ( self ):
         """ Returns the *inner trait* (or traits) for this trait.
