@@ -207,7 +207,7 @@ def date_editor ( ):
 
     return DateEditor
 
-def _is_hastraits_instance(handler):
+def _expects_hastraits_instance(handler):
     """ Does a trait handler or type expect a HasTraits subclass instance?
     """
     from traits.api import HasTraits, BaseInstance, TraitInstance
@@ -220,11 +220,6 @@ def _is_hastraits_instance(handler):
         return False
     return issubclass(cls, HasTraits)
 
-def _is_string_trait(handler):
-    """ Is this one of the string matching trait handlers
-    """
-    from traits.api import BaseStr, String, TraitString
-    return isinstance(handler, (BaseStr, String, TraitString))
 
 def _instance_handler_factory(handler):
     """ Get the instance factory of an Instance or TraitInstance
@@ -235,12 +230,16 @@ def _instance_handler_factory(handler):
         return handler.aClass
     elif isinstance(handler, BaseInstance):
         return handler.default_value
+    else:
+        msg = "handler should be TraitInstance or BaseInstance, but got {}"
+        raise ValueError(msg.format(repr(handler)))
+
 
 def list_editor(trait, handler):
     """ Factory that constructs an appropriate editor for a list.
     """
     item_handler = handler.item_trait.handler
-    if _is_hastraits_instance(item_handler):
+    if _expects_hastraits_instance(item_handler):
         from traitsui.table_column import ObjectColumn
         from traitsui.table_filter import (EvalFilterTemplate,
             RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
@@ -256,14 +255,6 @@ def list_editor(trait, handler):
             show_toolbar=True,
             reorderable=True,
             row_factory=_instance_handler_factory(item_handler)
-        )
-    elif _is_string_trait(item_handler):
-        from traitsui.api import ListStrEditor
-
-        return ListStrEditor(
-            auto_add=True,
-            title=trait.title if trait.title else '',
-            title_name=trait.title_name if trait.title_name else '',
         )
     else:
         from traitsui.api import ListEditor
