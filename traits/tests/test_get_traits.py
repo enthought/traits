@@ -67,10 +67,9 @@ class GetTraitTestCase(unittest.TestCase):
 
     def test_dir(self):
         b = Foo()
-        self.assertEqual(
-            sorted(dir(b)),
-            ['bar', 'num']
-        )
+        self.assertIn('bar', dir(b))
+        self.assertIn('num', dir(b))
+        self.assertIn('edit_traits', dir(b))
 
 
 ### EOF #######################################################################
