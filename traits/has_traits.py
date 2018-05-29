@@ -1647,11 +1647,8 @@ class HasTraits ( CHasTraits ):
             the object. This enables tab-completion in IPython.
         """
         trait_names = self.trait_names()
-        blacklist = ('trait_added', 'trait_modified')
-        filtered_trait_names = [
-            name for name in trait_names if name not in blacklist
-        ]
-        return filtered_trait_names
+        method_names = [method for method in self._each_trait_method(self)]
+        return trait_names + method_names
 
     #---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
