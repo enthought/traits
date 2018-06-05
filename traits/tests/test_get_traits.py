@@ -33,6 +33,10 @@ class Bar(HasTraits):
     # Force visibility of a private trait.
     PrivT2  = Str( private=True, visible=True )
 
+class FooBar(HasTraits):
+    num = Int
+    baz = 'non-trait class attribute'
+
 
 class GetTraitTestCase(unittest.TestCase):
 
@@ -66,8 +70,8 @@ class GetTraitTestCase(unittest.TestCase):
                           sorted(["PubT1", "PrivT2"]) )
 
     def test_dir(self):
-        b = Foo()
-        self.assertIn('bar', dir(b))
+        b = FooBar()
+        self.assertIn('baz', dir(b))
         self.assertIn('num', dir(b))
         self.assertIn('edit_traits', dir(b))
 
