@@ -1648,7 +1648,8 @@ class HasTraits ( CHasTraits ):
         """
         trait_names = self.trait_names()
         method_names = [method for method in self._each_trait_method(self)]
-        return trait_names + method_names
+        class_attrs = vars(self.__class__).keys()
+        return trait_names + method_names + class_attrs
 
     #---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
