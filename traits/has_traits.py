@@ -2562,8 +2562,15 @@ class HasTraits ( CHasTraits ):
 
         if isinstance( name, list ):
             for name_i in name:
-                self.on_trait_change( handler, name_i, remove, dispatch,
-                                      priority, target )
+                self.on_trait_change(
+                    handler,
+                    name=name_i,
+                    remove=remove,
+                    dispatch=dispatch,
+                    priority=priority,
+                    deferred=deferred,
+                    target=target,
+                )
 
             return
 

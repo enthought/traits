@@ -97,7 +97,7 @@ class ExtendedListenerInList(HasTraits):
 
     changed = Bool(False)
 
-    @on_trait_change(['dummy.x'])
+    @on_trait_change(['dummy:x'])
     def set_changed(self):
         self.changed = True
 
