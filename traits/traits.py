@@ -207,6 +207,66 @@ def date_editor ( ):
 
     return DateEditor
 
+def _expects_hastraits_instance(handler):
+    """ Does a trait handler or type expect a HasTraits subclass instance?
+    """
+    from traits.api import HasTraits, BaseInstance, TraitInstance
+
+    if isinstance(handler, TraitInstance):
+        cls = handler.aClass
+    elif isinstance(handler, BaseInstance):
+        cls = handler.klass
+    else:
+        return False
+    return issubclass(cls, HasTraits)
+
+
+def _instance_handler_factory(handler):
+    """ Get the instance factory of an Instance or TraitInstance
+    """
+    from traits.api import BaseInstance, TraitInstance
+
+    if isinstance(handler, TraitInstance):
+        return handler.aClass
+    elif isinstance(handler, BaseInstance):
+        return handler.default_value
+    else:
+        msg = "handler should be TraitInstance or BaseInstance, but got {}"
+        raise ValueError(msg.format(repr(handler)))
+
+
+def list_editor(trait, handler):
+    """ Factory that constructs an appropriate editor for a list.
+    """
+    item_handler = handler.item_trait.handler
+    if _expects_hastraits_instance(item_handler):
+        from traitsui.table_column import ObjectColumn
+        from traitsui.table_filter import (EvalFilterTemplate,
+            RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
+        from traitsui.api import TableEditor
+
+        return TableEditor(
+            filters=[RuleFilterTemplate, MenuFilterTemplate,
+                     EvalFilterTemplate],
+            edit_view='',
+            orientation='vertical',
+            search=EvalTableFilter(),
+            deletable=True,
+            show_toolbar=True,
+            reorderable=True,
+            row_factory=_instance_handler_factory(item_handler)
+        )
+    else:
+        from traitsui.api import ListEditor
+
+        return ListEditor(
+            trait_handler=handler,
+            rows=trait.rows if trait.rows else 5,
+            use_notebook=bool(trait.use_notebook),
+            page_name=trait.page_name if trait.page_name else ''
+        )
+
+
 #-------------------------------------------------------------------------------
 #  'CTrait' class (extends the underlying cTrait c-based type):
 #-------------------------------------------------------------------------------

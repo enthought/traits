@@ -2273,39 +2273,9 @@ class TraitList ( TraitHandler ):
 
         return 'a list of %s%s' % ( size, info )
 
-    def get_editor ( self, trait ):
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (trait.mode != 'list'):
-            from .api import HasTraits
-
-            if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from traitsui.table_column import ObjectColumn
-                    from traitsui.table_filter import (EvalFilterTemplate,
-                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from traitsui.api import TableEditor
-
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = trait.rows or 5,
-                           use_notebook  = trait.use_notebook is True,
-                           page_name     = trait.page_name or '' )
+    def get_editor(self, trait):
+        from traits.traits import list_editor
+        return list_editor(trait, self)
 
     def items_event ( self ):
         return items_event()
