@@ -90,6 +90,18 @@ class SimpleProperty(HasTraits):
         return self.x + 1
 
 
+class ExtendedListenerInList(HasTraits):
+    # Used in regression test for enthought/traits#403.
+
+    dummy = Instance(Dummy)
+
+    changed = Bool(False)
+
+    @on_trait_change(['dummy:x'])
+    def set_changed(self):
+        self.changed = True
+
+
 class TestRegression(unittest.TestCase):
 
     def test_default_value_for_no_cache(self):
@@ -210,6 +222,14 @@ class TestRegression(unittest.TestCase):
         # the CPython interpreter, so the exception wasn't triggered until
         # later.
         round(3.14159, 2)
+
+    def test_on_trait_change_with_list_of_extended_names(self):
+        # Regression test for enthought/traits#403
+        dummy = Dummy(x=10)
+        model = ExtendedListenerInList(dummy=dummy)
+        self.assertFalse(model.changed)
+        dummy.x = 11
+        self.assertTrue(model.changed)
 
 
 if __name__ == '__main__':
