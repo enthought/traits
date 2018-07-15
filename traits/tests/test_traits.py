@@ -19,10 +19,11 @@ import sys
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import (Any, CFloat, CInt, CLong, Delegate, Float, HasTraits,
-                   Instance, Int, List, Long, Str, Trait, TraitError,
-                   TraitList, TraitPrefixList, TraitPrefixMap, TraitRange,
-                   Tuple, pop_exception_handler, push_exception_handler)
+from ..api import (Any, Bytes, CBytes, CFloat, CInt, CLong, Delegate, Float,
+                   HasTraits, Instance, Int, List, Long, Str, This, Trait,
+                   TraitError, TraitList, TraitPrefixList, TraitPrefixMap,
+                   TraitRange, Tuple, pop_exception_handler,
+                   push_exception_handler)
 
 #  Base unit test classes:
 
@@ -321,6 +322,52 @@ class UnicodeTest(StringTest):
 
     def coerce(self, value):
         return str(value)
+
+
+class BytesTrait(HasTraits):
+    value = Bytes(b'bytes')
+
+
+version_dependent = ['', 'string']
+
+
+class BytesTest(StringTest):
+
+    obj = BytesTrait()
+
+    _default_value = b'bytes'
+    _good_values = [b'', b'10', b'-10'] + (version_dependent
+        if sys.version_info[0] == 2 else [])
+    _bad_values = [10, -10, 10L, 10.1, u'unicode', u'', [b''], [b'bytes'], [0],
+        {b'ten': b'10'}, (b'',), None, True] + (version_dependent
+        if sys.version_info[0] == 3 else [])
+
+    def coerce(self, value):
+        return bytes(value)
+
+
+class CoercibleBytesTrait(HasTraits):
+    value = CBytes(b'bytes')
+
+version_dependent = [
+    '', 'string', u'unicode', u'', -10, 10.1, [b''], [b'bytes'],
+    [-10], (-10,), {-10: 'foo'}, set([-10]),
+    [256], (256,), {256: 'foo'}, set([256]),
+    {b'ten': b'10'}, (b'',), None,
+]
+
+class CoercibleBytesTest(StringTest):
+
+    obj = CoercibleBytesTrait()
+
+    _default_value = b'bytes'
+    _good_values = [
+        b'', b'10', b'-10', 10, 10L, [10], (10,), set([10]), {10: 'foo'},
+        True] + (version_dependent if sys.version_info[0] == 2 else [])
+    _bad_values = (version_dependent if sys.version_info[0] == 3 else [])
+
+    def coerce(self, value):
+        return bytes(value)
 
 
 class EnumTrait(HasTraits):
@@ -914,3 +961,33 @@ class test_list_value(test_base2):
 
     def _record_trait_list_event(self, object, name, old, new):
         self.last_event = new
+
+
+class ThisDummy(HasTraits):
+    allows_none = This()
+    disallows_none = This(allow_none=False)
+
+
+class TestThis(unittest.TestCase):
+    def test_this_none(self):
+        d = ThisDummy()
+        self.assertIsNone(d.allows_none)
+        d.allows_none = None
+        d.allows_none = ThisDummy()
+        self.assertIsNotNone(d.allows_none)
+        d.allows_none = None
+        self.assertIsNone(d.allows_none)
+
+        # Still starts out as None, unavoidably.
+        self.assertIsNone(d.disallows_none)
+        d.disallows_none = ThisDummy()
+        self.assertIsNotNone(d.disallows_none)
+        with self.assertRaises(TraitError):
+            d.disallows_none = None
+        self.assertIsNotNone(d.disallows_none)
+
+    def test_this_other_class(self):
+        d = ThisDummy()
+        with self.assertRaises(TraitError):
+            d.allows_none = object()
+        self.assertIsNone(d.allows_none)

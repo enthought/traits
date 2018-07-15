@@ -213,7 +213,7 @@ class ETSConfig(object):
     def provisional_toolkit(self, toolkit):
         """ Perform an operation with toolkit provisionally set
 
-        This sets the toolkit attribute of the ETSConfig object set to the
+        This sets the toolkit attribute of the ETSConfig object to the
         provided value. If the operation fails with an exception, the toolkit
         is reset to nothing.
 
@@ -245,8 +245,7 @@ class ETSConfig(object):
     def _get_toolkit(self):
         """
         Property getter for the GUI toolkit.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ETS_TOOLKIT' environment variable; otherwise the empty string.
 
         """
@@ -282,8 +281,7 @@ class ETSConfig(object):
         Deprecated: This property is no longer used.
 
         Property getter for the Enable backend.  The value returned is, in order
-        of preference: the value set by the application; the value passed on
-        the command line using the '-toolkit' option; the value specified by
+        of preference: the value set by the application; the value specified by
         the 'ENABLE_TOOLKIT' environment variable; otherwise the empty string.
         """
         from warnings import warn
@@ -461,26 +459,8 @@ class ETSConfig(object):
         Initializes the toolkit.
 
         """
-        # We handle the command line option even though it doesn't have the
-        # highest precedence because we always want to remove it from the
-        # command line.
-        if '-toolkit' in sys.argv:
-            opt_idx = sys.argv.index('-toolkit')
-
-            try:
-                opt_toolkit = sys.argv[opt_idx + 1]
-            except IndexError:
-                raise ValueError, "the -toolkit command line argument must be followed by a toolkit name"
-
-            # Remove the option.
-            del sys.argv[opt_idx:opt_idx + 2]
-        else:
-            opt_toolkit = None
-
         if self._toolkit is not None:
             toolkit = self._toolkit
-        elif opt_toolkit is not None:
-            toolkit = opt_toolkit
         else:
             toolkit = os.environ.get('ETS_TOOLKIT', '')
 
