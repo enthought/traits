@@ -134,7 +134,8 @@ cdef int func_index(void* fun, void** lst):
 
 cdef object raise_trait_error(cTrait trait, CHasTraits obj, object name, object value):
 
-    cdef object result = trait.handler.error(obj, name, value)
+    cdef object rsult = trait.handler.error(obj, name, value)
+    return 0 # returns NULL in C
 
 cdef object delete_readonly_error(obj, name):
     """" Raise an attempt to delete read-only attribute error. """
@@ -170,7 +171,7 @@ cdef object unknown_attribute_error(obj, name):
 
 
 cdef int set_disallow_error(obj, name) except? -1:
-    """Raises an undefined attribute error.
+    """ Raises an undefined attribute error.
     """
     if not isinstance(name, basestring):
         invalid_attribute_error(name)
@@ -268,7 +269,7 @@ cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object
 
         return value
     else:
-        raise_trait_error(trait, obj, name, value)
+        return raise_trait_error(trait, obj, name, value)
 
 
 cdef object validate_trait_integer(cTrait trait, CHasTraits obj, object name, object value):
@@ -302,7 +303,7 @@ cdef object validate_trait_instance(cTrait trait, CHasTraits obj, object name, o
     if (kind == 3 and value is None) or isinstance(value, type_info[kind-1]):
         return value
 
-    raise_trait_error(trait, obj, name, value)
+    return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is in a specified enumeration. """
@@ -311,7 +312,7 @@ cdef object validate_trait_enum(cTrait trait, CHasTraits obj, object name, objec
     if value in type_info[1]:
         return value
     else:
-        raise_trait_error(trait, obj, name, value)
+        return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object value):
     """  Verifies a Python value is in a specified map (i.e. dictionary). """
@@ -327,7 +328,7 @@ cdef object validate_trait_map(cTrait trait, CHasTraits obj, object name, object
     if has_value:
         return value
     else:
-        raise_trait_error(trait, obj, name, value)
+        return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value satisifies a complex trait definition. """
@@ -457,7 +458,7 @@ cdef object validate_trait_complex(cTrait trait, CHasTraits obj, object name, ob
             raise NotImplementedError('Complex validation not implemented for %d' % check)
 
     # If we hit this line, it means the validation was not successful.
-    raise_trait_error(trait, obj, name, value)
+    return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, object value):
     cdef object result =  validate_trait_tuple_check(
@@ -465,7 +466,7 @@ cdef object validate_trait_tuple(cTrait trait, CHasTraits obj, object name, obje
     )
     if result is not None:
         return result
-    raise_trait_error(trait, obj, name, value)
+    return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_tuple_check(object trait, CHasTraits obj, object name, object value):
     "" "Verifies a Python value is a tuple of a specified type and content. """
@@ -499,7 +500,7 @@ cdef object validate_trait_tuple_check(object trait, CHasTraits obj, object name
             else:
                 return value
     else:
-        raise_trait_error(trait, obj, name, value)
+        return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_prefix_map(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is in a specified prefix map (i.e. dictionary). """
@@ -569,7 +570,7 @@ cdef object validate_trait_coerce_type(cTrait trait, CHasTraits obj, object name
             if PyObject_TypeCheck(value, <PyTypeObject*>type2):
                 return type_(value)
 
-    raise_trait_error( trait, obj, name, value );
+    return raise_trait_error( trait, obj, name, value );
 
 cdef object validate_trait_cast_type(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value is of a specified (possibly castable) type. """
@@ -581,7 +582,7 @@ cdef object validate_trait_cast_type(cTrait trait, CHasTraits obj, object name, 
         try:
             return type_info[1](value)
         except:
-            raise_trait_error(trait, obj, name, value)
+            return raise_trait_error(trait, obj, name, value)
 
 cdef object validate_trait_function(cTrait trait, CHasTraits obj, object name, object value):
     """ Verifies a Python value satisifies a specified function validator. """
@@ -635,7 +636,7 @@ cdef object validate_trait_adapt(cTrait trait, CHasTraits obj, object name, obje
     if rc:
         return value
     else:
-        raise_trait_error( trait, obj, name, value )
+        return raise_trait_error( trait, obj, name, value )
 
 
 
@@ -951,7 +952,9 @@ cdef class CHasTraits:
             result = trait.setattr(trait, trait, self, name, value)
 
         if result < 0:
-            raise_trait_error(trait, self, name, value)
+            result = raise_trait_error(trait, self, name, value)
+        
+        return result
 
     def _notifiers(self, force_create):
         """ Returns (and optionally creates) the anytrait 'notifiers' list """
@@ -1350,7 +1353,7 @@ cdef object getattr_generic(cTrait trait, CHasTraits obj, object name):
         raise ValueError('Input cannot be null')
     cdef PyObject* result = PyObject_GenericGetAttr(_obj, _name)
     if result is NULL:
-        raise_trait_error(trait, obj, name, None)
+        return raise_trait_error(trait, obj, name, None)
     else:
         return <object>result
 
