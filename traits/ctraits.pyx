@@ -239,7 +239,7 @@ cdef object validate_trait_float(cTrait trait, CHasTraits obj, object name, obje
 cdef object validate_trait_self_type(cTrait trait, CHasTraits obj, object name, object value):
     if (len(trait.py_validate) == 2 and value is None) or isinstance(value, type(obj)):
         return value
-    raise_trait_error(trait, obj, name, value)
+    return raise_trait_error(trait, obj, name, value)
 
 
 cdef object validate_trait_int(cTrait trait, CHasTraits obj, object name, object value):
@@ -293,7 +293,7 @@ cdef object validate_trait_integer(cTrait trait, CHasTraits obj, object name, ob
         try:
             int_value = PyNumber_Index(value)
         except TypeError:
-            raise_trait_error(trait, obj, name, value)
+            return raise_trait_error(trait, obj, name, value)
         # FIXME: Will cython compatibility handle this in Py3?
         return PyNumber_Int(int_value)
 
@@ -790,10 +790,11 @@ cdef class CHasTraits:
 
         return trait
 
-    cdef cTrait get_trait(self, str name, int instance):
+    cdef cTrait get_trait(self, object name, int instance):
         """ Returns (and optionaly creates) a specified instance or class trait.
         """
 
+        
         cdef int i, n
         cdef cTrait trait, itrait
         cdef list notifiers, inotifiers
@@ -1728,7 +1729,7 @@ cdef object delegate_attr_name_prefix(cTrait trait, CHasTraits obj, object name)
 cdef object delegate_attr_name_prefix_name(cTrait trait, CHasTraits obj, object name):
 
    # TODO: if needed, could be optimized for speed ...
-   return '%s%s' % (trait.delegate_prefix, name)
+   return u'%s%s' % (trait.delegate_prefix, name)
 
 cdef object delegate_attr_name_class_name(cTrait trait, CHasTraits obj, object name):
 
@@ -1736,7 +1737,7 @@ cdef object delegate_attr_name_class_name(cTrait trait, CHasTraits obj, object n
     if prefix is None:
         return name
     else:
-        return '%s%s' % (prefix, name)
+        return u'%s%s' % (prefix, name)
 
 cdef delegate_attr_name_func delegate_attr_name_handlers[4]
 delegate_attr_name_handlers[0] = delegate_attr_name_name
