@@ -1640,6 +1640,20 @@ class HasTraits ( CHasTraits ):
         """
         return self.__class_traits__.keys()
 
+    #--------------------------------------------------------------------------
+    #  Returns the list of trait names when calling the dir() builtin on the
+    #  object. This enables tab-completion in IPython.
+    #--------------------------------------------------------------------------
+
+    def __dir__(self):
+        """ Returns the list of trait names when calling the dir() builtin on
+            the object. This enables tab-completion in IPython.
+        """
+        trait_names = self.trait_names()
+        method_names = [method for method in self._each_trait_method(self)]
+        class_attrs = vars(self.__class__).keys()
+        return trait_names + method_names + class_attrs
+
     #---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
     #---------------------------------------------------------------------------
