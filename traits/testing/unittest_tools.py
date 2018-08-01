@@ -226,7 +226,7 @@ class UnittestTools(object):
 
             my_class = MyClass()
 
-            with self.assertTraitChangesExactly(my_class, 'number', count=1):
+            with self.assertTraitChanges(my_class, 'number', count=1):
                 my_class.number = 3.0
 
         Parameters
