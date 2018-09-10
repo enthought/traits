@@ -24,17 +24,20 @@
 
 from __future__ import absolute_import
 
+# inspect.getargspec is deprecated in Python 3; inspect.getfullargspec is
+# unavailable in Python 2.
+try:
+    from inspect import getfullargspec, getmro
+except ImportError:
+    from inspect import getargspec as getfullargspec, getmro
+import logging
 from types import FunctionType
-
-from inspect import getargspec, getmro
 
 from .has_traits import HasTraits
 
 #-------------------------------------------------------------------------------
 #  Logging:
 #-------------------------------------------------------------------------------
-
-import logging
 
 logger = logging.getLogger( __name__ )
 
@@ -129,8 +132,8 @@ class InterfaceChecker ( HasTraits ):
 
 
             # Check that the method signatures are the same:
-            cls_argspec       = getargspec( cls_methods[ name ] )
-            interface_argspec = getargspec( interface_methods[ name ] )
+            cls_argspec       = getfullargspec( cls_methods[ name ] )
+            interface_argspec = getfullargspec( interface_methods[ name ] )
 
             if cls_argspec != interface_argspec:
                 return self._handle_error( BAD_SIGNATURE %
@@ -193,4 +196,3 @@ def check_implements ( cls, interfaces, error_mode = 0 ):
         'interfaces' can be a single interface or a list of interfaces.
     """
     return checker.check_implements( cls, interfaces, error_mode )
-
