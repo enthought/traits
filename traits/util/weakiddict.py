@@ -1,3 +1,14 @@
+""" Variants of weak-key dictionaries that are based on object identity.
+
+They will ignore the ``__hash__`` and ``__eq__`` implementations on the
+objects. These are intended for various kinds of caches that map instances of
+classes to other things without keeping those instances alive. Note that
+iteration is not guarded, so if one were iterating over these dictionaries and
+one of the weakrefs got cleaned up, this might modify the structure and break
+the iteration. As this is not a common use for such caches, we have not
+bothered to make these dicts robust to that case.
+"""
+
 import collections
 from weakref import ref
 
@@ -11,7 +22,7 @@ def _remover(key_id, id_dict_ref):
 
 
 class WeakIDDict(collections.MutableMapping):
-    """ Make a weak-key-value dictionary that uses the id() of the key for
+    """ A weak-key-value dictionary that uses the id() of the key for
     comparisons.
     """
 
@@ -49,8 +60,7 @@ class WeakIDDict(collections.MutableMapping):
 
 
 class WeakIDKeyDict(WeakIDDict):
-    """ Make a weak-key dictionary that uses the id() of the key for
-    comparisons.
+    """ A weak-key dictionary that uses the id() of the key for comparisons.
 
     This differs from `WeakIDDict` in that it does not try to make a weakref to
     the values.
