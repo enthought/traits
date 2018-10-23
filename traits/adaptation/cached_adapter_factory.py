@@ -13,10 +13,9 @@
 """ An adapter factory that caches adapters per instance. """
 
 
-import weakref
-
 from traits.api import Any, Bool, HasTraits, Property
 from traits.util.api import import_symbol
+from traits.util.weakiddict import WeakIDKeyDict
 
 
 class CachedAdapterFactory(HasTraits):
@@ -68,7 +67,7 @@ class CachedAdapterFactory(HasTraits):
 
     _adapter_cache = Any
     def __adapter_cache_default(self):
-        return weakref.WeakKeyDictionary()
+        return WeakIDKeyDict()
 
     #: Shadow trait for the corresponding property.
     _factory = Any

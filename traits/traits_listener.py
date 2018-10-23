@@ -28,7 +28,6 @@ from __future__ import absolute_import
 import re
 import string
 import weakref
-from weakref import WeakKeyDictionary
 from string import whitespace
 from types import MethodType
 
@@ -41,6 +40,7 @@ from .trait_handlers import (
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
+from .util.weakiddict import WeakIDKeyDict
 
 #---------------------------------------------------------------------------
 #  Constants:
@@ -291,7 +291,7 @@ class ListenerItem ( ListenerBase ):
     #: A dictionary mapping objects to a list of all current active
     #: (*name*, *type*) listener pairs, where *type* defines the type of
     #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Instance( WeakKeyDictionary, () )
+    active = Instance( WeakIDKeyDict, () )
 
     #-- 'ListenerBase' Class Method Implementations ----------------------------
 

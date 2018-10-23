@@ -85,6 +85,20 @@ class DynamicNotifiers(HasTraits):
     def high_priority_second(self):
         self.prioritized_notifications.append(3)
 
+
+class UnhashableDynamicNotifiers(DynamicNotifiers):
+    """ Class that cannot be used as a key in a dictionary.
+    """
+
+    a_list = List
+
+    def __hash__(self):
+        raise NotImplementedError()
+
+    def __eq__(self):
+        raise NotImplementedError()
+
+
 # 'ok' function listeners
 
 calls_0 = []
@@ -266,6 +280,33 @@ class TestDynamicNotifiers(unittest.TestCase):
 
         obj = DynamicNotifiers()
         obj.on_trait_change(function_listener_0, 'ok')
+
+        # Create a weak reference to `obj` with a callback that flags when the
+        # object is finalized.
+        obj_collected = []
+
+        def obj_collected_callback(weakref):
+            obj_collected.append(True)
+
+        obj_weakref = weakref.ref(obj, obj_collected_callback)
+
+        # Remove reference to `obj`, and check that the weak reference
+        # callback has been called, indicating that it has been collected.
+        del obj
+
+        self.assertEqual(obj_collected, [True])
+
+    def test_unhashable_object_can_be_garbage_collected(self):
+        # Make sure that an unhashable trait object can be garbage collected
+        # even though there are listener to its traits.
+
+        import weakref
+
+        obj = UnhashableDynamicNotifiers()
+        obj.on_trait_change(function_listener_0, 'a_list:ok')
+        # Changing a List trait is the easiest way to trigger a check into the
+        # weak key dict.
+        obj.a_list.append(UnhashableDynamicNotifiers())
 
         # Create a weak reference to `obj` with a callback that flags when the
         # object is finalized.
