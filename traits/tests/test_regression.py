@@ -237,24 +237,27 @@ class TestRegression(unittest.TestCase):
 class TestDerivedClassDefaults(unittest.TestCase):
 
     def test_function_default(self):
-        # Regression test for enthought/traits#411
+        # Regression test for enthought/traits#411. Providing a pure Python
+        # default in a child class for a Callable trait declared in the base
+        # class didn't work as expected -- the default value would be silently
+        # ignored.
 
         # Given
 
-        def fun():
-            pass
+        def square(x):
+            return x ** 2
 
         class A(HasTraits):
             f = Callable()
 
         class B(A):
-            f = fun
+            f = square
 
         # When
         b = B()
 
         # Then
-        self.assertIsNotNone(b.f)
+        self.assertEquals(b.f(3), 9)
 
 
 if __name__ == '__main__':
