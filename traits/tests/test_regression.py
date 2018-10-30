@@ -11,9 +11,7 @@ else:
     from ..trait_numeric import Array
 
 from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import (
-    Bool, Callable, DelegatesTo, Either, Instance, Int, List
-)
+from ..trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from ..testing.unittest_tools import unittest
 
 
@@ -232,32 +230,6 @@ class TestRegression(unittest.TestCase):
         self.assertFalse(model.changed)
         dummy.x = 11
         self.assertTrue(model.changed)
-
-
-class TestDerivedClassDefaults(unittest.TestCase):
-
-    def test_function_default(self):
-        # Regression test for enthought/traits#411. Providing a pure Python
-        # default in a child class for a Callable trait declared in the base
-        # class didn't work as expected -- the default value would be silently
-        # ignored.
-
-        # Given
-
-        def square(x):
-            return x ** 2
-
-        class A(HasTraits):
-            f = Callable()
-
-        class B(A):
-            f = square
-
-        # When
-        b = B()
-
-        # Then
-        self.assertEquals(b.f(3), 9)
 
 
 if __name__ == '__main__':
