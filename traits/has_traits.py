@@ -547,10 +547,10 @@ class MetaHasTraitsObject ( object ):
                     prefix_list.append( name )
                     prefix_traits[ name ] = value
 
-            elif (( isinstance( value, FunctionType ) or
-                    is_cython_func_or_method(value) ) and
-                   hasattr( value, 'on_trait_change' )):
-                listeners[ name ] = ( 'method', value.on_trait_change )
+            elif isinstance( value, FunctionType ) or is_cython_func_or_method(value):
+                pattern = getattr( value, 'on_trait_change', None )
+                if pattern is not None:
+                    listeners[ name ] = ( 'method', pattern )
 
             elif isinstance( value, property ):
                 class_traits[ name ] = generic_trait
