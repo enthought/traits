@@ -1290,7 +1290,7 @@ def Color ( *args, **metadata ):
 
     Default Value
     -------------
-    For wxPython, 0x000000 (that is, white)
+    For wxPython, 0xffffff (that is, white)
     """
     from traitsui.toolkit_traits import ColorTrait
 
@@ -1314,7 +1314,7 @@ def RGBColor ( *args, **metadata ):
 
     Default Value
     -------------
-    For wxPython, (0.0, 0.0, 0.0) (that is, white)
+    For wxPython, (1.0, 1.0, 1.0) (that is, white)
     """
     from traitsui.toolkit_traits import RGBColorTrait
 
