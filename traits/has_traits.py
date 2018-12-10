@@ -3498,7 +3498,7 @@ class HasRequiredTraits(HasStrictTraits):
             raise TraitError(
                 "The following required traits were not passed as a "
                 "keyword argument: {names}.".format(
-                    names=', '.join(missing_required_traits)
+                    names=', '.join(sorted(missing_required_traits))
                 )
             )
 
