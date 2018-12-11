@@ -31,9 +31,9 @@ init:
 install:
   - install-edm-windows.cmd
   - edm install -y wheel click coverage
-  - appveyor-run.cmd install %runtime%
+  - edm run -- python etstool.py install %runtime%
 test_script:
-  - appveyor-run.cmd test %runtime%
+  - edm run -- python etstool.py test %runtime%
 on_success:
   - edm run -- coverage combine
   - edm run -- pip install codecov
