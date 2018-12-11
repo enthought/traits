@@ -2,7 +2,7 @@ language: generic
 
 env:
   global:
-    - INSTALL_EDM_VERSION=1.10.1
+    - INSTALL_EDM_VERSION=1.10.0
       PYTHONUNBUFFERED="1"
 
 matrix:
