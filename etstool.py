@@ -88,7 +88,6 @@ import click
 dependencies = {
     "coverage",
     "cython",
-    "numpy",
     "Sphinx",
     "mock",
     "nose",
