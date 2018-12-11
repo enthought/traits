@@ -3461,8 +3461,8 @@ class HasStrictTraits ( HasTraits ):
 
 class HasRequiredTraits(HasStrictTraits):
     """ This class builds on the functionality of HasStrictTraits and ensures
-     that any object attribute with `required=True` in its metadata must be
-     passed as an argument on object initialization.
+    that any object attribute with `required=True` in its metadata must be
+    passed as an argument on object initialization.
 
     This can be useful in cases where an object has traits which are required
     for it to function correctly.
@@ -3470,20 +3470,23 @@ class HasRequiredTraits(HasStrictTraits):
     Raises
     ------
     TraitError
-        If a required trait is not passed as an argument
+        If a required trait is not passed as an argument.
 
-    Examples
-    --------
+    Usage
+    -----
     A class with required traits:
-    >>> class RequiredTest(HasRequiredTraits):
-    >>>     required_trait = Any(required=True)
-    >>>     non_required_trait = Any()
 
-    Making an instance of a HasRequiredTraits class:
+    >>> class RequiredTest(HasRequiredTraits):
+    ...     required_trait = Any(required=True)
+    ...     non_required_trait = Any()
+
+    Creating an instance of a HasRequiredTraits subclass:
+
     >>> test_instance = RequiredTest(required_trait=13, non_required_trait=11)
     >>> test_instance2 = RequiredTest(required_trait=13)
 
     Forgetting to specify a required trait:
+
     >>> test_instance = RequiredTest(non_required_trait=11)
     traits.trait_errors.TraitError: The following required traits were not
     provided: required_trait.
