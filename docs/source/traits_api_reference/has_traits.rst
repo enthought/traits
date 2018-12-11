@@ -37,6 +37,8 @@ Classes
 
 .. autoclass:: HasStrictTraits
 
+.. autoclass:: HasRequiredTraits
+
 .. autoclass:: HasPrivateTraits
 
 .. autoclass:: SingletonHasTraits
