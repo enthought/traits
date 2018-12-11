@@ -3461,7 +3461,7 @@ class HasStrictTraits ( HasTraits ):
 
 class HasRequiredTraits(HasStrictTraits):
     """ This class builds on the functionality of HasStrictTraits and ensures
-     that any object attribute with required=True in its metadata must be
+     that any object attribute with `required=True` in its metadata must be
      passed as an argument on object initialization.
 
     This can be useful in cases where an object has traits which are required
