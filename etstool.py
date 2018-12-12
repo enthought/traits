@@ -91,7 +91,8 @@ dependencies = {
     "Sphinx",
     "mock",
     "nose",
-
+    "numpy",
+    "traitsui"
 }
 
 supported_runtimes = ["2.7.13", "3.5.2", "3.6.0"]
