@@ -308,9 +308,9 @@ structure.
 HasRequiredTraits
 '''''''''''''''''
 
-This class builds on the functionality of HasStrictTraits and ensures
-that any object attribute with `required=True` in its metadata must be passed
-as an argument on object initialization.
+This subclass of :ref:`hasstricttraits` ensures that any object attribute with
+``required=True`` in its metadata must be passed as an argument on object
+initialization.
 
 An example of a class with required traits::
 
@@ -321,17 +321,17 @@ An example of a class with required traits::
 All required traits have to be provided as arguments on creating a new
 instance::
 
-   >>> new_instance = RequiredTest(required_trait=13.0)
+    >>> new_instance = RequiredTest(required_trait=13.0)
 
 Non-required traits can also still be provided as usual::
 
-  >>> new_instance = RequiredTest(required_trait=13.0, non_required_trait=14.0)
+    >>> new_instance = RequiredTest(required_trait=13.0, non_required_trait=14.0)
 
 However, omitting a required trait will raise a TraitError::
 
-  >>> new_instance = RequiredTest(non_required_trait=14.0)
-  traits.trait_errors.TraitError: The following required traits were not
-  provided: required_trait.
+    >>> new_instance = RequiredTest(non_required_trait=14.0)
+    traits.trait_errors.TraitError: The following required traits were not
+    provided: required_trait.
 
 .. index:: HasPrivateTraits class
 
