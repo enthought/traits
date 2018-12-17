@@ -17,17 +17,12 @@ import contextlib
 import threading
 import sys
 import warnings
+import unittest  # noqa
 
-from traits.api import (Any, Event, HasStrictTraits, Instance, Int, List,
-        Property, Str)
+from traits.api import (
+    Any, Event, HasStrictTraits, Instance, Int, List, Str, Property)
 from traits.util.async_trait_wait import wait_for_condition
-
-# Compatibility layer for Python 2.6: try loading unittest2
 from traits import _py2to3
-if sys.version_info[:2] == (2, 6):
-    import unittest2 as unittest
-else:
-    import unittest
 
 
 class _AssertTraitChangesContext(object):
@@ -140,8 +135,8 @@ class _TraitsChangeCollector(HasStrictTraits):
     # The object we're listening to.
     obj = Any
 
-    # The (possibly extended) trait name.
-    trait = Str
+    # The (possibly extended) trait name(s).
+    trait_name = Str
 
     # Read-only event count.
     event_count = Property(Int)
@@ -156,16 +151,26 @@ class _TraitsChangeCollector(HasStrictTraits):
     # simultaneously.
     _lock = Instance(threading.Lock, ())
 
+    def __init__(self, **traits):
+        if 'trait' in traits:
+            value = traits.pop('trait')
+            message = (
+                "The `trait` keyword is deprecated."
+                " please use `trait_name`")
+            warnings.warn(message, DeprecationWarning, stacklevel=2)
+            traits['trait_name'] = value
+        super(_TraitsChangeCollector, self).__init__(**traits)
+
     def start_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.trait,
+            self.trait_name,
         )
 
     def stop_collecting(self):
         self.obj.on_trait_change(
             self._event_handler,
-            self.trait,
+            self.trait_name,
             remove=True,
         )
 
@@ -221,7 +226,7 @@ class UnittestTools(object):
 
             my_class = MyClass()
 
-            with self.assertTraitChangesExactly(my_class, 'number', count=1):
+            with self.assertTraitChanges(my_class, 'number', count=1):
                 my_class.number = 3.0
 
         Parameters
@@ -377,7 +382,7 @@ class UnittestTools(object):
             of changes. None can be used to indicate no timeout.
 
         """
-        collector = _TraitsChangeCollector(obj=obj, trait=trait)
+        collector = _TraitsChangeCollector(obj=obj, trait_name=trait)
 
         # Pass control to body of the with statement.
         collector.start_collecting()

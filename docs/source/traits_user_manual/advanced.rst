@@ -301,6 +301,38 @@ exception, as does attempting to set an attribute that is not one of the three
 defined attributes. In essence, TreeNode behaves like a type-checked data
 structure.
 
+.. index:: HasRequiredTraits class
+
+.. _hasrequiredtraits:
+
+HasRequiredTraits
+'''''''''''''''''
+
+This subclass of :ref:`hasstricttraits` ensures that any object attribute with
+``required=True`` in its metadata must be passed as an argument on object
+initialization.
+
+An example of a class with required traits::
+
+    class RequiredTest(HasRequiredTraits):
+        required_trait = Any(required=True)
+        non_required_trait = Any()
+
+All required traits have to be provided as arguments on creating a new
+instance::
+
+    >>> new_instance = RequiredTest(required_trait=13.0)
+
+Non-required traits can also still be provided as usual::
+
+    >>> new_instance = RequiredTest(required_trait=13.0, non_required_trait=14.0)
+
+However, omitting a required trait will raise a TraitError::
+
+    >>> new_instance = RequiredTest(non_required_trait=14.0)
+    traits.trait_errors.TraitError: The following required traits were not
+    provided: required_trait.
+
 .. index:: HasPrivateTraits class
 
 .. _hasprivatetraits:

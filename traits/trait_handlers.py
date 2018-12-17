@@ -73,6 +73,41 @@ RangeTypes    = ( int, LONG_TYPE, float )
 
 CallableTypes = ( FunctionType, MethodType )
 
+
+#: Default value types
+#: The default value type has not been specified
+UNSPECIFIED_DEFAULT_VALUE = -1
+#: The default_value of the trait is the default value.
+CONSTANT_DEFAULT_VALUE = 0
+#: The default_value of the trait is Missing.
+MISSING_DEFAULT_VALUE = 1
+#: The object containing the trait is the default value.
+OBJECT_DEFAULT_VALUE = 2
+#: A new copy of the list specified by default_value is the default value.
+LIST_COPY_DEFAULT_VALUE = 3
+#: A new copy of the dict specified by default_value is the default value.
+DICT_COPY_DEFAULT_VALUE = 4
+#: A new instance of TraitListObject constructed using the default_value list
+#: is the default value.
+TRAIT_LIST_OBJECT_DEFAULT_VALUE = 5
+#: A new instance of TraitDictObject constructed using the default_value dict
+#: is the default value.
+TRAIT_DICT_OBJECT_DEFAULT_VALUE = 6
+#: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
+#: where *callable* is a callable, *args* is a tuple, and *kw* is either a
+#: dictionary or None. The default value is the result obtained by invoking
+#: ``callable(\*args, \*\*kw)``.
+CALLABLE_AND_ARGS_DEFAULT_VALUE = 7
+#: The default_value is a callable. The default value is the result obtained
+#: by invoking *default_value*(*object*), where *object* is the object
+#: containing the trait. If the trait has a validate() method, the validate()
+#: method is also called to validate the result.
+CALLABLE_DEFAULT_VALUE = 8
+#: A new instance of TraitSetObject constructed using the default_value set
+#: is the default value.
+TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
+
+
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {
     'python': 1,
@@ -137,7 +172,7 @@ class BaseTraitHandler ( object ):
           wider range of cases, such as interactions with other components.
     """
 
-    default_value_type = -1
+    default_value_type = UNSPECIFIED_DEFAULT_VALUE
     has_items          = False
     is_mapped          = False
     editor             = None
@@ -458,21 +493,21 @@ class TraitType ( BaseTraitHandler ):
         dv  = self.default_value
         dvt = self.default_value_type
         if dvt < 0:
-            dvt = 0
-            if isinstance( dv, TraitListObject ):
-                dvt = 5
-            elif isinstance( dv, list ):
-                dvt = 3
-            elif isinstance( dv, TraitDictObject ):
-                dvt = 6
-            elif isinstance( dv, dict ):
-                dvt = 4
-            elif isinstance( dv, TraitSetObject ):
-                dvt = 9
+            dvt = CONSTANT_DEFAULT_VALUE
+            if isinstance(dv, TraitListObject):
+                dvt = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+            elif isinstance(dv, list):
+                dvt = LIST_COPY_DEFAULT_VALUE
+            elif isinstance(dv, TraitDictObject):
+                dvt = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+            elif isinstance(dv, dict):
+                dvt = DICT_COPY_DEFAULT_VALUE
+            elif isinstance(dv, TraitSetObject):
+                dvt = TRAIT_SET_OBJECT_DEFAULT_VALUE
 
             self.default_value_type = dvt
 
-        return ( dvt, dv )
+        return (dvt, dv)
 
     def clone ( self, default_value = Missing, **metadata ):
         """ Clones the contents of this object into a new instance of the same
@@ -2179,7 +2214,7 @@ class TraitList ( TraitHandler ):
     list.
     """
     info_trait         = None
-    default_value_type = 5
+    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, trait = None, minlen = 0, maxlen = six.MAXSIZE,
@@ -2240,39 +2275,9 @@ class TraitList ( TraitHandler ):
 
         return 'a list of %s%s' % ( size, info )
 
-    def get_editor ( self, trait ):
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (trait.mode != 'list'):
-            from .api import HasTraits
-
-            if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from traitsui.table_column import ObjectColumn
-                    from traitsui.table_filter import (EvalFilterTemplate,
-                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from traitsui.api import TableEditor
-
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = trait.rows or 5,
-                           use_notebook  = trait.use_notebook is True,
-                           page_name     = trait.page_name or '' )
+    def get_editor(self, trait):
+        from traits.traits import list_editor
+        return list_editor(trait, self)
 
     def items_event ( self ):
         return items_event()
@@ -2968,7 +2973,7 @@ class TraitDict ( TraitHandler ):
     be floats (i.e., their most recently recorded weight).
     """
     info_trait         = None
-    default_value_type = 6
+    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, key_trait = None, value_trait = None,

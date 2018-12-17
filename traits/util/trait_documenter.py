@@ -6,11 +6,12 @@
     :copyright: Copyright 2012 by Enthought, Inc
 
 """
-import traceback
-import sys
 import inspect
-import tokenize
+import sys
 import token
+import tokenize
+import traceback
+
 import six
 
 
@@ -106,8 +107,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition),
-                      '<autodoc>')
+        self.add_line(u'   :annotation: = {0}'.format(definition), '<autodoc>')
 
     # Private Interface #####################################################
 
@@ -133,7 +133,11 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
-        return tokenize.untokenize(definition_tokens).strip()
+        definition = tokenize.untokenize(definition_tokens).strip()
+        if six.PY2:
+            definition = six.text_type(definition, 'utf-8')
+
+        return definition
 
 
 def _get_definition_tokens(tokens):

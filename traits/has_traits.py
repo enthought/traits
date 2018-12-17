@@ -52,7 +52,9 @@ from .trait_notifiers import (ExtendedTraitChangeNotifyWrapper,
     StaticAnyTraitChangeNotifyWrapper, StaticTraitChangeNotifyWrapper,
     TraitChangeNotifyWrapper)
 
-from .trait_handlers import TraitType
+from .trait_handlers import (
+    TraitType, MISSING_DEFAULT_VALUE, TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+    CALLABLE_DEFAULT_VALUE)
 
 from .trait_base import (Missing, SequenceTypes, TraitsCache, Undefined,
     add_article, is_none, not_event, not_false)
@@ -183,8 +185,8 @@ def _get_def ( class_name, class_dict, bases, method ):
         result = getattr( base, method, None )
         if ((result is not None) and
             is_unbound_method_type(result) and \
-            (getattr( six.get_unbound_function(result),
-                      'on_trait_change', None ) is None)):
+            (getattr( six.get_unbound_function,
+                        'on_trait_change', None ) is None)):
             return result
 
     return None
@@ -569,13 +571,14 @@ class MetaHasTraitsObject ( object ):
                         class_traits[ name ] = value = ictrait( default_value )
                         # Make sure that the trait now has the default value
                         # has the correct initializer.
-                        value.default_value(1, value.default)
+                        value.default_value(
+                            MISSING_DEFAULT_VALUE, value.default)
                         del class_dict[ name ]
                         override_bases = []
                         handler        = value.handler
                         if (handler is not None) and handler.is_mapped:
                             class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                         value )
+                                value )
                         break
 
         # Process all HasTraits base classes:
@@ -713,7 +716,7 @@ class MetaHasTraitsObject ( object ):
                     _add_notifiers( trait._notifiers( 1 ), handlers )
 
                 if default is not None:
-                    trait.default_value( 8, default )
+                    trait.default_value(CALLABLE_DEFAULT_VALUE, default)
 
             # Handle the case of properties whose value depends upon the value
             # of other traits:
@@ -1620,6 +1623,20 @@ class HasTraits ( CHasTraits ):
         """
         return list(self.__class_traits__.keys())
 
+    #--------------------------------------------------------------------------
+    #  Returns the list of trait names when calling the dir() builtin on the
+    #  object. This enables tab-completion in IPython.
+    #--------------------------------------------------------------------------
+
+    def __dir__(self):
+        """ Returns the list of trait names when calling the dir() builtin on
+            the object. This enables tab-completion in IPython.
+        """
+        trait_names = self.trait_names()
+        method_names = [method for method in self._each_trait_method(self)]
+        class_attrs = vars(self.__class__).keys()
+        return trait_names + method_names + class_attrs
+
     #---------------------------------------------------------------------------
     #  Copies another object's traits into this one:
     #---------------------------------------------------------------------------
@@ -2162,7 +2179,7 @@ class HasTraits ( CHasTraits ):
         return names
 
     class_editable_traits = classmethod( class_editable_traits )
-    
+
     def visible_traits ( self ):
         """Returns an alphabetically sorted list of the names of non-event
         trait attributes associated with the current object, that should be GUI visible
@@ -2530,8 +2547,15 @@ class HasTraits ( CHasTraits ):
 
         if isinstance( name, list ):
             for name_i in name:
-                self.on_trait_change( handler, name_i, remove, dispatch,
-                                      priority, target )
+                self.on_trait_change(
+                    handler,
+                    name=name_i,
+                    remove=remove,
+                    dispatch=dispatch,
+                    priority=priority,
+                    deferred=deferred,
+                    target=target,
+                )
 
             return
 
@@ -2712,7 +2736,11 @@ class HasTraits ( CHasTraits ):
     def _is_list_trait ( self, trait_name ):
         handler = self.base_trait( trait_name ).handler
 
-        return ((handler is not None) and (handler.default_value_type == 5))
+        return (
+            (handler is not None)
+            and
+            (handler.default_value_type == TRAIT_LIST_OBJECT_DEFAULT_VALUE)
+        )
 
     #---------------------------------------------------------------------------
     #  Add a new trait:
@@ -2942,7 +2970,7 @@ class HasTraits ( CHasTraits ):
         values of all keywords to be included in the result.
         """
         traits = self.__base_traits__.copy()
-        
+
         # Update with instance-defined traits.
         for name, trt in self._instance_traits().items():
             if name[-6:] != "_items":
@@ -3397,6 +3425,57 @@ class HasStrictTraits ( HasTraits ):
     going unnoticed; a misspelled attribute name typically causes an exception.
     """
     _ = Disallow   # Disallow access to any traits not explicitly defined
+
+#-------------------------------------------------------------------------------
+#  'HasRequiredTraits' class:
+#-------------------------------------------------------------------------------
+
+class HasRequiredTraits(HasStrictTraits):
+    """ This class builds on the functionality of HasStrictTraits and ensures
+    that any object attribute with `required=True` in its metadata must be
+    passed as an argument on object initialization.
+
+    This can be useful in cases where an object has traits which are required
+    for it to function correctly.
+
+    Raises
+    ------
+    TraitError
+        If a required trait is not passed as an argument.
+
+    Usage
+    -----
+    A class with required traits:
+
+    >>> class RequiredTest(HasRequiredTraits):
+    ...     required_trait = Any(required=True)
+    ...     non_required_trait = Any()
+
+    Creating an instance of a HasRequiredTraits subclass:
+
+    >>> test_instance = RequiredTest(required_trait=13, non_required_trait=11)
+    >>> test_instance2 = RequiredTest(required_trait=13)
+
+    Forgetting to specify a required trait:
+
+    >>> test_instance = RequiredTest(non_required_trait=11)
+    traits.trait_errors.TraitError: The following required traits were not
+    provided: required_trait.
+    """
+
+    def __init__(self, **traits):
+
+        missing_required_traits = [
+            name for name in self.trait_names(required=True)
+            if name not in traits
+        ]
+        if missing_required_traits:
+            raise TraitError(
+                "The following required traits were not provided: "
+                "{}.".format(', '.join(sorted(missing_required_traits)))
+            )
+
+        super(HasRequiredTraits, self).__init__(**traits)
 
 #-------------------------------------------------------------------------------
 #  'HasPrivateTraits' class:
