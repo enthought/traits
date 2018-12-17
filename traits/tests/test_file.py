@@ -1,4 +1,4 @@
-import os.path as osp
+import os
 
 import six
 
@@ -18,8 +18,8 @@ class FastExampleModel(HasTraits):
 class FileTestCase(unittest.TestCase):
     def test_valid_file(self):
         example_model = ExampleModel(file_name=__file__)
-        example_model.file_name = osp.__file__
-        example_model.file_name = six.text_type(osp.__file__)
+        example_model.file_name = os.path.__file__
+        example_model.file_name = six.text_type(os.path.__file__)
 
     def test_invalid_file(self):
         example_model = ExampleModel(file_name=__file__)
@@ -33,7 +33,7 @@ class FileTestCase(unittest.TestCase):
         example_model = ExampleModel(file_name=__file__)
 
         def assign_invalid():
-            example_model.file_name = osp.dirname(__file__)
+            example_model.file_name = os.path.dirname(__file__)
 
         self.assertRaises(TraitError, assign_invalid)
 

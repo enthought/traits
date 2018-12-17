@@ -790,9 +790,9 @@ def _trait_monitor_index ( cls, handler ):
         if type_handler is type( _handler ):
             if (((type_handler is MethodType)  or
                 'cython_function_or_method' in str(type_handler)) and \
-                (six.get_method_self(handler) is not None)):
+                (handler.__self__ is not None)):
                 if ((handler.__name__ == _handler.__name__) and
-                    (six.get_method_self(handler) is six.get_method_self(_handler))):
+                    (handler.__self__ is _handler.__self__)):
                    return i
 
             elif handler == _handler:
@@ -957,7 +957,7 @@ def weak_arg(arg):
             if arg is not None:
                 function(arg, *args)
         # Return the correct wrapper depending on the arg count
-        args = six.get_function_code(function).co_argcount-1
+        args = function.__code__.co_argcount-1
         if args == 0:
             return wrapper0
         elif args == 1:
@@ -1947,7 +1947,7 @@ class HasTraits ( CHasTraits ):
                 result = view_elements.find( name )
                 if (result is None) and (handler is not None):
                     method = getattr( handler, name, None )
-                    if six.callable( method ):
+                    if callable( method ):
                         result = method()
 
                 return result
@@ -1974,7 +1974,7 @@ class HasTraits ( CHasTraits ):
 
         if handler is not None:
             method = getattr( handler, name, None )
-            if six.callable( method ):
+            if callable( method ):
                 result = method()
                 if isinstance( result, ViewElement ):
                     return result

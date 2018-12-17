@@ -1,7 +1,5 @@
 """ Tests for the trait change event tracer. """
 
-import six
-
 from traits.api import Float, HasTraits, on_trait_change
 from traits.testing.unittest_tools import unittest
 

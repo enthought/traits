@@ -769,7 +769,7 @@ class Lab(ASection):
                         del values[name]
 
                 # Execute the current lab code:
-                exec(module[2:] in values, values)
+                exec(module[2:], values, values)
 
                 # fixme: Hack trying to update the Traits UI view of the dict.
                 self.values = {}

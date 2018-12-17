@@ -29,10 +29,8 @@ else:
     QT_FOUND = True
 
 
-from threading import Thread
+import threading
 import time
-
-import six.moves as sm
 
 from traits.api import Callable, Float, HasTraits, on_trait_change
 from traits.testing.unittest_tools import unittest
@@ -71,7 +69,7 @@ class BaseTestUINotifiers(object):
         qt4_app.processEvents()
 
     def on_foo_notifications(self, obj, name, old, new):
-        thread_id = sm._thread.get_ident()
+        thread_id = threading.current_thread().ident
         event = (thread_id, (obj, name, old, new))
         self.notifications.append(event)
 
@@ -105,7 +103,7 @@ class BaseTestUINotifiers(object):
         def set_foo_to_3(obj):
             obj.foo = 3
 
-        Thread(target=set_foo_to_3, args=(obj,)).start()
+        threading.Thread(target=set_foo_to_3, args=(obj,)).start()
 
         # Wait for a while to make sure the function has finished.
         time.sleep(0.1)

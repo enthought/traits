@@ -27,8 +27,8 @@ from __future__ import absolute_import, print_function
 import contextlib
 
 import six
-import six.moves as sm
 
+import threading
 from threading import local as thread_local
 from threading import Thread
 
@@ -60,10 +60,10 @@ def set_ui_handler ( handler ):
     global ui_handler, ui_thread
 
     ui_handler = handler
-    ui_thread  = sm._thread.get_ident()
+    ui_thread  = threading.current_thread().ident
 
 def ui_dispatch( handler, *args, **kw ):
-    if sm._thread.get_ident() == ui_thread:
+    if threading.current_thread().ident == ui_thread:
         handler( *args, **kw )
     else:
         ui_handler( handler, *args, **kw )
@@ -175,7 +175,7 @@ class NotificationExceptionHandler ( object ):
         """
         thread_local = self.thread_local
         if isinstance( thread_local, dict ):
-            id       = sm._thread.get_ident()
+            id       = threading.current_thread().ident
             handlers = thread_local.get( id )
         else:
             handlers = getattr( thread_local, 'handlers', None )
@@ -335,7 +335,7 @@ class AbstractStaticChangeNotifyWrapper(object):
     arguments_transforms = {}
 
     def __init__ ( self, handler ):
-        arg_count = six.get_function_code(handler).co_argcount
+        arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the static anytrait change '
@@ -440,13 +440,13 @@ class TraitChangeNotifyWrapper(object):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
         if type( handler ) is MethodType:
-            func   = six.get_method_function(handler)
-            object = six.get_method_self(handler)
+            func   = handler.__func__
+            object = handler.__self__
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
                 self.owner  = owner
-                arg_count   = six.get_function_code(func).co_argcount - 1
+                arg_count   = func.__code__.co_argcount - 1
                 if arg_count > 4:
                     raise TraitNotificationError(
                         ('Invalid number of arguments for the dynamic trait '
@@ -466,7 +466,7 @@ class TraitChangeNotifyWrapper(object):
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
 
-        arg_count = six.get_function_code(handler).co_argcount
+        arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the dynamic trait change '
@@ -508,9 +508,9 @@ class TraitChangeNotifyWrapper(object):
         if handler is self:
             return True
 
-        if (type( handler ) is MethodType) and (six.get_method_self(handler) is not None):
+        if (type( handler ) is MethodType) and (handler.__self__ is not None):
             return ((handler.__name__ == self.name) and
-                    (six.get_method_self(handler) is self.object()))
+                    (handler.__self__ is self.object()))
 
         return ((self.name is None) and (handler == self.handler))
 
@@ -633,7 +633,7 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     """
 
     def dispatch ( self, handler, *args ):
-        if sm._thread.get_ident() == ui_thread:
+        if threading.current_thread().ident == ui_thread:
             handler( *args )
         else:
             ui_handler( handler, *args )

@@ -7,7 +7,7 @@ import logging
 
 
 __requires__ = [
-    'six'
+    'six',
 ]
 
 class NullHandler(logging.Handler):

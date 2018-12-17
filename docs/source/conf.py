@@ -13,8 +13,9 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 from __future__ import print_function
-import sys
+import io
 import os
+import sys
 
 # The docset build will use slightly different formatting rules
 BUILD_DOCSET = bool(os.environ.get('BUILD_DOCSET'))
@@ -143,9 +144,12 @@ copyright = '2008-2016, Enthought'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
-d = {}
-exec(open(os.path.join('..', '..', 'traits', '__init__.py')).read(), d)
-version = release = d['__version__']
+version_info = {}
+traits_init_path = os.path.join('..', '..', 'traits', '__init__.py')
+with io.open(traits_init_path, "r", encoding="utf-8") as version_module:
+    version_code = compile(version_module.read(), "__init__.py", "exec")
+    exec(version_code, version_info)
+version = release = version_info['__version__']
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

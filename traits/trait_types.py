@@ -1677,7 +1677,7 @@ class BaseRange ( TraitType ):
 
         vtype = type( high )
         if ((low is not None) and
-            (not issubclass( vtype, ( float, six.string_types ) ))):
+            (not issubclass( vtype, (float,) + six.string_types ))):
             vtype = type( low )
 
         is_static = (not issubclass( vtype, six.string_types ))

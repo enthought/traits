@@ -128,8 +128,8 @@ def _arg_count ( func ):
     """ Returns the correct argument count for a specified function or method.
     """
     if (type( func ) is MethodType) and (func.__self__ is not None):
-        return six.get_function_code(func).co_argcount - 1
-    return six.get_function_code(func).co_argcount
+        return func.__code__.co_argcount - 1
+    return func.__code__.co_argcount
 
 #-------------------------------------------------------------------------------
 #  Property error handling functions:

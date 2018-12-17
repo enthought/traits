@@ -31,8 +31,6 @@ import weakref
 from string import whitespace
 from types import MethodType
 
-import six
-
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property

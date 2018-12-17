@@ -3,7 +3,6 @@ import threading
 import time
 import unittest
 
-import six
 import six.moves as sm
 
 from traits.api import Enum, HasStrictTraits

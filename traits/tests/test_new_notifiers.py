@@ -8,9 +8,8 @@ Most of the functionality of the class is thus already covered by the
 notification really occurs on a separate thread.
 
 """
+import threading
 import time
-
-import six.moves as sm
 
 from traits.api import Float, HasTraits
 from traits.testing.unittest_tools import unittest
@@ -27,7 +26,7 @@ class TestNewNotifiers(unittest.TestCase):
         notifications = []
 
         def on_foo_notifications(obj, name, old, new):
-            thread_id = sm._thread.get_ident()
+            thread_id = threading.current_thread().ident
             event = (thread_id, obj, name, old, new)
             notifications.append(event)
 
@@ -41,7 +40,7 @@ class TestNewNotifiers(unittest.TestCase):
         self.assertEqual(len(notifications), 1)
         self.assertEqual(notifications[0][1:], (obj, 'foo', 0, 3))
 
-        this_thread_id = sm._thread.get_ident()
+        this_thread_id = threading.current_thread().ident
         self.assertNotEqual(this_thread_id, notifications[0][0])
 
 
