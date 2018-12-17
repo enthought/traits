@@ -1634,7 +1634,7 @@ class HasTraits ( CHasTraits ):
         """
         trait_names = self.trait_names()
         method_names = [method for method in self._each_trait_method(self)]
-        class_attrs = vars(self.__class__).keys()
+        class_attrs = list(vars(self.__class__).keys())
         return trait_names + method_names + class_attrs
 
     #---------------------------------------------------------------------------
