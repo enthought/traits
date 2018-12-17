@@ -3318,13 +3318,52 @@ error:
     return raise_trait_error( trait, obj, name, value );
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Verifies that a Python value is convertible to float
+|
+|  Will convert anything whose type has a __float__ method to a Python
+|  float. Returns a Python object of exact type "float". Raises TraitError
+|  with a suitable message if the given value isn't convertible to float.
+|
+|  Any exception other than TypeError raised by the value's __float__ method
+|  will be propagated. A TypeError will be caught and turned into TraitError.
+|
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_float(trait_object * trait, has_traits_object * obj,
+                     PyObject * name, PyObject * value) {
+    /* Fast path for the most common case. */
+    if (PyFloat_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+    else {
+        double value_as_double = PyFloat_AsDouble(value);
+        /* Translate a TypeError to a TraitError, but propagate
+           other exceptions. */
+        if (value_as_double == -1.0 && PyErr_Occurred()) {
+            if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                PyErr_Clear();
+                goto error;
+            }
+            return NULL;
+        }
+        return PyFloat_FromDouble(value_as_double);
+    }
+
+  error:
+    return raise_trait_error(trait, obj, name, value);
+}
+
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is a float within a specified range:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-validate_trait_float ( trait_object * trait, has_traits_object * obj,
-                       PyObject * name, PyObject * value ) {
+validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
+                             PyObject * name, PyObject * value ) {
 
     register PyObject * low;
     register PyObject * high;
@@ -4015,7 +4054,7 @@ check_implements:
                     goto done;
                 break;
 
-            case 20:  /* Integer check: */
+           case 20:  /* Integer check: */
 
                 /* Fast paths for the most common cases. */
 #if PY_MAJOR_VERSION < 3
@@ -4063,6 +4102,29 @@ check_implements:
                 Py_DECREF(int_value);
                 return result;
 
+           case 21:  /* Float check */
+               /* Fast path for most common case. */
+               if (PyFloat_CheckExact(value)) {
+                   Py_INCREF(value);
+                   return value;
+               }
+               else {
+                   double value_as_double = PyFloat_AsDouble(value);
+                   if (value_as_double == -1.0 && PyErr_Occurred()) {
+                       /* TypeError indicates that we don't have a match;
+                          clear the error and continue with the next item
+                          in the complex sequence. */
+                       if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                           PyErr_Clear();
+                           break;
+                       }
+                       /* Any other exception is unexpected and likely
+                          a code bug; propagate it. */
+                       return NULL;
+                   }
+                   return PyFloat_FromDouble(value_as_double);
+               }
+
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
         }
@@ -4086,7 +4148,7 @@ static trait_validate validate_handlers[] = {
 #else
     validate_trait_self_type,   NULL,
 #endif // #if PY_MAJOR_VERSION < 3
-    validate_trait_float,       validate_trait_enum,
+    validate_trait_float_range, validate_trait_enum,
     validate_trait_map,         validate_trait_complex,
     NULL,                       validate_trait_tuple,
     validate_trait_prefix_map,  validate_trait_coerce_type,
@@ -4097,6 +4159,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate2,           setattr_validate3,
 /*  ...End of __getstate__ method entries */
     validate_trait_adapt,        validate_trait_integer,
+    validate_trait_float,
 };
 
 static PyObject *
@@ -4246,6 +4309,12 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                     if ( n == 1 )
                         goto done;
                     break;
+
+                case 21:  /* Float check: */
+                    if ( n == 1 )
+                        goto done;
+                    break;
+
             }
         }
     }
