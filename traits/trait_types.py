@@ -123,6 +123,23 @@ def default_text_editor ( trait, type = None ):
                        enter_set = enter_set,
                        evaluate  = type )
 
+
+# Generic validators
+
+def _validate_float(value):
+    """
+    Convert an arbitrary Python object to a float, or raise TypeError.
+    """
+    if type(value) == float:  # fast path for common case
+        return value
+    try:
+        nb_float = type(value).__float__
+    except AttributeError:
+        raise TypeError(
+            "Object of type {!r} not convertible to float".format(type(value)))
+    return nb_float(value)
+
+
 #-------------------------------------------------------------------------------
 #  'Any' trait:
 #-------------------------------------------------------------------------------
@@ -241,6 +258,7 @@ class Long ( BaseLong ):
     #: The C-level fast validator to use:
     fast_validate = long_fast_validate
 
+
 #-------------------------------------------------------------------------------
 #  'BaseFloat' and 'Float' traits:
 #-------------------------------------------------------------------------------
@@ -262,13 +280,10 @@ class BaseFloat ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, float ):
-            return value
-
-        if isinstance( value, ( int, long ) ):
-            return float( value )
-
-        self.error( object, name, value )
+        try:
+            return _validate_float(value)
+        except TypeError:
+            self.error(object, name, value)
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
@@ -282,7 +297,7 @@ class Float ( BaseFloat ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = float_fast_validate
+    fast_validate = ( 21, )
 
 #-------------------------------------------------------------------------------
 #  'BaseComplex' and 'Complex' traits:
