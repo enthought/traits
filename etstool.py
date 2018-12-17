@@ -115,12 +115,8 @@ def install(runtime, environment):
     commands = [
         "edm environments create {environment} --force --version={runtime}",
         "edm install -y -e {environment} " + packages,
-        "edm run -e {environment} -- pip install -r ci-src-requirements.txt --no-dependencies",
-        "edm run -e {environment} -- python setup.py clean --all",
-        "edm run -e {environment} -- python setup.py install",
+        "edm run -e {environment} -- python -m pip install --no-deps .",
     ]
-    # pip install pyqt5 and pyside2, because we don't have them in EDM yet
-
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     click.echo('Done install')
