@@ -1,11 +1,11 @@
 build: false
-shallow_clone: false
-skip_branch_with_pr: true
 environment:
 
   global:
     PYTHONUNBUFFERED: "1"
-    INSTALL_EDM_VERSION: "1.9.1"
+    INSTALL_EDM_VERSION: "1.9.2"
+    # We're having trouble setting up EDM 1.10.0.
+    # See PR #420 for details.
 
   matrix:
 

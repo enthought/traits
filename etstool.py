@@ -46,12 +46,12 @@ environment.  You can update with a command like::
 
 You can run all three tasks at once with::
 
-    python etstool.py test_clean --runtime=...
+    python etstool.py test-clean --runtime=...
 
 which will create, install, run tests, and then clean-up the environment.  And
 you can run tests in all supported runtimes::
 
-    python etstool.py test_all
+    python etstool.py test-all
 
 Currently supported runtime values are ``2.7`` and ``3.5``.  Not all
 combinations of runtimes will work, but the tasks will fail with
@@ -92,7 +92,8 @@ dependencies = {
     "mock",
     "nose",
     "numpy",
-    "traitsui"
+    "pyqt",
+    "traitsui",
 }
 
 supported_runtimes = ["2.7.13", "3.5.2", "3.6.0"]
@@ -169,7 +170,7 @@ def cleanup(runtime, environment):
     click.echo('Done cleanup')
 
 
-@cli.command()
+@cli.command(name='test-clean')
 @click.option('--runtime', default='3.6')
 def test_clean(runtime):
     """ Run tests in a clean environment, cleaning up afterwards
@@ -197,7 +198,7 @@ def update(runtime, environment):
     click.echo('Done update')
 
 
-@cli.command()
+@cli.command(name='test-all')
 def test_all():
     """ Run test_clean across all supported environment combinations.
 
