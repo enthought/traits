@@ -5,6 +5,7 @@
 # all_wildcard.py --- Example of trait attribute wildcard rules
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import Any, Str, Int, HasTraits, TraitError
 
 
@@ -32,11 +33,11 @@ bill.zip_code = 55212
 bill.age = 49
 
 # This should generate an error (must be an Int):
-print 'Attempting to assign a string to an Int trait object...\n'
+print('Attempting to assign a string to an Int trait object...\n')
 try:
     bill.age = 'middle age'
-except TraitError, c:
-    print 'TraitError: ', c, '\n'
+except TraitError as c:
+    print('TraitError: ', c, '\n')
 
 # Display the final results:
 bill.print_traits()

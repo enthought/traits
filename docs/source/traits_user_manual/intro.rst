@@ -91,7 +91,7 @@ package. These features are elaborated in the rest of this guide.
 
         # NOTIFICATION: This method is called when 'age' changes:
         def _age_changed ( self, old, new ):
-            print 'Age changed from %s to %s ' % ( old, new )
+            print('Age changed from %s to %s ' % ( old, new ))
 
     # Set up the example:
     joe = Parent()
@@ -100,7 +100,7 @@ package. These features are elaborated in the rest of this guide.
     moe.father = joe
 
     # DELEGATION in action:
-    print "Moe's last name is %s " % moe.last_name
+    print("Moe's last name is %s " % moe.last_name)
     # Result:
     # Moe's last name is Johnson
 

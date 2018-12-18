@@ -3,6 +3,8 @@
 
 from abc import ABCMeta
 
+import six
+
 from traits.adaptation.api import PurePythonAdapter as Adapter
 
 
@@ -10,17 +12,21 @@ from traits.adaptation.api import PurePythonAdapter as Adapter
 
 #### Protocols ################################################################
 
+@six.add_metaclass(ABCMeta)
 class UKStandard(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class EUStandard(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class JapanStandard(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class IraqStandard(object):
-    __metaclass__ = ABCMeta
+    pass
 
 #### Implementations ##########################################################
 
@@ -99,14 +105,17 @@ EUStandard.register(TravelPlugToEUStandard)
 class FileType(object):
     pass
 
+@six.add_metaclass(ABCMeta)
 class IEditor(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class IScriptable(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class IUndoable(object):
-    __metaclass__ = ABCMeta
+    pass
 
 
 class FileTypeToIEditor(Adapter):
@@ -123,8 +132,9 @@ IUndoable.register(IScriptableToIUndoable)
 
 #### Hierarchy example ########################################################
 
+@six.add_metaclass(ABCMeta)
 class IPrintable(object):
-    __metaclass__ = ABCMeta
+    pass
 
 class Editor(object):
     pass
@@ -145,8 +155,9 @@ IPrintable.register(TextEditorToIPrintable)
 
 #### Interface hierarchy example ##############################################
 
+@six.add_metaclass(ABCMeta)
 class IPrimate(object):
-    __metaclass__ = ABCMeta
+    pass
 
 class IHuman(IPrimate):
     pass
@@ -154,11 +165,13 @@ class IHuman(IPrimate):
 class IChild(IHuman):
     pass
 
+@six.add_metaclass(ABCMeta)
 class IIntermediate(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class ITarget(object):
-    __metaclass__ = ABCMeta
+    pass
 
 class Source(object):
     pass
@@ -188,17 +201,20 @@ ITarget.register(IIntermediateToITarget)
 
 #### Non-trivial chaining example #############################################
 
+@six.add_metaclass(ABCMeta)
 class IStart(object):
-    __metaclass__ = ABCMeta
+    pass
 
+@six.add_metaclass(ABCMeta)
 class IGeneric(object):
-    __metaclass__ = ABCMeta
+    pass
 
 class ISpecific(IGeneric):
     pass
 
+@six.add_metaclass(ABCMeta)
 class IEnd(object):
-    __metaclass__ = ABCMeta
+    pass
 
 class Start(object):
     pass

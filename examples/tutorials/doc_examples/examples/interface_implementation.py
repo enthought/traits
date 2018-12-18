@@ -4,6 +4,7 @@
 # interface_implementation.py - Example of implementing an interface
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, implements, Str, Instance
 from interface_definition import IName
 
@@ -27,5 +28,5 @@ class Apartment(HasTraits):
 
 william = Person(first_name='William', last_name='Adams')
 apt1 = Apartment(renter=william)
-print 'Renter is: ', apt1.renter.get_name()
+print('Renter is: ', apt1.renter.get_name())
 # Result: Renter is: William Adams

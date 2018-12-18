@@ -23,10 +23,15 @@ except ImportError:
     numpy_available = False
 else:
     numpy_available = True
+import six
 
+from traits.api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
 from traits.testing.unittest_tools import unittest
 
-from ..api import BaseFloat, Either, Float, HasTraits, TraitError, Unicode
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
 
 
 class MyFloat(object):
@@ -121,12 +126,11 @@ class CommonFloatTests(object):
     @unittest.skipUnless(sys.version_info < (3,), "Not applicable to Python 3")
     def test_accepts_small_long(self):
         a = self.test_class()
-
-        a.value = long(2)
+        a.value = LONG_TYPE(2)
         self.assertIs(type(a.value), float)
         self.assertEqual(a.value, 2.0)
 
-        a.value_or_none = long(2)
+        a.value_or_none = LONG_TYPE(2)
         self.assertIs(type(a.value_or_none), float)
         self.assertEqual(a.value_or_none, 2.0)
 

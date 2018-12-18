@@ -12,9 +12,9 @@
 # Description: <Traits component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
-from ..api import HasTraits, Property
+from traits.api import HasTraits, Property
 
 
 class Test(HasTraits):
@@ -36,27 +36,27 @@ class Test(HasTraits):
 class Test_1 (Test):
 
     def value_changed(self, value):
-        print 'value_changed:', value
+        print('value_changed:', value)
 
 
 class Test_2 (Test):
 
     def anytrait_changed(self, name, value):
-        print 'anytrait_changed for %s: %s' % (name, value)
+        print('anytrait_changed for %s: %s' % (name, value))
 
 
 class Test_3 (Test_2):
 
     def value_changed(self, value):
-        print 'value_changed:', value
+        print('value_changed:', value)
 
 
 def on_value_changed(value):
-    print 'on_value_changed:', value
+    print('on_value_changed:', value)
 
 
 def on_anyvalue_changed(value):
-    print 'on_anyvalue_changed:', value
+    print('on_anyvalue_changed:', value)
 
 
 def test_property_notifications():

@@ -7,19 +7,18 @@
 
 """
 import inspect
-import StringIO
 import sys
 import token
 import tokenize
 import traceback
 
+import six
+
+
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
 from ..trait_handlers import TraitType
 from ..has_traits import MetaHasTraits
-
-
-IS_PY3 = sys.version_info >= (3, 0)
 
 
 def _is_class_trait(name, cls):
@@ -91,7 +90,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         # this used to only catch SyntaxError, ImportError and
         # AttributeError, but importing modules with side effects can raise
         # all kinds of errors.
-        except Exception, err:
+        except Exception as err:
             if self.env.app and not self.env.app.quiet:
                 self.env.app.info(traceback.format_exc().rstrip())
             msg = ('autodoc can\'t import/find {0} {r1}, it reported error: '
@@ -118,7 +117,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Get the class source and tokenize it.
         source = inspect.getsource(self.parent)
-        string_io = StringIO.StringIO(source)
+        string_io = six.StringIO(source)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         # find the trait definition start
@@ -135,8 +134,8 @@ class TraitDocumenter(ClassLevelDocumenter):
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
         definition = tokenize.untokenize(definition_tokens).strip()
-        if not IS_PY3:
-            definition = unicode(definition, 'utf-8')
+        if six.PY2:
+            definition = six.text_type(definition, 'utf-8')
 
         return definition
 

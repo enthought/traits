@@ -118,7 +118,7 @@ def check_python_version():
 if __name__ == "__main__":
     check_python_version()
     write_version_py()
-    from traits import __version__
+    from traits import __version__, __requires__
 
     ctraits = Extension(
         'traits.ctraits',
@@ -171,6 +171,7 @@ if __name__ == "__main__":
         description='explicitly typed attributes for Python',
         long_description=open('README.rst').read(),
         download_url='https://github.com/enthought/traits',
+        install_requires=__requires__,
         ext_modules=[ctraits],
         license='BSD',
         maintainer='ETS Developers',
@@ -178,10 +179,6 @@ if __name__ == "__main__":
         packages=find_packages(exclude=['fixers']),
         platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
         zip_safe=False,
-        use_2to3=True,
-        use_2to3_fixers=['fixers'],
-        # traits_listener.ListenerItem has a trait *next* which gets
-        # wrongly renamed
-        use_2to3_exclude_fixers=['lib2to3.fixes.fix_next'],
+        use_2to3=False,
         cmdclass=additional_commands(),
     )

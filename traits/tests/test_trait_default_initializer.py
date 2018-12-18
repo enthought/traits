@@ -16,8 +16,8 @@ from __future__ import absolute_import
 
 import unittest
 
-from ..trait_types import Int
-from ..has_traits import HasTraits
+from traits.trait_types import Int
+from traits.has_traits import HasTraits
 
 
 class Foo(HasTraits):

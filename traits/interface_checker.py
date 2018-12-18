@@ -33,6 +33,8 @@ except ImportError:
 import logging
 from types import FunctionType
 
+import six
+
 from .has_traits import HasTraits
 
 #-------------------------------------------------------------------------------
@@ -150,7 +152,7 @@ class InterfaceChecker ( HasTraits ):
 
         if len( missing ) > 0:
             return self._handle_error( MISSING_TRAIT %
-                       ( self._class_name( cls ), `list( missing )`[1:-1],
+                       ( self._class_name( cls ), repr(list( missing ))[1:-1],
                          self._class_name( interface ) ), error_mode )
 
         return True

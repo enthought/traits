@@ -177,7 +177,7 @@ specifying only the wildcard character for the attribute name::
       File "all_wildcard.py", line 33, in <module>
         bill.age = 'middle age'
       File "c:\wrk\src\lib\enthought\traits\\trait_handlers.py", line 163, in error
-        raise TraitError, ( object, name, self.info(), value )
+        raise TraitError( object, name, self.info(), value )
     TraitError: The 'age' trait of a Person instance must be an integer, but a value
      of 'middle age' <type 'str'> was specified.
     """
@@ -915,9 +915,9 @@ interface and be open to extensions by adaptation as follows:
             # about adaptation.
             lines = printable.get_formatted_text(n_cols=20)
 
-            print '-- Start document --'
-            print '\n'.join(lines)
-            print '-- End of document -\n'
+            print('-- Start document --')
+            print('\n'.join(lines))
+            print('-- End of document -\n')
 
     class TextDocument(HasTraits):
         """ A text document. """

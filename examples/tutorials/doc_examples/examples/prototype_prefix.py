@@ -4,6 +4,7 @@
 # prototype_prefix.py --- Examples of PrototypedFrom() prefix parameter
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import PrototypedFrom, Float, HasTraits, Instance, Str
 
 
@@ -37,5 +38,5 @@ maria = Parent(first_name='Maria',
 
 nino = Child(father=fred, mother=maria)
 
-print '%s %s gets $%.2f for allowance' % (nino.first_name, nino.last_name,
-                                          nino.allowance)
+print('%s %s gets $%.2f for allowance' % (nino.first_name, nino.last_name,
+                                          nino.allowance))

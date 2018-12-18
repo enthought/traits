@@ -336,8 +336,7 @@ class HasDynamicViews ( HasTraits ):
                     filtered[ order ] = e
 
         # Sort the contributed elements by their display ordering values:
-        ordering = filtered.keys()
-        ordering.sort()
+        ordering = sorted(filtered)
         elements = [ filtered[ order ] for order in ordering ]
 
         # Replace any dynamic sub-element with their full composition.

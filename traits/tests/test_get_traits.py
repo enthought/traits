@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import Float, HasTraits, Int, ReadOnly, Str, TraitError, Undefined
+from traits.api import Float, HasTraits, Int, ReadOnly, Str, TraitError, Undefined
 
 
 class Foo(HasTraits):

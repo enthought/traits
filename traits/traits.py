@@ -50,6 +50,9 @@ from __future__ import absolute_import
 
 import sys
 from types import FunctionType, MethodType
+
+import six
+
 NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
@@ -64,6 +67,8 @@ from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     _undefined_get, _undefined_set, UNSPECIFIED_DEFAULT_VALUE,
     CALLABLE_AND_ARGS_DEFAULT_VALUE)
 
+
+from ._py2to3 import LONG_TYPE
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -504,9 +509,9 @@ ctraits._ctrait( CTrait )
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
+ConstantTypes    = ( NoneType, int, LONG_TYPE, float, complex, str, six.text_type )
 
-PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
+PythonTypes      = ( str, six.text_type, int, LONG_TYPE, float, complex, list, tuple,
                      dict, FunctionType, MethodType, type, NoneType )
 
 if sys.version_info[0] < 3:
@@ -520,9 +525,9 @@ TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
     str:  '',
-    unicode: u'',
+    six.text_type: '',
     int:     0,
-    long:    0L,
+    LONG_TYPE:    LONG_TYPE(0),
     float:   0.0,
     complex: 0j,
     list:    [],
@@ -882,7 +887,7 @@ class _TraitMaker ( object ):
                 else:
                     typeValue = type( default_value )
 
-                    if isinstance(default_value, basestring):
+                    if isinstance(default_value, six.string_types):
                         string_options = self.extract( metadata, 'min_len',
                                                        'max_len', 'regex' )
                         if len( string_options ) == 0:
@@ -962,7 +967,7 @@ class _TraitMaker ( object ):
                     for i, item in enumerate( other ):
                         if isinstance( item, CTrait ):
                             if item.type != 'trait':
-                                raise TraitError, ("Cannot create a complex "
+                                raise TraitError("Cannot create a complex "
                                     "trait containing %s trait." %
                                     add_article( item.type ) )
                             handler = item.handler
@@ -1054,7 +1059,6 @@ class _TraitMaker ( object ):
             validate      = getattr( handler, 'fast_validate', None )
             if validate is None:
                 validate = handler.validate
-
             trait.set_validate( validate )
 
             post_setattr = getattr( handler, 'post_setattr', None )

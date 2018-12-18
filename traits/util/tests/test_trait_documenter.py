@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """ Tests for the trait documenter. """
 
-import StringIO
-import sys
+
 import textwrap
 import tokenize
 
 import mock
+import six
 
 from traits.testing.unittest_tools import unittest
 
@@ -20,15 +20,19 @@ def _sphinx_present():
     return True
 
 
-def _python_version_is_32():
-    return sys.version_info[:2] == (3, 2)
-
-
-# Skipping for python 3.2 because sphinx does not work on it.
-@unittest.skipIf(not _sphinx_present() or _python_version_is_32(),
+@unittest.skipIf(not _sphinx_present(),
                  "Sphinx not available. Cannot test documenter")
 class TestTraitDocumenter(unittest.TestCase):
     """ Tests for the trait documenter. """
+
+    def setUp(self):
+        self.source = """
+    depth_interval = Property(Tuple(Float, Float),
+                              depends_on="_depth_interval")
+"""
+        string_io = six.StringIO(self.source)
+        tokens = tokenize.generate_tokens(string_io.readline)
+        self.tokens = tokens
 
     def test_get_definition_tokens(self):
 
@@ -38,7 +42,7 @@ class TestTraitDocumenter(unittest.TestCase):
         depth_interval = Property(Tuple(Float, Float),
                                   depends_on="_depth_interval")
         """)
-        string_io = StringIO.StringIO(src)
+        string_io = six.StringIO(src)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         definition_tokens = _get_definition_tokens(tokens)

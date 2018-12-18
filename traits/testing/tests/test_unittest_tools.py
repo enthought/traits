@@ -12,6 +12,9 @@ import threading
 import time
 import warnings
 
+import six
+import six.moves as sm
+
 from traits import _py2to3
 
 from traits.testing.unittest_tools import unittest
@@ -109,7 +112,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                 ['flag', 'number', 'list_of_numbers[]']) as results:
             test_object.number = 2.0
 
-        events = filter(bool, (result.event for result in results))
+        events = list(filter(bool, (result.event for result in results)))
         msg = 'The assertion result is not None: {0}'.format(", ".join(events))
         self.assertFalse(events, msg=msg)
 
@@ -119,7 +122,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
                 ['flag']) as results:
             test_object.number = 5.0
 
-        events = filter(bool, (result.event for result in results))
+        events = list(filter(bool, (result.event for result in results)))
         msg = 'The assertion result is None'
         self.assertTrue(events, msg=msg)
 
@@ -208,7 +211,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(test_object, 'number'):
             self.assertEqual(test_object.number, 16.0)
 
-        with self.assertRaisesRegexp(AssertionError, '16\.0 != 12\.0'):
+        with six.assertRaisesRegex(self, AssertionError, '16\.0 != 12\.0'):
             with self.assertTraitDoesNotChange(test_object, 'number'):
                 self.assertEqual(test_object.number, 12.0)
 
@@ -232,12 +235,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for _ in xrange(count):
+            for _ in sm.range(count):
                 obj.event = True
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in xrange(thread_count)
+            for _ in sm.range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread
@@ -262,13 +265,13 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for n in xrange(count):
+            for n in sm.range(count):
                 time.sleep(0.001)
                 obj.event = n
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in xrange(thread_count)
+            for _ in sm.range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread
@@ -283,7 +286,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         _py2to3.assertCountEqual(
             self,
             event_collector.events,
-            range(events_per_thread) * thread_count,
+            list(sm.range(events_per_thread)) * thread_count,
         )
 
     def test_assert_trait_changes_async_failure(self):
@@ -298,12 +301,12 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
 
         def thread_target(obj, count):
             "Fire obj.event 'count' times."
-            for _ in xrange(count):
+            for _ in sm.range(count):
                 obj.event = True
 
         threads = [
             threading.Thread(target=thread_target, args=(a, events_per_thread))
-            for _ in xrange(thread_count)
+            for _ in sm.range(thread_count)
         ]
 
         expected_count = thread_count * events_per_thread

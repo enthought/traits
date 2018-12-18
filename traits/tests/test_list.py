@@ -10,9 +10,11 @@ from __future__ import absolute_import
 
 import sys
 
+import six.moves as sm
+
 from traits.testing.unittest_tools import unittest
 
-from ..api import CList, HasTraits, Instance, Int, List, Str, TraitError
+from traits.api import CList, HasTraits, Instance, Int, List, Str, TraitError
 
 
 class Foo(HasTraits):
@@ -92,7 +94,7 @@ class ListTestCase(unittest.TestCase):
 
     def test_slice_assignment(self):
         # Exhaustive testing.
-        starts = stops = [None] + range(-10, 11)
+        starts = stops = [None] + list(sm.range(-10, 11))
         steps = list(starts)
         steps.remove(0)
         test_slices = [slice(start, stop, step)
@@ -102,7 +104,7 @@ class ListTestCase(unittest.TestCase):
             f = Foo(l=['zero', 'one', 'two', 'three', 'four'])
             plain_l = list(f.l)
             length = len(plain_l[test_slice])
-            replacements = map(str, range(length))
+            replacements = list(sm.map(str, sm.range(length)))
 
             # Plain Python list and Traits list behaviour should match.
             plain_l[test_slice] = replacements

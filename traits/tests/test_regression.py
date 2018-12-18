@@ -2,17 +2,19 @@
 import gc
 import sys
 
+import six.moves as sm
+
 try:
     import numpy
 except ImportError:
     numpy_available = False
 else:
     numpy_available = True
-    from ..trait_numeric import Array
+    from traits.trait_numeric import Array
 
-from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import Bool, DelegatesTo, Either, Instance, Int, List
-from ..testing.unittest_tools import unittest
+from traits.has_traits import HasTraits, Property, on_trait_change
+from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.testing.unittest_tools import unittest
 
 
 class Dummy(HasTraits):
@@ -188,7 +190,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -201,7 +203,7 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))

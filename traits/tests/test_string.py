@@ -24,7 +24,7 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, String
+from traits.api import HasTraits, String
 
 
 class A(HasTraits):

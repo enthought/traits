@@ -1348,7 +1348,7 @@ class ListenerHandler ( object ):
 
     def __init__ ( self, handler ):
         if type( handler ) is MethodType:
-            object = handler.im_self
+            object = handler.__self__
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__

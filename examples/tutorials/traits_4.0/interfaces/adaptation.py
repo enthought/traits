@@ -186,10 +186,10 @@ The following code shows a simple example of using adaptation::
     apt = Apartment(renter = william)
 
     # Verify that the resulting value implements 'IName' correctly:
-    print 'Renter is: ', apt.renter.get_name()
+    print('Renter is: ', apt.renter.get_name())
 
     # Check the type of object actually assigned to 'renter':
-    print apt.renter
+    print(apt.renter)
 
 Refer to the **Output** tab for the actual result of running this example.
 
@@ -228,6 +228,7 @@ re-running the example code to verify that this is indeed the case.
 
 #--<Imports>-------------------------------------------------------------------
 
+from __future__ import print_function
 from traits.api import *
 
 
@@ -276,7 +277,7 @@ william = Person(first_name='William', last_name='Adams')
 apt = Apartment(renter=william)
 
 # Verify that the object works correctly:
-print 'Renter is:', apt.renter.get_name()
+print('Renter is:', apt.renter.get_name())
 
 # Check the type of object actually assigned to 'renter':
-print apt.renter
+print(apt.renter)

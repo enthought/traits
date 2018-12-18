@@ -25,7 +25,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import, division
+from __future__ import absolute_import, division, print_function
 
 import copy as copy_module
 import weakref
@@ -33,6 +33,8 @@ import re
 import sys
 
 from types import FunctionType, MethodType
+
+import six
 
 from . import __version__ as TraitsVersion
 
@@ -167,48 +169,27 @@ def _get_method ( cls, method ):
     return None
 
 
-if sys.version_info[0] >= 3:
-    def _get_def ( class_name, class_dict, bases, method ):
-        """ Gets the definition of a specified method (if any).
-        """
-        if method[0:2] == '__':
-            method = '_%s%s' % ( class_name, method )
+def _get_def ( class_name, class_dict, bases, method ):
+    """ Gets the definition of a specified method (if any).
+    """
+    if method[0:2] == '__':
+        method = '_%s%s' % ( class_name, method )
 
-        result = class_dict.get( method )
+    result = class_dict.get( method )
+    if ((result is not None) and
+        is_function_type(result) and
+        (getattr( result, 'on_trait_change', None ) is None)):
+        return result
+
+    for base in bases:
+        result = getattr( base, method, None )
         if ((result is not None) and
-            is_function_type(result) and
-            (getattr( result, 'on_trait_change', None ) is None)):
+            is_unbound_method_type(result) and \
+            (getattr( six.get_unbound_function,
+                        'on_trait_change', None ) is None)):
             return result
 
-        for base in bases:
-            result = getattr( base, method, None )
-            if ((result is not None) and
-                is_unbound_method_type(result) and \
-                (getattr( result, 'on_trait_change', None ) is None)):
-                return result
-
-        return None
-else:
-    def _get_def ( class_name, class_dict, bases, method ):
-        """ Gets the definition of a specified method (if any).
-        """
-        if method[0:2] == '__':
-            method = '_%s%s' % ( class_name, method )
-
-        result = class_dict.get( method )
-        if ((result is not None) and
-            is_function_type(result) and
-            (getattr( result, 'on_trait_change', None ) is None)):
-            return result
-
-        for base in bases:
-            result = getattr( base, method, None )
-            if ((result is not None) and
-                is_unbound_method_type(result) and \
-                (getattr( result.im_func, 'on_trait_change', None ) is None)):
-                return result
-
-        return None
+    return None
 
 
 def is_cython_func_or_method(method):
@@ -393,7 +374,7 @@ def _add_event_handlers ( trait, cls, handlers ):
     """
     events = trait.event
     if events is not None:
-        if isinstance(events, basestring):
+        if isinstance(events, six.string_types):
             events = [ events ]
 
         for event in events:
@@ -490,8 +471,8 @@ class MetaHasTraitsObject ( object ):
 
         # Move all trait definitions from the class dictionary to the
         # appropriate trait class dictionaries:
-        for name, value in class_dict.items():
-            value = _check_trait( value )
+        for name, value in list(class_dict.items()):
+            value = _check_trait(value)
             rc    = isinstance( value, CTrait )
 
             if (not rc) and isinstance( value, ForwardProperty ):
@@ -540,7 +521,7 @@ class MetaHasTraitsObject ( object ):
                                            get_delegate_pattern( name, value ) )
                     elif value_type == 'event':
                         on_trait_change = value.on_trait_change
-                        if isinstance( on_trait_change, basestring ):
+                        if isinstance( on_trait_change, six.string_types ):
                             listeners[ name ] = ( 'event', on_trait_change )
                 else:
                     name = name[:-1]
@@ -623,8 +604,8 @@ class MetaHasTraitsObject ( object ):
                     base_traits[ name ] = value
 
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s' trait "
+                                     "definition in a category" % name)
 
             # Merge class traits:
             for name, value in base_dict.get( ClassTraits ).items():
@@ -640,8 +621,8 @@ class MetaHasTraitsObject ( object ):
                     class_traits[ name ] = value
 
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s' trait "
+                                     "definition in a category" % name)
 
             # Merge prefix traits:
             base_prefix_traits = base_dict.get( PrefixTraits )
@@ -650,8 +631,8 @@ class MetaHasTraitsObject ( object ):
                     prefix_list.append( name )
                     prefix_traits[ name ] = base_prefix_traits[ name ]
                 elif is_category:
-                    raise TraitError, ("Cannot override '%s_' trait "
-                                       "definition in a category" % name)
+                    raise TraitError("Cannot override '%s_' trait "
+                                     "definition in a category" % name)
 
             # If the base class has a 'ViewElements' object defined, add it to
             # the 'parents' list of this class's 'ViewElements':
@@ -689,8 +670,10 @@ class MetaHasTraitsObject ( object ):
         # Make one final pass over the class traits dictionary, making sure
         # all static trait notification handlers are attached to a 'cloned'
         # copy of the original trait:
+        # The dictionary is modified in place
         cloned = set()
-        for name in class_traits.keys():
+
+        for name in list(class_traits.keys()):
             trait    = class_traits[ name ]
             handlers = [ anytrait,
                          _get_def( class_name, class_dict, bases,
@@ -711,7 +694,7 @@ class MetaHasTraitsObject ( object ):
             events = trait.event
             if events is not None:
 
-                if isinstance(events, basestring):
+                if isinstance(events, six.string_types):
                     events = [ events ]
 
                 for event in events:
@@ -807,9 +790,9 @@ def _trait_monitor_index ( cls, handler ):
         if type_handler is type( _handler ):
             if (((type_handler is MethodType)  or
                 'cython_function_or_method' in str(type_handler)) and \
-                (handler.im_self is not None)):
+                (handler.__self__ is not None)):
                 if ((handler.__name__ == _handler.__name__) and
-                    (handler.im_self is _handler.im_self)):
+                    (handler.__self__ is _handler.__self__)):
                    return i
 
             elif handler == _handler:
@@ -974,7 +957,7 @@ def weak_arg(arg):
             if arg is not None:
                 function(arg, *args)
         # Return the correct wrapper depending on the arg count
-        args = function.func_code.co_argcount-1
+        args = function.__code__.co_argcount-1
         if args == 0:
             return wrapper0
         elif args == 1:
@@ -994,6 +977,7 @@ def weak_arg(arg):
 #  'HasTraits' class:
 #-------------------------------------------------------------------------------
 
+@six.add_metaclass(MetaHasTraits)
 class HasTraits ( CHasTraits ):
     """ Enables any Python class derived from it to have trait attributes.
 
@@ -1010,7 +994,7 @@ class HasTraits ( CHasTraits ):
         >>>bob = Person()
         >>>bob.temp_lunch = 'sandwich'
         >>>bob.add_trait('favorite_sport', Str('football'))
-        >>>print bob.trait_names()
+        >>>print(bob.trait_names())
         ['trait_added', 'age', 'name']
 
     In this example, the trait_names() method returns only the *age* and
@@ -1019,7 +1003,6 @@ class HasTraits ( CHasTraits ):
     The wildcard attribute *temp_lunch* and the dynamically-added trait
     attribute *favorite_sport* are not listed.
     """
-    __metaclass__ = MetaHasTraits
 
     #-- Trait Prefix Rules -----------------------------------------------------
 
@@ -1040,7 +1023,7 @@ class HasTraits ( CHasTraits ):
     #-- Trait Definitions ------------------------------------------------------
 
     #: An event fired when a new trait is dynamically added to the object
-    trait_added = Event( basestring )
+    trait_added = Event( six.string_types[0] )
 
     #: An event that can be fired to indicate that the state of the object has
     #: been modified
@@ -1118,7 +1101,7 @@ class HasTraits ( CHasTraits ):
 
         # Make sure a trait argument was specified:
         if len( trait ) == 0:
-            raise ValueError, 'No trait definition was specified.'
+            raise ValueError('No trait definition was specified.')
 
         # Make sure only valid traits get added:
         if len( trait ) > 1:
@@ -1298,14 +1281,14 @@ class HasTraits ( CHasTraits ):
         try:
             if issubclass( klass, TraitChangeNotifyWrapper ):
                 if (not override) and (name in cls.wrappers):
-                    raise TraitError, ("A dispatch handler called '%s' has "
-                                       "already been defined." % name)
+                    raise TraitError("A dispatch handler called '%s' has "
+                                     "already been defined." % name)
                 cls.wrappers[ name ] = klass
                 return
         except TypeError:
             pass
-        raise TraitError, ('%s is not a subclass of TraitChangeNotifyWrapper.' %
-                           klass)
+        raise TraitError('%s is not a subclass of TraitChangeNotifyWrapper.' %
+                         klass)
 
     set_trait_dispatch_handler = classmethod( set_trait_dispatch_handler )
 
@@ -1638,7 +1621,7 @@ class HasTraits ( CHasTraits ):
         """ Returns the list of all trait names, including implicitly defined
             traits.
         """
-        return self.__class_traits__.keys()
+        return list(self.__class_traits__.keys())
 
     #--------------------------------------------------------------------------
     #  Returns the list of trait names when calling the dir() builtin on the
@@ -1651,7 +1634,7 @@ class HasTraits ( CHasTraits ):
         """
         trait_names = self.trait_names()
         method_names = [method for method in self._each_trait_method(self)]
-        class_attrs = vars(self.__class__).keys()
+        class_attrs = list(vars(self.__class__).keys())
         return trait_names + method_names + class_attrs
 
     #---------------------------------------------------------------------------
@@ -2159,30 +2142,18 @@ class HasTraits ( CHasTraits ):
         modified by the user.
         """
         if filename is not None:
-            fd = None
-            try:
-                import cPickle
-                fd = open( filename, 'rb' )
-                self.copy_traits( cPickle.Unpickler( fd ).load() )
-            except:
-                if fd is not None:
-                    fd.close()
+            with open(filename, 'rb') as fd:
+                self.copy_traits( sm.cPickle.Unpickler( fd ).load() )
 
         if edit:
             from traitsui.api import toolkit
             if context is None:
                 context = self
             rc = toolkit().view_application( context, self.trait_view( view ),
-                                           kind, handler, id, scrollable, args )
+                                             kind, handler, id, scrollable, args )
             if rc and (filename is not None):
-                fd = None
-                try:
-                    import cPickle
-                    fd = open( filename, 'wb' )
-                    cPickle.Pickler( fd, True ).dump( self )
-                finally:
-                    if fd is not None:
-                        fd.close()
+                with open(filename, 'wb') as fd:
+                    sm.cPickle.Pickler( fd, True ).dump( self )
             return rc
 
         return True
@@ -2243,7 +2214,7 @@ class HasTraits ( CHasTraits ):
             names = self.trait_names( type = not_event )
 
         if len( names ) == 0:
-            print ''
+            print('')
             return
 
         result = []
@@ -2266,7 +2237,7 @@ class HasTraits ( CHasTraits ):
             else:
                 result.append( '%s %s' % ( lname, value ) )
 
-        print '\n'.join( result )
+        print('\n'.join( result ))
 
     #---------------------------------------------------------------------------
     #  Add/Remove a handler for a specified trait being changed:
@@ -2564,7 +2535,7 @@ class HasTraits ( CHasTraits ):
         """
         # Check to see if we can do a quick exit to the basic trait change
         # handler:
-        if ((isinstance( name, basestring ) and
+        if ((isinstance( name, six.string_types ) and
             (extended_trait_pat.match( name ) is None)) or (name is None)):
             self._on_trait_change( handler, name, remove, dispatch, priority, target )
 
@@ -2694,9 +2665,9 @@ class HasTraits ( CHasTraits ):
         # to avoid reference cycles, this must not be a member function. See
         # Github issue #69 for more detail.
         def _sync_trait_listener_deleted (ref, info):
-            for key, dic in info.items():
+            for key, dic in list(info.items()):
                 if key != '':
-                    for name, value in dic.items():
+                    for name, value in list(dic.items()):
                         if ref is value[0]:
                             del dic[ name ]
                     if len( dic ) == 0:
@@ -2791,7 +2762,7 @@ class HasTraits ( CHasTraits ):
 
         # Make sure a trait argument was specified:
         if len( trait ) == 0:
-            raise ValueError, 'No trait definition was specified.'
+            raise ValueError('No trait definition was specified.')
 
         # Make sure only valid traits get added:
         if len( trait ) > 1:
@@ -3014,7 +2985,7 @@ class HasTraits ( CHasTraits ):
         if len( metadata ) == 0:
             return traits
 
-        for meta_name, meta_eval in metadata.items():
+        for meta_name, meta_eval in list(metadata.items()):
             if type( meta_eval ) is not FunctionType:
                 metadata[ meta_name ] = _SimpleTest( meta_eval )
 
@@ -3069,7 +3040,7 @@ class HasTraits ( CHasTraits ):
 
         result = {}
 
-        for meta_name, meta_eval in metadata.items():
+        for meta_name, meta_eval in list(metadata.items()):
             if type( meta_eval ) is not FunctionType:
                 metadata[ meta_name ] = _SimpleTest( meta_eval )
 
@@ -3102,7 +3073,7 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return self.traits( **metadata ).keys()
+        return list(self.traits( **metadata ).keys())
 
     def class_trait_names ( cls, **metadata ):
         """Returns a list of the names of all trait attributes whose definitions
@@ -3118,7 +3089,7 @@ class HasTraits ( CHasTraits ):
         This method is similar to the traits() method, but returns only the
         names of the matching trait attributes, not the trait definitions.
         """
-        return cls.class_traits( **metadata ).keys()
+        return list(cls.class_traits( **metadata ).keys())
 
     class_trait_names = classmethod( class_trait_names )
 
@@ -3163,8 +3134,8 @@ class HasTraits ( CHasTraits ):
 
             # Otherwise, it is a 'getattr' request, so indicate that no such
             # attribute exists:
-            raise AttributeError, "'%s' object has no attribute '%s'" % (
-                                  self.__class__.__name__, name )
+            raise AttributeError("'%s' object has no attribute '%s'" % (
+                                 self.__class__.__name__, name ))
 
         # Handle the special case of 'delegated' traits:
         if name[-1:] == '_':
@@ -3203,9 +3174,9 @@ class HasTraits ( CHasTraits ):
 
         # There should ALWAYS be a prefix match in the trait classes, since ''
         # is at the end of the list, so we should never get here:
-        raise SystemError, ("Trait class look-up failed for attribute '%s' "
-                            "for an object of type '%s'") % (
-                            name, self.__class__.__name__ )
+        raise SystemError("Trait class look-up failed for attribute '%s' "
+                          "for an object of type '%s'" % (
+                          name, self.__class__.__name__))
 
     #---------------------------------------------------------------------------
     #  Adds/Removes (Java-style) event listeners to an object:
@@ -3546,13 +3517,13 @@ try:
         pass
 
 
+    @six.add_metaclass(ABCMetaHasTraits)
     class ABCHasTraits(HasTraits):
         """ A HasTraits subclass which enables the features of Abstract
         Base Classes (ABC). See the 'abc' module in the standard library
         for more information.
 
         """
-        __metaclass__ = ABCMetaHasTraits
 
 
     class ABCHasStrictTraits(ABCHasTraits):
@@ -3643,11 +3614,10 @@ class MetaInterface ( ABCMetaHasTraits ):
 #  'Interface' class:
 #-------------------------------------------------------------------------------
 
+@six.add_metaclass(MetaInterface)
 class Interface ( HasTraits ):
     """ The base class for all interfaces.
     """
-
-    __metaclass__ = MetaInterface
 
 #-------------------------------------------------------------------------------
 #  Class decorator to declare the protocols that a class provides.

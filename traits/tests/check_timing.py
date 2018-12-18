@@ -12,7 +12,7 @@
 # Description: Perform timing tests on various trait styles to determine the
 #              amount of overhead that traits add.
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from time import time
 from ..api import Any, DelegatesTo, HasTraits, Int, Range
@@ -221,9 +221,9 @@ def report(name, get_time, set_time, ref_get_time, ref_set_time):
 def run_benchmark(klass, ref_get_time, ref_set_time):
     benchmark_name = klass.__name__
     get_time, set_time = klass().measure()
-    print report(benchmark_name,
+    print(report(benchmark_name,
                  get_time, set_time,
-                 ref_get_time, ref_set_time)
+                 ref_get_time, ref_set_time))
 
 
 def main():

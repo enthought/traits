@@ -31,7 +31,11 @@ import sys
 from os import getcwd
 from os.path import dirname, exists, join
 
+import six
+
 from . import _py2to3
+from ._py2to3 import LONG_TYPE
+
 from .etsconfig.api import ETSConfig
 
 # backwards compatibility: trait_base used to provide a patched enumerate
@@ -51,7 +55,7 @@ SequenceTypes = ( list, tuple )
 
 ComplexTypes  = ( float, int )
 
-TypeTypes     = ( str,  unicode, int, long, float, complex, list, tuple, dict, bool )
+TypeTypes     = ( str,  six.text_type, int, LONG_TYPE, float, complex, list, tuple, dict, bool )
 
 TraitNotifier = '__trait_notifier__'
 
@@ -178,7 +182,7 @@ def strx ( arg ):
 #  Constants:
 #-------------------------------------------------------------------------------
 
-StringTypes = ( str, unicode, int, long, float, complex )
+StringTypes = ( str, six.text_type, int, LONG_TYPE, float, complex )
 
 #-------------------------------------------------------------------------------
 #  Define a mapping of coercable types:
@@ -186,10 +190,10 @@ StringTypes = ( str, unicode, int, long, float, complex )
 
 # Mapping of coercable types.
 CoercableTypes = {
-    long:    ( 11, long, int ),
+    LONG_TYPE:    ( 11, LONG_TYPE, int ),
     float:   ( 11, float, int ),
     complex: ( 11, complex, float, int ),
-    unicode: ( 11, unicode, str )
+    six.text_type: ( 11, six.text_type, str )
 }
 
 #-------------------------------------------------------------------------------
@@ -202,7 +206,7 @@ def class_of ( object ):
     correct indefinite article ('a' or 'an') preceding it (e.g., 'an Image',
     'a PlotValue').
     """
-    if isinstance( object, basestring ):
+    if isinstance( object, six.string_types ):
         return add_article( object )
 
     return add_article( object.__class__.__name__ )
@@ -388,4 +392,4 @@ def not_event ( value ):
     return (value != 'event')
 
 def is_str ( value ):
-    return isinstance( value, basestring )
+    return isinstance( value, six.string_types )

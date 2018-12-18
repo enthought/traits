@@ -5,6 +5,12 @@ from __future__ import division, absolute_import
 
 import sys
 
+import six
+
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
 
 if sys.version_info[0] < 3:
     import string
