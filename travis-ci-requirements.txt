@@ -1,7 +1,0 @@
-nose
-cython
-Sphinx
-coverage
-coveralls
-numpy ; python_version >= '3.4'
-mock
