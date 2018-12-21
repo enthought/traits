@@ -28,7 +28,7 @@ else:
     numpy_available = True
 
 from traits.testing.unittest_tools import UnittestTools
-from ..api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
+from traits.api import ArrayOrNone, HasTraits, NO_COMPARE, TraitError
 
 
 if numpy_available:

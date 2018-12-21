@@ -50,6 +50,9 @@ from __future__ import absolute_import
 
 import sys
 from types import FunctionType, MethodType
+
+import six
+
 NoneType = type(None)   # Python 3's types does not include NoneType
 
 from . import trait_handlers
@@ -61,8 +64,11 @@ from .trait_base import (SequenceTypes, Self, Undefined, Missing, TypeTypes,
 from .trait_handlers import (TraitHandler, TraitInstance, TraitFunction,
     TraitCoerceType, TraitCastType, TraitEnum, TraitCompound, TraitMap,
     TraitString, ThisClass, TraitType, _arg_count, _read_only, _write_only,
-    _undefined_get, _undefined_set)
+    _undefined_get, _undefined_set, UNSPECIFIED_DEFAULT_VALUE,
+    CALLABLE_AND_ARGS_DEFAULT_VALUE)
 
+
+from ._py2to3 import LONG_TYPE
 
 #-------------------------------------------------------------------------------
 #  Constants:
@@ -205,6 +211,66 @@ def date_editor ( ):
         DateEditor = DateEditor()
 
     return DateEditor
+
+def _expects_hastraits_instance(handler):
+    """ Does a trait handler or type expect a HasTraits subclass instance?
+    """
+    from traits.api import HasTraits, BaseInstance, TraitInstance
+
+    if isinstance(handler, TraitInstance):
+        cls = handler.aClass
+    elif isinstance(handler, BaseInstance):
+        cls = handler.klass
+    else:
+        return False
+    return issubclass(cls, HasTraits)
+
+
+def _instance_handler_factory(handler):
+    """ Get the instance factory of an Instance or TraitInstance
+    """
+    from traits.api import BaseInstance, TraitInstance
+
+    if isinstance(handler, TraitInstance):
+        return handler.aClass
+    elif isinstance(handler, BaseInstance):
+        return handler.default_value
+    else:
+        msg = "handler should be TraitInstance or BaseInstance, but got {}"
+        raise ValueError(msg.format(repr(handler)))
+
+
+def list_editor(trait, handler):
+    """ Factory that constructs an appropriate editor for a list.
+    """
+    item_handler = handler.item_trait.handler
+    if _expects_hastraits_instance(item_handler):
+        from traitsui.table_column import ObjectColumn
+        from traitsui.table_filter import (EvalFilterTemplate,
+            RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
+        from traitsui.api import TableEditor
+
+        return TableEditor(
+            filters=[RuleFilterTemplate, MenuFilterTemplate,
+                     EvalFilterTemplate],
+            edit_view='',
+            orientation='vertical',
+            search=EvalTableFilter(),
+            deletable=True,
+            show_toolbar=True,
+            reorderable=True,
+            row_factory=_instance_handler_factory(item_handler)
+        )
+    else:
+        from traitsui.api import ListEditor
+
+        return ListEditor(
+            trait_handler=handler,
+            rows=trait.rows if trait.rows else 5,
+            use_notebook=bool(trait.use_notebook),
+            page_name=trait.page_name if trait.page_name else ''
+        )
+
 
 #-------------------------------------------------------------------------------
 #  'CTrait' class (extends the underlying cTrait c-based type):
@@ -443,9 +509,9 @@ ctraits._ctrait( CTrait )
 #  Constants:
 #-------------------------------------------------------------------------------
 
-ConstantTypes    = ( NoneType, int, long, float, complex, str, unicode )
+ConstantTypes    = ( NoneType, int, LONG_TYPE, float, complex, str, six.text_type )
 
-PythonTypes      = ( str, unicode, int, long, float, complex, list, tuple,
+PythonTypes      = ( str, six.text_type, int, LONG_TYPE, float, complex, list, tuple,
                      dict, FunctionType, MethodType, type, NoneType )
 
 if sys.version_info[0] < 3:
@@ -459,9 +525,9 @@ TraitTypes       = ( TraitHandler, CTrait )
 
 DefaultValues = {
     str:  '',
-    unicode: u'',
+    six.text_type: '',
     int:     0,
-    long:    0L,
+    LONG_TYPE:    LONG_TYPE(0),
     float:   0.0,
     complex: 0j,
     list:    [],
@@ -787,7 +853,7 @@ class _TraitMaker ( object ):
     #---------------------------------------------------------------------------
 
     def define ( self, *value_type, **metadata ):
-        default_value_type = -1
+        default_value_type = UNSPECIFIED_DEFAULT_VALUE
         default_value      = handler = clone = None
 
         if len( value_type ) > 0:
@@ -821,7 +887,7 @@ class _TraitMaker ( object ):
                 else:
                     typeValue = type( default_value )
 
-                    if isinstance(default_value, basestring):
+                    if isinstance(default_value, six.string_types):
                         string_options = self.extract( metadata, 'min_len',
                                                        'max_len', 'regex' )
                         if len( string_options ) == 0:
@@ -878,7 +944,8 @@ class _TraitMaker ( object ):
                             handler.allow_none()
 
                         elif isinstance( default_value, _InstanceArgs ):
-                            default_value_type = 7
+                            default_value_type = (
+                                CALLABLE_AND_ARGS_DEFAULT_VALUE)
                             default_value = ( handler.create_default_value,
                                 default_value.args, default_value.kw )
 
@@ -887,18 +954,20 @@ class _TraitMaker ( object ):
                             typeValue = type( default_value )
 
                             if typeValue is dict:
-                                default_value_type = 7
+                                default_value_type = (
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
                                 default_value = ( aClass, (), default_value )
                             elif not isinstance( default_value, aClass ):
                                 if typeValue is not tuple:
                                     default_value = ( default_value, )
-                                default_value_type = 7
+                                default_value_type = (
+                                    CALLABLE_AND_ARGS_DEFAULT_VALUE)
                                 default_value = ( aClass, default_value, None )
                 else:
                     for i, item in enumerate( other ):
                         if isinstance( item, CTrait ):
                             if item.type != 'trait':
-                                raise TraitError, ("Cannot create a complex "
+                                raise TraitError("Cannot create a complex "
                                     "trait containing %s trait." %
                                     add_article( item.type ) )
                             handler = item.handler
@@ -914,7 +983,7 @@ class _TraitMaker ( object ):
 
         if default_value_type < 0:
             if isinstance( default_value, Default ):
-                default_value_type = 7
+                default_value_type = CALLABLE_AND_ARGS_DEFAULT_VALUE
                 default_value      = default_value.default_value
             else:
                 if (handler is None) and (clone is not None):
@@ -990,7 +1059,6 @@ class _TraitMaker ( object ):
             validate      = getattr( handler, 'fast_validate', None )
             if validate is None:
                 validate = handler.validate
-
             trait.set_validate( validate )
 
             post_setattr = getattr( handler, 'post_setattr', None )
@@ -1226,7 +1294,7 @@ def Color ( *args, **metadata ):
 
     Default Value
     -------------
-    For wxPython, 0x000000 (that is, white)
+    For wxPython, 0xffffff (that is, white)
     """
     from traitsui.toolkit_traits import ColorTrait
 
@@ -1250,7 +1318,7 @@ def RGBColor ( *args, **metadata ):
 
     Default Value
     -------------
-    For wxPython, (0.0, 0.0, 0.0) (that is, white)
+    For wxPython, (1.0, 1.0, 1.0) (that is, white)
     """
     from traitsui.toolkit_traits import RGBColorTrait
 

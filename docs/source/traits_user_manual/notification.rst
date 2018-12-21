@@ -357,9 +357,9 @@ some aspect of the extended trait name syntax in the name specifier.
     class Department( HasTraits ):
         employees = List(Employee)
 
-    def a_handler(): print "A handler"
-    def b_handler(): print "B handler"
-    def c_handler(): print "C handler"
+    def a_handler(): print("A handler")
+    def b_handler(): print("B handler")
+    def c_handler(): print("C handler")
 
     fred = Employee()
     mary = Employee()
@@ -377,9 +377,9 @@ some aspect of the extended trait name syntax in the name specifier.
     # c_handler is called if 'employees' or its membership change:
     dept.on_trait_change( c_handler, 'employees[]' )
 
-    print "Changing list items"
+    print("Changing list items")
     dept.employees[1] = donna     # Calls B and C
-    print "Replacing list"
+    print("Replacing list")
     dept.employees = [donna]      # Calls A and C
 
 .. index:: notification; static
@@ -502,13 +502,13 @@ illustrated in the following example::
         bmi = Float(0.0)
 
         def _weight_kg_changed(self, old, new):
-             print 'weight_kg changed from %s to %s ' % (old, new)
+             print('weight_kg changed from %s to %s ' % (old, new))
              if self.height_m != 0.0:
                  self.bmi = self.weight_kg / (self.height_m**2)
 
         def _anytrait_changed(self, name, old, new):
-             print 'The %s trait changed from %s to %s ' \
-                    % (name, old, new)
+             print('The %s trait changed from %s to %s ' \
+                    % (name, old, new))
     """
     >>> bob = Person()
     >>> bob.height_m = 1.75

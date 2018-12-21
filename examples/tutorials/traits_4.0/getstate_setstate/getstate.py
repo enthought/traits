@@ -127,9 +127,11 @@ notifications managed by traits are correctly initialized for the object.
 Failure to call this method may result in lost change notifications.
 """
 
+from __future__ import print_function
+from six.moves.cPickle import dumps, loads
+
 from traits.api import *
 from time import time, sleep
-from cPickle import dumps, loads
 
 
 #--[Session Class]-------------------------------------------------------------
@@ -156,8 +158,8 @@ class Session(HasTraits):
 session = Session(name='session_1')
 
 # Display its contents:
-print 'Session name:', session.name
-print 'Session created:', session.created
+print('Session name:', session.name)
+print('Session created:', session.created)
 
 # # Simulate saving the session to a file/database:
 # saved_session = dumps(session)

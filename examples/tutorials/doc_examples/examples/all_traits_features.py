@@ -6,6 +6,7 @@
 #                            package
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import Delegate, HasTraits, Instance, Int, Str
 
 
@@ -29,7 +30,7 @@ class Child(HasTraits):
 
     # NOTIFICATION: This method is called when 'age' changes:
     def _age_changed(self, old, new):
-        print 'Age changed from %s to %s ' % (old, new)
+        print('Age changed from %s to %s ' % (old, new))
 
 #--[Example*]------------------------------------------------------------------
 
@@ -40,7 +41,7 @@ moe = Child()
 moe.father = joe
 
 # DELEGATION in action:
-print "Moe's last name is %s " % moe.last_name
+print("Moe's last name is %s " % moe.last_name)
 # Result:
 # Moe's last name is Johnson
 

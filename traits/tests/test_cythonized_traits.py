@@ -17,7 +17,7 @@ except ImportError:
     no_cython = True
 
 
-from ..testing.unittest_tools import unittest, UnittestTools
+from traits.testing.unittest_tools import unittest, UnittestTools
 
 
 def has_no_compiler():

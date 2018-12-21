@@ -22,12 +22,16 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import contextlib
+
+import six
+
+import threading
 from threading import local as thread_local
 from threading import Thread
-from thread import get_ident
+
 import traceback
 from types import MethodType
 import weakref
@@ -56,10 +60,10 @@ def set_ui_handler ( handler ):
     global ui_handler, ui_thread
 
     ui_handler = handler
-    ui_thread  = get_ident()
+    ui_thread  = threading.current_thread().ident
 
 def ui_dispatch( handler, *args, **kw ):
-    if get_ident() == ui_thread:
+    if threading.current_thread().ident == ui_thread:
         handler( *args, **kw )
     else:
         ui_handler( handler, *args, **kw )
@@ -163,7 +167,7 @@ class NotificationExceptionHandler ( object ):
         handler_info.handler( object, trait_name, old, new )
         if (handler_info.reraise_exceptions or
             isinstance( excp, TraitNotificationError )):
-            raise
+            raise excp
 
     def _get_handlers ( self ):
         """ Returns the handler stack associated with the currently executing
@@ -171,7 +175,7 @@ class NotificationExceptionHandler ( object ):
         """
         thread_local = self.thread_local
         if isinstance( thread_local, dict ):
-            id       = get_ident()
+            id       = threading.current_thread().ident
             handlers = thread_local.get( id )
         else:
             handlers = getattr( thread_local, 'handlers', None )
@@ -229,8 +233,8 @@ class NotificationExceptionHandler ( object ):
             handler = logging.StreamHandler()
             handler.setFormatter( logging.Formatter( '%(message)s' ) )
             logger.addHandler( handler )
-            print ('Exception occurred in traits notification handler.\n'
-                   'Please check the log file for details.')
+            print('Exception occurred in traits notification handler.\n'
+                  'Please check the log file for details.')
 
         try:
             logger.exception(
@@ -331,7 +335,7 @@ class AbstractStaticChangeNotifyWrapper(object):
     arguments_transforms = {}
 
     def __init__ ( self, handler ):
-        arg_count = handler.func_code.co_argcount
+        arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the static anytrait change '
@@ -436,13 +440,13 @@ class TraitChangeNotifyWrapper(object):
         # If target is not None and handler is a function then the handler
         # will be removed when target is deleted.
         if type( handler ) is MethodType:
-            func   = handler.im_func
-            object = handler.im_self
+            func   = handler.__func__
+            object = handler.__self__
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
                 self.owner  = owner
-                arg_count   = func.func_code.co_argcount - 1
+                arg_count   = func.__code__.co_argcount - 1
                 if arg_count > 4:
                     raise TraitNotificationError(
                         ('Invalid number of arguments for the dynamic trait '
@@ -462,7 +466,7 @@ class TraitChangeNotifyWrapper(object):
             self.object = weakref.ref( target, self.listener_deleted )
             self.owner = owner
 
-        arg_count = handler.func_code.co_argcount
+        arg_count = handler.__code__.co_argcount
         if arg_count > 4:
             raise TraitNotificationError(
                 ('Invalid number of arguments for the dynamic trait change '
@@ -504,9 +508,9 @@ class TraitChangeNotifyWrapper(object):
         if handler is self:
             return True
 
-        if (type( handler ) is MethodType) and (handler.im_self is not None):
+        if (type( handler ) is MethodType) and (handler.__self__ is not None):
             return ((handler.__name__ == self.name) and
-                    (handler.im_self is self.object()))
+                    (handler.__self__ is self.object()))
 
         return ((self.name is None) and (handler == self.handler))
 
@@ -629,7 +633,7 @@ class FastUITraitChangeNotifyWrapper ( TraitChangeNotifyWrapper ):
     """
 
     def dispatch ( self, handler, *args ):
-        if get_ident() == ui_thread:
+        if threading.current_thread().ident == ui_thread:
             handler( *args )
         else:
             ui_handler( handler, *args )

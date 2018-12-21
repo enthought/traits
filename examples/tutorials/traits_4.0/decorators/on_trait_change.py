@@ -116,7 +116,7 @@ Refer to the code tabs of this lesson for a complete example using the
 """
 
 #--<Imports>-------------------------------------------------------------------
-
+from __future__ import print_function
 from traits.api import *
 
 
@@ -152,8 +152,8 @@ class Corporation(HasTraits):
     # Define a corporate 'whistle blower' method:
     @on_trait_change('departments:employees.sick_days')
     def sick_again(self, object, name, old, new):
-        print '%s just took sick day number %d for this year!' % (
-              object.name, new)
+        print('%s just took sick day number %d for this year!' % (
+              object.name, new))
 
 
 #--[Example*]------------------------------------------------------------------

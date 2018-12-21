@@ -25,7 +25,7 @@ def clean_filename(name):
     wordparts = re.split('[^\w\.\-]+', name)
 
     # Filter out empty strings at the beginning or end of the list.
-    wordparts = filter(None, wordparts)
+    wordparts = [x for x in wordparts if x]
 
     # Make sure this is an ASCII-encoded string, not a Unicode string.
     filename = '_'.join(wordparts).encode('ascii')

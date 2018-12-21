@@ -24,7 +24,7 @@ import sys
 from traits.testing.unittest_tools import unittest
 
 # Enthought library imports.
-from ..api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
+from traits.api import (Bool, HasTraits, Int, Interface, Str, Adapter, adapts,
                    Property)
 
 # NOTE: There is a File class in apptools.io module, but since we want to

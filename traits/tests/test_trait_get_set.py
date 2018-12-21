@@ -18,7 +18,7 @@ import logging
 import traits.has_traits
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..api import HasTraits, Str, Int
+from traits.api import HasTraits, Str, Int
 
 
 class TraitsObject(HasTraits):

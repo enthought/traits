@@ -6,12 +6,14 @@
     :copyright: Copyright 2012 by Enthought, Inc
 
 """
-import traceback
-import sys
 import inspect
-import tokenize
+import sys
 import token
-import StringIO
+import tokenize
+import traceback
+
+import six
+
 
 from sphinx.ext.autodoc import ClassLevelDocumenter
 
@@ -88,7 +90,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         # this used to only catch SyntaxError, ImportError and
         # AttributeError, but importing modules with side effects can raise
         # all kinds of errors.
-        except Exception, err:
+        except Exception as err:
             if self.env.app and not self.env.app.quiet:
                 self.env.app.info(traceback.format_exc().rstrip())
             msg = ('autodoc can\'t import/find {0} {r1}, it reported error: '
@@ -105,8 +107,7 @@ class TraitDocumenter(ClassLevelDocumenter):
         """
         ClassLevelDocumenter.add_directive_header(self, sig)
         definition = self._get_trait_definition()
-        self.add_line(u'   :annotation: = {0}'.format(definition),
-                      '<autodoc>')
+        self.add_line(u'   :annotation: = {0}'.format(definition), '<autodoc>')
 
     # Private Interface #####################################################
 
@@ -116,7 +117,7 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Get the class source and tokenize it.
         source = inspect.getsource(self.parent)
-        string_io = StringIO.StringIO(source)
+        string_io = six.StringIO(source)
         tokens = tokenize.generate_tokens(string_io.readline)
 
         # find the trait definition start
@@ -132,7 +133,11 @@ class TraitDocumenter(ClassLevelDocumenter):
 
         # Retrieve the trait definition.
         definition_tokens = _get_definition_tokens(tokens)
-        return tokenize.untokenize(definition_tokens).strip()
+        definition = tokenize.untokenize(definition_tokens).strip()
+        if six.PY2:
+            definition = six.text_type(definition, 'utf-8')
+
+        return definition
 
 
 def _get_definition_tokens(tokens):

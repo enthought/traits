@@ -21,6 +21,13 @@ from __future__ import absolute_import
 import decimal
 import sys
 
+import six
+
+if six.PY2:
+    LONG_TYPE = long
+else:
+    LONG_TYPE = int
+
 try:
     import numpy
 except ImportError:
@@ -30,7 +37,7 @@ else:
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, TraitError
+from traits.api import HasTraits, Int, TraitError
 
 
 class A(HasTraits):
@@ -61,20 +68,25 @@ class TestInt(unittest.TestCase):
 
     def test_accepts_small_long(self):
         a = A()
-        a.integral = 23L
+        a.integral = LONG_TYPE(23)
         # Check that type is stored as int where possible.
         self.assertEqual(a.integral, 23)
         self.assertIs(type(a.integral), int)
 
     def test_accepts_large_long(self):
+        # This is only applicable to Python 2
+        if six.PY2:
+            size_limit = sys.maxint
+        else:
+            size_limit = six.MAXSIZE
         a = A()
-        a.integral = long(sys.maxint)
-        self.assertEqual(a.integral, sys.maxint)
+        a.integral = LONG_TYPE(size_limit)
+        self.assertEqual(a.integral, size_limit)
         self.assertIs(type(a.integral), int)
 
-        a.integral = sys.maxint + 1
-        self.assertEqual(a.integral, sys.maxint + 1)
-        self.assertIs(type(a.integral), long)
+        a.integral = size_limit + 1
+        self.assertEqual(a.integral, size_limit + 1)
+        self.assertIs(type(a.integral), LONG_TYPE)
 
     def test_accepts_bool(self):
         a = A()
@@ -110,11 +122,11 @@ class TestInt(unittest.TestCase):
         a = A()
         a.integral = numpy.int32(23)
         self.assertEqual(a.integral, 23)
-        self.assertIn(type(a.integral), (int, long))
+        self.assertIn(type(a.integral), six.integer_types)
 
         a.integral = numpy.uint64(2**63 + 2)
         self.assertEqual(a.integral, 2**63 + 2)
-        self.assertIs(type(a.integral), long)
+        self.assertIs(type(a.integral), LONG_TYPE)
 
         with self.assertRaises(TraitError):
             a.integral = numpy.float32(4.0)

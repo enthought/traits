@@ -4,6 +4,7 @@
 # dynamic_notification.py --- Example of dynamic notification
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import Float, HasTraits, Instance
 
 
@@ -30,5 +31,5 @@ class Widget(HasTraits):
 w = Widget()
 w.part1.cost = 2.25
 w.part2.cost = 5.31
-print w.cost
+print(w.cost)
 # Result: 7.56

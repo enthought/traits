@@ -1,40 +1,40 @@
 build: false
-shallow_clone: true
 environment:
 
   global:
-    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
-    # /E:ON and /V:ON options are not enabled in the batch script intepreter
-    # See: http://stackoverflow.com/a/13751649/163740
-    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
+    PYTHONUNBUFFERED: "1"
+    INSTALL_EDM_VERSION: "1.9.2"
+    # We're having trouble setting up EDM 1.10.0.
+    # See PR #420 for details.
 
   matrix:
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x"
-      PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Python34-x64"
-      PYTHON_VERSION: "3.4.x"
-      PYTHON_ARCH: "64"
+    - RUNTIME: '2.7'
+    - RUNTIME: '3.5'
+    - RUNTIME: '3.6'
 
-    - PYTHON: "C:\\Python35-x64"
-      PYTHON_VERSION: "3.5.x"
-      PYTHON_ARCH: "64"
+matrix:
+  fast_finish: true
 
-    - PYTHON: "C:\\Python36-x64"
-      PYTHON_VERSION: "3.6.x"
-      PYTHON_ARCH: "64"
+branches:
+  only:
+    - master
 
 cache:
-  - c:\egg_cache
+  - C:\Users\appveyor\.cache -> appveyor-clean-cache.txt
+  - C:\Users\appveyor\AppData\Local\pip\Cache -> appveyor-clean-cache.txt
 
 init:
-  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+  - ps: $Env:path = "C:/Enthought/edm;" + $Env:path
+  - ps: md C:/Users/appveyor/.cache -Force
+
 install:
-  - ps: if ((Test-Path "c:/egg_cache") -eq 0) { mkdir c:/egg_cache }
-  - ps: python -m pip install --upgrade --no-binary wheel pip
-  - ps: pip install --upgrade wheel
-  - ps: pip --version
-  - "%CMD_IN_ENV% .\\appveyor\\appveyor-install.cmd"
+  - install-edm-windows.cmd
+  - edm install -y wheel click coverage
+  - edm run -- python etstool.py install --runtime=%runtime%
 test_script:
-  - "%CMD_IN_ENV% .\\appveyor\\appveyor-test.cmd"
+  - edm run -- python etstool.py test --runtime=%runtime%
+on_success:
+  - edm run -- coverage combine
+  - edm run -- pip install codecov
+  - edm run -- codecov

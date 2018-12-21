@@ -245,6 +245,7 @@ Refer to the code tabs of this lesson for a complete example using
 bottom of the **Example** tab for the code that sets up an extended trait
 change notification handler using *on_trait_change*.
 """
+from __future__ import print_function
 
 from traits.api import *
 
@@ -308,8 +309,8 @@ acme = Corporation(name='Acme, Inc.',
 
 # Define a corporate 'whistle blower' function:
 def sick_again(object, name, old, new):
-    print '%s just took sick day number %d for this year!' % (
-          object.name, new)
+    print('%s just took sick day number %d for this year!' % (
+          object.name, new))
 
 # Set up the function as a listener:
 acme.on_trait_change(sick_again, 'departments.employees.sick_days')

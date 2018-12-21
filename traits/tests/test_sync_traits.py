@@ -7,7 +7,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..api import (
+from traits.api import (
     HasTraits, Int, List, push_exception_handler, pop_exception_handler)
 
 

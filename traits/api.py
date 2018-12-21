@@ -65,10 +65,10 @@ from .trait_types import (BaseInt, BaseLong, BaseFloat, BaseComplex, BaseStr,
 from .trait_types import UUID, ValidatedTuple
 
 from .has_traits import (HasTraits, HasStrictTraits, HasPrivateTraits,
-        Interface, SingletonHasTraits, SingletonHasStrictTraits,
-        SingletonHasPrivateTraits, MetaHasTraits, Vetoable, VetoableEvent,
-        implements, traits_super, on_trait_change, cached_property,
-        property_depends_on, provides, isinterface)
+        HasRequiredTraits, Interface, SingletonHasTraits,
+        SingletonHasStrictTraits, SingletonHasPrivateTraits, MetaHasTraits,
+        Vetoable, VetoableEvent, implements, traits_super, on_trait_change,
+        cached_property, property_depends_on, provides, isinterface)
 
 try:
     from .has_traits import ABCHasTraits, ABCHasStrictTraits, ABCMetaHasTraits
