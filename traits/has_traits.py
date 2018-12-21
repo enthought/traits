@@ -1417,8 +1417,8 @@ class HasTraits ( CHasTraits ):
             inst_traits = state.pop('__instance_traits__', {})
             self.trait_set( trait_change_notify = trait_change_notify, **state )
             self._post_init_trait_listeners()
-            for attr, trait in inst_traits.iteritems():
-                self.add_trait(attr, trait)
+            for attr in inst_traits:
+                self.add_trait(attr, inst_traits[attr])
             self.traits_init()
 
         self.traits_inited( True )
@@ -1786,8 +1786,8 @@ class HasTraits ( CHasTraits ):
         memo[ id( self ) ] = new
         new._init_trait_listeners()
         inst_traits = self._instance_traits()
-        for attr, trait in inst_traits.iteritems():
-            new.add_trait(attr, trait)
+        for attr in inst_traits:
+            new.add_trait(attr, inst_traits[attr])
         new.copy_traits( self, traits, memo, copy, **metadata )
         new._post_init_trait_listeners()
         new.traits_init()
