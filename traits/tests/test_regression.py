@@ -190,21 +190,28 @@ class TestRegression(unittest.TestCase):
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup+1:])
 
-    def test_hastraits_pickle_deepcopy(self):
-        from pickle import dumps, loads
+    def test_hastraits_deepcopy(self):
         from copy import deepcopy
         a = HasTraits()
         a.add_trait('foo', Int)
         a.foo = 1
         with self.assertRaises(TraitError):
             a.foo = 'a'
-        pkld_a = dumps(a)
-        unpkld_a = loads(pkld_a)
-        with self.assertRaises(TraitError):
-            unpkld_a.foo = 'a'
         copied_a = deepcopy(a)
         with self.assertRaises(TraitError):
             copied_a.foo = 'a'
+
+    def test_hastraits_pickle(self):
+        from pickle import dumps, loads
+        a = HasTraits()
+        a.add_trait('foo', Int)
+        a.foo = 1
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
+        pickled_a = dumps(a)
+        unpickled_a = loads(pickled_a)
+        with self.assertRaises(TraitError):
+            unpickled_a.foo = 'a'
 
 
 if __name__ == '__main__':
