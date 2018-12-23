@@ -1416,9 +1416,9 @@ class HasTraits ( CHasTraits ):
             self._init_trait_listeners()
             inst_traits = state.pop('__instance_traits__', {})
             self.trait_set( trait_change_notify = trait_change_notify, **state )
-            self._post_init_trait_listeners()
             for attr in inst_traits:
                 self.add_trait(attr, inst_traits[attr])
+            self._post_init_trait_listeners()
             self.traits_init()
 
         self.traits_inited( True )
