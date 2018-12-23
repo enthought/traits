@@ -258,7 +258,7 @@ def _get_instance_handlers ( class_dict, bases ):
                         arg_lists.append( arg_list )
 
     # Merge in the information from the class dictionary:
-    for name, value in class_dict.items():
+    for name, value in list(class_dict.items()):
         if (name[:1] == '_') and is_function_type(value):
             n   = 13
             col = name.find( '_changed_for_' )
@@ -489,7 +489,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
 
     # Move all trait definitions from the class dictionary to the
     # appropriate trait class dictionaries:
-    for name, value in class_dict.items():
+    for name, value in list(class_dict.items()):
         value = _check_trait( value )
         rc    = isinstance( value, CTrait )
 
@@ -540,7 +540,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
                                        get_delegate_pattern( name, value ) )
                 elif value_type == 'event':
                     on_trait_change = value.on_trait_change
-                    if isinstance( on_trait_change, basestring ):
+                    if isinstance( on_trait_change, six.string_types ):
                         listeners[ name ] = ( 'event', on_trait_change )
             else:
                 name = name[:-1]
@@ -622,8 +622,9 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
                 base_traits[ name ] = value
 
             elif is_category:
-                raise TraitError, ("Cannot override '%s' trait "
-                                   "definition in a category" % name)
+                raise TraitError(
+                    "Cannot override '%s' trait "
+                    "definition in a category" % name)
 
         # Merge class traits:
         for name, value in base_dict.get( ClassTraits ).items():
@@ -639,8 +640,9 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
                 class_traits[ name ] = value
 
             elif is_category:
-                raise TraitError, ("Cannot override '%s' trait "
-                                   "definition in a category" % name)
+                raise TraitError(
+                    "Cannot override '%s' trait "
+                    "definition in a category" % name)
 
         # Merge prefix traits:
         base_prefix_traits = base_dict.get( PrefixTraits )
@@ -649,8 +651,9 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
                 prefix_list.append( name )
                 prefix_traits[ name ] = base_prefix_traits[ name ]
             elif is_category:
-                raise TraitError, ("Cannot override '%s_' trait "
-                                   "definition in a category" % name)
+                raise TraitError(
+                    "Cannot override '%s_' trait "
+                    "definition in a category" % name)
 
         # If the base class has a 'ViewElements' object defined, add it to
         # the 'parents' list of this class's 'ViewElements':
@@ -710,7 +713,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
         events = trait.event
         if events is not None:
 
-            if isinstance(events, basestring):
+            if isinstance(events, six.string_types):
                 events = [ events ]
 
             for event in events:
