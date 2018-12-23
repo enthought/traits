@@ -36,7 +36,10 @@ from __future__ import absolute_import
 import sys
 import re
 import copy
-import copy_reg
+
+import six
+import six.moves as sm
+
 from types import FunctionType, MethodType
 TypeType = type
 
@@ -47,6 +50,8 @@ from .trait_base import (strx, SequenceTypes, Undefined, TypeTypes, ClassTypes,
 from .trait_errors import TraitError, repr_type
 
 from . import _py2to3
+
+from ._py2to3 import LONG_TYPE
 
 # Patched by 'traits.py' once class is defined!
 Trait = Event = None
@@ -64,9 +69,44 @@ NO_COMPARE              = 0
 OBJECT_IDENTITY_COMPARE = 1
 RICH_COMPARE            = 2
 
-RangeTypes    = ( int, long, float )
+RangeTypes    = ( int, LONG_TYPE, float )
 
 CallableTypes = ( FunctionType, MethodType )
+
+
+#: Default value types
+#: The default value type has not been specified
+UNSPECIFIED_DEFAULT_VALUE = -1
+#: The default_value of the trait is the default value.
+CONSTANT_DEFAULT_VALUE = 0
+#: The default_value of the trait is Missing.
+MISSING_DEFAULT_VALUE = 1
+#: The object containing the trait is the default value.
+OBJECT_DEFAULT_VALUE = 2
+#: A new copy of the list specified by default_value is the default value.
+LIST_COPY_DEFAULT_VALUE = 3
+#: A new copy of the dict specified by default_value is the default value.
+DICT_COPY_DEFAULT_VALUE = 4
+#: A new instance of TraitListObject constructed using the default_value list
+#: is the default value.
+TRAIT_LIST_OBJECT_DEFAULT_VALUE = 5
+#: A new instance of TraitDictObject constructed using the default_value dict
+#: is the default value.
+TRAIT_DICT_OBJECT_DEFAULT_VALUE = 6
+#: The default_value is a tuple of the form: (*callable*, *args*, *kw*),
+#: where *callable* is a callable, *args* is a tuple, and *kw* is either a
+#: dictionary or None. The default value is the result obtained by invoking
+#: ``callable(\*args, \*\*kw)``.
+CALLABLE_AND_ARGS_DEFAULT_VALUE = 7
+#: The default_value is a callable. The default value is the result obtained
+#: by invoking *default_value*(*object*), where *object* is the object
+#: containing the trait. If the trait has a validate() method, the validate()
+#: method is also called to validate the result.
+CALLABLE_DEFAULT_VALUE = 8
+#: A new instance of TraitSetObject constructed using the default_value set
+#: is the default value.
+TRAIT_SET_OBJECT_DEFAULT_VALUE = 9
+
 
 # Mapping from trait metadata 'type' to CTrait 'type':
 trait_types = {
@@ -87,26 +127,26 @@ trait_from = None  # Patched by 'traits.py' when real 'trait_from' is defined
 def _arg_count ( func ):
     """ Returns the correct argument count for a specified function or method.
     """
-    if (type( func ) is MethodType) and (func.im_self is not None):
-        return func.func_code.co_argcount - 1
-    return func.func_code.co_argcount
+    if (type( func ) is MethodType) and (func.__self__ is not None):
+        return func.__code__.co_argcount - 1
+    return func.__code__.co_argcount
 
 #-------------------------------------------------------------------------------
 #  Property error handling functions:
 #-------------------------------------------------------------------------------
 
 def _write_only ( object, name ):
-    raise TraitError, "The '%s' trait of %s instance is 'write only'." % (
-                      name, class_of( object ) )
+    raise TraitError("The '%s' trait of %s instance is 'write only'." % (
+                      name, class_of( object ) ))
 
 def _read_only ( object, name, value ):
-    raise TraitError, "The '%s' trait of %s instance is 'read only'." % (
-                      name, class_of( object ) )
+    raise TraitError("The '%s' trait of %s instance is 'read only'." % (
+                      name, class_of( object ) ))
 
 def _undefined_get ( object, name ):
-    raise TraitError, ("The '%s' trait of %s instance is a property that has "
+    raise TraitError(("The '%s' trait of %s instance is a property that has "
                        "no 'get' or 'set' method") % (
-                       name, class_of( object ) )
+                       name, class_of( object ) ))
 
 def _undefined_set ( object, name, value ):
     _undefined_get( object, name )
@@ -132,7 +172,7 @@ class BaseTraitHandler ( object ):
           wider range of cases, such as interactions with other components.
     """
 
-    default_value_type = -1
+    default_value_type = UNSPECIFIED_DEFAULT_VALUE
     has_items          = False
     is_mapped          = False
     editor             = None
@@ -453,21 +493,21 @@ class TraitType ( BaseTraitHandler ):
         dv  = self.default_value
         dvt = self.default_value_type
         if dvt < 0:
-            dvt = 0
-            if isinstance( dv, TraitListObject ):
-                dvt = 5
-            elif isinstance( dv, list ):
-                dvt = 3
-            elif isinstance( dv, TraitDictObject ):
-                dvt = 6
-            elif isinstance( dv, dict ):
-                dvt = 4
-            elif isinstance( dv, TraitSetObject ):
-                dvt = 9
+            dvt = CONSTANT_DEFAULT_VALUE
+            if isinstance(dv, TraitListObject):
+                dvt = TRAIT_LIST_OBJECT_DEFAULT_VALUE
+            elif isinstance(dv, list):
+                dvt = LIST_COPY_DEFAULT_VALUE
+            elif isinstance(dv, TraitDictObject):
+                dvt = TRAIT_DICT_OBJECT_DEFAULT_VALUE
+            elif isinstance(dv, dict):
+                dvt = DICT_COPY_DEFAULT_VALUE
+            elif isinstance(dv, TraitSetObject):
+                dvt = TRAIT_SET_OBJECT_DEFAULT_VALUE
 
             self.default_value_type = dvt
 
-        return ( dvt, dv )
+        return (dvt, dv)
 
     def clone ( self, default_value = Missing, **metadata ):
         """ Clones the contents of this object into a new instance of the same
@@ -687,7 +727,7 @@ class TraitHandler ( BaseTraitHandler ):
         raise a TraitError exception
 
         """
-        raise TraitError, (
+        raise TraitError(
               "The '%s' trait of %s instance has an unknown type. "
               "Contact the developer to correct the problem." % (
               name, class_of( object ) ) )
@@ -738,12 +778,11 @@ class TraitRange ( TraitHandler ):
         specify whether the *low* and *high* values should be exclusive (or
         inclusive).
         """
-
         vtype = type( high )
         if (low is not None) and (vtype is not float):
             vtype = type( low )
         if vtype not in RangeTypes:
-            raise TraitError, ("TraitRange can only be use for int, long or "
+            raise TraitError("TraitRange can only be use for int, long or "
                                "float values, but a value of type %s was "
                                "specified." % vtype)
         if vtype is float:
@@ -754,13 +793,13 @@ class TraitRange ( TraitHandler ):
                 low = float( low )
             if high is not None:
                 high = float( high )
-        elif vtype is long:
+        elif vtype is LONG_TYPE:
             self.validate   = self.long_validate
             self._type_desc = 'a long integer'
             if low is not None:
-                low = long( low )
+                low = LONG_TYPE( low )
             if high is not None:
-                high = long( high )
+                high = LONG_TYPE( high )
         else:
             self.validate = self.int_validate
             kind = 3
@@ -774,7 +813,7 @@ class TraitRange ( TraitHandler ):
             exclude_mask |= 1
         if exclude_high:
             exclude_mask |= 2
-        if vtype is not long:
+        if vtype is not LONG_TYPE:
             self.fast_validate = ( kind, low, high, exclude_mask )
 
         # Assign type-corrected arguments to handler attributes
@@ -814,7 +853,7 @@ class TraitRange ( TraitHandler ):
 
     def long_validate ( self, object, name, value ):
         try:
-            if (isinstance( value, long ) and
+            if (isinstance( value, six.integer_types ) and
                 ((self._low  is None) or
                  (self._exclude_low and (self._low < value)) or
                  ((not self._exclude_low) and (self._low <= value))) and
@@ -882,7 +921,7 @@ class TraitString ( TraitHandler ):
     must be a string of between 0 and 50 characters that consist of only
     upper and lower case letters.
     """
-    def __init__ ( self, minlen = 0, maxlen = sys.maxint, regex = '' ):
+    def __init__ ( self, minlen = 0, maxlen = six.MAXSIZE, regex = '' ):
         """ Creates a TraitString handler.
 
         Parameters
@@ -903,9 +942,9 @@ class TraitString ( TraitHandler ):
     def _init ( self ):
         if self.regex != '':
             self.match = re.compile( self.regex ).match
-            if (self.minlen == 0) and (self.maxlen == sys.maxint):
+            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
                 self.validate = self.validate_regex
-        elif (self.minlen == 0) and (self.maxlen == sys.maxint):
+        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
             self.validate = self.validate_str
         else:
             self.validate = self.validate_len
@@ -947,10 +986,10 @@ class TraitString ( TraitHandler ):
 
     def info ( self ):
         msg = ''
-        if (self.minlen != 0) and (self.maxlen != sys.maxint):
+        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
             msg = ' between %d and %d characters long' % (
                   self.minlen, self.maxlen )
-        elif self.maxlen != sys.maxint:
+        elif self.maxlen != six.MAXSIZE:
             msg = ' <= %d characters long' % self.maxlen
         elif self.minlen != 0:
             msg = ' >= %d characters long' % self.minlen
@@ -1276,7 +1315,7 @@ class TraitInstance ( ThisClass ):
         self._allow_none = allow_none
         self.adapt       = AdaptMap[ adapt ]
         self.module      = module
-        if isinstance( aClass, basestring ):
+        if isinstance( aClass, six.string_types ):
             self.aClass = aClass
         else:
             if not isinstance( aClass, ClassTypes ):
@@ -1311,7 +1350,7 @@ class TraitInstance ( ThisClass ):
             else:
                 self.validate_failed( object, name, value )
 
-        if isinstance( self.aClass, basestring ):
+        if isinstance( self.aClass, six.string_types ):
             self.resolve_class( object, name, value )
 
         if self.adapt < 0:
@@ -1392,10 +1431,10 @@ class TraitInstance ( ThisClass ):
 
     def create_default_value ( self, *args, **kw ):
         aClass = args[0]
-        if isinstance( aClass, basestring ):
+        if isinstance( aClass, six.string_types ):
             aClass = self.validate_class( self.find_class( aClass ) )
             if aClass is None:
-                raise TraitError, 'Unable to locate class: ' + args[0]
+                raise TraitError('Unable to locate class: ' + args[0])
 
         return aClass( *args[1:], **kw )
 
@@ -1479,7 +1518,7 @@ class TraitClass ( TraitHandler ):
 
     def validate ( self, object, name, value ):
         try:
-            if isinstance( value, basestring ):
+            if isinstance( value, six.string_types ):
                 value = value.strip()
                 col   = value.rfind( '.' )
                 if col >= 0:
@@ -1533,7 +1572,7 @@ class TraitFunction ( TraitHandler ):
         function must raise a TraitError exception.
         """
         if not isinstance( aFunc, CallableTypes ):
-            raise TraitError, "Argument must be callable."
+            raise TraitError("Argument must be callable.")
         self.aFunc = aFunc
         self.fast_validate = ( 13, aFunc )
 
@@ -1776,12 +1815,10 @@ class TraitMap ( TraitHandler ):
         except:
             # We don't need a fancy error message, because this exception
             # should always be caught by a TraitCompound handler:
-            raise TraitError, 'Unmappable'
+            raise TraitError('Unmappable')
 
     def info ( self ):
-        keys = [ repr( x ) for x in self.map.keys() ]
-        keys.sort()
-
+        keys = sorted(repr(x) for x in self.map.keys())
         return ' or '.join( keys )
 
     def get_editor ( self, trait ):
@@ -2177,10 +2214,10 @@ class TraitList ( TraitHandler ):
     list.
     """
     info_trait         = None
-    default_value_type = 5
+    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
-    def __init__ ( self, trait = None, minlen = 0, maxlen = sys.maxint,
+    def __init__ ( self, trait = None, minlen = 0, maxlen = six.MAXSIZE,
                          has_items = True ):
         """ Creates a TraitList handler.
 
@@ -2220,12 +2257,12 @@ class TraitList ( TraitHandler ):
 
     def full_info ( self, object, name, value ):
         if self.minlen == 0:
-            if self.maxlen == sys.maxint:
+            if self.maxlen == six.MAXSIZE:
                 size = 'items'
             else:
                 size = 'at most %d items' % self.maxlen
         else:
-            if self.maxlen == sys.maxint:
+            if self.maxlen == six.MAXSIZE:
                 size = 'at least %d items' % self.minlen
             else:
                 size = 'from %s to %s items' % (
@@ -2238,39 +2275,9 @@ class TraitList ( TraitHandler ):
 
         return 'a list of %s%s' % ( size, info )
 
-    def get_editor ( self, trait ):
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (trait.mode != 'list'):
-            from .api import HasTraits
-
-            if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from traitsui.table_column import ObjectColumn
-                    from traitsui.table_filter import (EvalFilterTemplate,
-                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from traitsui.api import TableEditor
-
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = trait.rows or 5,
-                           use_notebook  = trait.use_notebook is True,
-                           page_name     = trait.page_name or '' )
+    def get_editor(self, trait):
+        from traits.traits import list_editor
+        return list_editor(trait, self)
 
     def items_event ( self ):
         return items_event()
@@ -2308,7 +2315,7 @@ class TraitListObject ( list ):
 
                 return
 
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
 
@@ -2401,7 +2408,7 @@ class TraitListObject ( list ):
                 self._send_trait_items_event( self.name_items,
                     TraitListEvent( index, removed, values ) )
 
-        except TraitError, excp:
+        except TraitError as excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
 
@@ -2496,7 +2503,7 @@ class TraitListObject ( list ):
                         trait.items_event() )
                 return
 
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
 
@@ -2535,7 +2542,7 @@ class TraitListObject ( list ):
 
                 return
 
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
 
@@ -2551,7 +2558,7 @@ class TraitListObject ( list ):
         try:
             len_xlist = len( xlist )
         except:
-            raise TypeError, "list.extend() argument must be iterable"
+            raise TypeError("list.extend() argument must be iterable")
 
         if (trait.minlen <= (len( self ) + len_xlist) <= trait.maxlen):
             object   = self.object()
@@ -2571,7 +2578,7 @@ class TraitListObject ( list ):
 
                 return
 
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'The elements of the' )
                 raise excp
 
@@ -2727,7 +2734,7 @@ class TraitSetObject ( set ):
 
             return
 
-        except TraitError, excp:
+        except TraitError as excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
 
@@ -2770,7 +2777,7 @@ class TraitSetObject ( set ):
                 if self.name_items is not None:
                     self._send_trait_items_event( self.name_items,
                         TraitSetEvent( None, added ) )
-        except TraitError, excp:
+        except TraitError as excp:
             excp.set_prefix( 'Each element of the' )
             raise excp
 
@@ -2831,7 +2838,7 @@ class TraitSetObject ( set ):
                 if self.name_items is not None:
                     self._send_trait_items_event( self.name_items,
                         TraitSetEvent( None, set( [ value ] ) ) )
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each element of the' )
                 raise excp
 
@@ -2871,7 +2878,7 @@ class TraitSetObject ( set ):
     def __reduce_ex__(self, protocol=None):
         """ Overridden to make sure we call our custom __getstate__.
         """
-        return (copy_reg._reconstructor,
+        return (sm.copyreg._reconstructor,
                 (type(self), set, list(self)),
                 self.__getstate__())
 
@@ -2966,7 +2973,7 @@ class TraitDict ( TraitHandler ):
     be floats (i.e., their most recently recorded weight).
     """
     info_trait         = None
-    default_value_type = 6
+    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, key_trait = None, value_trait = None,
@@ -3077,7 +3084,7 @@ class TraitDictObject ( dict ):
             return memo[ id_self ]
 
         memo[ id_self ] = result = TraitDictObject( self.trait, lambda: None,
-                         self.name, dict([ copy.deepcopy( x, memo ) for x in self.iteritems() ]) )
+                         self.name, dict([ copy.deepcopy( x, memo ) for x in six.iteritems(self) ]) )
 
         return result
 
@@ -3093,7 +3100,7 @@ class TraitDictObject ( dict ):
             if validate is not None:
                 key = validate( object, self.name, key )
 
-        except TraitError, excp:
+        except TraitError as excp:
             excp.set_prefix( 'Each key of the' )
             raise excp
 
@@ -3124,7 +3131,7 @@ class TraitDictObject ( dict ):
                 self._send_trait_items_event( self.name_items,
                     TraitDictEvent( added, changed ), trait.items_event() )
 
-        except TraitError, excp:
+        except TraitError as excp:
             excp.set_prefix( 'Each value of the' )
             raise excp
 
@@ -3161,7 +3168,7 @@ class TraitDictObject ( dict ):
             if self.name_items is not None:
                 added   = {}
                 changed = {}
-                for key, value in new_dic.iteritems():
+                for key, value in six.iteritems(new_dic):
                     if key in self:
                         changed[ key ] = self[ key ]
                     else:
@@ -3249,16 +3256,16 @@ class TraitDictObject ( dict ):
             value_validate = lambda object, name, value: value
 
         object = self.object()
-        for key, value in dic.iteritems():
+        for key, value in six.iteritems(dic):
             try:
                 key = key_validate( object, name, key )
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each key of the' )
                 raise excp
 
             try:
                 value = value_validate( object, name, value )
-            except TraitError, excp:
+            except TraitError as excp:
                 excp.set_prefix( 'Each value of the' )
                 raise excp
 

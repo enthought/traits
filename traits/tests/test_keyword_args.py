@@ -8,7 +8,7 @@
 
 from __future__ import absolute_import
 
-from ..api import HasTraits, Instance, Int
+from traits.api import HasTraits, Instance, Int
 
 from traits.testing.unittest_tools import unittest
 

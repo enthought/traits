@@ -53,7 +53,10 @@ trait reference. In particular, take a look at the **LeagueModelView Class**
 tab's *total_hits* trait definition.
 """
 
+from __future__ import print_function
 # FIXME redo example without traitsui
+
+import six.moves as sm
 
 from traits.api import *
 
@@ -124,7 +127,7 @@ class LeagueModelView(ModelView):
     def _get_total_hits(self):
         """ Returns the total number of hits across all teams and players.
         """
-        return reduce(add, [reduce(add, [p.hits for p in t.players], 0)
+        return sm.reduce(add, [sm.reduce(add, [p.hits for p in t.players], 0)
                             for t in self.model.teams], 0)
 
     view = View(

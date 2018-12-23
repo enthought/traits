@@ -4,6 +4,7 @@
 # bad_self_ref.py -- Non-working example with self-referencing class definition
 
 #--[Imports]-------------------------------------------------------------------
+from __future__ import print_function
 from traits.api import HasTraits, Instance
 
 #--[Code]----------------------------------------------------------------------
@@ -14,5 +15,5 @@ try:
         # This won't work.
         # 'Employee' is not defined until the class definition is complete:
         manager = Instance(Employee)
-except NameError, excp:
-    print excp
+except NameError as excp:
+    print(excp)

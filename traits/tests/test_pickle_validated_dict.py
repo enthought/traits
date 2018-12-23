@@ -8,10 +8,11 @@
 
 from __future__ import absolute_import
 
-from cPickle import dumps, loads
+import six.moves as sm
+
 from traits.testing.unittest_tools import unittest
 
-from ..api import Dict, HasTraits, Int, List
+from traits.api import Dict, HasTraits, Int, List
 
 
 class C(HasTraits):
@@ -28,8 +29,8 @@ class PickleValidatedDictTestCase(unittest.TestCase):
     def test(self):
 
         # And we must unpickle one
-        x = dumps(C())
+        x = sm.cPickle.dumps(C())
         try:
-            loads(x)
-        except AttributeError, e:
+            sm.cPickle.loads(x)
+        except AttributeError as e:
             self.fail('Unpickling raised an AttributeError: %s' % e)

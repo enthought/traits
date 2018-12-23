@@ -28,16 +28,19 @@ from __future__ import absolute_import
 import re
 import string
 import weakref
-from weakref import WeakKeyDictionary
 from string import whitespace
 from types import MethodType
 
 from .has_traits import HasPrivateTraits
 from .trait_base import Undefined, Uninitialized
 from .traits import Property
+from .trait_handlers import (
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE, TRAIT_DICT_OBJECT_DEFAULT_VALUE,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE)
 from .trait_types import Str, Int, Bool, Instance, List, Enum, Any
 from .trait_errors import TraitError
 from .trait_notifiers import TraitChangeNotifyWrapper
+from .util.weakiddict import WeakIDKeyDict
 
 #---------------------------------------------------------------------------
 #  Constants:
@@ -59,9 +62,9 @@ SET_LISTENER      = '_register_set'
 
 # Mapping from trait default value types to listener types
 type_map = {
-    5: LIST_LISTENER,
-    6: DICT_LISTENER,
-    9: SET_LISTENER
+    TRAIT_LIST_OBJECT_DEFAULT_VALUE: LIST_LISTENER,
+    TRAIT_DICT_OBJECT_DEFAULT_VALUE: DICT_LISTENER,
+    TRAIT_SET_OBJECT_DEFAULT_VALUE: SET_LISTENER
 }
 
 # Listener types:
@@ -288,7 +291,7 @@ class ListenerItem ( ListenerBase ):
     #: A dictionary mapping objects to a list of all current active
     #: (*name*, *type*) listener pairs, where *type* defines the type of
     #: listener, one of: (SIMPLE_LISTENER, LIST_LISTENER, DICT_LISTENER).
-    active = Instance( WeakKeyDictionary, () )
+    active = Instance( WeakIDKeyDict, () )
 
     #-- 'ListenerBase' Class Method Implementations ----------------------------
 
@@ -1345,7 +1348,7 @@ class ListenerHandler ( object ):
 
     def __init__ ( self, handler ):
         if type( handler ) is MethodType:
-            object = handler.im_self
+            object = handler.__self__
             if object is not None:
                 self.object = weakref.ref( object, self.listener_deleted )
                 self.name   = handler.__name__
@@ -1363,4 +1366,3 @@ class ListenerHandler ( object ):
 
     def listener_deleted ( self, ref ):
         self.handler = Undefined
-

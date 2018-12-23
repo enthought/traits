@@ -203,6 +203,51 @@ static int call_notifiers ( PyListObject *, PyListObject *,
    notifications? */
 #define TRAIT_NO_VALUE_TEST 0x00000100
 
+
+/*-----------------------------------------------------------------------------
+| Default value type constants (see `default_value_for` method)
++----------------------------------------------------------------------------*/
+
+/* The default_value of the trait is the default value */
+#define CONSTANT_DEFAULT_VALUE 0
+
+/* The default_value of the trait is Missing */
+#define MISSING_DEFAULT_VALUE 1
+
+/* The object containing the trait is the default value */
+#define OBJECT_DEFAULT_VALUE 2
+
+/* A new copy of the list specified by default_value is the default value */
+#define LIST_COPY_DEFAULT_VALUE 3
+
+/* A new copy of the dict specified by default_value is the default value */
+#define DICT_COPY_DEFAULT_VALUE 4
+
+/* A new instance of TraitListObject constructed using the default_value list
+  is the default value */
+#define TRAIT_LIST_OBJECT_DEFAULT_VALUE 5
+
+/* A new instance of TraitDictObject constructed using the default_value dict
+   is the default value */
+#define TRAIT_DICT_OBJECT_DEFAULT_VALUE 6
+
+/* The default_value is a tuple of the form: (*callable*, *args*, *kw*),
+   where *callable* is a callable, *args* is a tuple, and *kw* is either a
+   dictionary or None. The default value is the result obtained by invoking
+  ``callable(\*args, \*\*kw)`` */
+#define CALLABLE_AND_ARGS_DEFAULT_VALUE 7
+
+/* The default_value is a callable. The default value is the result obtained
+   by invoking *default_value*(*object*), where *object* is the object
+   containing the trait. If the trait has a validate() method, the validate()
+   method is also called to validate the result */
+#define CALLABLE_DEFAULT_VALUE 8
+
+/* A new instance of TraitSetObject constructed using the default_value set
+   is the default value */
+#define TRAIT_SET_OBJECT_DEFAULT_VALUE 9
+
+
 /*-----------------------------------------------------------------------------
 |  'CTrait' instance definition:
 +----------------------------------------------------------------------------*/
@@ -1606,36 +1651,36 @@ default_value_for ( trait_object      * trait,
     PyObject * result = NULL, * value, * dv, * kw, * tuple;
 
     switch ( trait->default_value_type ) {
-        case 0:
-        case 1:
+        case CONSTANT_DEFAULT_VALUE:
+        case MISSING_DEFAULT_VALUE:
             result = trait->default_value;
             if (result == NULL) {
                 result = Py_None;
             }
             Py_INCREF( result );
             break;
-        case 2:
+        case OBJECT_DEFAULT_VALUE:
             result = (PyObject *) obj;
             Py_INCREF( obj );
             break;
-        case 3:
+        case LIST_COPY_DEFAULT_VALUE:
             return PySequence_List( trait->default_value );
-        case 4:
+        case DICT_COPY_DEFAULT_VALUE:
             return PyDict_Copy( trait->default_value );
-        case 5:
+        case TRAIT_LIST_OBJECT_DEFAULT_VALUE:
             return call_class( TraitListObject, trait, obj, name,
                                trait->default_value );
-        case 6:
+        case TRAIT_DICT_OBJECT_DEFAULT_VALUE:
             return call_class( TraitDictObject, trait, obj, name,
                                trait->default_value );
-        case 7:
+        case CALLABLE_AND_ARGS_DEFAULT_VALUE:
             dv = trait->default_value;
             kw = PyTuple_GET_ITEM( dv, 2 );
             if ( kw == Py_None )
                 kw = NULL;
             return PyObject_Call( PyTuple_GET_ITEM( dv, 0 ),
                                   PyTuple_GET_ITEM( dv, 1 ), kw );
-        case 8:
+        case CALLABLE_DEFAULT_VALUE:
             if ( (tuple = PyTuple_New( 1 )) == NULL )
                 return NULL;
             PyTuple_SET_ITEM( tuple, 0, (PyObject *) obj );
@@ -1648,7 +1693,7 @@ default_value_for ( trait_object      * trait,
                 return value;
             }
             break;
-        case 9:
+        case TRAIT_SET_OBJECT_DEFAULT_VALUE:
             return call_class( TraitSetObject, trait, obj, name,
                                trait->default_value );
     }
@@ -3273,13 +3318,52 @@ error:
     return raise_trait_error( trait, obj, name, value );
 }
 
+
+/*-----------------------------------------------------------------------------
+|  Verifies that a Python value is convertible to float
+|
+|  Will convert anything whose type has a __float__ method to a Python
+|  float. Returns a Python object of exact type "float". Raises TraitError
+|  with a suitable message if the given value isn't convertible to float.
+|
+|  Any exception other than TypeError raised by the value's __float__ method
+|  will be propagated. A TypeError will be caught and turned into TraitError.
+|
++----------------------------------------------------------------------------*/
+
+static PyObject *
+validate_trait_float(trait_object * trait, has_traits_object * obj,
+                     PyObject * name, PyObject * value) {
+    /* Fast path for the most common case. */
+    if (PyFloat_CheckExact(value)) {
+        Py_INCREF(value);
+        return value;
+    }
+    else {
+        double value_as_double = PyFloat_AsDouble(value);
+        /* Translate a TypeError to a TraitError, but propagate
+           other exceptions. */
+        if (value_as_double == -1.0 && PyErr_Occurred()) {
+            if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                PyErr_Clear();
+                goto error;
+            }
+            return NULL;
+        }
+        return PyFloat_FromDouble(value_as_double);
+    }
+
+  error:
+    return raise_trait_error(trait, obj, name, value);
+}
+
 /*-----------------------------------------------------------------------------
 |  Verifies a Python value is a float within a specified range:
 +----------------------------------------------------------------------------*/
 
 static PyObject *
-validate_trait_float ( trait_object * trait, has_traits_object * obj,
-                       PyObject * name, PyObject * value ) {
+validate_trait_float_range ( trait_object * trait, has_traits_object * obj,
+                             PyObject * name, PyObject * value ) {
 
     register PyObject * low;
     register PyObject * high;
@@ -3787,7 +3871,10 @@ validate_trait_complex ( trait_object * trait, has_traits_object * obj,
                 if ( PySequence_Contains( PyTuple_GET_ITEM( type_info, 1 ),
                                           value ) > 0 )
                     goto done;
-
+                /* If the containment check failed (for example as a result of
+                   checking whether an array is in a sequence), clear the
+                   exception. See enthought/traits#376. */
+                PyErr_Clear();
                 break;
             case 6:  /* Mapped item check: */
                 if ( PyDict_GetItem( PyTuple_GET_ITEM( type_info, 1 ),
@@ -3967,7 +4054,7 @@ check_implements:
                     goto done;
                 break;
 
-            case 20:  /* Integer check: */
+           case 20:  /* Integer check: */
 
                 /* Fast paths for the most common cases. */
 #if PY_MAJOR_VERSION < 3
@@ -4015,6 +4102,29 @@ check_implements:
                 Py_DECREF(int_value);
                 return result;
 
+           case 21:  /* Float check */
+               /* Fast path for most common case. */
+               if (PyFloat_CheckExact(value)) {
+                   Py_INCREF(value);
+                   return value;
+               }
+               else {
+                   double value_as_double = PyFloat_AsDouble(value);
+                   if (value_as_double == -1.0 && PyErr_Occurred()) {
+                       /* TypeError indicates that we don't have a match;
+                          clear the error and continue with the next item
+                          in the complex sequence. */
+                       if (PyErr_ExceptionMatches(PyExc_TypeError)) {
+                           PyErr_Clear();
+                           break;
+                       }
+                       /* Any other exception is unexpected and likely
+                          a code bug; propagate it. */
+                       return NULL;
+                   }
+                   return PyFloat_FromDouble(value_as_double);
+               }
+
             default:  /* Should never happen...indicates an internal error: */
                 goto error;
         }
@@ -4038,7 +4148,7 @@ static trait_validate validate_handlers[] = {
 #else
     validate_trait_self_type,   NULL,
 #endif // #if PY_MAJOR_VERSION < 3
-    validate_trait_float,       validate_trait_enum,
+    validate_trait_float_range, validate_trait_enum,
     validate_trait_map,         validate_trait_complex,
     NULL,                       validate_trait_tuple,
     validate_trait_prefix_map,  validate_trait_coerce_type,
@@ -4049,6 +4159,7 @@ static trait_validate validate_handlers[] = {
     setattr_validate2,           setattr_validate3,
 /*  ...End of __getstate__ method entries */
     validate_trait_adapt,        validate_trait_integer,
+    validate_trait_float,
 };
 
 static PyObject *
@@ -4198,6 +4309,12 @@ _trait_set_validate ( trait_object * trait, PyObject * args ) {
                     if ( n == 1 )
                         goto done;
                     break;
+
+                case 21:  /* Float check: */
+                    if ( n == 1 )
+                        goto done;
+                    break;
+
             }
         }
     }

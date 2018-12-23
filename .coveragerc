@@ -3,6 +3,11 @@ branch = True
 source = traits
 omit = */tests/*
 
+[paths]
+source =
+    ./traits
+    */traits
+
 [report]
 # Regexes for lines to exclude from consideration
 exclude_lines =

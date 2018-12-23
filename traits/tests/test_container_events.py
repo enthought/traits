@@ -16,11 +16,11 @@
 Tests for Dict items_changed events
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Dict
+from traits.api import HasTraits, Dict
 
 
 class MyClass(HasTraits):
@@ -57,7 +57,7 @@ class Callback:
 
     def __call__(self, event):
         if event.added != self.added:
-            print "\n\n******Error\nevent.added:", event.added
+            print("\n\n******Error\nevent.added:", event.added)
         else:
             self.obj.assertEqual(event.added, self.added)
         self.obj.assertEqual(event.changed, self.changed)

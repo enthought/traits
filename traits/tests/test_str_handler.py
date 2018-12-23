@@ -14,15 +14,17 @@
 
 from __future__ import absolute_import
 
+import six
+
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Trait, TraitError, TraitHandler
-from ..trait_base import strx
+from traits.api import HasTraits, Trait, TraitError, TraitHandler
+from traits.trait_base import strx
 
 
 # Validation via function
 def validator(object, name, value):
-    if isinstance(value, basestring):
+    if isinstance(value, six.string_types):
         # arbitrary rule for testing
         if value.find('fail') < 0:
             return value

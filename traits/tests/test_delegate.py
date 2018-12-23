@@ -11,7 +11,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import Delegate, HasTraits, Instance, Str
+from traits.api import Delegate, HasTraits, Instance, Str
 
 # global because event handlers are being called with wrong value for self
 baz_s_handler_self = None

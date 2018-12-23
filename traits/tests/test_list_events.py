@@ -19,7 +19,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Int, List
+from traits.api import HasTraits, Int, List
 
 
 class MyClass(HasTraits):

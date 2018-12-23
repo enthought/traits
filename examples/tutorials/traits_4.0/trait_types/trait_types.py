@@ -92,7 +92,7 @@ This provides the exact same functionality as the previous definition of
   developers.
 """
 #--<Imports>-------------------------------------------------------------------
-
+from __future__ import print_function
 from traits.api import *
 
 
@@ -126,14 +126,14 @@ t = Test()
 
 # Set both traits to an odd integer value:
 t.any_int = 1
-print "t.any_int:", t.any_int
+print("t.any_int:", t.any_int)
 
 t.odd_int = 1
-print "t.odd_int:", t.odd_int
+print("t.odd_int:", t.odd_int)
 
 # Now set them both to an even value (and see what happens):
 t.any_int = 2
-print "t.any_int:", t.any_int
+print("t.any_int:", t.any_int)
 
 t.odd_int = 2
-print "t.odd_int:", t.odd_int  # Should never get here!
+print("t.odd_int:", t.odd_int)  # Should never get here!

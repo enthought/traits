@@ -31,9 +31,11 @@
 
 from __future__ import absolute_import
 
+import six
+
 from .has_traits import (
     MetaHasTraits, update_traits_class_dict, BaseTraits, ClassTraits,
-    InstanceTraits, PrefixTraits, ListenerTraits, ViewTraits
+    InstanceTraits, PrefixTraits, ListenerTraits, ViewTraits,
 )
 
 #-------------------------------------------------------------------------------
@@ -46,29 +48,29 @@ class MetaCategory ( MetaHasTraits ):
 
         # Make sure the correct usage is being applied:
         if len( bases ) > 2:
-            raise TypeError, \
-                  "Correct usage is: class FooCategory(Category,Foo):"
+            raise TypeError(
+                  "Correct usage is: class FooCategory(Category,Foo):")
 
         # Process any traits-related information in the class dictionary:
         update_traits_class_dict(
-            class_name, bases, class_dict, is_category=True )
+            class_name, bases, class_dict, is_category=True)
 
         if len( bases ) == 2:
             category_class = bases[1]
 
             # Update the class and each of the existing subclasses:
             category_class._add_trait_category(
-                class_dict.pop( BaseTraits     ),
-                class_dict.pop( ClassTraits    ),
-                class_dict.pop( InstanceTraits ),
-                class_dict.pop( PrefixTraits   ),
-                class_dict.pop( ListenerTraits ),
-                class_dict.pop( ViewTraits     )
+                class_dict.pop(BaseTraits),
+                class_dict.pop(ClassTraits),
+                class_dict.pop(InstanceTraits),
+                class_dict.pop(PrefixTraits),
+                class_dict.pop(ListenerTraits),
+                class_dict.pop(ViewTraits)
             )
 
             # Move all remaining items in our class dictionary to the base
             # class's dictionary:
-            for name, value in class_dict.items():
+            for name, value in list(class_dict.items()):
                 if not hasattr( category_class, name ):
                     setattr( category_class, name, value )
                     del class_dict[ name ]
@@ -81,6 +83,8 @@ class MetaCategory ( MetaHasTraits ):
 #  'Category' class:
 #-------------------------------------------------------------------------------
 
+
+@six.add_metaclass(MetaCategory)
 class Category ( object ):
     """ Used for defining "category" extensions to existing classes.
 
@@ -98,6 +102,3 @@ class Category ( object ):
         class BaseExtra(Category, Base):
             z = Str("BaseExtra z")
     """
-
-    __metaclass__ = MetaCategory
-

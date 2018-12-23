@@ -18,8 +18,8 @@ import gc
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from ..trait_types import Str, WeakRef
-from ..has_traits import HasTraits
+from traits.trait_types import Str, WeakRef
+from traits.has_traits import HasTraits
 
 
 class Eggs(HasTraits):

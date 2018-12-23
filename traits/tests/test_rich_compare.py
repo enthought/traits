@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import HasTraits, Any, Str
+from traits.api import HasTraits, Any, Str
 
 
 class IdentityCompare(HasTraits):

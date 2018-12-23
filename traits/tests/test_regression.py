@@ -2,9 +2,20 @@
 import gc
 import sys
 
-from ..has_traits import HasTraits, Property, on_trait_change
-from ..trait_types import Bool, DelegatesTo, Instance, Int, List
-from ..testing.unittest_tools import unittest
+import six.moves as sm
+
+try:
+    import numpy
+except ImportError:
+    numpy_available = False
+else:
+    numpy_available = True
+    from traits.trait_numeric import Array
+
+from traits.has_traits import HasTraits, Property, on_trait_change
+from traits.trait_errors import TraitError
+from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
+from traits.testing.unittest_tools import unittest
 
 
 class Dummy(HasTraits):
@@ -82,6 +93,18 @@ class SimpleProperty(HasTraits):
         return self.x + 1
 
 
+class ExtendedListenerInList(HasTraits):
+    # Used in regression test for enthought/traits#403.
+
+    dummy = Instance(Dummy)
+
+    changed = Bool(False)
+
+    @on_trait_change(['dummy:x'])
+    def set_changed(self):
+        self.changed = True
+
+
 class TestRegression(unittest.TestCase):
 
     def test_default_value_for_no_cache(self):
@@ -101,7 +124,7 @@ class TestRegression(unittest.TestCase):
         """
         # Regression test for enthought/traits#336.
         y_trait = SimpleProperty.class_traits()['y']
-        simple_property = SimpleProperty
+        simple_property = SimpleProperty()
         self.assertIsNone(y_trait.default_value_for(simple_property, "y"))
 
     def test_subclasses_weakref(self):
@@ -168,7 +191,7 @@ class TestRegression(unittest.TestCase):
             obj.on_trait_change(handler)
 
         # Warmup.
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             f()
             gc.collect()
             counts.append(len(gc.get_objects()))
@@ -181,13 +204,60 @@ class TestRegression(unittest.TestCase):
         cycles = 10
         counts = []
 
-        for _ in xrange(cycles):
+        for _ in sm.range(cycles):
             DelegateLeak()
             gc.collect()
             counts.append(len(gc.get_objects()))
 
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+
+    def test_hastraits_deepcopy(self):
+        # Regression test for enthought/traits#2 and enthought/traits#16
+        from copy import deepcopy
+        a = HasTraits()
+        a.add_trait('foo', Int)
+        a.foo = 1
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
+        copied_a = deepcopy(a)
+        with self.assertRaises(TraitError):
+            copied_a.foo = 'a'
+
+    def test_hastraits_pickle(self):
+        # Regression test for enthought/traits#2 and enthought/traits#16
+        from pickle import dumps, loads
+        a = HasTraits()
+        a.add_trait('foo', Int)
+        a.foo = 1
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
+        pickled_a = dumps(a)
+        unpickled_a = loads(pickled_a)
+        with self.assertRaises(TraitError):
+            unpickled_a.foo = 'a'
+
+    @unittest.skipUnless(numpy_available, "test requires NumPy")
+    def test_exception_from_numpy_comparison_ignored(self):
+        # Regression test for enthought/traits#376.
+
+        class MultiArrayDataSource(HasTraits):
+            data = Either(None, Array)
+
+        b = MultiArrayDataSource(data=numpy.array([1, 2]))
+        # The following line was necessary to trigger the bug: the previous
+        # line set a Python exception, but didn't return the correct result to
+        # the CPython interpreter, so the exception wasn't triggered until
+        # later.
+        round(3.14159, 2)
+
+    def test_on_trait_change_with_list_of_extended_names(self):
+        # Regression test for enthought/traits#403
+        dummy = Dummy(x=10)
+        model = ExtendedListenerInList(dummy=dummy)
+        self.assertFalse(model.changed)
+        dummy.x = 11
+        self.assertTrue(model.changed)
 
 
 if __name__ == '__main__':

@@ -31,6 +31,8 @@ import sys
 from os.path import isfile, isdir
 from types import FunctionType, MethodType, ModuleType
 
+import six
+
 from . import trait_handlers
 
 from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTypes,
@@ -38,15 +40,19 @@ from .trait_base import (strx, get_module_name, class_of, SequenceTypes, TypeTyp
 
 from .trait_handlers import (TraitType, TraitInstance, TraitListObject,
         TraitSetObject, TraitSetEvent, TraitDictObject, TraitDictEvent,
-        ThisClass, items_event, RangeTypes, HandleWeakRef)
+        ThisClass, items_event, RangeTypes, HandleWeakRef,
+        OBJECT_DEFAULT_VALUE, TRAIT_LIST_OBJECT_DEFAULT_VALUE,
+        TRAIT_DICT_OBJECT_DEFAULT_VALUE, CALLABLE_AND_ARGS_DEFAULT_VALUE,
+        CALLABLE_DEFAULT_VALUE, TRAIT_SET_OBJECT_DEFAULT_VALUE)
 
 from .traits import (Trait, trait_from, _TraitMaker, _InstanceArgs, code_editor,
-        html_editor, password_editor, shell_editor, date_editor, time_editor)
+        html_editor, password_editor, shell_editor, date_editor, time_editor,
+        list_editor)
 
 from .trait_errors import TraitError
 
 from . import _py2to3
-
+from ._py2to3 import LONG_TYPE
 #-------------------------------------------------------------------------------
 #  Constants:
 #-------------------------------------------------------------------------------
@@ -82,8 +88,8 @@ try:
     from numpy import integer, floating, complexfloating, bool_
 
     int_fast_validate     = ( 11, int, integer )
-    long_fast_validate    = ( 11, long, None, int, integer )
-    float_fast_validate   = ( 11, float, floating, None, int, long, integer )
+    long_fast_validate    = ( 11, LONG_TYPE, None, int, integer )
+    float_fast_validate   = ( 11, float, floating, None, int, LONG_TYPE, integer )
     complex_fast_validate = ( 11, complex, complexfloating, None,
                                   float, floating, int, integer )
     bool_fast_validate    = ( 11, bool, None, bool_ )
@@ -92,8 +98,8 @@ try:
 except ImportError:
     # The standard python definitions (without numpy):
     int_fast_validate     = ( 11, int )
-    long_fast_validate    = ( 11, long,    None, int )
-    float_fast_validate   = ( 11, float,   None, int, long )
+    long_fast_validate    = ( 11, LONG_TYPE,    None, int )
+    float_fast_validate   = ( 11, float,   None, int, LONG_TYPE )
     complex_fast_validate = ( 11, complex, None, float, int )
     bool_fast_validate    = ( 11, bool )
     # Tuple or single type suitable for an isinstance check.
@@ -118,6 +124,23 @@ def default_text_editor ( trait, type = None ):
     return TextEditor( auto_set  = auto_set,
                        enter_set = enter_set,
                        evaluate  = type )
+
+
+# Generic validators
+
+def _validate_float(value):
+    """
+    Convert an arbitrary Python object to a float, or raise TypeError.
+    """
+    if type(value) == float:  # fast path for common case
+        return value
+    try:
+        nb_float = type(value).__float__
+    except AttributeError:
+        raise TypeError(
+            "Object of type {!r} not convertible to float".format(type(value)))
+    return nb_float(value)
+
 
 #-------------------------------------------------------------------------------
 #  'Any' trait:
@@ -167,7 +190,7 @@ class BaseInt ( TraitType ):
         """
         if type(value) is int:
             return value
-        elif type(value) is long:
+        elif type(value) is LONG_TYPE:
             return int(value)
 
         try:
@@ -202,10 +225,10 @@ class BaseLong ( TraitType ):
     """
 
     #: The function to use for evaluating strings to this type:
-    evaluate = long
+    evaluate = LONG_TYPE
 
     #: The default value for the trait:
-    default_value = 0L
+    default_value = LONG_TYPE(0)
 
     #: A description of the type of value this trait accepts:
     info_text = 'a long'
@@ -215,18 +238,18 @@ class BaseLong ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, long ):
-            return value
-
         if isinstance( value, int ):
-            return long( value )
+            return LONG_TYPE( value )
+
+        if isinstance( value, six.integer_types ):
+            return value
 
         self.error( object, name, value )
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
         """
-        return default_text_editor( self, long )
+        return default_text_editor( self, LONG_TYPE )
 
 
 class Long ( BaseLong ):
@@ -236,6 +259,7 @@ class Long ( BaseLong ):
 
     #: The C-level fast validator to use:
     fast_validate = long_fast_validate
+
 
 #-------------------------------------------------------------------------------
 #  'BaseFloat' and 'Float' traits:
@@ -258,13 +282,10 @@ class BaseFloat ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, float ):
-            return value
-
-        if isinstance( value, ( int, long ) ):
-            return float( value )
-
-        self.error( object, name, value )
+        try:
+            return _validate_float(value)
+        except TypeError:
+            self.error(object, name, value)
 
     def create_editor ( self ):
         """ Returns the default traits UI editor for this type of trait.
@@ -278,7 +299,7 @@ class Float ( BaseFloat ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = float_fast_validate
+    fast_validate = ( 21, )
 
 #-------------------------------------------------------------------------------
 #  'BaseComplex' and 'Complex' traits:
@@ -343,7 +364,7 @@ class BaseStr ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, basestring ):
+        if isinstance( value, six.string_types ):
             return value
 
         self.error( object, name, value )
@@ -366,7 +387,7 @@ class Str ( BaseStr ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 11, basestring )
+    fast_validate = (11,) + six.string_types
 
 
 class Title ( Str ):
@@ -402,11 +423,11 @@ class BaseUnicode ( TraitType ):
 
             Note: The 'fast validator' version performs this check in C.
         """
-        if isinstance( value, unicode ):
+        if isinstance( value, six.text_type ):
             return value
 
         if isinstance( value, str ):
-            return unicode( value )
+            return six.text_type( value )
 
         self.error( object, name, value )
 
@@ -428,7 +449,7 @@ class Unicode ( BaseUnicode ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 11, unicode, None, str )
+    fast_validate = ( 11, six.text_type, None, str )
 
 
 #-------------------------------------------------------------------------------
@@ -562,7 +583,7 @@ class BaseCLong ( BaseLong ):
     """
 
     #: The function to use for evaluating strings to this type:
-    evaluate = long
+    evaluate = LONG_TYPE
 
     def validate ( self, object, name, value ):
         """ Validates that a specified value is valid for this trait.
@@ -570,7 +591,7 @@ class BaseCLong ( BaseLong ):
             Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return long( value )
+            return LONG_TYPE( value )
         except:
             self.error( object, name, value )
 
@@ -581,7 +602,7 @@ class CLong ( BaseCLong ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 12, long )
+    fast_validate = ( 12, LONG_TYPE )
 
 #-------------------------------------------------------------------------------
 #  'BaseCFloat' and 'CFloat' traits:
@@ -664,7 +685,7 @@ class BaseCStr ( BaseStr ):
             return str( value )
         except:
             try:
-                return unicode( value )
+                return six.text_type( value )
             except:
                 self.error( object, name, value )
 
@@ -676,7 +697,7 @@ class CStr ( BaseCStr ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 7, ( ( 12, str ), ( 12, unicode ) ) )
+    fast_validate = ( 7, ( ( 12, str ), ( 12, six.text_type ) ) )
 
 #-------------------------------------------------------------------------------
 #  'BaseCUnicode' and 'CUnicode' traits:
@@ -693,7 +714,7 @@ class BaseCUnicode ( BaseUnicode ):
             Note: The 'fast validator' version performs this check in C.
         """
         try:
-            return unicode( value )
+            return six.text_type( value )
         except:
             self.error( object, name, value )
 
@@ -705,7 +726,7 @@ class CUnicode ( BaseCUnicode ):
     """
 
     #: The C-level fast validator to use:
-    fast_validate = ( 12, unicode )
+    fast_validate = ( 12, six.text_type )
 
 #-------------------------------------------------------------------------------
 #  'BaseCBytes' and 'CBytes' traits:
@@ -778,7 +799,7 @@ class String ( TraitType ):
         specified regular expression.
     """
 
-    def __init__ ( self, value = '', minlen = 0, maxlen = sys.maxint,
+    def __init__ ( self, value = '', minlen = 0, maxlen = six.MAXSIZE,
                    regex = '', **metadata ):
         """ Creates a String trait.
 
@@ -807,9 +828,9 @@ class String ( TraitType ):
         self._validate = 'validate_all'
         if self.regex != '':
             self.match = re.compile( self.regex ).match
-            if (self.minlen == 0) and (self.maxlen == sys.maxint):
+            if (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
                 self._validate = 'validate_regex'
-        elif (self.minlen == 0) and (self.maxlen == sys.maxint):
+        elif (self.minlen == 0) and (self.maxlen == six.MAXSIZE):
             self._validate = 'validate_str'
         else:
             self._validate = 'validate_len'
@@ -873,10 +894,10 @@ class String ( TraitType ):
         """ Returns a description of the trait.
         """
         msg = ''
-        if (self.minlen != 0) and (self.maxlen != sys.maxint):
+        if (self.minlen != 0) and (self.maxlen != six.MAXSIZE):
             msg = ' between %d and %d characters long' % (
                   self.minlen, self.maxlen )
-        elif self.maxlen != sys.maxint:
+        elif self.maxlen != six.MAXSIZE:
             msg = ' <= %d characters long' % self.maxlen
         elif self.minlen != 0:
             msg = ' >= %d characters long' % self.minlen
@@ -1067,7 +1088,7 @@ class self ( This ):
     """
 
     #: The default value type to use (i.e. 'self'):
-    default_value_type = 2
+    default_value_type = OBJECT_DEFAULT_VALUE
 
 
 class Function ( TraitType ):
@@ -1211,8 +1232,7 @@ class Constant ( TraitType ):
             because those types have mutable values.
         """
         if type( value ) in MutableTypes:
-            raise TraitError, \
-                  "Cannot define a constant using a mutable list or dictionary"
+            raise TraitError("Cannot define a constant using a mutable list or dictionary")
 
         super( Constant, self ).__init__( value, **metadata )
 
@@ -1532,7 +1552,7 @@ class File ( BaseFile ):
         """
         if not exists:
             # Define the C-level fast validator to use:
-            fast_validate = ( 11, basestring )
+            self.fast_validate = (11,) + six.string_types
 
         super( File, self ).__init__( value, filter, auto_set, entries, exists,
                                       **metadata )
@@ -1578,11 +1598,11 @@ class BaseDirectory ( BaseStr ):
 
             Note: The 'fast validator' version performs this check in C.
         """
+        validated_value = super( BaseDirectory, self ).validate( object, name, value )
         if not self.exists:
-            return super( BaseDirectory, self ).validate( object, name, value )
-
-        if isdir( value ):
-            return value
+            return validated_value
+        elif isdir( value ):
+            return validated_value
 
         self.error( object, name, value )
 
@@ -1622,8 +1642,7 @@ class Directory ( BaseDirectory ):
         # Define the C-level fast validator to use if the directory existence
         #: test is not required:
         if not exists:
-            self.fast_validate = ( 11, basestring )
-
+            self.fast_validate = (11,) + six.string_types
         super( Directory, self ).__init__( value, auto_set, entries, exists,
                                            **metadata )
 
@@ -1673,14 +1692,14 @@ class BaseRange ( TraitType ):
 
         vtype = type( high )
         if ((low is not None) and
-            (not issubclass( vtype, ( float, basestring ) ))):
+            (not issubclass( vtype, (float,) + six.string_types ))):
             vtype = type( low )
 
-        is_static = (not issubclass( vtype, basestring ))
+        is_static = (not issubclass( vtype, six.string_types ))
         if is_static and (vtype not in RangeTypes):
-            raise TraitError, ("Range can only be use for int, long or float "
-                               "values, but a value of type %s was specified." %
-                               vtype)
+            raise TraitError("Range can only be use for int, long or float "
+                             "values, but a value of type %s was specified." %
+                             vtype)
 
         self._low_name = self._high_name = ''
         self._vtype    = Undefined
@@ -1695,14 +1714,14 @@ class BaseRange ( TraitType ):
             if high is not None:
                 high = float( high )
 
-        elif vtype is long:
+        elif vtype is LONG_TYPE:
             self._validate  = 'long_validate'
             self._type_desc = 'a long integer'
             if low is not None:
-                low = long( low )
+                low = LONG_TYPE( low )
 
             if high is not None:
-                high = long( high )
+                high = LONG_TYPE( high )
 
         elif vtype is int:
             self._validate  = 'int_validate'
@@ -1718,23 +1737,23 @@ class BaseRange ( TraitType ):
             self._vtype     = None
             self._type_desc = 'a number'
 
-            if isinstance( high, basestring ):
+            if isinstance( high, six.string_types ):
                 self._high_name = high = 'object.' + high
             else:
                 self._vtype = type( high )
             high = compile( str( high ), '<string>', 'eval' )
 
-            if isinstance( low, basestring ):
+            if isinstance( low, six.string_types ):
                 self._low_name = low = 'object.' + low
             else:
                 self._vtype = type( low )
             low = compile( str( low ), '<string>', 'eval' )
 
-            if isinstance( value, basestring ):
+            if isinstance( value, six.string_types ):
                 value = 'object.' + value
             self._value = compile( str( value ), '<string>', 'eval' )
 
-            self.default_value_type = 8
+            self.default_value_type = CALLABLE_DEFAULT_VALUE
             self.default_value      = self._get_default_value
 
         exclude_mask = 0
@@ -1744,7 +1763,7 @@ class BaseRange ( TraitType ):
         if exclude_high:
             exclude_mask |= 2
 
-        if is_static and (vtype is not long):
+        if is_static and (vtype is not LONG_TYPE):
             self.init_fast_validator( kind, low, high, exclude_mask )
 
         #: Assign type-corrected arguments to handler attributes:
@@ -1842,7 +1861,7 @@ class BaseRange ( TraitType ):
     def _set ( self, object, name, value ):
         """ Sets the current value of a dynamic range trait.
         """
-        if not isinstance( value, basestring ):
+        if not isinstance( value, six.string_types ):
             try:
                 low  = eval( self._low )
                 high = eval( self._high )
@@ -1971,7 +1990,7 @@ class BaseEnum ( TraitType ):
         values[0]
         """
         values = metadata.pop( 'values', None )
-        if isinstance( values, basestring ):
+        if isinstance( values, six.string_types ):
             n = len( args )
             if n == 0:
                 default_value = None
@@ -2275,11 +2294,11 @@ class List ( TraitType ):
     """
 
     info_trait         = None
-    default_value_type = 5
+    default_value_type = TRAIT_LIST_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, trait = None, value = None, minlen = 0,
-                   maxlen = sys.maxint, items = True, **metadata ):
+                   maxlen = six.MAXSIZE, items = True, **metadata ):
         """ Returns a List trait.
 
         Parameters
@@ -2342,12 +2361,12 @@ class List ( TraitType ):
         """ Returns a description of the trait.
         """
         if self.minlen == 0:
-            if self.maxlen == sys.maxint:
+            if self.maxlen == six.MAXSIZE:
                 size = 'items'
             else:
                 size = 'at most %d items' % self.maxlen
         else:
-            if self.maxlen == sys.maxint:
+            if self.maxlen == six.MAXSIZE:
                 size = 'at least %d items' % self.minlen
             else:
                 size = 'from %s to %s items' % (
@@ -2356,24 +2375,10 @@ class List ( TraitType ):
         return 'a list of %s which are %s' % (
                    size, self.item_trait.full_info( object, name, value ) )
 
-    def create_editor ( self ):
+    def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from .api import HasTraits
-
-            if issubclass( handler.aClass, HasTraits ):
-                from traitsui.api import TableEditor
-
-                return TableEditor()
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = self.rows or 5,
-                           use_notebook  = self.use_notebook is True,
-                           page_name     = self.page_name or '' )
+        return list_editor(self, self)
 
     def inner_traits ( self ):
         """ Returns the *inner trait* (or traits) for this trait.
@@ -2425,7 +2430,7 @@ class Set ( TraitType ):
     """
 
     info_trait         = None
-    default_value_type = 9
+    default_value_type = TRAIT_SET_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, trait = None, value = None, items = True, **metadata ):
@@ -2478,42 +2483,12 @@ class Set ( TraitType ):
         """
         return 'a set of %s' % self.item_trait.full_info( object, name, value )
 
-    def create_editor ( self ):
+    def create_editor(self):
         """ Returns the default UI editor for the trait.
         """
-        # fixme: Needs to be customized for sets.
-        handler = self.item_trait.handler
-        if isinstance( handler, TraitInstance ) and (self.mode != 'list'):
-            from .api import HasTraits
+        from traitsui.api import TextEditor
 
-            if issubclass( handler.aClass, HasTraits ):
-                try:
-                    object = handler.aClass()
-                    from traitsui.table_column import ObjectColumn
-                    from traitsui.table_filter import (EvalFilterTemplate,
-                        RuleFilterTemplate, MenuFilterTemplate, EvalTableFilter)
-                    from traitsui.api import TableEditor
-
-                    return TableEditor(
-                            columns = [ ObjectColumn( name = name )
-                                        for name in object.editable_traits() ],
-                            filters     = [ RuleFilterTemplate,
-                                            MenuFilterTemplate,
-                                            EvalFilterTemplate ],
-                            edit_view   = '',
-                            orientation = 'vertical',
-                            search      = EvalTableFilter(),
-                            deletable   = True,
-                            row_factory = handler.aClass )
-                except:
-                    pass
-
-        from traitsui.api import ListEditor
-
-        return ListEditor( trait_handler = self,
-                           rows          = self.rows or 5,
-                           use_notebook  = self.use_notebook is True,
-                           page_name     = self.page_name or '' )
+        return TextEditor(evaluate=eval)
 
     def inner_traits ( self ):
         """ Returns the *inner trait* (or traits) for this trait.
@@ -2569,7 +2544,7 @@ class Dict ( TraitType ):
     """
 
     info_trait         = None
-    default_value_type = 6
+    default_value_type = TRAIT_DICT_OBJECT_DEFAULT_VALUE
     _items_event       = None
 
     def __init__ ( self, key_trait = None, value_trait = None, value = None,
@@ -2805,7 +2780,7 @@ class BaseInstance ( BaseClass ):
         self.adapt       = AdaptMap[ adapt ]
         self.module      = module or get_module_name()
 
-        if isinstance( klass, basestring ):
+        if isinstance( klass, six.string_types ):
             self.klass = klass
         else:
             if not isinstance( klass, ClassTypes ):
@@ -2829,7 +2804,7 @@ class BaseInstance ( BaseClass ):
                 raise TraitError( "The 'kw' argument must be a dictionary." )
 
             if ((not callable( factory )) and
-                (not isinstance( factory, basestring ))):
+                (not isinstance( factory, six.string_types ))):
                 if (len( args ) > 0) or (len( kw ) > 0):
                     raise TraitError( "'factory' must be callable" )
             else:
@@ -2850,7 +2825,7 @@ class BaseInstance ( BaseClass ):
 
             self.validate_failed( object, name, value )
 
-        if isinstance( self.klass, basestring ):
+        if isinstance( self.klass, six.string_types ):
             self.resolve_class( object, name, value )
 
         if self.adapt == 0:
@@ -2886,7 +2861,7 @@ class BaseInstance ( BaseClass ):
         """ Returns a description of the trait.
         """
         klass = self.klass
-        if not isinstance( klass, basestring ):
+        if not isinstance( klass, six.string_types ):
             klass = klass.__name__
 
         if self.adapt == 0:
@@ -2910,7 +2885,7 @@ class BaseInstance ( BaseClass ):
             if not isinstance( dv, _InstanceArgs ):
                 return super( BaseInstance, self ).get_default_value()
 
-            self.default_value_type = dvt = 7
+            self.default_value_type = dvt = CALLABLE_AND_ARGS_DEFAULT_VALUE
             self.default_value      = dv  = ( self.create_default_value,
                                               dv.args, dv.kw )
 
@@ -2929,10 +2904,10 @@ class BaseInstance ( BaseClass ):
 
     def create_default_value ( self, *args, **kw ):
         klass = args[0]
-        if isinstance( klass, basestring ):
+        if isinstance( klass, six.string_types ):
             klass = self.validate_class( self.find_class( klass ) )
             if klass is None:
-                raise TraitError, 'Unable to locate class: ' + args[0]
+                raise TraitError('Unable to locate class: ' + args[0])
 
         return klass( *args[1:], **kw )
 
@@ -3094,7 +3069,7 @@ class Type ( BaseClass ):
         elif klass is None:
             klass = value
 
-        if isinstance( klass, basestring ):
+        if isinstance( klass, six.string_types ):
             self.validate = self.resolve
 
         elif not isinstance( klass, ClassTypes ):
@@ -3123,7 +3098,7 @@ class Type ( BaseClass ):
             class, then resets the trait so that future calls will be handled by
             the normal validate method.
         """
-        if isinstance( self.klass, basestring ):
+        if isinstance( self.klass, six.string_types ):
             self.resolve_class( object, name, value )
             del self.validate
 
@@ -3133,7 +3108,7 @@ class Type ( BaseClass ):
         """ Returns a description of the trait.
         """
         klass = self.klass
-        if not isinstance( klass, basestring ):
+        if not isinstance( klass, six.string_types ):
             klass = klass.__name__
 
         result = 'a subclass of ' + klass
@@ -3147,16 +3122,17 @@ class Type ( BaseClass ):
         """ Returns a tuple of the form: ( default_value_type, default_value )
             which describes the default value for this trait.
         """
-        if not isinstance( self.default_value, basestring ):
+        if not isinstance( self.default_value, six.string_types ):
             return super( Type, self ).get_default_value()
 
-        return ( 7, ( self.resolve_default_value, (), None ) )
+        return (CALLABLE_AND_ARGS_DEFAULT_VALUE,
+                (self.resolve_default_value, (), None))
 
     def resolve_default_value ( self ):
         """ Resolves a class name into a class so that it can be used to
             return the class as the default value of the trait.
         """
-        if isinstance( self.klass, basestring ):
+        if isinstance( self.klass, six.string_types ):
             try:
                 self.resolve_class( None, None, None )
                 del self.validate
@@ -3345,7 +3321,7 @@ class Symbol ( TraitType ):
                 object.__dict__[ cache ] = ref = \
                     object.trait( name ).default_value_for( object, name )
 
-            if isinstance( ref, basestring ):
+            if isinstance( ref, six.string_types ):
                 object.__dict__[ name ] = value = self._resolve( ref )
 
         return value
@@ -3353,7 +3329,7 @@ class Symbol ( TraitType ):
     def set ( self, object, name, value ):
         dict = object.__dict__
         old  = dict.get( name, Undefined )
-        if isinstance( value, basestring ):
+        if isinstance( value, six.string_types ):
             dict.pop( name, None )
             dict[ TraitsCache + name ] = value
             object.trait_property_changed( name, old )
@@ -3413,7 +3389,8 @@ if python_version >= 2.5:
                               "UUID." % ( name, class_of( object ) ) )
 
         def get_default_value ( self ):
-            return ( 7, ( self._create_uuid, (), None ) )
+            return (CALLABLE_AND_ARGS_DEFAULT_VALUE,
+                    (self._create_uuid, (), None))
 
         #-- Private Methods ---------------------------------------------------
 
@@ -3523,7 +3500,7 @@ ListFloat = List( float )
 ListStr = List( str )
 
 #: List of Unicode string values; default value is [].
-ListUnicode = List( unicode )
+ListUnicode = List( six.text_type )
 
 #: List of complex values; default value is [].
 ListComplex = List( complex )
@@ -3565,7 +3542,7 @@ DictStrInt = Dict( str, int )
 
 #: Only a dictionary of string:long-integer values can be assigned; only string
 #: keys with long-integer values can be inserted. The default value is {}.
-DictStrLong = Dict( str, long )
+DictStrLong = Dict( str, LONG_TYPE )
 
 #: Only a dictionary of string:float values can be assigned; only string keys
 #: with float values can be inserted. The default value is {}.

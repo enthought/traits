@@ -1,6 +1,6 @@
 """ Tests the 'ETSConfig' configuration object. """
 
-
+from __future__ import print_function
 # Standard library imports.
 import contextlib
 import os
@@ -258,7 +258,7 @@ class ETSConfigTestCase(unittest.TestCase):
 
         with mock_sys_argv(test_args):
             with mock_os_environ(test_environ):
-                print repr(self.ETSConfig.toolkit)
+                print(repr(self.ETSConfig.toolkit))
                 with self.ETSConfig.provisional_toolkit('test_direct'):
                     toolkit = self.ETSConfig.toolkit
                     self.assertEqual(toolkit, 'test_direct')

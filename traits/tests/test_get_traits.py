@@ -16,7 +16,7 @@ from __future__ import absolute_import
 
 from traits.testing.unittest_tools import unittest
 
-from ..api import Float, HasTraits, Int, ReadOnly, Str, TraitError, Undefined
+from traits.api import Float, HasTraits, Int, ReadOnly, Str, TraitError, Undefined
 
 
 class Foo(HasTraits):
@@ -32,6 +32,10 @@ class Bar(HasTraits):
     PrivT1  = Str( private=True )
     # Force visibility of a private trait.
     PrivT2  = Str( private=True, visible=True )
+
+class FooBar(HasTraits):
+    num = Int
+    baz = 'non-trait class attribute'
 
 
 class GetTraitTestCase(unittest.TestCase):
@@ -64,6 +68,12 @@ class GetTraitTestCase(unittest.TestCase):
         b = Bar()
         self.assertEqual( sorted(b.visible_traits()),
                           sorted(["PubT1", "PrivT2"]) )
+
+    def test_dir(self):
+        b = FooBar()
+        self.assertIn('baz', dir(b))
+        self.assertIn('num', dir(b))
+        self.assertIn('edit_traits', dir(b))
 
 
 ### EOF #######################################################################
