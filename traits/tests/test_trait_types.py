@@ -25,6 +25,20 @@ from traits.api import Float, TraitType
 
 class TraitTypesTest(unittest.TestCase):
 
+    def test_validate_implements(self):
+        from traits.has_traits import Interface
+        from traits.trait_types import validate_implements
+
+        class Abstract(Interface):
+            def keys(self):
+                pass
+
+        class Concrete(object):
+            def keys(self):
+                return []
+
+        self.assertTrue(validate_implements(Concrete(), Abstract))
+
     def test_traits_shared_transient(self):
         # Regression test for a bug in traits where the same _metadata
         # dictionary was shared between different trait types.
