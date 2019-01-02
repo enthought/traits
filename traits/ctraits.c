@@ -551,7 +551,8 @@ set_readonly_error ( has_traits_object * obj, PyObject * name ) {
 static int
 set_disallow_error ( has_traits_object * obj, PyObject * name ) {
 
-    if ( !Py2to3_SimpleString_Check( name ) ) {
+    PyObject *nname = Py2to3_NormaliseAttrName(name);
+    if (nname == NULL) {
         return invalid_attribute_error( name );
     }
 
@@ -559,9 +560,10 @@ set_disallow_error ( has_traits_object * obj, PyObject * name ) {
         TraitError,
         "Cannot set the undefined '%.400" Py2to3_PYERR_SIMPLE_STRING_FMTCHR "'"
             " attribute of a '%.50s' object.",
-        Py2to3_PYERR_PREPARE_SIMPLE_STRING( name ),
+        Py2to3_PYERR_PREPARE_SIMPLE_STRING( nname ),
         Py_TYPE(obj)->tp_name
     );
+    Py2to3_FinishNormaliseAttrName(name, nname);
     return -1;
 }
 
