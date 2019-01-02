@@ -17,10 +17,6 @@ Classes
 
     .. automethod:: __call__
 
-.. autoclass:: MetaHasTraitsObject
-
-    .. automethod:: __init__
-
 .. autoclass:: HasTraits
     :exclude-members: wrappers
 

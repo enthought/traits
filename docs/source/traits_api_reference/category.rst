@@ -9,6 +9,4 @@ Classes
 
 .. autoclass:: MetaCategory
 
-.. autoclass:: MetaCategoryObject
-
 .. autoclass:: Category
