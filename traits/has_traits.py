@@ -258,7 +258,7 @@ def _get_instance_handlers ( class_dict, bases ):
                         arg_lists.append( arg_list )
 
     # Merge in the information from the class dictionary:
-    for name, value in list(class_dict.items()):
+    for name, value in class_dict.items():
         if (name[:1] == '_') and is_function_type(value):
             n   = 13
             col = name.find( '_changed_for_' )
@@ -454,7 +454,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
 
     This is called during the construction of a new HasTraits class. The first
     three parameters have the same interpretation as the corresponding
-    parameters of ``type.__new__``. This function modifies `class_dict`
+    parameters of ``type.__new__``. This function modifies ``class_dict``
     in-place.
 
     Parameters
@@ -530,7 +530,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
 
                        if handler.is_mapped:
                            class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                     value )
+                                value )
 
                 elif value_type == 'delegate':
                     # Only add a listener if the trait.listenable metadata
@@ -590,7 +590,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
                     class_traits[ name ] = value = ictrait( default_value )
                     # Make sure that the trait now has the default value
                     # has the correct initializer.
-                    value.default_value(1, value.default)
+                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
                     del class_dict[ name ]
                     override_bases = []
                     handler        = value.handler
@@ -692,7 +692,7 @@ def update_traits_class_dict( class_name, bases, class_dict, is_category ):
     # all static trait notification handlers are attached to a 'cloned'
     # copy of the original trait:
     cloned = set()
-    for name in class_traits.keys():
+    for name in list(class_traits.keys()):
         trait    = class_traits[ name ]
         handlers = [ anytrait,
                      _get_def( class_name, class_dict, bases,
