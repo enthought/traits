@@ -205,9 +205,20 @@ except ImportError as exc:
                 https://github.com/enthought/enthought-sphinx-theme'''
     warnings.warn(RuntimeWarning(msg.format(exc)))
 
-    # Use old defaults
+    # Use old defaults if enthought-sphinx-theme not available
+
+    # The name of an image file (within the static path) to place at the top
+    # of the sidebar.
     html_logo = "e-logo-rev.png"
+
+    # The name of an image file (within the static path) to use as favicon of
+    # the docs.  This file should be a Windows icon file (.ico) being 16x16
+    # or 32x32 pixels large.
     html_favicon = "et.ico"
+
+    # The style sheet to use for HTML and HTML Help pages. A file of that name
+    # must exist either in Sphinx' static/ path, or in one of the custom paths
+    # given in html_static_path.
     html_style = 'default.css'
 
 # When using docset browsers like Dash and Zeal the side bar is redundant.
@@ -216,26 +227,12 @@ if BUILD_DOCSET:
         'nosidebar': 'true'
     }
 
-# The style sheet to use for HTML and HTML Help pages. A file of that name
-# must exist either in Sphinx' static/ path, or in one of the custom paths
-# given in html_static_path.
-#html_style = 'default.css'
-
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 html_title = "Traits 4 User Manual"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
-
-# The name of an image file (within the static path) to place at the top of
-# the sidebar.
-#html_logo = "e-logo-rev.png"
-
-# The name of an image file (within the static path) to use as favicon of the
-# docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
-# pixels large.
-#html_favicon = "et.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
