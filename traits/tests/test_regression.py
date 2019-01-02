@@ -13,6 +13,7 @@ else:
     from traits.trait_numeric import Array
 
 from traits.has_traits import HasTraits, Property, on_trait_change
+from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.unittest_tools import unittest
 
@@ -210,6 +211,31 @@ class TestRegression(unittest.TestCase):
 
         # All the counts should be the same.
         self.assertEqual(counts[warmup:-1], counts[warmup+1:])
+
+    def test_hastraits_deepcopy(self):
+        # Regression test for enthought/traits#2 and enthought/traits#16
+        from copy import deepcopy
+        a = HasTraits()
+        a.add_trait('foo', Int)
+        a.foo = 1
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
+        copied_a = deepcopy(a)
+        with self.assertRaises(TraitError):
+            copied_a.foo = 'a'
+
+    def test_hastraits_pickle(self):
+        # Regression test for enthought/traits#2 and enthought/traits#16
+        from pickle import dumps, loads
+        a = HasTraits()
+        a.add_trait('foo', Int)
+        a.foo = 1
+        with self.assertRaises(TraitError):
+            a.foo = 'a'
+        pickled_a = dumps(a)
+        unpickled_a = loads(pickled_a)
+        with self.assertRaises(TraitError):
+            unpickled_a.foo = 'a'
 
     @unittest.skipUnless(numpy_available, "test requires NumPy")
     def test_exception_from_numpy_comparison_ignored(self):
