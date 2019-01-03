@@ -2,6 +2,7 @@
 import gc
 import sys
 
+import six
 import six.moves as sm
 
 try:
