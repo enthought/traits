@@ -399,14 +399,23 @@ def _property_method ( class_dict, name ):
 _HasTraits = None
 
 class MetaHasTraits ( type ):
-    ### JMS: Need a docstring here.
+    """ Controls the creation of HasTraits classes.
+
+    The heavy work is done by the `create_traits_meta_dict` function, which
+    takes the ``class_dict`` dictionary of class members and extracts and
+    processes the trait declarations in it. The trait declarations are then
+    added back to the class dictionary and passed off to the __new__ method
+    of the type superclass, to be added to the class.
+
+    """
     # All registered class creation listeners.
     #
     # { Str class_name : Callable listener }
     _listeners = {}
 
     def __new__ ( cls, class_name, bases, class_dict ):
-        mhto = MetaHasTraitsObject( cls, class_name, bases, class_dict, False )
+        update_traits_class_dict(
+            class_name, bases, class_dict, is_category=False )
 
         # Finish building the class using the updated class dictionary:
         klass = type.__new__( cls, class_name, bases, class_dict )
@@ -439,344 +448,338 @@ class MetaHasTraits ( type ):
 
     remove_listener = classmethod( remove_listener )
 
-#-------------------------------------------------------------------------------
-#  'MetaHasTraitsObject' class:
-#-------------------------------------------------------------------------------
 
-class MetaHasTraitsObject ( object ):
-    """ Performs all of the meta-class processing needed to convert any
-        subclass of HasTraits into a well-formed traits class.
+def update_traits_class_dict( class_name, bases, class_dict, is_category ):
+    """ Processes all of the traits related data in the class dictionary.
+
+    This is called during the construction of a new HasTraits class. The first
+    three parameters have the same interpretation as the corresponding
+    parameters of ``type.__new__``. This function modifies ``class_dict``
+    in-place.
+
+    Parameters
+    ----------
+    class_name : str or unicode
+        The name of the HasTraits class.
+    bases : tuple
+        The base classes for the HasTraits class.
+    class_dict : dict
+        A dictionary of class members.
+    is_category : bool
+        Whether this is a Category subclass.
+
     """
+    # Create the various class dictionaries, lists and objects needed to
+    # hold trait and view information and definitions:
+    base_traits      = {}
+    class_traits     = {}
+    prefix_traits    = {}
+    listeners        = {}
+    prefix_list      = []
+    override_bases   = bases
+    view_elements    = ViewElements()
 
-    def __init__ ( self, cls, class_name, bases, class_dict, is_category ):
-        """ Processes all of the traits related data in the class dictionary.
-        """
-        # Create the various class dictionaries, lists and objects needed to
-        # hold trait and view information and definitions:
-        base_traits      = {}
-        class_traits     = {}
-        prefix_traits    = {}
-        listeners        = {}
-        prefix_list      = []
-        override_bases   = bases
-        view_elements    = ViewElements()
+    # Create a list of just those base classes that derive from HasTraits:
+    hastraits_bases = [ base for base in bases
+                        if base.__dict__.get( ClassTraits ) is not None ]
 
-        # Create a list of just those base classes that derive from HasTraits:
-        hastraits_bases = [ base for base in bases
-                            if base.__dict__.get( ClassTraits ) is not None ]
+    # Create a list of all inherited trait dictionaries:
+    inherited_class_traits = [ base.__dict__.get( ClassTraits )
+                               for base in hastraits_bases ]
 
-        # Create a list of all inherited trait dictionaries:
-        inherited_class_traits = [ base.__dict__.get( ClassTraits )
-                                   for base in hastraits_bases ]
+    # Move all trait definitions from the class dictionary to the
+    # appropriate trait class dictionaries:
+    for name, value in list(class_dict.items()):
+        value = _check_trait( value )
+        rc    = isinstance( value, CTrait )
 
-        # Move all trait definitions from the class dictionary to the
-        # appropriate trait class dictionaries:
-        for name, value in list(class_dict.items()):
-            value = _check_trait(value)
-            rc    = isinstance( value, CTrait )
+        if (not rc) and isinstance( value, ForwardProperty ):
+            rc     = True
+            # Create Property trait from getter, setter, validator
+            getter = _property_method( class_dict, '_get_' + name )
+            setter = _property_method( class_dict, '_set_' + name )
+            if (setter is None) and (getter is not None):
+                if getattr( getter, 'settable', False ):
+                    setter = HasTraits._set_traits_cache
+                elif getattr( getter, 'flushable', False ):
+                    setter = HasTraits._flush_traits_cache
+            validate = _property_method( class_dict, '_validate_' + name )
+            if validate is None:
+                validate = value.validate
 
-            if (not rc) and isinstance( value, ForwardProperty ):
-                rc     = True
-                getter = _property_method( class_dict, '_get_' + name )
-                setter = _property_method( class_dict, '_set_' + name )
-                if (setter is None) and (getter is not None):
-                    if getattr( getter, 'settable', False ):
-                        setter = HasTraits._set_traits_cache
-                    elif getattr( getter, 'flushable', False ):
-                        setter = HasTraits._flush_traits_cache
-                validate = _property_method( class_dict, '_validate_' + name )
-                if validate is None:
-                    validate = value.validate
+            value = Property( getter, setter, validate, True,
+                              value.handler, **value.metadata )
+        if rc:
+            del class_dict[ name ]
+            if name[-1:] != '_':
+                base_traits[ name ] = class_traits[ name ] = value
+                value_type = value.type
+                if value_type == 'trait':
+                   handler = value.handler
+                   if handler is not None:
+                       if handler.has_items:
+                           items_trait = _clone_trait(
+                               handler.items_event(), value.__dict__ )
 
-                value = Property( getter, setter, validate, True,
-                                  value.handler, **value.metadata )
-            if rc:
-                del class_dict[ name ]
-                if name[-1:] != '_':
-                    base_traits[ name ] = class_traits[ name ] = value
-                    value_type = value.type
-                    if value_type == 'trait':
-                       handler = value.handler
-                       if handler is not None:
-                           if handler.has_items:
-                               items_trait = _clone_trait(
-                                   handler.items_event(), value.__dict__ )
+                           if items_trait.instance_handler == \
+                               '_list_changed_handler':
+                               items_trait.instance_handler = \
+                                   '_list_items_changed_handler'
 
-                               if items_trait.instance_handler == \
-                                   '_list_changed_handler':
-                                   items_trait.instance_handler = \
-                                       '_list_items_changed_handler'
+                           class_traits[ name + '_items' ] = items_trait
 
-                               class_traits[ name + '_items' ] = items_trait
-
-                           if handler.is_mapped:
-                               class_traits[ name + '_' ] = _mapped_trait_for(
-                                                                         value )
-
-                    elif value_type == 'delegate':
-                        # Only add a listener if the trait.listenable metadata
-                        # is not False:
-                        if value._listenable is not False:
-                            listeners[ name ] = ( 'delegate',
-                                           get_delegate_pattern( name, value ) )
-                    elif value_type == 'event':
-                        on_trait_change = value.on_trait_change
-                        if isinstance( on_trait_change, six.string_types ):
-                            listeners[ name ] = ( 'event', on_trait_change )
-                else:
-                    name = name[:-1]
-                    prefix_list.append( name )
-                    prefix_traits[ name ] = value
-
-            elif isinstance( value, FunctionType ) or is_cython_func_or_method(value):
-                pattern = getattr( value, 'on_trait_change', None )
-                if pattern is not None:
-                    listeners[ name ] = ( 'method', pattern )
-
-            elif isinstance( value, property ):
-                class_traits[ name ] = generic_trait
-
-            # Handle any view elements found in the class:
-            elif isinstance( value, ViewElement ):
-
-                # Add the view element to the class's 'ViewElements' if it is
-                # not already defined (duplicate definitions are errors):
-                if name in view_elements.content:
-                    raise TraitError(
-                        "Duplicate definition for view element '%s'" % name )
-
-                view_elements.content[ name ] = value
-
-                # Replace all substitutable view sub elements with 'Include'
-                # objects, and add the substituted items to the
-                # 'ViewElements':
-                value.replace_include( view_elements )
-
-                # Remove the view element from the class definition:
-                del class_dict[ name ]
-
-            else:
-                for ct in inherited_class_traits:
-                    if name in ct:
-                        # The subclass is providing a default value for the
-                        # trait defined in a superclass.
-                        ictrait = ct[ name ]
-                        if ictrait.type in CantHaveDefaultValue:
-                            raise TraitError( "Cannot specify a default value "
-                                "for the %s trait '%s'. You must override the "
-                                "the trait definition instead." %
-                                ( ictrait.type, name ) )
-
-                        default_value = value
-                        class_traits[ name ] = value = ictrait( default_value )
-                        # Make sure that the trait now has the default value
-                        # has the correct initializer.
-                        value.default_value(
-                            MISSING_DEFAULT_VALUE, value.default)
-                        del class_dict[ name ]
-                        override_bases = []
-                        handler        = value.handler
-                        if (handler is not None) and handler.is_mapped:
-                            class_traits[ name + '_' ] = _mapped_trait_for(
+                       if handler.is_mapped:
+                           class_traits[ name + '_' ] = _mapped_trait_for(
                                 value )
-                        break
 
-        # Process all HasTraits base classes:
-        migrated_properties = {}
-        implements          = []
-        for base in hastraits_bases:
-            base_dict = base.__dict__
+                elif value_type == 'delegate':
+                    # Only add a listener if the trait.listenable metadata
+                    # is not False:
+                    if value._listenable is not False:
+                        listeners[ name ] = ( 'delegate',
+                                       get_delegate_pattern( name, value ) )
+                elif value_type == 'event':
+                    on_trait_change = value.on_trait_change
+                    if isinstance( on_trait_change, six.string_types ):
+                        listeners[ name ] = ( 'event', on_trait_change )
+            else:
+                name = name[:-1]
+                prefix_list.append( name )
+                prefix_traits[ name ] = value
 
-            # Merge listener information:
-            for name, value in base_dict.get( ListenerTraits ).items():
-                if (name not in class_traits) and (name not in class_dict):
-                    listeners[ name ] = value
+        elif isinstance( value, FunctionType ) or is_cython_func_or_method(value):
+            pattern = getattr( value, 'on_trait_change', None )
+            if pattern is not None:
+                listeners[ name ] = ( 'method', pattern )
 
-            # Merge base traits:
-            for name, value in base_dict.get( BaseTraits ).items():
-                if name not in base_traits:
-                    property_info = value.property()
-                    if property_info is not None:
-                        key = id( value )
-                        migrated_properties[ key ] = value = \
-                            self.migrate_property( name, value, property_info,
-                                                   class_dict )
-                    base_traits[ name ] = value
+        elif isinstance( value, property ):
+            class_traits[ name ] = generic_trait
 
-                elif is_category:
-                    raise TraitError("Cannot override '%s' trait "
-                                     "definition in a category" % name)
+        # Handle any view elements found in the class:
+        elif isinstance( value, ViewElement ):
 
-            # Merge class traits:
-            for name, value in base_dict.get( ClassTraits ).items():
-                if name not in class_traits:
-                    property_info = value.property()
-                    if property_info is not None:
-                        new_value = migrated_properties.get( id( value ) )
-                        if new_value is not None:
-                            value = new_value
-                        else:
-                            value = self.migrate_property( name, value,
-                                                     property_info, class_dict )
-                    class_traits[ name ] = value
+            # Add the view element to the class's 'ViewElements' if it is
+            # not already defined (duplicate definitions are errors):
+            if name in view_elements.content:
+                raise TraitError(
+                    "Duplicate definition for view element '%s'" % name )
 
-                elif is_category:
-                    raise TraitError("Cannot override '%s' trait "
-                                     "definition in a category" % name)
+            view_elements.content[ name ] = value
 
-            # Merge prefix traits:
-            base_prefix_traits = base_dict.get( PrefixTraits )
-            for name in base_prefix_traits['*']:
-                if name not in prefix_list:
-                    prefix_list.append( name )
-                    prefix_traits[ name ] = base_prefix_traits[ name ]
-                elif is_category:
-                    raise TraitError("Cannot override '%s_' trait "
-                                     "definition in a category" % name)
+            # Replace all substitutable view sub elements with 'Include'
+            # objects, and add the substituted items to the
+            # 'ViewElements':
+            value.replace_include( view_elements )
 
-            # If the base class has a 'ViewElements' object defined, add it to
-            # the 'parents' list of this class's 'ViewElements':
-            parent_view_elements = base_dict.get( ViewTraits )
-            if parent_view_elements is not None:
-                view_elements.parents.append( parent_view_elements )
+            # Remove the view element from the class definition:
+            del class_dict[ name ]
 
-        # Make sure there is a definition for 'undefined' traits:
-        if (prefix_traits.get( '' ) is None) and (not is_category):
-            prefix_list.append( '' )
-            prefix_traits[''] = Python().as_ctrait()
+        else:
+            for ct in inherited_class_traits:
+                if name in ct:
+                    # The subclass is providing a default value for the
+                    # trait defined in a superclass.
+                    ictrait = ct[ name ]
+                    if ictrait.type in CantHaveDefaultValue:
+                        raise TraitError( "Cannot specify a default value "
+                            "for the %s trait '%s'. You must override the "
+                            "the trait definition instead." %
+                            ( ictrait.type, name ) )
 
-        # Save a link to the prefix_list:
-        prefix_traits['*'] = prefix_list
+                    default_value = value
+                    class_traits[ name ] = value = ictrait( default_value )
+                    # Make sure that the trait now has the default value
+                    # has the correct initializer.
+                    value.default_value(MISSING_DEFAULT_VALUE, value.default)
+                    del class_dict[ name ]
+                    override_bases = []
+                    handler        = value.handler
+                    if (handler is not None) and handler.is_mapped:
+                        class_traits[ name + '_' ] = _mapped_trait_for(
+                                                                     value )
+                    break
 
-        # Make sure the trait prefixes are sorted longest to shortest
-        # so that we can easily bind dynamic traits to the longest matching
-        # prefix:
-        prefix_list.sort( key = lambda x: -len(x) )
+    # Process all HasTraits base classes:
+    migrated_properties = {}
+    implements          = []
+    for base in hastraits_bases:
+        base_dict = base.__dict__
 
-        # Get the list of all possible 'Instance'/'List(Instance)' handlers:
-        instance_traits = _get_instance_handlers( class_dict, hastraits_bases )
+        # Merge listener information:
+        for name, value in base_dict.get( ListenerTraits ).items():
+            if (name not in class_traits) and (name not in class_dict):
+                listeners[ name ] = value
 
-        # If there is an 'anytrait_changed' event handler, wrap it so that
-        # it can be attached to all traits in the class:
-        anytrait = _get_def( class_name, class_dict, bases,
-                             '_anytrait_changed' )
-        if anytrait is not None:
-            anytrait = StaticAnyTraitChangeNotifyWrapper( anytrait )
+        # Merge base traits:
+        for name, value in base_dict.get( BaseTraits ).items():
+            if name not in base_traits:
+                property_info = value.property()
+                if property_info is not None:
+                    key = id( value )
+                    migrated_properties[ key ] = value = \
+                        migrate_property( name, value, property_info,
+                                          class_dict )
+                base_traits[ name ] = value
 
-            # Save it in the prefix traits dictionary so that any dynamically
-            # created traits (e.g. 'prefix traits') can re-use it:
-            prefix_traits['@'] = anytrait
+            elif is_category:
+                raise TraitError(
+                    "Cannot override '%s' trait "
+                    "definition in a category" % name)
 
-        # Make one final pass over the class traits dictionary, making sure
-        # all static trait notification handlers are attached to a 'cloned'
-        # copy of the original trait:
-        # The dictionary is modified in place
-        cloned = set()
+        # Merge class traits:
+        for name, value in base_dict.get( ClassTraits ).items():
+            if name not in class_traits:
+                property_info = value.property()
+                if property_info is not None:
+                    new_value = migrated_properties.get( id( value ) )
+                    if new_value is not None:
+                        value = new_value
+                    else:
+                        value = migrate_property( name, value,
+                                                  property_info, class_dict )
+                class_traits[ name ] = value
 
-        for name in list(class_traits.keys()):
-            trait    = class_traits[ name ]
-            handlers = [ anytrait,
-                         _get_def( class_name, class_dict, bases,
-                                   '_%s_changed' % name ),
-                         _get_def( class_name, class_dict, bases,
-                                   '_%s_fired' % name ) ]
+            elif is_category:
+                raise TraitError(
+                    "Cannot override '%s' trait "
+                    "definition in a category" % name)
 
-            # Check for an 'Instance' or 'List(Instance)' trait with defined
-            # handlers:
-            instance_handler = trait.instance_handler
-            if ((instance_handler is not None) and
-                (name in instance_traits) or
-                ((instance_handler == '_list_items_changed_handler') and
-                 (name[-6:] == '_items') and
-                 (name[:-6] in instance_traits))):
-                handlers.append( getattr( HasTraits, instance_handler ) )
+        # Merge prefix traits:
+        base_prefix_traits = base_dict.get( PrefixTraits )
+        for name in base_prefix_traits['*']:
+            if name not in prefix_list:
+                prefix_list.append( name )
+                prefix_traits[ name ] = base_prefix_traits[ name ]
+            elif is_category:
+                raise TraitError(
+                    "Cannot override '%s_' trait "
+                    "definition in a category" % name)
 
-            events = trait.event
-            if events is not None:
+        # If the base class has a 'ViewElements' object defined, add it to
+        # the 'parents' list of this class's 'ViewElements':
+        parent_view_elements = base_dict.get( ViewTraits )
+        if parent_view_elements is not None:
+            view_elements.parents.append( parent_view_elements )
 
-                if isinstance(events, six.string_types):
-                    events = [ events ]
+    # Make sure there is a definition for 'undefined' traits:
+    if (prefix_traits.get( '' ) is None) and (not is_category):
+        prefix_list.append( '' )
+        prefix_traits[''] = Python().as_ctrait()
 
-                for event in events:
-                    handlers.append( _get_def( class_name, class_dict, bases,
-                                               '_%s_changed' % event ) )
-                    handlers.append( _get_def( class_name, class_dict, bases,
-                                               '_%s_fired' % event ) )
+    # Save a link to the prefix_list:
+    prefix_traits['*'] = prefix_list
 
-            handlers = [ h for h in handlers if h is not None ]
-            default  = _get_def( class_name, class_dict, [],
-                                 '_%s_default' % name )
-            if (len( handlers ) > 0) or (default is not None):
+    # Make sure the trait prefixes are sorted longest to shortest
+    # so that we can easily bind dynamic traits to the longest matching
+    # prefix:
+    prefix_list.sort( key = lambda x: -len(x) )
 
-                if name not in cloned:
-                    cloned.add( name )
-                    class_traits[ name ] = trait = _clone_trait( trait )
+    # Get the list of all possible 'Instance'/'List(Instance)' handlers:
+    instance_traits = _get_instance_handlers( class_dict, hastraits_bases )
 
-                if len( handlers ) > 0:
-                    _add_notifiers( trait._notifiers( 1 ), handlers )
+    # If there is an 'anytrait_changed' event handler, wrap it so that
+    # it can be attached to all traits in the class:
+    anytrait = _get_def( class_name, class_dict, bases,
+                         '_anytrait_changed' )
+    if anytrait is not None:
+        anytrait = StaticAnyTraitChangeNotifyWrapper( anytrait )
 
-                if default is not None:
-                    trait.default_value(CALLABLE_DEFAULT_VALUE, default)
+        # Save it in the prefix traits dictionary so that any dynamically
+        # created traits (e.g. 'prefix traits') can re-use it:
+        prefix_traits['@'] = anytrait
 
-            # Handle the case of properties whose value depends upon the value
-            # of other traits:
-            if (trait.type == 'property') and (trait.depends_on is not None):
+    # Make one final pass over the class traits dictionary, making sure
+    # all static trait notification handlers are attached to a 'cloned'
+    # copy of the original trait:
+    cloned = set()
+    for name in list(class_traits.keys()):
+        trait    = class_traits[ name ]
+        handlers = [ anytrait,
+                     _get_def( class_name, class_dict, bases,
+                               '_%s_changed' % name ),
+                     _get_def( class_name, class_dict, bases,
+                               '_%s_fired' % name ) ]
 
-                cached = trait.cached
-                if cached is True:
-                    cached = TraitsCache + name
+        # Check for an 'Instance' or 'List(Instance)' trait with defined
+        # handlers:
+        instance_handler = trait.instance_handler
+        if ((instance_handler is not None) and
+            (name in instance_traits) or
+            ((instance_handler == '_list_items_changed_handler') and
+             (name[-6:] == '_items') and
+             (name[:-6] in instance_traits))):
+            handlers.append( getattr( HasTraits, instance_handler ) )
 
-                depends_on = trait.depends_on
-                if isinstance( depends_on, SequenceTypes ):
-                    depends_on = ','.join( depends_on )
-                else:
-                    # Note: We add the leading blank to force it to be treated
-                    # as using the extended trait notation so that it will
-                    # automatically add '_items' listeners to lists/dicts:
-                    depends_on = ' ' + depends_on
+        events = trait.event
+        if events is not None:
 
-                listeners[ name ] = ( 'property', cached, depends_on )
+            if isinstance(events, six.string_types):
+                events = [ events ]
 
-        # Add the traits meta-data to the class:
-        self.add_traits_meta_data(
-            bases, class_dict, base_traits, class_traits, instance_traits,
-            prefix_traits, listeners, view_elements )
+            for event in events:
+                handlers.append( _get_def( class_name, class_dict, bases,
+                                           '_%s_changed' % event ) )
+                handlers.append( _get_def( class_name, class_dict, bases,
+                                           '_%s_fired' % event ) )
 
-    #---------------------------------------------------------------------------
-    #  Adds the traits meta-data to the class:
-    #---------------------------------------------------------------------------
+        handlers = [ h for h in handlers if h is not None ]
+        default  = _get_def( class_name, class_dict, [],
+                             '_%s_default' % name )
+        if (len( handlers ) > 0) or (default is not None):
 
-    def add_traits_meta_data ( self, bases, class_dict, base_traits,
-                               class_traits,  instance_traits, prefix_traits,
-                               listeners, view_elements ):
-        """ Adds the Traits metadata to the class dictionary.
-        """
-        class_dict[ BaseTraits      ] = base_traits
-        class_dict[ ClassTraits     ] = class_traits
-        class_dict[ InstanceTraits  ] = instance_traits
-        class_dict[ PrefixTraits    ] = prefix_traits
-        class_dict[ ListenerTraits  ] = listeners
-        class_dict[ ViewTraits      ] = view_elements
+            if name not in cloned:
+                cloned.add( name )
+                class_traits[ name ] = trait = _clone_trait( trait )
 
-    #---------------------------------------------------------------------------
-    #  Migrates an existing property to the class being defined (allowing for
-    #  method overrides):
-    #---------------------------------------------------------------------------
+            if len( handlers ) > 0:
+                _add_notifiers( trait._notifiers( 1 ), handlers )
 
-    def migrate_property ( self, name, property, property_info, class_dict ):
-        """ Migrates an existing property to the class being defined
-        (allowing for method overrides).
-        """
-        get = _property_method( class_dict, '_get_' + name )
-        set = _property_method( class_dict, '_set_' + name )
-        val = _property_method( class_dict,
-                                '_validate_' + name )
-        if ((get is not None) or (set is not None) or (val is not None)):
-            old_get, old_set, old_val = property_info
-            return Property( get or old_get, set or old_set, val or old_val,
-                             True, **property.__dict__ )
+            if default is not None:
+                trait.default_value(CALLABLE_DEFAULT_VALUE, default)
 
-        return property
+        # Handle the case of properties whose value depends upon the value
+        # of other traits:
+        if (trait.type == 'property') and (trait.depends_on is not None):
+
+            cached = trait.cached
+            if cached is True:
+                cached = TraitsCache + name
+
+            depends_on = trait.depends_on
+            if isinstance( depends_on, SequenceTypes ):
+                depends_on = ','.join( depends_on )
+            else:
+                # Note: We add the leading blank to force it to be treated
+                # as using the extended trait notation so that it will
+                # automatically add '_items' listeners to lists/dicts:
+                depends_on = ' ' + depends_on
+
+            listeners[ name ] = ( 'property', cached, depends_on )
+
+    # Add processed traits back into class_dict.
+    class_dict[ BaseTraits      ] = base_traits
+    class_dict[ ClassTraits     ] = class_traits
+    class_dict[ InstanceTraits  ] = instance_traits
+    class_dict[ PrefixTraits    ] = prefix_traits
+    class_dict[ ListenerTraits  ] = listeners
+    class_dict[ ViewTraits      ] = view_elements
+
+
+def migrate_property ( name, property, property_info, class_dict ):
+    """ Migrates an existing property to the class being defined
+    (allowing for method overrides).
+    """
+    get = _property_method( class_dict, '_get_' + name )
+    set = _property_method( class_dict, '_set_' + name )
+    val = _property_method( class_dict,
+                            '_validate_' + name )
+    if ((get is not None) or (set is not None) or (val is not None)):
+        old_get, old_set, old_val = property_info
+        return Property( get or old_get, set or old_set, val or old_val,
+                         True, **property.__dict__ )
+
+    return property
+
 
 #-------------------------------------------------------------------------------
 #  Manages the list of trait instance monitors:
