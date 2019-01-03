@@ -261,15 +261,17 @@ class TestRegression(unittest.TestCase):
         self.assertTrue(model.changed)
 
     def test_set_disallowed_exception(self):
+        # Regression test for enthought/traits#415
+
         class StrictDummy(HasStrictTraits):
             foo = Int
 
-        # Regression test for enthought/traits#415
         with self.assertRaises(TraitError):
             StrictDummy(forbidden=53)
 
-        with self.assertRaises(TraitError):
-            StrictDummy(**{'forbidden': 53})
+        if six.PY2:
+            with self.assertRaises(TraitError):
+                StrictDummy(**{b'forbidden': 53})
 
         # This is the case that used to fail on Python 2.
         with self.assertRaises(TraitError):
