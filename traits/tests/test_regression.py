@@ -2,6 +2,7 @@
 import gc
 import sys
 
+import six
 import six.moves as sm
 
 try:
@@ -12,7 +13,8 @@ else:
     numpy_available = True
     from traits.trait_numeric import Array
 
-from traits.has_traits import HasTraits, Property, on_trait_change
+from traits.has_traits import (
+    HasStrictTraits, HasTraits, Property, on_trait_change)
 from traits.trait_errors import TraitError
 from traits.trait_types import Bool, DelegatesTo, Either, Instance, Int, List
 from traits.testing.unittest_tools import unittest
@@ -258,6 +260,27 @@ class TestRegression(unittest.TestCase):
         self.assertFalse(model.changed)
         dummy.x = 11
         self.assertTrue(model.changed)
+
+    def test_set_disallowed_exception(self):
+        # Regression test for enthought/traits#415
+
+        class StrictDummy(HasStrictTraits):
+            foo = Int
+
+        with self.assertRaises(TraitError):
+            StrictDummy(forbidden=53)
+
+        if six.PY2:
+            with self.assertRaises(TraitError):
+                StrictDummy(**{b'forbidden': 53})
+
+        # This is the case that used to fail on Python 2.
+        with self.assertRaises(TraitError):
+            StrictDummy(**{u'forbidden': 53})
+
+        a = StrictDummy()
+        with self.assertRaises(TraitError):
+            setattr(a, u'forbidden', 53)
 
 
 if __name__ == '__main__':
