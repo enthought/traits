@@ -176,7 +176,6 @@ if __name__ == "__main__":
         license='BSD',
         maintainer='ETS Developers',
         maintainer_email='enthought-dev@enthought.com',
-        packages=find_packages(exclude=['fixers']),
         platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
         zip_safe=False,
         use_2to3=False,
