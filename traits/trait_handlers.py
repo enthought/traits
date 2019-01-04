@@ -459,7 +459,7 @@ class TraitType ( BaseTraitHandler ):
         pass
 
     def get_default_value ( self ):
-        """ Returns a tuple of the form: (*default_value_type*, *default_value*)
+        r"""Returns a tuple of the form: (*default_value_type*, *default_value*)
             which describes the default value for this trait. The default
             implementation analyzes the value of the trait's **default_value**
             attribute and determines an appropriate *default_value_type* for
@@ -1659,7 +1659,7 @@ class TraitEnum ( TraitHandler ):
 #-------------------------------------------------------------------------------
 
 class TraitPrefixList ( TraitHandler ):
-    """Ensures that a value assigned to a trait attribute is a member of a list
+    r"""Ensures that a value assigned to a trait attribute is a member of a list
     of specified string values, or is a unique prefix of one of those values.
 
     TraitPrefixList is a variation on TraitEnum. The values that can be
@@ -2095,7 +2095,7 @@ class TraitTuple ( TraitHandler ):
     strings, 'Hearts', 'Diamonds', 'Spades', or 'Clubs'.
     """
     def __init__ ( self, *args ):
-        """ Creates a TraitTuple handler.
+        r""" Creates a TraitTuple handler.
 
         Parameters
         ----------

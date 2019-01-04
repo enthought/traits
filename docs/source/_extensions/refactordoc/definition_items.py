@@ -21,7 +21,7 @@ definition_regex = re.compile(r"""
 $                  # match at the end of the line
 """, re.VERBOSE)
 function_regex = re.compile(r'\w+\(.*\)\s*')
-signature_regex = re.compile('\((.*)\)')
+signature_regex = re.compile(r'\((.*)\)')
 
 
 class DefinitionItem(collections.namedtuple(

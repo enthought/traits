@@ -22,7 +22,7 @@ def clean_filename(name):
     """
     # The only acceptable characters are alphanumeric (in the current locale)
     # plus a period and dash.
-    wordparts = re.split('[^\w\.\-]+', name)
+    wordparts = re.split(r'[^\w\.\-]+', name)
 
     # Filter out empty strings at the beginning or end of the list.
     wordparts = [x for x in wordparts if x]
@@ -94,4 +94,3 @@ def python_name(name):
 
 
 ### EOF ######################################################################
-

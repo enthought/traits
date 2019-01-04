@@ -2,7 +2,7 @@
 #  License: BSD Style.
 
 #--(on_trait_change Method Enhancements)---------------------------------------
-"""
+r"""
 on_trait_change Method Enhancements
 ===================================
 
