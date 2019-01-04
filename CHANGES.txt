@@ -1,6 +1,48 @@
 Traits CHANGELOG
 ================
 
+DEV
+---
+
+Enhancements
+
+* New ``HasRequiredTraits`` class (#419)
+* Free ``HasTraits`` subclasses from hashing/comparing by identity (#410)
+* Unify and fix default list editors (#396)
+* Add ``__dir__`` method to ``HasTraits`` for IPython tab completion (#382)
+* Python 3 compat fixes (#374)
+* New context manager for setting trait-change-event tracer (#365)
+* Default trait type constants (#354)
+
+Changes
+
+* Update CI to use edm and etstool module (#420)
+* Clean up ``Float`` and ``BaseFloat`` validation (#393)
+* Merge master into Cython port (#370)
+* Docs and minor refactoring of ``MetaHasTraits`` class (#366)
+* Remove ridiculous premature optimization (#362)
+* Add support for PyInstaller app bundler (#361)
+* Add description and example for ``Either`` trait type (#360)
+* Drop support for Python 2.6 and Python < 3.4 (#345)
+* Add make target for docset to be used with Dash/Zeal (#180)
+
+Fixes
+
+* Fix odd error message and wrong exception type (#426)
+* Fix Color and RGBColor doc strings (#417)
+* Fix use of deprecared ``inspect.getargspec`` function (#408)
+* Fix extended names in ``on_trait_change`` lists (#404)
+* Support Unicode on trait documenter on Python 2.7 (#386)
+* Clear exception from Numpy properly (#377)
+* Fix pickling and deepcopying bug with dynamically added traits (#373)
+* Set ``auto_set/enter_set`` default once (#371)
+* Fix validation of ``This`` trait (#353)
+* Make ``cTrait.default_value_for`` raise a ``ValueError`` instead of seg
+  faulting when asked for the default value of a trait that doesn't have one. (#350)
+* Fix misuse of ``unittest.expectedFailure`` decorator (#346)
+* Fix issue with overridden ``HasTraits.trait`` function (#343)
+
+
 Release 4.6.0
 -------------
 
