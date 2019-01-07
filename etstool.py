@@ -156,6 +156,22 @@ def test(runtime, environment):
 @cli.command()
 @click.option('--runtime', default='3.6')
 @click.option('--environment', default=None)
+def docs(runtime, environment):
+    """ Build the html documentation.
+
+    """
+    parameters = get_parameters(runtime, environment)
+    commands = [
+        "edm run -e {environment} -- sphinx-build -b html "
+        "-d build/doctrees source build/html",
+    ]
+    with do_in_existingdir(os.path.join(os.getcwd(), 'docs')):
+        execute(commands, parameters)
+
+
+@cli.command()
+@click.option('--runtime', default='3.6')
+@click.option('--environment', default=None)
 def cleanup(runtime, environment):
     """ Remove a development environment.
 
@@ -180,6 +196,7 @@ def test_clean(runtime):
     try:
         install(args=args, standalone_mode=False)
         test(args=args, standalone_mode=False)
+        docs(args=args, standalone_mode=False)
     finally:
         cleanup(args=args, standalone_mode=False)
 
@@ -267,6 +284,29 @@ def do_in_tempdir(files=(), capture_files=()):
     finally:
         os.chdir(old_path)
         rmtree(path)
+
+@contextmanager
+def do_in_existingdir(path):
+    """ Changes into an existing directory given by path.
+    On exit, changes back to the original directory.
+
+    Parameters
+    ----------
+    path : str
+        Path of the directory to be changed into.
+    """
+    if not os.path.exists(path):
+        raise IOError("The path {!r} does not exist", path)
+    elif not os.path.isdir(path):
+        raise NotADirectoryError(
+            "The path {!r} does not point to a directory".format(path)
+        )
+    old_path = os.getcwd()
+    os.chdir(path)
+    try:
+        yield path
+    finally:
+        os.chdir(old_path)
 
 
 def execute(commands, parameters):

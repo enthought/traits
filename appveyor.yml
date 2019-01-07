@@ -34,6 +34,7 @@ install:
   - edm run -- python etstool.py install --runtime=%runtime%
 test_script:
   - edm run -- python etstool.py test --runtime=%runtime%
+  - edm run -- python etstool.py docs --runtime=%runtime%
 on_success:
   - edm run -- coverage combine
   - edm run -- pip install codecov
