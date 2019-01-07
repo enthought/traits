@@ -139,7 +139,8 @@ def install_docs(runtime, environment):
         "--no-dependencies"
     ]
     execute(commands, parameters)
-    click.echo("Installed enthought-sphinx-theme in {environment}.")
+    click.echo("Installed enthought-sphinx-theme in '"
+               "{environment}'.".format(**parameters))
 
 
 @cli.command()
