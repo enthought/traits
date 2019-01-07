@@ -104,11 +104,11 @@ def is_empty(line):
 #------------------------------------------------------------------------------
 
 def fix_star(word):
-    """ Replace ``*`` with ``\*`` so that is will be parse properly by
+    """ Replace ``*`` with ``\\*`` so that it will be parsed properly by
     docutils.
 
     """
-    return word.replace('*', '\*')
+    return word.replace('*', '\\*')
 
 
 def fix_backspace(word):
@@ -125,7 +125,7 @@ def fix_trailing_underscore(word):
 
     """
     if word.endswith('_'):
-        word = word.replace('_', '\_')
+        word = word.replace('_', '\\_')
     return word
 
 

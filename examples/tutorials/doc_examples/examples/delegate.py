@@ -42,7 +42,7 @@ try:
 except TraitError as c:
     print('TraitError: ', c)
 
-"""
+r"""
 The exception printed will look similar to the following:
 
 Traceback (most recent call last):

@@ -211,7 +211,7 @@ class UnittestToolsTestCase(unittest.TestCase, UnittestTools):
         with self.assertTraitDoesNotChange(test_object, 'number'):
             self.assertEqual(test_object.number, 16.0)
 
-        with six.assertRaisesRegex(self, AssertionError, '16\.0 != 12\.0'):
+        with six.assertRaisesRegex(self, AssertionError, r'16\.0 != 12\.0'):
             with self.assertTraitDoesNotChange(test_object, 'number'):
                 self.assertEqual(test_object.number, 12.0)
 
