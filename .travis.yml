@@ -34,9 +34,7 @@ before_install:
   - if [[ ${TRAVIS_OS_NAME} == 'osx' ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
   - edm install -y wheel click coverage
 install:
-  - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
-  - git clone https://github.com/enthought/enthought-sphinx-theme.git
-  - pushd enthought-sphinx-theme && edm run -- pip install -e . && popd
+  - edm run -- python etstool.py install-docs --runtime=${RUNTIME} || exit
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit

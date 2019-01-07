@@ -123,6 +123,25 @@ def install(runtime, environment):
     click.echo('Done install')
 
 
+@cli.command(name='install-docs')
+@click.option('--runtime', default='3.6')
+@click.option('--environment', default=None)
+def install_docs(runtime, environment):
+    """ Install project and dependencies into a clean EDM environment, then
+    install further dependencies required for building documentation.
+
+    """
+    parameters = get_parameters(runtime, environment)
+    args = ['--runtime={}'.format(runtime)]
+    install(args=args, standalone_mode=False)
+    commands = [
+        "edm run -e {environment} -- pip install -r ci-doc-requirements.txt "
+        "--no-dependencies"
+    ]
+    execute(commands, parameters)
+    click.echo("Installed enthought-sphinx-theme in {environment}.")
+
+
 @cli.command()
 @click.option('--runtime', default='3.6')
 @click.option('--environment', default=None)
