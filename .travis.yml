@@ -36,7 +36,7 @@ before_install:
 install:
   - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
   - git clone https://github.com/enthought/enthought-sphinx-theme.git
-  - pushd enthought-sphinx-theme && edm run -- python setup.py install && popd
+  - pushd enthought-sphinx-theme && edm run -- pip install -e . && popd
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py docs --runtime=${RUNTIME} || exit
