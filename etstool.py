@@ -315,12 +315,6 @@ def do_in_existingdir(path):
     path : str
         Path of the directory to be changed into.
     """
-    if not os.path.exists(path):
-        raise IOError("The path {!r} does not exist", path)
-    elif not os.path.isdir(path):
-        raise NotADirectoryError(
-            "The path {!r} does not point to a directory".format(path)
-        )
     old_path = os.getcwd()
     os.chdir(path)
     try:
